@@ -1,0 +1,110 @@
+/*Copyright 2011 Aalborg University. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are
+permitted provided that the following conditions are met:
+
+   1. Redistributions of source code must retain the above copyright notice, this list of
+      conditions and the following disclaimer.
+
+   2. Redistributions in binary form must reproduce the above copyright notice, this list
+      of conditions and the following disclaimer in the documentation and/or other materials
+      provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+The views and conclusions contained in the software and documentation are those of the
+authors and should not be interpreted as representing official policies, either expressed*/
+
+
+device
+{
+    display:block;
+    width:500px;
+    border:1px solid #000;
+    overflow:auto;
+    background-color:#eee;
+    font: 12px arial;
+    margin-bottom:10px;
+}
+
+service
+{
+    display: block;
+    padding: 10px;
+    margin-bottom:10px;
+    border-top:1px solid #ccc;
+    border-bottom:1px solid #ccc;
+    background-color:#fff;
+}
+
+parameter
+{
+    display: block;
+    padding: 20px;
+    margin-bottom:10px;
+    border-top:1px solid #ccc;
+    border-bottom:1px solid #ccc;
+    background-color:#eee;
+}
+
+device:before, device:after{
+  	 display: block;
+    margin-left:10px;
+    margin-top:10px;
+    background-color:#eee;
+    font-weight:bold;
+}
+
+device:before{
+	font-size:16px;
+	content: " Device : " attr(desc);
+}
+
+device:after{
+	font-size:12px;
+    margin-bottom:10px;
+    content: " Device Description : ID : " attr(id) 
+    			" | vendor ID : " attr(vendorid) 
+    			" | product ID : " attr(productid) 
+    			" | version : " attr(version)
+    				" | IP : " attr(ip) 
+    				" | port : " attr(port) 
+    				" | location : " attr(location) 
+    				" | type : " attr(type);
+}
+
+service:before{
+    font-weight:bold;
+    content: " Service : " attr(desc);
+}
+
+service:after{
+	content : " Service Description : ID : " attr(id)
+					" | value URL : " attr(value_url)
+					" | type : " attr(type)
+					" | unit : " attr(unit);
+}
+
+parameter:before{
+    font-weight:bold;
+    content: " Parameter Description : " attr(desc);
+}
+
+parameter:after{
+	content : " ID : " attr(id)
+					" | max : " attr(max)
+					" | min : " attr(min)
+					" | scale : " attr(scale)
+					" | step : " attr(step)
+					" | type : " attr(type)
+					" | unit : " attr(unit)
+					" | values : " attr(values);
+}
