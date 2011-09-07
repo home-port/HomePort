@@ -1,22 +1,42 @@
-                        HomePort release 0.x
+HomePort release 0.1
 
-WHAT IS HomePort?
-
-
-ON WHAT HARDWARE DOES IT RUN ON?
+What is HomePort ?
+==================
 
 
+Installation
+============
 
-DOCUMENTATION:
+In order to install libhpd, some dependencies are necessary:
+	-libxml2 (http://xmlsoft.org/)
+	-libmicrohttpd (http://www.gnu.org/s/libmicrohttpd/)
+	-avahi-client or avahi-core (http://avahi.org/) 
+		in order to use avahi-core instead of avahi-client, make sur to use '--disable-hpd-avahi-client' flag
 
-INSTALLING libhpd (the HomPort library)
+Then run './configure' with the corresponding flag(s),'make' and 'sudo make install'.
 
-INSTALLING xxxxx (the HomePort access control service)
+To use the HomePort Daemon library with your own application, make sure that the <hpdaemon/homeport.h> in the include path when compiling.
 
-SOFTWARE REQUIREMENTS
 
-CONFIGURING
+Documentation
+=============
 
-COMPILING
+In order to generate the documentation some dependencies are necessary:
+	-doxygen
+	-graphivz
 
-INTERFACE
+After having installed the dependencies you can use with './configure' the different flags:
+	--disable-doxygen-doc   don't generate any doxygen documentation
+  	--disable-doxygen-dot   don't generate graphics for doxygen documentation
+  	--enable-doxygen-man    generate doxygen manual pages
+  	--enable-doxygen-rtf    generate doxygen RTF documentation
+  	--enable-doxygen-xml    generate doxygen XML documentation
+  	--enable-doxygen-chm    generate doxygen compressed HTML help documentation
+  	--enable-doxygen-chi    generate doxygen seperate compressed HTML help index
+  	                        file
+  	--disable-doxygen-html  don't generate doxygen plain HTML documentation
+  	--enable-doxygen-ps     generate doxygen PostScript documentation
+  	--enable-doxygen-pdf    generate doxygen PDF documentation
+
+And then run 'make doxygen-doc'
+
