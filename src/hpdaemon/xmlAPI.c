@@ -24,6 +24,46 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed*/
 
 #include "xmlAPI.h" 
+#include "hpd_error.h"
+
+serviceXmlFile *service_xml_file = NULL;
+
+
+void create_service_xml_file()
+{
+    service_xml_file = (serviceXmlFile*)malloc(sizeof(serviceXmlFile));
+    service_xml_file->mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+    pthread_mutex_init(service_xml_file->mutex, NULL);
+}
+
+void destroy_service_xml_file()
+{
+    if(service_xml_file)
+    {
+        mxmlDelete(service_xml_file->xml_tree);
+        if(service_xml_file->mutex)
+        {
+	   pthread_mutex_destroy(service_xml_file->mutex);
+	   free(service_xml_file->mutex);
+        }
+        free(service_xml_file);
+    }
+}
+
+void save_xml_tree()
+{
+    pthread_mutex_lock(service_xml_file->mutex);
+    service_xml_file->fp = fopen(XML_FILE_NAME, "w");
+    if(service_xml_file->fp == NULL)
+    {
+        pthread_mutex_unlock(service_xml_file->mutex);
+        printf("Impossible to open the XML file\n");
+        return HPD_E_FAILED_TO_OPEN_FILE;
+    }
+    mxmlSaveFile(service_xml_file->xml_tree, service_xml_file->fp, MXML_NO_CALLBACK);
+    fclose(service_xml_file->fp);
+    pthread_mutex_unlock(service_xml_file->mutex);
+}
 
 /**
  * Initialization of the services.xml file that will be used
@@ -37,77 +77,20 @@ authors and should not be interpreted as representing official policies, either 
 int init_xml_file(char *name, char *id)
 {
 
-	int rc;
-	xmlTextWriterPtr writer;
-	xmlDocPtr doc;
+    create_service_xml_file();
+  
+    mxml_node_t *devicelist;   
 
-	/*Creation of the Writer*/
-	writer = xmlNewTextWriterDoc(&doc, 0);
-	if(writer == NULL){
-		printf("Error while creating XML writer.\n");
-		return -1;
-	}
+    service_xml_file->xml_tree = mxmlNewXML("1.0");
+    devicelist = mxmlNewElement(service_xml_file->xml_tree, "devicelist");
+    mxmlElementSetAttr(devicelist, "name", name);
+    mxmlElementSetAttr(devicelist, "id", id);
+    mxmlElementSetAttr(devicelist, "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+    mxmlElementSetAttr(devicelist, "xsi:noNamespaceSchemaLocation", "http://cs.au.dk/dithus/xml/devicedescription.xsd");
 
-	/*Creation of the document*/
-	rc = xmlTextWriterStartDocument(writer, NULL, ENCODING, NULL);
-	if(rc < 0){
-		printf("Error while creating the document.\n");
-		return -1;
-	}
-
-	/*Creation of the first(root) element => devicelist*/
-	rc = xmlTextWriterStartElement(writer, BAD_CAST "devicelist");
-	if(rc < 0){
-		printf("Error while creating the root element.\n");
-		return -1;
-	}
-
-	/*Add attribute to devicelist*/
-	rc = xmlTextWriterWriteAttribute(writer, BAD_CAST "xmlns:xsi",
-	                                 BAD_CAST "http://www.w3.org/2001/XMLSchema-instance");
-	                                 if(rc < 0){
-										 printf("Error while adding attribute to root element.\n");
-										 return -1;
-									 }
-
-	                                 /*Add attribute to devicelist*/
-	                                 rc = xmlTextWriterWriteAttribute(writer, BAD_CAST "xsi:noNamespaceSchemaLocation",
-	                                                                  BAD_CAST "http://cs.au.dk/dithus/xml/devicedescription.xsd");
-	                                                                  if(rc < 0){
-																		  printf("Error while adding attribute to root element.\n");
-																		  return -1;
-																	  }
-
-	                                                                  /*Add attribute to devicelist*/
-	                                                                  rc = xmlTextWriterWriteAttribute(writer, BAD_CAST "name",
-	                                                                                                   BAD_CAST name);
-	                                                                  if(rc < 0){
-																		  printf("Error while adding attribute to root element.\n");
-																		  return -1;
-																	  }
-
-	                                                                  /*Add attribute to devicelist*/
-	                                                                  rc = xmlTextWriterWriteAttribute(writer, BAD_CAST "id",
-	                                                                                                   BAD_CAST id);
-	                                                                  if(rc < 0){
-																		  printf("Error while adding attribute to root element.\n");
-																		  return -1;
-																	  }
-
-	                                                                  /*Finish the writing*/
-	                                                                  rc = xmlTextWriterEndDocument(writer);
-	                                                                  if (rc < 0){
-																		  printf("Error at xmlTextWriterEndDocument.\n");
-																		  return -1;
-																	  }
-
-	                                                                  /*Saving the document and freeing resources*/
-	                                                                  xmlFreeTextWriter(writer);
-	                                                                  xmlSaveFormatFileEnc(XML_FILE_NAME, doc, ENCODING,1);
-	                                                                  xmlFreeDoc(doc);
-
-	                                                                  return 0;
-                                                                  }
+    save_xml_tree();
+    return 0;
+}
 
 /**
  * Checks if the Device is already in the XML file
@@ -116,44 +99,22 @@ int init_xml_file(char *name, char *id)
  *
  * @return returns 0 if the device is not in the XML file and 1 if it is
  */
-int device_is_in_xml_file(Device *device)
+int device_is_in_xml_file(Device *_device)
 {
+    mxml_node_t *device;
 
-	xmlDocPtr doc;
-	xmlChar *xpath = (xmlChar*) "//device";
-		xmlNodeSetPtr nodeset;
-	xmlNodePtr cur;
-	xmlXPathObjectPtr result;
-	xmlChar *id, *type;
-	int i;
-
-	doc = xmlParseFile(XML_FILE_NAME);
-	if(doc == NULL){
-		printf("Document not parsed successfully. \n");
-		return -1;
-	}
-
-	result = get_node_set (doc,xpath);
-	if(result){
-		nodeset = result->nodesetval;
-		for(i = 0 ; i < nodeset->nodeNr ; i++){
-			cur = nodeset->nodeTab[i];
-			type = xmlGetProp (cur,(const xmlChar *) "type");
-			id = xmlGetProp (cur,(const xmlChar *) "id");
-			if(strcmp((char*)type,device->type) == 0 && strcmp((char*)id,device->ID) == 0) {
-				xmlFree(id);
-				xmlFree(type);
-				xmlXPathFreeObject (result);
-				xmlFreeDoc(doc);
-				return 1; 
-			}
-			xmlFree(type);
-			xmlFree(id);
-		}
-		xmlXPathFreeObject (result);
-	}
-	xmlFreeDoc(doc);
-	return 0;
+    for (device = mxmlFindElement(service_xml_file->xml_tree, service_xml_file->xml_tree,"device", NULL, NULL, MXML_DESCEND);
+         device != NULL;
+         device = mxmlFindElement(device, service_xml_file->xml_tree, "device", NULL, NULL, MXML_DESCEND))
+    {
+        if(strcmp(mxmlElementGetAttr(device,"type") , _device->type) == 0
+           && strcmp(mxmlElementGetAttr(device,"id") , _device->ID) == 0)
+        {
+	   return HPD_YES;
+        }
+    }
+    
+    return HPD_NO;
 }
 
 /**
@@ -163,80 +124,41 @@ int device_is_in_xml_file(Device *device)
  *
  * @return returns 0 if the device is not in the XML file and 1 if it is
  */
-int service_is_in_xml_file(Service *service)
+int service_is_in_xml_file(Service *_service)
 {
+    if( device_is_in_xml_file(_service->device) == HPD_NO )
+        return HPD_NO;
 
-	xmlDocPtr doc;
-	xmlChar *xpath = (xmlChar*) "//service";
-		xmlNodeSetPtr nodeset;
-	xmlNodePtr cur;
-	xmlXPathObjectPtr result;
-	xmlChar *id, *type;
+    mxml_node_t *device = get_xml_node_of_device(_service->device);
+    if(device == NULL)
+    {
+        printf("Error while retrieving device node\n");
+        return HPD_E_IMPOSSIBLE_TO_RETRIEVE_DEVICE_XML_NODE;
+    }
+    
+    mxml_node_t *service;
 
-	int i;
+    for (device = mxmlFindElement(service_xml_file->xml_tree, service_xml_file->xml_tree,"device", NULL, NULL, MXML_DESCEND);
+         device != NULL;
+         device = mxmlFindElement(device, service_xml_file->xml_tree, "device", NULL, NULL, MXML_DESCEND))
+    {
+        if(strcmp(mxmlElementGetAttr(device,"type") , _service->device->type) == 0
+           && strcmp(mxmlElementGetAttr(device,"id") , _service->device->ID) == 0)
+        {
+	   for (service = mxmlFindElement(device, device,"service", NULL, NULL, MXML_DESCEND);
+	        service != NULL;
+	        service = mxmlFindElement(service, device, "service", NULL, NULL, MXML_DESCEND))
+	   {
+	       if(strcmp(mxmlElementGetAttr(service,"type") , _service->type) == 0
+	          && strcmp(mxmlElementGetAttr(service,"id") , _service->ID) == 0)
+	       {
+		  return HPD_YES;
+	       }
+	   }
+        }
+    }
 
-	doc = xmlParseFile(XML_FILE_NAME);
-	if(doc == NULL){
-		printf("Document not parsed successfully. \n");
-		return -1;
-	}
-
-	result = get_node_set (doc,xpath);
-	if(result){
-		nodeset = result->nodesetval;
-		for(i = 0 ; i < nodeset->nodeNr ; i++){
-			cur = nodeset->nodeTab[i];
-			id = xmlGetProp (cur, (const xmlChar *)"id");
-			type = xmlGetProp (cur,(const xmlChar *)"type");
-			if(strcmp((char*)id,service->ID) == 0 && strcmp((char*)type,service->type)==0 && device_is_in_xml_file (service->device) == 1){
-				xmlFree(id);
-				xmlFree(type);
-				xmlXPathFreeObject (result);
-				xmlFreeDoc(doc);
-				return 1;
-			}
-			xmlFree(type);
-			xmlFree(id);
-		}
-		xmlXPathFreeObject (result);
-	}
-	xmlFreeDoc(doc);
-	return 0; 
-}
-
-/**
- * Returns the node set of a specified type (ie : Service, Device etc...)
- *
- * @param doc the XML Document
- * @param xpath the desired type
- *
- * @return returns the node set
- */
-xmlXPathObjectPtr get_node_set(xmlDocPtr doc, xmlChar *xpath)
-{
-
-	xmlXPathContextPtr context;
-	xmlXPathObjectPtr result;
-
-	context = xmlXPathNewContext(doc);
-	if(context == NULL){
-		printf("Error in xmlPathNewContext. \n");
-		return NULL;
-	}
-
-	result = xmlXPathEvalExpression (xpath, context);
-	xmlXPathFreeContext (context);
-	if(result == NULL){
-		printf("Error in xmlXPathEvalExpression. \n");
-		return NULL;
-	}
-
-	if(xmlXPathNodeSetIsEmpty(result->nodesetval)){
-		xmlXPathFreeObject (result);
-		return NULL;
-	}
-
-	return result;
+    return HPD_NO;
 }
 
 /**
@@ -249,50 +171,87 @@ xmlXPathObjectPtr get_node_set(xmlDocPtr doc, xmlChar *xpath)
 int add_device_to_xml(Device *device_to_add)
 {
 
+    if(device_is_in_xml_file (device_to_add) == HPD_YES)
+        return HPD_E_DEVICE_ALREADY_IN_XML;
+    
+    mxml_node_t *devicelist;
+    mxml_node_t *new_device;
 
-	xmlDocPtr doc;
-	xmlNodePtr cur;
-	xmlNodePtr newNode;
-	xmlAttrPtr newAttr;
+    devicelist = mxmlFindElement(service_xml_file->xml_tree, service_xml_file->xml_tree, "devicelist", NULL, NULL, MXML_DESCEND);
+    if(devicelist == NULL)
+    {
+	printf("No \"devicelist\" in the XML file\n");
+	return HPD_E_XML_ERROR;
+    }
 
-	if( device_is_in_xml_file (device_to_add) == 1 ) return -2;
+    new_device = mxmlNewElement(devicelist, "device");
+    if(device_to_add->description != NULL) mxmlElementSetAttr(new_device, "desc", device_to_add->description);
+    if(device_to_add->ID != NULL) mxmlElementSetAttr(new_device, "id", device_to_add->ID);
+    if(device_to_add->vendorID != NULL) mxmlElementSetAttr(new_device, "vendorID", device_to_add->vendorID);
+    if(device_to_add->productID != NULL) mxmlElementSetAttr(new_device, "productID", device_to_add->productID);
+    if(device_to_add->version != NULL) mxmlElementSetAttr(new_device, "version", device_to_add->version);
+    if(device_to_add->IP != NULL) mxmlElementSetAttr(new_device, "ip", device_to_add->IP);
+    if(device_to_add->port != NULL) mxmlElementSetAttr(new_device, "port", device_to_add->port);
+    if(device_to_add->location != NULL) mxmlElementSetAttr(new_device, "location", device_to_add->location);
+    if(device_to_add->type != NULL) mxmlElementSetAttr(new_device, "type", device_to_add->type);
 
-	doc = xmlParseFile(XML_FILE_NAME);
-	if(doc == NULL){
-		printf("Error while parsing the file. \n");
-		return -1;
-	}
+    save_xml_tree (); 
 
-	cur = xmlDocGetRootElement (doc);
-	if(cur == NULL){
-		printf("The Document is empty. \n");
-		xmlFreeDoc(doc);
-		return -1;
-	}
+    return HPD_E_SUCCESS;
+}
 
-	if(xmlStrcmp(cur->name, (const xmlChar *) "devicelist")){
-		printf("Document of the wrong type. \n");
-		xmlFreeDoc(doc);
-		//xmlFreeNode(cur);
-		return -1;
-	}
-	/*Adds the new device with all its attributes*/
-	newNode = xmlNewTextChild (cur, NULL,(const xmlChar *) "device", NULL);	
-	if(device_to_add->description != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"desc", (const xmlChar *)device_to_add->description);
-	if(device_to_add->ID != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"id", (const xmlChar *)device_to_add->ID);
-	if(device_to_add->vendorID != NULL) newAttr = xmlNewProp (newNode,(const xmlChar *) "vendorid", (const xmlChar *)device_to_add->vendorID);
-	if(device_to_add->productID != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"productid", (const xmlChar *)device_to_add->productID);
-	if(device_to_add->version != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"version", (const xmlChar *)device_to_add->version);
-	if(device_to_add->IP != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"ip", (const xmlChar *)device_to_add->IP);
-	if(device_to_add->port != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"port", (const xmlChar *)device_to_add->port);
-	if(device_to_add->location != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"location", (const xmlChar *)device_to_add->location);
-	if(device_to_add->type != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"type", (const xmlChar *)device_to_add->type);
+mxml_node_t *get_xml_node_of_device(Device *_device)
+{
+    mxml_node_t *device;
 
-	/*Save the file*/
-	xmlSaveFormatFileEnc(XML_FILE_NAME, doc, ENCODING,1);
-	xmlFreeDoc(doc);
+    for (device = mxmlFindElement(service_xml_file->xml_tree, service_xml_file->xml_tree,"device", NULL, NULL, MXML_DESCEND);
+         device != NULL;
+         device = mxmlFindElement(device, service_xml_file->xml_tree, "device", NULL, NULL, MXML_DESCEND))
+    {
+        if(strcmp(mxmlElementGetAttr(device,"type") , _device->type) == 0
+           && strcmp(mxmlElementGetAttr(device,"id") , _device->ID) == 0)
+        {
+	   return device;
+        }
+    }
+    return NULL;
+}
 
-	return 0;
+mxml_node_t *get_xml_node_of_service(Service *_service)
+{
+    if( device_is_in_xml_file(_service->device) == HPD_NO )
+        return HPD_NO;
+
+    mxml_node_t *device = get_xml_node_of_device(_service->device);
+    if(device == NULL)
+    {
+        printf("Error while retrieving device node\n");
+        return HPD_E_IMPOSSIBLE_TO_RETRIEVE_DEVICE_XML_NODE;
+    }
+    
+    mxml_node_t *service;
+
+    for (device = mxmlFindElement(service_xml_file->xml_tree, service_xml_file->xml_tree,"device", NULL, NULL, MXML_DESCEND);
+         device != NULL;
+         device = mxmlFindElement(device, service_xml_file->xml_tree, "device", NULL, NULL, MXML_DESCEND))
+    {
+        if(strcmp(mxmlElementGetAttr(device,"type") , _service->device->type) == 0
+           && strcmp(mxmlElementGetAttr(device,"id") , _service->device->ID) == 0)
+        {
+	   for (service = mxmlFindElement(device, device,"service", NULL, NULL, MXML_DESCEND);
+	        service != NULL;
+	        service = mxmlFindElement(service, device, "service", NULL, NULL, MXML_DESCEND))
+	   {
+	       if(strcmp(mxmlElementGetAttr(service,"type") , _service->type) == 0
+	          && strcmp(mxmlElementGetAttr(service,"id") , _service->ID) == 0)
+	       {
+		  return service;
+	       }
+	   }
+        }
+    }
+
+    return NULL;
 }
 
 /**
@@ -304,109 +263,61 @@ int add_device_to_xml(Device *device_to_add)
  */
 int add_service_to_xml(Service *service_to_add)
 {
+    if(service_is_in_xml_file (service_to_add) == HPD_YES)
+        return HPD_E_SERVICE_ALREADY_IN_XML;
+    else if(device_is_in_xml_file (service_to_add->device) == HPD_NO)
+    {
+        add_device_to_xml (service_to_add->device);
+    }
+    
+    mxml_node_t *device = get_xml_node_of_device(service_to_add->device);
+    if(device == NULL)
+    {
+        printf("Error while retrieving device node\n");
+        return HPD_E_IMPOSSIBLE_TO_RETRIEVE_DEVICE_XML_NODE;
+    }
+    
+    mxml_node_t *new_service;
+    mxml_node_t *new_parameter;
 
-	xmlDocPtr doc;
-	xmlNodePtr cur;
-	xmlNodePtr newNode;
-	xmlNodePtr paramNode;
-	xmlAttrPtr newAttr;
-	xmlAttrPtr newParamAttr;
-	xmlChar *xpath = (xmlChar*) "//device";
-		xmlXPathObjectPtr result;
-	xmlChar *id, *type;
-	xmlNodeSetPtr nodeset;
-	int i;
+    new_service = mxmlNewElement(device, "service");
+    if(service_to_add->description != NULL) mxmlElementSetAttr(new_service, "desc", service_to_add->description);
+    if(service_to_add->ID != NULL) mxmlElementSetAttr(new_service, "id", service_to_add->ID);
+    if(service_to_add->value_url != NULL) mxmlElementSetAttr(new_service, "value_url", service_to_add->value_url);
+    if(service_to_add->type != NULL) mxmlElementSetAttr(new_service, "type", service_to_add->type);
+    if(service_to_add->unit != NULL) mxmlElementSetAttr(new_service, "unit", service_to_add->unit);
 
-	/*Check if the device is already in the xml*/
-	if( device_is_in_xml_file (service_to_add->device) == 0 ) add_device_to_xml(service_to_add->device);
+    ParameterElement *iterator = service_to_add->parameter_head;
+    if(iterator != NULL)
+    {
+        new_parameter = mxmlNewElement(new_service, "parameter");
+        if(iterator->parameter->ID != NULL) mxmlElementSetAttr(new_parameter, "id", iterator->parameter->ID);
+        if(iterator->parameter->max != NULL) mxmlElementSetAttr(new_parameter, "max", iterator->parameter->max);
+        if(iterator->parameter->min != NULL) mxmlElementSetAttr(new_parameter, "min", iterator->parameter->min);
+        if(iterator->parameter->scale != NULL) mxmlElementSetAttr(new_parameter, "scale", iterator->parameter->scale);
+        if(iterator->parameter->step != NULL) mxmlElementSetAttr(new_parameter, "step", iterator->parameter->step);
+        if(iterator->parameter->type != NULL) mxmlElementSetAttr(new_parameter, "type", iterator->parameter->type);
+        if(iterator->parameter->unit != NULL) mxmlElementSetAttr(new_parameter, "unit", iterator->parameter->unit);
+        if(iterator->parameter->values != NULL) mxmlElementSetAttr(new_parameter, "values", iterator->parameter->values);
 
-	/*Check if the service is already in the xml*/
-	if( service_is_in_xml_file (service_to_add) == 1 ) return -2;
+        while(iterator->next != NULL)
+        {
+	   iterator = iterator->next;
+	   new_parameter = mxmlNewElement(new_service, "parameter");
+	   if(iterator->parameter->ID != NULL) mxmlElementSetAttr(new_parameter, "id", iterator->parameter->ID);
+	   if(iterator->parameter->max != NULL) mxmlElementSetAttr(new_parameter, "max", iterator->parameter->max);
+	   if(iterator->parameter->min != NULL) mxmlElementSetAttr(new_parameter, "min", iterator->parameter->min);
+	   if(iterator->parameter->scale != NULL) mxmlElementSetAttr(new_parameter, "scale", iterator->parameter->scale);
+	   if(iterator->parameter->step != NULL) mxmlElementSetAttr(new_parameter, "step", iterator->parameter->step);
+	   if(iterator->parameter->type != NULL) mxmlElementSetAttr(new_parameter, "type", iterator->parameter->type);
+	   if(iterator->parameter->unit != NULL) mxmlElementSetAttr(new_parameter, "unit", iterator->parameter->unit);
+	   if(iterator->parameter->values != NULL) mxmlElementSetAttr(new_parameter, "values", iterator->parameter->values);
+        }
+    }
 
-	doc = xmlParseFile(XML_FILE_NAME);
-	if(doc == NULL){
-		printf("Error while parsing the file. \n");
-		return -1;
-	}
+    save_xml_tree ();
 
-	cur = xmlDocGetRootElement (doc);
-	if(cur == NULL){
-		printf("The Document is empty. \n");
-		xmlFreeDoc(doc);
-		return -1;
-	}
-
-	if(xmlStrcmp(cur->name, (const xmlChar *) "devicelist")){
-		printf("Document of the wrong type. \n");
-		xmlFreeDoc(doc);
-		return -1;
-	}
-
-	result = get_node_set (doc,xpath);
-	if(result){
-		nodeset = result->nodesetval;
-		for(i = 0 ; i < nodeset->nodeNr ; i++){
-			cur = nodeset->nodeTab[i];
-			id = xmlGetProp (cur, (const xmlChar *)"id");
-			type = xmlGetProp (cur,(const xmlChar *)"type");
-			if(strcmp((char*)id,service_to_add->device->ID) == 0 && strcmp((char*)type,service_to_add->device->type) == 0){
-
-				/*Adds the new device with all its attributes*/
-				newNode = xmlNewTextChild (cur, NULL, (const xmlChar *)"service", NULL);
-				if(service_to_add->description != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"desc", (const xmlChar *)service_to_add->description);
-				if(service_to_add->ID != NULL) newAttr = xmlNewProp (newNode,(const xmlChar *) "id",(const xmlChar *) service_to_add->ID);
-				if(service_to_add->value_url != NULL) newAttr = xmlNewProp (newNode,(const xmlChar *) "value_url", (const xmlChar *)service_to_add->value_url);
-				if(service_to_add->type != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"type", (const xmlChar *)service_to_add->type);
-				if(service_to_add->unit != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"unit", (const xmlChar *)service_to_add->unit);
-
-				ParameterElement *iterator = service_to_add->parameter_head;
-
-				if(iterator != NULL)
-				{    
-					paramNode = xmlNewTextChild (newNode, NULL, (const xmlChar *)"parameter", NULL);
-					if(iterator->parameter->ID != NULL) newParamAttr = xmlNewProp (paramNode, (const xmlChar *)"id", (const xmlChar *)iterator->parameter->ID);
-					if(iterator->parameter->max != NULL) newParamAttr = xmlNewProp (paramNode, (const xmlChar *)"max",(const xmlChar *) iterator->parameter->max);
-					if(iterator->parameter->min != NULL) newParamAttr = xmlNewProp (paramNode, (const xmlChar *)"min",(const xmlChar *) iterator->parameter->min);
-					if(iterator->parameter->scale != NULL) newParamAttr = xmlNewProp (paramNode, (const xmlChar *)"scale", (const xmlChar *)iterator->parameter->scale);
-					if(iterator->parameter->step != NULL) newParamAttr = xmlNewProp (paramNode,(const xmlChar *) "step",(const xmlChar *) iterator->parameter->step);
-					if(iterator->parameter->type != NULL) newParamAttr = xmlNewProp (paramNode, (const xmlChar *)"type",(const xmlChar *) iterator->parameter->type);
-					if(iterator->parameter->unit != NULL) newParamAttr = xmlNewProp (paramNode, (const xmlChar *)"unit", (const xmlChar *)iterator->parameter->unit);
-					if(iterator->parameter->values != NULL) newParamAttr = xmlNewProp (paramNode,(const xmlChar *) "values",(const xmlChar *) iterator->parameter->values);
-
-					while(iterator->next != NULL)
-					{
-						iterator = iterator->next;
-						paramNode = xmlNewTextChild (newNode, NULL, (const xmlChar *)"parameter", NULL);
-						if(iterator->parameter->ID != NULL) newParamAttr = xmlNewProp (paramNode, (const xmlChar *)"id",(const xmlChar *) iterator->parameter->ID);
-						if(iterator->parameter->max != NULL) newParamAttr = xmlNewProp (paramNode,(const xmlChar *) "max",(const xmlChar *) iterator->parameter->max);
-						if(iterator->parameter->min != NULL) newParamAttr = xmlNewProp (paramNode, (const xmlChar *)"min",(const xmlChar *) iterator->parameter->min);
-						if(iterator->parameter->scale != NULL) newParamAttr = xmlNewProp (paramNode,(const xmlChar *) "scale",(const xmlChar *) iterator->parameter->scale);
-						if(iterator->parameter->step != NULL) newParamAttr = xmlNewProp (paramNode, (const xmlChar *)"step",(const xmlChar *) iterator->parameter->step);
-						if(iterator->parameter->type != NULL) newParamAttr = xmlNewProp (paramNode, (const xmlChar *)"type", (const xmlChar *)iterator->parameter->type);
-						if(iterator->parameter->unit != NULL) newParamAttr = xmlNewProp (paramNode, (const xmlChar *)"unit",(const xmlChar *) iterator->parameter->unit);
-						if(iterator->parameter->values != NULL) newParamAttr = xmlNewProp (paramNode,(const xmlChar *) "values",(const xmlChar *) iterator->parameter->values);
-
-					}
-				}
-
-
-				/*Save the file*/
-				xmlSaveFormatFileEnc(XML_FILE_NAME, doc, ENCODING,1);
-				xmlFreeDoc(doc);
-				xmlXPathFreeObject (result);
-				xmlFree(id);
-				xmlFree(type);
-
-				return 0;
-
-			}
-			xmlFree(id);
-			xmlFree(type);
-		}
-		xmlXPathFreeObject (result);
-	}
-	xmlFreeDoc(doc);
-	return -1;	
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -420,56 +331,50 @@ int add_service_to_xml(Service *service_to_add)
  *
  * @return Returns the xmlChar* corresponding
  */
-xmlChar * get_xml_value(char* value)
+char * get_xml_value(char* value)
 {
+    mxml_node_t *xml;
+    mxml_node_t *xml_value;
 
-	xmlDocPtr doc;
-	xmlChar* xmlbuff;
-	int buffersize;
+    xml = mxmlNewXML("1.0");
+    xml_value = mxmlNewElement(xml, "value");
+    mxmlElementSetAttr(xml_value, "timestamp", timestamp());
+    mxmlNewText(xml_value, 0, value);
 
-	int rc;
-	xmlTextWriterPtr writer;
+    char* return_value = mxmlSaveAllocString(xml, MXML_NO_CALLBACK);
 
-	writer = xmlNewTextWriterDoc(&doc, 0);
-	if(writer == NULL){
-		printf("Error while creating XML writer.\n");
-		return NULL;
-	}
+    mxmlDelete(xml);
 
-	rc = xmlTextWriterStartDocument(writer, NULL, ENCODING, NULL);
-	if(rc < 0){
-		printf("Error while creating the document.\n");
-		return NULL;
-	}
+    return return_value;
+}
 
-	rc = xmlTextWriterStartElement (writer, BAD_CAST "value");
-	if(rc < 0){
-		printf("Error while creating the root element.\n");
-		return NULL;
-	}
+/**
+ * Returns an internal xmlChar of a value under the form of :
+ * <?xml version="1.0" encoding="UTF-8"?>
+ * <subscription timestamp = xxxxxx url = yyyyy>
+ *       yes/no
+ * </subscription>
+ *
+ * @param value The string of the value desired
+ *
+ * @return Returns the xmlChar* corresponding
+ */
+char * get_xml_subscription(char* value, char *url)
+{
+    mxml_node_t *xml;
+    mxml_node_t *xml_value;
 
-	rc = xmlTextWriterWriteAttribute(writer, BAD_CAST "timestamp",
-	                                 BAD_CAST timestamp ());
-	if(rc < 0){
-		printf("Error while adding attribute to root element.\n");
-		return NULL;
-	}
+    xml = mxmlNewXML("1.0");
+    xml_value = mxmlNewElement(xml, "subscription");
+    mxmlElementSetAttr(xml_value, "timestamp", timestamp());
+    mxmlElementSetAttr(xml_value, "url", url);
+    mxmlNewText(xml_value, 0, value);
 
-	rc = xmlTextWriterWriteString (writer,BAD_CAST value);
+    char* return_value = mxmlSaveAllocString(xml, MXML_NO_CALLBACK);
 
-	rc = xmlTextWriterEndDocument(writer);
-	if (rc < 0){
-		printf("Error at xmlTextWriterEndDocument.\n");
-		return NULL;
-	}
+    mxmlDelete(xml);
 
-	xmlFreeTextWriter(writer);
-
-	xmlDocDumpFormatMemory (doc, &xmlbuff, &buffersize, 1);
-
-	xmlFreeDoc (doc);
-
-	return xmlbuff;
+    return return_value;
 }
 
 /**
@@ -477,11 +382,28 @@ xmlChar * get_xml_value(char* value)
  *
  * @return Returns the timestamp
  */
-char * timestamp()
+char *timestamp ( void )
 {
-	time_t ltime;
-	ltime = time(NULL);
-	return asctime(localtime(&ltime));
+    time_t ltime;
+    ltime = time(NULL);
+    const struct tm *timeptr = localtime(&ltime);
+
+    static char wday_name[7][3] = {
+        "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+    };
+    static char mon_name[12][3] = {
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    };
+    static char result[25];
+
+    sprintf(result, "%.3s %.3s%3d %.2d:%.2d:%.2d %d",
+            wday_name[timeptr->tm_wday],
+            mon_name[timeptr->tm_mon],
+            timeptr->tm_mday, timeptr->tm_hour,
+            timeptr->tm_min, timeptr->tm_sec,
+            1900 + timeptr->tm_year);
+    return result;
 }
 
 /**
@@ -493,59 +415,19 @@ char * timestamp()
  */
 int remove_service_from_XML(Service *_service)
 {
+    if(service_is_in_xml_file (_service) == HPD_NO)
+        return HPD_E_SERVICE_NOT_IN_LIST;
 
-	xmlDocPtr doc;
-	xmlChar *xpath = (xmlChar*) "//device";
-		xmlNodeSetPtr nodeset;
-	xmlNodePtr cur;
-	xmlXPathObjectPtr result;
-	xmlChar *id, *type;
-	int i;
-
-	if(service_is_in_xml_file (_service) == 0) return -1;
-
-	doc = xmlParseFile(XML_FILE_NAME);
-	if(doc == NULL){
-		printf("Document not parsed successfully. \n");
-		return -1;
-	}
-
-	result = get_node_set (doc,xpath);
-	if(result){
-		nodeset = result->nodesetval;
-		for(i = 0 ; i < nodeset->nodeNr ; i++){
-			cur = nodeset->nodeTab[i];
-			id = xmlGetProp (cur, (const xmlChar *)"id");
-			type = xmlGetProp (cur,(const xmlChar *) "type");
-			if(strcmp((char*)id,_service->device->ID)== 0 && strcmp((char*)type, _service->device->type) == 0){
-				cur = cur->xmlChildrenNode;
-				while (cur != NULL) {
-					id = xmlGetProp (cur,(const xmlChar *) "id");
-					type = xmlGetProp (cur, (const xmlChar *)"type");
-					if (strcmp((char*)id,_service->ID) == 0 && strcmp((char*)type,_service->type) == 0){
-						/*Removing the Node*/
-						xmlUnlinkNode(cur);
-						xmlFreeNode(cur);
-						xmlFree(type);
-						xmlFree(id);
-						xmlXPathFreeObject (result);
-
-						/*Save the file*/
-						xmlSaveFormatFileEnc(XML_FILE_NAME, doc, ENCODING,1);
-						xmlFreeDoc(doc);
-						return 0;
-					}
-					cur = cur->next;
-				}
-			}
-			xmlFree(type);
-			xmlFree(id);
-		}
-		xmlXPathFreeObject (result);
-	}
-	xmlFreeDoc(doc);
-
-	return -1;
+    mxml_node_t *service = get_xml_node_of_service (_service);
+    if(service == NULL)
+    {
+        printf("Impossible to retrieve Service XML node\n");
+        return HPD_E_IMPOSSIBLE_TO_RETRIEVE_SERVICE_XML_NODE;
+    }
+    mxmlRemove(service);
+    mxmlDelete(service);
+    save_xml_tree ();
+    return HPD_YES;
 }
 
 /**
@@ -557,54 +439,21 @@ int remove_service_from_XML(Service *_service)
  */
 int remove_device_from_XML(Device *_device)
 {
+    if(device_is_in_xml_file (_device) == HPD_NO)
+        return HPD_E_SERVICE_NOT_IN_LIST;
 
-	xmlDocPtr doc;
-	xmlChar *xpath = (xmlChar*) "//device";
-		xmlNodeSetPtr nodeset;
-	xmlNodePtr cur;
-	xmlXPathObjectPtr result;
-	xmlChar *id, *type;
-	int i;
-
-	if(device_is_in_xml_file (_device) == 0) return -1;
-
-	doc = xmlParseFile(XML_FILE_NAME);
-	if(doc == NULL){
-		printf("Document not parsed successfully. \n");
-		return -1;
-	}
-
-	result = get_node_set (doc,xpath);
-	if(result){
-		nodeset = result->nodesetval;
-		for(i = 0 ; i < nodeset->nodeNr ; i++){
-			cur = nodeset->nodeTab[i];
-			id = xmlGetProp (cur,(const xmlChar *) "id");
-			type = xmlGetProp (cur,(const xmlChar *) "type");
-			if(strcmp((char*)id,_device->ID)== 0 && strcmp((char*)type, _device->type) == 0){
-
-				/*Removing the Node*/
-				xmlUnlinkNode(cur);
-				xmlFreeNode(cur);
-				xmlFree(type);
-				xmlFree(id);
-				xmlXPathFreeObject (result);
-
-				/*Save the file*/
-				xmlSaveFormatFileEnc(XML_FILE_NAME, doc, ENCODING,1);
-				xmlFreeDoc(doc);
-				return 0;
-
-			}
-			xmlFree(type);
-			xmlFree(id);
-		}
-		xmlXPathFreeObject (result);
-	}
-	xmlFreeDoc(doc);
-
-	return -1;
+    mxml_node_t *device = get_xml_node_of_device(_device);
+    if(device == NULL)
+    {
+        printf("Error while retrieving device node\n");
+        return HPD_E_IMPOSSIBLE_TO_RETRIEVE_DEVICE_XML_NODE;
+    }
+    mxmlRemove(device);
+    mxmlDelete(device);
+    save_xml_tree ();
+    return HPD_YES;
 }
+
 /**
  * Deletes the XML file
  *
@@ -614,8 +463,9 @@ int remove_device_from_XML(Device *_device)
  */
 int delete_xml(char* xml_file_path)
 {
-	remove(xml_file_path);
-	return 0;
+    destroy_service_xml_file();
+    remove(xml_file_path);
+    return 0;
 }
 
 /**
@@ -627,44 +477,30 @@ int delete_xml(char* xml_file_path)
  */
 char* get_value_from_xml_value(char* _xml_value)
 {
+    mxml_node_t *xml;
+    mxml_node_t *node;
 
-	FILE* temporary_xml_file;
-	temporary_xml_file = fopen("temp.xml","w+t");
-	fputs(_xml_value,temporary_xml_file);
-	fclose(temporary_xml_file);
-
-	xmlTextReaderPtr reader;
-	int ret;
-	char* return_value;
-
-	reader = xmlReaderForFile("temp.xml", NULL, 0);
-	if (reader != NULL) {
-		ret = xmlTextReaderRead(reader);                             
-		while(ret == 1)
-		{
-			if(strcmp((char*)xmlTextReaderName(reader),"value")==0)
-			{
-				ret = xmlTextReaderRead(reader);
-				if(strcmp((char*)xmlTextReaderName(reader),"#text")==0){
-					return_value = malloc(sizeof(char)*strlen((char*)xmlTextReaderValue (reader)));
-					strcpy(return_value,(char*)xmlTextReaderValue (reader));
-					xmlFreeTextReader(reader);
-					delete_xml("temp.xml");
-					return return_value;
-				}
-				else{
-					delete_xml("temp.xml");
-					xmlFreeTextReader(reader);
-					return NULL;
-				}
-			}
-			ret = xmlTextReaderRead(reader);
-		}
-	}
-	delete_xml("temp.xml");
-	xmlFreeTextReader(reader);
-
+    xml = mxmlLoadString(NULL, _xml_value, MXML_TEXT_CALLBACK);
+    if(xml == NULL)
+    {
+	printf("XML value format uncompatible with HomePort\n");
 	return NULL;
+    }
+
+    node = mxmlFindElement(xml, xml, "value", NULL, NULL, MXML_DESCEND);
+    if(node == NULL)
+    {
+	mxmlDelete(xml);
+	printf("No \"value\" in the XML file\n");
+	return NULL;
+    }
+
+    char *return_value = malloc(sizeof(char)*(strlen(node->child->value.text.string)+1));
+    strcpy(return_value, node->child->value.text.string);
+
+    mxmlDelete(xml);
+
+    return return_value;
 }
 
 /**
@@ -674,649 +510,82 @@ char* get_value_from_xml_value(char* _xml_value)
  *
  * @return The XML description of the service
  */ 
-xmlChar *extract_service_xml(Service *_service_to_extract)
+char *extract_service_xml(Service *_service_to_extract)
+{
+    if(service_is_in_xml_file (_service_to_extract) == HPD_NO)
+        return NULL;
+
+    mxml_node_t *xml;
+    xml = mxmlNewXML("1.0");
+    
+    mxml_node_t *new_service;
+    mxml_node_t *new_device;
+    mxml_node_t *new_parameter;
+
+    new_service = mxmlNewElement(xml, "service");
+    if(_service_to_extract->description != NULL) mxmlElementSetAttr(new_service, "desc", _service_to_extract->description);
+    if(_service_to_extract->ID != NULL) mxmlElementSetAttr(new_service, "id", _service_to_extract->ID);
+    if(_service_to_extract->value_url != NULL) mxmlElementSetAttr(new_service, "value_url", _service_to_extract->value_url);
+    if(_service_to_extract->type != NULL) mxmlElementSetAttr(new_service, "type", _service_to_extract->type);
+    if(_service_to_extract->unit != NULL) mxmlElementSetAttr(new_service, "unit", _service_to_extract->unit);
+
+    new_device = mxmlNewElement(new_service, "device");
+    if(_service_to_extract->device->description != NULL) mxmlElementSetAttr(new_device, "desc", _service_to_extract->device->description);
+    if(_service_to_extract->device->ID != NULL) mxmlElementSetAttr(new_device, "id", _service_to_extract->device->ID);
+    if(_service_to_extract->device->vendorID != NULL) mxmlElementSetAttr(new_device, "vendorID", _service_to_extract->device->vendorID);
+    if(_service_to_extract->device->productID != NULL) mxmlElementSetAttr(new_device, "productID", _service_to_extract->device->productID);
+    if(_service_to_extract->device->version != NULL) mxmlElementSetAttr(new_device, "version", _service_to_extract->device->version);
+    if(_service_to_extract->device->IP != NULL) mxmlElementSetAttr(new_device, "ip", _service_to_extract->device->IP);
+    if(_service_to_extract->device->port != NULL) mxmlElementSetAttr(new_device, "port", _service_to_extract->device->port);
+    if(_service_to_extract->device->location != NULL) mxmlElementSetAttr(new_device, "location", _service_to_extract->device->location);
+    if(_service_to_extract->device->type != NULL) mxmlElementSetAttr(new_device, "type", _service_to_extract->device->type);
+
+    ParameterElement *iterator = _service_to_extract->parameter_head;
+    if(iterator != NULL)
+    {
+        new_parameter = mxmlNewElement(new_service, "parameter");
+        if(iterator->parameter->ID != NULL) mxmlElementSetAttr(new_parameter, "id", iterator->parameter->ID);
+        if(iterator->parameter->max != NULL) mxmlElementSetAttr(new_parameter, "max", iterator->parameter->max);
+        if(iterator->parameter->min != NULL) mxmlElementSetAttr(new_parameter, "min", iterator->parameter->min);
+        if(iterator->parameter->scale != NULL) mxmlElementSetAttr(new_parameter, "scale", iterator->parameter->scale);
+        if(iterator->parameter->step != NULL) mxmlElementSetAttr(new_parameter, "step", iterator->parameter->step);
+        if(iterator->parameter->type != NULL) mxmlElementSetAttr(new_parameter, "type", iterator->parameter->type);
+        if(iterator->parameter->unit != NULL) mxmlElementSetAttr(new_parameter, "unit", iterator->parameter->unit);
+        if(iterator->parameter->values != NULL) mxmlElementSetAttr(new_parameter, "values", iterator->parameter->values);
+
+        while(iterator->next != NULL)
+        {
+	   iterator = iterator->next;
+	   new_parameter = mxmlNewElement(new_service, "parameter");
+	   if(iterator->parameter->ID != NULL) mxmlElementSetAttr(new_parameter, "id", iterator->parameter->ID);
+	   if(iterator->parameter->max != NULL) mxmlElementSetAttr(new_parameter, "max", iterator->parameter->max);
+	   if(iterator->parameter->min != NULL) mxmlElementSetAttr(new_parameter, "min", iterator->parameter->min);
+	   if(iterator->parameter->scale != NULL) mxmlElementSetAttr(new_parameter, "scale", iterator->parameter->scale);
+	   if(iterator->parameter->step != NULL) mxmlElementSetAttr(new_parameter, "step", iterator->parameter->step);
+	   if(iterator->parameter->type != NULL) mxmlElementSetAttr(new_parameter, "type", iterator->parameter->type);
+	   if(iterator->parameter->unit != NULL) mxmlElementSetAttr(new_parameter, "unit", iterator->parameter->unit);
+	   if(iterator->parameter->values != NULL) mxmlElementSetAttr(new_parameter, "values", iterator->parameter->values);
+        }
+    }
+
+    char* return_string = mxmlSaveAllocString(xml, MXML_NO_CALLBACK);
+    
+    mxmlDelete(xml);
+    
+    return return_string;
+}
+
+/**
+ * Returns the entire xml device list
+ *
+ * @return The XML device list
+ */ 
+char *get_xml_device_list()
 {
 
-	xmlDocPtr doc;
-	xmlChar *xpath = (xmlChar*) "//device";
-		xmlNodeSetPtr nodeset;
-	xmlNodePtr cur;
-	xmlNodePtr newNode;
-	xmlXPathObjectPtr result;
-	xmlAttrPtr newAttr;
-	xmlChar *id, *type, *return_string ,*xml_result;
-	xmlBufferPtr buffer = xmlBufferCreate();
+	char *return_value = mxmlSaveAllocString(service_xml_file->xml_tree, MXML_NO_CALLBACK);
 
-	int i;
-
-	doc = xmlParseFile(XML_FILE_NAME);
-	if(doc == NULL){
-		printf("Document not parsed successfully. \n");
-		return NULL;
-	}
-
-	result = get_node_set (doc,xpath);
-	if(result){
-		nodeset = result->nodesetval;
-		for(i = 0 ; i < nodeset->nodeNr ; i++){
-			cur = nodeset->nodeTab[i];
-			id = xmlGetProp (cur, (const xmlChar *)"id");
-			type = xmlGetProp (cur, (const xmlChar *)"type");
-			if(strcmp((char*)id,_service_to_extract->device->ID)== 0 && strcmp((char*)type, _service_to_extract->device->type) == 0){
-				cur = cur->xmlChildrenNode;
-				while (cur != NULL) {
-					id = xmlGetProp (cur, (const xmlChar *)"id");
-					type = xmlGetProp (cur, (const xmlChar *)"type");
-					if (strcmp((char*)id,_service_to_extract->ID) == 0 && strcmp((char*)type,_service_to_extract->type) == 0){
-						newNode = xmlNewTextChild (cur, NULL,(const xmlChar *) "device", NULL);
-						if(_service_to_extract->device->description != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"desc", (const xmlChar *)_service_to_extract->device->description);
-						if(_service_to_extract->device->type != NULL) newAttr = xmlNewProp (newNode,(const xmlChar *) "type",(const xmlChar *) _service_to_extract->device->type);
-						if(_service_to_extract->device->port != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"port", (const xmlChar *)_service_to_extract->device->port);
-						if(_service_to_extract->device->location != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"location", (const xmlChar *)_service_to_extract->device->location);
-						if(_service_to_extract->device->vendorID != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"vendorid", (const xmlChar *)_service_to_extract->device->vendorID);
-						if(_service_to_extract->device->productID != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"productid", (const xmlChar *)_service_to_extract->device->productID);
-						if(_service_to_extract->device->version != NULL) newAttr = xmlNewProp (newNode,(const xmlChar *) "version", (const xmlChar *)_service_to_extract->device->version);
-						if(_service_to_extract->device->IP != NULL) newAttr = xmlNewProp (newNode, (const xmlChar *)"ip", (const xmlChar *)_service_to_extract->device->IP);
-						if(_service_to_extract->device->ID != NULL) newAttr = xmlNewProp (newNode,(const xmlChar *) "id",(const xmlChar *) _service_to_extract->device->ID);
-
-						xmlNodeDump(buffer,doc,cur,0,1);
-
-						xml_result = (xmlChar*)xmlBufferContent(buffer);
-						return_string = (xmlChar *)malloc((strlen((char *)xml_result) + 1)*sizeof(xmlChar));
-						strcpy((char*)return_string,(char*)xml_result);
-						xmlBufferFree(buffer);
-						xmlFree(id);
-						xmlFree(type);
-						xmlXPathFreeObject (result);
-						xmlFreeDoc(doc);
-
-						return return_string;
-					}
-					cur = cur->next;
-				}
-			}
-			xmlFree(id);
-			xmlFree(type);
-		}
-		xmlXPathFreeObject (result);
-	}
-	xmlBufferFree(buffer);
-	xmlFreeDoc(doc);
-
-	return NULL;
+	return return_value;
+	
 }
-
-
-
-
-
-
-/*******************IN PROGRESS******************/
-
-void generate_get_and_put_functions_from_xml(char* _xml_file_name){
-
-	//Create or open C file
-	FILE* get_and_put_functions_c_source;
-	get_and_put_functions_c_source = fopen("get_and_put_functions.c","w+t");
-
-	//Create or open H file
-	FILE* get_and_put_functions_h_source;
-	get_and_put_functions_h_source = fopen("get_and_put_functions.h","w+t");
-
-
-	fputs("/*Auto Generated File from HomePortDaemon*\\n",get_and_put_functions_c_source);
-	fputs("/*Auto Generated File from HomePortDaemon*\\n",get_and_put_functions_h_source);
-
-	fputs("#include \"get_and_put_functions.h\"\n\n",get_and_put_functions_c_source);
-
-	fputs("#ifndef _GET_AND_PUT_FUNCTIONS_H\n",get_and_put_functions_h_source);
-	fputs("#define _GET_AND_PUT_FUNCTIONS_H\n\n",get_and_put_functions_h_source);
-
-	fputs("#include <stdio.h>\n",get_and_put_functions_h_source);
-	fputs("#include <stdlib.h>\n",get_and_put_functions_h_source);
-	fputs("#include <string.h>\n",get_and_put_functions_h_source);
-	fputs("#include \"service_list.h\"\n\n",get_and_put_functions_h_source);
-
-
-	//Scanning for Services
-
-	xmlDocPtr doc;
-	xmlChar *xpath = (xmlChar*) "//service";
-		xmlNodeSetPtr nodeset;
-	xmlXPathObjectPtr result;
-	int i;
-	xmlChar *id;
-	xmlNodePtr cur;
-	char* put_begin = "char * put_";
-	char* get_begin = "char * get_";
-	char* put_end_c = "(char * _put_value){\n\nreturn NULL;\n";
-	char* put_end_h = "(char * _put_value);\n";
-	char* get_end_c = "(){\n\nreturn NULL;\n";
-	char* get_end_h = "();\n";
-	char* return_service_list_name_h = "ServiceList return_service_list(ServiceList list);\n";
-	char* return_service_list_name_c = "ServiceList return_service_list(ServiceList list){\n";
-
-	doc = xmlParseFile(_xml_file_name);
-	if(doc == NULL){
-		printf("Document not parsed successfully. \n");
-		return;
-	}
-
-	result = get_node_set (doc,xpath);
-	if(result){
-		nodeset = result->nodesetval;
-		for(i = 0 ; i < nodeset->nodeNr ; i++){
-			cur = nodeset->nodeTab[i];
-			id = xmlGetProp (cur, (const xmlChar *)"id");
-			if(id){
-
-				/*****Create the PUT function*****/
-
-				//Add the PUT function to the C file
-				fputs(put_begin,get_and_put_functions_c_source);
-				fputs((char*)id,get_and_put_functions_c_source);
-				fputs(put_end_c,get_and_put_functions_c_source);
-				fputs("}\n",get_and_put_functions_c_source);
-
-				//Add the PUT function to the H file
-				fputs(put_begin,get_and_put_functions_h_source);
-				fputs((char*)id,get_and_put_functions_h_source);
-				fputs(put_end_h,get_and_put_functions_h_source);
-
-				/*****Create the GET function*****/
-
-				//Add the GET function to the C file
-				fputs(get_begin,get_and_put_functions_c_source);
-				fputs((char*)id,get_and_put_functions_c_source);
-				fputs(get_end_c,get_and_put_functions_c_source);
-				fputs("}\n",get_and_put_functions_c_source);
-
-				//Add the GET function to the H file
-				fputs(get_begin,get_and_put_functions_h_source);
-				fputs((char*)id,get_and_put_functions_h_source);
-				fputs(get_end_h,get_and_put_functions_h_source);
-
-
-				fputs("\n",get_and_put_functions_c_source);
-				fputs("\n",get_and_put_functions_h_source);
-			}
-		}
-	}
-	xmlFree(id);
-	xmlXPathFreeObject (result);
-	xmlFreeDoc(doc);
-
-	/*Creating the return_service_list function*/
-
-	fputs(return_service_list_name_c, get_and_put_functions_c_source);
-	fputs(return_service_list_name_h, get_and_put_functions_h_source);
-
-	/*****Stream the file*****/
-
-	xmlTextReaderPtr reader;
-	int ret;
-	const xmlChar *name;
-	char* inDevice = malloc(100);
-	char* inService = malloc(100);
-	int firstParameter = 0;
-	char* inParameter = malloc(100);
-
-	inDevice = "";
-	inService = "";
-	inParameter = "";
-
-	reader = xmlReaderForFile(_xml_file_name, NULL, 0);
-	if (reader != NULL) {
-		ret = xmlTextReaderRead(reader);
-		while (ret == 1) {
-			name = xmlTextReaderConstName(reader);
-			if (strcmp((char*)name,"device")==0 && strcmp(inDevice,"") == 0){
-				inDevice = (char *)xmlTextReaderGetAttribute(reader,(const xmlChar *)"id");
-				/*Create the device :
-				 Device* create_device_struct(
-				                              char *_description,
-				                              char *_ID,
-				                              char *_UID,
-				                              char *_IP,
-				                              char *_port,
-				                              char *_location,
-				                              char *_type);
-											  */
-				fputs(" Device *device_", get_and_put_functions_c_source);
-				fputs(inDevice, get_and_put_functions_c_source);
-				fputs("= create_device_struct (", get_and_put_functions_c_source);
-
-				if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"desc")){
-					fputs("\"", get_and_put_functions_c_source);
-					fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"desc"), get_and_put_functions_c_source);
-					fputs("\"", get_and_put_functions_c_source);
-				}
-				else fputs("NULL", get_and_put_functions_c_source);
-				fputs("\n\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-				if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"id")){
-					fputs("\"", get_and_put_functions_c_source);
-					fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"id"), get_and_put_functions_c_source);
-					fputs("\"", get_and_put_functions_c_source);
-				}
-				else fputs("NULL", get_and_put_functions_c_source);
-				fputs("\n\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-				if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"uid")){
-					fputs("\"", get_and_put_functions_c_source);
-					fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"uid"), get_and_put_functions_c_source);
-					fputs("\"", get_and_put_functions_c_source);
-				}
-				else fputs("NULL", get_and_put_functions_c_source);
-				fputs("\n\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-				if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"ip")){
-					fputs("\"", get_and_put_functions_c_source);
-					fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"ip"), get_and_put_functions_c_source);
-					fputs("\"", get_and_put_functions_c_source);
-				}
-				else fputs("NULL", get_and_put_functions_c_source);
-				fputs("\n\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-				if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"port")){
-					fputs("\"", get_and_put_functions_c_source);
-					fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"port"), get_and_put_functions_c_source);
-					fputs("\"", get_and_put_functions_c_source);
-				}
-				else fputs("NULL", get_and_put_functions_c_source);
-				fputs("\n\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-				if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"location")){
-					fputs("\"", get_and_put_functions_c_source);
-					fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"location"), get_and_put_functions_c_source);
-					fputs("\"", get_and_put_functions_c_source);
-				}
-				else fputs("NULL", get_and_put_functions_c_source);
-				fputs("\n\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-				if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"type")){
-					fputs("\"", get_and_put_functions_c_source);
-					fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"type"), get_and_put_functions_c_source);
-					fputs("\"", get_and_put_functions_c_source);
-				}
-				else fputs("NULL", get_and_put_functions_c_source);
-				fputs(");\n\n", get_and_put_functions_c_source);
-
-			}	
-			else if (strcmp((char*)name,"device")==0 && strcmp(inDevice,"") != 0){
-				inDevice = "";
-			}
-			else if (strcmp((char*)name,"service")==0 && strcmp(inService,"") == 0){
-				inService = (char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"id");
-
-				/*Create the service :
-				 Service* create_service_struct(
-				                                char *_description,
-				                                char *_ID,
-				                                char *_value_url,
-				                                char *_type,
-				                                char *_unit,
-				                                Device *_device,
-				                                char* (*_get_function)(),
-												char* (*put_function)(char*),
-												Parameter *_parameter);
-												*/
-				fputs(" Service *service_", get_and_put_functions_c_source);
-				fputs(inService, get_and_put_functions_c_source);
-				fputs("= create_service_struct (", get_and_put_functions_c_source);
-
-				if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"desc")){
-					fputs("\"", get_and_put_functions_c_source);
-					fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"desc"), get_and_put_functions_c_source);
-					fputs("\"", get_and_put_functions_c_source);
-				}
-				else fputs("NULL", get_and_put_functions_c_source);
-				fputs("\n\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-				if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"id")){
-					fputs("\"", get_and_put_functions_c_source);
-					fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"id"), get_and_put_functions_c_source);
-					fputs("\"", get_and_put_functions_c_source);
-				}
-				else fputs("NULL", get_and_put_functions_c_source);
-				fputs("\n\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-				if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"value_url")){
-					fputs("\"", get_and_put_functions_c_source);
-					fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"value_url"), get_and_put_functions_c_source);
-					fputs("\"", get_and_put_functions_c_source);
-				}
-				else fputs("NULL", get_and_put_functions_c_source);
-				fputs("\n\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-				if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"type")){
-					fputs("\"", get_and_put_functions_c_source);
-					fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"type"), get_and_put_functions_c_source);
-					fputs("\"", get_and_put_functions_c_source);
-				}
-				else fputs("NULL", get_and_put_functions_c_source);
-				fputs("\n\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-				if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"unit")){
-					fputs("\"", get_and_put_functions_c_source);
-					fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"unit"), get_and_put_functions_c_source);
-					fputs("\"", get_and_put_functions_c_source);
-				}
-				else fputs("NULL", get_and_put_functions_c_source);
-				fputs("\n\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-				fputs("device_", get_and_put_functions_c_source);
-				fputs(inDevice, get_and_put_functions_c_source);
-				fputs("\n\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-				fputs("get_", get_and_put_functions_c_source);
-				fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"id"), get_and_put_functions_c_source);
-				fputs("\n\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-				fputs("put_", get_and_put_functions_c_source);
-				fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"id"), get_and_put_functions_c_source);
-				fputs("\n\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-			}
-			else if (strcmp((char*)name,"service")==0 && strcmp(inService,"") != 0){
-
-				fputs("list = add_service_to_list(service_", get_and_put_functions_c_source);
-				fputs(inService , get_and_put_functions_c_source);
-				fputs(", list);\n\n", get_and_put_functions_c_source);
-				inService = "";
-				firstParameter = 0;
-
-			}
-			else if (strcmp((char*)name,"parameter")==0){
-				inParameter = (char *)xmlTextReaderGetAttribute(reader,(const xmlChar *)"id");
-				if(firstParameter == 0){
-					firstParameter = 1;
-					/*Create the parameter :
-					 Parameter* create_parameter_struct(
-					                                    char *_ID,
-					                                    char *_max,
-					                                    char *_min,
-					                                    char *_scale,
-					                                    char *_step,
-					                                    char *_type,
-					                                    char *_unit,
-					                                    char *_values);
-														*/
-					fputs( "create_parameter_struct(", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"id")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"id"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs("\n\t\t\t\t\t\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"max")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"max"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs("\n\t\t\t\t\t\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"min")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"min"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs("\n\t\t\t\t\t\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"scale")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"scale"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs("\n\t\t\t\t\t\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"step")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"step"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs("\n\t\t\t\t\t\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"type")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"type"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs("\n\t\t\t\t\t\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"unit")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"unit"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs("\n\t\t\t\t\t\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"values")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"values"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs("));\n\n", get_and_put_functions_c_source);
-
-				}
-				else{
-					/*Create the parameter :
-					 Parameter* create_parameter_struct(
-					                                    char *_ID,
-					                                    char *_max,
-					                                    char *_min,
-					                                    char *_scale,
-					                                    char *_step,
-					                                    char *_type,
-					                                    char *_unit,
-					                                    char *_values);
-														*/
-					fputs(" Parameter *parameter_", get_and_put_functions_c_source);
-					fputs(inParameter, get_and_put_functions_c_source);
-					fputs("= create_parameter_struct (", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"id")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"id"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs("\n\t\t\t\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"max")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"max"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs("\n\t\t\t\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"min")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"min"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs("\n\t\t\t\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"scale")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"scale"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs("\n\t\t\t\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"step")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"step"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs("\n\t\t\t\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"type")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"type"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs("\n\t\t\t\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"unit")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"unit"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs("\n\t\t\t\t\t\t\t\t\t\t, ", get_and_put_functions_c_source);
-
-					if(xmlTextReaderGetAttribute(reader,(const xmlChar *)"values")){
-						fputs("\"", get_and_put_functions_c_source);
-						fputs((char*)xmlTextReaderGetAttribute(reader,(const xmlChar *)"values"), get_and_put_functions_c_source);
-						fputs("\"", get_and_put_functions_c_source);
-					}
-					else fputs("NULL", get_and_put_functions_c_source);
-					fputs(");\n", get_and_put_functions_c_source);
-
-					/*Add the parameter to the list of parameter of service */
-
-					fputs("add_parameter_to_service (parameter_", get_and_put_functions_c_source);
-					fputs(inParameter, get_and_put_functions_c_source);
-					fputs(",service_", get_and_put_functions_c_source);
-					fputs(inService, get_and_put_functions_c_source);
-					fputs(");\n\n", get_and_put_functions_c_source);
-				}
-			}
-
-			ret = xmlTextReaderRead(reader);
-		}
-		xmlFreeTextReader(reader);
-		if (ret != 0) {
-			fprintf(stderr, "%s : failed to parse\n", _xml_file_name);
-		}
-	} else {
-		fprintf(stderr, "Unable to open %s\n", _xml_file_name);
-	}
-
-
-
-	fputs("return list;\n",get_and_put_functions_c_source);
-	fputs("}\n",get_and_put_functions_c_source);
-
-	fclose(get_and_put_functions_c_source);
-
-	fputs("#endif /* GET_AND_PUT_FUNCTIONS_FCT_H *\n",get_and_put_functions_h_source);
-	fclose(get_and_put_functions_h_source);
-
-
-
-}
-/*
-Service *get_service_from_xml_node(char *xml_node){
-
-	EN ATTENTE DE LA NOUVELLE STRUCTURE SERVICE
-		static int service1_value = 0;
-	static int service2_value = 0;
-	static int service3_value = 0;
-
-	Device *device1 = create_device_struct ("Legrand Switch",
-	                                        "10000",
-	                                        "12345",
-	                                        "192.168.1.1",
-	                                        "_xulhttp._tcp",
-	                                        "Kitchen",
-	                                        NULL);
-
-
-											xmlTextReaderPtr reader;
-											xmlChar *name;
-											char *temp_desc,*temp_id,*temp_value_url,*temp_type,*temp_unit;
-											int ret;
-											int firstIteration = 0;
-											Service *new_service;
-											Parameter *new_parameter;
-
-											reader= xmlReaderForMemory (xml_node,
-											                            strlen(xml_node),
-																		"test",
-																		ENCODING,
-																		NULL);
-
-
-
-																		if (reader != NULL) {
-																			ret = xmlTextReaderRead(reader);
-																			while (ret == 1) {
-																				name = xmlTextReaderName(reader);
-
-																				if(strcmp((char *)name,"service") == 0 && firstIteration == 0) {
-																					temp_desc = (char *)xmlTextReaderGetAttribute (reader,"desc");
-																					temp_id = (char *)xmlTextReaderGetAttribute (reader,"id");
-																					temp_value_url = (char *)xmlTextReaderGetAttribute (reader,"value_url");
-																					temp_type = (char *)xmlTextReaderGetAttribute (reader,"type");
-																					temp_unit = (char *)xmlTextReaderGetAttribute (reader,"unit");
-																					}
-
-																					if(strcmp((char *)name,"parameter") == 0 && firstIteration == 1){
-																						new_parameter = create_parameter_struct(
-																						                                        (char *)xmlTextReaderGetAttribute (reader,"id"),
-																																(char *)xmlTextReaderGetAttribute (reader,"max"),
-																																(char *)xmlTextReaderGetAttribute (reader,"min"),
-																																(char *)xmlTextReaderGetAttribute (reader,"scale"),
-																																(char *)xmlTextReaderGetAttribute (reader,"step"),
-																																(char *)xmlTextReaderGetAttribute (reader,"type"),
-																																(char *)xmlTextReaderGetAttribute (reader,"unit"),
-																																(char *)xmlTextReaderGetAttribute (reader,"values"));
-																																new_service->parameter_list = add_parameter_to_list(new_parameter, new_service->parameter_list);
-																																}
-
-																																if(strcmp((char *)name,"parameter") == 0 && firstIteration == 0){
-																																	firstIteration = 1;
-																																	new_parameter = create_parameter_struct(
-																																	                                        (char *)xmlTextReaderGetAttribute (reader,"id"),
-																																											(char *)xmlTextReaderGetAttribute (reader,"max"),
-																																											(char *)xmlTextReaderGetAttribute (reader,"min"),
-																																											(char *)xmlTextReaderGetAttribute (reader,"scale"),
-																																											(char *)xmlTextReaderGetAttribute (reader,"step"),
-																																											(char *)xmlTextReaderGetAttribute (reader,"type"),
-																																											(char *)xmlTextReaderGetAttribute (reader,"unit"),
-																																											(char *)xmlTextReaderGetAttribute (reader,"values"));
-
-																																											new_service = create_service_struct(temp_desc,
-																																											                                    temp_id,
-																																											                                    temp_value_url,
-																																											                                    temp_type,
-																																											                                    temp_unit,
-																																											                                    device1, // A changer
-																																											                                    get_function_service1, // A changer
-																																											                                    put_function_service1, // A changer
-																																											                                    new_parameter);
-																																																				}
-
-																																																				ret = xmlTextReaderRead(reader);
-																																																				}
-
-																																																				xmlFreeTextReader(reader);
-
-																																																				return new_service;
-																																																				if (ret != 0) {
-																																																					printf("failed to parse\n");
-																																																					return NULL;
-																																																					}
-																																																					} else {
-																																																						printf("Fail");
-																																																						return NULL;
-																																																						}
-																																																						}*/
 

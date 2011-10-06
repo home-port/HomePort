@@ -47,8 +47,8 @@ authors and should not be interpreted as representing official policies, either 
 
 #include "services.h"
 
-void avahi_core_create_service (Service *_service);
-void avahi_core_start(char* _host_name, char *_domain_name);
+int avahi_core_create_service (Service *_service);
+int avahi_core_start(char* _host_name, char *_domain_name);
 int avahi_core_remove_service(Service *_service);
 void avahi_core_quit();
 void reset_all_services();

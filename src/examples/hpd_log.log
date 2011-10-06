@@ -1,0 +1,4 @@
+#Version: 1.0
+#Date: 2011-09-06
+#Fields: date time x-error-string c-ip cs-method cs-uri-stem cs-uri-query
+EOL

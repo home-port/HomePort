@@ -23,62 +23,31 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The views and conclusions contained in the software and documentation are those of the
 authors and should not be interpreted as representing official policies, either expressed*/
 
-#ifndef HOMEPORT_H
-#define HOMEPORT_H
+#include <stdio.h>
+#include <stdlib.h>
+#include "hpd_phidget.h"
 
-/** @mainpage The HomePort Project
- *
- * @authors Several
- *
- * @section intro Introduction
- *
- */
+int main()
+{	
+	int rc;
+	
+	/** Starts the hpdaemon. If using avahi-core pass a host name for the server, otherwise pass NULL */
+	if( rc = HPD_start(HPD_USE_CFG_FILE, "Homeport", HPD_OPTION_CFG_PATH, "./hpd.cfg"))
+	{
+		printf("Failed to start HPD %d\n", rc);
+		return 1;
+	}
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+	/**Init the phidget */
+	HPD_phidget_init();
 
-#include <stdarg.h>
+	getchar();
 
-#include "services.h"
-#include "hpd_configure.h"
+	/** Deinit the phidget */
+	HPD_phidget_deinit ();
 
-enum HPD_FLAG
-{
-	HPD_NO_FLAG = 0,
+	/** Stop the homeport daemon */
+	HPD_stop();
 
-	HPD_USE_OPTION = 1,
-
-	HPD_USE_CFG_FILE = 2,
-
-	HPD_USE_DEFAULT = 4
-};
-
-enum HPD_OPTION
-{
-	/** No more options / last option
-	*/
-	HPD_OPTION_END = 0,
-
-	HPD_OPTION_HTTP = 1,
-
-	HPD_OPTION_HTTPS = 2,
-
-	HPD_OPTION_LOG = 3,
-
-	HPD_OPTION_CFG_PATH = 4
-
-};
-
-int HPD_start( unsigned int option, char *_hostname, ... );
-int HPD_stop();
-int HPD_register_service(Service *_service);
-int HPD_unregister_service(Service *_service);
-int HPD_register_device_services(Device *_device);
-int HPD_unregister_device_services(Device *_device);
-int HPD_send_event_of_value_change (Service *service, char *_updated_value);
-
-Service* HPD_get_service( char *_device_type, char *_device_ID, char *_service_type, char *_service_ID );
-Device* HPD_get_device(char *_device_type, char *_device_ID);
-
-#endif
+	return (0);
+}

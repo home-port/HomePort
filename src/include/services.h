@@ -33,6 +33,7 @@ authors and should not be interpreted as representing official policies, either 
 
 #define HPD_SECURE_DEVICE 1 /**< Defines if the Device is a Secured Device. */  
 #define HPD_NON_SECURE_DEVICE 0 /**< Defines if the Device is a Non Secured Device. */  
+#define MHD_MAX_BUFFER_SIZE 10
 
 /**
  * The structure ServiceElement used in the Service List, it contains a Service and a pointer on the next ServiceElement
@@ -47,41 +48,48 @@ typedef struct Device Device;
  */
 typedef struct Service Service;
 
+typedef size_t (*HPD_GetFunction) (Service* service, char *buffer, size_t max_buffer_size);
+
+typedef size_t (*HPD_PutFunction) (Service* service, char *buffer, size_t max_buffer_size, char *put_value);
+
+
 struct ServiceElement
 {
     Service *service;/**<The Service*/
     ServiceElement *next;/**<A pointer to the next ServiceElement*/
-    pthread_mutex_t mutex; /**<A mutex used to access a Service in the list*/
+    pthread_mutex_t *mutex; /**<A mutex used to access a Service in the list*/
 };
 
 struct Device
 {
-    char *description;/**<The Device description*/
-    char *ID;/**<The Device ID*/
-    char *vendorID;/**<The ID of the vendor*/
-    char *productID;/**<The ID of the product*/
-    char *version;/**<The Device version*/
+    	char *description;/**<The Device description*/
+    	char *ID;/**<The Device ID*/
+    	char *vendorID;/**<The ID of the vendor*/
+    	char *productID;/**<The ID of the product*/
+    	char *version;/**<The Device version*/
 	char *IP;/**<The IP address of the Device*/
 	char *port;/**<The port that the Device uses*/
 	char *location;/**<The location of the Device*/
 	char *type;/**<The Device type*/
-    int secure_device;/**<A variable that states if the Device is Secure or not (HPD_SECURE_DEVICE or HPD_NON_SECURE_DEVICE)*/
-    ServiceElement *service_head;/**<The first ServiceElement of the Service List*/
+    	int secure_device;/**<A variable that states if the Device is Secure or not (HPD_SECURE_DEVICE or HPD_NON_SECURE_DEVICE)*/
+    	ServiceElement *service_head;/**<The first ServiceElement of the Service List*/
 };
 
 struct Service
 {
-    char *description;/**<The Service description*/
-    char *ID;/**<The Service ID*/
-    char *value_url;/**<The URL used to retrieve or set the Value of the Service*/
-    char *type;/**<The Service type*/
-    char *unit;/**<The unit provided by the Service*/
-    char *DNS_SD_type;/**<*/
-    Device *device;/**<The Device that contains the Service*/
-    char* (*get_function)(Service*);/**<A pointer to the GET function of the Service*/
-    char* (*put_function)(Service*, char*);/**<A pointer to the PUT function of the Service*/
-    ParameterElement *parameter_head;/**<The first ParameterElement of the Parameter List*/
-    char* zeroConfName;/**<The name used to advertise the service using ZeroConf*/
+    	char *description;/**<The Service description*/
+    	char *ID;/**<The Service ID*/
+    	char *value_url;/**<The URL used to retrieve or set the Value of the Service*/
+    	char *type;/**<The Service type*/
+    	char *unit;/**<The unit provided by the Service*/
+    	char *DNS_SD_type;/**<*/
+	char* zeroConfName;/**<The name used to advertise the service using ZeroConf*/
+	char* get_function_buffer;
+    	Device *device;/**<The Device that contains the Service*/
+    	HPD_GetFunction get_function;/**<A pointer to the GET function of the Service*/
+    	HPD_PutFunction put_function;/**<A pointer to the PUT function of the Service*/
+    	ParameterElement *parameter_head;/**<The first ParameterElement of the Parameter List*/
+	void* user_data_pointer;/**<Pointer used for the used to store its data*/
 };
 
 Service* create_service_struct(
@@ -90,9 +98,10 @@ Service* create_service_struct(
                                char *_type,
                                char *_unit,
                                Device *_device,
-                               char* (*_get_function)(Service*),
-                               char* (*_put_function)(Service*, char*),
-                               Parameter *_parameter);
+                               HPD_GetFunction _get_function,
+                               HPD_PutFunction _put_function,
+                               Parameter *_parameter,
+			       void* _user_data_pointer);
 
 int destroy_service_struct(Service *_service); 
 
@@ -119,6 +128,12 @@ int add_service_to_device(Service *_service, Device *_device);
 int remove_service_from_device(Service *_service, Device *_device);
 
 ServiceElement* create_service_element(Service *_service);
+
+ServiceElement* create_subscribed_service_element(ServiceElement *_service_element_to_subscribe);
+
+void destroy_service_element(ServiceElement *_service_element_to_destroy);
+
+void destroy_subscribed_service_element(ServiceElement *_subscribed_service_element_to_destroy);
 
 int cmp_ServiceElement( ServiceElement *a, ServiceElement *b);
 
