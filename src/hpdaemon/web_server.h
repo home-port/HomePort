@@ -23,62 +23,35 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The views and conclusions contained in the software and documentation are those of the
 authors and should not be interpreted as representing official policies, either expressed*/
 
-#ifndef HOMEPORT_H
-#define HOMEPORT_H
+#ifndef WEB_SERVER_API_H
+#define WEB_SERVER_API_H
 
-/** @mainpage The HomePort Project
- *
- * @authors Several
- *
- * @section intro Introduction
- *
- */
+#include "services.h"
+#include "xmlAPI.h"
+#include "utlist.h"
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#include <stdarg.h>
+#if HPD_HTTP
+	#include "web_server_api.h"
+#endif
 
-#include "services.h"
-#include "hpd_configure.h"
+#if HPD_HTTPS
+	#include "web_server_secure_api.h"
+#endif
 
-enum HPD_FLAG
-{
-	HPD_NO_FLAG = 0,
 
-	HPD_USE_OPTION = 1,
+int start_server(char* _hostname, char *_domain_name);
+int stop_server();
+int register_service_in_server(Service *_service);
+int unregister_service_in_server( Service *_service );
+int register_device_services( Device *_device );
 
-	HPD_USE_CFG_FILE = 2,
+int is_service_registered( Service *_service );
 
-	HPD_USE_DEFAULT = 4
-};
-
-enum HPD_OPTION
-{
-	/** No more options / last option
-	*/
-	HPD_OPTION_END = 0,
-
-	HPD_OPTION_HTTP = 1,
-
-	HPD_OPTION_HTTPS = 2,
-
-	HPD_OPTION_LOG = 3,
-
-	HPD_OPTION_CFG_PATH = 4
-
-};
-
-int HPD_start( unsigned int option, char *_hostname, ... );
-int HPD_stop();
-int HPD_register_service(Service *_service);
-int HPD_unregister_service(Service *_service);
-int HPD_register_device_services(Device *_device);
-int HPD_unregister_device_services(Device *_device);
-int HPD_send_event_of_value_change (Service *service, char *_updated_value);
-
-Service* HPD_get_service( char *_device_type, char *_device_ID, char *_service_type, char *_service_ID );
-Device* HPD_get_device(char *_device_type, char *_device_ID);
+Service* get_service_from_server( char *_device_type, char *_device_ID, char *_service_type, char *_service_ID );
+Device* get_device_from_server( char *_device_type, char *_device_ID);
 
 #endif

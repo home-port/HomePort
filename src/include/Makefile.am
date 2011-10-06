@@ -25,4 +25,4 @@
 
 libhpdincludedir=$(includedir)/hpdaemon
 
-libhpdinclude_HEADERS = parameter.h services.h homeport.h 
+libhpdinclude_HEADERS = parameter.h services.h homeport.h hpd_configure.h hpd_error.h

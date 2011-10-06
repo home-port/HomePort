@@ -26,7 +26,8 @@ authors and should not be interpreted as representing official policies, either 
 #include <stdio.h>
 #include "services.h"
 #include "utlist.h"
-#include "web_server_api.h"
+#include "web_server.h"
+#include "hpd_error.h"
 
 /**
  * Creates the structure Service with all its parameters
@@ -59,82 +60,132 @@ Service* create_service_struct(
                                char *_type,
                                char *_unit,
                                Device *_device,
-                               char* (*_get_function)(Service*),
-                               char* (*_put_function)(Service*, char*),
-                               Parameter *_parameter)
+                               HPD_GetFunction _get_function,
+                               HPD_PutFunction _put_function,
+                               Parameter *_parameter,
+			       void* _user_data_pointer)
 {
-    Service *_service = (Service*)malloc(sizeof(Service));
-    _service->description = _description;
-    _service->ID = _ID;
-    if(_service->ID==NULL)
-    {
-        printf("Service ID cannot be NULL\n");
-        free(_service);
-        return NULL;
-    }
+    	Service *_service = (Service*)malloc(sizeof(Service));
 
-    _service->type = _type;
-    if(_service->type==NULL)
-    {
-        printf("Service type cannot be NULL\n");
-        free(_service);
-        return NULL;
-    }
+	if(_ID == NULL)
+    	{
+        	printf("Service ID cannot be NULL\n");
+        	free(_service);
+        	return NULL;
+    	}
+	else
+	{
+		_service->ID = malloc(sizeof(char)*(strlen(_ID)+1));
+		strcpy(_service->ID, _ID);
+	}
 
-    _service->unit = _unit;
-    _service->device = _device;
-    if(_service->device==NULL)
-    {
-        printf("Service device cannot be NULL\n");
-        free(_service);
-        return NULL;
-    }
+	if(_type == NULL)
+    	{
+        	printf("Service type cannot be NULL\n");
+		free(_service->ID);
+        	free(_service);
+        	return NULL;
+    	}
+	else
+	{
+		_service->type = malloc(sizeof(char)*(strlen(_type)+1));
+		strcpy(_service->type, _type);
+	}
 
-    _service->get_function = _get_function;
-    if(_service->get_function==NULL)
-    {
-        printf("Service get_function cannot be NULL\n");
-        free(_service);
-        return NULL;
-    }
+		if(_device == NULL)
+    	{
+        	printf("Service's device cannot be NULL\n");
+		free(_service->ID);
+		free(_service->type);
+        	free(_service);
+        	return NULL;
+    	}
+	else
+	{
+		_service->device = _device;
+	}
 
-    _service->put_function = _put_function;
-    _service->parameter_head = NULL;
+	if(_get_function == NULL)
+    	{
+        	printf("Service's get_function cannot be NULL\n");
+		free(_service->ID);
+		free(_service->type);
+        	free(_service);
+        	return NULL;
+    	}
+	else
+	{
+		_service->get_function = _get_function;
+	}
 
-    if(_parameter!=NULL){
-        ParameterElement *_parameter_to_add = create_parameter_element (_parameter);
-        LL_APPEND(_service->parameter_head, _parameter_to_add);
-    }
+    	if(_description == NULL)
+    	{
+        	_service->description = NULL;
+    	}
+	else
+	{
+		_service->description = malloc(sizeof(char)*(strlen(_description)+1));
+		strcpy(_service->description, _description);
+	}
 
-    /*Creation of the URL*/
-    char * URL = malloc(sizeof(char)*(strlen("/")+strlen(_service->device->type)+strlen("/")+strlen(_service->device->ID)+strlen("/")
-                                      +strlen(_service->type)+strlen("/")+strlen(_service->ID)+1));
-    sprintf(URL,"/%s/%s/%s/%s",_service->device->type,_service->device->ID,_service->type,_service->ID);
-    _service->value_url = URL;
+	if(_unit == NULL)
+    	{
+        	_service->unit = NULL;
+    	}
+	else
+	{
+		_service->unit = malloc(sizeof(char)*(strlen(_unit)+1));
+		strcpy(_service->unit, _unit);
+	}
 
-    /*Creation of the ZeroConf Name*/
-    char * zeroConfName = malloc(sizeof(char)*(strlen(_service->device->type)+strlen(" ")+strlen(_service->device->ID)+strlen(" ")
-                                               +strlen(_service->type)+strlen(" ")+strlen(_service->ID)+1));
-    sprintf(zeroConfName,"%s %s %s %s",_service->device->type,_service->device->ID,_service->type,_service->ID);
-    _service->zeroConfName = zeroConfName;
+	if(_put_function == NULL)
+    	{
+        	_service->put_function = NULL;
+    	}
+	else
+	{
+		_service->put_function = _put_function;
+	}
+	
+	if(_user_data_pointer == NULL)
+    	{
+        	_service->user_data_pointer = NULL;
+    	}
+	else
+	{
+		_service->user_data_pointer = _user_data_pointer;
+	}
 
-    /*Determination of the type*/
-    if( _service->device->secure_device == HPD_NON_SECURE_DEVICE ) _service->DNS_SD_type = "_homeport._tcp";
-    else if(_service->device->secure_device == HPD_SECURE_DEVICE ) _service->DNS_SD_type = "_homeport-secure._tcp";
-    else {
-        free(URL);
-        free(zeroConfName);
-        free(_service);
-        return NULL;
-    }
+	_service->parameter_head = NULL;
 
-    /*Adding the service to the Device's Service List*/
-    if(add_service_to_device (_service,_service->device) == -1){
-        free(URL);
-        free(zeroConfName);
-        free(_service);
-        return NULL;
-    }
+	if(_parameter != NULL)
+	{
+		ParameterElement *_parameter_to_add = create_parameter_element (_parameter);
+		LL_APPEND(_service->parameter_head, _parameter_to_add);
+	}
+
+    	/*Creation of the URL*/
+    	_service->value_url = malloc(sizeof(char)*(strlen("/")+strlen(_service->device->type)+strlen("/")+strlen(_service->device->ID)+strlen("/")
+    	                                  +strlen(_service->type)+strlen("/")+strlen(_service->ID)+1));
+    	sprintf(_service->value_url,"/%s/%s/%s/%s",_service->device->type,_service->device->ID,_service->type,_service->ID);
+
+    	/*Creation of the ZeroConf Name*/
+    	_service->zeroConfName = malloc(sizeof(char)*(strlen(_service->device->type)+strlen(" ")+strlen(_service->device->ID)+strlen(" ")
+    	                                           +strlen(_service->type)+strlen(" ")+strlen(_service->ID)+1));
+    	sprintf(_service->zeroConfName,"%s %s %s %s",_service->device->type,_service->device->ID,_service->type,_service->ID);
+
+    	/*Determination of the type*/
+    	if(_service->device->secure_device == HPD_SECURE_DEVICE ) _service->DNS_SD_type = "_homeport-secure._tcp";
+	else _service->DNS_SD_type = "_homeport._tcp";
+
+    	/*Adding the service to the Device's Service List*/
+    	if(add_service_to_device (_service,_service->device) == -1)
+	{
+    	    free(_service);
+    	    return NULL;
+    	}
+
+	_service->get_function_buffer = malloc(sizeof(char)*MHD_MAX_BUFFER_SIZE);
 
     return _service;
 }
@@ -149,7 +200,7 @@ Service* create_service_struct(
  *
  * @param _service The service to destroy
  *
- * @return returns 0 if successful -1 if failed
+ * @return returns A HPD error code
  */
 int destroy_service_struct(Service *_service)
 {
@@ -160,14 +211,29 @@ int destroy_service_struct(Service *_service)
 		if( is_service_registered( _service ) )
 		{
 			printf("Cannot destroy a registered service.\n Make a call to HPD_unregister_service before destroying service\n");
-			return -1;
+			return HPD_E_SERVICE_IN_USE;
 		}
+
+		if(_service->description)
+			free(_service->description);
+
+		if(_service->ID)
+			free(_service->ID);
+
+		if(_service->type)
+			free(_service->type);
+
+		if(_service->unit)
+			free(_service->unit);
 
 		if(_service->value_url)
 			free(_service->value_url);
 
 		if(_service->zeroConfName)
 			free(_service->zeroConfName);
+		
+		if(_service->get_function_buffer)
+			free(_service->get_function_buffer);
 
 		if(_service->parameter_head)
 		{
@@ -184,17 +250,8 @@ int destroy_service_struct(Service *_service)
 		{
 			if( _service->device->service_head )
 			{
-				ServiceElement *_tmp, *_iterator = NULL;
 				
-				LL_FOREACH_SAFE( _service->device->service_head, _iterator, _tmp )
-				{
-					if( strcmp( _service->type, _iterator->service->type ) == 0
-					   && strcmp ( _service->ID, _iterator->service->ID ) == 0 )
-					{
-						LL_DELETE( _service->device->service_head, _iterator );
-						break;
-					}
-				}
+				remove_service_from_device(_service, _service->device);
 
 				if( _service->device->service_head == NULL )
 				{
@@ -206,7 +263,7 @@ int destroy_service_struct(Service *_service)
 
 		free(_service);
 	}
-    return 0;
+    return HPD_E_SUCCESS;
 }
 
 
@@ -252,37 +309,110 @@ Device* create_device_struct(
                              char *_type,
                              int _secure_device)
 {
-    Device *_device = (Device*)malloc(sizeof(Device));
-    _device->description = _description;
-    _device->ID = _ID;
-    if(_device->ID==NULL)
-    {
-        printf("Device ID cannot be NULL\n");
-        free(_device);
-        return NULL;
-    }
-    _device->vendorID = _vendorID;
-    _device->productID = _productID;
-    _device->version = _version;
-    _device->IP = _IP;
-    _device->port = _port;
-    _device->location = _location;
-    _device->type = _type;
-    if(_device->type==NULL)
-    {
-        printf("Device type cannot be NULL\n");
-        free(_device);
-        return NULL;
-    }
+    	Device *_device = (Device*)malloc(sizeof(Device));
+	
+	if(_ID == NULL)
+    	{
+        	printf("Device ID cannot be NULL\n");
+        	free(_device);
+        	return NULL;
+    	}
+	else
+	{
+		_device->ID = malloc(sizeof(char)*(strlen(_ID)+1));
+		strcpy(_device->ID, _ID);
+	}
 
-    if(_secure_device==HPD_SECURE_DEVICE || _secure_device==HPD_NON_SECURE_DEVICE)
-        _device->secure_device = _secure_device;
-    else
-        _device->secure_device = HPD_NON_SECURE_DEVICE;
-    
-    _device->service_head = NULL;
-    
+	if(_type == NULL)
+    	{
+        	printf("Device type cannot be NULL\n");
+		free(_device->ID);
+        	free(_device);
+        	return NULL;
+    	}
+	else
+	{
+		_device->type = malloc(sizeof(char)*(strlen(_type)+1));
+		strcpy(_device->type, _type);
+	}
+	
+	if(_description == NULL)
+    	{
+        	_device->description = NULL;
+    	}
+	else
+	{
+		_device->description = malloc(sizeof(char)*(strlen(_description)+1));
+		strcpy(_device->description, _description);
+	}
+	
+	if(_vendorID == NULL)
+    	{
+        	_device->vendorID = NULL;
+    	}
+	else
+	{
+		_device->vendorID = malloc(sizeof(char)*(strlen(_vendorID)+1));
+		strcpy(_device->vendorID, _vendorID);
+	}
+	
+	if(_productID == NULL)
+    	{
+        	_device->productID = NULL;
+    	}
+	else
+	{
+		_device->productID = malloc(sizeof(char)*(strlen(_productID)+1));
+		strcpy(_device->productID, _productID);
+	}
 
+	if(_version == NULL)
+    	{
+        	_device->version = NULL;
+    	}
+	else
+	{
+		_device->version = malloc(sizeof(char)*(strlen(_version)+1));
+		strcpy(_device->version, _version);
+	}
+
+	if(_IP == NULL)
+    	{
+        	_device->IP = NULL;
+    	}
+	else
+	{
+		_device->IP = malloc(sizeof(char)*(strlen(_IP)+1));
+		strcpy(_device->IP, _IP);
+	}
+
+	if(_port == NULL)
+    	{
+        	_device->port = NULL;
+    	}
+	else
+	{
+		_device->port = malloc(sizeof(char)*(strlen(_port)+1));
+		strcpy(_device->port, _port);
+	}
+
+	if(_location == NULL)
+    	{
+        	_device->location = NULL;
+    	}
+	else
+	{
+		_device->location = malloc(sizeof(char)*(strlen(_location)+1));
+		strcpy(_device->location, _location);
+	}
+
+	if(_secure_device == HPD_SECURE_DEVICE || _secure_device == HPD_NON_SECURE_DEVICE)
+        	_device->secure_device = _secure_device;
+    	else
+        	_device->secure_device = HPD_NON_SECURE_DEVICE;
+    
+    	_device->service_head = NULL;
+    
     return _device;
 }
 
@@ -296,29 +426,62 @@ Device* create_device_struct(
  *
  * @param _device The Device to destroy
  *
- * @return returns 0 if successful -1 if failed
+ * @return A HPD error code
  */
 int destroy_device_struct(Device *_device)
 {
-	ServiceElement *_tmp, *_iterator = NULL;
 
-	LL_FOREACH_SAFE( _device->service_head, _iterator, _tmp )
+	if(_device)
 	{
-		if( is_service_registered( _iterator->service ) )
-		{
-			printf("Device has registered service(s). Call HPD_unregister_device before destroying\n");
-			return -1;
-		}
-		LL_DELETE( _device->service_head, _iterator );
-		destroy_service_struct (_iterator->service);
-		free(_iterator);
-		_iterator = NULL;
-	}
-    
-    if(_device)
-        free(_device);
 
-	return 0;
+		ServiceElement *_tmp, *_iterator = NULL;
+
+		LL_FOREACH_SAFE( _device->service_head, _iterator, _tmp )
+		{
+			if( is_service_registered( _iterator->service ) )
+			{
+				printf("Device has registered service(s). Call HPD_unregister_device before destroying\n");
+				return HPD_E_SERVICE_IN_USE;
+			}
+			LL_DELETE( _device->service_head, _iterator );
+			destroy_service_struct (_iterator->service);
+			destroy_service_element(_iterator);
+			_iterator = NULL;
+		}		
+		
+		if(_device->description)
+			free(_device->description);
+
+		if(_device->ID)
+			free(_device->ID);
+
+		if(_device->vendorID)
+			free(_device->vendorID);
+
+		if(_device->productID)
+			free(_device->productID);
+
+		if(_device->version)
+			free(_device->version);
+
+		if(_device->IP)
+			free(_device->IP);
+
+		if(_device->port)
+			free(_device->port);
+
+		if(_device->location)
+			free(_device->location);
+
+		if(_device->type)
+			free(_device->type);
+
+		free(_device);
+
+		return HPD_E_SUCCESS;
+	}
+
+	return HPD_E_NULL_POINTER;
 }
 
 /**
@@ -328,21 +491,21 @@ int destroy_device_struct(Device *_device)
  *
  * @param _service The Service 
  *
- * @return returns 0 if successful -1 if failed -2 if already exist
+ * @return A HPD error code
  */
 int add_parameter_to_service(Parameter *_parameter, Service *_service)
 {
-    if(_parameter == NULL || _service == NULL) return -1;
+    if(_parameter == NULL || _service == NULL) return HPD_E_NULL_POINTER;
 
     ParameterElement *elt;
     ParameterElement *_parameter_to_add = create_parameter_element (_parameter);
 
     LL_SEARCH(_service->parameter_head,elt,_parameter_to_add,cmp_ParameterElement);
-    if(elt) return -2;
+    if(elt) return HPD_E_PARAMETER_ALREADY_IN_LIST;
     
     LL_APPEND(_service->parameter_head, _parameter_to_add);
     
-    return 0;
+    return HPD_E_SUCCESS;
 }
 
 
@@ -353,7 +516,7 @@ int add_parameter_to_service(Parameter *_parameter, Service *_service)
  *
  * @param _service The Service 
  *
- * @return returns 0 if successful -1 if failed -2 if not in the list
+ * @return return A HPD error code 
  */
 int remove_parameter_from_service(Parameter *_parameter, Service *_service)
 {
@@ -364,10 +527,10 @@ int remove_parameter_from_service(Parameter *_parameter, Service *_service)
     ParameterElement *_parameter_to_remove = create_parameter_element (_parameter);
 
     LL_SEARCH(_service->parameter_head,elt,_parameter_to_remove,cmp_ParameterElement);
-    if(!elt) return -2;
+    if(!elt) return HPD_E_PARAMETER_NOT_IN_LIST;
     
     LL_DELETE(_service->parameter_head,_parameter_to_remove);
-    return 0;
+    return HPD_E_SUCCESS;
 }
 
 
@@ -379,22 +542,25 @@ int remove_parameter_from_service(Parameter *_parameter, Service *_service)
  *
  * @param _device The Device 
  *
- * @return returns 0 if successful -1 if failed -2 if already in the list
+ * @return returns A HPD error code
  */
 int add_service_to_device(Service *_service, Device *_device)
 {
     
-    if(_service == NULL || _device == NULL) return -1;
+    if(_service == NULL || _device == NULL) return HPD_E_NULL_POINTER;
     
     ServiceElement *_service_to_add = create_service_element (_service);
     ServiceElement *elt;
 
     LL_SEARCH(_device->service_head,elt,_service_to_add,cmp_ServiceElement);
-    if(elt) return -2;
-    
+    if(elt) 
+	{
+		destroy_service_element(_service_to_add);
+		return HPD_E_SERVICE_ALREADY_IN_LIST;
+	}
     LL_APPEND(_device->service_head, _service_to_add);
 
-    return 0;
+    return HPD_E_SUCCESS;
 }
 
 
@@ -405,22 +571,28 @@ int add_service_to_device(Service *_service, Device *_device)
  *
  * @param _device The Device 
  *
- * @return returns 0 if successful -1 if failed -2 if not in the list
+ * @return returns A HPD error code
  */
 int remove_service_from_device(Service *_service, Device *_device)
 {
 
-    if(_service == NULL || _device == NULL) return -1;
+    if(_service == NULL || _device == NULL) return HPD_E_NULL_POINTER;
     
-    ServiceElement *_service_to_remove = create_service_element (_service);
-    ServiceElement *elt;
+    ServiceElement *_iterator, *_tmp;
 
-    LL_SEARCH(_device->service_head,elt,_service_to_remove,cmp_ServiceElement);
-    if(!elt) return -2;
-    
-    LL_DELETE(_device->service_head, _service_to_remove);
+	LL_FOREACH_SAFE(_device->service_head, _iterator, _tmp)
+	{
+		if( strcmp( _service->type, _iterator->service->type ) == 0
+		   && strcmp ( _service->ID, _iterator->service->ID ) == 0 )
+		{
+			LL_DELETE( _service->device->service_head, _iterator );
+			destroy_service_element(_iterator);
+			_iterator = NULL;
+			break;
+		}			
+	}
 
-    return 0;
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -435,9 +607,65 @@ ServiceElement* create_service_element(Service *_service)
     ServiceElement *_service_list_element = (ServiceElement*)malloc(sizeof(ServiceElement));
     _service_list_element->service = _service;
     _service_list_element->next = NULL;
-    pthread_mutex_init(&_service_list_element->mutex, NULL);
+    _service_list_element->mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+    pthread_mutex_init(_service_list_element->mutex, NULL);
     
     return _service_list_element;
+}
+
+/**
+ * Creates a Service Element for the Service List derived from another service element
+ *
+ * @param _service_element_to_subscribe The Service Element 
+ *
+ * @return returns the Service Element if successfull NULL if failed
+ */
+ServiceElement* create_subscribed_service_element(ServiceElement *_service_element_to_subscribe)
+{
+    ServiceElement *_service_list_element = (ServiceElement*)malloc(sizeof(ServiceElement));
+    _service_list_element->service = _service_element_to_subscribe->service;
+    _service_list_element->next = NULL;
+    _service_list_element->mutex = _service_element_to_subscribe->mutex;
+
+    return _service_list_element;
+}
+
+/**
+ * Destroys a Service Element
+ *
+ * @param _service_element_to_destroy The Service Element 
+ *
+ * @return void
+ */
+void destroy_service_element(ServiceElement *_service_element_to_destroy)
+{
+	if(_service_element_to_destroy)
+	{
+		if(_service_element_to_destroy->mutex)
+		{
+			pthread_mutex_destroy(_service_element_to_destroy->mutex);
+		}
+		if(_service_element_to_destroy->mutex)
+		{
+			free(_service_element_to_destroy->mutex);
+		}
+		free(_service_element_to_destroy);
+	}
+}
+
+/**
+ * Destroys a Service Element used for subscription
+ *
+ * @param _subscribed_service_element_to_destroy The Service Element 
+ *
+ * @return void
+ */
+void destroy_subscribed_service_element(ServiceElement *_subscribed_service_element_to_destroy)
+{
+     if(_subscribed_service_element_to_destroy)
+    {
+        free(_subscribed_service_element_to_destroy);
+    }
 }
 
 

@@ -26,6 +26,7 @@ authors and should not be interpreted as representing official policies, either 
 
 
 #include "avahi_publish.h"
+#include "hpd_error.h"
 /**
  * Start either an Avahi server either an Avahi client. If starting an Avahi
  * client, the device needs to have an Avahi daemon running.

@@ -24,9 +24,10 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed*/
 
 
-#include "web_server_api.h"
+#include <assert.h>
 
-#define AVAHI 1
+#include "web_server_api.h"
+#include "hpd_error.h"
 
 
 static ServiceElement *service_head;/**< List containing all the services handled by the server */
@@ -34,23 +35,9 @@ static struct MHD_Daemon *d;/**< MDH daemon for the MHD web server listening for
 
 
 int done_flag = 0;
-char *put_data_temp = NULL;
+int answer_continue = 0;
 
-static ssize_t
-file_reader (void *cls, uint64_t pos, char *buf, size_t max)
-{
-    FILE *file = cls;
 
-    (void)  fseek (file, pos, SEEK_SET);
-    return fread (buf, 1, max, file);
-}
-
-static void
-free_callback (void *cls)
-{
-    FILE *file = cls;
-    fclose (file);
-}
 
 /**
  * Add an XML response to the queue of the server
@@ -61,7 +48,7 @@ free_callback (void *cls)
  *		   return code of MHD_queue_response otherwise
  */
 static int
-send_xml (struct MHD_Connection *connection, const xmlChar *xmlbuff)
+send_xml (struct MHD_Connection *connection, const char *xmlbuff)
 {
 
     int ret;
@@ -72,8 +59,9 @@ send_xml (struct MHD_Connection *connection, const xmlChar *xmlbuff)
     if(!response)
     {
         if(xmlbuff)
-	   xmlFree(xmlbuff);
-        return MHD_NO;
+	   		free(xmlbuff);
+
+		return MHD_NO;
     }
 
     MHD_add_response_header (response, "Content-Type", "text/xml");
@@ -84,23 +72,37 @@ send_xml (struct MHD_Connection *connection, const xmlChar *xmlbuff)
 }
 
 /**
- * Add a Not found response to the queue of the server
+ * Add an error response to the queue of the server
  *
  * @param connection The client connection which will receive the response
+ * 
+ * @param http_error_code The http error code to send
  *
  * @return MHD return value, MHD_NO if the response failed to be created, 
  *		   return code of MHD_queue_response otherwise
  */
-static int send_not_found(struct MHD_Connection *connection)
+static int send_error(struct MHD_Connection *connection, int http_error_code)
 {
     int ret;
     struct MHD_Response *response;
 
-    response = MHD_create_response_from_data(strlen("Not Found"), (void *) "Not Found", MHD_NO, MHD_NO);
+    switch( http_error_code )
+    {
+	case MHD_HTTP_NOT_FOUND :
+		response = MHD_create_response_from_data(strlen("Not Found"), (void *) "Not Found", MHD_NO, MHD_NO);
+		break;
+
+	case MHD_HTTP_BAD_REQUEST :
+		response = MHD_create_response_from_data(strlen("Bad Request"), (void *) "Bad Request", MHD_NO, MHD_NO);
+		break;
+	default :
+		response = MHD_create_response_from_data(strlen("Unknown error"), (void *) "Unknown error", MHD_NO, MHD_NO);
+		break;
+    } 
 
     if(!response)
         return MHD_NO;
-    ret = MHD_queue_response (connection, MHD_HTTP_NOT_FOUND, response);
+    ret = MHD_queue_response (connection, http_error_code, response);
     MHD_destroy_response(response);
 
     return ret;
@@ -124,7 +126,7 @@ int request_completed(void *cls, struct MHD_Connection *connection,
 {
     if(*con_cls)
     {
-        xmlFree((xmlChar*)*con_cls);
+        free(*con_cls);
         return 0;
     }
 
@@ -164,6 +166,10 @@ int answer_to_connection (void *cls, struct MHD_Connection *connection,
     ServiceElement *_requested_service_element;
     int *done = cls;
     static int aptr;
+	struct sockaddr *addr;
+	addr = MHD_get_connection_info (connection, MHD_CONNECTION_INFO_CLIENT_ADDRESS)->client_addr;
+	char IP[16];
+    	inet_ntop(addr->sa_family,addr->sa_data + 2, IP, 16);
 
     if( 0 == strcmp (method, MHD_HTTP_METHOD_GET) )
     {
@@ -175,213 +181,182 @@ int answer_to_connection (void *cls, struct MHD_Connection *connection,
 	   return MHD_YES;
         }
         *con_cls = NULL;
-        xmlChar *xmlbuff;
+        char *xmlbuff;
 
-        if(strcmp(url,"/services_css.css") == 0){
-
-	   FILE *file;
-	   struct stat buf;
-	   struct MHD_Response *response;
-	   int ret;
-	   if (0 == stat ("services_css.css", &buf))
-	       file = fopen ("services_css.css", "rb");
-	   else
-	       file = NULL;
-
-	   response = MHD_create_response_from_callback (buf.st_size, 32 * 1024,     /* 32k page size */
-	                                                 &file_reader,
-	                                                 file,
-	                                                 &free_callback);
-	   if (response == NULL)
-	   {
-	       fclose (file);
-	       return MHD_NO;
-	   }
-	   ret = MHD_queue_response (connection, MHD_HTTP_OK, response);
-	   MHD_destroy_response (response);
-	   return ret;
+        if(strcmp(url,"/log") == 0)
+	{
+		Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
+		return subscribe_to_log_events(connection, con_cls, HPD_IS_UNSECURE_CONNECTION);
+	}
+        else if(strcmp(url,"/events") == 0)
+        {
+	   Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
+	   int ret = set_up_server_sent_event_connection(connection, HPD_IS_UNSECURE_CONNECTION);
+	   if(ret == 404) return send_error (connection, MHD_HTTP_NOT_FOUND);
+	   else return ret;
         }
-
         else if(strcmp(url,"/devices") == 0)
         {
-	   const char *_get_arg = MHD_lookup_connection_value(connection, MHD_GET_ARGUMENT_KIND, "c");
-	   if(_get_arg != NULL)
-	   {
-	       if(strcmp(_get_arg, "1") == 0)
-	       {
-		  char* css_add_string = "<?xml-stylesheet type=\"text/css\" href=\"services_css.css\"?>";
-		  char string[1000] = "";
-		  FILE* originalFile = fopen("services.xml","r");
-		  FILE* newFile = fopen("services_with_css.xml","w+t");
-		  int i = 0;
-		  while(fgets(string,1000,originalFile)!=NULL){
-		      i++;
-		      if(i==2){
-			 fputs(css_add_string,newFile);
-		      }
-		      fputs(string,newFile);
-		  }
-		  fclose(originalFile);
-		  fclose(newFile);
+		Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
+		
+		xmlbuff = get_xml_device_list();
 
-		  xmlDocPtr doc = xmlParseFile ("services_with_css.xml");
-		  int buffersize;
-
-		  xmlDocDumpFormatMemory (doc, &xmlbuff, &buffersize, 1);
-
-		  remove("services_with_css.xml");
-
-		  return send_xml (connection, xmlbuff);
-
-	       }
+		return send_xml (connection, xmlbuff);
 	   }
-	   else{
-	       xmlDocPtr doc = xmlParseFile (XML_FILE_NAME);
-	       int buffersize;
-
-	       xmlDocDumpFormatMemory (doc, &xmlbuff, &buffersize, 1);
-
-	       return send_xml (connection, xmlbuff);
-	   }
-        }
         else if( ( _requested_service_element = matching_service (service_head, url) ) !=NULL )
         {
-	   pthread_mutex_lock(&_requested_service_element->mutex);
 	   const char *_get_arg = MHD_lookup_connection_value(connection, MHD_GET_ARGUMENT_KIND, "x");
 	   if(_get_arg != NULL)
 	   {
 	       if(strcmp(_get_arg, "1") == 0)
 	       {
+		 Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, "x=1");
+		  pthread_mutex_lock(_requested_service_element->mutex);
 		  xmlbuff = extract_service_xml(_requested_service_element->service);
 
 		  *con_cls = xmlbuff;
 
-		  pthread_mutex_unlock(&_requested_service_element->mutex);
+		  pthread_mutex_unlock(_requested_service_element->mutex);
 		  return send_xml (connection, xmlbuff);
 	       }
 	   }
-	   char *_value = _requested_service_element->service->get_function(_requested_service_element->service);
-	   xmlbuff = get_xml_value (_value);
+
+	   /*Request for the Subscription to the events from the service*/
+	    _get_arg = MHD_lookup_connection_value(connection, MHD_GET_ARGUMENT_KIND, "p");
+	   if(_get_arg != NULL)
+	   {
+	       if(strcmp(_get_arg, "1") == 0)
+	       {
+                Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, "p=1");
+		  return subscribe_to_service(connection, _requested_service_element, con_cls, HPD_IS_UNSECURE_CONNECTION);
+	       }
+	   }
+
+	  Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
+	   pthread_mutex_lock(_requested_service_element->mutex);
+
+		int ret;
+		ret = _requested_service_element->service->get_function(_requested_service_element->service, 
+										_requested_service_element->service->get_function_buffer,
+										MHD_MAX_BUFFER_SIZE);
+		if(ret != 0)
+			_requested_service_element->service->get_function_buffer[ret] = '\0';
+		else
+			return send_error(connection, MHD_HTTP_NOT_FOUND);
+
+	   xmlbuff = get_xml_value (_requested_service_element->service->get_function_buffer);
 	   *con_cls = xmlbuff;
-	   pthread_mutex_unlock(&_requested_service_element->mutex);
+	   pthread_mutex_unlock(_requested_service_element->mutex);
 	   return send_xml(connection, xmlbuff);
         }
         else
         {
-	   return send_not_found(connection);
+	   return send_error(connection, MHD_HTTP_NOT_FOUND);
         }
     }
 
     else if( 0 == strcmp(method, MHD_HTTP_METHOD_PUT) )
     {  
-        if( ( *done ) == 0)
+        if( ( *con_cls ) == NULL )
         {
-	   if(*upload_data_size == 0)
-	   {
-	       return MHD_YES; /* not ready yet */
-	   }	    
-	   *done = 1;
-	   /* Add a space for a '/0' in order to clear the end of the XML */
-	   put_data_temp = (char*)malloc((*upload_data_size)*sizeof(char)+1);
-	   memcpy(put_data_temp, upload_data, *upload_data_size);
-	   put_data_temp[*upload_data_size]='\0';
-	   *upload_data_size = 0;
-	   return MHD_YES;
-        }
-        else
-        {
-	   *done = 0;
-	   if( ( _requested_service_element = matching_service (service_head, url) ) !=NULL )
-	   {
-	       pthread_mutex_lock(&_requested_service_element->mutex);
-	       if( _requested_service_element->service->put_function != NULL && put_data_temp != NULL)
-	       {
-		  char* _value = get_value_from_xml_value (put_data_temp);
-		  if(_value == NULL)
-		      return send_not_found (connection);
-		  xmlChar* xmlbuff = get_xml_value ( _requested_service_element->service->put_function(_requested_service_element->service, _value));
-		  *con_cls = xmlbuff;
-		  put_data_temp = NULL;
-		  pthread_mutex_unlock(&_requested_service_element->mutex);
-		  return send_xml (connection, xmlbuff);
-	       }
-	       else
-	       {
-		  pthread_mutex_unlock(&_requested_service_element->mutex);
-		  return send_not_found (connection);
-	       }
-	   }
+			if(*upload_data_size == 0)
+			{
+				return MHD_YES; /* not ready yet */
+			}	    
+			/* Add a space for a '/0' in order to clear the end of the XML */
+			char *put_data_temp = (char*)malloc((*upload_data_size)*sizeof(char)+1);
+			memcpy(put_data_temp, upload_data, *upload_data_size);
+			put_data_temp[*upload_data_size]='\0';
+			*con_cls = put_data_temp;
+			*upload_data_size = 0;
+			return MHD_YES;
+		}
+		else
+		{
+			if( ( _requested_service_element = matching_service (service_head, url) ) !=NULL )
+			{
+				Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
+				pthread_mutex_lock(_requested_service_element->mutex);
+				if( _requested_service_element->service->put_function != NULL && *con_cls != NULL)
+				{
+					char* _value = get_value_from_xml_value (*con_cls);
+					if(_value == NULL)
+					{
+						pthread_mutex_unlock(_requested_service_element->mutex);
+						return send_error (connection, MHD_HTTP_BAD_REQUEST);
+					}
+
+					free(*con_cls);
+
+					int ret;
+					ret = _requested_service_element->service->put_function(_requested_service_element->service, 
+					                                                        _requested_service_element->service->get_function_buffer,
+					                                                        MHD_MAX_BUFFER_SIZE,
+					                                                        _value);
+					free(_value);
+					
+					if(ret != 0)
+						_requested_service_element->service->get_function_buffer[ret] = '\0';
+					else
+						return send_error(connection, MHD_HTTP_NOT_FOUND);
+
+					char* xmlbuff = get_xml_value (_requested_service_element->service->get_function_buffer);
+					*con_cls = xmlbuff;
+					pthread_mutex_unlock(_requested_service_element->mutex);
+					send_event_of_value_change (_requested_service_element->service, _requested_service_element->service->get_function_buffer);
+					return send_xml (connection, xmlbuff);
+				}
+				else
+				{
+					pthread_mutex_unlock(_requested_service_element->mutex);
+					return send_error(connection, MHD_HTTP_BAD_REQUEST);
+				}
+			}
 	   else
-	       return send_not_found (connection);
+	       return send_error (connection, MHD_HTTP_NOT_FOUND);
         }
     }
     return MHD_NO;
 }
 
 /**
- * Add a service to the XML file, the server's service list and the AVAHI server
+ * Add a service the server's service list
  *
  * @param _service The service to add
  *
- * @return 0 if the service has been successfully added,
- *		  -1 if a similar service already exists in the server,
- *		  -2 if the adding to the XML file failed,
- *        -3 if the service was not added to the list successfully, 
- *		  -4 if the server couldn't add it to its list
+ * @return A HPD error code
  */
-int register_service_in_server(Service *_service)
+int register_service_in_unsecure_server(Service *_service)
 {
     int rc;
 
-    if( is_service_registered( _service ) )
-    {
-        printf("A similar service is already registered in the server\n");
-        return -1;
-    }
+    assert(d);
 
     ServiceElement *_service_element_to_add = create_service_element (_service);
-    /* Add to XML */
-    rc = add_service_to_xml (_service);
-    if (rc == -1){
-        printf("Impossible to add the Service to the XML file.\n");
-        return -2;
-    }
-    else if(rc == -2){
-        printf("The Service already exists\n");
-    }
+
     LL_APPEND(service_head, _service_element_to_add);
     if(service_head == NULL)
     {
         printf("add_service_to_list failed\n");
-        return -3;
+        return HPD_E_LIST_ERROR;
     }
-#if AVAHI == 1
-    avahi_create_service (_service);
-#endif
-    return 0;
+
+    return HPD_E_SUCCESS;
 }
 
 /**
- * Remove a service from the XML file, the server's service list, and the AVAHI server
+ * Remove a service the server's service list
  *
  * @param _service The service to remove
  *
- * @return 0 if the service has been successfully removed, 
- *        -1 if the removing from the XML file failed,
- *        -2 if the service couldn't be removed from the server's service list,
- *		  -3 if the service couldn't be removed from the AVAHI server
+ * @return A HPD error code
  */
-int unregister_service_in_server( Service *_service )
+int unregister_service_in_unsecure_server( Service *_service )
 {
     int rc;
     ServiceElement *_tmp, *_iterator;
 
-    rc = remove_service_from_XML(_service);
-    if( rc < 0 )
-    {
-        printf("remove_service_from_xml failed : %d\n", rc);
-        return -1;
-    }
+    assert(d);
 
     LL_FOREACH_SAFE(service_head, _iterator, _tmp)
     {
@@ -392,16 +367,7 @@ int unregister_service_in_server( Service *_service )
         }
     }
 
-#if AVAHI == 1
-    rc = avahi_remove_service ( _service );
-    if(  rc < 0 )
-    {
-        printf("avahi_remove_service failed : %d\n", rc);
-        return -3;
-    }
-#endif
-
-    return 0;
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -411,36 +377,59 @@ int unregister_service_in_server( Service *_service )
  *
  * @param _domain_name Domain name for the local address of the server (if NULL = .local)
  *
- * @return 0 if the server has been successfully started, 
- *        -1 otherwise
+ * @return A HPD error code
  */
-int start_server( char* _hostname, char* _domain_name)
+int start_unsecure_server()
 {  
-    init_xml_file (XML_FILE_NAME,DEVICE_LIST_ID);
 
-    d = MHD_start_daemon (MHD_USE_THREAD_PER_CONNECTION, PORT, NULL, NULL, 
+    d = MHD_start_daemon (MHD_USE_THREAD_PER_CONNECTION | MHD_USE_DEBUG, hpd_daemon->http_port, NULL, NULL, 
                           &answer_to_connection, &done_flag, MHD_OPTION_NOTIFY_COMPLETED, 
                           &request_completed, NULL, MHD_OPTION_END);
-    if (NULL == d) return 1;
-#if AVAHI == 1
-    avahi_start (_hostname, _domain_name);
-#endif
+    if (NULL == d) 
+    {
+	return HPD_E_MHD_ERROR;
+    }
 
-    return 0;
+    return HPD_E_SUCCESS;
 }
 
 /**
- * Stop the MHD web server and the AVAHI server and delete the XML file
+ * Stop the MHD web server and the AVAHI server and free the associated services
  *
- * @return void
+ * @return A HPD error code
  */
-void stop_server()
+int stop_unsecure_server()
 {
+    assert(d);
+    free_unsecure_server_services();
+
     MHD_stop_daemon (d);
-    delete_xml(XML_FILE_NAME);
-#if AVAHI == 1
-    avahi_quit ();
-#endif
+
+    return HPD_E_SUCCESS;
+}
+
+/**
+ * Free all the services holded by the server
+ *
+ * @return A HPD error code
+ */
+int free_unsecure_server_services()
+{
+	ServiceElement *_iterator, *_tmp;
+
+	if(service_head == NULL)
+		return HPD_E_NULL_POINTER;
+	
+	LL_FOREACH_SAFE(service_head, _iterator, _tmp)
+	{
+		LL_DELETE(service_head, _iterator);
+		destroy_service_struct(_iterator->service);
+		destroy_service_element(_iterator);
+		_iterator = NULL;
+	}
+
+	return HPD_E_SUCCESS;
+
 }
 
 /**
@@ -452,9 +441,11 @@ void stop_server()
  *		   1 If the given service is registered
  */
 
-int is_service_registered( Service *_service )
+int is_unsecure_service_registered( Service *_service )
 {
     ServiceElement *_iterator = NULL;
+
+    assert(d);
 
     LL_FOREACH( service_head, _iterator )
     {
@@ -485,9 +476,11 @@ int is_service_registered( Service *_service )
  *		   NULL    otherwise
  */
 
-Service* get_service_from_server( char *_device_type, char *_device_ID, char *_service_type, char *_service_ID )
+Service* get_service_from_unsecure_server( char *_device_type, char *_device_ID, char *_service_type, char *_service_ID )
 {
     ServiceElement *_iterator = NULL;
+
+    assert(d);
 
     LL_FOREACH(service_head, _iterator)
     {
@@ -516,9 +509,11 @@ Service* get_service_from_server( char *_device_type, char *_device_ID, char *_s
  *		   NULL    otherwise
  */
 
-Device* get_device_from_server( char *_device_type, char *_device_ID)
+Device* get_device_from_unsecure_server( char *_device_type, char *_device_ID)
 {
     ServiceElement *_iterator = NULL;
+
+    assert(d);
 
     LL_FOREACH(service_head, _iterator)
     {

@@ -23,21 +23,150 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The views and conclusions contained in the software and documentation are those of the
 authors and should not be interpreted as representing official policies, either expressed*/
 
+
 #include "homeport.h"
-#include "web_server_api.h"
-#include "utlist.h"
+#include "hpd_error.h"
+#include "web_server.h"
+
+
+/**
+ * Parse the user's specified options
+ *
+ * @param ap va_list of options
+ *
+ * @return A HPD error code
+ */
+static 
+int parse_option_va(va_list ap)
+{
+	enum HPD_OPTION opt;
+	int log_level, max_log_size;
+	char *log_file_name;
+
+	while( HPD_OPTION_END != ( opt = va_arg( ap, enum HPD_OPTION ) ) )
+	{
+		switch (opt)
+		{
+
+			case HPD_OPTION_HTTP :
+#if HPD_HTTP
+				hpd_daemon->http_port = va_arg( ap, int );
+				break;
+#else
+				printf("Received HPD_OPTION_HTTP without HTTP feature enabled\n");
+				return HPD_E_NO_HTTP;
+#endif		
+			case HPD_OPTION_HTTPS :
+#if HPD_HTTPS
+				hpd_daemon->https_port = va_arg( ap, int );
+				hpd_daemon->server_cert_path = va_arg( ap, const char*);
+				hpd_daemon->server_key_path = va_arg( ap, const char*);
+				hpd_daemon->root_ca_path = va_arg( ap, const char*);
+				break;
+#else
+				printf("Received HPD_OPTION_HTTPS without HTTPS feature enabled\n");
+				return HPD_E_NO_HTTPS;
+#endif		
+			case HPD_OPTION_LOG :
+				log_level = va_arg( ap, int );
+				if( log_level < 0 || log_level > 2 )
+				{
+					printf("Bad value for log level\n");
+					return HPD_E_BAD_PARAMETER;
+				}
+				max_log_size = va_arg( ap, int );
+				if( max_log_size < 0 )
+				{
+					printf("Bad value for max log size\n");
+					return HPD_E_BAD_PARAMETER;
+				}
+				break;
+
+			default :
+				printf("Unrecognized option\n");	
+				return HPD_E_BAD_PARAMETER;
+			
+		}
+
+	}
+
+	return HPD_E_SUCCESS;
+
+}
 
 /**
  * Starts the HomePort Daemon
  *
  * @param _hostname Name of the desired host
  *
- * @return 0 if the daemon has been successfully started, 
- *        -1 if failed
+ * @return A HPD error code
  */
-int HPD_start( char* _hostname )
+int HPD_start( unsigned int option, char *_hostname, ... )
 {
-	return start_server (_hostname, NULL);
+
+	int rc;
+
+	if( rc = HPD_init_daemon() )
+	{
+		printf("Error initializing HPD_Daemon struct\n");
+		return rc;
+	}
+#if !AVAHI_CLIENT
+	if( _hostname == NULL )
+		return HPD_E_NULL_POINTER;
+
+	hpd_daemon->hostname = _hostname;
+#endif
+
+	va_list ap;
+
+	va_start( ap, _hostname);
+
+	if( option & HPD_USE_CFG_FILE )
+	{
+		printf("Using config file\n");
+
+		if( va_arg(ap, enum HPD_OPTION) != HPD_OPTION_CFG_PATH )
+		{
+			printf("Only HPD_OPTION_CFG_PATH msut be specified when using HPD_USE_CFG_FILE\n");
+
+			return HPD_E_BAD_PARAMETER;
+		}		
+		
+		if( rc = HPD_config_file_init( va_arg( ap, const char* ) ) )
+		{
+			printf("Error loading config file %d\n", rc);
+			return rc;
+		}		
+	}
+
+	else
+	{	
+		if( rc = parse_option_va(ap) )
+			return rc;
+
+
+#if HPD_HTTP
+		if( hpd_daemon->http_port == 0 )
+		{
+			printf("Missing HTTP port option\n");
+		}
+#endif
+
+#if HPD_HTTPS		
+		if(  hpd_daemon->https_port == 0 || hpd_daemon->server_cert_path == NULL
+			 || hpd_daemon->server_key_path == NULL || hpd_daemon->root_ca_path == NULL ) 
+		{
+			printf("Missing options to launch HTTPS\n");
+			return HPD_E_MISSING_OPTION;
+		}
+#endif
+
+	}
+
+	va_end(ap);	
+
+	return start_server(_hostname, NULL);
 }
 
 
@@ -45,13 +174,12 @@ int HPD_start( char* _hostname )
 /**
  * Stops the HomePort Daemon
  *
- * @return 0 if the daemon has been successfully stopped, 
- *        -1 if failed
+ * @return A HPD error code
  */
 int HPD_stop()
 {
-	stop_server();
-	return 0;
+	HPD_config_deinit();
+	return stop_server();
 }
 
 /**
@@ -59,15 +187,14 @@ int HPD_stop()
  *
  * @param _service The service to register
  *
- * @return 0 if the service has been successfully registered,
- *		  -1 if a similar service already exists in the server,
- *		  -2 if the adding to the XML file failed,
- *        	  -3 if the service was not added to the list successfully, 
- *		  -4 if the server couldn't add it to its list
+ * @return A HPD error code
  */
 int HPD_register_service(Service *_service)
 {
-	return register_service_in_server (_service);
+	if( _service == NULL )
+		return HPD_E_NULL_POINTER;
+
+	return register_service_in_server(_service);
 }
 
 /**
@@ -75,14 +202,14 @@ int HPD_register_service(Service *_service)
  *
  * @param _service The service to unregister
  *
- * @return 0 if the service has been successfully unregistered, 
- *        	-1 if the removing from the XML file failed,
- *       	-2 if the service couldn't be removed from the server's service list,
- *		-3 if the service couldn't be removed from the AVAHI server
+ * @return A HPD error code
  */
 int HPD_unregister_service(Service *_service)
 {
-	return unregister_service_in_server (_service);
+	if( _service == NULL )
+		return HPD_E_NULL_POINTER;
+
+	return unregister_service_in_server(_service);
 }
 
 /**
@@ -92,24 +219,16 @@ int HPD_unregister_service(Service *_service)
  * @param _device The device that contains the services
  *  to register
  *
- * @return 0 if the services have been successfully registered,
- *		  -1 if a similar service already exists in the server,
- *		  -2 if the adding to the XML file failed,
- *        	  -3 if one of the services was not added to the list successfully, 
- *		  -4 if the server couldn't add one of the services to its list
+ * @return A HPD error code
  */
-int HPD_register_device_services(Device *_device){
-
-    ServiceElement *_iterator;
-    int return_value;
-    LL_FOREACH(_device->service_head, _iterator)
-    {
-        return_value = register_service_in_server (_iterator->service);
-        if(return_value < 0){
-	   return return_value;
-        }
-    }
-    return 0;
+int HPD_register_device_services(Device *_device)
+{
+	if( _device == NULL )
+	{
+		return HPD_E_NULL_POINTER;
+	}
+	return register_device_services( _device );
+	
 }
 
 
@@ -120,23 +239,14 @@ int HPD_register_device_services(Device *_device){
  * @param _device The device that contains the services
  *  to unregister
  *
- * @return 0 if the services have been successfully unregistered, 
- *        	-1 if the removing from the XML file failed,
- *       	-2 if one of the services couldn't be removed from the server's service list,
- *		-3 if one of the services couldn't be removed from the AVAHI server
+ * @return A HPD error code
  */
-int HPD_unregister_device_services(Device *_device){
-
-    ServiceElement *_iterator;
-    int return_value;
-    LL_FOREACH(_device->service_head, _iterator)
-    {
-        return_value = unregister_service_in_server (_iterator->service);
-        if(return_value < 0){
-	   return return_value;
-        }
-    }
-    return 0;
+int HPD_unregister_device_services(Device *_device)
+{
+    if( _device == NULL )
+	return HPD_E_NULL_POINTER;
+	
+    return unregister_device_services(_device);
 }
 
 
@@ -155,7 +265,11 @@ int HPD_unregister_device_services(Device *_device){
  */
 Service* HPD_get_service( char *_device_type, char *_device_ID, char *_service_type, char *_service_ID )
 {
-	return get_service_from_server ( _device_type, _device_ID, _service_type, _service_ID );
+
+	if( _device_type == NULL || _device_ID == NULL || _service_type == NULL || _service_ID == NULL )
+		return NULL;
+
+	return get_service_from_server( _device_type, _device_ID, _service_type, _service_ID );
 }
 
 /**
@@ -169,6 +283,24 @@ Service* HPD_get_service( char *_device_type, char *_device_ID, char *_service_t
  */
 Device* HPD_get_device(char *_device_type, char *_device_ID)
 {
-	return get_device_from_server ( _device_type, _device_ID);
+	if( _device_type == NULL || _device_ID == NULL )
+		return NULL;
+
+	return get_device_from_server( _device_type, _device_ID );
 }
+
+/**
+ * Sends an event of a changing of value from a given Service
+ *
+ * @param _service_url The URL of the service
+ *
+ * @param _updated_value The new value.
+ *
+ * @return HPD_E_SUCCESS if successful
+ */
+int HPD_send_event_of_value_change (Service *service, char *_updated_value)
+{
+	return send_event_of_value_change (service, _updated_value);
+}
+
 

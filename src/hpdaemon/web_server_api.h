@@ -26,6 +26,12 @@ authors and should not be interpreted as representing official policies, either 
 #ifndef _WEB_SERVER_API_H
 #define WEB_SERVER_API_H
 
+#define	XML_FILE_NAME "services.xml"
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/select.h>
@@ -37,24 +43,22 @@ authors and should not be interpreted as representing official policies, either 
 #include <pthread.h>
 
 #include "services.h"
-#include "xmlAPI.h"
-#include "avahi_publish.h"
 #include "utlist.h"
+#include "server_sent_events.h"
 
-#define PORT    8888
-#define PUTBUFFERSIZE  512
-#define MAXNAMESIZE     20
-#define MAXANSWERSIZE   512
+#include "hpd_configure.h"
 
-int start_server(char* _hostname, char *_domain_name);
-void stop_server();
-int register_service_in_server(Service *_service);
-int unregister_service_in_server( Service *_service );
 
-int is_service_registered( Service *_service );
+int start_unsecure_server();
+int stop_unsecure_server();
+int register_service_in_unsecure_server(Service *_service);
+int unregister_service_in_unsecure_server( Service *_service );
 
-Service* get_service_from_server( char *_device_type, char *_device_ID, char *_service_type, char *_service_ID );
-Device* get_device_from_server( char *_device_type, char *_device_ID);
+int is_unsecure_service_registered( Service *_service );
+int free_unsecure_server_services();
+
+Service* get_service_from_unsecure_server( char *_device_type, char *_device_ID, char *_service_type, char *_service_ID );
+Device* get_device_from_unsecure_server( char *_device_type, char *_device_ID);
 
 
 #endif /* WEB_SERVER_API_H */

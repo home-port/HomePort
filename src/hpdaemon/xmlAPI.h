@@ -26,37 +26,48 @@ authors and should not be interpreted as representing official policies, either 
 #ifndef XMLAPI_H
 #define XMLAPI_H
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <mxml.h>
 #include "services.h"
-#include <libxml/xmlmemory.h>
-#include <libxml/parser.h>
-#include <libxml/xmlschemas.h>
-#include <libxml/xmlwriter.h>
-#include <libxml/xmlreader.h>
-#include <libxml/encoding.h>
-#include <libxml/xpath.h>
 
 #define	ENCODING "UTF-8"
 #define	XML_FILE_NAME "services.xml"
 #define	DEVICE_LIST_ID "12345"
 
-int init_xml_file(char *name, char *id); // DONE
-int device_is_in_xml_file(Device *device); // DONE
-int service_is_in_xml_file(Service *service); // DONE
-xmlXPathObjectPtr get_node_set(xmlDocPtr doc, xmlChar *xpath); // DONE
-int add_device_to_xml(Device *device_to_add); //DONE
-int add_service_to_xml(Service *service_to_add); //DONE
-xmlChar * get_xml_value(char* value); //DONE
-char * timestamp(); //DONE
-int remove_service_from_XML(Service *_service); //DONE
-int remove_device_from_XML(Device *_device); //DONE
-int delete_xml(char* xml_file_path); //DONE
-char* get_value_from_xml_value(char* _xml_value); //DONE
-xmlChar *extract_service_xml(Service *_service_to_extract);//DONE
-void generate_get_and_put_functions_from_xml(char* _xml_file_name); //IN PROGRESS
-/*Service *get_service_from_xml_node(char *xml_node);*/ //IN PROGRESS
+typedef struct serviceXmlFile serviceXmlFile;
+struct serviceXmlFile
+{
+    FILE *fp;
+    mxml_node_t *xml_tree;
+    pthread_mutex_t *mutex;
+};
+
+int init_xml_file(char *name, char *id);
+int device_is_in_xml_file(Device *_device);
+int service_is_in_xml_file(Service *_service);
+int add_device_to_xml(Device *device_to_add); 
+int add_service_to_xml(Service *service_to_add); 
+char * get_xml_value(char* value); 
+char * get_xml_subscription(char* value, char *url);
+char * timestamp(); 
+int remove_service_from_XML(Service *_service); 
+int remove_device_from_XML(Device *_device); 
+int delete_xml(char* xml_file_path); 
+char* get_value_from_xml_value(char* _xml_value); 
+char *extract_service_xml(Service *_service_to_extract);
+const char * whitespace_cb(mxml_node_t *node, int where);
+void create_service_xml_file();
+void destroy_service_xml_file();
+void save_xml_tree();
+mxml_node_t *get_xml_node_of_device(Device *_device);
+mxml_node_t *get_xml_node_of_service(Service *_service);
 
 #endif
+

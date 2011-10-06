@@ -24,6 +24,7 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed*/
 
 #include "avahi_publish_client.h"
+#include "hpd_error.h"
 
 static AvahiThreadedPoll *threaded_poll = NULL;
 
@@ -31,7 +32,7 @@ AvahiClient *client = NULL;
 
 EntryGroupElement *entry_group_head = NULL;
 
-static void static_create_services(Service *_service);
+static int static_create_services(Service *_service);
 
 void clean_up_client ();
 
@@ -97,11 +98,15 @@ static void entry_group_callback(AvahiEntryGroup *g, AvahiEntryGroupState state,
  *
  * @return void
  */ 
-void avahi_client_create_service (Service *_service)
+int avahi_client_create_service (Service *_service)
 {
+    int rc;
+
     avahi_threaded_poll_lock(threaded_poll);
-    static_create_services (_service);
+    rc = static_create_services (_service);
     avahi_threaded_poll_unlock(threaded_poll);
+
+    return rc;
 }
 
 /**
@@ -111,7 +116,7 @@ void avahi_client_create_service (Service *_service)
  *
  * @return void
  */ 
-static void static_create_services(Service *_service) {
+static int static_create_services(Service *_service) {
     //char *n, r[128];
 	char *r;
 	int ret;
@@ -125,8 +130,11 @@ static void static_create_services(Service *_service) {
 	}
 
 	/* Setting TXT data */
-    r = (char*)malloc((strlen("URI=")+strlen(_service->value_url)+1)*sizeof(char));
-    strcpy(r, "URI=");
+    	r = (char*)malloc((strlen("URI=")+strlen(_service->value_url)+1)*sizeof(char));
+	if( r == NULL )
+		return HPD_E_MALLOC_ERROR;
+
+	strcpy(r, "URI=");
     strcat(r, _service->value_url);
 
 
@@ -143,6 +151,8 @@ static void static_create_services(Service *_service) {
 		goto fail;
 	}
 
+	free(r);
+
 	EntryGroupElement *_new_entry_group_element = (EntryGroupElement*)malloc(sizeof(EntryGroupElement));
 	_new_entry_group_element->avahiEntryGroup = _group;
 	_new_entry_group_element->service = _service;
@@ -150,10 +160,12 @@ static void static_create_services(Service *_service) {
 
 	LL_APPEND(entry_group_head, _new_entry_group_element);
 
-    return;
+    return HPD_E_SUCCESS;
 
 fail:
     avahi_threaded_poll_quit(threaded_poll);
+
+    return HPD_E_AVAHI_CLIENT_ERROR;
 }
 
 /**
@@ -232,6 +244,8 @@ int avahi_client_remove_service(Service *_service)
 		{
 			_group = _iterator->avahiEntryGroup;
 			LL_DELETE(entry_group_head, _iterator);
+			free(_iterator);
+			_iterator = NULL;
 			break;
 		}
 	}
@@ -239,7 +253,7 @@ int avahi_client_remove_service(Service *_service)
 	if( _group == NULL )
 	{
 		printf("avahi_remove_service : No matching AvahiEntryGroup found\n");
-		return -1;
+		return HPD_E_AVAHI_SERVICE_NOT_FOUND;
 	}
 
 	avahi_threaded_poll_lock(threaded_poll);                                                                 
@@ -248,7 +262,7 @@ int avahi_client_remove_service(Service *_service)
 
 	avahi_threaded_poll_unlock(threaded_poll);
 
-	return 0;
+	return HPD_E_SUCCESS;
 }
 
 
@@ -259,16 +273,13 @@ int avahi_client_remove_service(Service *_service)
  */ 
 int avahi_client_start() {
     int error;
-    int ret = 1;
 
     /* Allocate main loop object */
     if (!(threaded_poll = avahi_threaded_poll_new())) {
         fprintf(stderr, "Failed to create simple poll object.\n");
         clean_up_client ();
-		return -1;
+		return HPD_E_AVAHI_CLIENT_ERROR;
     }
-
-    //name = avahi_strdup("MegaPrinter");
 
     /* Allocate a new client */
     client = avahi_client_new(avahi_threaded_poll_get(threaded_poll), 0, client_callback, NULL, &error);
@@ -277,15 +288,13 @@ int avahi_client_start() {
     if (!client) {
         fprintf(stderr, "Failed to create client: %s\n", avahi_strerror(error));
         clean_up_client ();
-		return -1;
+		return HPD_E_AVAHI_CLIENT_ERROR;
     }
 
     /* Run the main loop */
     avahi_threaded_poll_start(threaded_poll);
 
-    ret = 0;
-
-    return ret;
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -295,8 +304,22 @@ int avahi_client_start() {
  */ 
 void clean_up_client()
 {
+
+	EntryGroupElement *_tmp, *_iterator = NULL;
+
+	LL_FOREACH_SAFE(entry_group_head, _iterator, _tmp)
+	{
+		LL_DELETE(entry_group_head, _iterator);
+		free(_iterator);
+		_iterator = NULL;
+	}
+
+	avahi_threaded_poll_lock(threaded_poll);  
+	
 	if (client)
 		avahi_client_free(client);
+
+	avahi_threaded_poll_unlock(threaded_poll); 
 
 	if (threaded_poll)
 		avahi_threaded_poll_free(threaded_poll);

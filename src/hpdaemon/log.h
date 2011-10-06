@@ -23,62 +23,49 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The views and conclusions contained in the software and documentation are those of the
 authors and should not be interpreted as representing official policies, either expressed*/
 
-#ifndef HOMEPORT_H
-#define HOMEPORT_H
 
-/** @mainpage The HomePort Project
- *
- * @authors Several
- *
- * @section intro Introduction
- *
- */
+#ifndef LOG_H
+#define LOG_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
 #include <stdarg.h>
+#include <arpa/inet.h>
 
-#include "services.h"
-#include "hpd_configure.h"
 
-enum HPD_FLAG
-{
-	HPD_NO_FLAG = 0,
+#define LOG_FILE_NAME "hpd_log.log"
 
-	HPD_USE_OPTION = 1,
-
-	HPD_USE_CFG_FILE = 2,
-
-	HPD_USE_DEFAULT = 4
+enum HPD_Loglevel{
+    HPD_LOG_NO_LOG = 0,
+    HPD_LOG_ONLY_REQUESTS = 1,
+    HPD_LOG_ALL = 2
 };
 
-enum HPD_OPTION
+typedef struct HPD_Log HPD_Log;
+struct HPD_Log
 {
-	/** No more options / last option
-	*/
-	HPD_OPTION_END = 0,
-
-	HPD_OPTION_HTTP = 1,
-
-	HPD_OPTION_HTTPS = 2,
-
-	HPD_OPTION_LOG = 3,
-
-	HPD_OPTION_CFG_PATH = 4
-
+    int max_log_size;/**<The maximum size of the Log File*/
+    int send_events;/**<Integer that is used to know if we need to send Log event notifications*/
+    FILE *log_file;/**<The actual Log File*/
+    fpos_t pos;/**<The current position in the Log File*/
+    fpos_t initial_pos;/**<The initial file position*/
+    pthread_mutex_t *mutex; /**<A mutex used to access theLog */
+    enum HPD_Loglevel log_level;/**<The desired log level*/
 };
 
-int HPD_start( unsigned int option, char *_hostname, ... );
-int HPD_stop();
-int HPD_register_service(Service *_service);
-int HPD_unregister_service(Service *_service);
-int HPD_register_device_services(Device *_device);
-int HPD_unregister_device_services(Device *_device);
-int HPD_send_event_of_value_change (Service *service, char *_updated_value);
-
-Service* HPD_get_service( char *_device_type, char *_device_ID, char *_service_type, char *_service_ID );
-Device* HPD_get_device(char *_device_type, char *_device_ID);
+HPD_Log *create_hpd_log( int _max_log_size, enum HPD_Loglevel _log_level);
+char *get_date();
+char *get_time ();
+char *hpd_error_code_to_string(int error_code);
+void destroy_hpd_log();
+int init_hpd_log( int _max_log_size, enum HPD_Loglevel _log_level);
+int Log (enum HPD_Loglevel _log_level, char* error_string, char* client_IP, char *method, char *uri_stem, char *uri_query);
+int LogError (int error_code, const char *message,...);
+int change_hpd_log_level (enum HPD_Loglevel _log_level);
+int set_event_sending(int _send_events);
+int LogHTTPRequest (struct sockaddr *addr, char *method, char *url, char *version);
+char *timestamp();
 
 #endif
+
