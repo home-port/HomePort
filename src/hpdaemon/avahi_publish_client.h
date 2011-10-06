@@ -59,7 +59,7 @@ struct EntryGroupElement
 };
 
 
-void avahi_client_create_service (Service *_service);
+int avahi_client_create_service (Service *_service);
 int avahi_client_start();
 int avahi_client_remove_service(Service *_service);
 void avahi_client_quit();

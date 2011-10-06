@@ -24,13 +24,14 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed*/
 
 #include "avahi_publish_core.h"
+#include "hpd_error.h"
 
 static AvahiServer *server=NULL;
 
 static AvahiThreadedPoll *threaded_poll = NULL;
 static char *name = NULL;
 
-static void static_create_services(Service *_service);
+static int static_create_services(Service *_service);
 
 int avahi_core_start_server (char* _host_name, char* _domain_name);
 
@@ -108,11 +109,15 @@ static void entry_group_callback(AvahiServer *s, AvahiSEntryGroup *g, AvahiEntry
  *
  * @return void
  */ 
-void avahi_core_create_service(Service *_service)
+int avahi_core_create_service(Service *_service)
 {
+    int rc;
+
     avahi_threaded_poll_lock(threaded_poll);
-    static_create_services (_service);
+    rc = static_create_services (_service);
     avahi_threaded_poll_unlock(threaded_poll);
+
+    return rc;
 }
 
 /**
@@ -122,7 +127,7 @@ void avahi_core_create_service(Service *_service)
  *
  * @return void
  */ 
-static void static_create_services(Service *_service) {
+static int static_create_services(Service *_service) {
     char *r;
     int ret;
     AvahiSEntryGroup *_group = NULL;
@@ -139,6 +144,8 @@ static void static_create_services(Service *_service) {
 
     /* Setting TXT data */
     r = (char*)malloc((strlen("URI=")+strlen(_service->value_url)+1)*sizeof(char));
+    if( r == NULL )
+	return HPD_E_MALLOC_ERROR;
     strcpy(r, "URI=");
     strcat(r, _service->value_url);
 	
@@ -155,10 +162,13 @@ static void static_create_services(Service *_service) {
         goto fail;
     }
 
-    return;
+    free(r);
+
+    return HPD_E_SUCCESS;
 
 fail:
     avahi_threaded_poll_quit(threaded_poll);
+    return HPD_E_AVAHI_CORE_ERROR;
 }
 
 /**
@@ -240,9 +250,9 @@ static void server_callback(AvahiServer *s, AvahiServerState state, AVAHI_GCC_UN
  *
  * @return void
  */ 
-void avahi_core_start (char *_host_name, char *_domain_name)
+int avahi_core_start (char *_host_name, char *_domain_name)
 {
-    avahi_core_start_server (_host_name, _domain_name);
+    return avahi_core_start_server (_host_name, _domain_name);
 }
 
 /**
@@ -289,16 +299,14 @@ int avahi_core_start_server(char* _host_name, char* _domain_name){
 
     /* Run the main loop */
     avahi_threaded_poll_start(threaded_poll);
-
-    ret = 0;
     
-    return ret;
+    return HPD_E_SUCCESS;
 
 fail:
 
     clean_up_server();
 
-    return ret;
+    return HPD_E_AVAHI_CORE_ERROR;
 }
 
 /**
@@ -339,14 +347,14 @@ int avahi_core_remove_service(Service *_service)
     {
             printf("avahi_server_get_group_of_service failed : %d\n", rc);
             avahi_threaded_poll_unlock(threaded_poll);
-            return -1;
+            return HPD_E_AVAHI_SERVICE_NOT_FOUND;
     }                                                                    
     
     avahi_s_entry_group_free(_group);
 
     avahi_threaded_poll_unlock(threaded_poll);
     
-    return 0;
+    return HPD_E_SUCCESS;
 }
 
 

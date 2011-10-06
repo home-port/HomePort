@@ -8,6 +8,7 @@ Installation
 ============
 
 In order to install libhpd, some dependencies are necessary:
+	-libuuid
 	-libxml2 (http://xmlsoft.org/)
 	-libmicrohttpd (http://www.gnu.org/s/libmicrohttpd/)
 	-avahi-client or avahi-core (http://avahi.org/) 

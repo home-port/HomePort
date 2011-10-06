@@ -23,62 +23,43 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The views and conclusions contained in the software and documentation are those of the
 authors and should not be interpreted as representing official policies, either expressed*/
 
-#ifndef HOMEPORT_H
-#define HOMEPORT_H
+#ifndef WEB_SERVER_SECURE_API_H
+#define WEB_SERVER_SECURE_API_H
 
-/** @mainpage The HomePort Project
- *
- * @authors Several
- *
- * @section intro Introduction
- *
- */
+#define	XML_FILE_NAME "services.xml"
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#include <stdarg.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/select.h>
+#include <sys/socket.h>
+#include <microhttpd.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <pthread.h>
+#include <gnutls/gnutls.h>
+#include <gnutls/x509.h>
 
 #include "services.h"
+#include "utlist.h"
 #include "hpd_configure.h"
+#include "server_sent_events.h"
 
-enum HPD_FLAG
-{
-	HPD_NO_FLAG = 0,
+int start_secure_server();
+int stop_secure_server();
+int register_service_in_secure_server(Service *_service);
+int unregister_service_in_secure_server( Service *_service );
 
-	HPD_USE_OPTION = 1,
+int is_secure_service_registered( Service *_service );
+int free_secure_server_services();
 
-	HPD_USE_CFG_FILE = 2,
+Service* get_service_from_secure_server( char *_device_type, char *_device_ID, char *_service_type, char *_service_ID );
+Device* get_device_from_secure_server( char *_device_type, char *_device_ID);
 
-	HPD_USE_DEFAULT = 4
-};
 
-enum HPD_OPTION
-{
-	/** No more options / last option
-	*/
-	HPD_OPTION_END = 0,
+#endif /* WEB_SERVER_SECURE_API_H */
 
-	HPD_OPTION_HTTP = 1,
-
-	HPD_OPTION_HTTPS = 2,
-
-	HPD_OPTION_LOG = 3,
-
-	HPD_OPTION_CFG_PATH = 4
-
-};
-
-int HPD_start( unsigned int option, char *_hostname, ... );
-int HPD_stop();
-int HPD_register_service(Service *_service);
-int HPD_unregister_service(Service *_service);
-int HPD_register_device_services(Device *_device);
-int HPD_unregister_device_services(Device *_device);
-int HPD_send_event_of_value_change (Service *service, char *_updated_value);
-
-Service* HPD_get_service( char *_device_type, char *_device_ID, char *_service_type, char *_service_ID );
-Device* HPD_get_device(char *_device_type, char *_device_ID);
-
-#endif

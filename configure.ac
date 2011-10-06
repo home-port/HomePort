@@ -53,11 +53,22 @@ DX_PS_FEATURE(OFF)
 
 DX_INIT_DOXYGEN([$PACKAGE_NAME],[doxygen.cfg])
 
-# Checks for command line options
+# Checks for command line options AVAHI
 AC_ARG_ENABLE([hpd-avahi-client],
     [AS_HELP_STRING([--disable-hpd-avahi-client],
         [disable hpd avahi client feature @<:@default: no@:>@])],
     [hpd_avahi_client=${enableval}], [hpd_avahi_client=yes])
+
+# Checks for command line options HTTPS and HTTP
+AC_ARG_ENABLE([hpd-https],
+    [AS_HELP_STRING([--enable-hpd-https],
+        [enable hpd https feature @<:@default: no@:>@])],
+    [hpd_https=${enableval}], [hpd_https=no])
+
+AC_ARG_ENABLE([hpd-http],
+    [AS_HELP_STRING([--disable-hpd-http],
+        [disable hpd http feature @<:@default: yes@:>@])],
+    [hpd_http=${enableval}], [hpd_http=yes])
 
 if test "x${hpd_avahi_client}" = xyes; then
     have_avahi_client=no
@@ -85,21 +96,52 @@ if test "x${hpd_avahi_client}" = xno; then
 fi
 
 if test "x${hpd_avahi_client}" = xyes; then
-	AC_DEFINE([AVAHI_CLIENT], 1, [async execution enabled])
+	AC_DEFINE([AVAHI_CLIENT], 1, [Avahi client enabled])
 fi
 
 AM_CONDITIONAL([ENABLE_AVAHI_CLIENT], [test "x$hpd_avahi_client" = xyes]) 
+
+echo "
+Enable HTTP : '${hpd_http}'
+Enable HTTPS : '${hpd_https}'"
+
+if test "x${hpd_https}" = xno -a "x${hpd_http}" = xno; then
+	AC_MSG_ERROR([Cannot disable http and not enable https])
+fi
+
+if test "x${hpd_http}" = xyes; then
+	AC_DEFINE([HPD_HTTP], 1, [http enabled])
+fi
+
+if test "x${hpd_https}" = xyes; then
+	AC_CHECK_HEADERS([gnutls/gnutls.h],
+            AC_CHECK_LIB([gnutls], [gnutls_priority_set],
+	     gnutls=true))
+	AC_DEFINE([HPD_HTTPS], 1, [https enabled])
+fi
+
+AM_CONDITIONAL([ENABLE_HTTP], [test "x$hpd_http" = xyes])
+AM_CONDITIONAL([ENABLE_HTTPS], [test "x$hpd_https" = xyes])
 
 # Checks for libraries.
 
 # Check for headers that are ALWAYS required
 AC_CHECK_HEADERS([fcntl.h math.h errno.h limits.h stdio.h locale.h sys/stat.h sys/types.h pthread.h malloc.h sys/socket.h],,AC_MSG_ERROR([Compiling libhpd requires standard UNIX headers files]))
 
+#Check for libphidget for the phidget example
+AC_CHECK_HEADERS([phidget21.h],
+		[hpd_phidget=yes], [hpd_phidget=no])
+
+AM_CONDITIONAL([ENABLE_PHIDGET], [test "x$hpd_phidget" = xyes] )
+
+# Check for libconfig
+PKG_CHECK_MODULES([LIBCONFIG], [libconfig >= 1.4])
+
 # Check for libmicrohttpd
 PKG_CHECK_MODULES([LIBMICROHTTPD], [libmicrohttpd])
 
 # Check for libxml
-PKG_CHECK_MODULES([LIBXML2], [libxml-2.0 >= 2.6.19])
+PKG_CHECK_MODULES([MINIXML], [mxml])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
@@ -114,7 +156,7 @@ AC_CONFIG_FILES([libhpd.pc
                  src/Makefile
                  src/hpdaemon/Makefile
                  src/include/Makefile
-		 src/example/Makefile])
+		 src/examples/Makefile])
 AC_OUTPUT
 
 echo \
