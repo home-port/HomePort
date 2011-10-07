@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <phidget21.h>
-#include <hpdaemon/homeport.h>
+#include "homeport.h"
 #include "../hpdaemon/utlist.h"
 
 void HPD_phidget_init();
