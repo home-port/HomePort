@@ -97,6 +97,7 @@ Examples
 ========
 
 In order to use the Phidget Example you will need the library phidget21 when configuring libhpd :
+	- sudo apt-get install libusb-dev
 	- Download the latest version at http://www.phidgets.com/
 	- Extract 
 	- $ cd libphidget-x.x.x.xxxxxxxx
