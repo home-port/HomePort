@@ -100,6 +100,7 @@ In order to use the Phidget Example you will need the library phidget21 when con
 	- sudo apt-get install libusb-dev
 	- Download the latest version at http://www.phidgets.com/
 	- Extract 
+	- Make sure to read the README file for more installation processes
 	- $ cd libphidget-x.x.x.xxxxxxxx
 	  $ ./configure --prefix=/usr
 	  $ make
