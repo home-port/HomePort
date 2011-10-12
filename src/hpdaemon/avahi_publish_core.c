@@ -25,6 +25,7 @@ authors and should not be interpreted as representing official policies, either 
 
 #include "avahi_publish_core.h"
 #include "hpd_error.h"
+#include "hpd_configure.h"
 
 static AvahiServer *server=NULL;
 
@@ -132,6 +133,12 @@ static int static_create_services(Service *_service) {
     int ret;
     AvahiSEntryGroup *_group = NULL;
     assert(server);
+    int _port;
+
+    if( _service->device->secure_device == HPD_NON_SECURE_DEVICE )
+	_port = hpd_daemon->http_port;
+    else
+	_port = hpd_daemon->https_port;
     
     /* Create an entry group */
 	if (!(_group = avahi_s_entry_group_new(server, entry_group_callback, _service))) 
@@ -151,7 +158,7 @@ static int static_create_services(Service *_service) {
 	
 
     /* Add the service for service_type */
-    if ((ret = avahi_server_add_service(server, _group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, 0, _service->zeroConfName, _service->DNS_SD_type, avahi_server_get_domain_name(server), NULL, 8888, r, NULL)) < 0) {
+    if ((ret = avahi_server_add_service(server, _group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, 0, _service->zeroConfName, _service->DNS_SD_type, avahi_server_get_domain_name(server), NULL, _port, r, NULL)) < 0) {
         fprintf(stderr, "Failed to add %s service with type %s: %s\n", _service->zeroConfName, _service->DNS_SD_type, avahi_strerror(ret));
         goto fail;
     }
