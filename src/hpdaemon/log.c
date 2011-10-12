@@ -241,13 +241,12 @@ int Log (enum HPD_Loglevel _log_level, char* error_string, char* client_IP, char
 			}
 			else
 			{
-				log_message = (char*)malloc(sizeof(char)*(strlen(date)
-		                                                        +strlen(time)
-		                                                        +strlen("-")*2
+				log_message = (char*)malloc(sizeof(char)*(11
+		                                                        +9
 		                                                        +strlen(client_IP)
 		                                                        +strlen(method)
 		                                                        +strlen(uri_stem)
-		                                                        +7/*spaces and \0*/));
+		                                                        +9/*spaces and \0*/));
 		        	sprintf(log_message,"%s %s - %s %s %s -\n\0", date, time, client_IP, method, uri_stem);
 			}
 		    }
