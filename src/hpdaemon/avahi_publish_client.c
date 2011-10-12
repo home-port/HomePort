@@ -25,6 +25,7 @@ authors and should not be interpreted as representing official policies, either 
 
 #include "avahi_publish_client.h"
 #include "hpd_error.h"
+#include "hpd_configure.h"
 
 static AvahiThreadedPoll *threaded_poll = NULL;
 
@@ -122,6 +123,12 @@ static int static_create_services(Service *_service) {
 	int ret;
 	AvahiEntryGroup *_group = NULL;
    	assert(client);
+	int _port;
+
+	if( _service->device->secure_device == HPD_NON_SECURE_DEVICE )
+		_port = hpd_daemon->http_port;
+	else
+		_port = hpd_daemon->https_port;
 
 	if (!(_group = avahi_entry_group_new(client, entry_group_callback, _service))) 
 	{
@@ -139,7 +146,7 @@ static int static_create_services(Service *_service) {
 
 
 	/* Add the service to the entry group */
-	if ((ret = avahi_entry_group_add_service(_group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, 0, _service->zeroConfName, _service->DNS_SD_type, NULL, NULL, 8888, r, NULL)) < 0) {
+	if ((ret = avahi_entry_group_add_service(_group, AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, 0, _service->zeroConfName, _service->DNS_SD_type, NULL, NULL, _port, r, NULL)) < 0) {
 
 		fprintf(stderr, "Failed to add %s service: %s\n", _service->ID, avahi_strerror(ret));
 		goto fail;
