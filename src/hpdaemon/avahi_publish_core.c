@@ -136,9 +136,17 @@ static int static_create_services(Service *_service) {
     int _port;
 
     if( _service->device->secure_device == HPD_NON_SECURE_DEVICE )
+#if HPD_HTTP
 	_port = hpd_daemon->http_port;
+#else
+	return HPD_E_NO_HTTP
+#endif
     else
-	_port = hpd_daemon->https_port;
+#if HPD_HTTP
+	_port = hpd_daemon->http_port;
+#else
+	return HPD_E_NO_HTTPS
+#endif
     
     /* Create an entry group */
 	if (!(_group = avahi_s_entry_group_new(server, entry_group_callback, _service))) 
