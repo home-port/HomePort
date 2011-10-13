@@ -217,11 +217,10 @@ int Log (enum HPD_Loglevel _log_level, char* error_string, char* client_IP, char
 
 		    if(error_string != NULL)
 		    {
-		        log_message = (char*)malloc(sizeof(char)*(strlen(date)
-		                                                        +strlen(time)
+		        log_message = (char*)malloc(sizeof(char)*(11
+		                                                        +9
 		                                                        +strlen(error_string)
-		                                                        +strlen("-")*4
-		                                                        +7/*spaces and \0*/));
+		                                                        +12/*spaces and \0*/));
 		        sprintf(log_message,"%s %s %s - - - -\n\0", date, time, error_string);
 		    }
 		    else if (client_IP != NULL && method != NULL && uri_stem != NULL)
@@ -234,7 +233,7 @@ int Log (enum HPD_Loglevel _log_level, char* error_string, char* client_IP, char
 		                                                        +strlen(method)
 		                                                        +strlen(uri_stem)
 		                                                        +strlen(uri_query)
-		                                                        +7/*spaces and \0*/));
+		                                                        +9/*spaces and \0*/));
 
 		        	sprintf(log_message,"%s %s - %s %s %s %s\n\0", date, time, client_IP, method, uri_stem, uri_query);
 
@@ -246,7 +245,7 @@ int Log (enum HPD_Loglevel _log_level, char* error_string, char* client_IP, char
 		                                                        +strlen(client_IP)
 		                                                        +strlen(method)
 		                                                        +strlen(uri_stem)
-		                                                        +9/*spaces and \0*/));
+		                                                        +10/*spaces and \0*/));
 		        	sprintf(log_message,"%s %s - %s %s %s -\n\0", date, time, client_IP, method, uri_stem);
 			}
 		    }
