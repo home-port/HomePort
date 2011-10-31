@@ -24,63 +24,48 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed*/
 
 /**
- * @file hpd_configure.h
- * @brief  Methods for managing the configuration of a HomePort Daemon
+ * @file hpd_parameters.h
+ * @brief  Methods for managing the Parameter structure
  * @author Thibaut Le Guilly
  * @author Regis Louge
  */
 
-#ifndef HPD_CONFIGURE_H
-#define HPD_CONFIGURE_H
+#ifndef PARAMETER_H
+#define PARAMETER_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <libconfig.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
-typedef struct HPD_Daemon HPD_Daemon;
-struct HPD_Daemon
+typedef struct Parameter Parameter;
+struct Parameter
 {
+    char *ID; /**<The Parameter ID*/
+    char *max;/**<The maximum value of the Parameter*/
+	char *min;/**<The minimum value of the Parameter*/
+	char *scale;/**<The Scale of the Parameter*/
+	char *step;/**<The Step of the values of the Parameter*/
+	char *type;/**<The Type of values for the Parameter*/
+	char *unit;/**<The Unit of the values of the Parameter*/
+	char *values;/**<The possible values for the Parameter*/
 
-#if !AVAHI_CLIENT
-	char *hostname;
-#endif
-
-#if HPD_HTTP
-	int http_port;
-#endif
-
-#if HPD_HTTPS
-	int https_port;
-	char *server_cert_path;
-	char *server_key_path;
-	char *root_ca_path;
-#endif
-
+	Parameter *prev;/**<A pointer to the previous Parameter*/
+   	Parameter *next;/**<A pointer to the next Parameter*/
 };
 
+Parameter* create_parameter_struct(
+                                   char *ID,
+                                   char *max,
+                                   char *min,
+                                   char *scale,
+                                   char *step,
+                                   char *type,
+                                   char *unit,
+                                   char *values );
 
-HPD_Daemon *hpd_daemon;
+void free_parameter_struct( Parameter *parameter );
 
-int HPD_init_daemon();
-
-int HPD_config_file_init( char *cfg_file_path );
-int HPD_config_default_init();
-int HPD_config_set_root_ca_path( char *root_ca_path );
-int HPD_config_set_server_key_path( char *server_key_path );
-int HPD_config_set_server_cert_path( char *server_cert_path );
-int HPD_config_set_ssl_port( int ssl_port );
-int HPD_config_set_port( int port );
-int HPD_config_get_root_ca_path( char **root_ca_path );
-int HPD_config_get_server_key_path( char **server_key_path );
-int HPD_config_get_server_cert_path( char **server_cert_path );
-int HPD_config_get_ssl_port( int *ssl_port );
-int HPD_config_get_port( int *port );
-
-
+int cmp_Parameter( Parameter *a, Parameter *b );
 
 #endif

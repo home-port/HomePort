@@ -23,13 +23,22 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The views and conclusions contained in the software and documentation are those of the
 authors and should not be interpreted as representing official policies, either expressed*/
 
+/**
+ * @file hpd_error.h
+ * @brief  Methods for managing Errors
+ * @author Thibaut Le Guilly
+ * @author Regis Louge
+ */
+
 
 #ifndef HPD_ERROR_H
 #define HPD_ERROR_H
 
-#include "log.h"
+#include "hpd_log.h"
+#include <errno.h>
 
 /** 		HPD error codes			*/
+#define HPD_WAIT_FOR_TIMEOUT				3
 
 #define HPD_NO						2
 
@@ -112,6 +121,37 @@ authors and should not be interpreted as representing official policies, either 
 #define HPD_E_IMPOSSIBLE_TO_RETRIEVE_DEVICE_XML_NODE	-37
 
 #define HPD_E_IMPOSSIBLE_TO_RETRIEVE_SERVICE_XML_NODE	-38
+
+#define HPD_E_QUEUE_IS_EMPTY				-39
+
+#define HPD_E_EVENT_IS_NULL				-40
+
+#define HPD_E_EVENT_QUEUE_IS_NULL				-41
+
+#define HPD_E_SERVICE_ID_IS_NULL				-42
+
+#define HPD_E_EVENT_QUEUE_OR_EVENT_IS_NULL				-43
+
+#define HPD_E_EVENT_QUEUE_OR_URL_IS_NULL				-44
+
+#define HPD_E_EVENT_QUEUE_OR_SERVICE_ID_IS_NULL				-45
+
+#define HPD_E_SERVICE_ID_NOT_IN_EVENT_QUEUE				-46
+
+#define HPD_E_NOT_HPD_BOOLEAN				-47
+
+#define HPD_E_SERVICE_IS_NULL				-48
+
+#define HPD_E_ERROR_QUEUING_EVENT				-49
+
+#define HPD_E_LOG_DATA_IS_NULL				-50
+
+#define HPD_E_CONNECTION_ID_IS_NULL				-51
+
+
+
+
+
 /*
 char *hpd_error_code_to_string(int error_code)
 {

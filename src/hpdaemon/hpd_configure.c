@@ -23,6 +23,13 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The views and conclusions contained in the software and documentation are those of the
 authors and should not be interpreted as representing official policies, either expressed*/
 
+/**
+ * @file hpd_configure.c
+ * @brief  Methods for managing the configuration of a HomePort Daemon
+ * @author Thibaut Le Guilly
+ * @author Regis Louge
+ */
+
 #include "hpd_configure.h"
 #include "hpd_error.h"
 
@@ -33,7 +40,8 @@ config_t *cfg = NULL;
  *
  * @return returns A HPD error code
  */
-int HPD_init_daemon()
+int 
+HPD_init_daemon()
 {
 	hpd_daemon = (HPD_Daemon*)malloc(sizeof(HPD_Daemon));
 	if( hpd_daemon == NULL )
@@ -61,15 +69,16 @@ int HPD_init_daemon()
 /**
  * Init the HPD configuration from a file
  *
- * @param _cfg_file_path The absolute path of the configuration file
+ * @param cfg_file_path The absolute path of the configuration file
  *
  * @return returns A HPD error code
  */
-int HPD_config_file_init( char *_cfg_file_path )
+int 
+HPD_config_file_init( char *cfg_file_path )
 {
 	int max_log_size, log_level;
 
-	if( _cfg_file_path == NULL )
+	if( cfg_file_path == NULL )
 		return HPD_E_NULL_POINTER;
 
 	if( hpd_daemon == NULL )
@@ -85,12 +94,12 @@ int HPD_config_file_init( char *_cfg_file_path )
 			return HPD_E_MALLOC_ERROR;
 		}
 	}
-	
+
 
 	config_init(cfg);
 
 	/* Read the file. If there is an error, report it and exit. */
-	if(! config_read_file(cfg, _cfg_file_path))
+	if(! config_read_file(cfg, cfg_file_path))
 	{
 		fprintf(stderr, "Error loading config file%s:%d - %s\n", config_error_file(cfg),
 		        config_error_line(cfg), config_error_text(cfg));
@@ -180,7 +189,8 @@ int HPD_config_file_init( char *_cfg_file_path )
  *
  * @return returns A HPD error code
  */
-int HPD_config_default_init()
+int 
+HPD_config_default_init()
 {
 	if(hpd_daemon == NULL)
 	{
@@ -206,11 +216,12 @@ int HPD_config_default_init()
  *
  * @return returns A HPD error code
  */
-int HPD_config_deinit()
+int 
+HPD_config_deinit()
 {
 
 	destroy_hpd_log();
-	
+
 	if( hpd_daemon == NULL )
 		return HPD_E_CFG_NOT_INIT;
 
@@ -231,19 +242,19 @@ int HPD_config_deinit()
  * Set the absolute path of the root CA
  * The configuration needs to be already initialized
  *
- * @param _root_ca_path The absolute path of the root CA
+ * @param root_ca_path The absolute path of the root CA
  *
  * @return returns A HPD error code
  */
-int HPD_config_set_root_ca_path( char *_root_ca_path)
+int HPD_config_set_root_ca_path( char *root_ca_path )
 {
-	if( _root_ca_path == NULL )
+	if( root_ca_path == NULL )
 		return HPD_E_NULL_POINTER;
 
 	if( hpd_daemon == NULL )
 		return HPD_E_CFG_NOT_INIT;
 #if HPD_HTTPS
-	hpd_daemon->root_ca_path = _root_ca_path;
+	hpd_daemon->root_ca_path = root_ca_path;
 #else
 	return HPD_E_NO_HTTPS;
 #endif
@@ -254,19 +265,20 @@ int HPD_config_set_root_ca_path( char *_root_ca_path)
  * Set the absolute path of the server key
  * The configuration needs to be already initialized
  *
- * @param _server_key_path The absolute path of the server key file
+ * @param server_key_path The absolute path of the server key file
  *
  * @return returns A HPD error code
  */
-int HPD_config_set_server_key_path( char *_server_key_path)
+int 
+HPD_config_set_server_key_path( char *server_key_path )
 {
-	if( _server_key_path == NULL )
+	if( server_key_path == NULL )
 		return HPD_E_NULL_POINTER;
 
 	if( hpd_daemon == NULL )
 		return HPD_E_CFG_NOT_INIT;	
 #if HPD_HTTPS
-	hpd_daemon->server_key_path = _server_key_path;
+	hpd_daemon->server_key_path = server_key_path;
 #else
 	return HPD_E_NO_HTTPS;
 #endif
@@ -277,19 +289,20 @@ int HPD_config_set_server_key_path( char *_server_key_path)
  * Set the absolute path of the server certificate
  * The configuration needs to be already initialized
  *
- * @param _server_cert_path The absolute path of the server certificate file
+ * @param server_cert_path The absolute path of the server certificate file
  *
  * @return returns A HPD error code
  */
-int HPD_config_set_server_cert_path( char *_server_cert_path)
+int 
+HPD_config_set_server_cert_path( char *server_cert_path )
 {
-	if( _server_cert_path == NULL )
+	if( server_cert_path == NULL )
 		return HPD_E_NULL_POINTER;
 
 	if( hpd_daemon == NULL )
 		return HPD_E_CFG_NOT_INIT;
 #if HPD_HTTPS
-	hpd_daemon->server_cert_path = _server_cert_path;
+	hpd_daemon->server_cert_path = server_cert_path;
 #else
 	return HPD_E_NO_HTTPS;
 #endif
@@ -300,20 +313,21 @@ int HPD_config_set_server_cert_path( char *_server_cert_path)
  * Set the SSL port to use for HTTPS communications
  * The configuration needs to be already initialized
  *
- * @param _ssl_port The SSL port to use
+ * @param ssl_port The SSL port to use
  *
  * @return returns A HPD error code
  */
-int HPD_config_set_ssl_port( int _ssl_port )
+int 
+HPD_config_set_ssl_port( int ssl_port )
 {
-	if( _ssl_port <= 0 )
+	if( ssl_port <= 0 )
 		return HPD_E_BAD_PARAMETER;
 
 	if( hpd_daemon == NULL )
 		return HPD_E_CFG_NOT_INIT;
 
 #if HPD_HTTPS
-	hpd_daemon->https_port = _ssl_port;
+	hpd_daemon->https_port = ssl_port;
 #else
 	return HPD_E_NO_HTTPS;
 #endif
@@ -324,19 +338,20 @@ int HPD_config_set_ssl_port( int _ssl_port )
  * Set the port to use for HTTP communications
  * The configuration needs to be already initialized
  *
- * @param _port The port to use
+ * @param port The port to use
  *
  * @return returns A HPD error code
  */
-int HPD_config_set_port( int _port )
+int 
+HPD_config_set_port( int port )
 {
-	if( _port <= 0 )
+	if( port <= 0 )
 		return HPD_E_BAD_PARAMETER;
-	
+
 	if( hpd_daemon == NULL )
 		return HPD_E_CFG_NOT_INIT;
 #if HPD_HTTP
-	hpd_daemon->http_port = _port;
+	hpd_daemon->http_port = port;
 #else
 	return HPD_E_NO_HTTP;
 #endif
@@ -347,19 +362,20 @@ int HPD_config_set_port( int _port )
  * Get the absolute path of the root CA
  * The configuration needs to be already initialized
  *
- * @param _root_ca_path Pointer to store the returned value
+ * @param root_ca_path Pointer to store the returned value
  *
  * @return returns A HPD error code
  */
-int HPD_config_get_root_ca_path( char **_root_ca_path)
+int 
+HPD_config_get_root_ca_path( char **root_ca_path )
 {
 	if( hpd_daemon == NULL )
 		return HPD_E_CFG_NOT_INIT;
 
-	if( _root_ca_path == NULL )
+	if( root_ca_path == NULL )
 		return HPD_E_NULL_POINTER;
 #if HPD_HTTPS
-	*_root_ca_path = hpd_daemon->root_ca_path;
+	*root_ca_path = hpd_daemon->root_ca_path;
 #else
 	return HPD_E_NO_HTTPS;
 #endif
@@ -370,19 +386,20 @@ int HPD_config_get_root_ca_path( char **_root_ca_path)
  * Get the absolute path of the server key file
  * The configuration needs to be already initialized
  *
- * @param _server_key_path Pointer to store the returned value
+ * @param server_key_path Pointer to store the returned value
  *
  * @return returns A HPD error code
  */
-int HPD_config_get_server_key_path( char **_server_key_path)
+int 
+HPD_config_get_server_key_path( char **server_key_path )
 {
 	if( hpd_daemon == NULL )
 		return HPD_E_CFG_NOT_INIT;
 
-	if( _server_key_path == NULL )
+	if( server_key_path == NULL )
 		return HPD_E_NULL_POINTER;
 #if HPD_HTTPS
-	*_server_key_path = hpd_daemon->server_key_path;
+	*server_key_path = hpd_daemon->server_key_path;
 #else
 	return HPD_E_NO_HTTPS;
 #endif
@@ -393,19 +410,20 @@ int HPD_config_get_server_key_path( char **_server_key_path)
  * Get the absolute path of the server certificate file
  * The configuration needs to be already initialized
  *
- * @param _server_cert_path Pointer to store the returned value
+ * @param server_cert_path Pointer to store the returned value
  *
  * @return returns A HPD error code
  */
-int HPD_config_get_server_cert_path( char **_server_cert_path)
+int 
+HPD_config_get_server_cert_path( char **server_cert_path )
 {
 	if( hpd_daemon == NULL )
 		return HPD_E_CFG_NOT_INIT;
 
-	if( _server_cert_path == NULL )
+	if( server_cert_path == NULL )
 		return HPD_E_NULL_POINTER;
 #if HPD_HTTPS
-	*_server_cert_path = hpd_daemon->server_cert_path;
+	*server_cert_path = hpd_daemon->server_cert_path;
 #else
 	return HPD_E_NO_HTTPS;
 #endif
@@ -416,19 +434,20 @@ int HPD_config_get_server_cert_path( char **_server_cert_path)
  * Get the SSL port in use
  * The configuration needs to be already initialized
  *
- * @param _ssl_port Pointer to store the returned value
+ * @param ssl_port Pointer to store the returned value
  *
  * @return returns A HPD error code
  */
-int HPD_config_get_ssl_port(int *_ssl_port)
+int 
+HPD_config_get_ssl_port( int *ssl_port )
 {
-	if( _ssl_port == NULL )
+	if( ssl_port == NULL )
 		return HPD_E_NULL_POINTER;
 
 	if( hpd_daemon != NULL )
 	{
 #if HPD_HTTPS
-		*_ssl_port = hpd_daemon->https_port;
+		*ssl_port = hpd_daemon->https_port;
 		return HPD_E_SUCCESS;
 #else
 		return HPD_E_NO_HTTPS;
@@ -443,25 +462,26 @@ int HPD_config_get_ssl_port(int *_ssl_port)
  * Get the port in use
  * The configuration needs to be already initialized
  *
- * @param _port Pointer to store the returned value
+ * @param port Pointer to store the returned value
  *
  * @return returns A HPD error code
  */
-int HPD_config_get_port(int *_port)
+int 
+HPD_config_get_port( int *port )
 {
-	if( _port == NULL )
+	if( port == NULL )
 		return HPD_E_NULL_POINTER;
 
 	if( hpd_daemon != NULL )
 	{
 #if HPD_HTTP
-		*_port = hpd_daemon->http_port;
+		*port = hpd_daemon->http_port;
 		return HPD_E_SUCCESS;
 #else
 		return HPD_E_NO_HTTP;
 #endif
 	}
-	
+
 	return HPD_E_CFG_NOT_INIT;
 }
 

@@ -28,17 +28,17 @@ AM_CFLAGS=-I$(top_srcdir)\
 	-I$(top_srcdir)/src/include	
 
 noinst_PROGRAMS = hpd-example
-hpd_example_SOURCES = hpd-example.c
+hpd_example_SOURCES = hpd_example.c
 hpd_example_CFLAGS = $(AM_CFLAGS)
 hpd_example_LDADD = $(AM_LDADD) ../hpdaemon/libhpd.la
 
-EXTRA_DIST = hpd.cfg CA_root_cert.pem client-cert.pem server.key server.pem
+EXTRA_DIST = hpd.cfg CA_root_cert.pem client-cert.pem HPD-key.key HPD-cert.pem client-browser-cert.p12
 
 if ENABLE_PHIDGET
 
 noinst_PROGRAMS += phidget-example
-phidget_example_SOURCES = phidget-example.c hpd_phidget.h hpd_phidget.c
-phidget_example_CFLAGS = $(AM_CFLAGS) -lphidget21
+phidget_example_SOURCES = hpd_phidget_example.c hpd_phidget.h hpd_phidget.c
+phidget_example_CFLAGS = $(AM_CFLAGS) -lphidget21 -g
 phidget_example_LDADD = $(AM_LDADD) ../hpdaemon/libhpd.la
 
 endif

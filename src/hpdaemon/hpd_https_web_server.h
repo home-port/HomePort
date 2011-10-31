@@ -24,63 +24,59 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed*/
 
 /**
- * @file hpd_configure.h
- * @brief  Methods for managing the configuration of a HomePort Daemon
+ * @file hpd_https_web_server.h
+ * @brief  Methods for managing a secure Web Server
  * @author Thibaut Le Guilly
  * @author Regis Louge
  */
 
-#ifndef HPD_CONFIGURE_H
-#define HPD_CONFIGURE_H
+#ifndef WEB_SERVER_SECURE_API_H
+#define WEB_SERVER_SECURE_API_H
+
+#define	XML_FILE_NAME "services.xml"
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#include <libconfig.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/select.h>
+#include <sys/socket.h>
+#include <microhttpd.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <pthread.h>
+#include <gnutls/gnutls.h>
+#include <gnutls/x509.h>
+
+#include "hpd_services.h"
+#include "utlist.h"
+#include "hpd_configure.h"
+#include "hpd_server_sent_events.h"
+#include "hpd_xml.h"
+
+#define NOT_FOUND "<html><head><title>Not Found</title></head></html>"
+#define BAD_REQUEST "<html><head><title>Bad Request</title></head></html>"
+#define UNAUTHORIZED "<html><head><title>Unauthorized</title></head></html>"
+#define UNKNOWN_ERROR "<html><head><title>Unknown Error</title></head></html>"
+
+int start_secure_server();
+int stop_secure_server();
+int register_service_in_secure_server( Service *service_to_register );
+int unregister_service_in_secure_server( Service *service_to_unregister );
+
+int is_secure_service_registered( Service *service );
+int free_secure_server_services();
+
+Service* get_service_from_secure_server( 	char *device_type, 
+											char *device_ID, 
+											char *service_type, 
+											char *service_ID );
+
+Device* get_device_from_secure_server( char *device_type, char *device_ID );
 
 
-typedef struct HPD_Daemon HPD_Daemon;
-struct HPD_Daemon
-{
+#endif /* WEB_SERVER_SECURE_API_H */
 
-#if !AVAHI_CLIENT
-	char *hostname;
-#endif
-
-#if HPD_HTTP
-	int http_port;
-#endif
-
-#if HPD_HTTPS
-	int https_port;
-	char *server_cert_path;
-	char *server_key_path;
-	char *root_ca_path;
-#endif
-
-};
-
-
-HPD_Daemon *hpd_daemon;
-
-int HPD_init_daemon();
-
-int HPD_config_file_init( char *cfg_file_path );
-int HPD_config_default_init();
-int HPD_config_set_root_ca_path( char *root_ca_path );
-int HPD_config_set_server_key_path( char *server_key_path );
-int HPD_config_set_server_cert_path( char *server_cert_path );
-int HPD_config_set_ssl_port( int ssl_port );
-int HPD_config_set_port( int port );
-int HPD_config_get_root_ca_path( char **root_ca_path );
-int HPD_config_get_server_key_path( char **server_key_path );
-int HPD_config_get_server_cert_path( char **server_cert_path );
-int HPD_config_get_ssl_port( int *ssl_port );
-int HPD_config_get_port( int *port );
-
-
-
-#endif
