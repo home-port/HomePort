@@ -33,16 +33,17 @@ AM_CPPFLAGS = \
 lib_LTLIBRARIES = \
   libhpd.la
 
-libhpd_la_SOURCES = avahi_publish.c avahi_publish.h\
+libhpd_la_SOURCES = hpd_avahi_publish.c hpd_avahi_publish.h\
 		    hpd_configure.c\
 		    homeport.c\
-		    parameter.c\
-		    services.c\
+		    hpd_parameters.c\
+		    hpd_services.c\
 		    utlist.h\
-		    web_server.h web_server.c\
-		    server_sent_events.c server_sent_events.h\
-		    log.c log.h\
-		    xmlAPI.c xmlAPI.h
+		    hpd_web_server.h hpd_web_server.c\
+		    hpd_server_sent_events.c hpd_server_sent_events.h\
+		    hpd_log.c hpd_log.h\
+		    hpd_xml.c hpd_xml.h\
+		    hpd_events.c hpd_events.h
 
 libhpd_la_LDFLAGS = $(HPD_LIB_LDFLAGS) 
 
@@ -51,15 +52,15 @@ libhpd_la_CFLAGS = -lconfig -luuid
 libhpd_la_LIBADD = $(LIBMICROHTTPD_LIBS) $(LIBCONFIG_LIBS) $(MINIXML_LIBS)
 
 if ENABLE_AVAHI_CLIENT
-libhpd_la_SOURCES += avahi_publish_client.c avahi_publish_client.h
+libhpd_la_SOURCES += hpd_avahi_publish_client.c hpd_avahi_publish_client.h
 else
-libhpd_la_SOURCES += avahi_publish_core.c avahi_publish_core.h
+libhpd_la_SOURCES += hpd_avahi_publish_core.c hpd_avahi_publish_core.h
 endif
 
 if ENABLE_HTTP
-libhpd_la_SOURCES += web_server_api.c web_server_api.h
+libhpd_la_SOURCES += hpd_http_web_server.c hpd_http_web_server.h
 endif
 
 if ENABLE_HTTPS 
-libhpd_la_SOURCES += web_server_secure_api.c web_server_secure_api.h
+libhpd_la_SOURCES += hpd_https_web_server.c hpd_https_web_server.h
 endif

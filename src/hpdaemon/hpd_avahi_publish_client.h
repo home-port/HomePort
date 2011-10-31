@@ -24,63 +24,52 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed*/
 
 /**
- * @file hpd_configure.h
- * @brief  Methods for managing the configuration of a HomePort Daemon
+ * @file hpd_avahi_publish_client.h
+ * @brief  Methods for managing Avahi publishment using Avahi Client
  * @author Thibaut Le Guilly
  * @author Regis Louge
  */
 
-#ifndef HPD_CONFIGURE_H
-#define HPD_CONFIGURE_H
+#ifndef AVAHI_PUBLISH_CLIENT_H
+#define AVAHI_PUBLISH_CLIENT_H
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#include <libconfig.h>
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
+#include <avahi-common/simple-watch.h>
+#include <avahi-common/malloc.h>
+#include <avahi-common/alternative.h>
+#include <avahi-common/error.h>
+#include <avahi-common/thread-watch.h>
 
-typedef struct HPD_Daemon HPD_Daemon;
-struct HPD_Daemon
+#include <avahi-client/client.h>
+#include <avahi-client/publish.h>
+
+#include "hpd_services.h"
+#include "utlist.h"
+
+/**
+ * An Avahi Entry Group Element containing an Entry Group and a Service 
+ */
+typedef struct EntryGroupElement EntryGroupElement;
+struct EntryGroupElement 
 {
-
-#if !AVAHI_CLIENT
-	char *hostname;
-#endif
-
-#if HPD_HTTP
-	int http_port;
-#endif
-
-#if HPD_HTTPS
-	int https_port;
-	char *server_cert_path;
-	char *server_key_path;
-	char *root_ca_path;
-#endif
-
+	AvahiEntryGroup *avahiEntryGroup;/**<The Entry Group*/
+	Service *service;/**<The Service*/
+	EntryGroupElement *prev;/**<A pointer to the previous EntryGroupElement*/
+	EntryGroupElement *next;/**<A pointer to the next EntryGroupElement*/
 };
 
 
-HPD_Daemon *hpd_daemon;
-
-int HPD_init_daemon();
-
-int HPD_config_file_init( char *cfg_file_path );
-int HPD_config_default_init();
-int HPD_config_set_root_ca_path( char *root_ca_path );
-int HPD_config_set_server_key_path( char *server_key_path );
-int HPD_config_set_server_cert_path( char *server_cert_path );
-int HPD_config_set_ssl_port( int ssl_port );
-int HPD_config_set_port( int port );
-int HPD_config_get_root_ca_path( char **root_ca_path );
-int HPD_config_get_server_key_path( char **server_key_path );
-int HPD_config_get_server_cert_path( char **server_cert_path );
-int HPD_config_get_ssl_port( int *ssl_port );
-int HPD_config_get_port( int *port );
-
-
+int avahi_client_create_service ( Service *service_to_create );
+int avahi_client_start();
+int avahi_client_remove_service( Service *service_to_remove );
+void avahi_client_quit();
 
 #endif

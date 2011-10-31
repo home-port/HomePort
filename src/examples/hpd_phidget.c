@@ -9,36 +9,40 @@
 CPhidgetInterfaceKitHandle waitingIfKit = 0;
 
 /** Function passed to HPD to get the value of an input */
-size_t get_input_value(Service *_service, char *buffer, size_t max_buffer_size)
+size_t 
+get_input_value( Service *service, char *buffer, size_t max_buffer_size )
 {
-	int service_ID = atoi(_service->ID), value; 
-	CPhidgetInterfaceKit_getInputState ((CPhidgetInterfaceKitHandle)_service->user_data_pointer,service_ID,&value);
+	int service_ID = atoi(service->ID), value; 
+	CPhidgetInterfaceKit_getInputState ((CPhidgetInterfaceKitHandle)service->user_data_pointer,service_ID,&value);
 	sprintf(buffer, "%d", value);
 	return strlen(buffer);
 }
 
 /** Function passed to HPD to get the value of an output */
-size_t get_output_value(Service *_service, char *buffer, size_t max_buffer_size)
+size_t 
+get_output_value( Service *service, char *buffer, size_t max_buffer_size )
 {
-	int service_ID = atoi(_service->ID), value;
-	CPhidgetInterfaceKit_getOutputState ((CPhidgetInterfaceKitHandle)_service->user_data_pointer,service_ID,&value);
+	int service_ID = atoi(service->ID), value;
+	CPhidgetInterfaceKit_getOutputState ((CPhidgetInterfaceKitHandle)service->user_data_pointer,service_ID,&value);
 	sprintf(buffer, "%d", value);
 	return strlen(buffer);
 }
 
 /** Function passed to HPD to set the value of an output */
-size_t put_output_value(Service *_service, char *buffer, size_t max_buffer_size, char *_value)
+size_t 
+put_output_value( Service *service, char *buffer, size_t max_buffer_size, char *value )
 {
-	int service_ID = atoi(_service->ID), int_value; 
-	int_value = atoi(_value);
-	CPhidgetInterfaceKit_setOutputState ((CPhidgetInterfaceKitHandle)_service->user_data_pointer,service_ID, int_value);
+	int service_ID = atoi(service->ID), int_value; 
+	int_value = atoi(value);
+	CPhidgetInterfaceKit_setOutputState ((CPhidgetInterfaceKitHandle)service->user_data_pointer,service_ID, int_value);
 	sprintf(buffer, "%d", int_value);
 	return strlen(buffer);
 }
 
 
 /** Function that manage the attachment of a new phidget */
-int AttachHandler(CPhidgetHandle IFK, void *userptr)
+int 
+AttachHandler( CPhidgetHandle IFK, void *userptr )
 {
 
 	int serialNo, i, rc;
@@ -99,8 +103,8 @@ int AttachHandler(CPhidgetHandle IFK, void *userptr)
 }
 
 /** Function that manages the detachment of a phidget */
-int DetachHandler(CPhidgetHandle IFK, void *userptr)
-
+int 
+DetachHandler( CPhidgetHandle IFK, void *userptr )
 {
 
 	int serialNo;
@@ -127,8 +131,8 @@ int DetachHandler(CPhidgetHandle IFK, void *userptr)
 }
 
 /** Handle the errors : Not implemented */
-int ErrorHandler(CPhidgetHandle IFK, void *userptr, int ErrorCode, const char *unknown)
-
+int 
+ErrorHandler( CPhidgetHandle IFK, void *userptr, int ErrorCode, const char *unknown )
 {
 
 	//printf("Error handled. %d - %s", ErrorCode, unknown);
@@ -138,14 +142,14 @@ int ErrorHandler(CPhidgetHandle IFK, void *userptr, int ErrorCode, const char *u
 }
 
 /** Manage the changement of an input */
-int InputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int State)
-
+int 
+InputChangeHandler( CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int State )
 {
 	printf("Input number %d changed to state %d\n", Index, State);
 
 	int serialNo = 0;
 	
-	char _return_value[4], serial[10], index[3];
+	char return_value[4], serial[10], index[3];
 
 	CPhidget_getSerialNumber((CPhidgetHandle)IFK, &serialNo);
 
@@ -153,23 +157,20 @@ int InputChangeHandler(CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, 
 
 	sprintf(index, "%d", Index);
 	
-	Service *_changed_service = HPD_get_service("phidget", serial, "input", index);
+	Service *changed_service = HPD_get_service("phidget", serial, "input", index);
 
-	sprintf(_return_value, "%d", State);
+	sprintf(return_value, "%d", State);
 	
-	HPD_send_event_of_value_change (_changed_service, _return_value);	
+	HPD_send_event_of_value_change (changed_service, return_value);	
 
 	return 0;
 }
 
 /** Init ressources needed */
-void HPD_phidget_init()
+void 
+HPD_phidget_init()
 {
-
-		//create the InterfaceKit object
 	CPhidgetInterfaceKit_create(&waitingIfKit);
-
-	//Set the handlers to be run when the device is plugged in or opened from software, unplugged or closed from software, or generates an error.
 
 	CPhidget_set_OnAttach_Handler((CPhidgetHandle)waitingIfKit, AttachHandler, NULL);
 
@@ -177,21 +178,15 @@ void HPD_phidget_init()
 
 	CPhidget_set_OnError_Handler((CPhidgetHandle)waitingIfKit, ErrorHandler, NULL);
 
-	//Registers a callback that will run if an input changes.
-
-	//Requires the handle for the Phidget, the function that will be called, and an arbitrary pointer that will be supplied to the callback function (may be NULL).
 
 	CPhidgetInterfaceKit_set_OnInputChange_Handler (waitingIfKit, InputChangeHandler, NULL);
 
-	//open the interfacekit for device connections
-
 	CPhidget_open((CPhidgetHandle)waitingIfKit, -1);
-
 }
 
 /** Deinit the ressources */
-void HPD_phidget_deinit()
-
+void 
+HPD_phidget_deinit()
 {	
 	CPhidgetManagerHandle phidm = 0;
   	CPhidgetHandle *device_array;
@@ -215,7 +210,7 @@ void HPD_phidget_deinit()
 		{
 			CPhidget_getSerialNumber(device_array[i], &serialNo);
 			sprintf(serial, "%d",serialNo);
-			CPhidgetHandle tmp = (CPhidgetHandle)HPD_get_device(PHIDGET_DEVICE, serial)->service_head->service->user_data_pointer;
+			CPhidgetHandle tmp = (CPhidgetHandle)HPD_get_device(PHIDGET_DEVICE, serial)->service_head->user_data_pointer;
 			CPhidget_close(tmp);
 			CPhidget_delete(tmp);
 		}
