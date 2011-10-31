@@ -3,7 +3,7 @@ HomePort release 0.2
 What is HomePort ?
 ==================
 
-The project is about establishing possibilities for intelligent control of the energy consumption in private homes through the development of a prototype for a so called ’HomePort’. This port establish access to coordinated control of the different subsystems in a private home for control and surveillance of energy consumption etc. Key concepts in the project are coexistence of different technologies controlled through a common service layer in a private house. The purpose of this coexistence is to create interoperability between the different technologies such that energy consumption can be lowered and consequently lowering the pollution of the environment. More info at http://www.energybox.dk/
+The project is about establishing possibilities for intelligent control of the energy consumption in private homes through the development of a prototype for a so called ’home port’. This port establish access to coordinated control of the different subsystems in a private home for control and surveillance of energy consumption etc. Key concepts in the project are coexistence of different technologies controlled through a common service layer in a private house. The purpose of this coexistence is to create interoperability between the different technologies such that energy consumption can be lowered and consequently lowering the pollution of the environment. More info at http://www.energybox.dk/
 
 Installation
 ============
@@ -91,7 +91,8 @@ After having installed the dependencies you can use with './configure' the diffe
   	--enable-doxygen-ps     generate doxygen PostScript documentation
   	--enable-doxygen-pdf    generate doxygen PDF documentation
 
-And then run 'make doxygen-doc'
+And then run :
+	$ sudo doxygen doxygen.cfg
 
 Examples
 ========
@@ -100,7 +101,6 @@ In order to use the Phidget Example you will need the library phidget21 when con
 	- sudo apt-get install libusb-dev
 	- Download the latest version at http://www.phidgets.com/
 	- Extract 
-	- Make sure to read the README file for more installation processes
 	- $ cd libphidget-x.x.x.xxxxxxxx
 	  $ ./configure --prefix=/usr
 	  $ make
