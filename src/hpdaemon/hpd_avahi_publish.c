@@ -24,63 +24,86 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed*/
 
 /**
- * @file hpd_configure.h
- * @brief  Methods for managing the configuration of a HomePort Daemon
+ * @file hpd_avahi_publish.c
+ * @brief  Methods for managing Avahi publishment
  * @author Thibaut Le Guilly
  * @author Regis Louge
  */
 
-#ifndef HPD_CONFIGURE_H
-#define HPD_CONFIGURE_H
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <libconfig.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-
-typedef struct HPD_Daemon HPD_Daemon;
-struct HPD_Daemon
+#include "hpd_avahi_publish.h"
+#include "hpd_error.h"
+/**
+ * Start either an Avahi server either an Avahi client. If starting an Avahi
+ * client, the device needs to have an Avahi daemon running.
+ *
+ * @param host_name If starting a server, set its host name
+ *
+ * @param domain_name If starting a server, set its domain name. .local if NULL
+ *
+ * @return 
+ *
+ */
+int 
+avahi_start ( char* host_name, char* domain_name )
 {
 
-#if !AVAHI_CLIENT
-	char *hostname;
+#if AVAHI_CLIENT
+	return avahi_client_start ();
+#else
+	return avahi_core_start( host_name, domain_name );
 #endif
+}
 
-#if HPD_HTTP
-	int http_port;
+/**
+ * Stops either an Avahi server either an Avahi client. If starting an Avahi
+ * client, the device needs to have an Avahi daemon running.
+ *
+ * @return 
+ *
+ */
+void 
+avahi_quit ()
+{
+#if AVAHI_CLIENT
+	avahi_client_quit ();
+#else
+	avahi_core_quit();
 #endif
+}
 
-#if HPD_HTTPS
-	int https_port;
-	char *server_cert_path;
-	char *server_key_path;
-	char *root_ca_path;
+/**
+ * Creates an Avahi service given a Service structure
+ *
+ * @param service_to_create the service to create
+ *
+ * @return 
+ *
+ */
+void 
+avahi_create_service ( Service * service_to_create )
+{
+#if AVAHI_CLIENT
+	avahi_client_create_service ( service_to_create );
+#else
+	avahi_core_create_service( service_to_create );
 #endif
+}
 
-};
-
-
-HPD_Daemon *hpd_daemon;
-
-int HPD_init_daemon();
-
-int HPD_config_file_init( char *cfg_file_path );
-int HPD_config_default_init();
-int HPD_config_set_root_ca_path( char *root_ca_path );
-int HPD_config_set_server_key_path( char *server_key_path );
-int HPD_config_set_server_cert_path( char *server_cert_path );
-int HPD_config_set_ssl_port( int ssl_port );
-int HPD_config_set_port( int port );
-int HPD_config_get_root_ca_path( char **root_ca_path );
-int HPD_config_get_server_key_path( char **server_key_path );
-int HPD_config_get_server_cert_path( char **server_cert_path );
-int HPD_config_get_ssl_port( int *ssl_port );
-int HPD_config_get_port( int *port );
-
-
-
+/**
+ * Removes a service from Avahi given a Service structure
+ *
+ * @param service_to_remove the service to remove
+ *
+ * @return 0 if successful -1 if failed
+ *
+ */
+int 
+avahi_remove_service( Service * service_to_remove )
+{
+#if AVAHI_CLIENT
+	return avahi_client_remove_service ( service_to_remove );
+#else
+	return avahi_core_remove_service( service_to_remove );
 #endif
+}

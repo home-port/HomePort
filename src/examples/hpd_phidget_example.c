@@ -23,64 +23,31 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The views and conclusions contained in the software and documentation are those of the
 authors and should not be interpreted as representing official policies, either expressed*/
 
-/**
- * @file hpd_configure.h
- * @brief  Methods for managing the configuration of a HomePort Daemon
- * @author Thibaut Le Guilly
- * @author Regis Louge
- */
-
-#ifndef HPD_CONFIGURE_H
-#define HPD_CONFIGURE_H
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <libconfig.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "hpd_phidget.h"
 
+int main()
+{	
+	int rc;
+	
+	/** Starts the hpdaemon. If using avahi-core pass a host name for the server, otherwise pass NULL */
+	if( rc = HPD_start(HPD_USE_CFG_FILE, "Homeport", HPD_OPTION_CFG_PATH, "./hpd.cfg") )
+	{
+		printf("Failed to start HPD %d\n", rc);
+		return 1;
+	}
 
-typedef struct HPD_Daemon HPD_Daemon;
-struct HPD_Daemon
-{
+	/**Init the phidget */
+	HPD_phidget_init();
 
-#if !AVAHI_CLIENT
-	char *hostname;
-#endif
+	getchar();
 
-#if HPD_HTTP
-	int http_port;
-#endif
+	/** Deinit the phidget */
+	HPD_phidget_deinit ();
 
-#if HPD_HTTPS
-	int https_port;
-	char *server_cert_path;
-	char *server_key_path;
-	char *root_ca_path;
-#endif
+	/** Stop the homeport daemon */
+	HPD_stop();
 
-};
-
-
-HPD_Daemon *hpd_daemon;
-
-int HPD_init_daemon();
-
-int HPD_config_file_init( char *cfg_file_path );
-int HPD_config_default_init();
-int HPD_config_set_root_ca_path( char *root_ca_path );
-int HPD_config_set_server_key_path( char *server_key_path );
-int HPD_config_set_server_cert_path( char *server_cert_path );
-int HPD_config_set_ssl_port( int ssl_port );
-int HPD_config_set_port( int port );
-int HPD_config_get_root_ca_path( char **root_ca_path );
-int HPD_config_get_server_key_path( char **server_key_path );
-int HPD_config_get_server_cert_path( char **server_cert_path );
-int HPD_config_get_ssl_port( int *ssl_port );
-int HPD_config_get_port( int *port );
-
-
-
-#endif
+	return (0);
+}

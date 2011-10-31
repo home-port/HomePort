@@ -23,10 +23,17 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The views and conclusions contained in the software and documentation are those of the
 authors and should not be interpreted as representing official policies, either expressed*/
 
+/**
+ * @file homeport.c
+ * @brief  Methods for managing HomePort Daemon
+ * @author Thibaut Le Guilly
+ * @author Regis Louge
+ */
+
 
 #include "homeport.h"
 #include "hpd_error.h"
-#include "web_server.h"
+#include "hpd_web_server.h"
 
 
 /**
@@ -36,8 +43,8 @@ authors and should not be interpreted as representing official policies, either 
  *
  * @return A HPD error code
  */
-static 
-int parse_option_va(va_list ap)
+static int
+parse_option_va( va_list ap )
 {
 	enum HPD_OPTION opt;
 	int log_level, max_log_size;
@@ -70,22 +77,22 @@ int parse_option_va(va_list ap)
 			case HPD_OPTION_LOG :
 				log_level = va_arg( ap, int );
 				if( log_level < 0 || log_level > 2 )
-				{
-					printf("Bad value for log level\n");
-					return HPD_E_BAD_PARAMETER;
-				}
+			{
+				printf("Bad value for log level\n");
+				return HPD_E_BAD_PARAMETER;
+			}
 				max_log_size = va_arg( ap, int );
 				if( max_log_size < 0 )
-				{
-					printf("Bad value for max log size\n");
-					return HPD_E_BAD_PARAMETER;
-				}
+			{
+				printf("Bad value for max log size\n");
+				return HPD_E_BAD_PARAMETER;
+			}
 				break;
 
 			default :
 				printf("Unrecognized option\n");	
 				return HPD_E_BAD_PARAMETER;
-			
+
 		}
 
 	}
@@ -96,12 +103,17 @@ int parse_option_va(va_list ap)
 
 /**
  * Starts the HomePort Daemon
+ * 
+ * @param option HPD option as specified in homeport.h
  *
- * @param _hostname Name of the desired host
+ * @param hostname Name of the desired host
+ *
+ * @param ... va list of option, last option has to be HPD_OPTION_END
  *
  * @return A HPD error code
  */
-int HPD_start( unsigned int option, char *_hostname, ... )
+int 
+HPD_start( unsigned int option, char *hostname, ... )
 {
 
 	int rc;
@@ -112,15 +124,15 @@ int HPD_start( unsigned int option, char *_hostname, ... )
 		return rc;
 	}
 #if !AVAHI_CLIENT
-	if( _hostname == NULL )
+	if( hostname == NULL )
 		return HPD_E_NULL_POINTER;
 
-	hpd_daemon->hostname = _hostname;
+	hpd_daemon->hostname = hostname;
 #endif
 
 	va_list ap;
 
-	va_start( ap, _hostname);
+	va_start( ap, hostname);
 
 	if( option & HPD_USE_CFG_FILE )
 	{
@@ -132,7 +144,7 @@ int HPD_start( unsigned int option, char *_hostname, ... )
 
 			return HPD_E_BAD_PARAMETER;
 		}		
-		
+
 		if( rc = HPD_config_file_init( va_arg( ap, const char* ) ) )
 		{
 			printf("Error loading config file %d\n", rc);
@@ -155,7 +167,7 @@ int HPD_start( unsigned int option, char *_hostname, ... )
 
 #if HPD_HTTPS		
 		if(  hpd_daemon->https_port == 0 || hpd_daemon->server_cert_path == NULL
-			 || hpd_daemon->server_key_path == NULL || hpd_daemon->root_ca_path == NULL ) 
+		   || hpd_daemon->server_key_path == NULL || hpd_daemon->root_ca_path == NULL ) 
 		{
 			printf("Missing options to launch HTTPS\n");
 			return HPD_E_MISSING_OPTION;
@@ -166,7 +178,7 @@ int HPD_start( unsigned int option, char *_hostname, ... )
 
 	va_end(ap);	
 
-	return start_server(_hostname, NULL);
+	return start_server(hostname, NULL);
 }
 
 
@@ -176,7 +188,8 @@ int HPD_start( unsigned int option, char *_hostname, ... )
  *
  * @return A HPD error code
  */
-int HPD_stop()
+int 
+HPD_stop()
 {
 	HPD_config_deinit();
 	return stop_server();
@@ -185,50 +198,53 @@ int HPD_stop()
 /**
  * Registers a given Service in the HomePort Daemon
  *
- * @param _service The service to register
+ * @param service_to_register The service to register
  *
  * @return A HPD error code
  */
-int HPD_register_service(Service *_service)
+int 
+HPD_register_service( Service *service_to_register )
 {
-	if( _service == NULL )
+	if( service_to_register == NULL )
 		return HPD_E_NULL_POINTER;
 
-	return register_service_in_server(_service);
+	return register_service_in_server( service_to_register );
 }
 
 /**
  * Unregisters a given Service in the HomePort Daemon
  *
- * @param _service The service to unregister
+ * @param service_to_unregister The service to unregister
  *
  * @return A HPD error code
  */
-int HPD_unregister_service(Service *_service)
+int 
+HPD_unregister_service( Service *service_to_unregister )
 {
-	if( _service == NULL )
+	if( service_to_unregister == NULL )
 		return HPD_E_NULL_POINTER;
 
-	return unregister_service_in_server(_service);
+	return unregister_service_in_server( service_to_unregister );
 }
 
 /**
  * Registers all the Services contained in a given
  *  Device in the HomePort Daemon
  *
- * @param _device The device that contains the services
+ * @param device_to_register The device that contains the services
  *  to register
  *
  * @return A HPD error code
  */
-int HPD_register_device_services(Device *_device)
+int 
+HPD_register_device_services( Device *device_to_register )
 {
-	if( _device == NULL )
+	if( device_to_register == NULL )
 	{
 		return HPD_E_NULL_POINTER;
 	}
-	return register_device_services( _device );
-	
+	return register_device_services( device_to_register );
+
 }
 
 
@@ -236,71 +252,75 @@ int HPD_register_device_services(Device *_device)
  * Unregisters all the Services contained in a given
  *  Device in the HomePort Daemon
  *
- * @param _device The device that contains the services
+ * @param device_to_unregister The device that contains the services
  *  to unregister
  *
  * @return A HPD error code
  */
-int HPD_unregister_device_services(Device *_device)
+int 
+HPD_unregister_device_services( Device *device_to_unregister )
 {
-    if( _device == NULL )
-	return HPD_E_NULL_POINTER;
-	
-    return unregister_device_services(_device);
+	if( device_to_unregister == NULL )
+		return HPD_E_NULL_POINTER;
+
+	return unregister_device_services( device_to_unregister );
 }
 
 
 /**
  * Gets a service given its uniqueness identifiers
  *
- * @param _device_type The type of the device that contains the service
+ * @param device_type The type of the device that contains the service
  *
- * @param _device_ID The ID of the device that contains the service
+ * @param device_ID The ID of the device that contains the service
  *
- * @param _service_type The type of the wanted service
+ * @param service_type The type of the wanted service
  *
- * @param _service_ID The ID of the wanted service
+ * @param service_ID The ID of the wanted service
  *
  * @return The desired Service or NULL if failed
  */
-Service* HPD_get_service( char *_device_type, char *_device_ID, char *_service_type, char *_service_ID )
+Service * 
+HPD_get_service( char *device_type, char *device_ID, char *service_type, char *service_ID )
 {
 
-	if( _device_type == NULL || _device_ID == NULL || _service_type == NULL || _service_ID == NULL )
+	if( device_type == NULL || device_ID == NULL || service_type == NULL || service_ID == NULL )
 		return NULL;
 
-	return get_service_from_server( _device_type, _device_ID, _service_type, _service_ID );
+	return get_service_from_server( device_type, device_ID, service_type, service_ID );
 }
 
 /**
  * Gets a device given its uniqueness identifiers
  *
- * @param _device_type The type of the device 
+ * @param device_type The type of the device 
  *
- * @param _device_ID The ID of the device 
+ * @param device_ID The ID of the device 
  *
  * @return The desired Device or NULL if failed
  */
-Device* HPD_get_device(char *_device_type, char *_device_ID)
+Device* 
+HPD_get_device( char *device_type, char *device_ID )
 {
-	if( _device_type == NULL || _device_ID == NULL )
+	if( device_type == NULL || device_ID == NULL )
 		return NULL;
 
-	return get_device_from_server( _device_type, _device_ID );
+	return get_device_from_server( device_type, device_ID );
 }
 
 /**
  * Sends an event of a changing of value from a given Service
  *
- * @param _service_url The URL of the service
+ * @param service_changed the Service that has its value changed
  *
- * @param _updated_value The new value.
+ * @param updated_value The new value.
  *
  * @return HPD_E_SUCCESS if successful
  */
-int HPD_send_event_of_value_change (Service *service, char *_updated_value)
+int 
+HPD_send_event_of_value_change ( Service *service_changed, char *updated_value )
 {
-	return send_event_of_value_change (service, _updated_value);
+	return send_event_of_value_change (service_changed, updated_value);
 }
 
 
