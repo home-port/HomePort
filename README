@@ -29,6 +29,14 @@ In order to install libhpd, some dependencies are necessary:
 		  $ make
 		  $ sudo make install
 
+	-libconfig
+		- Download the latest version at http://www.hyperrealm.com/libconfig/
+		- Extract
+		- $ cd libconfig-x.x.x
+		  $ ./configure
+		  $ make
+		  $ sudo make install
+
 	-(Optional) libgnutls
 		- $ sudo apt-get install libgnutls-dev
 
