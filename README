@@ -33,7 +33,7 @@ In order to install libhpd, some dependencies are necessary:
 		- Download the latest version at http://www.hyperrealm.com/libconfig/
 		- Extract
 		- $ cd libconfig-x.x.x
-		  $ ./configure
+		  $ ./configure --prefix=/usr
 		  $ make
 		  $ sudo make install
 
