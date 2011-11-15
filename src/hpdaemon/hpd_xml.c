@@ -565,7 +565,7 @@ get_value_from_xml_value(char* _xml_value)
 	}
 
 	node = mxmlFindElement(xml, xml, "value", NULL, NULL, MXML_DESCEND);
-	if(node == NULL)
+	if(node == NULL && node->child->value.text.string == NULL)
 	{
 		mxmlDelete(xml);
 		printf("No \"value\" in the XML file\n");
