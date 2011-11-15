@@ -111,6 +111,9 @@ send_error( struct MHD_Connection *connection, int http_error_code )
 		case MHD_HTTP_BAD_REQUEST :
 			response = MHD_create_response_from_data( strlen("Bad Request"), (void *) "Bad Request", MHD_NO, MHD_NO );
 			break;
+		case MHD_HTTP_INTERNAL_SERVER_ERROR :
+			response = MHD_create_response_from_data( strlen("Internal Server Error"), (void *) "Internal Server Error", MHD_NO, MHD_NO );
+			break;
 		default :
 			response = MHD_create_response_from_data( strlen("Unknown error"), (void *) "Unknown error", MHD_NO, MHD_NO );
 			break;
@@ -240,7 +243,8 @@ answer_to_connection ( void *cls, struct MHD_Connection *connection,
 				requested_service->get_function_buffer[ret] = '\0';
 			else
 			{
-				ret = send_error(connection, MHD_HTTP_NOT_FOUND);
+				pthread_mutex_unlock( requested_service->mutex );
+				ret = send_error(connection, MHD_HTTP_INTERNAL_SERVER_ERROR);
 				Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
 				return ret;
 			}
@@ -303,7 +307,8 @@ answer_to_connection ( void *cls, struct MHD_Connection *connection,
 						requested_service->get_function_buffer[ret] = '\0';
 					else
 					{
-						ret = send_error(connection, MHD_HTTP_NOT_FOUND);
+						pthread_mutex_unlock( requested_service->mutex );
+						ret = send_error(connection, MHD_HTTP_INTERNAL_SERVER_ERROR);
 						Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
 						return ret;
 					}
