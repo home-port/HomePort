@@ -179,6 +179,10 @@ send_error( struct MHD_Connection *connection, int http_error_code )
 		case MHD_HTTP_UNAUTHORIZED :
 			response = MHD_create_response_from_data(strlen(UNAUTHORIZED), (void *) UNAUTHORIZED, MHD_NO, MHD_NO);
 			break;
+			
+		case MHD_HTTP_INTERNAL_SERVER_ERROR :
+			response = MHD_create_response_from_data(strlen("Internal Server Error"), (void *) "Internal Server Error", MHD_NO, MHD_NO);
+			break;
 		default :
 			response = MHD_create_response_from_data(strlen(UNKNOWN_ERROR), (void *) UNKNOWN_ERROR, MHD_NO, MHD_NO);
 			break;
@@ -396,10 +400,15 @@ secure_answer_to_connection (void *cls, struct MHD_Connection *connection,
 			ret = requested_service->get_function(	requested_service, 
 			                                       						requested_service->get_function_buffer,
 			                                       						MHD_MAX_BUFFER_SIZE);
-			if(ret != 0)
+			if( ret != 0 )
 				requested_service->get_function_buffer[ret] = '\0';
 			else
-				return send_error(connection, MHD_HTTP_NOT_FOUND);
+			{
+				ret = send_error(connection, MHD_HTTP_INTERNAL_SERVER_ERROR);
+				pthread_mutex_unlock( requested_service->mutex );
+				Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
+				return ret;
+			}
 
 			xmlbuff = get_xml_value (requested_service->get_function_buffer);
 			pthread_mutex_unlock(requested_service->mutex);
@@ -451,10 +460,15 @@ secure_answer_to_connection (void *cls, struct MHD_Connection *connection,
 					                                       						value);
 					free(value);
 
-					if(ret != 0)
+					if( ret != 0 )
 						requested_service->get_function_buffer[ret] = '\0';
 					else
-						return send_error(connection, MHD_HTTP_NOT_FOUND);
+					{
+						ret = send_error(connection, MHD_HTTP_INTERNAL_SERVER_ERROR);
+						pthread_mutex_unlock( requested_service->mutex );
+						Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
+						return ret;
+					}
 
 					char* xmlbuff = get_xml_value (requested_service->get_function_buffer);
 					pthread_mutex_unlock(requested_service->mutex);
