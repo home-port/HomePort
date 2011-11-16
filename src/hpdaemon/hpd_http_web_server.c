@@ -37,7 +37,7 @@ authors and should not be interpreted as representing official policies, either 
 #include "hpd_error.h"
 
 
-static Service *service_head;/**< List containing all the services handled by the server */
+static ServiceElement *service_head;/**< List containing all the services handled by the server */
 static struct MHD_Daemon *d;/**< MDH daemon for the MHD web server listening for incoming connections */
 
 
@@ -346,10 +346,15 @@ int
 register_service_in_unsecure_server(Service *service_to_register)
 {
 	int rc;
+	ServiceElement *new_se = NULL;	
 
 	assert(d);
 
-	DL_APPEND( service_head, service_to_register );
+	new_se = create_service_element_struct( service_to_register );
+	if( !new_se )
+		return HPD_E_NULL_POINTER;
+
+	DL_APPEND( service_head, new_se );
 	if( service_head == NULL )
 	{
 		printf("add_service_to_list failed\n");
@@ -370,15 +375,16 @@ int
 unregister_service_in_unsecure_server( Service *service_to_unregister )
 {
 	int rc;
-	Service *tmp, *iterator;
+	ServiceElement *tmp, *iterator;
 
 	assert(d);
 
 	DL_FOREACH_SAFE( service_head, iterator, tmp )
 	{
-		if( strcmp( iterator->value_url,service_to_unregister->value_url ) == 0 )
+		if( strcmp( iterator->service->value_url,service_to_unregister->value_url ) == 0 )
 		{
 			DL_DELETE( service_head, iterator );
+			destroy_service_element_struct( iterator );
 			break;
 		}
 	}
@@ -430,7 +436,7 @@ stop_unsecure_server()
 int 
 free_unsecure_server_services()
 {
-	Service *iterator, *tmp;
+	ServiceElement *iterator, *tmp;
 
 	if( service_head == NULL )
 		return HPD_E_NULL_POINTER;
@@ -438,7 +444,8 @@ free_unsecure_server_services()
 	DL_FOREACH_SAFE( service_head, iterator, tmp )
 	{
 		DL_DELETE( service_head, iterator );
-		destroy_service_struct( iterator );
+		destroy_service_struct( iterator->service );
+		destroy_service_element_struct( iterator );
 		iterator = NULL;
 	}
 
@@ -457,16 +464,16 @@ free_unsecure_server_services()
 int 
 is_unsecure_service_registered( Service *service )
 {
-	Service *iterator = NULL;
+	ServiceElement *iterator = NULL;
 
 	assert(d);
 
 	DL_FOREACH( service_head, iterator )
 	{
-		if(   ( strcmp( iterator->device->type, service->device->type ) == 0 ) 
-		   && ( strcmp( iterator->device->ID, service->device->ID ) == 0 )
-		   && ( strcmp( iterator->type, service->type ) == 0 )
-		   && ( strcmp( iterator->ID, service->ID ) == 0 )            )
+		if(   ( strcmp( iterator->service->device->type, service->device->type ) == 0 ) 
+		   && ( strcmp( iterator->service->device->ID, service->device->ID ) == 0 )
+		   && ( strcmp( iterator->service->type, service->type ) == 0 )
+		   && ( strcmp( iterator->service->ID, service->ID ) == 0 )            )
 		{
 			return 1;
 		}
@@ -493,18 +500,18 @@ is_unsecure_service_registered( Service *service )
 Service* 
 get_service_from_unsecure_server( char *device_type, char *device_ID, char *service_type, char *service_ID )
 {
-	Service *iterator = NULL;
+	ServiceElement *iterator = NULL;
 
 	assert(d);
 
 	DL_FOREACH(service_head, iterator)
 	{
-		if(   ( strcmp( iterator->device->type, device_type ) == 0 ) 
-		   && ( strcmp( iterator->device->ID, device_ID ) == 0 )
-		   && ( strcmp( iterator->type, service_type ) == 0 )
-		   && ( strcmp( iterator->ID, service_ID ) == 0 )            )
+		if(   ( strcmp( iterator->service->device->type, device_type ) == 0 ) 
+		   && ( strcmp( iterator->service->device->ID, device_ID ) == 0 )
+		   && ( strcmp( iterator->service->type, service_type ) == 0 )
+		   && ( strcmp( iterator->service->ID, service_ID ) == 0 )            )
 		{
-			return iterator;
+			return iterator->service;
 		}
 	}
 
@@ -527,16 +534,16 @@ get_service_from_unsecure_server( char *device_type, char *device_ID, char *serv
 Device* 
 get_device_from_unsecure_server( char *device_type, char *device_ID )
 {
-	Service *iterator = NULL;
+	ServiceElement *iterator = NULL;
 
 	assert(d);
 
 	DL_FOREACH(service_head, iterator)
 	{
-		if(   ( strcmp( iterator->device->type, device_type ) == 0 ) 
-		   && ( strcmp( iterator->device->ID, device_ID ) == 0 ))
+		if(   ( strcmp( iterator->service->device->type, device_type ) == 0 ) 
+		   && ( strcmp( iterator->service->device->ID, device_ID ) == 0 ))
 		{
-			return iterator->device;
+			return iterator->service->device;
 		}
 	}
 
