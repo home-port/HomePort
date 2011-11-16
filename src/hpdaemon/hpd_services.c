@@ -76,6 +76,8 @@ create_service_struct(
                       void* user_data_pointer)
 {
 	Service *service = (Service*)malloc(sizeof(Service));
+	if( !service )
+		return NULL;
 
 	if( ID == NULL )
 	{
@@ -192,9 +194,6 @@ create_service_struct(
 
 	service->get_function_buffer = malloc(sizeof(char)*MHD_MAX_BUFFER_SIZE);
 
-	service-> prev = NULL;
-	service-> next = NULL;
-
 	service->mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
 	pthread_mutex_init(service->mutex, NULL);
 
@@ -282,6 +281,39 @@ destroy_service_struct( Service *service_to_destroy )
 		free(service_to_destroy);
 	}
 	return HPD_E_SUCCESS;
+}
+
+
+ServiceElement* 
+create_service_element_struct( Service *service )
+{
+	ServiceElement *to_create;
+
+	if( !service )
+		return NULL;
+
+	to_create = (ServiceElement*)malloc(sizeof(ServiceElement));
+	if( !to_create )
+		return NULL;
+
+	to_create->service = service;
+
+	to_create->next = NULL;
+	to_create->prev = NULL;
+
+	return to_create;
+}
+
+
+int 
+destroy_service_element_struct( ServiceElement *service_element_to_destroy )
+{
+	if( !service_element_to_destroy )
+		return HPD_E_NULL_POINTER;
+
+	free( service_element_to_destroy );
+
+	return 0;
 }
 
 
@@ -454,17 +486,18 @@ destroy_device_struct( Device *device_to_destroy )
 	if(device_to_destroy)
 	{
 
-		Service *tmp, *iterator = NULL;
+		ServiceElement *tmp, *iterator = NULL;
 
 		DL_FOREACH_SAFE( device_to_destroy->service_head, iterator, tmp )
 		{
-			if( is_service_registered( iterator ) )
+			if( is_service_registered( iterator->service ) )
 			{
 				printf("Device has registered service(s). Call HPD_unregister_device before destroying\n");
 				return HPD_E_SERVICE_IN_USE;
 			}
 			DL_DELETE( device_to_destroy->service_head, iterator );
-			destroy_service_struct (iterator);
+			destroy_service_struct (iterator->service);
+			destroy_service_element_struct( iterator );
 			iterator = NULL;
 		}		
 
@@ -583,16 +616,23 @@ add_service_to_device( Service *service, Device *device )
 	if( service == NULL || device == NULL ) 
 		return HPD_E_NULL_POINTER;
 
-	Service *elt;
+	ServiceElement *elt, *new_se;
+
+	new_se = create_service_element_struct( service );
+	if( !new_se )
+		return HPD_E_NULL_POINTER;
 
 	DL_SEARCH( device->service_head,
 	           elt,
-	           service,
-	           cmp_Service );
+	           new_se,
+	           cmp_ServiceElement );
 	if( elt ) 
+	{
+		destroy_service_element_struct( new_se );
 		return HPD_E_SERVICE_ALREADY_IN_LIST;
+	}
 
-	DL_APPEND( device->service_head, service);
+	DL_APPEND( device->service_head, new_se);
 
 	return HPD_E_SUCCESS;
 }
@@ -613,14 +653,15 @@ remove_service_from_device( Service *service, Device *device )
 
 	if( service == NULL || device == NULL ) return HPD_E_NULL_POINTER;
 
-	Service *iterator, *tmp;
+	ServiceElement *iterator, *tmp;
 
 	DL_FOREACH_SAFE( device->service_head, iterator, tmp )
 	{
-		if( strcmp( service->type, iterator->type ) == 0
-		   && strcmp ( service->ID, iterator->ID ) == 0 )
+		if( strcmp( service->type, iterator->service->type ) == 0
+		   && strcmp ( service->ID, iterator->service->ID ) == 0 )
 		{
 			DL_DELETE( service->device->service_head, iterator );
+			destroy_service_element_struct( iterator );
 			iterator = NULL;
 			break;
 		}			
@@ -639,9 +680,12 @@ remove_service_from_device( Service *service, Device *device )
  * @return returns 0 if the same -1 or 1 if not
  */
 int 
-cmp_Service( Service *a, Service *b )
+cmp_ServiceElement( ServiceElement *a, ServiceElement *b )
 {
-	return strcmp( a->value_url, b->value_url );
+	if( !a || !b )
+		return -1;
+	
+	return strcmp( a->service->value_url, b->service->value_url );
 }
 
 /**
@@ -654,18 +698,18 @@ cmp_Service( Service *a, Service *b )
  * @return returns the Service if it exists NULL if not
  */
 Service* 
-matching_service( Service *service_head, char *url )
+matching_service( ServiceElement *service_head, char *url )
 {
-	Service *iterator;
+	ServiceElement *iterator;
 	DL_FOREACH( service_head, iterator )
 	{
-		pthread_mutex_lock(iterator->mutex);
-		if( strcmp( iterator->value_url, url) == 0 )
+		pthread_mutex_lock(iterator->service->mutex);
+		if( strcmp( iterator->service->value_url, url) == 0 )
 		{
-			pthread_mutex_unlock( iterator->mutex );
-			return iterator;
+			pthread_mutex_unlock( iterator->service->mutex );
+			return iterator->service;
 		}
-		pthread_mutex_unlock( iterator->mutex );
+		pthread_mutex_unlock( iterator->service->mutex );
 	}
 	return  NULL;
 }

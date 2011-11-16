@@ -210,7 +210,7 @@ HPD_phidget_deinit()
 		{
 			CPhidget_getSerialNumber(device_array[i], &serialNo);
 			sprintf(serial, "%d",serialNo);
-			CPhidgetHandle tmp = (CPhidgetHandle)HPD_get_device(PHIDGET_DEVICE, serial)->service_head->user_data_pointer;
+			CPhidgetHandle tmp = (CPhidgetHandle)HPD_get_device(PHIDGET_DEVICE, serial)->service_head->service->user_data_pointer;
 			CPhidget_close(tmp);
 			CPhidget_delete(tmp);
 		}

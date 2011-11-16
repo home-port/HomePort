@@ -51,6 +51,8 @@ typedef struct Device Device;
  */
 typedef struct Service Service;
 
+typedef struct ServiceElement ServiceElement;
+
 typedef size_t (*HPD_GetFunction) (Service* service, char *buffer, size_t max_buffer_size);
 
 typedef size_t (*HPD_PutFunction) (Service* service, char *buffer, size_t max_buffer_size, char *put_value);
@@ -68,7 +70,7 @@ struct Device
 	char *type;/**<The Device type*/
 	int secure_device;/**<A variable that states if the Device is Secure or not (HPD_SECURE_DEVICE or HPD_NON_SECURE_DEVICE)*/
 
-	Service *service_head;/**<The first Service of the Service List*/
+	ServiceElement *service_head;/**<The first Service of the Service List*/
 };
 
 struct Service
@@ -88,9 +90,14 @@ struct Service
 
 	Parameter *parameter_head;/**<The first Parameter of the Parameter List*/
 
-	Service *prev;/**<A pointer to the previous Service*/
-	Service *next;/**<A pointer to the next Service*/
 	pthread_mutex_t *mutex; /**<A mutex used to access a Service in the list*/
+};
+
+struct ServiceElement
+{
+	Service *service;
+	ServiceElement *next;
+	ServiceElement *prev;
 };
 
 Service* create_service_struct(
@@ -105,6 +112,10 @@ Service* create_service_struct(
                                void* user_data_pointer);
 
 int destroy_service_struct( Service *service ); 
+
+ServiceElement* create_service_element_struct( Service *service );
+
+int destroy_service_element_struct( ServiceElement *service_element_to_destroy );
 
 Device* create_device_struct(
                              char *description,
@@ -128,8 +139,8 @@ int add_service_to_device( Service *service, Device *device );
 
 int remove_service_from_device( Service *service, Device *device );
 
-int cmp_Service( Service *a, Service *b );
+int cmp_ServiceElement( ServiceElement *a, ServiceElement *b );
 
-Service* matching_service( Service *_service_head, char *url );
+Service* matching_service( ServiceElement *service_head, char *url );
 
 #endif
