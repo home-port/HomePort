@@ -1,0 +1,117 @@
+HomePort release 0.2
+
+What is HomePort ?
+==================
+
+The project is about establishing possibilities for intelligent control of the energy consumption in private homes through the development of a prototype for a so called ’home port’. This port establish access to coordinated control of the different subsystems in a private home for control and surveillance of energy consumption etc. Key concepts in the project are coexistence of different technologies controlled through a common service layer in a private house. The purpose of this coexistence is to create interoperability between the different technologies such that energy consumption can be lowered and consequently lowering the pollution of the environment. More info at http://www.energybox.dk/
+
+Installation
+============
+
+In order to install libhpd, some dependencies are necessary:
+	-libuuid
+		- $ sudo apt-get install uuid-dev
+
+	-minixml 
+		- Download the latest version at http://www.minixml.org/
+		- Extract
+		- $ cd mxml-x.x
+		  $ ./configure --enable-shared --prefix=/usr
+		  $ make
+		  $ sudo make install 
+
+	-libmicrohttpd 
+		- Download the latest version at http://www.gnu.org/s/libmicrohttpd/
+		- Extract
+		- For HTTPS feature enabled, dependencies needed : libgnutls and libgcrypt 
+		- $ cd libmicrohttpd-x.x.xx
+		  $ ./configure --prefix=/usr
+		  $ make
+		  $ sudo make install
+
+	-libconfig
+		- Download the latest version at http://www.hyperrealm.com/libconfig/
+		- Extract
+		- $ cd libconfig-x.x.x
+		  $ ./configure --prefix=/usr
+		  $ make
+		  $ sudo make install
+
+	-(Optional) libgnutls
+		- $ sudo apt-get install libgnutls-dev
+
+	-(Optional) libgcrypt
+		- $ sudo apt-get install libgcrypt11-dev
+
+	-avahi-client or avahi-core 
+		- Download the latest version at http://avahi.org/
+		- Extract
+		- $./configure --prefix=/usr \
+            	  $	--sysconfdir=/etc \
+            	  $	--localstatedir=/var \
+            	  $	--with-distro=lfs \
+            	  $	--disable-qt3 \
+            	  $	--disable-qt4 \
+            	  $	--disable-gtk \
+		  $	--disable-gtk3 \
+            	  $	--disable-dbus \ (necessary for avahi-client optional for avahi-core)
+            	  $	--disable-libdaemon \ (necessary for avahi-client optional for avahi-core)
+            	  $	--disable-python \
+            	  $	--disable-mono \
+            	  $	--disable-monodoc \
+		  $	--disable-gdbm \
+		  $	--disable-glib \
+		  $	--disable-xmltoman 
+		  $ make
+		  $ sudo make install
+
+In order to use avahi-core instead of avahi-client, make sur to use '--disable-hpd-avahi-client' flag
+
+Then
+	- $ cd HPDvx.x
+	- $ autoreconf -i
+	- $ ./configure with the corresponding flag(s)
+	- $ make
+	- $ sudo make install
+
+To use the HomePort Daemon library with your own application, make sure that the <hpdaemon/homeport.h> in the include path when compiling.
+
+
+Documentation
+=============
+
+In order to generate the documentation some dependencies are necessary:
+	-doxygen
+		- $ sudo apt-get install doxygen
+
+	-graphviz
+		- $ sudo apt-get install graphviz
+
+After having installed the dependencies you can use with './configure' the different flags:
+	--disable-doxygen-doc   don't generate any doxygen documentation
+  	--disable-doxygen-dot   don't generate graphics for doxygen documentation
+  	--enable-doxygen-man    generate doxygen manual pages
+  	--enable-doxygen-rtf    generate doxygen RTF documentation
+  	--enable-doxygen-xml    generate doxygen XML documentation
+  	--enable-doxygen-chm    generate doxygen compressed HTML help documentation
+  	--enable-doxygen-chi    generate doxygen seperate compressed HTML help index file
+  	--disable-doxygen-html  don't generate doxygen plain HTML documentation
+  	--enable-doxygen-ps     generate doxygen PostScript documentation
+  	--enable-doxygen-pdf    generate doxygen PDF documentation
+
+And then run :
+	$ sudo doxygen doxygen.cfg
+
+Examples
+========
+
+In order to use the Phidget Example you will need the library phidget21 when configuring libhpd :
+	- sudo apt-get install libusb-dev
+	- Download the latest version at http://www.phidgets.com/
+	- Extract 
+	- $ cd libphidget-x.x.x.xxxxxxxx
+	  $ ./configure --prefix=/usr
+	  $ make
+	  $ sudo make install 
+
+
