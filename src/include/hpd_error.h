@@ -38,6 +38,14 @@ authors and should not be interpreted as representing official policies, either 
 #include <errno.h>
 
 /** 		HPD error codes			*/
+#define HPD_IS_CONFIGURATION_ENTITY	7
+
+#define HPD_IS_PARAMETER				6
+
+#define HPD_IS_DEVICE				5
+
+#define HPD_IS_SERVICE				4
+
 #define HPD_WAIT_FOR_TIMEOUT				3
 
 #define HPD_NO						2
@@ -147,6 +155,14 @@ authors and should not be interpreted as representing official policies, either 
 #define HPD_E_LOG_DATA_IS_NULL				-50
 
 #define HPD_E_CONNECTION_ID_IS_NULL				-51
+
+#define HPD_E_CONFIGURATION_DEVICE_CREATION_FAILED				-52
+
+#define HPD_E_CONFIGURATION_FAILED				-53
+
+#define HPD_E_DEVICE_NOT_THE_SAME				-54
+
+
 
 
 

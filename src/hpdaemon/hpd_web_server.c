@@ -295,7 +295,7 @@ unregister_service_in_server( Service *service_to_unregister )
 int 
 register_device_services( Device *device_to_register )
 {
-	Service *iterator;
+	serviceElement *iterator;
 	int return_value;
 
 	if( device_to_register->secure_device == HPD_NON_SECURE_DEVICE )
@@ -303,7 +303,7 @@ register_device_services( Device *device_to_register )
 #if HPD_HTTP
 		DL_FOREACH(device_to_register->service_head, iterator)
 		{
-			return_value = register_service_in_server (iterator);
+			return_value = register_service_in_server (iterator->service);
 			if(return_value < HPD_E_SUCCESS)
 			{
 				return return_value;
@@ -322,7 +322,7 @@ register_device_services( Device *device_to_register )
 #if HPD_HTTPS
 		DL_FOREACH(device_to_register->service_head, iterator)
 		{
-			return_value = register_service_in_secure_server (iterator);
+			return_value = register_service_in_secure_server (iterator->service);
 			if(return_value < HPD_E_SUCCESS)
 			{
 				return return_value;
@@ -348,14 +348,14 @@ register_device_services( Device *device_to_register )
 int 
 unregister_device_services( Device *device_to_unregister )
 {
-	Service *iterator;
+	serviceElement *iterator;
 	int return_value;
 	if( device_to_unregister->secure_device == HPD_NON_SECURE_DEVICE )
 	{
 #if HPD_HTTP
 		DL_FOREACH( device_to_unregister->service_head, iterator )
 		{
-			return_value = unregister_service_in_server ( iterator );
+			return_value = unregister_service_in_server ( iterator->service );
 			if(return_value < HPD_E_SUCCESS)
 			{
 				return return_value;
@@ -372,7 +372,7 @@ unregister_device_services( Device *device_to_unregister )
 #if HPD_HTTPS
 		DL_FOREACH(device_to_unregister->service_head, iterator)
 		{
-			return_value = unregister_service_in_secure_server (iterator);
+			return_value = unregister_service_in_secure_server (iterator->service);
 			if(return_value < HPD_E_SUCCESS)
 			{
 				return return_value;

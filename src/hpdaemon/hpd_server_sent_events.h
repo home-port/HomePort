@@ -84,7 +84,7 @@ char *generate_connection_id();
 
 void *consume_global_queue();
 
-int send_event_of_value_change (Service *service, char *updated_value);
+int send_event_of_value_change (Service *service, char *updated_value, char *IP);
 
 EventQueue *get_event_queue_with_connection_id(char *connection_id);
 

@@ -35,13 +35,18 @@ authors and should not be interpreted as representing official policies, either 
 
 #include "hpd_https_web_server.h"
 #include "hpd_error.h"
+#include "hpd_device_configuration.h"
 
-char *key_pem;
-char *cert_pem;
-char *root_pem;
+char *key_pem = NULL;
+int size_of_key_pem = 0;
+char *cert_pem = NULL;
+int size_of_cert_pem = 0;
+char *root_pem = NULL;
+int size_of_root_pem = 0;
 
-static Service *secure_service_head;/**< List containing all the services handled by the server */
+static serviceElement *secure_service_head;/**< List containing all the services handled by the server */
 static struct MHD_Daemon *secure_d;/**< MDH daemon for the MHD web server listening for incoming connections */
+int is_secure_configuring = HPD_NO;
 
 
 int secure_done_flag = 0;
@@ -84,6 +89,30 @@ get_file_size (const char *filename)
  * @return a malloc'd buffer containing the content of the file
  *
 */
+
+int load_file(const char *filename, char **result) 
+{ 
+	int size = 0;
+	FILE *f = fopen(filename, "rb");
+	if (f == NULL) 
+	{ 
+		*result = NULL;
+		return -1; // -1 means file opening fail 
+	} 
+	fseek(f, 0, SEEK_END);
+	size = ftell(f);
+	fseek(f, 0, SEEK_SET);
+	*result = (char *)malloc(size+1);
+	if (size != fread(*result, sizeof(char), size, f)) 
+	{ 
+		free(*result);
+		return -2; // -2 means file reading fail 
+	} 
+	fclose(f);
+	(*result)[size] = '\0';
+	return size;
+}
+/*
 static char *
 load_file (const char *filename)
 {
@@ -99,7 +128,7 @@ load_file (const char *filename)
 	if (!fp)
 		return NULL;
 
-	buffer = malloc (size);
+	buffer = malloc (sizeof(char)*(size+1));
 	if (!buffer)
 	{
 		fclose (fp);
@@ -114,7 +143,7 @@ load_file (const char *filename)
 
 	fclose (fp);
 	return buffer;
-}
+}*/
 
 
 /**
@@ -168,19 +197,31 @@ send_error( struct MHD_Connection *connection, int http_error_code )
 
 	switch( http_error_code )
 	{
+
+		case MHD_HTTP_OK :
+			response = MHD_create_response_from_data( strlen("OK"), (void *) "OK", MHD_NO, MHD_NO );
+			break;
+
 		case MHD_HTTP_NOT_FOUND :
-			response = MHD_create_response_from_data(strlen(NOT_FOUND), (void *) NOT_FOUND, MHD_NO, MHD_NO);
+			response = MHD_create_response_from_data(strlen("Not Found"), (void *) "Not Found", MHD_NO, MHD_NO);
 			break;
 
 		case MHD_HTTP_BAD_REQUEST :
-			response = MHD_create_response_from_data(strlen(BAD_REQUEST), (void *) BAD_REQUEST, MHD_NO, MHD_NO);
+			response = MHD_create_response_from_data(strlen("Bad Request"), (void *) "Bad Request", MHD_NO, MHD_NO);
 			break;
 
 		case MHD_HTTP_UNAUTHORIZED :
-			response = MHD_create_response_from_data(strlen(UNAUTHORIZED), (void *) UNAUTHORIZED, MHD_NO, MHD_NO);
+			response = MHD_create_response_from_data(strlen("Unauthorized"), (void *) "Unauthorized", MHD_NO, MHD_NO);
 			break;
+
+		case MHD_HTTP_SERVICE_UNAVAILABLE :
+			response = MHD_create_response_from_data( strlen("Service Unavailable"), (void *) "Service Unavailable", MHD_NO, MHD_NO );
+
+		case MHD_HTTP_INTERNAL_SERVER_ERROR :
+			response = MHD_create_response_from_data( strlen("Intrernal Server Error"), (void *) "Intrernal Server Error", MHD_NO, MHD_NO );
+
 		default :
-			response = MHD_create_response_from_data(strlen(UNKNOWN_ERROR), (void *) UNKNOWN_ERROR, MHD_NO, MHD_NO);
+			response = MHD_create_response_from_data(strlen("Unknown Error"), (void *) "Unknown Error", MHD_NO, MHD_NO);
 			break;
 	} 
 
@@ -313,7 +354,13 @@ secure_answer_to_connection (void *cls, struct MHD_Connection *connection,
 {
 	Service *requested_service;
 	int *done = cls;
+	int ret = 0;
+	char *xmlbuff = NULL;
 	struct sockaddr *addr;
+
+	if(is_secure_configuring == HPD_YES)
+		return send_error (connection, MHD_HTTP_SERVICE_UNAVAILABLE);
+
 	addr = MHD_get_connection_info (connection, MHD_CONNECTION_INFO_CLIENT_ADDRESS)->client_addr;
 	char IP[16];
 	inet_ntop(addr->sa_family,addr->sa_data + 2, IP, 16);
@@ -335,8 +382,6 @@ secure_answer_to_connection (void *cls, struct MHD_Connection *connection,
 
 	if( 0 == strcmp (method, MHD_HTTP_METHOD_GET) )
 	{
-
-		char *xmlbuff;
 		*con_cls = NULL;
 
 		if(strcmp(url,"/log") == 0)
@@ -347,7 +392,7 @@ secure_answer_to_connection (void *cls, struct MHD_Connection *connection,
 		else if(strcmp(url,"/events") == 0)
 		{
 			Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
-			int ret = set_up_server_sent_event_connection (connection, HPD_IS_SECURE_CONNECTION);
+			ret = set_up_server_sent_event_connection (connection, HPD_IS_SECURE_CONNECTION);
 			if(ret == MHD_HTTP_NOT_FOUND)
 				return send_error (connection, MHD_HTTP_NOT_FOUND);
 			else 
@@ -391,8 +436,6 @@ secure_answer_to_connection (void *cls, struct MHD_Connection *connection,
 
 			Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
 			pthread_mutex_lock(requested_service->mutex);
-
-			int ret;
 			ret = requested_service->get_function(	requested_service, 
 			                                       						requested_service->get_function_buffer,
 			                                       						MHD_MAX_BUFFER_SIZE);
@@ -430,7 +473,23 @@ secure_answer_to_connection (void *cls, struct MHD_Connection *connection,
 		}
 		else
 		{
-			if( ( requested_service = matching_service (secure_service_head, url) ) !=NULL )
+			if(strcmp(url, "/configure") == 0)
+			{
+				is_secure_configuring = HPD_YES;
+				ret = manage_configuration_xml( *con_cls , secure_service_head );
+				if(ret < 0)
+				{
+					ret = send_error (connection, MHD_HTTP_NOT_FOUND);
+					is_secure_configuring = HPD_NO;
+					return ret;
+				}
+				is_secure_configuring = HPD_NO;
+				xmlbuff = get_xml_device_list();
+				ret = send_xml (connection, xmlbuff);
+				Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
+				return ret;
+			}
+			else if( ( requested_service = matching_service (secure_service_head, url) ) !=NULL )
 			{
 				Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
 				pthread_mutex_lock(requested_service->mutex);
@@ -444,27 +503,50 @@ secure_answer_to_connection (void *cls, struct MHD_Connection *connection,
 						return send_error (connection, MHD_HTTP_BAD_REQUEST);
 					}
 
-					int ret;
 					ret = requested_service->put_function(	requested_service, 
 					                                      						requested_service->get_function_buffer,
 					                                     						MHD_MAX_BUFFER_SIZE,
 					                                       						value);
 					free(value);
 
-					if(ret != 0)
+					switch(ret)
+					{
+						case -2:
+							ret = send_error(connection, MHD_HTTP_BAD_REQUEST);
+							break;
+						case -1:
+							ret = send_error(connection, MHD_HTTP_INTERNAL_SERVER_ERROR);
+							break;
+						case 0:
+							send_event_of_value_change (requested_service, value, IP);
+							ret = send_error(connection, MHD_HTTP_OK);
+							break;
+						default:
+							break;
+					}
+				
+					if(ret > 0)
 						requested_service->get_function_buffer[ret] = '\0';
 					else
-						return send_error(connection, MHD_HTTP_NOT_FOUND);
-
-					char* xmlbuff = get_xml_value (requested_service->get_function_buffer);
+					{
+						pthread_mutex_unlock( requested_service->mutex );
+						Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
+						return ret;
+					}
+					
+					xmlbuff = get_xml_value (requested_service->get_function_buffer);
 					pthread_mutex_unlock(requested_service->mutex);
-					send_event_of_value_change (requested_service, requested_service->get_function_buffer);
-					return send_xml (connection, xmlbuff);
+					send_event_of_value_change (requested_service, requested_service->get_function_buffer, IP);
+					ret = send_xml (connection, xmlbuff);
+					Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
+					return ret;
 				}
 				else
 				{
 					pthread_mutex_unlock(requested_service->mutex);
-					return send_error (connection, MHD_HTTP_BAD_REQUEST);
+					ret = send_error(connection, MHD_HTTP_BAD_REQUEST);
+					Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
+					return ret;
 				}
 			}
 			else
@@ -486,7 +568,9 @@ register_service_in_secure_server( Service *service_to_register )
 {
 	int rc;
 
-	DL_APPEND(secure_service_head, service_to_register);
+	serviceElement *service_element_to_register = create_service_element(service_to_register);
+
+	DL_APPEND(secure_service_head, service_element_to_register);
 	if(secure_service_head == NULL)
 	{
 		printf("add_service_to_list failed\n");
@@ -507,13 +591,14 @@ int
 unregister_service_in_secure_server( Service *service_to_unregister )
 {
 	int rc;
-	Service *tmp, *iterator;
+	serviceElement *tmp, *iterator;
 	assert(secure_d);
 	DL_FOREACH_SAFE(secure_service_head, iterator, tmp)
 	{
-		if( strcmp( iterator->value_url, service_to_unregister->value_url ) == 0 )
+		if( strcmp( iterator->service->value_url, service_to_unregister->value_url ) == 0 )
 		{
 			DL_DELETE(secure_service_head, iterator);
+			destroy_service_element(iterator);
 			break;
 		}
 	}
@@ -530,9 +615,9 @@ int
 start_secure_server()
 {  
 
-	root_pem = load_file(hpd_daemon->root_ca_path);
-	key_pem = load_file(hpd_daemon->server_key_path);
-	cert_pem = load_file(hpd_daemon->server_cert_path);
+	size_of_root_pem = load_file(hpd_daemon->root_ca_path, &root_pem);
+	size_of_key_pem = load_file(hpd_daemon->server_key_path, &key_pem);
+	size_of_cert_pem = load_file(hpd_daemon->server_cert_path, &cert_pem);
 
 	if( root_pem == NULL )
 	{
@@ -616,7 +701,7 @@ stop_secure_server()
 int 
 free_secure_server_services()
 {
-	Service *iterator, *tmp;
+	serviceElement *iterator, *tmp;
 
 	if(secure_service_head == NULL)
 		return HPD_E_NULL_POINTER;
@@ -624,7 +709,8 @@ free_secure_server_services()
 	DL_FOREACH_SAFE(secure_service_head, iterator, tmp)
 	{
 		DL_DELETE(secure_service_head, iterator);
-		destroy_service_struct(iterator);
+		destroy_service_struct(iterator->service);
+		destroy_service_element(iterator);
 		iterator = NULL;
 	}
 
@@ -644,16 +730,16 @@ free_secure_server_services()
 int 
 is_secure_service_registered( Service *service )
 {
-	Service *iterator = NULL;
+	serviceElement *iterator = NULL;
 
 	assert(secure_d);
 
 	DL_FOREACH( secure_service_head, iterator )
 	{
-		if(   ( strcmp( iterator->device->type, service->device->type ) == 0 ) 
-		   && ( strcmp( iterator->device->ID, service->device->ID ) == 0 )
-		   && ( strcmp( iterator->type, service->type ) == 0 )
-		   && ( strcmp( iterator->ID, service->ID ) == 0 )            )
+		if(   ( strcmp( iterator->service->device->type, service->device->type ) == 0 ) 
+		   && ( strcmp( iterator->service->device->ID, service->device->ID ) == 0 )
+		   && ( strcmp( iterator->service->type, service->type ) == 0 )
+		   && ( strcmp( iterator->service->ID, service->ID ) == 0 )            )
 		{
 			return 1;
 		}
@@ -683,18 +769,18 @@ get_service_from_secure_server( 	char *device_type,
 									char *service_type, 
 									char *service_ID )
 {
-	Service *iterator = NULL;
+	serviceElement *iterator = NULL;
 
 	assert(secure_d);
 
 	DL_FOREACH(secure_service_head, iterator)
 	{
-		if(   ( strcmp( iterator->device->type, device_type ) == 0 ) 
-		   && ( strcmp( iterator->device->ID, device_ID ) == 0 )
-		   && ( strcmp( iterator->type, service_type ) == 0 )
-		   && ( strcmp( iterator->ID, service_ID ) == 0 )            )
+		if(   ( strcmp( iterator->service->device->type, device_type ) == 0 ) 
+		   && ( strcmp( iterator->service->device->ID, device_ID ) == 0 )
+		   && ( strcmp( iterator->service->type, service_type ) == 0 )
+		   && ( strcmp( iterator->service->ID, service_ID ) == 0 )            )
 		{
-			return iterator;
+			return iterator->service;
 		}
 	}
 
@@ -715,16 +801,16 @@ get_service_from_secure_server( 	char *device_type,
 Device* 
 get_device_from_secure_server( char *device_type, char *device_ID)
 {
-	Service *iterator = NULL;
+	serviceElement *iterator = NULL;
 
 	assert(secure_d);
 
 	DL_FOREACH(secure_service_head, iterator)
 	{
-		if(   ( strcmp( iterator->device->type, device_type ) == 0 ) 
-		   && ( strcmp( iterator->device->ID, device_ID ) == 0 ))
+		if(   ( strcmp( iterator->service->device->type, device_type ) == 0 ) 
+		   && ( strcmp( iterator->service->device->ID, device_ID ) == 0 ))
 		{
-			return iterator->device;
+			return iterator->service->device;
 		}
 	}
 

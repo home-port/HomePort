@@ -73,7 +73,7 @@ initiate_global_event_queue()
  * @return HPD_E_SERVICE_IS_NULL, HPD_E_EVENT_IS_NULL or HPD_E_ERROR_QUEUING_EVENT if an error occured, HPD_E_SUCCESS if successful
  */
 int 
-send_event_of_value_change( Service *service, char *value )
+send_event_of_value_change( Service *service, char *value , char *IP )
 {
 	Event *new_event;
 	if( !service )
@@ -82,7 +82,7 @@ send_event_of_value_change( Service *service, char *value )
 	if( !service->value_url )
 		return HPD_E_SERVICE_IS_NULL;
 
-	new_event = create_event( service->value_url, value );
+	new_event = create_event( "value_change", service->value_url, IP, value );
 	if ( !new_event )
 		return HPD_E_EVENT_IS_NULL;
 
@@ -103,13 +103,13 @@ send_event_of_value_change( Service *service, char *value )
  * @return HPD_E_LOG_DATA_IS_NULL, HPD_E_EVENT_IS_NULL or HPD_E_ERROR_QUEUING_EVENT if an error occured, HPD_E_SUCCESS if successful
  */
 int 
-send_log_event( char *log_data )
+send_log_event( char *log_data)
 {
 	Event *new_event;
 	if( !log_data )
 		return HPD_E_LOG_DATA_IS_NULL;
 
-	new_event = create_event( "Log", log_data );
+	new_event = create_event( "log" ,"/log", NULL, log_data );
 	if ( !new_event )
 		return HPD_E_EVENT_IS_NULL;
 
@@ -340,6 +340,7 @@ server_sent_events_callback (	void *cls,
                              char *buf, 
                              size_t max)
 {
+
 	char *connection_id = cls;
 
 	if(!connection_id)
@@ -363,13 +364,13 @@ server_sent_events_callback (	void *cls,
 		return -1;
 	}
 
-	if( !new_event->id || !new_event->data )
+	if( !new_event->id || !new_event->data || !new_event->event_name)
 	{
 		printf("Event error\n");
 		return -1;
 	}
 
-	sprintf(buf,"data: %s<br>id: %s<br><br>", new_event->data, new_event->id);
+	sprintf(buf,"event: %s\ndata: %s\ndata: %s\nid: %s\n\n",new_event->event_name, new_event->data, (new_event->IP != NULL) ? new_event->IP : "", new_event->id);
 
 	destroy_event(new_event);
 
@@ -574,7 +575,6 @@ set_up_server_sent_event_connection(struct MHD_Connection *connection,
 
 	if(event_queue-> service_id_head != NULL || event_queue-> send_log_events == HPD_SEND_LOG_EVENTS)
 	{
-
 		response = MHD_create_response_from_callback (MHD_SIZE_UNKNOWN,
 		                                              32 * 1024,
 		                                              &server_sent_events_callback,
@@ -584,7 +584,7 @@ set_up_server_sent_event_connection(struct MHD_Connection *connection,
 
 		add_session_cookie(event_queue, response, is_secure_connection);
 
-		MHD_add_response_header (response, "Content-Type", "text/html; charset=utf-8");
+		MHD_add_response_header (response, "Content-Type", "text/event-stream; charset=utf-8");
 		ret = MHD_queue_response (connection, MHD_HTTP_OK, response);
 		if(response != NULL)
 			MHD_destroy_response (response);
@@ -674,7 +674,7 @@ notify_service_availability(Service* service_to_notify, int availability)
 	{
 		if(HPD_YES == set_availability_of_service(service_to_notify-> value_url,iterator, availability ))
 		{
-			new_event = create_event( service_to_notify-> value_url, (availability == HPD_YES) ? "available" : "unavailable" );
+			new_event = create_event( "service_availability", service_to_notify-> value_url , NULL, (availability == HPD_YES) ? "available" : "unavailable" );
 			queue_event( iterator, new_event, HPD_NO );
 		}
 	}

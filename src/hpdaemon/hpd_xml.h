@@ -75,6 +75,14 @@ void destroy_service_xml_file();
 void save_xml_tree();
 mxml_node_t *get_xml_node_of_device(Device *_device);
 mxml_node_t *get_xml_node_of_service(Service *_service);
+int update_device_xml( Device *device );
+int update_service_xml( Service *service );
+int update_parameter_xml( Service *service );
+char *extract_device_xml(Device *device_to_extract);
+
+/*
+Device* get_device_from_xml(char* xml_device);
+*/
 
 #endif
 

@@ -33,10 +33,7 @@ authors and should not be interpreted as representing official policies, either 
 #ifndef SERVICES_H
 #define SERVICES_H
 
-#include "hpd_parameters.h"
-
 #include <pthread.h>
-
 
 #define HPD_SECURE_DEVICE 1 /**< Defines if the Device is a Secured Device. */  
 #define HPD_NON_SECURE_DEVICE 0 /**< Defines if the Device is a Non Secured Device. */  
@@ -50,6 +47,14 @@ typedef struct Device Device;
  * The structure Service containing all the Attributes that a Service possess
  */
 typedef struct Service Service;
+/**
+ * The structure Service containing all the Attributes that a Parameter possess
+ */
+typedef struct Parameter Parameter;
+/**
+ * The structure serviceElement used to store Services in lists
+ */
+typedef struct serviceElement serviceElement;
 
 typedef size_t (*HPD_GetFunction) (Service* service, char *buffer, size_t max_buffer_size);
 
@@ -67,8 +72,7 @@ struct Device
 	char *location;/**<The location of the Device*/
 	char *type;/**<The Device type*/
 	int secure_device;/**<A variable that states if the Device is Secure or not (HPD_SECURE_DEVICE or HPD_NON_SECURE_DEVICE)*/
-
-	Service *service_head;/**<The first Service of the Service List*/
+	serviceElement *service_head;/**<The first Service of the Service List*/
 };
 
 struct Service
@@ -85,14 +89,46 @@ struct Service
 	HPD_GetFunction get_function;/**<A pointer to the GET function of the Service*/
 	HPD_PutFunction put_function;/**<A pointer to the PUT function of the Service*/
 	void* user_data_pointer;/**<Pointer used for the used to store its data*/
-
-	Parameter *parameter_head;/**<The first Parameter of the Parameter List*/
-
-	Service *prev;/**<A pointer to the previous Service*/
-	Service *next;/**<A pointer to the next Service*/
+	Parameter *parameter;/**<The first Parameter of the Parameter List*/
 	pthread_mutex_t *mutex; /**<A mutex used to access a Service in the list*/
 };
 
+struct serviceElement
+{
+	Service *service;
+	serviceElement *prev;
+	serviceElement *next;
+};
+
+struct Parameter
+{
+    	char *ID; /**<The Parameter ID*/
+    	char *max;/**<The maximum value of the Parameter*/
+	char *min;/**<The minimum value of the Parameter*/
+	char *scale;/**<The Scale of the Parameter*/
+	char *step;/**<The Step of the values of the Parameter*/
+	char *type;/**<The Type of values for the Parameter*/
+	char *unit;/**<The Unit of the values of the Parameter*/
+	char *values;/**<The possible values for the Parameter*/
+};
+
+serviceElement *create_service_element(Service *service);
+
+void destroy_service_element(serviceElement *service_element_to_destroy);
+
+Parameter* create_parameter_struct(
+                                   char *ID,
+                                   char *max,
+                                   char *min,
+                                   char *scale,
+                                   char *step,
+                                   char *type,
+                                   char *unit,
+                                   char *values );
+
+void free_parameter_struct( Parameter *parameter );
+
+int cmp_Parameter( Parameter *a, Parameter *b );
 Service* create_service_struct(
                                char *description,
                                char *ID,
@@ -120,16 +156,12 @@ Device* create_device_struct(
 
 int destroy_device_struct( Device *device ); 
 
-int add_parameter_to_service( Parameter *parameter, Service *service );
-
-int remove_parameter_from_service( Parameter *parameter, Service *service );
-
 int add_service_to_device( Service *service, Device *device );
 
 int remove_service_from_device( Service *service, Device *device );
 
-int cmp_Service( Service *a, Service *b );
+int cmp_ServiceElement( serviceElement *a, serviceElement *b );
 
-Service* matching_service( Service *_service_head, char *url );
+Service* matching_service( serviceElement *service_head, char *url );
 
 #endif

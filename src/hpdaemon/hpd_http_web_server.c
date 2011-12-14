@@ -35,10 +35,12 @@ authors and should not be interpreted as representing official policies, either 
 
 #include "hpd_http_web_server.h"
 #include "hpd_error.h"
+#include "hpd_device_configuration.h"
 
 
-static Service *service_head;/**< List containing all the services handled by the server */
+static serviceElement *service_head;/**< List containing all the services handled by the server */
 static struct MHD_Daemon *d;/**< MDH daemon for the MHD web server listening for incoming connections */
+int is_configuring = HPD_NO;
 
 
 int done_flag = 0;
@@ -104,6 +106,10 @@ send_error( struct MHD_Connection *connection, int http_error_code )
 
 	switch( http_error_code )
 	{
+		case MHD_HTTP_OK :
+			response = MHD_create_response_from_data( strlen("OK"), (void *) "OK", MHD_NO, MHD_NO );
+			break;
+
 		case MHD_HTTP_NOT_FOUND :
 			response = MHD_create_response_from_data( strlen("Not Found"), (void *) "Not Found", MHD_NO, MHD_NO );
 			break;
@@ -111,6 +117,11 @@ send_error( struct MHD_Connection *connection, int http_error_code )
 		case MHD_HTTP_BAD_REQUEST :
 			response = MHD_create_response_from_data( strlen("Bad Request"), (void *) "Bad Request", MHD_NO, MHD_NO );
 			break;
+		case MHD_HTTP_SERVICE_UNAVAILABLE :
+			response = MHD_create_response_from_data( strlen("Service Unavailable"), (void *) "Service Unavailable", MHD_NO, MHD_NO );
+			break;
+		case MHD_HTTP_INTERNAL_SERVER_ERROR :
+			response = MHD_create_response_from_data( strlen("Intrernal Server Error"), (void *) "Intrernal Server Error", MHD_NO, MHD_NO );
 		default :
 			response = MHD_create_response_from_data( strlen("Unknown error"), (void *) "Unknown error", MHD_NO, MHD_NO );
 			break;
@@ -155,13 +166,18 @@ answer_to_connection ( void *cls, struct MHD_Connection *connection,
                        const char *upload_data, 
                        size_t *upload_data_size, void **con_cls		)
 {
-	Service *requested_service;
+	Service *requested_service = NULL;
+	Service *requested_device = NULL;
 	char *xmlbuff = NULL;
 	int ret;
 	int *done = cls;
 	static int aptr;
 	const char *get_arg;
 	struct sockaddr *addr;
+
+	if(is_configuring == HPD_YES)
+		return send_error (connection, MHD_HTTP_SERVICE_UNAVAILABLE);
+	
 	addr = MHD_get_connection_info (connection, MHD_CONNECTION_INFO_CLIENT_ADDRESS)->client_addr;
 	char IP[16];
 	inet_ntop(addr->sa_family,addr->sa_data + 2, IP, 16);
@@ -241,6 +257,7 @@ answer_to_connection ( void *cls, struct MHD_Connection *connection,
 			else
 			{
 				ret = send_error(connection, MHD_HTTP_NOT_FOUND);
+				pthread_mutex_unlock( requested_service->mutex );
 				Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
 				return ret;
 			}
@@ -278,7 +295,23 @@ answer_to_connection ( void *cls, struct MHD_Connection *connection,
 		}
 		else
 		{
-			if( ( requested_service = matching_service (service_head, url) ) !=NULL )
+			if(strcmp(url, "/configure") == 0)
+			{
+				is_configuring = HPD_YES;
+				ret = manage_configuration_xml( *con_cls , service_head );
+				if(ret < 0)
+				{
+					ret = send_error (connection, MHD_HTTP_NOT_FOUND);
+					is_configuring = HPD_NO;
+					return ret;
+				}
+				is_configuring = HPD_NO;
+				xmlbuff = get_xml_device_list();
+				ret = send_xml (connection, xmlbuff);
+				Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
+				return ret;
+			}
+			else if( ( requested_service = matching_service (service_head, url) ) !=NULL )
 			{
 				pthread_mutex_lock(requested_service->mutex);
 				if( requested_service->put_function != NULL && *con_cls != NULL )
@@ -299,18 +332,34 @@ answer_to_connection ( void *cls, struct MHD_Connection *connection,
 					                                        _value );
 					free(_value);
 
-					if( ret != 0 )
+					switch(ret)
+					{
+						case -2:
+							ret = send_error(connection, MHD_HTTP_BAD_REQUEST);
+							break;
+						case -1:
+							ret = send_error(connection, MHD_HTTP_INTERNAL_SERVER_ERROR);
+							break;
+						case 0:
+							send_event_of_value_change (requested_service, _value, IP);
+							ret = send_error(connection, MHD_HTTP_OK);
+							break;
+						default:
+							break;
+					}
+
+					if(ret > 0)
 						requested_service->get_function_buffer[ret] = '\0';
 					else
 					{
-						ret = send_error(connection, MHD_HTTP_NOT_FOUND);
+						pthread_mutex_unlock( requested_service->mutex );
 						Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
 						return ret;
 					}
-
+					
 					xmlbuff = get_xml_value (requested_service->get_function_buffer);
 					pthread_mutex_unlock(requested_service->mutex);
-					send_event_of_value_change (requested_service, requested_service->get_function_buffer);
+					send_event_of_value_change (requested_service, requested_service->get_function_buffer,IP);
 					ret = send_xml (connection, xmlbuff);
 					Log (HPD_LOG_ONLY_REQUESTS, NULL, IP, method, url, NULL);
 					return ret;
@@ -344,7 +393,9 @@ register_service_in_unsecure_server(Service *service_to_register)
 
 	assert(d);
 
-	DL_APPEND( service_head, service_to_register );
+	serviceElement *service_element_to_register = create_service_element(service_to_register);
+
+	DL_APPEND( service_head, service_element_to_register );
 	if( service_head == NULL )
 	{
 		printf("add_service_to_list failed\n");
@@ -365,15 +416,16 @@ int
 unregister_service_in_unsecure_server( Service *service_to_unregister )
 {
 	int rc;
-	Service *tmp, *iterator;
+	serviceElement *tmp, *iterator;
 
 	assert(d);
 
 	DL_FOREACH_SAFE( service_head, iterator, tmp )
 	{
-		if( strcmp( iterator->value_url,service_to_unregister->value_url ) == 0 )
+		if( strcmp( iterator->service->value_url,service_to_unregister->value_url ) == 0 )
 		{
 			DL_DELETE( service_head, iterator );
+			destroy_service_element(iterator);
 			break;
 		}
 	}
@@ -425,7 +477,7 @@ stop_unsecure_server()
 int 
 free_unsecure_server_services()
 {
-	Service *iterator, *tmp;
+	serviceElement *iterator, *tmp;
 
 	if( service_head == NULL )
 		return HPD_E_NULL_POINTER;
@@ -433,7 +485,8 @@ free_unsecure_server_services()
 	DL_FOREACH_SAFE( service_head, iterator, tmp )
 	{
 		DL_DELETE( service_head, iterator );
-		destroy_service_struct( iterator );
+		destroy_service_struct( iterator->service );
+		destroy_service_element(iterator);
 		iterator = NULL;
 	}
 
@@ -452,16 +505,16 @@ free_unsecure_server_services()
 int 
 is_unsecure_service_registered( Service *service )
 {
-	Service *iterator = NULL;
+	serviceElement *iterator = NULL;
 
 	assert(d);
 
 	DL_FOREACH( service_head, iterator )
 	{
-		if(   ( strcmp( iterator->device->type, service->device->type ) == 0 ) 
-		   && ( strcmp( iterator->device->ID, service->device->ID ) == 0 )
-		   && ( strcmp( iterator->type, service->type ) == 0 )
-		   && ( strcmp( iterator->ID, service->ID ) == 0 )            )
+		if(   ( strcmp( iterator->service->device->type, service->device->type ) == 0 ) 
+		   && ( strcmp( iterator->service->device->ID, service->device->ID ) == 0 )
+		   && ( strcmp( iterator->service->type, service->type ) == 0 )
+		   && ( strcmp( iterator->service->ID, service->ID ) == 0 )            )
 		{
 			return 1;
 		}
@@ -488,18 +541,18 @@ is_unsecure_service_registered( Service *service )
 Service* 
 get_service_from_unsecure_server( char *device_type, char *device_ID, char *service_type, char *service_ID )
 {
-	Service *iterator = NULL;
+	serviceElement *iterator = NULL;
 
 	assert(d);
 
 	DL_FOREACH(service_head, iterator)
 	{
-		if(   ( strcmp( iterator->device->type, device_type ) == 0 ) 
-		   && ( strcmp( iterator->device->ID, device_ID ) == 0 )
-		   && ( strcmp( iterator->type, service_type ) == 0 )
-		   && ( strcmp( iterator->ID, service_ID ) == 0 )            )
+		if(   ( strcmp( iterator->service->device->type, device_type ) == 0 ) 
+		   && ( strcmp( iterator->service->device->ID, device_ID ) == 0 )
+		   && ( strcmp( iterator->service->type, service_type ) == 0 )
+		   && ( strcmp( iterator->service->ID, service_ID ) == 0 )            )
 		{
-			return iterator;
+			return iterator->service;
 		}
 	}
 
@@ -522,16 +575,16 @@ get_service_from_unsecure_server( char *device_type, char *device_ID, char *serv
 Device* 
 get_device_from_unsecure_server( char *device_type, char *device_ID )
 {
-	Service *iterator = NULL;
+	serviceElement *iterator = NULL;
 
 	assert(d);
 
 	DL_FOREACH(service_head, iterator)
 	{
-		if(   ( strcmp( iterator->device->type, device_type ) == 0 ) 
-		   && ( strcmp( iterator->device->ID, device_ID ) == 0 ))
+		if(   ( strcmp( iterator->service->device->type, device_type ) == 0 ) 
+		   && ( strcmp( iterator->service->device->ID, device_ID ) == 0 ))
 		{
-			return iterator->device;
+			return iterator->service->device;
 		}
 	}
 
