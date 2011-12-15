@@ -400,6 +400,9 @@ register_service_in_unsecure_server(Service *service_to_register)
 		return HPD_E_NULL_POINTER;
 
 	DL_APPEND( service_head, new_se );
+	ServiceElement *service_element_to_register = create_service_element(service_to_register);
+
+	DL_APPEND( service_head, service_element_to_register );
 	if( service_head == NULL )
 	{
 		printf("add_service_to_list failed\n");

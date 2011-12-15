@@ -587,14 +587,22 @@ int
 unregister_service_in_secure_server( Service *service_to_unregister )
 {
 	int rc;
+<<<<<<< HEAD
 	ServiceElement *tmp, *iterator;
+=======
+	serviceElement *tmp, *iterator;
+>>>>>>> b6ed1160a63b041d18b34a167a36d6231e8f3561
 	assert(secure_d);
 	DL_FOREACH_SAFE(secure_service_head, iterator, tmp)
 	{
 		if( strcmp( iterator->service->value_url, service_to_unregister->value_url ) == 0 )
 		{
 			DL_DELETE(secure_service_head, iterator);
+<<<<<<< HEAD
 			destroy_service_element_struct( iterator );
+=======
+			destroy_service_element(iterator);
+>>>>>>> b6ed1160a63b041d18b34a167a36d6231e8f3561
 			break;
 		}
 	}
@@ -697,7 +705,11 @@ stop_secure_server()
 int 
 free_secure_server_services()
 {
+<<<<<<< HEAD
 	ServiceElement *iterator, *tmp;
+=======
+	serviceElement *iterator, *tmp;
+>>>>>>> b6ed1160a63b041d18b34a167a36d6231e8f3561
 
 	if(secure_service_head == NULL)
 		return HPD_E_NULL_POINTER;
@@ -706,7 +718,11 @@ free_secure_server_services()
 	{
 		DL_DELETE(secure_service_head, iterator);
 		destroy_service_struct(iterator->service);
+<<<<<<< HEAD
 		destroy_service_element_struct( iterator );
+=======
+		destroy_service_element(iterator);
+>>>>>>> b6ed1160a63b041d18b34a167a36d6231e8f3561
 		iterator = NULL;
 	}
 
@@ -726,7 +742,11 @@ free_secure_server_services()
 int 
 is_secure_service_registered( Service *service )
 {
+<<<<<<< HEAD
 	ServiceElement *iterator = NULL;
+=======
+	serviceElement *iterator = NULL;
+>>>>>>> b6ed1160a63b041d18b34a167a36d6231e8f3561
 
 	assert(secure_d);
 
@@ -765,7 +785,11 @@ get_service_from_secure_server( 	char *device_type,
 									char *service_type, 
 									char *service_ID )
 {
+<<<<<<< HEAD
 	ServiceElement *iterator = NULL;
+=======
+	serviceElement *iterator = NULL;
+>>>>>>> b6ed1160a63b041d18b34a167a36d6231e8f3561
 
 	assert(secure_d);
 
@@ -797,7 +821,11 @@ get_service_from_secure_server( 	char *device_type,
 Device* 
 get_device_from_secure_server( char *device_type, char *device_ID)
 {
+<<<<<<< HEAD
 	ServiceElement *iterator = NULL;
+=======
+	serviceElement *iterator = NULL;
+>>>>>>> b6ed1160a63b041d18b34a167a36d6231e8f3561
 
 	assert(secure_d);
 

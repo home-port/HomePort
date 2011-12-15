@@ -36,11 +36,11 @@ lib_LTLIBRARIES = \
 libhpd_la_SOURCES = hpd_avahi_publish.c hpd_avahi_publish.h\
 		    hpd_configure.c\
 		    homeport.c\
-		    hpd_parameters.c\
 		    hpd_services.c\
 		    utlist.h\
 		    hpd_web_server.h hpd_web_server.c\
 		    hpd_server_sent_events.c hpd_server_sent_events.h\
+		    hpd_device_configuration.c hpd_device_configuration.h\
 		    hpd_log.c hpd_log.h\
 		    hpd_xml.c hpd_xml.h\
 		    hpd_events.c hpd_events.h

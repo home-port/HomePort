@@ -295,7 +295,11 @@ unregister_service_in_server( Service *service_to_unregister )
 int 
 register_device_services( Device *device_to_register )
 {
+<<<<<<< HEAD
 	ServiceElement *iterator;
+=======
+	serviceElement *iterator;
+>>>>>>> b6ed1160a63b041d18b34a167a36d6231e8f3561
 	int return_value;
 
 	if( device_to_register->secure_device == HPD_NON_SECURE_DEVICE )
@@ -348,7 +352,11 @@ register_device_services( Device *device_to_register )
 int 
 unregister_device_services( Device *device_to_unregister )
 {
+<<<<<<< HEAD
 	ServiceElement *iterator;
+=======
+	serviceElement *iterator;
+>>>>>>> b6ed1160a63b041d18b34a167a36d6231e8f3561
 	int return_value;
 	if( device_to_unregister->secure_device == HPD_NON_SECURE_DEVICE )
 	{

@@ -653,9 +653,15 @@ cmp_ServiceElement( ServiceElement *a, ServiceElement *b )
  * @return returns the Service if it exists NULL if not
  */
 Service* 
+<<<<<<< HEAD
 matching_service( ServiceElement *service_head, char *url )
 {
 	ServiceElement *iterator;
+=======
+matching_service( serviceElement *service_head, char *url )
+{
+	serviceElement *iterator;
+>>>>>>> b6ed1160a63b041d18b34a167a36d6231e8f3561
 	DL_FOREACH( service_head, iterator )
 	{
 		pthread_mutex_lock(iterator->service->mutex);
