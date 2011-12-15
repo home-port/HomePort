@@ -386,16 +386,16 @@ int is_parameter_in_list(configurationXML *configure, Service *service)
  * 
  */
 int 
-manage_configuration_xml( char *configuration_xml , serviceElement *service_head)
+manage_configuration_xml( char *configuration_xml , ServiceElement *service_head)
 {
 
 	mxml_node_t *xml = NULL; 
 	mxml_node_t *selector_node = NULL;
 	mxml_node_t *selected_node = NULL;
 	mxml_node_t *node = NULL;
-	serviceElement *iterator = NULL;
-	serviceElement *iterator2 = NULL;
-	serviceElement *iterator3 = NULL;
+	ServiceElement *iterator = NULL;
+	ServiceElement *iterator2 = NULL;
+	ServiceElement *iterator3 = NULL;
 	Parameter *parameter = NULL;
 	Attribute *att_iterator = NULL;
 	Service *new_service = NULL;

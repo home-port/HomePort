@@ -96,7 +96,7 @@ int destroy_configuration_xml(configurationXML *configuration_xml_to_destroy);
 int retrieve_selectors(mxml_node_t *node, configurationXML * configure, int type);
 int retrieve_attributes(mxml_node_t *node, configurationXML * configure, int type);
 
-int manage_configuration_xml( char *configuration_xml , serviceElement *service_head);
+int manage_configuration_xml( char *configuration_xml , ServiceElement *service_head);
 
 int modify_services(configurationXML *configure);
 int modify_devices(configurationXML *configure);

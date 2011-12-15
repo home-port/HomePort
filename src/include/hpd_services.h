@@ -74,12 +74,7 @@ struct Device
 	char *location;/**<The location of the Device*/
 	char *type;/**<The Device type*/
 	int secure_device;/**<A variable that states if the Device is Secure or not (HPD_SECURE_DEVICE or HPD_NON_SECURE_DEVICE)*/
-<<<<<<< HEAD
-
 	ServiceElement *service_head;/**<The first Service of the Service List*/
-=======
-	serviceElement *service_head;/**<The first Service of the Service List*/
->>>>>>> b6ed1160a63b041d18b34a167a36d6231e8f3561
 };
 
 struct Service
@@ -100,17 +95,6 @@ struct Service
 	pthread_mutex_t *mutex; /**<A mutex used to access a Service in the list*/
 };
 
-struct serviceElement
-{
-	Service *service;
-	serviceElement *prev;
-	serviceElement *next;
-};
-
-<<<<<<< HEAD
-	pthread_mutex_t *mutex; /**<A mutex used to access a Service in the list*/
-};
-
 struct ServiceElement
 {
 	Service *service;
@@ -118,7 +102,7 @@ struct ServiceElement
 	ServiceElement *prev;
 };
 
-=======
+
 struct Parameter
 {
     	char *ID; /**<The Parameter ID*/
@@ -130,10 +114,6 @@ struct Parameter
 	char *unit;/**<The Unit of the values of the Parameter*/
 	char *values;/**<The possible values for the Parameter*/
 };
-
-serviceElement *create_service_element(Service *service);
-
-void destroy_service_element(serviceElement *service_element_to_destroy);
 
 Parameter* create_parameter_struct(
                                    char *ID,
@@ -148,7 +128,7 @@ Parameter* create_parameter_struct(
 void free_parameter_struct( Parameter *parameter );
 
 int cmp_Parameter( Parameter *a, Parameter *b );
->>>>>>> b6ed1160a63b041d18b34a167a36d6231e8f3561
+
 Service* create_service_struct(
                                char *description,
                                char *ID,
@@ -184,14 +164,9 @@ int add_service_to_device( Service *service, Device *device );
 
 int remove_service_from_device( Service *service, Device *device );
 
-<<<<<<< HEAD
+
 int cmp_ServiceElement( ServiceElement *a, ServiceElement *b );
 
 Service* matching_service( ServiceElement *service_head, char *url );
-=======
-int cmp_ServiceElement( serviceElement *a, serviceElement *b );
-
-Service* matching_service( serviceElement *service_head, char *url );
->>>>>>> b6ed1160a63b041d18b34a167a36d6231e8f3561
 
 #endif

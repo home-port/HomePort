@@ -284,26 +284,6 @@ destroy_service_struct( Service *service_to_destroy )
 	return HPD_E_SUCCESS;
 }
 
-serviceElement *create_service_element(Service *service)
-{
-	if( !service )
-		return NULL;
-	serviceElement *service_element = (serviceElement *)malloc(sizeof(serviceElement));
-	service_element-> service = service;
-	service_element-> next = NULL;
-	service_element-> prev = NULL;
-	return service_element;
-}
-
-void destroy_service_element(serviceElement *service_element_to_destroy)
-{
-	if( !service_element_to_destroy )
-		return HPD_E_NULL_POINTER;
-
-	free( service_element_to_destroy );
-}
-
-
 ServiceElement* 
 create_service_element_struct( Service *service )
 {
