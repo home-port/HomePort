@@ -33,8 +33,7 @@ AM_CPPFLAGS = \
 lib_LTLIBRARIES = \
   libhpd.la
 
-libhpd_la_SOURCES = hpd_avahi_publish.c hpd_avahi_publish.h\
-		    hpd_configure.c\
+libhpd_la_SOURCES = hpd_configure.c\
 		    homeport.c\
 		    hpd_services.c\
 		    utlist.h\
@@ -51,10 +50,13 @@ libhpd_la_CFLAGS = -lconfig -luuid
 
 libhpd_la_LIBADD = $(LIBMICROHTTPD_LIBS) $(LIBCONFIG_LIBS) $(MINIXML_LIBS)
 
+if !DISABLE_AVAHI
+libhpd_la_SOURCES += hpd_avahi_publish.c hpd_avahi_publish.h
 if ENABLE_AVAHI_CLIENT
 libhpd_la_SOURCES += hpd_avahi_publish_client.c hpd_avahi_publish_client.h
 else
 libhpd_la_SOURCES += hpd_avahi_publish_core.c hpd_avahi_publish_core.h
+endif
 endif
 
 if ENABLE_HTTP
