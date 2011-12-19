@@ -59,6 +59,11 @@ AC_ARG_ENABLE([hpd-avahi-client],
         [disable hpd avahi client feature @<:@default: no@:>@])],
     [hpd_avahi_client=${enableval}], [hpd_avahi_client=yes])
 
+AC_ARG_ENABLE([hpd-avahi],
+    [AS_HELP_STRING([--disable-hpd-avahi],
+        [disable hpd avahi (zeroConf) feature @<:@default: no@:>@])],
+    [hpd_avahi=${enableval}], [hpd_avahi=yes])
+
 # Checks for command line options HTTPS and HTTP
 AC_ARG_ENABLE([hpd-https],
     [AS_HELP_STRING([--enable-hpd-https],
@@ -70,38 +75,52 @@ AC_ARG_ENABLE([hpd-http],
         [disable hpd http feature @<:@default: yes@:>@])],
     [hpd_http=${enableval}], [hpd_http=yes])
 
-if test "x${hpd_avahi_client}" = xyes; then
-    have_avahi_client=no
-    AC_SEARCH_LIBS([avahi_client_new], [avahi-client], [have_avahi_client=yes])
 
-    if test "x${have_avahi_client}" = xyes; then
-        AC_CHECK_HEADERS([avahi-client/client.h avahi-client/publish.h], [], [have_avahi_client=no])
-    fi
+if test "x${hpd_avahi}" = xyes; then
 
-    if test "x${have_avahi_client}" = xno; then
-        AC_MSG_ERROR([Compiling libhpd requires 'avahi-client'])
-    fi
+	if test "x${hpd_avahi_client}" = xyes; then
+	    have_avahi_client=no
+	    AC_SEARCH_LIBS([avahi_client_new], [avahi-client], [have_avahi_client=yes])
+
+	    if test "x${have_avahi_client}" = xyes; then
+		AC_CHECK_HEADERS([avahi-client/client.h avahi-client/publish.h], [], [have_avahi_client=no])
+	    fi
+
+	    if test "x${have_avahi_client}" = xno; then
+		AC_MSG_ERROR([Compiling libhpd requires 'avahi-client'])
+	    fi
+	fi
+
+	if test "x${hpd_avahi_client}" = xno; then
+	    have_avahi_core=no
+	    AC_SEARCH_LIBS([avahi_server_new], [avahi-core], [have_avahi_core=yes])
+	    if test "x${have_avahi_core}" = xyes; then
+		AC_CHECK_HEADERS([avahi-core/core.h avahi-core/publish.h], [], [have_avahi_core=no])
+	    fi
+
+	    if test "x${have_avahi_core}" = xno; then
+		AC_MSG_ERROR([Compiling libhpd without avahi-client requires 'avahi-core'])
+	    fi
+	fi
+
+	if test "x${hpd_avahi_client}" = xyes; then
+		AC_DEFINE([AVAHI_CLIENT], 1, [Avahi client enabled])
+	fi
+
+	AC_DEFINE([USE_AVAHI], 1, [Avahi enabled])
+
+else
+	hpd_avahi_client=no
+	hpd_avahi_core=no
+
 fi
-
-if test "x${hpd_avahi_client}" = xno; then
-    have_avahi_core=no
-    AC_SEARCH_LIBS([avahi_server_new], [avahi-core], [have_avahi_core=yes])
-    if test "x${have_avahi_core}" = xyes; then
-        AC_CHECK_HEADERS([avahi-core/core.h avahi-core/publish.h], [], [have_avahi_core=no])
-    fi
-
-    if test "x${have_avahi_core}" = xno; then
-        AC_MSG_ERROR([Compiling libhpd without avahi-client requires 'avahi-core'])
-    fi
-fi
-
-if test "x${hpd_avahi_client}" = xyes; then
-	AC_DEFINE([AVAHI_CLIENT], 1, [Avahi client enabled])
-fi
-
 AM_CONDITIONAL([ENABLE_AVAHI_CLIENT], [test "x$hpd_avahi_client" = xyes]) 
+AM_CONDITIONAL([DISABLE_AVAHI], [test "x$hpd_avahi" = xno])
 
 echo "
+Use AVAHI : '${hpd_avahi}'
+Use AVAHI CLIENT : '${hpd_avahi_client}'
+Use AVAHI CORE : '${hpd_avahi_core}'
 Enable HTTP : '${hpd_http}'
 Enable HTTPS : '${hpd_https}'"
 
