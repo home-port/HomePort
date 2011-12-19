@@ -84,7 +84,7 @@ start_server(char* hostname, char *domain_name)
 	}
 #endif
 
-#if AVAHI == 1
+#if USE_AVAHI
 	rc = avahi_start (hostname, domain_name);
 	if( rc < 0 )
 	{
@@ -124,7 +124,7 @@ stop_server()
 
 	delete_xml(XML_FILE_NAME);
 
-#if AVAHI == 1
+#if USE_AVAHI
 	avahi_quit ();
 #endif
 
@@ -200,14 +200,14 @@ register_service_in_server( Service *service_to_register )
 	else if(rc == -2){
 		printf("The Service already exists\n");
 	}
-
+#if USE_AVAHI
 	rc = avahi_create_service ( service_to_register );
 	if(  rc < HPD_E_SUCCESS )
 	{
 		printf("avahi_create_service failed : %d\n", rc);
 		return rc;
 	}
-
+#endif
 	rc = notify_service_availability( service_to_register, HPD_YES);
 	if(  rc < HPD_E_SUCCESS )
 	{
@@ -267,14 +267,14 @@ unregister_service_in_server( Service *service_to_unregister )
 		printf("remove_service_from_xml failed : %d\n", rc);
 		return HPD_E_XML_ERROR;
 	}
-
+#if USE_AVAHI
 	rc = avahi_remove_service ( service_to_unregister );
 	if(  rc < HPD_E_SUCCESS )
 	{
 		printf("avahi_remove_service failed : %d\n", rc);
 		return rc;
 	}
-
+#endif
 	rc = notify_service_availability( service_to_unregister, HPD_NO);
 	if(  rc < HPD_E_SUCCESS )
 	{
