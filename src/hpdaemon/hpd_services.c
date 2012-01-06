@@ -33,7 +33,7 @@ authors and should not be interpreted as representing official policies, either 
 #include <stdio.h>
 #include "hpd_services.h"
 #include "utlist.h"
-#include "hpd_web_server.h"
+#include "hpd_web_server_interface.h"
 #include "hpd_error.h"
 
 /**
