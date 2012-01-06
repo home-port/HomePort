@@ -24,16 +24,15 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed*/
 
 /**
- * @file hpd_web_server.h
+ * @file hpd_web_server_interface.h
  * @brief  Methods for managing the Web Server
  * @author Thibaut Le Guilly
  * @author Regis Louge
  */
 
-#ifndef WEB_SERVER_API_H
-#define WEB_SERVER_API_H
+#ifndef WEB_SERVER_INTERFACE_H
+#define WEB_SERVER_INTERFACE_H
 
-#include "hpd_services.h"
 #include "hpd_xml.h"
 #include "utlist.h"
 
@@ -41,25 +40,18 @@ authors and should not be interpreted as representing official policies, either 
 #include <config.h>
 #endif
 
-#if HPD_HTTP
-	#include "hpd_http_web_server.h"
-#endif
-
-#if HPD_HTTPS
-	#include "hpd_https_web_server.h"
-#endif
-
+#include "hpd_web_server_core.h"
 
 int start_server(char* hostname, char *domain_name);
 int stop_server();
-int register_service_in_server( Service *service_to_register );
-int unregister_service_in_server( Service *service_to_unregister );
+int register_service( Service *service_to_register );
+int unregister_service( Service *service_to_unregister );
 int register_device_services( Device *device_to_register );
 int unregister_device_services( Device *device_to_unregister );
 
 int is_service_registered( Service *service );
 
-Service* get_service_from_server( char *device_type, char *device_ID, char *service_type, char *service_ID );
-Device* get_device_from_server( char *device_type, char *device_ID);
+Service* get_service( char *device_type, char *device_ID, char *service_type, char *service_ID );
+Device* get_device( char *device_type, char *device_ID);
 
 #endif
