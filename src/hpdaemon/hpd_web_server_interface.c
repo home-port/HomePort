@@ -24,18 +24,70 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed*/
 
 /**
- * @file hpd_web_server.c
+ * @file hpd_web_server_interface.c
  * @brief  Methods for managing the Web Server
  * @author Thibaut Le Guilly
  * @author Regis Louge
  */
 
-#include "hpd_web_server.h"
+#include "hpd_web_server_interface.h"
 #include "hpd_error.h"
 
-#define AVAHI 1
+#if HPD_HTTP
+HPD_web_server_struct *unsecure_web_server;
+#endif
 
+#if HPD_HTTPS
+HPD_web_server_struct *secure_web_server;
+#endif
 
+/**
+ * Creates a HPD_web_server_struct and allocate memory for it, should not be used anywhere but 
+ * in this file (static).
+ *
+ * @param is_secure HPD_IS_SECURE_CONNECTION or HPD_IS_UNSECURE_CONNECTION
+ *
+ * @return A newly allocated HPD_web_server_struct pointer or NULL if an error occured
+ */
+static HPD_web_server_struct* 
+create_HPD_web_server_struct( int is_secure )
+{
+
+	HPD_web_server_struct *new_HPD_web_server_struct = malloc( sizeof( HPD_web_server_struct ) );
+	new_HPD_web_server_struct->service_head = NULL;
+	new_HPD_web_server_struct->is_configuring = HPD_NO;
+	new_HPD_web_server_struct->is_secure = is_secure;
+	
+	if( pthread_mutex_init( &new_HPD_web_server_struct->configure_mutex, NULL ) )
+	{
+		printf("Error while initializing configure mutex\n");
+		free( new_HPD_web_server_struct );
+		return NULL;
+	}
+	
+	return new_HPD_web_server_struct;
+}
+
+/**
+ * Destroy a HPD_web_server_struct and deallocate its memory, should not be used anywhere but 
+ * in this file (static).
+ *
+ * @param to_destroy The HPD_web_server_struct to destroy
+ *
+ * @return HPD_YES if successful or HPD_E_NULL_POINTER if the pointer given is NULL
+ */
+static int 
+destroy_HPD_web_server_struct( HPD_web_server_struct* to_destroy )
+{
+	if( !to_destroy )
+		return HPD_E_NULL_POINTER;
+
+	pthread_mutex_destroy( &to_destroy->configure_mutex );
+	
+	free( to_destroy );
+	
+	return HPD_YES;
+}
 
 /**
  * Start the MHD web server(s) and the AVAHI client or server
@@ -67,7 +119,10 @@ start_server(char* hostname, char *domain_name)
 	}
 
 #if HPD_HTTP
-	rc = start_unsecure_server();
+	
+	unsecure_web_server = create_HPD_web_server_struct( HPD_IS_UNSECURE_CONNECTION );
+
+	rc = start_unsecure_web_server( unsecure_web_server );
 	if( rc < 0 )
 	{	
 		printf("Failed to start HTTP server\n");
@@ -76,7 +131,9 @@ start_server(char* hostname, char *domain_name)
 #endif
 
 #if HPD_HTTPS
-	rc = start_secure_server();
+	secure_web_server = create_HPD_web_server_struct( HPD_IS_SECURE_CONNECTION );
+
+	rc = start_secure_web_server( secure_web_server );
 	if( rc < 0 )
 	{	
 		printf("Failed to start HTTPS server\n");
@@ -111,15 +168,18 @@ stop_server()
 	free_server_sent_events_ressources();
 
 #if HPD_HTTP
-	rc = stop_unsecure_server();
+	rc = stop_web_server( unsecure_web_server );
 	if( rc < HPD_E_SUCCESS )
 		return rc;
+		
+	destroy_HPD_web_server_struct( unsecure_web_server );
 #endif
 
 #if HPD_HTTPS
-	rc = stop_secure_server();
+	rc = stop_web_server( secure_web_server );
 	if( rc < HPD_E_SUCCESS )
 		return rc;
+	destroy_HPD_web_server_struct( secure_web_server );
 #endif
 
 	delete_xml(XML_FILE_NAME);
@@ -141,7 +201,7 @@ stop_server()
  * @return A HPD error code
  */
 int 
-register_service_in_server( Service *service_to_register )
+register_service( Service *service_to_register )
 {
 
 	int rc;
@@ -149,7 +209,7 @@ register_service_in_server( Service *service_to_register )
 	if( service_to_register->device->secure_device == HPD_NON_SECURE_DEVICE )
 	{
 #if HPD_HTTP
-		rc = is_unsecure_service_registered( service_to_register );	
+		rc = is_service_registered_in_web_server( service_to_register, unsecure_web_server );	
 
 		if( rc == 1 )
 		{
@@ -158,7 +218,7 @@ register_service_in_server( Service *service_to_register )
 		}
 
 		printf("Registering non secure service\n");
-		rc = register_service_in_unsecure_server ( service_to_register );
+		rc = register_service_in_web_server ( service_to_register, unsecure_web_server );
 		if( rc < HPD_E_SUCCESS )
 			return rc;
 #else
@@ -170,7 +230,8 @@ register_service_in_server( Service *service_to_register )
 	else if( service_to_register->device->secure_device == HPD_SECURE_DEVICE )
 	{
 #if HPD_HTTPS
-		rc = is_secure_service_registered( service_to_register );
+		rc = is_service_registered_in_web_server( service_to_register, 
+							  secure_web_server );
 
 		if( rc == 1 )
 		{
@@ -179,7 +240,7 @@ register_service_in_server( Service *service_to_register )
 		}
 
 		printf("Registering secure service\n");
-		rc = register_service_in_secure_server ( service_to_register );
+		rc = register_service_in_web_server ( service_to_register, secure_web_server );
 		if( rc < HPD_E_SUCCESS )
 			return rc;
 #else
@@ -226,7 +287,7 @@ register_service_in_server( Service *service_to_register )
  * @return A HPD error code
  */
 int 
-unregister_service_in_server( Service *service_to_unregister )
+unregister_service( Service *service_to_unregister )
 {
 
 	int rc;
@@ -237,7 +298,7 @@ unregister_service_in_server( Service *service_to_unregister )
 	if( service_to_unregister->device->secure_device == HPD_NON_SECURE_DEVICE )
 	{
 #if HPD_HTTP
-		rc = unregister_service_in_unsecure_server ( service_to_unregister );
+		rc = unregister_service_in_web_server ( service_to_unregister, unsecure_web_server );
 		if( rc < HPD_E_SUCCESS )
 			return rc;
 #else
@@ -249,7 +310,7 @@ unregister_service_in_server( Service *service_to_unregister )
 	else if( service_to_unregister->device->secure_device == HPD_SECURE_DEVICE )
 	{
 #if HPD_HTTPS
-		rc = unregister_service_in_secure_server ( service_to_unregister );
+		rc = unregister_service_in_web_server ( service_to_unregister, secure_web_server );
 		if( rc < HPD_E_SUCCESS )
 			return rc;
 #else
@@ -298,44 +359,17 @@ register_device_services( Device *device_to_register )
 	ServiceElement *iterator;
 	int return_value;
 
-	if( device_to_register->secure_device == HPD_NON_SECURE_DEVICE )
+	DL_FOREACH( device_to_register->service_head, iterator )
 	{
-#if HPD_HTTP
-		DL_FOREACH(device_to_register->service_head, iterator)
+		return_value = register_service( iterator->service );
+		if( return_value < HPD_E_SUCCESS )
 		{
-			return_value = register_service_in_server (iterator->service);
-			if(return_value < HPD_E_SUCCESS)
-			{
-				return return_value;
-			}
+			return return_value;
 		}
-
-		return HPD_E_SUCCESS;
-#else
-		printf("Trying to register non secure device without HTTP feature\n");
-		return HPD_E_NO_HTTP;
-#endif
 	}
 
-	if( device_to_register->secure_device == HPD_SECURE_DEVICE )
-	{
-#if HPD_HTTPS
-		DL_FOREACH(device_to_register->service_head, iterator)
-		{
-			return_value = register_service_in_secure_server (iterator->service);
-			if(return_value < HPD_E_SUCCESS)
-			{
-				return return_value;
-			}
-		}
-		return HPD_E_SUCCESS;
-#else
-		printf("Trying to register secure device without HTTPS feature\n");
-		return HPD_E_NO_HTTPS;
-#endif
-	}
+	return HPD_E_SUCCESS;
 
-	return HPD_E_BAD_PARAMETER;
 }
 
 /**
@@ -350,39 +384,16 @@ unregister_device_services( Device *device_to_unregister )
 {
 	ServiceElement *iterator;
 	int return_value;
-	if( device_to_unregister->secure_device == HPD_NON_SECURE_DEVICE )
+
+	DL_FOREACH( device_to_unregister->service_head, iterator )
 	{
-#if HPD_HTTP
-		DL_FOREACH( device_to_unregister->service_head, iterator )
+		return_value = unregister_service( iterator->service );
+		if(return_value < HPD_E_SUCCESS)
 		{
-			return_value = unregister_service_in_server ( iterator->service );
-			if(return_value < HPD_E_SUCCESS)
-			{
-				return return_value;
-			}
+			return return_value;
 		}
-#else
-		printf("Trying to unregister non secure device without HTTP feature\n");
-		return HPD_E_NO_HTTP;
-#endif
 	}
 
-	if( device_to_unregister->secure_device == HPD_SECURE_DEVICE )
-	{
-#if HPD_HTTPS
-		DL_FOREACH(device_to_unregister->service_head, iterator)
-		{
-			return_value = unregister_service_in_secure_server (iterator->service);
-			if(return_value < HPD_E_SUCCESS)
-			{
-				return return_value;
-			}
-		}
-#else
-		printf("Trying to unregister secure device without HTTPS feature\n");
-		return HPD_E_NO_HTTPS;
-#endif
-	}
 
 	return HPD_E_SUCCESS;
 }
@@ -404,14 +415,14 @@ is_service_registered( Service *service )
 #if HPD_HTTP
 	if( service->device->secure_device == HPD_NON_SECURE_DEVICE )
 	{
-		return is_unsecure_service_registered(service);
+		return is_service_registered_in_web_server( service, unsecure_web_server );
 	}	
 #endif
 
 #if HPD_HTTPS
 	if( service->device->secure_device == HPD_SECURE_DEVICE )
 	{
-		return is_secure_service_registered(service);
+		return is_service_registered_in_web_server( service, secure_web_server );
 	}	
 #endif
 
@@ -432,17 +443,21 @@ is_service_registered( Service *service )
  * @return A pointer on the Service struct if found, NULL otherwise
  */
 Service* 
-get_service_from_server( char *device_type, char *device_ID, char *service_type, char *service_ID )
+get_service( char *device_type, char *device_ID, char *service_type, char *service_ID )
 {
 	Service *service = NULL;
 
 #if HPD_HTTP
-	service = get_service_from_unsecure_server ( device_type, device_ID, service_type, service_ID );
+	service = get_service_from_web_server ( device_type, device_ID, 
+						service_type, service_ID,
+						unsecure_web_server );
 #endif
 #if HPD_HTTPS
 	if( service == NULL )
 	{
-		service = get_service_from_secure_server ( device_type, device_ID, service_type, service_ID );
+		service = get_service_from_web_server ( device_type, device_ID, 
+							service_type, service_ID,
+							secure_web_server );
 	}
 #endif
 	return service;
@@ -459,17 +474,17 @@ get_service_from_server( char *device_type, char *device_ID, char *service_type,
  * @return A pointer on the Device struct if found, NULL otherwise
  */
 Device* 
-get_device_from_server( char *device_type, char *device_ID)
+get_device( char *device_type, char *device_ID)
 {
 	Device *device = NULL;
 
 #if HPD_HTTP
-	device = get_device_from_unsecure_server ( device_type, device_ID );
+	device = get_device_from_web_server ( device_type, device_ID, unsecure_web_server );
 #endif
 #if HPD_HTTPS
 	if( device == NULL )
 	{
-		device = get_device_from_secure_server( device_type, device_ID );
+		device = get_device_from_web_server( device_type, device_ID, secure_web_server );
 	}
 #endif
 	return device;
