@@ -79,6 +79,7 @@ int update_device_xml( Device *device );
 int update_service_xml( Service *service );
 int update_parameter_xml( Service *service );
 char *extract_device_xml(Device *device_to_extract);
+char *get_xml_device_list();
 
 /*
 Device* get_device_from_xml(char* xml_device);
