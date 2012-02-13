@@ -33,7 +33,7 @@ authors and should not be interpreted as representing official policies, either 
 #include <stdio.h>
 #include "hpd_services.h"
 #include "utlist.h"
-#include "hpd_web_server.h"
+#include "hpd_web_server_interface.h"
 #include "hpd_error.h"
 
 /**
@@ -130,6 +130,19 @@ create_service_struct(
 		service->get_function = get_function;
 	}
 
+	if(parameter == NULL)
+	{
+		printf("Service's parameter cannot be NULL\n");
+		free(service->ID);
+		free(service->type);
+		free(service);
+		return NULL;
+	}
+	else
+	{
+		service->parameter = parameter;
+	}
+
 	if( description == NULL )
 	{
 		service->description = NULL;
@@ -166,13 +179,6 @@ create_service_struct(
 	else
 	{
 		service->user_data_pointer = user_data_pointer;
-	}
-
-	service->parameter_head = NULL;
-
-	if( parameter != NULL )
-	{
-		DL_APPEND( service->parameter_head, parameter );
 	}
 
 	/*Creation of the URL*/
@@ -236,7 +242,6 @@ destroy_service_struct( Service *service_to_destroy )
 		{
 			if( service_to_destroy->device->service_head )
 			{
-
 				remove_service_from_device(service_to_destroy, service_to_destroy->device);
 
 				if( service_to_destroy->device->service_head == NULL )
@@ -268,21 +273,16 @@ destroy_service_struct( Service *service_to_destroy )
 		if( service_to_destroy->get_function_buffer )
 			free(service_to_destroy->get_function_buffer);
 
-		if( service_to_destroy->parameter_head )
-		{
-			Parameter *tmp, *iterator;
-			DL_FOREACH_SAFE(service_to_destroy->parameter_head, iterator, tmp)
-			{
-				DL_DELETE(service_to_destroy->parameter_head, iterator);
-				free_parameter_struct (iterator);
-			}
-		}
+		if( service_to_destroy->parameter )
+			free_parameter_struct ( service_to_destroy->parameter );
+
+		if( service_to_destroy->mutex )
+			free(service_to_destroy->mutex);
 
 		free(service_to_destroy);
 	}
 	return HPD_E_SUCCESS;
 }
-
 
 ServiceElement* 
 create_service_element_struct( Service *service )
@@ -537,70 +537,6 @@ destroy_device_struct( Device *device_to_destroy )
 }
 
 /**
- * Adds a Parameter to the Service
- *
- * @param parameter The Parameter to add
- *
- * @param service The Service 
- *
- * @return A HPD error code
- */
-int 
-add_parameter_to_service( Parameter *parameter, Service *service )
-{
-	if( parameter == NULL || service == NULL ) 
-		return HPD_E_NULL_POINTER;
-
-	Parameter *elt;
-
-	DL_SEARCH( service->parameter_head,
-	           elt,
-	           parameter,
-	           cmp_Parameter);
-
-	if( elt ) 
-		return HPD_E_PARAMETER_ALREADY_IN_LIST;
-
-	DL_APPEND( service->parameter_head, parameter );
-
-	return HPD_E_SUCCESS;
-}
-
-
-/**
- * Removes a Parameter from the Service
- *
- * @param parameter The Parameter to remove
- *
- * @param service The Service 
- *
- * @return return A HPD error code 
- */
-int 
-remove_parameter_from_service( Parameter *parameter, Service *service )
-{
-
-	if( parameter == NULL || service == NULL ) 
-		return HPD_E_NULL_POINTER;
-
-	Parameter *elt;
-
-	DL_SEARCH( service->parameter_head,
-	           elt,
-	           parameter,
-	           cmp_Parameter );
-
-	if( !elt ) 
-		return HPD_E_PARAMETER_NOT_IN_LIST;
-
-	DL_DELETE( service->parameter_head, parameter );
-
-	return HPD_E_SUCCESS;
-}
-
-
-
-/**
  * Adds a Service to the Device
  *
  * @param service The Service to add
@@ -684,7 +620,6 @@ cmp_ServiceElement( ServiceElement *a, ServiceElement *b )
 {
 	if( !a || !b )
 		return -1;
-	
 	return strcmp( a->service->value_url, b->service->value_url );
 }
 
@@ -712,4 +647,196 @@ matching_service( ServiceElement *service_head, char *url )
 		pthread_mutex_unlock( iterator->service->mutex );
 	}
 	return  NULL;
+}
+
+/**
+ * Creates the structure Parameter with all its parameters
+ *
+ * @param ID The Parameter ID
+ *
+ * @param max The maximum value of the Parameter
+ *
+ * @param min The minimum value of the Parameter
+ *
+ * @param scale The Scale of the Parameter
+ *
+ * @param step The Step of the values of the Parameter
+ *
+ * @param type The Type of values for the Parameter
+ *
+ * @param unit The Unit of the values of the Parameter
+ *
+ * @param values The possible values for the Parameter
+ *
+ * @return returns the Parameter or NULL if failed, note that the ID can not be NULL
+ */
+Parameter* 
+create_parameter_struct( char *ID,
+                         char *max,
+                         char *min,
+                         char *scale,
+                         char *step,
+                         char *type,
+                         char *unit,
+                         char *values )
+{
+	Parameter *parameter = (Parameter*)malloc(sizeof(Parameter));
+	if(!ID)
+	{
+		printf("Parameter ID cannot be NULL\n");
+		free(parameter);
+		return NULL;
+	}
+	else
+	{
+		parameter->ID = malloc(sizeof(char)*(strlen(ID)+1));
+		strcpy(parameter->ID, ID);
+	}
+
+	if(max)
+	{
+		parameter->max = malloc(sizeof(char)*(strlen(max)+1));
+		strcpy(parameter->max, max);
+	}
+	else parameter->max = NULL;
+
+	if(min)
+	{
+		parameter->min = malloc(sizeof(char)*(strlen(min)+1));
+		strcpy(parameter->min, min);
+	}
+	else parameter->min = NULL;
+
+	if(scale)
+	{
+		parameter->scale = malloc(sizeof(char)*(strlen(scale)+1));
+		strcpy(parameter->scale, scale);
+	}
+	else parameter->scale = NULL;
+
+	if(step)
+	{
+		parameter->step = malloc(sizeof(char)*(strlen(step)+1));
+		strcpy(parameter->step, step);
+	}
+	else parameter->step = NULL;
+
+	if(type)
+	{
+		parameter->type = malloc(sizeof(char)*(strlen(type)+1));
+		strcpy(parameter->type, type);
+	}
+	else parameter->type = NULL;
+
+	if(unit)
+	{
+		parameter->unit = malloc(sizeof(char)*(strlen(unit)+1));
+		strcpy(parameter->unit, unit);
+	}
+	else parameter->unit = NULL;
+
+	if(values)
+	{
+		parameter->values = malloc(sizeof(char)*(strlen(values)+1));
+		strcpy(parameter->values, values);
+	}
+	else parameter->values = NULL;
+
+	return parameter;
+}
+
+
+/**
+ * Frees all the memory allocated for the Parameter. Note
+ * that it only frees the memory used by the API, if the
+ * user allocates memory for Parameter attributes, he needs
+ * to free it before/after calling this function.
+ *
+ * @param parameter The parameter to free
+ *
+ * @return 
+ */
+void 
+free_parameter_struct(Parameter *parameter){
+
+	if( parameter )
+	{
+		if(parameter->ID)
+			free(parameter->ID);
+		if(parameter->max)
+			free(parameter->max);
+		if(parameter->min)
+			free(parameter->min);
+		if(parameter->scale)
+			free(parameter->scale);
+		if(parameter->step)
+			free(parameter->step);
+		if(parameter->type)
+			free(parameter->type);
+		if(parameter->unit)
+			free(parameter->unit);
+		if(parameter->values)
+			free(parameter->values);
+		free(parameter);
+	}
+}
+
+
+/**
+ * Method that compares all the Parameter's Attributes
+ *
+ * @param a The Parameter to compare
+ *
+ * @param b The other Parameter to compare
+ *
+ * @return 0 if the same -1 or 1 if not
+ */
+int 
+cmp_Parameter( Parameter *a, Parameter *b )
+{
+	if( a->ID != NULL )
+	{
+		if( strcmp(a->ID,b->ID) != 0 )
+			return strcmp(a->ID,b->ID);
+	}
+	
+	if( a->max != NULL )
+	{
+		if( strcmp(a->max,b->max) != 0 )
+			return strcmp(a->max,b->max);
+	}
+	
+	if( a->min != NULL )
+	{
+		if( strcmp(a->min,b->min) != 0 )
+			return strcmp(a->min,b->min);
+	}
+	
+	if( a->scale != NULL )
+	{
+		if( strcmp(a->scale,b->scale) != 0 )
+			return strcmp(a->scale,b->scale);
+	}
+	
+	if( a->step != NULL ){
+		if( strcmp(a->step,b->step) != 0 )
+			return strcmp(a->step,b->step);
+	}
+	
+	if( a->type != NULL ){
+		if( strcmp(a->type ,b->type) != 0 )
+			return strcmp(a->type,b->type);
+	}
+	
+	if( a->unit != NULL ){
+		if( strcmp(a->unit,b->unit) != 0 )
+			return strcmp(a->unit,b->unit);
+	}
+	
+	if( a->values != NULL )
+	{
+		if( strcmp(a->values,b->values) != 0 )
+			return strcmp(a->values,b->values);
+	}
+	return 0;
 }

@@ -24,16 +24,14 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed*/
 
 /**
- * @file hpd_https_web_server.h
- * @brief  Methods for managing a secure Web Server
+ * @file   hpd_web_server_core.h
+ * @brief  Methods for managing the Web Server(s)
  * @author Thibaut Le Guilly
  * @author Regis Louge
  */
 
-#ifndef WEB_SERVER_SECURE_API_H
-#define WEB_SERVER_SECURE_API_H
-
-#define	XML_FILE_NAME "services.xml"
+#ifndef HPD_WEB_SERVER_CORE
+#define HPD_WEB_SERVER_CORE
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -57,26 +55,43 @@ authors and should not be interpreted as representing official policies, either 
 #include "hpd_server_sent_events.h"
 #include "hpd_xml.h"
 
-#define NOT_FOUND "<html><head><title>Not Found</title></head></html>"
-#define BAD_REQUEST "<html><head><title>Bad Request</title></head></html>"
-#define UNAUTHORIZED "<html><head><title>Unauthorized</title></head></html>"
-#define UNKNOWN_ERROR "<html><head><title>Unknown Error</title></head></html>"
+typedef struct HPD_web_server_struct HPD_web_server_struct;
 
-int start_secure_server();
-int stop_secure_server();
-int register_service_in_secure_server( Service *service_to_register );
-int unregister_service_in_secure_server( Service *service_to_unregister );
+struct HPD_web_server_struct
+{
+   ServiceElement *service_head;
+   struct MHD_Daemon *daemon;
+   int is_secure;
+   int is_configuring;
+   pthread_mutex_t configure_mutex;
+};
 
-int is_secure_service_registered( Service *service );
-int free_secure_server_services();
+#if HPD_HTTP
+int start_unsecure_web_server( HPD_web_server_struct *unsecure_web_server );
+#endif
 
-Service* get_service_from_secure_server( 	char *device_type, 
-											char *device_ID, 
-											char *service_type, 
-											char *service_ID );
+#if HPD_HTTPS
+int start_secure_web_server( HPD_web_server_struct *secure_web_server );
+#endif
 
-Device* get_device_from_secure_server( char *device_type, char *device_ID );
+int stop_web_server( HPD_web_server_struct *web_server );
 
+int register_service_in_web_server( Service *service_to_register, 
+                                    HPD_web_server_struct *web_server );
 
-#endif /* WEB_SERVER_SECURE_API_H */
+int unregister_service_in_web_server( Service *service_to_unregister, 
+                                      HPD_web_server_struct *web_server );
 
+Device* get_device_from_web_server( char *device_type, char *device_ID, 
+                                    HPD_web_server_struct *web_server);
+
+Service* get_service_from_web_server(char *device_type, char *device_ID, 
+                                     char *service_type, char *service_ID,
+				                         HPD_web_server_struct *web_server );
+				
+int is_service_registered_in_web_server( Service *service, 
+                                         HPD_web_server_struct *web_server );
+
+int free_web_server_services( HPD_web_server_struct *web_server );
+
+#endif

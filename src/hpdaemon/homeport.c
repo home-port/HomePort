@@ -33,7 +33,7 @@ authors and should not be interpreted as representing official policies, either 
 
 #include "homeport.h"
 #include "hpd_error.h"
-#include "hpd_web_server.h"
+#include "hpd_web_server_interface.h"
 
 
 /**
@@ -123,11 +123,13 @@ HPD_start( unsigned int option, char *hostname, ... )
 		printf("Error initializing HPD_Daemon struct\n");
 		return rc;
 	}
+#if USE_AVAHI
 #if !AVAHI_CLIENT
 	if( hostname == NULL )
 		return HPD_E_NULL_POINTER;
 
 	hpd_daemon->hostname = hostname;
+#endif
 #endif
 
 	va_list ap;
@@ -208,7 +210,7 @@ HPD_register_service( Service *service_to_register )
 	if( service_to_register == NULL )
 		return HPD_E_NULL_POINTER;
 
-	return register_service_in_server( service_to_register );
+	return register_service( service_to_register );
 }
 
 /**
@@ -224,7 +226,7 @@ HPD_unregister_service( Service *service_to_unregister )
 	if( service_to_unregister == NULL )
 		return HPD_E_NULL_POINTER;
 
-	return unregister_service_in_server( service_to_unregister );
+	return unregister_service( service_to_unregister );
 }
 
 /**
@@ -287,7 +289,7 @@ HPD_get_service( char *device_type, char *device_ID, char *service_type, char *s
 	if( device_type == NULL || device_ID == NULL || service_type == NULL || service_ID == NULL )
 		return NULL;
 
-	return get_service_from_server( device_type, device_ID, service_type, service_ID );
+	return get_service( device_type, device_ID, service_type, service_ID );
 }
 
 /**
@@ -305,7 +307,7 @@ HPD_get_device( char *device_type, char *device_ID )
 	if( device_type == NULL || device_ID == NULL )
 		return NULL;
 
-	return get_device_from_server( device_type, device_ID );
+	return get_device( device_type, device_ID );
 }
 
 /**
@@ -320,7 +322,7 @@ HPD_get_device( char *device_type, char *device_ID )
 int 
 HPD_send_event_of_value_change ( Service *service_changed, char *updated_value )
 {
-	return send_event_of_value_change (service_changed, updated_value);
+	return send_event_of_value_change (service_changed, updated_value, NULL);
 }
 
 

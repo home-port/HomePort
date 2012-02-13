@@ -46,6 +46,8 @@ create_empty_event()
 		return NULL;
 	newEvent->id = NULL;
 	newEvent->data = NULL;
+	newEvent->event_name = NULL;
+	newEvent->IP = NULL;
 	newEvent->prev = NULL;
 	newEvent->next = NULL;
 
@@ -62,11 +64,11 @@ create_empty_event()
  * @return The corresponding Event structure
  */
 Event *
-create_event( char *id, char *data )
+create_event( char* event_name, char *id, char *IP, char *data )
 {
 	Event *newEvent;
 
-	if( !id || !data )
+	if( !id || !data || !event_name)
 		return NULL;
 
 	newEvent = ( Event* ) malloc ( sizeof( Event ) );
@@ -77,6 +79,18 @@ create_event( char *id, char *data )
 
 	newEvent->data = ( char* ) malloc( ( strlen ( data ) + 1 ) * sizeof( char ) );
 	newEvent->data = strcpy( newEvent->data, data );
+
+	newEvent->event_name = ( char* ) malloc( ( strlen ( event_name ) + 1 ) * sizeof( char ) );
+	newEvent->event_name = strcpy( newEvent->event_name, event_name );
+
+	if(IP)
+	{
+		newEvent->IP = ( char* ) malloc( ( strlen ( IP ) + 1 ) * sizeof( char ) );
+		newEvent->IP = strcpy( newEvent->IP, IP );
+	}
+	else
+		newEvent->IP = NULL;
+
 	newEvent->prev = NULL;
 	newEvent->next = NULL;
 
@@ -112,6 +126,20 @@ copy_event( Event *event )
 		strcpy( newEvent->data, event->data );
 	}
 
+	if( event->IP )
+	{
+		newEvent->IP = (char*)malloc((strlen(event->IP)+1)*sizeof(char));
+		strcpy( newEvent->IP, event->IP );
+	}
+	else newEvent->IP = NULL;
+
+	if( event->event_name )
+	{
+		newEvent->event_name = (char*)malloc((strlen(event->event_name)+1)*sizeof(char));
+		strcpy( newEvent->event_name, event->event_name );
+	}
+
+
 	newEvent->prev = NULL;
 	newEvent->next = NULL;
 
@@ -136,6 +164,12 @@ destroy_event( Event *event_to_destroy )
 
 	if( event_to_destroy->data )
 		free(event_to_destroy->data);
+	
+	if( event_to_destroy->event_name )
+		free(event_to_destroy->event_name);
+
+	if( event_to_destroy->IP )
+		free(event_to_destroy->IP);
 
 	free( event_to_destroy );
 
@@ -318,7 +352,7 @@ queue_event( EventQueue *event_queue, Event *event, int is_global_queue )
 	if( !event_queue || !event )
 		return HPD_E_EVENT_QUEUE_OR_EVENT_IS_NULL;
 
-	int is_log = strcmp(event->id, "Log");
+	int is_log = strcmp(event->event_name, "log");
 	pthread_mutex_lock( event_queue->mutex );
 
 	if( (  is_log == 0 ) && ( event_queue->send_log_events == HPD_NO ) )

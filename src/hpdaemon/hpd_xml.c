@@ -245,8 +245,8 @@ add_device_to_xml(Device *device_to_add)
 	new_device = mxmlNewElement(devicelist, "device");
 	if(device_to_add->description != NULL) mxmlElementSetAttr(new_device, "desc", device_to_add->description);
 	if(device_to_add->ID != NULL) mxmlElementSetAttr(new_device, "id", device_to_add->ID);
-	if(device_to_add->vendorID != NULL) mxmlElementSetAttr(new_device, "vendorID", device_to_add->vendorID);
-	if(device_to_add->productID != NULL) mxmlElementSetAttr(new_device, "productID", device_to_add->productID);
+	if(device_to_add->vendorID != NULL) mxmlElementSetAttr(new_device, "vendorid", device_to_add->vendorID);
+	if(device_to_add->productID != NULL) mxmlElementSetAttr(new_device, "productid", device_to_add->productID);
 	if(device_to_add->version != NULL) mxmlElementSetAttr(new_device, "version", device_to_add->version);
 	if(device_to_add->IP != NULL) mxmlElementSetAttr(new_device, "ip", device_to_add->IP);
 	if(device_to_add->port != NULL) mxmlElementSetAttr(new_device, "port", device_to_add->port);
@@ -362,32 +362,18 @@ add_service_to_xml(Service *service_to_add)
 	if(service_to_add->type != NULL) mxmlElementSetAttr(new_service, "type", service_to_add->type);
 	if(service_to_add->unit != NULL) mxmlElementSetAttr(new_service, "unit", service_to_add->unit);
 
-	Parameter *iterator = service_to_add->parameter_head;
-	if(iterator != NULL)
+	
+	if(service_to_add->parameter != NULL)
 	{
 		new_parameter = mxmlNewElement(new_service, "parameter");
-		if(iterator->ID != NULL) mxmlElementSetAttr(new_parameter, "id", iterator->ID);
-		if(iterator->max != NULL) mxmlElementSetAttr(new_parameter, "max", iterator->max);
-		if(iterator->min != NULL) mxmlElementSetAttr(new_parameter, "min", iterator->min);
-		if(iterator->scale != NULL) mxmlElementSetAttr(new_parameter, "scale", iterator->scale);
-		if(iterator->step != NULL) mxmlElementSetAttr(new_parameter, "step", iterator->step);
-		if(iterator->type != NULL) mxmlElementSetAttr(new_parameter, "type", iterator->type);
-		if(iterator->unit != NULL) mxmlElementSetAttr(new_parameter, "unit", iterator->unit);
-		if(iterator->values != NULL) mxmlElementSetAttr(new_parameter, "values", iterator->values);
-
-		while(iterator->next != NULL)
-		{
-			iterator = iterator->next;
-			new_parameter = mxmlNewElement(new_service, "parameter");
-			if(iterator->ID != NULL) mxmlElementSetAttr(new_parameter, "id", iterator->ID);
-			if(iterator->max != NULL) mxmlElementSetAttr(new_parameter, "max", iterator->max);
-			if(iterator->min != NULL) mxmlElementSetAttr(new_parameter, "min", iterator->min);
-			if(iterator->scale != NULL) mxmlElementSetAttr(new_parameter, "scale", iterator->scale);
-			if(iterator->step != NULL) mxmlElementSetAttr(new_parameter, "step", iterator->step);
-			if(iterator->type != NULL) mxmlElementSetAttr(new_parameter, "type", iterator->type);
-			if(iterator->unit != NULL) mxmlElementSetAttr(new_parameter, "unit", iterator->unit);
-			if(iterator->values != NULL) mxmlElementSetAttr(new_parameter, "values", iterator->values);
-		}
+		if(service_to_add->parameter->ID != NULL) mxmlElementSetAttr(new_parameter, "id", service_to_add->parameter->ID);
+		if(service_to_add->parameter->max != NULL) mxmlElementSetAttr(new_parameter, "max", service_to_add->parameter->max);
+		if(service_to_add->parameter->min != NULL) mxmlElementSetAttr(new_parameter, "min", service_to_add->parameter->min);
+		if(service_to_add->parameter->scale != NULL) mxmlElementSetAttr(new_parameter, "scale", service_to_add->parameter->scale);
+		if(service_to_add->parameter->step != NULL) mxmlElementSetAttr(new_parameter, "step", service_to_add->parameter->step);
+		if(service_to_add->parameter->type != NULL) mxmlElementSetAttr(new_parameter, "type", service_to_add->parameter->type);
+		if(service_to_add->parameter->unit != NULL) mxmlElementSetAttr(new_parameter, "unit", service_to_add->parameter->unit);
+		if(service_to_add->parameter->values != NULL) mxmlElementSetAttr(new_parameter, "values", service_to_add->parameter->values);
 	}
 
 	save_xml_tree ();
@@ -552,12 +538,12 @@ delete_xml(char* xml_file_path)
  * @return The string of the value or NULL if failed
  */
 char* 
-get_value_from_xml_value(char* _xml_value)
+get_value_from_xml_value(char* xml_value)
 {
 	mxml_node_t *xml;
 	mxml_node_t *node;
 
-	xml = mxmlLoadString(NULL, _xml_value, MXML_TEXT_CALLBACK);
+	xml = mxmlLoadString(NULL, xml_value, MXML_TEXT_CALLBACK);
 	if(xml == NULL)
 	{
 		printf("XML value format uncompatible with HomePort\n");
@@ -565,7 +551,7 @@ get_value_from_xml_value(char* _xml_value)
 	}
 
 	node = mxmlFindElement(xml, xml, "value", NULL, NULL, MXML_DESCEND);
-	if(node == NULL || node->child == NULL)
+	if(node == NULL || node-> child == NULL || node->child->value.text.string == NULL)
 	{
 		mxmlDelete(xml);
 		printf("No \"value\" in the XML file\n");
@@ -610,15 +596,15 @@ extract_service_xml(Service *_service_to_extract)
 	new_device = mxmlNewElement(new_service, "device");
 	if(_service_to_extract->device->description != NULL) mxmlElementSetAttr(new_device, "desc", _service_to_extract->device->description);
 	if(_service_to_extract->device->ID != NULL) mxmlElementSetAttr(new_device, "id", _service_to_extract->device->ID);
-	if(_service_to_extract->device->vendorID != NULL) mxmlElementSetAttr(new_device, "vendorID", _service_to_extract->device->vendorID);
-	if(_service_to_extract->device->productID != NULL) mxmlElementSetAttr(new_device, "productID", _service_to_extract->device->productID);
+	if(_service_to_extract->device->vendorID != NULL) mxmlElementSetAttr(new_device, "vendorid", _service_to_extract->device->vendorID);
+	if(_service_to_extract->device->productID != NULL) mxmlElementSetAttr(new_device, "productid", _service_to_extract->device->productID);
 	if(_service_to_extract->device->version != NULL) mxmlElementSetAttr(new_device, "version", _service_to_extract->device->version);
 	if(_service_to_extract->device->IP != NULL) mxmlElementSetAttr(new_device, "ip", _service_to_extract->device->IP);
 	if(_service_to_extract->device->port != NULL) mxmlElementSetAttr(new_device, "port", _service_to_extract->device->port);
 	if(_service_to_extract->device->location != NULL) mxmlElementSetAttr(new_device, "location", _service_to_extract->device->location);
 	if(_service_to_extract->device->type != NULL) mxmlElementSetAttr(new_device, "type", _service_to_extract->device->type);
 
-	Parameter *iterator = _service_to_extract->parameter_head;
+	Parameter *iterator = _service_to_extract->parameter;
 	if(iterator != NULL)
 	{
 		new_parameter = mxmlNewElement(new_service, "parameter");
@@ -630,20 +616,6 @@ extract_service_xml(Service *_service_to_extract)
 		if(iterator->type != NULL) mxmlElementSetAttr(new_parameter, "type", iterator->type);
 		if(iterator->unit != NULL) mxmlElementSetAttr(new_parameter, "unit", iterator->unit);
 		if(iterator->values != NULL) mxmlElementSetAttr(new_parameter, "values", iterator->values);
-
-		while(iterator->next != NULL)
-		{
-			iterator = iterator->next;
-			new_parameter = mxmlNewElement(new_service, "parameter");
-			if(iterator->ID != NULL) mxmlElementSetAttr(new_parameter, "id", iterator->ID);
-			if(iterator->max != NULL) mxmlElementSetAttr(new_parameter, "max", iterator->max);
-			if(iterator->min != NULL) mxmlElementSetAttr(new_parameter, "min", iterator->min);
-			if(iterator->scale != NULL) mxmlElementSetAttr(new_parameter, "scale", iterator->scale);
-			if(iterator->step != NULL) mxmlElementSetAttr(new_parameter, "step", iterator->step);
-			if(iterator->type != NULL) mxmlElementSetAttr(new_parameter, "type", iterator->type);
-			if(iterator->unit != NULL) mxmlElementSetAttr(new_parameter, "unit", iterator->unit);
-			if(iterator->values != NULL) mxmlElementSetAttr(new_parameter, "values", iterator->values);
-		}
 	}
 
 	char* return_string = mxmlSaveAllocString(xml, MXML_NO_CALLBACK);
@@ -666,5 +638,191 @@ get_xml_device_list()
 
 	return return_value;
 
+}
+
+int update_device_xml( Device *device )
+{
+	mxml_node_t *xml_device;
+
+	for (xml_device = mxmlFindElement(service_xml_file->xml_tree, 
+						service_xml_file->xml_tree,
+						"device", 
+						NULL, 
+						NULL, 
+						MXML_DESCEND);
+	     xml_device != NULL;
+	     xml_device = mxmlFindElement(	xml_device, 
+										service_xml_file->xml_tree,
+										"device", 
+										NULL, 
+										NULL, 
+										MXML_DESCEND))
+	{
+		if(strcmp(mxmlElementGetAttr(xml_device,"type") , device->type) == 0
+		   && strcmp(mxmlElementGetAttr(xml_device,"id") , device->ID) == 0)
+		{
+				if(device->description != NULL) mxmlElementSetAttr(xml_device, "desc", device->description);
+				if(device->vendorID != NULL) mxmlElementSetAttr(xml_device, "vendorid", device->vendorID);
+				if(device->productID != NULL) mxmlElementSetAttr(xml_device, "productid", device->productID);
+				if(device->version != NULL) mxmlElementSetAttr(xml_device, "version", device->version);
+				if(device->IP != NULL) mxmlElementSetAttr(xml_device, "ip", device->IP);
+				if(device->port != NULL) mxmlElementSetAttr(xml_device, "port", device->port);
+				if(device->location != NULL) mxmlElementSetAttr(xml_device, "location", device->location);
+
+				save_xml_tree();
+				return HPD_YES;
+		}
+	}
+
+	return HPD_NO;
+}
+
+int update_service_xml( Service *service )
+{
+	mxml_node_t *xml_service;
+	mxml_node_t *xml_device;
+
+	for (xml_device = mxmlFindElement(service_xml_file->xml_tree, 
+						service_xml_file->xml_tree,
+						"device", 
+						NULL, 
+						NULL, 
+						MXML_DESCEND);
+	     xml_device != NULL;
+	     xml_device = mxmlFindElement(	xml_device, 
+										service_xml_file->xml_tree,
+										"device", 
+										NULL, 
+										NULL, 
+										MXML_DESCEND))
+	{
+		if(strcmp(mxmlElementGetAttr(xml_device,"type") , service->device->type) == 0
+		   && strcmp(mxmlElementGetAttr(xml_device,"id") , service->device->ID) == 0)
+		{
+			for (xml_service = mxmlFindElement(xml_device, 
+												xml_device,
+												"service", 
+												NULL, 
+												NULL, 
+												MXML_DESCEND);
+	    			 xml_service != NULL;
+	   			 xml_service = mxmlFindElement(xml_service, 
+												xml_device,
+												"service", 
+												NULL, 
+												NULL, 
+												MXML_DESCEND))
+			{
+				if(strcmp(mxmlElementGetAttr(xml_service,"type") , service->type) == 0
+		   			&& strcmp(mxmlElementGetAttr(xml_service,"id") , service->ID) == 0)
+				{
+					if(service->description != NULL) mxmlElementSetAttr(xml_service, "desc", service->description);
+					if(service->unit != NULL) mxmlElementSetAttr(xml_service, "unit", service->unit);
+					save_xml_tree();
+					return HPD_YES;
+				}
+			}
+		}
+	}
+	return HPD_NO;
+}
+
+int update_parameter_xml( Service *service )
+{
+
+	mxml_node_t *xml_service;
+	mxml_node_t *xml_device;
+	mxml_node_t *xml_parameter;
+
+	for (xml_device = mxmlFindElement(service_xml_file->xml_tree, 
+						service_xml_file->xml_tree,
+						"device", 
+						NULL, 
+						NULL, 
+						MXML_DESCEND);
+	     xml_device != NULL;
+	     xml_device = mxmlFindElement(	xml_device, 
+										service_xml_file->xml_tree,
+										"device", 
+										NULL, 
+										NULL, 
+										MXML_DESCEND))
+	{
+		if(strcmp(mxmlElementGetAttr(xml_device,"type") , service->device->type) == 0
+		   && strcmp(mxmlElementGetAttr(xml_device,"id") , service->device->ID) == 0)
+		{
+			for (xml_service = mxmlFindElement(xml_device, 
+												xml_device,
+												"service", 
+												NULL, 
+												NULL, 
+												MXML_DESCEND);
+	    			 xml_service != NULL;
+	   			 xml_service = mxmlFindElement(xml_service, 
+												xml_device,
+												"service", 
+												NULL, 
+												NULL, 
+												MXML_DESCEND))
+			{
+				if(strcmp(mxmlElementGetAttr(xml_service,"type") , service->type) == 0
+		   			&& strcmp(mxmlElementGetAttr(xml_service,"id") , service->ID) == 0)
+				{
+					xml_parameter = mxmlFindElement(xml_service, 
+														xml_service,
+														"parameter", 
+														NULL, 
+														NULL, 
+														MXML_DESCEND);
+					if(!xml_parameter) return HPD_NO;
+					if(service->parameter->max != NULL) mxmlElementSetAttr(xml_parameter, "max", service->parameter->max);
+					if(service->parameter->min != NULL) mxmlElementSetAttr(xml_parameter, "min",service->parameter->min);
+					if(service->parameter->scale != NULL) mxmlElementSetAttr(xml_parameter, "scale", service->parameter->scale);
+					if(service->parameter->step != NULL) mxmlElementSetAttr(xml_parameter, "step", service->parameter->step);
+					if(service->parameter->unit != NULL) mxmlElementSetAttr(xml_parameter, "unit", service->parameter->unit);
+					if(service->parameter->values != NULL) mxmlElementSetAttr(xml_parameter, "values", service->parameter->values);
+					save_xml_tree();
+					return HPD_YES;
+				}
+			}
+		}
+	}
+	return HPD_NO;
+}
+
+/**
+ * Extracts the device XML description given its internal structure
+ *
+ * @param device_to_extract The Device that we want to extract
+ *
+ * @return The XML description of the device or NULL if failed
+ */
+char *
+extract_device_xml(Device *device_to_extract)
+{
+	if(device_is_in_xml_file (device_to_extract) == HPD_NO)
+		return NULL;
+
+	mxml_node_t *xml;
+	xml = mxmlNewXML("1.0");
+
+	mxml_node_t *new_device;
+
+	new_device = mxmlNewElement(xml, "device");
+	if(device_to_extract->description != NULL) mxmlElementSetAttr(new_device, "desc", device_to_extract->description);
+	if(device_to_extract->ID != NULL) mxmlElementSetAttr(new_device, "id", device_to_extract->ID);
+	if(device_to_extract->vendorID != NULL) mxmlElementSetAttr(new_device, "vendorID", device_to_extract->vendorID);
+	if(device_to_extract->productID != NULL) mxmlElementSetAttr(new_device, "productID", device_to_extract->productID);
+	if(device_to_extract->version != NULL) mxmlElementSetAttr(new_device, "version", device_to_extract->version);
+	if(device_to_extract->IP != NULL) mxmlElementSetAttr(new_device, "ip", device_to_extract->IP);
+	if(device_to_extract->port != NULL) mxmlElementSetAttr(new_device, "port", device_to_extract->port);
+	if(device_to_extract->location != NULL) mxmlElementSetAttr(new_device, "location", device_to_extract->location);
+	if(device_to_extract->type != NULL) mxmlElementSetAttr(new_device, "type", device_to_extract->type);
+
+	char* return_string = mxmlSaveAllocString(xml, MXML_NO_CALLBACK);
+
+	mxmlDelete(xml);
+
+	return return_string;
 }
 

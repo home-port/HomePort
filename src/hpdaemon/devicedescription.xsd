@@ -17,8 +17,8 @@
       </xs:sequence>
       <xs:attribute name="desc"/>
       <xs:attribute name="id" use="required" type="xs:string"/>
-      <xs:attribute name="vendorid" use="required" type="xs:string"/>
-      <xs:attribute name="productid" use="required" type="xs:string"/>
+      <xs:attribute name="vendorid" use="optional" type="xs:string"/>
+      <xs:attribute name="productid" use="optional" type="xs:string"/>
       <xs:attribute name="version" use="optional" type="xs:string"/>
       <xs:attribute name="ip" use="optional" type="IPType"/>
       <xs:attribute name="port" use="optional" type="xs:int"/>
