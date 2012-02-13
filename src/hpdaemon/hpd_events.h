@@ -45,6 +45,8 @@ struct Event
 {
 	char *id;/**<The ID of the event*/
 	char *data;/**<The Data of the event*/
+	char *event_name;/**<The Name of the event*/	
+	char *IP;/**<The IP address of the client that modified the service or log*/
 	Event *prev;/**<The previous event in the list*/
 	Event *next;/**<The next event in the list*/
 };
@@ -73,7 +75,7 @@ struct ServiceId
 };
 
 Event *create_empty_event();
-Event *create_event( char *id, char *data );
+Event *create_event( char* event_name, char *id, char *IP, char *data );
 Event *copy_event( Event *event );
 int destroy_event( Event *event_to_destroy );
 

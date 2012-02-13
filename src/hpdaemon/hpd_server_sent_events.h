@@ -34,7 +34,7 @@ authors and should not be interpreted as representing official policies, either 
 #ifndef SERVER_SENT_EVENTS_H
 #define SERVER_SENT_EVENTS_H
 
-#include "hpd_web_server.h"
+#include "hpd_web_server_interface.h"
 #include "hpd_events.h"
 
 #include <time.h>
@@ -69,9 +69,10 @@ int remove_event_from_queue(Event *event, EventQueue *queue);
 
 EventQueue *get_queue(struct MHD_Connection *connection);
 
-static void add_session_cookie( EventQueue *event_queue, 
-				struct MHD_Response *response, 
-				int is_secure_connection);
+static void
+add_session_cookie( EventQueue *event_queue, 
+                   struct MHD_Response *response, 
+                   int is_secure_connection);
 
 int send_cookied_xml (	struct MHD_Connection *connection, 
 			const char *xmlbuff, 
@@ -84,7 +85,7 @@ char *generate_connection_id();
 
 void *consume_global_queue();
 
-int send_event_of_value_change (Service *service, char *updated_value);
+int send_event_of_value_change (Service *service, char *updated_value, char *IP);
 
 EventQueue *get_event_queue_with_connection_id(char *connection_id);
 
