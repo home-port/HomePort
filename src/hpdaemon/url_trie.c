@@ -115,7 +115,7 @@ int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, R
     if( !found )
     {
       UrlTrieElement *new_url_trie_element = create_url_trie_element( segment );
-      if( *segment != '@' ) 
+      if( strcmp( segment, "@" ) ) 
         LL_PREPEND( cur_node->children, new_url_trie_element );
       else
         LL_APPEND( cur_node->children, new_url_trie_element );
