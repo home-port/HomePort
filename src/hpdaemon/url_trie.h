@@ -15,7 +15,6 @@ struct UrlTrieElement
   char *url_segment;
   UrlTrieElement *children;
   UrlTrieElement *next;
-  UrlTrieElement *prev;
   RequestHandler get_handler;
   RequestHandler put_handler;
   RequestHandler post_handler;

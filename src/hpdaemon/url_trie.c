@@ -40,19 +40,6 @@ int free_url_trie( UrlTrieElement *head )
   return 0;
 }
 
-int seg_cmp( UrlTrieElement *a, UrlTrieElement *b )
-{
-  if( strcmp( a->url_segment, "@" ) == 0 )
-    return 1;
-  
-  else if( strcmp( b->url_segment, "@" ) == 0 )
-    return -1;
-  
-  else
-    return strcmp( a->url_segment, b->url_segment );
-}
-
-
 UrlTrieElement *create_url_trie_element( char *url_segment )
 {
   UrlTrieElement *new_url_trie_element = malloc( sizeof( *new_url_trie_element ) );
@@ -113,7 +100,7 @@ int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, R
   }
   while( segment )
   {
-    DL_FOREACH( cur_node->children, elt )
+    LL_FOREACH( cur_node->children, elt )
     {
       if( elt->url_segment )
       {
@@ -128,8 +115,10 @@ int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, R
     if( !found )
     {
       UrlTrieElement *new_url_trie_element = create_url_trie_element( segment );
-      DL_APPEND( cur_node->children, new_url_trie_element );
-      DL_SORT( cur_node->children, seg_cmp );
+      if( *segment != '@' ) 
+        LL_PREPEND( cur_node->children, new_url_trie_element );
+      else
+        LL_APPEND( cur_node->children, new_url_trie_element );
       cur_node = new_url_trie_element;
     }
     segment = strtok( NULL, "/" ); 
@@ -181,7 +170,7 @@ int lookup_for_url_trie_element( UrlTrieElement *head, char *url, UrlTrieElement
 
   while( segment )
   {
-    DL_FOREACH( cur_node->children, elt )
+    LL_FOREACH( cur_node->children, elt )
     {
       if( elt->url_segment )
       {
