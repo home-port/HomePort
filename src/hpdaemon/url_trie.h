@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "hpd_error.h"
 
 typedef size_t (*RequestHandler) ( char *buffer, size_t max_buffer_size, int argc, char **argv );
 
@@ -28,6 +29,11 @@ int destroy_url_trie_element( UrlTrieElement *to_destroy );
 int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, RequestHandler put_handler, 
                   RequestHandler post_handler, RequestHandler delete_handler);
 
-UrlTrieElement *lookup_for_url_trie_element( UrlTrieElement *head, char *url );
+int lookup_for_url_trie_element( UrlTrieElement *head, char *url, UrlTrieElement **url_out, int *argc, char ***argv );
+
+int free_argv( int argc, char ***argv );
+
+int free_url_trie( UrlTrieElement *head );
 
 #endif
+

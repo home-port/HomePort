@@ -1,6 +1,58 @@
 #include "url_trie.h"
 #include "utlist.h"
 
+int free_argv( int argc, char ***argv )
+{
+  int i;
+  
+  if( !*argv )
+    return HPD_E_NULL_POINTER;
+
+  for( i = 0; i < argc; i++ )
+  {
+    if( (*argv)[i] )
+      free( (*argv)[i] );
+  }
+  
+  free( *argv );
+
+  *argv = NULL;
+
+  return 0;
+} 
+
+int free_url_trie( UrlTrieElement *head )
+{
+  UrlTrieElement *iterator = NULL, *to_free;
+  if( !head )
+    return HPD_E_NULL_POINTER;
+
+  iterator = head->children;
+  while( iterator )
+  {
+    to_free = iterator;
+    iterator = iterator->next;
+    free_url_trie( to_free );
+  }
+
+  destroy_url_trie_element( head );
+  
+  return 0;
+}
+
+int seg_cmp( UrlTrieElement *a, UrlTrieElement *b )
+{
+  if( strcmp( a->url_segment, "@" ) == 0 )
+    return 1;
+  
+  else if( strcmp( b->url_segment, "@" ) == 0 )
+    return -1;
+  
+  else
+    return strcmp( a->url_segment, b->url_segment );
+}
+
+
 UrlTrieElement *create_url_trie_element( char *url_segment )
 {
   UrlTrieElement *new_url_trie_element = malloc( sizeof( *new_url_trie_element ) );
@@ -55,6 +107,7 @@ int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, R
   segment = strtok( copy_url, "/" );
   if( !segment )
   {
+    printf("No segment found\n");
     free( copy_url );
     return HPD_E_BAD_PARAMETER;
   }
@@ -76,9 +129,11 @@ int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, R
     {
       UrlTrieElement *new_url_trie_element = create_url_trie_element( segment );
       DL_APPEND( cur_node->children, new_url_trie_element );
+      DL_SORT( cur_node->children, seg_cmp );
       cur_node = new_url_trie_element;
     }
     segment = strtok( NULL, "/" ); 
+	found = 0;
   }
 
   free( copy_url );
@@ -99,21 +154,27 @@ int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, R
 
 }
 
-UrlTrieElement *lookup_for_url_trie_element( UrlTrieElement *head, char *url )
+int lookup_for_url_trie_element( UrlTrieElement *head, char *url, UrlTrieElement **url_out, int *argc, char ***argv )
 {
   char *segment = NULL, *copy_url = NULL;
   UrlTrieElement *cur_node = head, *elt;
-  int found = 0;
+  int found = 0, i = 0;
  
   if( !head || !url )
     return HPD_E_NULL_POINTER;
+
+  if( *argv || *url_out || !argc )
+    return HPD_E_BAD_PARAMETER;
   
+  *argc = 0;
+
   copy_url = malloc( sizeof( char ) * strlen( url ) + 1);
   strcpy( copy_url, url );
 
   segment = strtok( copy_url, "/" );
   if( !segment )
   {
+    printf("No segment\n");
     free( copy_url );
     return HPD_E_BAD_PARAMETER;
   }
@@ -130,17 +191,37 @@ UrlTrieElement *lookup_for_url_trie_element( UrlTrieElement *head, char *url )
           cur_node = elt;
           break;
         }
+        else if( strcmp( elt->url_segment, "@" ) == 0 )
+        {
+          found = 1;
+          cur_node = elt;
+          (*argc)++;
+          *argv = realloc( *argv, (*argc) * sizeof(char*) );
+          if( !(*argv) )
+            return -1;
+          (*argv)[(*argc)-1] = strdup(segment);
+          break;
+        }
       }
     }
     if( !found )
     {
       free( copy_url );
-      return NULL;
+      if( *argv )
+      {
+        for( i = 0; i < *argc; i++ )
+        {
+          free( *argv[i] );
+        }
+        free( *argv );
+      }
+      return -1;
     }
     segment = strtok( NULL, "/" );
+    found = 0;
   }
-
   free( copy_url );
-  return cur_node;
+  *url_out = cur_node;
+  return 0;
 }
 
