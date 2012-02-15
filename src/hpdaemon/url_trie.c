@@ -40,7 +40,7 @@ int free_url_trie( UrlTrieElement *head )
   return 0;
 }
 
-UrlTrieElement *create_url_trie_element( char *url_segment )
+UrlTrieElement *create_url_trie_element( char *url_segment, void *data_ptr )
 {
   UrlTrieElement *new_url_trie_element = malloc( sizeof( *new_url_trie_element ) );
   if( !new_url_trie_element )
@@ -60,6 +60,8 @@ UrlTrieElement *create_url_trie_element( char *url_segment )
   new_url_trie_element->put_handler = NULL;
   new_url_trie_element->post_handler = NULL;
   new_url_trie_element->delete_handler = NULL;
+
+  new_url_trie_element->data_ptr = data_ptr;
   
   return new_url_trie_element;
 
@@ -108,7 +110,7 @@ int destroy_request_container( RequestContainer *rc_to_destroy )
 }
 
 int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, RequestHandler put_handler,
-                  RequestHandler post_handler, RequestHandler delete_handler)
+                  RequestHandler post_handler, RequestHandler delete_handler, void *data_ptr)
 {
   char *segment = NULL, *copy_url = NULL;
   int found = 0;
@@ -142,7 +144,7 @@ int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, R
     }
     if( !found )
     {
-      UrlTrieElement *new_url_trie_element = create_url_trie_element( segment );
+      UrlTrieElement *new_url_trie_element = create_url_trie_element( segment, data_ptr );
       if( strcmp( segment, "@" ) ) 
         LL_PREPEND( cur_node->children, new_url_trie_element );
       else
@@ -285,6 +287,8 @@ int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* ht
     else
       (*rc_out)->req_handler = cur_node->delete_handler;
   }
+
+  (*rc_out)->data_ptr = cur_node->data_ptr;
 
   return 0;
 }

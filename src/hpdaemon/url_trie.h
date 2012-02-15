@@ -22,6 +22,7 @@ struct UrlTrieElement
   RequestHandler put_handler;
   RequestHandler post_handler;
   RequestHandler delete_handler;
+  void *data_ptr;
 };
 
 
@@ -32,9 +33,10 @@ struct RequestContainer
   int argc;
   char **argv;
   char *req_body;
+  void *data_ptr;
 };
 
-UrlTrieElement* create_url_trie_element(  char *url_segment );
+UrlTrieElement* create_url_trie_element(  char *url_segment, void *data_ptr );
 
 int destroy_url_trie_element( UrlTrieElement *ute_to_destroy );
 
@@ -43,7 +45,7 @@ RequestContainer *create_request_container();
 int destroy_request_container( RequestContainer *rc_to_destroy );
 
 int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, RequestHandler put_handler, 
-                  RequestHandler post_handler, RequestHandler delete_handler);
+                  RequestHandler post_handler, RequestHandler delete_handler, void *data_ptr );
 
 int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* http_method, RequestContainer **rc_out );
 
