@@ -6,9 +6,12 @@
 #include <string.h>
 #include "hpd_error.h"
 
-typedef size_t (*RequestHandler) ( char *buffer, size_t max_buffer_size, int argc, char **argv );
-
+typedef struct RequestContainer RequestContainer;
 typedef struct UrlTrieElement UrlTrieElement;
+
+typedef size_t (*RequestHandler) ( char *buffer, size_t max_buffer_size, RequestContainer *rc, int *http_ret_code );
+
+
 
 struct UrlTrieElement
 {
@@ -21,14 +24,28 @@ struct UrlTrieElement
   RequestHandler delete_handler;
 };
 
+
+
+struct RequestContainer
+{
+  RequestHandler req_handler;
+  int argc;
+  char **argv;
+  char *req_body;
+};
+
 UrlTrieElement* create_url_trie_element(  char *url_segment );
 
-int destroy_url_trie_element( UrlTrieElement *to_destroy );
+int destroy_url_trie_element( UrlTrieElement *ute_to_destroy );
+
+RequestContainer *create_request_container();
+
+int destroy_request_container( RequestContainer *rc_to_destroy );
 
 int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, RequestHandler put_handler, 
                   RequestHandler post_handler, RequestHandler delete_handler);
 
-int lookup_for_url_trie_element( UrlTrieElement *head, char *url, UrlTrieElement **url_out, int *argc, char ***argv );
+int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* http_method, RequestContainer **rc_out );
 
 int free_argv( int argc, char ***argv );
 
