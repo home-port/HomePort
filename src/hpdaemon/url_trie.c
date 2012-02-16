@@ -288,6 +288,8 @@ lookup_url( UrlTrieElement *head, const char *url, const char* http_method, Requ
     else
       rc_out->req_handler = cur_node->delete_handler;
   }
+  else
+    return HPD_E_URL_METHOD_NOT_IMPLEMENTED;
 
   rc_out->data_ptr = cur_node->data_ptr;
 
