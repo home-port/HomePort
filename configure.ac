@@ -175,6 +175,7 @@ AC_CONFIG_FILES([libhpd.pc
                  src/Makefile
                  src/hpdaemon/Makefile
                  src/include/Makefile
+                 src/test/Makefile
 		 src/examples/Makefile])
 AC_OUTPUT
 
