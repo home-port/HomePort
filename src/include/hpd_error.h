@@ -162,6 +162,12 @@ authors and should not be interpreted as representing official policies, either 
 
 #define HPD_E_DEVICE_NOT_THE_SAME				-54
 
+#define HPD_E_URL_ALREADY_REGISTERED    -55
+
+#define HPD_E_URL_NOT_FOUND             -56
+
+#define HPD_E_URL_METHOD_NOT_IMPLEMENTED -57
+
 
 
 
