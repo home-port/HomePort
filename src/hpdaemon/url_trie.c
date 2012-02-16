@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "url_trie.h"
 #include "utlist.h"
 #include "hpd_error.h"
@@ -29,8 +30,8 @@ int
 free_url_trie( UrlTrieElement *head )
 {
   UrlTrieElement *iterator = NULL, *to_free;
-  if( !head )
-    return HPD_E_NULL_POINTER;
+
+  assert( head );
 
   iterator = head->children;
   while( iterator )
@@ -81,8 +82,7 @@ create_url_trie_element( char *url_segment, void *data_ptr )
 int 
 destroy_url_trie_element( UrlTrieElement *ute_to_destroy )
 {
-  if( !ute_to_destroy )
-    return HPD_E_NULL_POINTER;
+  assert( ute_to_destroy );
 
   if( ute_to_destroy->url_segment )
     free( ute_to_destroy->url_segment );
@@ -111,8 +111,7 @@ create_request_container()
 int 
 destroy_request_container( RequestContainer *rc_to_destroy )
 {
-  if( !rc_to_destroy )
-    return HPD_E_NULL_POINTER;
+  assert( rc_to_destroy );
 
   if( rc_to_destroy->argv )
     free_argv( rc_to_destroy->argc, rc_to_destroy->argv );
@@ -132,8 +131,8 @@ register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, Reque
   char *segment = NULL, *copy_url = NULL;
   int found = 0;
   UrlTrieElement *cur_node = head, *elt;
-  if( !url || !head )
-    return HPD_E_NULL_POINTER;
+
+  assert( url && head ); 
 
   copy_url = malloc( sizeof( char ) * strlen( url ) + 1); 
   if( !copy_url )
@@ -199,8 +198,7 @@ lookup_url( UrlTrieElement *head, const char *url, const char* http_method, Requ
   UrlTrieElement *cur_node = head, *elt;
   int found = 0;
 
-  if( !head || !url || !http_method || !rc_out )
-    return HPD_E_NULL_POINTER;
+  assert( head && url && http_method && rc_out );
 
   copy_url = malloc( sizeof( char ) * strlen( url ) + 1);
   if( !copy_url )
@@ -244,7 +242,7 @@ lookup_url( UrlTrieElement *head, const char *url, const char* http_method, Requ
       }
     }
     if( !found )
-    
+    { 
       free( copy_url );
       return HPD_E_URL_NOT_FOUND;
     }
