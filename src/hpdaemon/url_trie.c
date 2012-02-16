@@ -1,22 +1,24 @@
 #include "url_trie.h"
 #include "utlist.h"
 
-int free_argv( int argc, char ***argv )
+int free_argv( int argc, char **argv )
 {
   int i;
   
-  if( !*argv )
+  if( !argv )
     return HPD_E_NULL_POINTER;
 
   for( i = 0; i < argc; i++ )
   {
-    if( (*argv)[i] )
-      free( (*argv)[i] );
+    if( argv[i] )
+      free( argv[i] );
   }
   
-  free( *argv );
+  free( argv );
 
-  *argv = NULL;
+  argv = NULL;
+
+  argc = 0;
 
   return 0;
 } 
@@ -101,7 +103,7 @@ int destroy_request_container( RequestContainer *rc_to_destroy )
     return HPD_E_NULL_POINTER;
 
   if( rc_to_destroy->argv )
-    free_argv( rc_to_destroy->argc, &rc_to_destroy->argv );
+    free_argv( rc_to_destroy->argc, rc_to_destroy->argv );
 
   if( rc_to_destroy->req_body )
     free( rc_to_destroy->req_body );
@@ -173,19 +175,14 @@ int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, R
 
 }
 
-int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* http_method, RequestContainer **rc_out )
+int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* http_method, RequestContainer *rc_out )
 {
   char *segment = NULL, *copy_url = NULL;
   UrlTrieElement *cur_node = head, *elt;
   int found = 0;
 
-  if( !head || !url || !http_method )
+  if( !head || !url || !http_method || !rc_out )
     return HPD_E_NULL_POINTER;
-
-  if( *rc_out )
-    return HPD_E_BAD_PARAMETER;
-  
-  *rc_out = create_request_container();
 
   copy_url = malloc( sizeof( char ) * strlen( url ) + 1);
   strcpy( copy_url, url );
@@ -195,8 +192,6 @@ int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* ht
   {
     printf("No segment\n");
     free( copy_url );
-    destroy_request_container( *rc_out );
-    *rc_out = NULL;
     return HPD_E_BAD_PARAMETER;
   }
 
@@ -216,16 +211,14 @@ int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* ht
         {
           found = 1;
           cur_node = elt;
-          (*rc_out)->argc++;
-          (*rc_out)->argv = realloc( (*rc_out)->argv, ((*rc_out)->argc) * sizeof(char*) );
-          if( !((*rc_out)->argv) )
+          rc_out->argc++;
+          rc_out->argv = realloc( rc_out->argv, (rc_out->argc) * sizeof(char*) );
+          if( !(rc_out->argv) )
           {
             free( copy_url );
-            destroy_request_container( *rc_out );
-            *rc_out = NULL;
             return -1;
           }
-          ((*rc_out)->argv)[((*rc_out)->argc)-1] = strdup(segment);
+          (rc_out->argv)[(rc_out->argc)-1] = strdup(segment);
           break;
         }
       }
@@ -233,8 +226,6 @@ int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* ht
     if( !found )
     {
       free( copy_url );
-      destroy_request_container( *rc_out );
-      *rc_out = NULL;
       return -1;
     }
     segment = strtok( NULL, "/" );
@@ -247,48 +238,40 @@ int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* ht
   {
     if( !cur_node->get_handler )
     {
-      destroy_request_container( *rc_out );
-      *rc_out = NULL;
       return -1;
     }
     else
-      (*rc_out)->req_handler = cur_node->get_handler;
+      rc_out->req_handler = cur_node->get_handler;
   }
   else if( 0 == strcmp( http_method, "PUT" ) )
   {
     if( !cur_node->put_handler )
     {
-      destroy_request_container( *rc_out );
-      *rc_out = NULL;
       return -1;
     }
     else
-      (*rc_out)->req_handler = cur_node->put_handler;
+      rc_out->req_handler = cur_node->put_handler;
   }
   else if( 0 == strcmp( http_method, "POST" ) )
   {
     if( !cur_node->post_handler )
     {
-      destroy_request_container( *rc_out );
-      *rc_out = NULL;
       return -1;
     }
     else
-      (*rc_out)->req_handler = cur_node->post_handler;
+      rc_out->req_handler = cur_node->post_handler;
   }
   else if( 0 == strcmp( http_method, "DELETE" ) )
   {
     if( !cur_node->delete_handler )
     {
-      destroy_request_container( *rc_out );
-      *rc_out = NULL;
       return -1;
     }
     else
-      (*rc_out)->req_handler = cur_node->delete_handler;
+      rc_out->req_handler = cur_node->delete_handler;
   }
 
-  (*rc_out)->data_ptr = cur_node->data_ptr;
+  rc_out->data_ptr = cur_node->data_ptr;
 
   return 0;
 }
