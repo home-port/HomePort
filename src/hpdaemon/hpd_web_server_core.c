@@ -296,6 +296,63 @@ verify_certificate(gnutls_session_t session)
 }
 #endif
 
+size_t
+get_all_services( char *buffer, size_t max_buffer_size, int *http_ret_code,
+                  int argc, char **argv, char *req_body, void *data_ptr )
+{
+  char *xml;
+  xml = get_xml_device_list();
+  if( !xml )
+  {
+     *http_ret_code = MHD_HTTP_INTERNAL_SERVER_ERROR;
+     return 0;
+  }
+
+  if( strlen( xml ) > max_buffer_size )
+  {
+     *http_ret_code = MHD_HTTP_INTERNAL_SERVER_ERROR;
+     return 0;
+  }
+
+  strcpy( buffer, xml );
+
+  return strlen( buffer );
+}
+
+size_t
+get_services_with_device_type( char *buffer, size_t max_buffer_size, int *http_ret_code,
+                               int argc, char **argv, char *req_body, void *data_ptr )
+{
+  return 0;
+}
+
+size_t
+get_services_of_device( char *buffer, size_t max_buffer_size, int *http_ret_code,
+                        int argc, char **argv, char *req_body, void *data_ptr )
+{
+  return 0;
+}
+
+size_t
+get_services_of_type_of_device( char *buffer, size_t max_buffer_size, int *http_ret_code,
+                                int argc, char **argv, char *req_body, void *data_ptr )
+{
+  return 0;
+}
+
+size_t
+get_service_desc( char *buffer, size_t max_buffer_size, int *http_ret_code,
+             int argc, char **argv, char *req_body, void *data_ptr )
+{
+  return 0;
+}
+
+size_t
+get_service_value( char *buffer, size_t max_buffer_size, int *http_ret_code,
+                   int argc, char **argv, char *req_body, void *data_ptr )
+{
+  return 0;
+}
 /**
  * Process the GET requests
  *	
@@ -720,6 +777,7 @@ unregister_service_in_web_server( Service *service_to_unregister,
 int 
 start_unsecure_web_server( HPD_web_server_struct *unsecure_web_server )
 {  
+  int ret;
 
 	unsecure_web_server->daemon = MHD_start_daemon (MHD_USE_THREAD_PER_CONNECTION, 
 							hpd_daemon->http_port, 
@@ -727,10 +785,40 @@ start_unsecure_web_server( HPD_web_server_struct *unsecure_web_server )
 	                      				&answer_to_connection, 
 	                      				unsecure_web_server,
 	                      				MHD_OPTION_END);
-	if (NULL == unsecure_web_server->daemon) 
+	if ( NULL == unsecure_web_server->daemon ) 
 	{
 		return HPD_E_MHD_ERROR;
 	}
+
+  if( ( ret = register_url( unsecure_web_server->url_head, "/devices", get_all_services,
+                            NULL, NULL, NULL, unsecure_web_server ) ) )
+  {
+    return ret;
+  }
+
+  if( ( ret = register_url( unsecure_web_server->url_head, "/devices/@", get_services_with_device_type,
+                            NULL, NULL, NULL, unsecure_web_server ) ) )
+  {
+    return ret;
+  }
+
+  if( ( ret = register_url( unsecure_web_server->url_head, "/devices/@/@", get_services_of_device,
+                            NULL, NULL, NULL,  unsecure_web_server ) ) )
+  {
+    return ret;
+  }
+
+  if( ( ret = register_url( unsecure_web_server->url_head, "/devices/@/@/@", get_services_of_type_of_device, 
+                            NULL, NULL, NULL,  unsecure_web_server ) ) )
+  {
+    return ret;
+  }
+
+  if( ( ret = register_url( unsecure_web_server->url_head, "/devices/@/@/@/@", get_service_desc,
+                            NULL, NULL, NULL,  unsecure_web_server ) ) )
+  {
+    return ret;
+  }
 
 	return HPD_E_SUCCESS;
 }
@@ -804,8 +892,37 @@ start_secure_web_server( HPD_web_server_struct *secure_web_server )
 		free(root_pem);
 		return HPD_E_MHD_ERROR;
 	}
+  
+	if( ( ret = register_url( secure_web_server->url_head, "/devices", get_all_services,
+                            NULL, NULL, NULL, secure_web_server ) ) )
+  {
+    return ret;
+  }
 
-	return HPD_E_SUCCESS;
+  if( ( ret = register_url( secure_web_server->url_head, "/devices/@", get_services_with_device_type, 
+                            NULL, NULL, NULL, secure_web_server ) ) )
+  {
+    return ret;
+  }
+
+  if( ( ret = register_url( secure_web_server->url_head, "/devices/@/@", get_services_of_device, 
+                            NULL, NULL, NULL, secure_web_server ) ) )
+  {
+    return ret;
+  }
+
+  if( ( ret = register_url( secure_web_server->url_head, "/devices/@/@/@", get_services_of_type_of_device, 
+                            NULL, NULL, NULL, secure_web_server ) ) )
+  {
+    return ret;
+  }
+
+  if( ( ret = register_url( secure_web_server->url_head, "/devices/@/@/@/@", get_service_desc, 
+                            NULL, NULL, NULL, secure_web_server ) ) )
+  {
+    return ret;
+  }
+  return HPD_E_SUCCESS;
 }
 
 #endif

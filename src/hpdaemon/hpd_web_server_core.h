@@ -54,6 +54,7 @@ authors and should not be interpreted as representing official policies, either 
 #include "hpd_configure.h"
 #include "hpd_server_sent_events.h"
 #include "hpd_xml.h"
+#include "url_trie.h"
 
 typedef struct HPD_web_server_struct HPD_web_server_struct;
 
@@ -64,6 +65,7 @@ struct HPD_web_server_struct
    int is_secure;
    int is_configuring;
    pthread_mutex_t configure_mutex;
+   UrlTrieElement *url_head;
 };
 
 #if HPD_HTTP

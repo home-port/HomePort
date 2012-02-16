@@ -64,6 +64,8 @@ create_HPD_web_server_struct( int is_secure )
 		free( new_HPD_web_server_struct );
 		return NULL;
 	}
+
+  new_HPD_web_server_struct->url_head = create_url_trie_element( NULL, NULL );
 	
 	return new_HPD_web_server_struct;
 }

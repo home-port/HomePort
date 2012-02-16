@@ -37,13 +37,14 @@ libhpd_la_SOURCES = hpd_configure.c\
 		    homeport.c\
 		    hpd_services.c\
 		    utlist.h\
+        url_trie.c url_trie.h
 		    hpd_web_server_interface.h hpd_web_server_interface.c\
 		    hpd_server_sent_events.c hpd_server_sent_events.h\
 		    hpd_device_configuration.c hpd_device_configuration.h\
 		    hpd_log.c hpd_log.h\
 		    hpd_xml.c hpd_xml.h\
 		    hpd_events.c hpd_events.h\
-		    hpd_web_server_core.c hpd_web_server_core.h
+		    hpd_web_server_core.c hpd_web_server_core.h\
 
 libhpd_la_LDFLAGS = $(HPD_LIB_LDFLAGS) 
 
