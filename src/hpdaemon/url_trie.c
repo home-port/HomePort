@@ -1,7 +1,9 @@
 #include "url_trie.h"
 #include "utlist.h"
+#include "hpd_error.h"
 
-int free_argv( int argc, char **argv )
+int 
+free_argv( int argc, char **argv )
 {
   int i;
   
@@ -20,10 +22,11 @@ int free_argv( int argc, char **argv )
 
   argc = 0;
 
-  return 0;
+  return HPD_E_SUCCESS;
 } 
 
-int free_url_trie( UrlTrieElement *head )
+int
+free_url_trie( UrlTrieElement *head )
 {
   UrlTrieElement *iterator = NULL, *to_free;
   if( !head )
@@ -39,10 +42,11 @@ int free_url_trie( UrlTrieElement *head )
 
   destroy_url_trie_element( head );
   
-  return 0;
+  return HPD_E_SUCCESS;
 }
 
-UrlTrieElement *create_url_trie_element( char *url_segment, void *data_ptr )
+UrlTrieElement *
+create_url_trie_element( char *url_segment, void *data_ptr )
 {
   UrlTrieElement *new_url_trie_element = malloc( sizeof( *new_url_trie_element ) );
   if( !new_url_trie_element )
@@ -53,6 +57,11 @@ UrlTrieElement *create_url_trie_element( char *url_segment, void *data_ptr )
   else
   {
     new_url_trie_element->url_segment = malloc( sizeof( char ) * ( strlen( url_segment ) + 1 ) );
+    if( !new_url_trie_element->url_segment )
+    {
+      free( new_url_trie_element );
+      return NULL;
+    }
     strcpy( new_url_trie_element->url_segment, url_segment );
   }
   
@@ -69,7 +78,8 @@ UrlTrieElement *create_url_trie_element( char *url_segment, void *data_ptr )
 
 }
 
-int destroy_url_trie_element( UrlTrieElement *ute_to_destroy )
+int 
+destroy_url_trie_element( UrlTrieElement *ute_to_destroy )
 {
   if( !ute_to_destroy )
     return HPD_E_NULL_POINTER;
@@ -79,10 +89,11 @@ int destroy_url_trie_element( UrlTrieElement *ute_to_destroy )
 
   free( ute_to_destroy );
 
-  return 0;
+  return HPD_E_SUCCESS;
 }
 
-RequestContainer *create_request_container()
+RequestContainer *
+create_request_container()
 {
   RequestContainer *new_request_container = malloc( sizeof( *new_request_container ) );
   if( !new_request_container )
@@ -97,7 +108,8 @@ RequestContainer *create_request_container()
 
 }
 
-int destroy_request_container( RequestContainer *rc_to_destroy )
+int 
+destroy_request_container( RequestContainer *rc_to_destroy )
 {
   if( !rc_to_destroy )
     return HPD_E_NULL_POINTER;
@@ -110,10 +122,11 @@ int destroy_request_container( RequestContainer *rc_to_destroy )
 
   free( rc_to_destroy );
 
-  return 0;
+  return HPD_E_SUCCESS;
 }
 
-int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, RequestHandler put_handler,
+int 
+register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, RequestHandler put_handler,
                   RequestHandler post_handler, RequestHandler delete_handler, void *data_ptr)
 {
   char *segment = NULL, *copy_url = NULL;
@@ -123,6 +136,8 @@ int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, R
     return HPD_E_NULL_POINTER;
 
   copy_url = malloc( sizeof( char ) * strlen( url ) + 1); 
+  if( !copy_url )
+    return HPD_E_MALLOC_ERROR;
   strcpy( copy_url, url );
 
   segment = strtok( copy_url, "/" );
@@ -170,14 +185,15 @@ int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, R
   }
   else
   {
-    return -100;
+    return HPD_E_URL_ALREADY_REGISTERED;
   }
 
-  return 0;
+  return HPD_E_SUCCESS;
 
 }
 
-int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* http_method, RequestContainer *rc_out )
+int 
+lookup_url( UrlTrieElement *head, const char *url, const char* http_method, RequestContainer *rc_out )
 {
   char *segment = NULL, *copy_url = NULL;
   UrlTrieElement *cur_node = head, *elt;
@@ -187,6 +203,8 @@ int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* ht
     return HPD_E_NULL_POINTER;
 
   copy_url = malloc( sizeof( char ) * strlen( url ) + 1);
+  if( !copy_url )
+    return HPD_E_MALLOC_ERROR;
   strcpy( copy_url, url );
 
   segment = strtok( copy_url, "/" );
@@ -226,9 +244,9 @@ int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* ht
       }
     }
     if( !found )
-    {
+    
       free( copy_url );
-      return -1;
+      return HPD_E_URL_NOT_FOUND;
     }
     segment = strtok( NULL, "/" );
     found = 0;
@@ -240,7 +258,7 @@ int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* ht
   {
     if( !cur_node->get_handler )
     {
-      return -1;
+      return HPD_E_URL_METHOD_NOT_IMPLEMENTED;
     }
     else
       rc_out->req_handler = cur_node->get_handler;
@@ -249,7 +267,7 @@ int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* ht
   {
     if( !cur_node->put_handler )
     {
-      return -1;
+      return HPD_E_URL_METHOD_NOT_IMPLEMENTED;
     }
     else
       rc_out->req_handler = cur_node->put_handler;
@@ -258,7 +276,7 @@ int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* ht
   {
     if( !cur_node->post_handler )
     {
-      return -1;
+      return HPD_E_URL_METHOD_NOT_IMPLEMENTED;
     }
     else
       rc_out->req_handler = cur_node->post_handler;
@@ -267,7 +285,7 @@ int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* ht
   {
     if( !cur_node->delete_handler )
     {
-      return -1;
+      return HPD_E_URL_METHOD_NOT_IMPLEMENTED;
     }
     else
       rc_out->req_handler = cur_node->delete_handler;
@@ -275,6 +293,6 @@ int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* ht
 
   rc_out->data_ptr = cur_node->data_ptr;
 
-  return 0;
+  return HPD_E_SUCCESS;
 }
 

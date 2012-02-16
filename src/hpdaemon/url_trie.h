@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "hpd_error.h"
 
 typedef struct RequestContainer RequestContainer;
 typedef struct UrlTrieElement UrlTrieElement;
@@ -47,7 +46,7 @@ int destroy_request_container( RequestContainer *rc_to_destroy );
 int register_url( UrlTrieElement *head, char *url, RequestHandler get_handler, RequestHandler put_handler, 
                   RequestHandler post_handler, RequestHandler delete_handler, void *data_ptr );
 
-int lookup_for_url_trie_element( UrlTrieElement *head, char *url, const char* http_method, RequestContainer *rc_out );
+int lookup_url( UrlTrieElement *head, const char *url, const char* http_method, RequestContainer *rc_out );
 
 int free_argv( int argc, char **argv );
 
