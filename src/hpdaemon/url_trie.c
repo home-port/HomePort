@@ -244,7 +244,7 @@ lookup_url( UrlTrieElement *head, const char *url, const char* http_method, Requ
       }
     }
     if( !found )
-    
+    {
       free( copy_url );
       return HPD_E_URL_NOT_FOUND;
     }
