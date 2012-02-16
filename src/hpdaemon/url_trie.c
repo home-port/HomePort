@@ -108,6 +108,8 @@ int destroy_request_container( RequestContainer *rc_to_destroy )
   if( rc_to_destroy->req_body )
     free( rc_to_destroy->req_body );
 
+  free( rc_to_destroy );
+
   return 0;
 }
 

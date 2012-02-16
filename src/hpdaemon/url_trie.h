@@ -9,8 +9,8 @@
 typedef struct RequestContainer RequestContainer;
 typedef struct UrlTrieElement UrlTrieElement;
 
-typedef size_t (*RequestHandler) ( char *buffer, size_t max_buffer_size, RequestContainer *rc, int *http_ret_code );
-
+typedef size_t (*RequestHandler) ( char *buffer, size_t max_buffer_size, int *http_ret_code, int argc, 
+                                   char **argv, char *req_body, void *data_ptr );
 
 
 struct UrlTrieElement
