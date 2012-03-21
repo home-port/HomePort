@@ -1,6 +1,4 @@
 
-
-
 #ifndef UTEST_H_
 #define UTEST_H_
 
@@ -8,7 +6,7 @@
 #undef NDEBUG
 #endif
 
-#include  <signal.h>
+#include <signal.h>
 #include <setjmp.h>
 #include <stdio.h>
 #include <assert.h>
@@ -19,6 +17,10 @@ int utst_actual_test;
 int utst_test_ok;
 jmp_buf utst_jmp;
 
+
+static void utst_sigabrt_clean(int dummy)
+{
+}
 
 static void utst_sigabrt(int dummy)
 {
@@ -38,6 +40,7 @@ static void utst_sigabrt(int dummy)
       puts("FAILED");                                           \
     }                                                           \
     fflush(stdin);                                              \
+    signal(SIGABRT, utst_sigabrt_clean);                        \
   }while (0)
 
 
@@ -53,7 +56,8 @@ static void utst_sigabrt(int dummy)
   utst_actual_test = 0;                           \
   } while (0)
 
-
+#define run_test_null(message, test) run_test(message, test == NULL)
+#define run_test_not_null(message, test) run_test(message, test != NULL)
 
 
 #endif /* UTEST_H_ */
