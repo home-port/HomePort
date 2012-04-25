@@ -3,9 +3,16 @@ HomePort release 0.2
 What is HomePort ?
 ==================
 
-The project is about establishing possibilities for intelligent control of the energy consumption in private homes through the development of a prototype for a so called ’home port’. This port establish access to coordinated control of the different subsystems in a private home for control and surveillance of energy consumption etc. Key concepts in the project are coexistence of different technologies controlled through a common service layer in a private house. The purpose of this coexistence is to create interoperability between the different technologies such that energy consumption can be lowered and consequently lowering the pollution of the environment. More info at http://www.energybox.dk/
+The project is about establishing possibilities for intelligent control of the energy consumption in private homes 
+through the development of a prototype for a so called ’home port’. This port establish access to coordinated control 
+of the different subsystems in a private home for control and surveillance of energy consumption etc. Key concepts in 
+the project are coexistence of different technologies controlled through a common service layer in a private house. 
+The purpose of this coexistence is to create interoperability between the different technologies such that energy 
+consumption can be lowered and consequently lowering the pollution of the environment. 
+More info at http://www.energybox.dk/
 
-You can take a look at the wiki (https://github.com/home-port/HomePort/wiki) to see what's going on with the HomePort project.
+You can take a look at the wiki (https://github.com/home-port/HomePort/wiki) to see what's going on with the 
+HomePort project.
 
 Installation
 ============
