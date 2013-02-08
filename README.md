@@ -1,0 +1,4 @@
+Encourage
+=========
+
+Student work repository
