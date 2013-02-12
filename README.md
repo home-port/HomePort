@@ -3,5 +3,4 @@ Encourage
 
 Student work repository
 
-libev:
-sudo apt-get install libev-dev
+See https://github.com/eudyptula/Encourage/wiki for details
