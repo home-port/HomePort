@@ -5,6 +5,6 @@
 
 int main()
 {
-	printf("Hello, peter git\n");
-	return 0;
+   start("http");
+   return 0;
 }

@@ -1,3 +1,5 @@
 // webserver.h
 
-#include <ev.h>
+void start();
+void stop();
+
