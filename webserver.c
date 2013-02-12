@@ -12,11 +12,14 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
-//#include <errno.h>
-//#include <netinet/in.h>
-//#include <sys/wait.h>
-//#include <signal.h>
+// TODO What data size shall we use ?
+#define MAXDATASIZE 1024
 
+struct watcher_data {
+   char ip[INET6_ADDRSTRLEN];
+};
+
+// Get a socket to listen on
 static int get_socket(char *port) {
    int status, sockfd;
    struct addrinfo hints;
@@ -40,14 +43,14 @@ static int get_socket(char *port) {
 
       // Create socket
       if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) < 0) {
-         perror("socket error");
+         perror("socket");
          continue;
       }
 
       // Bind to socket
       if (bind(sockfd, p->ai_addr, p->ai_addrlen) != 0) {
          close(sockfd);
-         perror("bind error");
+         perror("bind");
          continue;
       }
 
@@ -65,7 +68,7 @@ static int get_socket(char *port) {
 
    // Listen on socket
    if (listen(sockfd, SOMAXCONN) < 0) {
-      perror("listen error");
+      perror("listen");
       exit(1);
    }
 
@@ -73,7 +76,7 @@ static int get_socket(char *port) {
 }
 
 // Get sockaddr, IPv4 or IPv6
-void *get_in_addr(struct sockaddr *sa)
+static void *get_in_addr(struct sockaddr *sa)
 {
    if (sa->sa_family == AF_INET) {
       // IPv4
@@ -84,16 +87,54 @@ void *get_in_addr(struct sockaddr *sa)
    }
 }
 
-static void callback(struct ev_loop *loop, struct ev_io *watcher, int revents) {
+// Stop a watcher, close its file descripter, and free its data and it
+static void kill_watcher(struct ev_loop *loop, struct ev_io *watcher) {
+   ev_io_stop(loop, watcher);
+   if (close(watcher->fd) != 0) {
+      perror("close");
+   }
+   free(watcher->data);
+   free(watcher);
+}
+
+// Read header
+static void hd_reader(struct ev_loop *loop, struct ev_io *watcher, int revents) {
+   int bytes;
+   char buffer[MAXDATASIZE];
+
+   // Receive some data
+   if ((bytes = recv(watcher->fd, buffer, MAXDATASIZE-1, 0)) < 0) {
+      perror("recv");
+      // TODO Handle errors better - look up error# etc.
+      kill_watcher(loop, watcher);
+   } else if (bytes == 0) {
+      struct watcher_data *data = watcher->data;
+      fprintf(stderr, "connection closed by %s\n", data->ip);
+      kill_watcher(loop, watcher);
+   }
+   buffer[bytes] = '\0';
+
+   // Print message
+   printf("%s\n", buffer);
+
+   // Send hello back
+   if (send(watcher->fd, "\n\nHello, world!", 15, 0) == -1)
+      perror("send");
+   kill_watcher(loop, watcher);
+}
+
+// Accept a connection
+static void accept_conn(struct ev_loop *loop, struct ev_io *watcher, int revents) {
    int in_fd;
    socklen_t in_size;
    struct sockaddr_storage in_addr;
    char s[INET6_ADDRSTRLEN];
+   struct ev_io *io_hd_watcher;
 
    // Accept connection
    in_size = sizeof in_addr;
    if ((in_fd = accept(watcher->fd, (struct sockaddr *)&in_addr, &in_size)) < 0) {
-      perror("accept error");
+      perror("accept");
       return;
    }
 
@@ -101,27 +142,38 @@ static void callback(struct ev_loop *loop, struct ev_io *watcher, int revents) {
    inet_ntop(in_addr.ss_family, get_in_addr((struct sockaddr *)&in_addr), s, sizeof s);
    printf("got connection from %s\n", s);
 
-   if (send(in_fd, "Hello, world!", 13, 0) == -1)
-      perror("send");
-   close(in_fd);
+   // Create custom data for watcher
+   struct watcher_data *data = malloc(sizeof(struct watcher_data));
+   strcpy(data->ip, s);
 
-   fprintf(stderr, "Someone forgot to write me :(\n");
+   // Create new watcher for this connection
+   io_hd_watcher = malloc(sizeof(struct ev_io));
+   io_hd_watcher->data = data;
+   ev_io_init(io_hd_watcher, hd_reader, in_fd, EV_READ);
+   ev_io_start(loop, io_hd_watcher);
+
+   // TODO Create timeout watcher
 }
 
-void start(char *port) {
+// Start the webserver
+void ws_start(char *port) {
    struct ev_loop *loop = EV_DEFAULT;
-   struct ev_io io_watcher;
+   struct ev_io io_conn_watcher;
 
    int sockfd = get_socket(port);
 
-   ev_io_init(&io_watcher, callback, sockfd, EV_READ);
-   ev_io_start(loop, &io_watcher);
+   ev_io_init(&io_conn_watcher, accept_conn, sockfd, EV_READ);
+   ev_io_start(loop, &io_conn_watcher);
 
    ev_run(loop, 0);
 
-   close(sockfd);
+   if (close(sockfd) != 0) {
+      perror("close");
+   }
 }
 
-void stop() {
+// Stop the webserver
+void ws_stop() {
+   ev_break(EV_DEFAULT, EVBREAK_ALL);
 }
 

@@ -5,6 +5,6 @@
 
 int main()
 {
-   start("http");
+   ws_start("http");
    return 0;
 }

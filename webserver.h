@@ -1,5 +1,5 @@
 // webserver.h
 
-void start();
-void stop();
+void ws_start();
+void ws_stop();
 
