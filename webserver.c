@@ -125,19 +125,26 @@ static void hd_reader(struct ev_loop *loop, struct ev_io *watcher, int revents) 
       perror("recv");
       // TODO Handle errors better - look up error# etc.
       kill_watcher(loop, watcher);
+      return;
    } else if (bytes == 0) {
       fprintf(stderr, "connection closed by %s\n", data->ip);
       kill_watcher(loop, watcher);
+      return;
    }
-   buffer[bytes] = '\0';
+   else
+   {
+      buffer[bytes] = '\0';
 
-   // Print message
-   printf("%s\n", buffer);
+      // Print message
+      printf("%s\n", buffer);
 
-   // Send hello back
-   if (send(watcher->fd, "\n\nHello, world!", 15, 0) == -1)
-      perror("send");
-   kill_watcher(loop, watcher);
+      // Send hello back
+      if (send(watcher->fd, "\n\nHello, world!", 15, 0) == -1)
+         perror("send");
+
+      // TODO Currently we kill the watcher, this is just temporarily. Thats why we have it inside the else..
+      kill_watcher(loop, watcher);
+   }
 }
 
 // Timeout handler
