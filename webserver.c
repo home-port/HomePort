@@ -15,8 +15,16 @@
 // TODO What data size shall we use ?
 #define MAXDATASIZE 1024
 
+// The time between a connection has been accepted till the client sends something
+#define TIMEOUT  15
+
 struct watcher_data {
    char ip[INET6_ADDRSTRLEN];
+   ev_timer *timeout;
+};
+
+struct timeout_data {
+   ev_io *watcher;
 };
 
 // Get a socket to listen on
@@ -97,10 +105,20 @@ static void kill_watcher(struct ev_loop *loop, struct ev_io *watcher) {
    free(watcher);
 }
 
+static void kill_timeout(struct ev_loop *loop, struct ev_timer *timeout)
+{
+   ev_timer_stop(loop, timeout);
+   free(timeout->data);
+   free(timeout);
+}
+
 // Read header
 static void hd_reader(struct ev_loop *loop, struct ev_io *watcher, int revents) {
    int bytes;
    char buffer[MAXDATASIZE];
+   struct watcher_data *data = watcher->data;
+
+   kill_timeout(loop, data->timeout);
 
    // Receive some data
    if ((bytes = recv(watcher->fd, buffer, MAXDATASIZE-1, 0)) < 0) {
@@ -108,7 +126,6 @@ static void hd_reader(struct ev_loop *loop, struct ev_io *watcher, int revents) 
       // TODO Handle errors better - look up error# etc.
       kill_watcher(loop, watcher);
    } else if (bytes == 0) {
-      struct watcher_data *data = watcher->data;
       fprintf(stderr, "connection closed by %s\n", data->ip);
       kill_watcher(loop, watcher);
    }
@@ -123,6 +140,17 @@ static void hd_reader(struct ev_loop *loop, struct ev_io *watcher, int revents) 
    kill_watcher(loop, watcher);
 }
 
+// Timeout handler
+static void timeout_cb(struct ev_loop *loop, struct ev_timer *timer, int revents)
+{
+   ev_io *watcher = ((struct timeout_data *) timer->data)->watcher;
+
+   printf("timeout: %s\n",((struct watcher_data *) watcher->data)->ip);
+
+   kill_watcher(loop, watcher);
+   kill_timeout(loop, timer);
+}
+
 // Accept a connection
 static void accept_conn(struct ev_loop *loop, struct ev_io *watcher, int revents) {
    int in_fd;
@@ -130,6 +158,7 @@ static void accept_conn(struct ev_loop *loop, struct ev_io *watcher, int revents
    struct sockaddr_storage in_addr;
    char s[INET6_ADDRSTRLEN];
    struct ev_io *io_hd_watcher;
+   struct ev_timer *timeout;
 
    // Accept connection
    in_size = sizeof in_addr;
@@ -142,15 +171,28 @@ static void accept_conn(struct ev_loop *loop, struct ev_io *watcher, int revents
    inet_ntop(in_addr.ss_family, get_in_addr((struct sockaddr *)&in_addr), s, sizeof s);
    printf("got connection from %s\n", s);
 
-   // Create custom data for watcher
-   struct watcher_data *data = malloc(sizeof(struct watcher_data));
-   strcpy(data->ip, s);
+   // Create timeout timer
+   struct timeout_data *tData = malloc(sizeof(struct timeout_data));
+   timeout = malloc(sizeof(struct ev_timer));
+   timeout->data = tData;
 
-   // Create new watcher for this connection
+   // Create new watcher with custom data for this connection
+   struct watcher_data *wData = malloc(sizeof(struct watcher_data));
+   strcpy(wData->ip, s);
+
    io_hd_watcher = malloc(sizeof(struct ev_io));
-   io_hd_watcher->data = data;
+   io_hd_watcher->data = wData;
+
+   // Set up the timeout and watcher references
+   tData->watcher = io_hd_watcher;
+   wData->timeout = timeout;
+
+   // Start timeout and watcher
    ev_io_init(io_hd_watcher, hd_reader, in_fd, EV_READ);
+   ev_timer_init(timeout, timeout_cb, TIMEOUT, 0.);
+
    ev_io_start(loop, io_hd_watcher);
+   ev_timer_start(loop, timeout);
 
    // TODO Create timeout watcher
 }
