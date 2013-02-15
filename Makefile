@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-c -Wall -g
 LDFLAGS=-lev
-SOURCES=main.c webserver.c
+SOURCES=main.c accept.c webserver.c client.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=wstest
 
@@ -28,3 +28,4 @@ debug:
 
 memcheck:
 	valgrind ./$(EXECUTABLE)
+
