@@ -15,3 +15,8 @@
 *.exe
 *.out
 *.app
+
+.DS_Store
+/.gitignore
+.gitignore
+/wstest

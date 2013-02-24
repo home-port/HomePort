@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-c -Wall -g
-LDFLAGS=-lev
-SOURCES=main.c client.c
+LDFLAGS=-lcurl
+SOURCES=main.c client.c tests.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=wsTester
 
