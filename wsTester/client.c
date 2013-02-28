@@ -28,11 +28,11 @@ char* simple_get_request(char* url)
 		}
 
 		curl_easy_cleanup(handle);
-		return "abc";
+		return "the result from curl";
 	}
 	else
 	{
 		perror("Could not initialize curl: ");
-		return "b";
+		return "";
 	}
 }
