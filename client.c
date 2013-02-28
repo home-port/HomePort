@@ -1,6 +1,7 @@
 // client.c
 
 #include "client.h"
+#include "http-parser/http_parser.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -17,7 +18,10 @@
 // the time between a connection has been accepted till the client sends something
 #define TIMEOUT  15
 
+http_parser_settings settings;
+
 struct watcher_data {
+   http_parser parser;
    char ip[INET6_ADDRSTRLEN];
    ev_timer *timeout;
 };
@@ -103,8 +107,8 @@ void ws_cli_init(struct ev_loop *loop, struct ev_io *watcher, int revents)
    int in_fd;
    socklen_t in_size;
    struct sockaddr_storage in_addr;
-   struct ev_io *io_hd_watcher;
-
+   struct ev_io *io_hd_watcher; 
+   
    // Accept connection
    in_size = sizeof in_addr;
    if ((in_fd = accept(watcher->fd, (struct sockaddr *)&in_addr, &in_size)) < 0) {
@@ -123,6 +127,7 @@ void ws_cli_init(struct ev_loop *loop, struct ev_io *watcher, int revents)
 
    // Create new watcher with custom data for this connection
    struct watcher_data *wData = malloc(sizeof(struct watcher_data));
+   http_parser_init(&(wData->parser), HTTP_REQUEST);
    strcpy(wData->ip, s);
 
    io_hd_watcher = malloc(sizeof(struct ev_io));
