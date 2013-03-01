@@ -10,6 +10,7 @@ int main()
 
    // Init webserver and start it
    ws_init(&ws_http, loop);
+   ws_http.port = "8080";
    ws_start(&ws_http);
 
    // Start the loop
