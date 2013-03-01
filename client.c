@@ -32,6 +32,7 @@
  */
 
 #include "client.h"
+#include "webserver.h"
 #include "http-parser/http_parser.h"
 
 #include <stdlib.h>
@@ -57,6 +58,9 @@ struct ws_client {
    struct ev_io io_watcher;              ///< LibEV watcher for data.
    http_parser parser;                   ///< The parser in use.
    http_parser_settings parser_settings; ///< Settings for the parser.
+   struct ws_instance *instance;         ///< Webserver instance.
+   struct ws_client *prev;               ///< Previous client list.
+   struct ws_client *next;               ///< Next client in list.
 };
 
 /// Get the in_addr from a sockaddr (IPv4 or IPv6)
@@ -98,8 +102,28 @@ static void kill_client(struct ws_client *client) {
       perror("close");
    }
 
+   // Remove from list
+   if (client->next != NULL)
+      client->next->prev = client->prev;
+   if (client->prev != NULL) {
+      client->prev->next = client->next;
+   } else {
+      client->instance->clients = client->next;
+   }
+
    // Cleanup
    free(client);
+}
+
+void ws_client_killall(struct ws_instance *instance) {
+   struct ws_client *next;
+   struct ws_client *client = instance->clients;
+
+   while (client != NULL) {
+      next = client->next;
+      kill_client(client);
+      client = next;
+   }
 }
 
 /// Client IO callback for the LibEV io watcher.
@@ -189,6 +213,12 @@ void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
    client->timeout_watcher.data = client;
    client->io_watcher.data = client;
    http_parser_init(&(client->parser), HTTP_REQUEST);
+
+   // Set up list
+   client->instance = watcher->data;
+   client->prev = NULL;
+   client->next = client->instance->clients;
+   client->instance->clients = client;
 
    // Start timeout and io watcher
    ev_io_init(&client->io_watcher, client_io_cb, in_fd, EV_READ);

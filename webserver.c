@@ -137,6 +137,9 @@ void ws_init(struct ws_instance *instance, struct ev_loop *loop)
    instance->log_level = WS_LOG_INFO;
    instance->log_cb = default_log_cb;
    instance->loop = loop;
+
+   // Initialise data
+   instance->clients = NULL;
 }
 
 void ws_start(struct ws_instance *instance)
@@ -169,6 +172,9 @@ void ws_stop(struct ws_instance *instance)
 {
    // Stop accept watcher
    ev_io_stop(instance->loop, &instance->watcher);
+
+   // Kill all clients
+   ws_client_killall(instance);
 
    // Close socket
    if (close(instance->sockfd) != 0) {

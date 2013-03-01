@@ -41,6 +41,9 @@
 #define CLIENT_H
 
 #include <ev.h>
+#include "webserver.h"
+
+struct ws_client;
 
 /// Initialise and accept client
 /**
@@ -55,6 +58,16 @@
  *  \param revents Not used.
  */
 void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents);
+
+/// Kill all clients in a runnning webserver instance
+/**
+ *  Designed to be used within ws_stop, but can also be used for other
+ *  purposes, where the desidered effect is to remove all clients from
+ *  the event loop and close their sockets.
+ *
+ *  \param instance The webserver instance.
+ */
+void ws_client_killall(struct ws_instance *instance);
 
 #endif
 

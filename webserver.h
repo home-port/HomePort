@@ -99,6 +99,7 @@ struct ws_instance {
    // Internal data
    int sockfd;                  ///< Socket file descriptor.
    struct ev_io watcher;        ///< LibEV IO Watcher for accepting connects.
+   void *clients;               ///< Pointer to first client in list
 };
 
 /// Initialise the webserver instance struct.
