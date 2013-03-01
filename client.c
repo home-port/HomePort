@@ -181,7 +181,7 @@ void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
    // Create client
    client = malloc(sizeof(struct ws_client));
    if (client == NULL) {
-      fprintf("ERROR: Cannot accept client (malloc return NULL)\n");
+      fprintf(stderr, "ERROR: Cannot accept client (malloc return NULL)\n");
       return;
    }
    strcpy(client->ip, ip_string);
