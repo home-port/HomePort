@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-c -Wall -g
 LDFLAGS=-lev
-SOURCES=main.c accept.c webserver.c client.c http-parser/http_parser.c
+SOURCES=main.c webserver.c client.c http-parser/http_parser.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=wstest
 

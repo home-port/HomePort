@@ -37,26 +37,47 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
 
+#include <ev.h>
+
+// TODO How do I "hide" the internal data of this struct ?
+struct ws_instance {
+   // User settings
+   char *port;
+   struct ev_loop *loop;
+   // Internal data
+   int sockfd;
+   struct ev_io watcher;
+};
+
+void ws_init(struct ws_instance *instance, struct ev_loop *loop);
+
 /// Start the webserver on a given port.
 /**
- *  The libev-based webserver is started by a call to this function. The
- *  webser will run in the same process/thread as the caller, thus this
- *  function will not return before the event loop is finished -- which
- *  would likely be never, unless it is told to stop.
+ *  The libev-based webserver is added to an event loop by a call to
+ *  this function. It is the caller's resposibility to start the
+ *  event loop, either before or after a call to this.
  *
  *  To stop the webserver again, one may call ws_stop().
  *
+ *  General code to start one instance of the weserver (on port 80):
+ *  \code
+ *  struct ev_loop *loop = EV_DEFAULT;
+ *  ws_start(80, loop);
+ *  ev_run(loop, 0);
+ *  \endcode
+ *
  *  \param port Port number to start webserver on.
+ *  \param loop The event loop to use.
  */
-void ws_start(char *port);
+void ws_start(struct ws_instance *instance);
 
 /// Stop an already running webserver.
 /**
  *  The webserver, startet with ws_start(), may be stopped by calling
- *  this function, which will break the event-loop and force ws_start to
- *  clean-up and return.
+ *  this function. It will take the webserver off the event loop and
+ *  clean up after it.
  */
-void ws_stop();
+void ws_stop(struct ws_instance *instance);
 
 #endif
 
