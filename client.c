@@ -127,10 +127,11 @@ static void client_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, in
 
 void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
 {
-   char s[INET6_ADDRSTRLEN];
+   char ip_string[INET6_ADDRSTRLEN];
    int in_fd;
    socklen_t in_size;
    struct sockaddr_storage in_addr;
+   struct ws_client *client;
    
    // Accept connection
    in_size = sizeof in_addr;
@@ -140,12 +141,15 @@ void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
    }
 
    // Print a nice message
-   inet_ntop(in_addr.ss_family, get_in_addr((struct sockaddr *)&in_addr), s, sizeof s);
-   printf("got connection from %s\n", s);
+   inet_ntop(in_addr.ss_family,
+         get_in_addr((struct sockaddr *)&in_addr),
+         ip_string,
+         sizeof ip_string);
+   printf("got connection from %s\n", ip_string);
 
    // Create client
-   struct ws_client *client = malloc(sizeof(struct ws_client));
-   strcpy(client->ip, s);
+   client = malloc(sizeof(struct ws_client));
+   strcpy(client->ip, ip_string);
    client->loop = loop;
    client->timeout_watcher.data = client;
    client->io_watcher.data = client;
