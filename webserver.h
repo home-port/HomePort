@@ -65,6 +65,14 @@
 
 #include <ev.h>
 
+enum ws_log_level {
+   WS_LOG_FATAL,
+   WS_LOG_ERROR,
+   WS_LOG_WARN,
+   WS_LOG_INFO,
+   WS_LOG_DEBUG
+};
+
 /// Instance of a webserver
 /**
  *  This stuct represents a instance of the webserver. The struct
@@ -81,11 +89,16 @@
  */
 struct ws_instance {
    // User settings
-   char *port;           ///< Port number to start webserver on.
-   struct ev_loop *loop; ///< LibEV loop to start webserver on.
+   struct ev_loop *loop;        ///< LibEV loop to start webserver on.
+   char *port;                  ///< Port number to start webserver on.
+   enum ws_log_level log_level; ///< The log level to use.
+   int (*log_cb)(
+         struct ws_instance *instance,
+         enum ws_log_level log_level,
+         const char *fmt, ...); ///< Callback for logging.
    // Internal data
-   int sockfd;           ///< Socket file descriptor.
-   struct ev_io watcher; ///< LibEV IO Watcher for accepting connects.
+   int sockfd;                  ///< Socket file descriptor.
+   struct ev_io watcher;        ///< LibEV IO Watcher for accepting connects.
 };
 
 /// Initialise the webserver instance struct.

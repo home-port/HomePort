@@ -37,6 +37,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 #include <ev.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -109,9 +110,32 @@ static int bind_listen(char *port)
    return sockfd;
 }
 
-void ws_init(struct ws_instance *instance, struct ev_loop *loop) {
+static int default_log_cb(
+      struct ws_instance *instance,
+      enum ws_log_level log_level,
+      const char *fmt, ...)
+{
+   int status;
+   va_list arg;
+
+   if (instance->log_level < log_level) return 0;
+
+   va_start(arg, fmt);
+   if (log_level <= WS_LOG_WARN)
+      status = vfprintf(stderr, fmt, arg);
+   else
+      status = vfprintf(stdout, fmt, arg);
+   va_end(arg);
+
+   return status;
+}
+
+void ws_init(struct ws_instance *instance, struct ev_loop *loop)
+{
    // Set default settings
    instance->port = "http";
+   instance->log_level = WS_LOG_INFO;
+   instance->log_cb = default_log_cb;
    instance->loop = loop;
 }
 
@@ -119,20 +143,22 @@ void ws_start(struct ws_instance *instance)
 {
    // Check port
    if (instance->port == NULL) {
-      fprintf(stderr, "Warning: No port number given, starting server \
-            on 'http'");
+      instance->log_cb(instance, WS_LOG_ERROR,
+               "No port number given, starting server on 'http'");
       instance->port = "http";
    }
 
    // Check loop
    if (instance->loop == NULL) {
-      fprintf(stderr, "Warning: No event loop given, starting server \
-            on 'EV_DEFAULT' loop. Loop will not be started.");
+      instance->log_cb(instance, WS_LOG_ERROR,
+            "No event loop given, starting server on 'EV_DEFAULT' \
+            loop. Loop will not be started.");
       instance->loop = EV_DEFAULT;
    }
 
    // Start server
-   printf("Starting server on port '%s'\n", instance->port);
+   instance->log_cb(instance, WS_LOG_INFO,
+         "Starting server on port '%s'\n", instance->port);
    instance->sockfd = bind_listen(instance->port);
    instance->watcher.data = instance;
    ev_io_init(&instance->watcher, ws_client_accept, instance->sockfd, EV_READ);
