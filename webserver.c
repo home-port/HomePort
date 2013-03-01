@@ -103,7 +103,8 @@ void ws_start(struct ws_instance *instance)
    // Start server
    printf("Starting server on port '%s'\n", instance->port);
    instance->sockfd = bind_listen(instance->port);
-   ev_io_init(&instance->watcher, ws_cli_init, instance->sockfd, EV_READ);
+   instance->watcher.data = instance;
+   ev_io_init(&instance->watcher, ws_client_accept, instance->sockfd, EV_READ);
    ev_io_start(instance->loop, &instance->watcher);
 }
 
