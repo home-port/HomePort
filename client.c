@@ -137,7 +137,7 @@ void ws_client_killall(struct ws_instance *instance) {
  */
 static void client_io_cb(struct ev_loop *loop, struct ev_io *watcher, int revents)
 {
-   int bytes;
+   size_t length, nparser;
    char buffer[MAXDATASIZE];
    struct ws_client *client = watcher->data;
 
@@ -145,15 +145,21 @@ static void client_io_cb(struct ev_loop *loop, struct ev_io *watcher, int revent
    //kill_timeout(loop, data->timeout);
 
    // Receive some data
-   if ((bytes = recv(watcher->fd, buffer, MAXDATASIZE-1, 0)) < 0) {
+   if ((length = recv(watcher->fd, buffer, MAXDATASIZE-1, 0)) < 0) {
       perror("recv");
       // TODO Handle errors better - look up error# etc.
       kill_client(client);
-   } else if (bytes == 0) {
+   } else if (length == 0) {
       fprintf(stderr, "connection closed by %s\n", client->ip);
       kill_client(client);
    }
-   buffer[bytes] = '\0';
+   //
+   nparser = http_parser_execute(&client->parser, &client->parser_settings, buffer, length);
+   if (nparser == length) {
+      perror("parse");
+      // handle error 
+   }
+   buffer[length] = '\0';
 
    // Print message
    printf("%s\n", buffer);
