@@ -38,12 +38,21 @@ void init_tests()
 	init_libcurl();
 }
 
-int basic_connection_test(char* url)
+int basic_get_contains_test(char* url, char* contains)
 {
 	char *received = simple_get_request(url);
-	printf("%s", received);
+	int result = 0;
 
+	if(strstr(received, contains) != NULL)
+	{
+		result = 1;
+	}
 	free(received);
 
+	return result;
+}
+
+int basic_get_multithreaded_test(char* url, char* contains)
+{
 	return 1;
 }

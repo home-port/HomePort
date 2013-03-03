@@ -38,6 +38,7 @@
 
 void init_tests();
 
-int basic_connection_test(char* url);
+int basic_get_contains_test(char* url, char* contains);
+int basic_get_multithreaded_test(char* url, char* contains);
 
 #endif

@@ -36,12 +36,17 @@
 
 int main()
 {
+	int testresult;
 	init_tests();
 
 	printf("Running webserver tests:\n");
 
-	printf("\tBasic connection test: \n");
-	basic_connection_test("http://www.google.dk");
+	printf("\tBasic connection test: ");
+	testresult = basic_get_contains_test("http://localhost:8080", "world");
+	if(testresult == 1)
+		printf("Success");
+	else
+		printf("Failed");
 
 	printf("\nDone.\n");
 
