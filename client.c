@@ -57,7 +57,6 @@ struct ws_client {
    struct ev_timer timeout_watcher;      ///< LibEV watcher for timeout.
    struct ev_io io_watcher;              ///< LibEV watcher for data.
    http_parser parser;                   ///< The parser in use.
-   http_parser_settings parser_settings; ///< Settings for the parser.
    struct ws_instance *instance;         ///< Webserver instance.
    struct ws_client *prev;               ///< Previous client list.
    struct ws_client *next;               ///< Next client in list.
@@ -126,6 +125,35 @@ void ws_client_killall(struct ws_instance *instance) {
    }
 }
 
+int message_begin_cb(http_parser *parser)
+{
+   //struct ws_client *client = parser->data;
+  
+   return 0;
+}
+
+int url_cb(http_parser *parser, const char *buf, size_t len)
+{
+   return 0;
+}
+
+int message_complete_cb(http_parser *parser)
+{
+   //printf("major nr: '%d' \n", parser->http_major);
+   //printf("state: '%c' \n", parser->state);
+   //printf("header state: '%c' \n", parser->header_state);
+   //printf("type: '%c' \n", parser->type);
+   return 0;
+}
+
+
+static http_parser_settings parser_settings = 
+{
+   .on_message_begin = message_begin_cb,
+   .on_url = url_cb,
+   .on_message_complete = message_complete_cb    
+};
+
 /// Client IO callback for the LibEV io watcher.
 /**
  *  This function recieves data from the clients, and is used as a
@@ -154,11 +182,11 @@ static void client_io_cb(struct ev_loop *loop, struct ev_io *watcher, int revent
       kill_client(client);
    }
    //
-  // nparser = http_parser_execute(&client->parser, &client->parser_settings, buffer, length);
-  // if (nparser == length) {
-  //    perror("parse");
-      // handle error 
-  // }
+   nparser = http_parser_execute(&client->parser, &parser_settings, buffer, length);
+   if (nparser == length) {
+      perror("parse");
+      //handle error 
+   }
    buffer[length] = '\0';
 
    // Print message
@@ -173,8 +201,7 @@ static void client_io_cb(struct ev_loop *loop, struct ev_io *watcher, int revent
 /// Client Timeout callback for the LibEV timeout watcher
 /**
  *  This function handles timeouts of a client, and is used as a
- *  callback for a LibEV timeout watcher.
- *
+ *  callback for a LibEV timeout watcher
  *  \param loop    The event loop, that the client is running on.
  *  \param watcher The timeout watcher that timed out.
  *  \param revents Not used.
