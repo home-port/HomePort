@@ -36,9 +36,23 @@
 
 #include "client.h"
 
+#define NTHREADS 10
+
+int multithreaded_results;
+pthread_mutex_t lock;
+pthread_t threadID[NTHREADS];
+
+struct mt_args {
+    char *url;
+    char* contains;
+    unsigned long assaults;
+};
+
 void init_tests();
 
 int basic_get_contains_test(char* url, char* contains);
-int basic_get_multithreaded_test(char* url, char* contains);
+int basic_get_multithreaded_stress_test(char* url, char* contains);
+
+void get_mt_loop(void *args);
 
 #endif

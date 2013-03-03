@@ -37,6 +37,7 @@
 #include <curl/curl.h>
 #include <stdlib.h>
  #include <string.h>
+ #include <pthread.h> 
 
 void init_libcurl();
 char* simple_get_request(char* url);

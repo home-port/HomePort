@@ -44,9 +44,16 @@ int main()
 	printf("\tBasic connection test: ");
 	testresult = basic_get_contains_test("http://localhost:8080", "world");
 	if(testresult == 1)
-		printf("Success");
+		printf("Success\n");
 	else
-		printf("Failed");
+		printf("Failed\n");
+
+	printf("\tBasic multithreaded stress test: ");
+	testresult = basic_get_multithreaded_stress_test("http://localhost:8080", "world");
+	if(testresult == 1)
+		printf("Sucess\n");
+	else
+		printf("Failed\n");
 
 	printf("\nDone.\n");
 

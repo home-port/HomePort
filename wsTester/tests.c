@@ -52,7 +52,52 @@ int basic_get_contains_test(char* url, char* contains)
 	return result;
 }
 
-int basic_get_multithreaded_test(char* url, char* contains)
+int basic_get_multithreaded_stress_test(char* url, char* contains)
 {
-	return 1;
+	int threads = 0;
+	int err = 0;
+	multithreaded_results = 1;
+
+	struct mt_args *args = malloc(sizeof(struct mt_args));
+	args->url = url;
+	args->contains = contains;
+	args->assaults = 9999;
+
+	while(threads < NTHREADS)
+    {
+        err=pthread_create(&(threadID[threads]), NULL, &get_mt_loop, (void*)args);
+        if(err != 0)
+            printf("\nError creating thread: %i %i %s",threads, err,strerror(err));
+        threads++;
+    }
+
+    threads = 0;
+    while(threads < NTHREADS)
+    {
+    	pthread_join((threadID[threads]), NULL);
+    	threads++;
+    }
+
+	return multithreaded_results;
+}
+
+void set_bad_multithreaded_result()
+{
+	pthread_mutex_lock(&lock);
+	multithreaded_results = 0;
+	pthread_mutex_unlock(&lock);
+}
+
+void get_mt_loop(void *args)
+{
+	struct mt_args *arguments = (struct mt_args *)args;
+	unsigned long i;
+	for(i = 0; i<arguments->assaults; i++)
+	{
+		if(basic_get_contains_test(arguments->url,arguments->contains) == 0)
+		{
+			set_bad_multithreaded_result();
+			break;
+		}
+	}
 }
