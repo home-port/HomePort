@@ -154,11 +154,11 @@ static void client_io_cb(struct ev_loop *loop, struct ev_io *watcher, int revent
       kill_client(client);
    }
    //
-   nparser = http_parser_execute(&client->parser, &client->parser_settings, buffer, length);
-   if (nparser == length) {
-      perror("parse");
+  // nparser = http_parser_execute(&client->parser, &client->parser_settings, buffer, length);
+  // if (nparser == length) {
+  //    perror("parse");
       // handle error 
-   }
+  // }
    buffer[length] = '\0';
 
    // Print message
