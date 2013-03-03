@@ -65,8 +65,6 @@ char* simple_get_request(char* url)
 			return "";
 		}
 
-		printf("HELLO WORLD: %s\n",userdata);
-
 		curl_easy_cleanup(handle);
 		return userdata;
 	}

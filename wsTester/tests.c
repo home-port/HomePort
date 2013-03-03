@@ -41,8 +41,9 @@ void init_tests()
 int basic_connection_test(char* url)
 {
 	char *received = simple_get_request(url);
+	printf("%s", received);
 
-	//printf("%s", received);
+	free(received);
 
 	return 1;
 }

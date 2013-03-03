@@ -40,7 +40,10 @@ int main()
 
 	printf("Running webserver tests:\n");
 
-	printf("\tBasic connection test: %i\n",basic_connection_test("http://localhost:8080"));
+	printf("\tBasic connection test: \n");
+	basic_connection_test("http://www.google.dk");
+
+	printf("\nDone.\n");
 
 	return 0;
 }
