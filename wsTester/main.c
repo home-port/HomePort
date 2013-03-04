@@ -1,14 +1,61 @@
+// main.c
+
+/*  Copyright 2013 Aalborg University. All rights reserved.
+ *   
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *  
+ *  1. Redistributions of source code must retain the above copyright
+ *  notice, this list of conditions and the following disclaimer.
+ *  
+ *  2. Redistributions in binary form must reproduce the above copyright
+ *  notice, this list of conditions and the following disclaimer in the
+ *  documentation and/or other materials provided with the distribution.
+ *  
+ *  THIS SOFTWARE IS PROVIDED BY Aalborg University ''AS IS'' AND ANY
+ *  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ *  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ *  PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
+ *  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ *  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ *  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ *  SUCH DAMAGE.
+ *  
+ *  The views and conclusions contained in the software and
+ *  documentation are those of the authors and should not be interpreted
+ *  as representing official policies, either expressed.
+ */
+
 #include <stdio.h>
 #include "tests.h"
 
 int main()
 {
+	int testresult;
 	init_tests();
 
 	printf("Running webserver tests:\n");
 
-	int r = basic_connection_test("http://localhost");
-	printf("\tBasic connection test: %i\n",r);
+	printf("\tBasic connection test: ");
+	testresult = basic_get_contains_test("http://localhost:8080", "world");
+	if(testresult == 1)
+		printf("Success\n");
+	else
+		printf("Failed\n");
+
+	printf("\tBasic multithreaded stress test: ");
+	testresult = basic_get_multithreaded_stress_test("http://localhost:8080", "world");
+	if(testresult == 1)
+		printf("Sucess\n");
+	else
+		printf("Failed\n");
+
+	printf("\nDone.\n");
 
 	return 0;
 }
