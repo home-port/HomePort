@@ -59,6 +59,8 @@ struct ws_client;
  */
 void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents);
 
+void ws_client_kill(struct ws_client *client);
+
 /// Kill all clients in a runnning webserver instance
 /**
  *  Designed to be used within ws_stop, but can also be used for other

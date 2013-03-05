@@ -82,6 +82,15 @@ static int bind_listen(char *port)
          continue;
       }
 
+      // TODO Reuse addr is on for testing purposes
+//#ifdef DEBUG
+//      int yes = 1;
+//      if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+//         perror("setsockopt");
+//         continue;
+//      }
+//#endif
+
       // Bind to socket
       if (bind(sockfd, p->ai_addr, p->ai_addrlen) != 0) {
          close(sockfd);

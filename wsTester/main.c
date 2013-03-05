@@ -48,14 +48,14 @@ int main()
 	else
 		printf("Failed\n");
 
-	printf("\tBasic multithreaded stress test: ");
-	testresult = basic_get_multithreaded_stress_test("http://localhost:8080", "world");
-	if(testresult == 1)
-		printf("Sucess\n");
-	else
-		printf("Failed\n");
+	//printf("\tBasic multithreaded stress test: ");
+	//testresult = basic_get_multithreaded_stress_test("http://localhost:8080", "world");
+	//if(testresult == 1)
+	//	printf("Sucess\n");
+	//else
+	//	printf("Failed\n");
 
-	printf("\nDone.\n");
+	//printf("\nDone.\n");
 
 	return 0;
 }

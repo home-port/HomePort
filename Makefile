@@ -29,7 +29,7 @@
 # as representing official policies, either expressed.
 
 CC=gcc
-CFLAGS=-c -Wall -g
+CFLAGS=-c -Wall -g -DDEBUG
 LDFLAGS=-lev
 SOURCES=main.c webserver.c client.c http-parser/http_parser.c
 OBJECTS=$(SOURCES:.c=.o)

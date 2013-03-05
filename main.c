@@ -39,6 +39,10 @@ int main()
    struct ws_instance ws_http;
    struct ev_loop *loop = EV_DEFAULT;
 
+#ifdef DEBUG
+   printf("Debugging is set\n");
+#endif
+
    // Init webserver and start it
    ws_init(&ws_http, loop);
    ws_http.port = "8080";
