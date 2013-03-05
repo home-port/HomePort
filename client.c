@@ -43,6 +43,7 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <errno.h>
 
 /// The maximum data size we can recieve
 #define MAXDATASIZE 1024
@@ -68,7 +69,8 @@ struct ws_client {
    char ip[INET6_ADDRSTRLEN];            ///< IP address of client.
    struct ev_loop *loop;                 ///< The event loop.
    struct ev_timer timeout_watcher;      ///< LibEV watcher for timeout.
-   struct ev_io io_watcher;              ///< LibEV watcher for data.
+   struct ev_io recv_watcher;            ///< Watcher for recieving data.
+   struct ev_io send_watcher;            ///< Watcher for sending data.
    http_parser parser;                   ///< The parser in use.
    struct ws_instance *instance;         ///< Webserver instance.
    struct ws_client *prev;               ///< Previous client list.
@@ -118,6 +120,11 @@ static int parser_message_complete_cb(http_parser *parser)
    return 0;
 }
 
+static void client_send_cb(struct ev_loop *loop, struct ev_io *watcher,
+      int revents)
+{
+}
+
 /// Client IO callback for the LibEV io watcher.
 /**
  *  This function recieves data from the clients, and is used as a
@@ -127,23 +134,24 @@ static int parser_message_complete_cb(http_parser *parser)
  *  \param watcher The IO watcher that recieved data.
  *  \param revents Not used.
  */
-static void client_io_cb(struct ev_loop *loop, struct ev_io *watcher, int revents)
+static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revents)
 {
    size_t recieved, parsed;
    char buffer[MAXDATASIZE];
    struct ws_client *client = watcher->data;
 
-   // Reset timeout
-   ev_timer_again(loop, &client->timeout_watcher);
-
    // Receive some data
    if ((recieved = recv(watcher->fd, buffer, MAXDATASIZE-1, 0)) < 0) {
+      if (recieved == -1 && errno == EWOULDBLOCK) {
+         fprintf(stderr, "libev callbacked called without data to recieve (client: %s)", client->ip);
+         return;
+      }
       perror("recv");
       // TODO Handle errors better - look up error# etc.
       ws_client_kill(client);
       return;
    } else if (recieved == 0) {
-      fprintf(stderr, "connection closed by %s\n", client->ip);
+      //printf("connection closed by %s\n", client->ip);
       ws_client_kill(client);
       return;
    }
@@ -156,8 +164,12 @@ static void client_io_cb(struct ev_loop *loop, struct ev_io *watcher, int revent
       return;
    }
 
+   // Reset timeout
+   client->timeout_watcher.repeat = TIMEOUT;
+   ev_timer_again(loop, &client->timeout_watcher);
+
    // Send hello back
-   printf("sending hello...\n");
+   //printf("sending hello...\n");
    if (send(watcher->fd, "\n\nHello, world!", 16, 0) == -1)
       perror("send");
    ws_client_kill(client);
@@ -174,7 +186,7 @@ static void client_io_cb(struct ev_loop *loop, struct ev_io *watcher, int revent
 static void client_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, int revents)
 {
    struct ws_client *client = watcher->data;
-   printf("timeout on %s\n", client->ip);
+   //printf("timeout on %s\n", client->ip);
    ws_client_kill(client);
 }
 
@@ -198,7 +210,7 @@ void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
          get_in_addr((struct sockaddr *)&in_addr),
          ip_string,
          sizeof ip_string);
-   printf("got connection from %s\n", ip_string);
+   //printf("got connection from %s\n", ip_string);
 
    // Create client and parser
    client = malloc(sizeof(struct ws_client));
@@ -209,7 +221,7 @@ void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
    strcpy(client->ip, ip_string);
    client->loop = loop;
    client->timeout_watcher.data = client;
-   client->io_watcher.data = client;
+   client->recv_watcher.data = client;
    http_parser_init(&(client->parser), HTTP_REQUEST);
    client->parser.data = client;
 
@@ -222,8 +234,9 @@ void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
    client->instance->clients = client;
 
    // Start timeout and io watcher
-   ev_io_init(&client->io_watcher, client_io_cb, in_fd, EV_READ);
-   ev_io_start(loop, &client->io_watcher);
+   ev_io_init(&client->recv_watcher, client_recv_cb, in_fd, EV_READ);
+   ev_io_init(&client->send_watcher, client_send_cb, in_fd, EV_WRITE);
+   ev_io_start(loop, &client->recv_watcher);
    ev_init(&client->timeout_watcher, client_timeout_cb);
    client->timeout_watcher.repeat = TIMEOUT;
    ev_timer_again(loop, &client->timeout_watcher);
@@ -238,8 +251,9 @@ void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
  */
 void ws_client_kill(struct ws_client *client) {
    // Stop watchers
-   int sockfd = client->io_watcher.fd;
-   ev_io_stop(client->loop, &client->io_watcher);
+   int sockfd = client->recv_watcher.fd;
+   ev_io_stop(client->loop, &client->recv_watcher);
+   ev_io_stop(client->loop, &client->send_watcher);
    ev_timer_stop(client->loop, &client->timeout_watcher);
 
    // Close socket

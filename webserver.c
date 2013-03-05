@@ -44,6 +44,7 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <fcntl.h>
 
 /// Get the socket file descriptor for a port number.
 /**
@@ -81,6 +82,9 @@ static int bind_listen(char *port)
          perror("socket");
          continue;
       }
+
+      // Change to non-blocking sockets
+      fcntl(sockfd, F_SETFL, O_NONBLOCK);
 
       // TODO Reuse addr is on for testing purposes
 #ifdef DEBUG
