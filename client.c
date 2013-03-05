@@ -150,14 +150,15 @@ static void client_io_cb(struct ev_loop *loop, struct ev_io *watcher, int revent
 
    // Parse recieved data
    parsed = http_parser_execute(&client->parser, &parser_settings, buffer, recieved);
-   if (parsed == recieved) {
+   if (parsed != recieved) {
       perror("parse");
       ws_client_kill(client);
       return;
    }
 
    // Send hello back
-   if (send(watcher->fd, "\n\nHello, world!", 15, 0) == -1)
+   printf("sending hello...\n");
+   if (send(watcher->fd, "\n\nHello, world!", 16, 0) == -1)
       perror("send");
    ws_client_kill(client);
 }
@@ -173,7 +174,7 @@ static void client_io_cb(struct ev_loop *loop, struct ev_io *watcher, int revent
 static void client_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, int revents)
 {
    struct ws_client *client = watcher->data;
-   printf("timeout: %s\n", client->ip);
+   printf("timeout on %s\n", client->ip);
    ws_client_kill(client);
 }
 
@@ -216,6 +217,8 @@ void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
    client->instance = watcher->data;
    client->prev = NULL;
    client->next = client->instance->clients;
+   if (client->next != NULL)
+      client->next->prev = client;
    client->instance->clients = client;
 
    // Start timeout and io watcher
@@ -234,14 +237,13 @@ void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
  *  \param client The client to kill.
  */
 void ws_client_kill(struct ws_client *client) {
-   if (client == NULL) return;
-
    // Stop watchers
+   int sockfd = client->io_watcher.fd;
    ev_io_stop(client->loop, &client->io_watcher);
    ev_timer_stop(client->loop, &client->timeout_watcher);
 
    // Close socket
-   if (close(client->io_watcher.fd) != 0) {
+   if (close(sockfd) != 0) {
       perror("close");
    }
 
