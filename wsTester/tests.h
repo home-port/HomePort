@@ -36,7 +36,7 @@
 
 #include "client.h"
 
-#define NTHREADS 10
+#define NTHREADS 16
 
 int multithreaded_results;
 pthread_mutex_t lock;
