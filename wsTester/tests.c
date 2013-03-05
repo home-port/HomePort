@@ -47,6 +47,10 @@ int basic_get_contains_test(char* url, char* contains)
 	{
 		result = 1;
 	}
+	else
+	{
+		printf("The following bad string was received: %s\n", received);
+	}
 	free(received);
 
 	return result;
