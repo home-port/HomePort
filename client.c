@@ -44,8 +44,9 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <errno.h>
+#include <stdarg.h>
 
-/// The maximum data size we can recieve
+/// The maximum data size we can recieve or send
 #define MAXDATASIZE 1024
 
 /// The amount of time a client may be inactive
@@ -72,6 +73,7 @@ struct ws_client {
    struct ev_io recv_watcher;            ///< Watcher for recieving data.
    struct ev_io send_watcher;            ///< Watcher for sending data.
    http_parser parser;                   ///< The parser in use.
+   char send_msg[MAXDATASIZE];           ///< Data to send
    struct ws_instance *instance;         ///< Webserver instance.
    struct ws_client *prev;               ///< Previous client list.
    struct ws_client *next;               ///< Next client in list.
@@ -123,6 +125,14 @@ static int parser_message_complete_cb(http_parser *parser)
 static void client_send_cb(struct ev_loop *loop, struct ev_io *watcher,
       int revents)
 {
+   struct ws_client *client = watcher->data;
+
+   printf("sending response to %s\n", client->ip);
+   if (send(watcher->fd, client->send_msg, strlen(client->send_msg), 0) == -1)
+      perror("send");
+   ev_io_stop(client->loop, &client->send_watcher);
+
+   ws_client_kill(client);
 }
 
 /// Client IO callback for the LibEV io watcher.
@@ -140,6 +150,8 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
    char buffer[MAXDATASIZE];
    struct ws_client *client = watcher->data;
 
+   printf("recieving data from %s\n", client->ip);
+
    // Receive some data
    if ((recieved = recv(watcher->fd, buffer, MAXDATASIZE-1, 0)) < 0) {
       if (recieved == -1 && errno == EWOULDBLOCK) {
@@ -151,7 +163,7 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
       ws_client_kill(client);
       return;
    } else if (recieved == 0) {
-      //printf("connection closed by %s\n", client->ip);
+      printf("connection closed by %s\n", client->ip);
       ws_client_kill(client);
       return;
    }
@@ -169,10 +181,7 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
    ev_timer_again(loop, &client->timeout_watcher);
 
    // Send hello back
-   //printf("sending hello...\n");
-   if (send(watcher->fd, "\n\nHello, world!", 16, 0) == -1)
-      perror("send");
-   ws_client_kill(client);
+   ws_client_send(client, "\n\nHello, world!");
 }
 
 /// Client Timeout callback for the LibEV timeout watcher
@@ -186,7 +195,7 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
 static void client_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, int revents)
 {
    struct ws_client *client = watcher->data;
-   //printf("timeout on %s\n", client->ip);
+   printf("timeout on %s\n", client->ip);
    ws_client_kill(client);
 }
 
@@ -210,7 +219,7 @@ void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
          get_in_addr((struct sockaddr *)&in_addr),
          ip_string,
          sizeof ip_string);
-   //printf("got connection from %s\n", ip_string);
+   printf("got connection from %s\n", ip_string);
 
    // Create client and parser
    client = malloc(sizeof(struct ws_client));
@@ -222,6 +231,7 @@ void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
    client->loop = loop;
    client->timeout_watcher.data = client;
    client->recv_watcher.data = client;
+   client->send_watcher.data = client;
    http_parser_init(&(client->parser), HTTP_REQUEST);
    client->parser.data = client;
 
@@ -240,6 +250,23 @@ void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
    ev_init(&client->timeout_watcher, client_timeout_cb);
    client->timeout_watcher.repeat = TIMEOUT;
    ev_timer_again(loop, &client->timeout_watcher);
+}
+
+void ws_client_send(struct ws_client *client, char *fmt, ...) {
+   int status;
+   va_list arg;
+
+   va_start(arg, fmt);
+   status = vsnprintf(client->send_msg, MAXDATASIZE, fmt, arg);
+   va_end(arg);
+
+   if (status >= MAXDATASIZE) {
+      fprintf(stderr, "Data is too large to send!");
+      ws_client_kill(client);
+      return;
+   }
+
+   ev_io_start(client->loop, &client->send_watcher);
 }
 
 /// Kill and clean up after a client
