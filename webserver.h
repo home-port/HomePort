@@ -102,6 +102,21 @@ struct ws_instance {
    void *clients;               ///< Pointer to first client in list
 };
 
+/// Create an instance of a webserver
+/**
+ * Before starting the webserver, an instance of the ws_instance struct is needed
+ * This struct is created using this function. You should only use this function to
+ * create the ws_instance struct with.
+*/
+struct ws_instance *ws_create_instance(char *port, struct ev_loop *loop);
+
+ /// Free an instance of a webserver
+/**
+ * When the web server should no longer be used, this function
+ * should be called to free the allocated memory.
+*/
+void ws_free_instance(struct ws_instance *instance);
+
 /// Initialise the webserver instance struct.
 /**
  *  Before starting the webserver, an instance of the struct ws_instance

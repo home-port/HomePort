@@ -36,7 +36,7 @@
 
 int main()
 {
-   struct ws_instance ws_http;
+   struct ws_instance *ws_http;
    struct ev_loop *loop = EV_DEFAULT;
 
 #ifdef DEBUG
@@ -44,15 +44,15 @@ int main()
 #endif
 
    // Init webserver and start it
-   ws_init(&ws_http, loop);
-   ws_http.port = "8080";
-   ws_start(&ws_http);
+   ws_http = ws_create_instance("http", loop);
+   ws_start(ws_http);
 
    // Start the loop
    ev_run(loop, 0);
 
    // Clean up the webserver
-   ws_stop(&ws_http);
+   ws_stop(ws_http);
+   ws_free_instance(ws_http);
 
    return 0;
 }

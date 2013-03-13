@@ -143,6 +143,32 @@ static int default_log_cb(
    return status;
 }
 
+struct ws_instance *ws_create_instance(char *port, struct ev_loop *loop)
+{
+   struct ws_instance *instance = malloc(sizeof (struct ws_instance));
+   if(instance == NULL)
+   {
+      fprintf(stderr, "ERROR: Cannot allocate memory for a new instance struct\n");
+      return NULL;
+   }
+
+   instance->port = port;
+   instance->loop = loop;
+
+   // TODO: These should be from a variable parameter list
+   instance->log_level = WS_LOG_INFO;
+   instance->log_cb = default_log_cb;
+
+   instance->clients = NULL;
+
+   return instance;
+}
+
+void ws_free_instance(struct ws_instance *instance)
+{
+   free(instance);
+}
+
 void ws_init(struct ws_instance *instance, struct ev_loop *loop)
 {
    // Set default settings
