@@ -34,9 +34,15 @@
 #include <stdio.h>
 #include "webserver.h"
 
+// TODO: Return true/false to stop parser
 void dummy_receive_header(const char* url, const char* method)
 {
    printf("Dummy Header Callback URL: %s METHOD: %s\n",url, method);
+}
+
+void dummy_receive_body(const char* body)
+{
+   printf("Dummy body callback:%s\n",body);
 }
 
 int main()
@@ -49,7 +55,7 @@ int main()
 #endif
 
    // Init webserver and start it
-   ws_http = ws_create_instance("http", &dummy_receive_header, loop);
+   ws_http = ws_create_instance("http", &dummy_receive_header, &dummy_receive_body, loop);
    ws_start(ws_http);
 
    // Start the loop

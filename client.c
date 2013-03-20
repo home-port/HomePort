@@ -52,18 +52,24 @@
  /// The maximum lengt of the URL
 #define MAXURLLENGTH 512
 
+// TODO: Make body not constant size
+ /// The maximum length of the body
+ #define MAXBODYLENGTH 1024
+
 /// The amount of time a client may be inactive
 #define TIMEOUT  15
 
 // Methods for http_parser settings
 static int parser_url_cb(http_parser *parser, const char *buf, size_t len);
 static int parser_headers_complete_cb(http_parser *parser);
+static int parser_body_cb(http_parser *parser, const char *buf, size_t len);
 
 /// Global settings for http_parser
 static http_parser_settings parser_settings = 
 {
    .on_url = parser_url_cb,
-   .on_headers_complete = parser_headers_complete_cb
+   .on_headers_complete = parser_headers_complete_cb,
+   .on_body = parser_body_cb
 };
 
 /// All data to represent a client
@@ -76,6 +82,7 @@ struct ws_client {
    http_parser parser;                   ///< The parser in use.
    char request_url[MAXURLLENGTH];       ///< The URL requested.
    int request_method;                   ///< The used method for a request.
+   char request_body[MAXBODYLENGTH];     ///< The BODY from the request.
    char send_msg[MAXDATASIZE];           ///< Data to send.
    struct ws_instance *instance;         ///< Webserver instance.
    struct ws_client *prev;               ///< Previous client list.
@@ -110,7 +117,7 @@ static int parser_headers_complete_cb(http_parser *parser)
    struct ws_instance *instance = client->instance;
    client->request_method = parser->method;
 
-   instance->header_callback(client->request_url, http_method_str(parser->method));
+   instance->header_callback(client->request_url, http_method_str(client->request_method));
 
    return 0;
 }
@@ -119,6 +126,21 @@ static int parser_url_cb(http_parser *parser, const char *buf, size_t len)
 {
    struct ws_client *client = parser->data;
    strncat(client->request_url, buf, len);
+   return 0;
+}
+
+static int parser_body_cb(http_parser *parser, const char *buf, size_t len)
+{
+   struct ws_client *client = parser->data;
+   struct ws_instance *instance = client->instance;
+
+   strncat(client->request_body, buf, len);
+   
+   if(http_body_is_final(parser))
+   {
+      instance->body_callback(client->request_body);
+   }
+
    return 0;
 }
 
