@@ -34,6 +34,11 @@
 #include <stdio.h>
 #include "webserver.h"
 
+void dummy_receive_header(const char* url, const char* method)
+{
+   printf("Dummy Header Callback URL: %s METHOD: %s\n",url, method);
+}
+
 int main()
 {
    struct ws_instance *ws_http;
@@ -44,7 +49,7 @@ int main()
 #endif
 
    // Init webserver and start it
-   ws_http = ws_create_instance("http", loop);
+   ws_http = ws_create_instance("http", &dummy_receive_header, loop);
    ws_start(ws_http);
 
    // Start the loop

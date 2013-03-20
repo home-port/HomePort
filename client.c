@@ -49,20 +49,21 @@
 /// The maximum data size we can recieve or send
 #define MAXDATASIZE 1024
 
+ /// The maximum lengt of the URL
+#define MAXURLLENGTH 512
+
 /// The amount of time a client may be inactive
 #define TIMEOUT  15
 
 // Methods for http_parser settings
-static int parser_message_begin_cb(http_parser *parser);
 static int parser_url_cb(http_parser *parser, const char *buf, size_t len);
-static int parser_message_complete_cb(http_parser *parser);
+static int parser_headers_complete_cb(http_parser *parser);
 
 /// Global settings for http_parser
 static http_parser_settings parser_settings = 
 {
-   .on_message_begin = parser_message_begin_cb,
    .on_url = parser_url_cb,
-   .on_message_complete = parser_message_complete_cb    
+   .on_headers_complete = parser_headers_complete_cb
 };
 
 /// All data to represent a client
@@ -73,7 +74,9 @@ struct ws_client {
    struct ev_io recv_watcher;            ///< Watcher for recieving data.
    struct ev_io send_watcher;            ///< Watcher for sending data.
    http_parser parser;                   ///< The parser in use.
-   char send_msg[MAXDATASIZE];           ///< Data to send
+   char request_url[MAXURLLENGTH];       ///< The URL requested.
+   int request_method;                   ///< The used method for a request.
+   char send_msg[MAXDATASIZE];           ///< Data to send.
    struct ws_instance *instance;         ///< Webserver instance.
    struct ws_client *prev;               ///< Previous client list.
    struct ws_client *next;               ///< Next client in list.
@@ -101,24 +104,21 @@ static void *get_in_addr(struct sockaddr *sa)
    }
 }
 
-static int parser_message_begin_cb(http_parser *parser)
+static int parser_headers_complete_cb(http_parser *parser)
 {
-   //struct ws_client *client = parser->data;
-  
+   struct ws_client *client = parser->data;
+   struct ws_instance *instance = client->instance;
+   client->request_method = parser->method;
+
+   instance->header_callback(client->request_url, http_method_str(parser->method));
+
    return 0;
 }
 
 static int parser_url_cb(http_parser *parser, const char *buf, size_t len)
 {
-   return 0;
-}
-
-static int parser_message_complete_cb(http_parser *parser)
-{
-   //printf("major nr: '%d' \n", parser->http_major);
-   //printf("state: '%c' \n", parser->state);
-   //printf("header state: '%c' \n", parser->header_state);
-   //printf("type: '%c' \n", parser->type);
+   struct ws_client *client = parser->data;
+   strncat(client->request_url, buf, len);
    return 0;
 }
 

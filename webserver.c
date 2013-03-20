@@ -143,7 +143,7 @@ static int default_log_cb(
    return status;
 }
 
-struct ws_instance *ws_create_instance(char *port, struct ev_loop *loop)
+struct ws_instance *ws_create_instance(char *port, void (*header_callback)(const char*, const char*), struct ev_loop *loop)
 {
    struct ws_instance *instance = malloc(sizeof (struct ws_instance));
    if(instance == NULL)
@@ -153,6 +153,9 @@ struct ws_instance *ws_create_instance(char *port, struct ev_loop *loop)
    }
 
    instance->port = port;
+
+   instance->header_callback = header_callback;
+
    instance->loop = loop;
 
    // TODO: These should be from a variable parameter list
