@@ -81,7 +81,7 @@ struct ws_client {
    struct ev_io send_watcher;            ///< Watcher for sending data.
    http_parser parser;                   ///< The parser in use.
    char request_url[MAXURLLENGTH];       ///< The URL requested.
-   int request_method;                   ///< The used method for a request.
+   enum http_method request_method;      ///< The used method for a request.
    char request_body[MAXBODYLENGTH];     ///< The BODY from the request.
    char send_msg[MAXDATASIZE];           ///< Data to send.
    struct ws_instance *instance;         ///< Webserver instance.
@@ -256,6 +256,10 @@ void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
    client->send_watcher.data = client;
    http_parser_init(&(client->parser), HTTP_REQUEST);
    client->parser.data = client;
+
+   client->request_url[0] = '\0';
+   client->request_body[0] = '\0';
+   client->request_method = -1;
 
    // Set up list
    client->instance = watcher->data;
