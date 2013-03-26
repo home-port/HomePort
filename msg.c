@@ -121,7 +121,7 @@ char* ws_msg_tostring(struct ws_msg* msg)
 		char body_length_str[(int)floor(log10(abs(body_length))) + 2];
 		sprintf(body_length_str, "%d", body_length);
 
-		response = str_builder(response, "Content-Length: ");
+		response = str_builder(response, "Content-Length:");
 		response = str_builder(response, body_length_str);
 		response = str_builder(response, CRLF);
 	}
