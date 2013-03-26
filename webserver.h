@@ -64,6 +64,7 @@
 #define WEBSERVER_H
 
 #include <ev.h>
+#include "msg.h"
 
 enum ws_log_level {
    WS_LOG_FATAL,

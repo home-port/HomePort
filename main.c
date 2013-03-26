@@ -38,6 +38,8 @@
 void dummy_receive_header(const char* url, const char* method)
 {
    printf("Dummy Header Callback URL: %s METHOD: %s\n",url, method);
+
+   // 
 }
 
 void dummy_receive_body(const char* body)
