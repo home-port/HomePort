@@ -139,12 +139,21 @@ static int parser_body_cb(http_parser *parser, const char *buf, size_t len)
 {
    struct ws_client *client = parser->data;
    struct ws_instance *instance = client->instance;
+   struct ws_msg *msg;
 
    strncat(client->request_body, buf, len);
    
    if(http_body_is_final(parser))
    {
-      instance->body_callback(client->request_body);
+      msg = instance->body_callback(client->request_body);
+
+      if(msg == NULL)
+      {
+         return 1;
+      }
+
+      ws_client_send(client, "%s", ws_msg_tostring(msg));
+      ws_msg_destroy(msg);
    }
 
    return 0;
