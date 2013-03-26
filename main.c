@@ -39,7 +39,7 @@ struct ws_msg* dummy_receive_header(const char* url, const char* method)
 {
    printf("Dummy Header Callback URL: %s METHOD: %s\n",url, method);
 
-   struct ws_msg *msg = ws_msg_create(200, "test body\n");
+   struct ws_msg *msg = ws_msg_create(HTTP_200, "test body\n");
    return msg;
 }
 
@@ -47,7 +47,7 @@ struct ws_msg* dummy_receive_body(const char* body)
 {
    printf("Dummy body callback:%s\n",body);
 
-   struct ws_msg *msg = ws_msg_create(200, NULL);
+   struct ws_msg *msg = ws_msg_create(HTTP_200, NULL);
    return msg;
 }
 
