@@ -115,11 +115,17 @@ static int parser_headers_complete_cb(http_parser *parser)
 {
    struct ws_client *client = parser->data;
    struct ws_instance *instance = client->instance;
+   struct ws_msg *msg;
    client->request_method = parser->method;
 
-   instance->header_callback(client->request_url, http_method_str(client->request_method));
-
-   return 0;
+   msg = instance->header_callback(client->request_url, http_method_str(client->request_method));
+   if(msg == NULL) {
+      return 0;
+   } else {
+      ws_client_send(client, "%s", ws_msg_tostring(msg));
+      ws_msg_destroy(msg);
+      return 1;
+   }
 }
 
 static int parser_url_cb(http_parser *parser, const char *buf, size_t len)
@@ -203,7 +209,7 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
    ev_timer_again(loop, &client->timeout_watcher);
 
    // Send hello back
-   ws_client_send(client, "\n\nHello, world!");
+   //ws_client_send(client, "\n\nHello, world!");
 }
 
 /// Client Timeout callback for the LibEV timeout watcher

@@ -92,8 +92,8 @@ struct ws_instance {
    // User settings
    struct ev_loop *loop;        ///< LibEV loop to start webserver on.
    char *port;                  ///< Port number to start webserver on.
-   void (*header_callback)(const char*,const char*);
-   void (*body_callback)(const char*);
+   struct ws_msg* (*header_callback)(const char*,const char*);
+   struct ws_msg* (*body_callback)(const char*);
    enum ws_log_level log_level; ///< The log level to use.
    int (*log_cb)(
          struct ws_instance *instance,
@@ -111,7 +111,7 @@ struct ws_instance {
  * This struct is created using this function. You should only use this function to
  * create the ws_instance struct with.
 */
-struct ws_instance *ws_create_instance(char *port, void (*header_callback)(const char*, const char*), void (*body_callback)(const char*), struct ev_loop *loop);
+struct ws_instance *ws_create_instance(char *port, struct ws_msg* (*header_callback)(const char*, const char*), struct ws_msg* (*body_callback)(const char*), struct ev_loop *loop);
 
  /// Free an instance of a webserver
 /**

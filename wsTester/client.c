@@ -1,4 +1,4 @@
-// main.c
+// client.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
  *   

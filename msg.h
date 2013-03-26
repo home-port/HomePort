@@ -33,6 +33,17 @@
 
 struct ws_msg;
 
-struct ws_msg* ws_msg_create(int status_code, char* body);
+#define HTTP_STATUS_CODE_MAP(XX) \
+	XX(200,200 OK) \
+	XX(404,404 Not Found)
+
+enum http_status_codes
+{
+#define XX(num, str) HTTP_##num = num,
+	HTTP_STATUS_CODE_MAP(XX)
+#undef XX
+};
+
+struct ws_msg* ws_msg_create(enum http_status_codes status_code, char* body);
 void ws_msg_destroy(struct ws_msg *msg);
 char* ws_msg_tostring(struct ws_msg* msg);

@@ -143,7 +143,7 @@ static int default_log_cb(
    return status;
 }
 
-struct ws_instance *ws_create_instance(char *port, void (*header_callback)(const char*, const char*), void (*body_callback)(const char*), struct ev_loop *loop)
+struct ws_instance *ws_create_instance(char *port, struct ws_msg* (*header_callback)(const char*, const char*), struct ws_msg* (*body_callback)(const char*), struct ev_loop *loop)
 {
    struct ws_instance *instance = malloc(sizeof (struct ws_instance));
    if(instance == NULL)

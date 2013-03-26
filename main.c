@@ -35,16 +35,20 @@
 #include "webserver.h"
 
 // TODO: Return true/false to stop parser
-void dummy_receive_header(const char* url, const char* method)
+struct ws_msg* dummy_receive_header(const char* url, const char* method)
 {
    printf("Dummy Header Callback URL: %s METHOD: %s\n",url, method);
 
-   // 
+   struct ws_msg *msg = ws_msg_create(200, "test body\n");
+   return msg;
 }
 
-void dummy_receive_body(const char* body)
+struct ws_msg* dummy_receive_body(const char* body)
 {
    printf("Dummy body callback:%s\n",body);
+
+   struct ws_msg *msg = ws_msg_create(200, NULL);
+   return msg;
 }
 
 int main()
