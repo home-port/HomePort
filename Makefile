@@ -31,7 +31,7 @@
 CC=gcc
 CFLAGS=-c -Wall -g -DDEBUG
 LDFLAGS=-lev -lm
-SOURCES=main.c webserver.c ws_client.c ws_http.c ws_instance.c http-parser/http_parser.c
+SOURCES=main.c ws_client.c ws_http.c ws_instance.c http-parser/http_parser.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=wstest
 
