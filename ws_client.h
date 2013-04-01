@@ -50,6 +50,8 @@ void ws_client_send(struct ws_client *client, char *fmt, ...);
 void ws_client_kill(struct ws_client *client);
 void ws_client_killall(struct ws_instance *instance);
 
+struct ws_settings *ws_client_get_settings(struct ws_client *client);
+
 #endif
 
 /** } */

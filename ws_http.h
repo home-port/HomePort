@@ -44,7 +44,7 @@ struct ws_response;
 struct ws_request *ws_request_create(struct ws_client *client);
 struct ws_client *ws_request_get_client(struct ws_request *req);
 void ws_request_set_method(struct ws_request *req);
-void ws_request_cat_url(
+int ws_request_cat_url(
       struct ws_request *req,
       const char *buf,
       size_t len);

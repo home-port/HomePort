@@ -127,7 +127,9 @@ static int parser_url_cb(http_parser *parser, const char *buf, size_t len)
 {
    struct ws_request *request = parser->data;
 
-   ws_request_cat_url(request, buf, len);
+   if (ws_request_cat_url(request, buf, len) != 0) {
+      return 1;
+   }
 
    return 0;
 }
@@ -370,3 +372,7 @@ void ws_client_killall(struct ws_instance *instance) {
 }
 
 
+struct ws_settings *ws_client_get_settings(struct ws_client *client)
+{
+   return client->settings;
+}

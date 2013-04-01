@@ -32,17 +32,13 @@
 */
 
 #include "ws_http.h"
+#include "ws_client.h"
 #include "http-parser/http_parser.h"
 
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-
-/// The maximum lengt of the URL
-#define MAXURLLENGTH 512
-
-/// The maximum length of the body
 
 #define HTTP_VERSION "HTTP/1.1"
 #define SP " "
@@ -53,7 +49,7 @@ struct ws_request
    struct ws_client *client;
    http_parser parser;                   ///< The parser in use.
 
-   char url[MAXURLLENGTH];       ///< The URL requested.
+   char *url;       ///< The URL requested.
    enum http_method method;      ///< The used method for a request.
    char *body;     ///< The BODY from the request.
 };
@@ -67,11 +63,19 @@ struct ws_response
 	char* full_string;
 };
 
+static int check_request(struct ws_request *req)
+{
+   size_t size = sizeof(req)+sizeof(req->url)+sizeof(req->body);
+   if (size > ws_client_get_settings(req->client)->max_request_size)
+      return 1;
+   else
+      return 0;
+}
+
 struct ws_request *ws_request_create(struct ws_client *client)
 {
    struct ws_request *req = malloc(sizeof(struct ws_request));
-	if(req == NULL)
-	{
+	if(req == NULL) {
 		fprintf(stderr, "ERROR: Cannot allocate memory\n");
 		return NULL;
 	}
@@ -79,10 +83,34 @@ struct ws_request *ws_request_create(struct ws_client *client)
    req->client = client;
    http_parser_init(&(req->parser), HTTP_REQUEST);
    req->parser.data = req;
-   req->url[0] = '\0';
-   req->body = malloc(sizeof(char));
-   req->body[0] = '\0';
+   req->url = NULL;
+   req->body = NULL;
    req->method = -1;
+
+   // Allocate initial url
+   req->url = malloc(sizeof(char));
+   if (req->url == NULL) {
+      fprintf(stderr, "ERROR: Cannot allocate memory\n");
+      ws_request_destroy(req);
+      return NULL;
+   }
+   req->url[0] = '\0';
+
+   // Allocate initial body
+   req->body = malloc(sizeof(char));
+   if (req->body == NULL) {
+      fprintf(stderr, "ERROR: Cannot allocate memory\n");
+      ws_request_destroy(req);
+      return NULL;
+   }
+   req->body[0] = '\0';
+
+   // Check initial size
+   if (check_request(req) != 0) {
+      fprintf(stderr, "ERROR: Max request size is set too low\n");
+      ws_request_destroy(req);
+      return NULL;
+   }
 
    return req;
 }
@@ -90,6 +118,7 @@ struct ws_request *ws_request_create(struct ws_client *client)
 void ws_request_destroy(struct ws_request *req)
 {
    free(req->body);
+   free(req->url);
    free(req);
 }
 
@@ -157,13 +186,30 @@ char *ws_request_get_body(struct ws_request *req)
    return req->body;
 }
 
-void ws_request_cat_url(
+int ws_request_cat_url(
       struct ws_request *req,
       const char *buf,
       size_t len)
 {
-   // TODO Check of out-of-bounds
+   size_t new_len = strlen(req->url)+len+1;
+   char *new_url = realloc(req->url, new_len);
+   
+   if (new_url == NULL) {
+      fprintf(stderr, "ERROR: Cannot allocation enough memory for " \
+            "url\n");
+      return 1;
+   }
+
+   req->url = new_url;
+   if (check_request(req) != 0) {
+      fprintf(stderr, "Request too big\n");
+      free(req->url);
+      req->url = NULL;
+      return 1;
+   }
+
    strncat(req->url, buf, len);
+   return 0;
 }
 
 int ws_request_cat_body(
@@ -181,6 +227,13 @@ int ws_request_cat_body(
    }
 
    req->body = new_body;
+   if (check_request(req) != 0) {
+      fprintf(stderr, "Request too big\n");
+      free(req->body);
+      req->body = NULL;
+      return 1;
+   }
+
    strncat(req->body, buf, len);
    return 0;
 }

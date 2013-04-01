@@ -63,6 +63,8 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
 
+#include <stddef.h>
+
 enum ws_log_level {
    WS_LOG_FATAL,
    WS_LOG_ERROR,
@@ -110,11 +112,13 @@ typedef struct ws_response *(*request_cb)(struct ws_request *req);
 // Settings struct
 struct ws_settings {
    unsigned short int port;
+   size_t max_request_size;
    request_cb header_cb;
    request_cb body_cb;
 };
 #define WS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
+   .max_request_size = 1024*1024, \
    .header_cb = NULL, \
    .body_cb = NULL }
 
