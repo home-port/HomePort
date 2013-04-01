@@ -42,9 +42,7 @@
 /// The maximum lengt of the URL
 #define MAXURLLENGTH 512
 
-// TODO: Make body not constant size
 /// The maximum length of the body
-#define MAXBODYLENGTH 1024
 
 #define HTTP_VERSION "HTTP/1.1"
 #define SP " "
@@ -57,7 +55,7 @@ struct ws_request
 
    char url[MAXURLLENGTH];       ///< The URL requested.
    enum http_method method;      ///< The used method for a request.
-   char body[MAXBODYLENGTH];     ///< The BODY from the request.
+   char *body;     ///< The BODY from the request.
 };
 
 struct ws_response
@@ -82,6 +80,7 @@ struct ws_request *ws_request_create(struct ws_client *client)
    http_parser_init(&(req->parser), HTTP_REQUEST);
    req->parser.data = req;
    req->url[0] = '\0';
+   req->body = malloc(sizeof(char));
    req->body[0] = '\0';
    req->method = -1;
 
@@ -90,6 +89,7 @@ struct ws_request *ws_request_create(struct ws_client *client)
 
 void ws_request_destroy(struct ws_request *req)
 {
+   free(req->body);
    free(req);
 }
 
@@ -166,13 +166,23 @@ void ws_request_cat_url(
    strncat(req->url, buf, len);
 }
 
-void ws_request_cat_body(
+int ws_request_cat_body(
       struct ws_request *req,
       const char *buf,
       size_t len)
 {
-   // TODO Check of out-of-bounds
+   size_t new_len = strlen(req->body)+len+1;
+   char *new_body = realloc(req->body, new_len);
+
+   if (new_body == NULL) {
+      fprintf(stderr, "ERROR: Cannot allocation enough memory for " \
+            "body\n");
+      return 1;
+   }
+
+   req->body = new_body;
    strncat(req->body, buf, len);
+   return 0;
 }
 
 size_t ws_request_parse(

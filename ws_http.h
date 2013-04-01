@@ -41,23 +41,24 @@ struct ws_client;
 struct ws_request;
 struct ws_response;
 
+struct ws_request *ws_request_create(struct ws_client *client);
 struct ws_client *ws_request_get_client(struct ws_request *req);
 void ws_request_set_method(struct ws_request *req);
-void ws_response_destroy(struct ws_response *res);
 void ws_request_cat_url(
       struct ws_request *req,
       const char *buf,
       size_t len);
-void ws_request_cat_body(
+int ws_request_cat_body(
       struct ws_request *req,
       const char *buf,
       size_t len);
-char* ws_response_str(struct ws_response* res);
-struct ws_request *ws_request_create(struct ws_client *client);
 size_t ws_request_parse(
       struct ws_request *req,
       http_parser_settings *settings,
       const char *buf,
       size_t len);
+
+void ws_response_destroy(struct ws_response *res);
+char* ws_response_str(struct ws_response* res);
 
 #endif

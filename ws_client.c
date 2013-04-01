@@ -139,7 +139,9 @@ static int parser_body_cb(http_parser *parser, const char *buf, size_t len)
    struct ws_client *client = ws_request_get_client(request);
    struct ws_response *response;
 
-   ws_request_cat_body(request, buf, len);
+   if (ws_request_cat_body(request, buf, len) != 0) {
+      return 1;
+   }
    
    if(http_body_is_final(parser))
    {
@@ -235,6 +237,18 @@ static void client_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, in
    ws_client_kill(client);
 }
 
+/// Initialise and accept client
+/**
+ *  This function is designed to be used as a callback function within
+ *  LibEV. It will accept the conncetion as described inside the file
+ *  descripter within the watcher. It will also add timeout and io
+ *  watchers to the loop, which will handle the further communication
+ *  with the client.
+ *
+ *  \param loop The running event loop.
+ *  \param watcher The watcher that was tiggered on the connection.
+ *  \param revents Not used.
+ */
 void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
 {
    char ip_string[INET6_ADDRSTRLEN];
@@ -337,6 +351,14 @@ void ws_client_kill(struct ws_client *client) {
    free(client);
 }
 
+/// Kill all clients in a runnning webserver instance
+/**
+ *  Designed to be used within ws_stop, but can also be used for other
+ *  purposes, where the desidered effect is to remove all clients from
+ *  the event loop and close their sockets.
+ *
+ *  \param instance The webserver instance.
+ */
 void ws_client_killall(struct ws_instance *instance) {
    struct ws_client *next;
    struct ws_client *client = ws_instance_get_first_client(instance);
