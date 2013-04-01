@@ -34,7 +34,6 @@
 #include "ws_instance.h"
 #include "webserver.h"
 #include "ws_client.h"
-#include "ws_callbacks.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -65,9 +64,9 @@
 struct ws_instance {
    // User settings
    struct ev_loop *loop;        ///< LibEV loop to start webserver on.
-   char port[6];                  ///< Port number to start webserver on.
+   char port_str[6];                  ///< Port number to start webserver on.
    enum ws_log_level log_level; ///< The log level to use.
-   struct ws_callbacks callbacks;
+   struct ws_settings settings;
    int (*log_cb)(
          struct ws_instance *instance,
          enum ws_log_level log_level,
@@ -192,10 +191,8 @@ struct ws_instance *ws_instance_create(
       return NULL;
    }
 
-   sprintf(instance->port, "%i", settings->port);
-
-   instance->callbacks.header_cb = settings->header_cb;
-   instance->callbacks.body_cb = settings->body_cb;
+   memcpy(&instance->settings, settings, sizeof(struct ws_settings));
+   sprintf(instance->port_str, "%i", settings->port);
 
    instance->loop = loop;
 
@@ -242,8 +239,8 @@ void ws_start(struct ws_instance *instance)
 
    // Start server
    instance->log_cb(instance, WS_LOG_INFO,
-         "Starting server on port '%s'\n", instance->port);
-   instance->sockfd = bind_listen(instance->port);
+         "Starting server on port '%s'\n", instance->port_str);
+   instance->sockfd = bind_listen(instance->port_str);
    instance->watcher.data = instance;
    ev_io_init(&instance->watcher, ws_client_accept, instance->sockfd, EV_READ);
    ev_io_start(instance->loop, &instance->watcher);
@@ -271,10 +268,10 @@ void ws_stop(struct ws_instance *instance)
    }
 }
 
-struct ws_callbacks *ws_instance_get_callbacks(
+struct ws_settings *ws_instance_get_settings(
       struct ws_instance *instance)
 {
-   return &instance->callbacks;
+   return &instance->settings;
 }
 
 struct ws_client *ws_instance_get_first_client(

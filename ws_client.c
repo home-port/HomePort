@@ -34,7 +34,6 @@
 #include "ws_client.h"
 #include "ws_instance.h"
 #include "webserver.h"
-#include "ws_callbacks.h"
 #include "ws_http.h"
 #include "http-parser/http_parser.h"
 
@@ -79,7 +78,7 @@ struct ws_client {
    char send_msg[MAXDATASIZE];           ///< Data to send.
    struct ws_request *request;
    struct ws_instance *instance;         ///< Webserver instance.
-   struct ws_callbacks *callbacks;
+   struct ws_settings *settings;
    struct ws_client *prev;               ///< Previous client list.
    struct ws_client *next;               ///< Next client in list.
 };
@@ -114,7 +113,7 @@ static int parser_headers_complete_cb(http_parser *parser)
 
    ws_request_set_method(request);
 
-   response = client->callbacks->header_cb(request);
+   response = client->settings->header_cb(request);
    if(response == NULL) {
       return 0;
    } else {
@@ -145,7 +144,7 @@ static int parser_body_cb(http_parser *parser, const char *buf, size_t len)
    
    if(http_body_is_final(parser))
    {
-      response = client->callbacks->body_cb(request);
+      response = client->settings->body_cb(request);
 
       if(response == NULL)
       {
@@ -278,7 +277,7 @@ void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
       return;
    }
    client->instance = watcher->data;
-   client->callbacks = ws_instance_get_callbacks(client->instance); 
+   client->settings = ws_instance_get_settings(client->instance); 
    strcpy(client->ip, ip_string);
    client->loop = loop;
    client->timeout_watcher.data = client;

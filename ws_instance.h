@@ -38,7 +38,7 @@
 
 struct ws_client;
 
-struct ws_callbacks *ws_instance_get_callbacks(
+struct ws_settings *ws_instance_get_settings(
       struct ws_instance *instance);
 
 void ws_instance_set_first_client(
