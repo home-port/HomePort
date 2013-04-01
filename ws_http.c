@@ -1,4 +1,4 @@
-// http.c
+// ws_http.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   
@@ -31,7 +31,7 @@
 *  as representing official policies, either expressed.
 */
 
-#include "http.h"
+#include "ws_http.h"
 #include "http-parser/http_parser.h"
 
 #include <string.h>
@@ -187,7 +187,7 @@ size_t ws_request_parse(
 static char* http_status_codes_to_str(enum http_status_codes status)
 {
 #define XX(num, str) if(status == num) {return #str;}
-	HTTP_STATUS_CODE_MAP(XX)
+	WS_HTTP_STATUS_CODE_MAP(XX)
 #undef XX
 	return NULL;
 }

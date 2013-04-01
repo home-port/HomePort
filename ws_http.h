@@ -1,4 +1,4 @@
-// http.h
+// ws_http.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   
@@ -31,30 +31,17 @@
 *  as representing official policies, either expressed.
 */
 
-#ifndef HTTP_H
-#define HTTP_H
+#ifndef WS_HTTP_H
+#define WS_HTTP_H
 
+#include "webserver.h"
 #include "http-parser/http_parser.h"
 
 struct ws_client;
 struct ws_request;
 struct ws_response;
 
-#define HTTP_STATUS_CODE_MAP(XX) \
-	XX(200,200 OK) \
-	XX(404,404 Not Found)
-
-enum http_status_codes
-{
-#define XX(num, str) HTTP_##num = num,
-	HTTP_STATUS_CODE_MAP(XX)
-#undef XX
-};
-
 struct ws_client *ws_request_get_client(struct ws_request *req);
-char *ws_request_get_url(struct ws_request *req);
-const char *ws_request_get_method_str(struct ws_request *req);
-char *ws_request_get_body(struct ws_request *req);
 void ws_request_set_method(struct ws_request *req);
 void ws_response_destroy(struct ws_response *res);
 void ws_request_cat_url(
@@ -72,9 +59,5 @@ size_t ws_request_parse(
       http_parser_settings *settings,
       const char *buf,
       size_t len);
-struct ws_response *ws_response_create(
-      struct ws_request *req,
-      enum http_status_codes status,
-      char *body);
 
 #endif

@@ -1,7 +1,7 @@
-// callbacks.h
+// ws_callbacks.h
 
-#ifndef CALLBACKS_H
-#define CALLBACKS_H
+#ifndef WS_CALLBACKS_H
+#define WS_CALLBACKS_H
 
 #include "webserver.h"
 

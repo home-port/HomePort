@@ -31,9 +31,10 @@
  *  as representing official policies, either expressed.
  */
 
+#include "ws_instance.h"
 #include "webserver.h"
-#include "client.h"
-#include "callbacks.h"
+#include "ws_client.h"
+#include "ws_callbacks.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -180,7 +181,7 @@ static int default_log_cb(
  * is needed This struct is created using this function. You should only
  * use this function to create the ws_instance struct with.
 */
-struct ws_instance *ws_create_instance(
+struct ws_instance *ws_instance_create(
       char *port,
       request_cb header_callback,
       request_cb body_callback,
@@ -214,7 +215,7 @@ struct ws_instance *ws_create_instance(
  * When the web server should no longer be used, this function
  * should be called to free the allocated memory.
 */
-void ws_free_instance(struct ws_instance *instance)
+void ws_instance_free(struct ws_instance *instance)
 {
    free(instance);
 }

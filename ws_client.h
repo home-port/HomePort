@@ -1,4 +1,4 @@
-// client.h
+// ws_client.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
  *   
@@ -37,8 +37,8 @@
  *  \{
  */
 
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef WS_CLIENT_H
+#define WS_CLIENT_H
 
 #include <ev.h>
 #include "webserver.h"

@@ -63,9 +63,6 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
 
-#include <ev.h>
-#include "http.h"
-
 enum ws_log_level {
    WS_LOG_FATAL,
    WS_LOG_ERROR,
@@ -74,31 +71,43 @@ enum ws_log_level {
    WS_LOG_DEBUG
 };
 
+#define WS_HTTP_STATUS_CODE_MAP(XX) \
+	XX(200,200 OK) \
+	XX(404,404 Not Found)
+
+enum http_status_codes
+{
+#define XX(num, str) WS_HTTP_##num = num,
+	WS_HTTP_STATUS_CODE_MAP(XX)
+#undef XX
+};
+
+struct ev_loop;
 struct ws_instance;
+struct ws_request;
 
 typedef struct ws_response *(*request_cb)(struct ws_request *req);
 
-struct ws_instance *ws_create_instance(
+// Webserver instance functions
+struct ws_instance *ws_instance_create(
       char *port,
       request_cb header_callback,
       request_cb body_callback,
       struct ev_loop *loop);
-
-void ws_free_instance(struct ws_instance *instance);
-
+void ws_instance_free(struct ws_instance *instance);
 void ws_start(struct ws_instance *instance);
-
 void ws_stop(struct ws_instance *instance);
 
-struct ws_callbacks *ws_instance_get_callbacks(
-      struct ws_instance *instance);
+// Webserver request functions
+char *ws_request_get_url(struct ws_request *req);
+const char *ws_request_get_method_str(struct ws_request *req);
+char *ws_request_get_body(struct ws_request *req);
 
-void ws_instance_set_first_client(
-      struct ws_instance *instance,
-      struct ws_client *client);
-
-struct ws_client *ws_instance_get_first_client(
-      struct ws_instance *instance);
+// Webserver response functions
+struct ws_response *ws_response_create(
+      struct ws_request *req,
+      enum http_status_codes status,
+      char *body);
 
 #endif
 

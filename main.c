@@ -34,6 +34,7 @@
 #include "webserver.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <ev.h>
 
 static struct ws_instance *ws_http = NULL;
 
@@ -45,7 +46,7 @@ static struct ws_response* dummy_receive_header(struct ws_request *request)
 
    printf("Dummy Header Callback URL: %s METHOD: %s\n", url, method);
 
-   struct ws_response *response = ws_response_create(request, HTTP_200,
+   struct ws_response *response = ws_response_create(request, WS_HTTP_200,
          NULL);
    return response;
 }
@@ -56,7 +57,7 @@ static struct ws_response* dummy_receive_body(struct ws_request *request)
 
    printf("Dummy body callback:%s\n", body);
 
-   struct ws_response *response = ws_response_create(request, HTTP_200,
+   struct ws_response *response = ws_response_create(request, WS_HTTP_200,
          NULL);
    return response;
 }
@@ -65,7 +66,7 @@ static void exit_cb(int sig)
 {
    if (ws_http != NULL) {
       ws_stop(ws_http);
-      ws_free_instance(ws_http);
+      ws_instance_free(ws_http);
    }
    printf("Exiting...\n");
    exit(sig);
@@ -83,7 +84,7 @@ int main()
 #endif
 
    // Init webserver and start it
-   ws_http = ws_create_instance("8000", &dummy_receive_header, &dummy_receive_body, loop);
+   ws_http = ws_instance_create("8000", &dummy_receive_header, &dummy_receive_body, loop);
    ws_start(ws_http);
 
    // Start the loop

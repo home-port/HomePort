@@ -1,4 +1,4 @@
-// client.c
+// ws_client.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
  *   
@@ -31,9 +31,11 @@
  *  as representing official policies, either expressed.
  */
 
-#include "client.h"
+#include "ws_client.h"
+#include "ws_instance.h"
 #include "webserver.h"
-#include "callbacks.h"
+#include "ws_callbacks.h"
+#include "ws_http.h"
 #include "http-parser/http_parser.h"
 
 #include <stdlib.h>
