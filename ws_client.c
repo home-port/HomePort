@@ -48,6 +48,7 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <stdarg.h>
+#include <ev.h>
 
 /// The maximum data size we can recieve or send
 #define MAXDATASIZE 1024

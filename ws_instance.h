@@ -35,7 +35,8 @@
 #define WS_INSTANCE_H
 
 #include "webserver.h"
-#include "ws_client.h"
+
+struct ws_client;
 
 struct ws_callbacks *ws_instance_get_callbacks(
       struct ws_instance *instance);

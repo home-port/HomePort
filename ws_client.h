@@ -40,10 +40,10 @@
 #ifndef WS_CLIENT_H
 #define WS_CLIENT_H
 
-#include <ev.h>
 #include "webserver.h"
 
 struct ws_client;
+struct ev_io;
 
 /// Initialise and accept client
 /**
