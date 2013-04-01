@@ -78,8 +78,8 @@ int main()
 
    struct ws_settings settings = WS_SETTINGS_DEFAULT;
    settings.port = WS_PORT_HTTP_ALT;
-   settings.header_cb = &dummy_receive_header;
-   settings.body_cb = &dummy_receive_body;
+   settings.on_request_header_complete = &dummy_receive_header;
+   settings.on_request_complete = &dummy_receive_body;
 
    signal(SIGINT, exit_cb);
    signal(SIGTERM, exit_cb);

@@ -113,14 +113,24 @@ typedef struct ws_response *(*request_cb)(struct ws_request *req);
 struct ws_settings {
    unsigned short int port;
    size_t max_request_size;
-   request_cb header_cb;
-   request_cb body_cb;
+   request_cb on_request_begin;
+   request_cb on_request_url;
+   request_cb on_request_status;
+   request_cb on_request_header;
+   request_cb on_request_header_complete;
+   request_cb on_request_body;
+   request_cb on_request_complete;
 };
 #define WS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
    .max_request_size = 1024*1024, \
-   .header_cb = NULL, \
-   .body_cb = NULL }
+   .on_request_begin = NULL, \
+   .on_request_url = NULL, \
+   .on_request_status = NULL, \
+   .on_request_header = NULL, \
+   .on_request_header_complete = NULL, \
+   .on_request_body = NULL, \
+   .on_request_complete = NULL }
 
 // Webserver instance functions
 struct ws_instance *ws_instance_create(

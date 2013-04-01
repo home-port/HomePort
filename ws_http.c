@@ -72,6 +72,13 @@ static int check_request(struct ws_request *req)
       return 0;
 }
 
+void ws_request_destroy(struct ws_request *req)
+{
+   free(req->body);
+   free(req->url);
+   free(req);
+}
+
 struct ws_request *ws_request_create(struct ws_client *client)
 {
    struct ws_request *req = malloc(sizeof(struct ws_request));
@@ -113,13 +120,6 @@ struct ws_request *ws_request_create(struct ws_client *client)
    }
 
    return req;
-}
-
-void ws_request_destroy(struct ws_request *req)
-{
-   free(req->body);
-   free(req->url);
-   free(req);
 }
 
 struct ws_response *ws_response_create(
