@@ -71,14 +71,31 @@ enum ws_log_level {
    WS_LOG_DEBUG
 };
 
+// HTTP status codes according to
+// http://www.w3.org/Protocols/rfc2616/rfc2616.html
 #define WS_HTTP_STATUS_CODE_MAP(XX) \
 	XX(200,200 OK) \
 	XX(404,404 Not Found)
 
-enum http_status_codes
+enum ws_http_status_code
 {
 #define XX(num, str) WS_HTTP_##num = num,
 	WS_HTTP_STATUS_CODE_MAP(XX)
+#undef XX
+};
+
+// Port numbers are assigned according to
+// http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml
+// (Site may have very long loading time)
+#define WS_PORT_MAP(XX) \
+   XX(  80, HTTP    ) \
+   XX( 443, HTTPS   ) \
+   XX(8080, HTTP_ALT)
+
+enum ws_port
+{
+#define XX(num, str) WS_PORT_##str = num,
+   WS_PORT_MAP(XX)
 #undef XX
 };
 
@@ -90,11 +107,20 @@ struct ws_request;
 // Callbacks
 typedef struct ws_response *(*request_cb)(struct ws_request *req);
 
+// Settings struct
+struct ws_settings {
+   unsigned short int port;
+   request_cb header_cb;
+   request_cb body_cb;
+};
+#define WS_SETTINGS_DEFAULT { \
+   .port = WS_PORT_HTTP, \
+   .header_cb = NULL, \
+   .body_cb = NULL }
+
 // Webserver instance functions
 struct ws_instance *ws_instance_create(
-      char *port,
-      request_cb header_callback,
-      request_cb body_callback,
+      struct ws_settings *settings,
       struct ev_loop *loop);
 void ws_instance_free(struct ws_instance *instance);
 void ws_start(struct ws_instance *instance);
@@ -108,7 +134,7 @@ char *ws_request_get_body(struct ws_request *req);
 // Webserver response functions
 struct ws_response *ws_response_create(
       struct ws_request *req,
-      enum http_status_codes status,
+      enum ws_http_status_code status,
       char *body);
 
 #endif

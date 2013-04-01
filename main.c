@@ -76,6 +76,11 @@ int main()
 {
    struct ev_loop *loop = EV_DEFAULT;
 
+   struct ws_settings settings = WS_SETTINGS_DEFAULT;
+   settings.port = WS_PORT_HTTP_ALT;
+   settings.header_cb = &dummy_receive_header;
+   settings.body_cb = &dummy_receive_body;
+
    signal(SIGINT, exit_cb);
    signal(SIGTERM, exit_cb);
 
@@ -84,7 +89,7 @@ int main()
 #endif
 
    // Init webserver and start it
-   ws_http = ws_instance_create("8000", &dummy_receive_header, &dummy_receive_body, loop);
+   ws_http = ws_instance_create(&settings, loop);
    ws_start(ws_http);
 
    // Start the loop

@@ -62,7 +62,7 @@ struct ws_response
 {
    struct ws_client *client;
 
-	enum http_status_codes status;
+	enum ws_http_status_code status;
 	char* body;
 	char* full_string;
 };
@@ -95,7 +95,7 @@ void ws_request_destroy(struct ws_request *req)
 
 struct ws_response *ws_response_create(
       struct ws_request *req,
-      enum http_status_codes status,
+      enum ws_http_status_code status,
       char *body)
 {
    struct ws_response *res = malloc(sizeof(struct ws_response));
@@ -194,7 +194,7 @@ size_t ws_request_parse(
    return http_parser_execute(&req->parser, settings, buf, len);
 }
 
-static char* http_status_codes_to_str(enum http_status_codes status)
+static char* http_status_codes_to_str(enum ws_http_status_code status)
 {
 #define XX(num, str) if(status == num) {return #str;}
 	WS_HTTP_STATUS_CODE_MAP(XX)

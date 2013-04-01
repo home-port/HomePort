@@ -65,7 +65,7 @@
 struct ws_instance {
    // User settings
    struct ev_loop *loop;        ///< LibEV loop to start webserver on.
-   char *port;                  ///< Port number to start webserver on.
+   char port[6];                  ///< Port number to start webserver on.
    enum ws_log_level log_level; ///< The log level to use.
    struct ws_callbacks callbacks;
    int (*log_cb)(
@@ -182,9 +182,7 @@ static int default_log_cb(
  * use this function to create the ws_instance struct with.
 */
 struct ws_instance *ws_instance_create(
-      char *port,
-      request_cb header_callback,
-      request_cb body_callback,
+      struct ws_settings *settings,
       struct ev_loop *loop)
 {
    struct ws_instance *instance = malloc(sizeof (struct ws_instance));
@@ -194,10 +192,10 @@ struct ws_instance *ws_instance_create(
       return NULL;
    }
 
-   instance->port = port;
+   sprintf(instance->port, "%i", settings->port);
 
-   instance->callbacks.header_cb = header_callback;
-   instance->callbacks.body_cb = body_callback;
+   instance->callbacks.header_cb = settings->header_cb;
+   instance->callbacks.body_cb = settings->body_cb;
 
    instance->loop = loop;
 
@@ -234,13 +232,6 @@ void ws_instance_free(struct ws_instance *instance)
  */
 void ws_start(struct ws_instance *instance)
 {
-   // Check port
-   if (instance->port == NULL) {
-      instance->log_cb(instance, WS_LOG_ERROR,
-               "No port number given, starting server on 'http'");
-      instance->port = "http";
-   }
-
    // Check loop
    if (instance->loop == NULL) {
       instance->log_cb(instance, WS_LOG_ERROR,
