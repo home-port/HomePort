@@ -82,10 +82,12 @@ enum http_status_codes
 #undef XX
 };
 
+// Structs
 struct ev_loop;
 struct ws_instance;
 struct ws_request;
 
+// Callbacks
 typedef struct ws_response *(*request_cb)(struct ws_request *req);
 
 // Webserver instance functions
