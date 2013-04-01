@@ -33,6 +33,7 @@
 
 #include "webserver.h"
 #include "client.h"
+#include "callbacks.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -45,6 +46,36 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
+
+/// Instance of a webserver
+/**
+ *  This stuct represents a instance of the webserver. The struct
+ *  constains both settings for the webserver, which may be changed by
+ *  caller, and some internal data values, that are used to run the
+ *  webserver.
+ *
+ *  Making any changes to this struct after a call to ws_start() will
+ *  have either no effect or have undefined side-effects (most like
+ *  negative).
+ *
+ *  Use ws_init() to initialise this struct, ws_start() to
+ *  start a webserver, and ws_stop() to stop and clean up this instance.
+ */
+struct ws_instance {
+   // User settings
+   struct ev_loop *loop;        ///< LibEV loop to start webserver on.
+   char *port;                  ///< Port number to start webserver on.
+   enum ws_log_level log_level; ///< The log level to use.
+   struct ws_callbacks callbacks;
+   int (*log_cb)(
+         struct ws_instance *instance,
+         enum ws_log_level log_level,
+         const char *fmt, ...); ///< Callback for logging.
+   // Internal data
+   int sockfd;                  ///< Socket file descriptor.
+   struct ev_io watcher;        ///< LibEV IO Watcher for accepting connects.
+   void *clients;               ///< Pointer to first client in list
+};
 
 /// Get the socket file descriptor for a port number.
 /**
@@ -143,7 +174,17 @@ static int default_log_cb(
    return status;
 }
 
-struct ws_instance *ws_create_instance(char *port, struct ws_msg* (*header_callback)(const char*, const char*), struct ws_msg* (*body_callback)(const char*), struct ev_loop *loop)
+/// Create an instance of a webserver
+/**
+ * Before starting the webserver, an instance of the ws_instance struct
+ * is needed This struct is created using this function. You should only
+ * use this function to create the ws_instance struct with.
+*/
+struct ws_instance *ws_create_instance(
+      char *port,
+      request_cb header_callback,
+      request_cb body_callback,
+      struct ev_loop *loop)
 {
    struct ws_instance *instance = malloc(sizeof (struct ws_instance));
    if(instance == NULL)
@@ -154,8 +195,8 @@ struct ws_instance *ws_create_instance(char *port, struct ws_msg* (*header_callb
 
    instance->port = port;
 
-   instance->header_callback = header_callback;
-   instance->body_callback = body_callback;
+   instance->callbacks.header_cb = header_callback;
+   instance->callbacks.body_cb = body_callback;
 
    instance->loop = loop;
 
@@ -168,23 +209,28 @@ struct ws_instance *ws_create_instance(char *port, struct ws_msg* (*header_callb
    return instance;
 }
 
+/// Free an instance of a webserver
+/**
+ * When the web server should no longer be used, this function
+ * should be called to free the allocated memory.
+*/
 void ws_free_instance(struct ws_instance *instance)
 {
    free(instance);
 }
 
-void ws_init(struct ws_instance *instance, struct ev_loop *loop)
-{
-   // Set default settings
-   instance->port = "http";
-   instance->log_level = WS_LOG_INFO;
-   instance->log_cb = default_log_cb;
-   instance->loop = loop;
-
-   // Initialise data
-   instance->clients = NULL;
-}
-
+/// Start the webserver on a given port.
+/**
+ *  The libev-based webserver is added to an event loop by a call to
+ *  this function. It is the caller's resposibility to start the
+ *  event loop, either before or after a call to this.
+ *
+ *  To stop the webserver again, one may call ws_stop(). See ws_init()
+ *  for sample code.
+ *
+ *  \param instance The webserver instance to start. Initialised with
+ *  ws_init();
+ */
 void ws_start(struct ws_instance *instance)
 {
    // Check port
@@ -211,6 +257,14 @@ void ws_start(struct ws_instance *instance)
    ev_io_start(instance->loop, &instance->watcher);
 }
 
+/// Stop an already running webserver.
+/**
+ *  The webserver, startet with ws_start(), may be stopped by calling
+ *  this function. It will take the webserver off the event loop and
+ *  clean up after it.
+ *
+ *  \param instance The webserver instance to stop.
+ */
 void ws_stop(struct ws_instance *instance)
 {
    // Stop accept watcher
@@ -225,3 +279,21 @@ void ws_stop(struct ws_instance *instance)
    }
 }
 
+struct ws_callbacks *ws_instance_get_callbacks(
+      struct ws_instance *instance)
+{
+   return &instance->callbacks;
+}
+
+struct ws_client *ws_instance_get_first_client(
+      struct ws_instance *instance)
+{
+   return instance->clients;
+}
+
+void ws_instance_set_first_client(
+      struct ws_instance *instance,
+      struct ws_client *client)
+{
+   instance->clients = client;
+}

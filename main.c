@@ -31,45 +31,64 @@
  *  as representing official policies, either expressed.
  */
 
-#include <stdio.h>
 #include "webserver.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+static struct ws_instance *ws_http = NULL;
 
 // TODO: Return true/false to stop parser
-struct ws_msg* dummy_receive_header(const char* url, const char* method)
+static struct ws_response* dummy_receive_header(struct ws_request *request)
 {
-   printf("Dummy Header Callback URL: %s METHOD: %s\n",url, method);
+   char *url = ws_request_get_url(request);
+   const char *method = ws_request_get_method_str(request);
 
-   struct ws_msg *msg = ws_msg_create(HTTP_200, "test body\n");
-   return msg;
+   printf("Dummy Header Callback URL: %s METHOD: %s\n", url, method);
+
+   struct ws_response *response = ws_response_create(request, HTTP_200,
+         NULL);
+   return response;
 }
 
-struct ws_msg* dummy_receive_body(const char* body)
+static struct ws_response* dummy_receive_body(struct ws_request *request)
 {
-   printf("Dummy body callback:%s\n",body);
+   char *body = ws_request_get_body(request);
 
-   struct ws_msg *msg = ws_msg_create(HTTP_200, NULL);
-   return msg;
+   printf("Dummy body callback:%s\n", body);
+
+   struct ws_response *response = ws_response_create(request, HTTP_200,
+         NULL);
+   return response;
+}
+
+static void exit_cb(int sig)
+{
+   if (ws_http != NULL) {
+      ws_stop(ws_http);
+      ws_free_instance(ws_http);
+   }
+   printf("Exiting...\n");
+   exit(sig);
 }
 
 int main()
 {
-   struct ws_instance *ws_http;
    struct ev_loop *loop = EV_DEFAULT;
+
+   signal(SIGINT, exit_cb);
+   signal(SIGTERM, exit_cb);
 
 #ifdef DEBUG
    printf("Debugging is set\n");
 #endif
 
    // Init webserver and start it
-   ws_http = ws_create_instance("http", &dummy_receive_header, &dummy_receive_body, loop);
+   ws_http = ws_create_instance("8000", &dummy_receive_header, &dummy_receive_body, loop);
    ws_start(ws_http);
 
    // Start the loop
    ev_run(loop, 0);
 
-   // Clean up the webserver
-   ws_stop(ws_http);
-   ws_free_instance(ws_http);
-
+   exit(0);
    return 0;
 }

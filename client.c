@@ -33,6 +33,7 @@
 
 #include "client.h"
 #include "webserver.h"
+#include "callbacks.h"
 #include "http-parser/http_parser.h"
 
 #include <stdlib.h>
@@ -48,13 +49,6 @@
 
 /// The maximum data size we can recieve or send
 #define MAXDATASIZE 1024
-
- /// The maximum lengt of the URL
-#define MAXURLLENGTH 512
-
-// TODO: Make body not constant size
- /// The maximum length of the body
- #define MAXBODYLENGTH 1024
 
 /// The amount of time a client may be inactive
 #define TIMEOUT  15
@@ -79,12 +73,10 @@ struct ws_client {
    struct ev_timer timeout_watcher;      ///< LibEV watcher for timeout.
    struct ev_io recv_watcher;            ///< Watcher for recieving data.
    struct ev_io send_watcher;            ///< Watcher for sending data.
-   http_parser parser;                   ///< The parser in use.
-   char request_url[MAXURLLENGTH];       ///< The URL requested.
-   enum http_method request_method;      ///< The used method for a request.
-   char request_body[MAXBODYLENGTH];     ///< The BODY from the request.
    char send_msg[MAXDATASIZE];           ///< Data to send.
+   struct ws_request *request;
    struct ws_instance *instance;         ///< Webserver instance.
+   struct ws_callbacks *callbacks;
    struct ws_client *prev;               ///< Previous client list.
    struct ws_client *next;               ///< Next client in list.
 };
@@ -113,47 +105,50 @@ static void *get_in_addr(struct sockaddr *sa)
 
 static int parser_headers_complete_cb(http_parser *parser)
 {
-   struct ws_client *client = parser->data;
-   struct ws_instance *instance = client->instance;
-   struct ws_msg *msg;
-   client->request_method = parser->method;
+   struct ws_request *request = parser->data;
+   struct ws_client *client = ws_request_get_client(request);
+   struct ws_response *response;
 
-   msg = instance->header_callback(client->request_url, http_method_str(client->request_method));
-   if(msg == NULL) {
+   ws_request_set_method(request);
+
+   response = client->callbacks->header_cb(request);
+   if(response == NULL) {
       return 0;
    } else {
-      ws_client_send(client, "%s", ws_msg_tostring(msg));
-      ws_msg_destroy(msg);
+      ws_client_send(client, "%s", ws_response_str(response));
+      ws_response_destroy(response);
       return 1;
    }
 }
 
 static int parser_url_cb(http_parser *parser, const char *buf, size_t len)
 {
-   struct ws_client *client = parser->data;
-   strncat(client->request_url, buf, len);
+   struct ws_request *request = parser->data;
+
+   ws_request_cat_url(request, buf, len);
+
    return 0;
 }
 
 static int parser_body_cb(http_parser *parser, const char *buf, size_t len)
 {
-   struct ws_client *client = parser->data;
-   struct ws_instance *instance = client->instance;
-   struct ws_msg *msg;
+   struct ws_request *request = parser->data;
+   struct ws_client *client = ws_request_get_client(request);
+   struct ws_response *response;
 
-   strncat(client->request_body, buf, len);
+   ws_request_cat_body(request, buf, len);
    
    if(http_body_is_final(parser))
    {
-      msg = instance->body_callback(client->request_body);
+      response = client->callbacks->body_cb(request);
 
-      if(msg == NULL)
+      if(response == NULL)
       {
          return 1;
       }
 
-      ws_client_send(client, "%s", ws_msg_tostring(msg));
-      ws_msg_destroy(msg);
+      ws_client_send(client, "%s", ws_response_str(response));
+      ws_response_destroy(response);
    }
 
    return 0;
@@ -205,8 +200,12 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
       return;
    }
 
+   if (client->request == NULL) {
+      client->request = ws_request_create(client);
+   }
+
    // Parse recieved data
-   parsed = http_parser_execute(&client->parser, &parser_settings, buffer, recieved);
+   parsed = ws_request_parse(client->request, &parser_settings, buffer, recieved);
    if (parsed != recieved) {
       perror("parse");
       ws_client_kill(client);
@@ -216,9 +215,6 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
    // Reset timeout
    client->timeout_watcher.repeat = TIMEOUT;
    ev_timer_again(loop, &client->timeout_watcher);
-
-   // Send hello back
-   //ws_client_send(client, "\n\nHello, world!");
 }
 
 /// Client Timeout callback for the LibEV timeout watcher
@@ -264,25 +260,21 @@ void ws_client_accept(struct ev_loop *loop, struct ev_io *watcher, int revents)
       fprintf(stderr, "ERROR: Cannot accept client (malloc return NULL)\n");
       return;
    }
+   client->instance = watcher->data;
+   client->callbacks = ws_instance_get_callbacks(client->instance); 
    strcpy(client->ip, ip_string);
    client->loop = loop;
    client->timeout_watcher.data = client;
    client->recv_watcher.data = client;
    client->send_watcher.data = client;
-   http_parser_init(&(client->parser), HTTP_REQUEST);
-   client->parser.data = client;
-
-   client->request_url[0] = '\0';
-   client->request_body[0] = '\0';
-   client->request_method = -1;
+   client->request = NULL;
 
    // Set up list
-   client->instance = watcher->data;
    client->prev = NULL;
-   client->next = client->instance->clients;
+   client->next = ws_instance_get_first_client(client->instance);
    if (client->next != NULL)
       client->next->prev = client;
-   client->instance->clients = client;
+   ws_instance_set_first_client(client->instance, client);
 
    // Start timeout and io watcher
    ev_io_init(&client->recv_watcher, client_recv_cb, in_fd, EV_READ);
@@ -335,7 +327,7 @@ void ws_client_kill(struct ws_client *client) {
    if (client->prev != NULL) {
       client->prev->next = client->next;
    } else {
-      client->instance->clients = client->next;
+      ws_instance_set_first_client(client->instance, client->next);
    }
 
    // Cleanup
@@ -344,7 +336,7 @@ void ws_client_kill(struct ws_client *client) {
 
 void ws_client_killall(struct ws_instance *instance) {
    struct ws_client *next;
-   struct ws_client *client = instance->clients;
+   struct ws_client *client = ws_instance_get_first_client(instance);
 
    while (client != NULL) {
       next = client->next;
