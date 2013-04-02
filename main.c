@@ -34,32 +34,71 @@
 #include "webserver.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <ev.h>
 
 static struct ws_instance *ws_http = NULL;
 
-// TODO: Return true/false to stop parser
-static struct ws_response* dummy_receive_header(struct ws_request *request)
+static struct ws_response *on_begin(struct ws_request *req)
 {
-   char *url = ws_request_get_url(request);
-   const char *method = ws_request_get_method_str(request);
+   const char *ip = ws_request_get_client_ip(req);
 
-   printf("Dummy Header Callback URL: %s METHOD: %s\n", url, method);
+   printf("Message from %s\n", ip);
 
-   struct ws_response *response = ws_response_create(request, WS_HTTP_200,
-         NULL);
-   return response;
+   return NULL;
 }
 
-static struct ws_response* dummy_receive_body(struct ws_request *request)
+static struct ws_response *on_url(struct ws_request *req,
+      const char *url)
 {
-   char *body = ws_request_get_body(request);
+   const char *method = ws_request_get_method_str(req);
+   const char *ip = ws_request_get_client_ip(req);
 
-   printf("Dummy body callback:%s\n", body);
+   printf("[%s] %s %s\n", ip, method, url);
 
-   struct ws_response *response = ws_response_create(request, WS_HTTP_200,
-         NULL);
-   return response;
+   return NULL;
+}
+
+static struct ws_response *on_header(struct ws_request *req,
+      const char *field, const char *value)
+{
+   const char *ip = ws_request_get_client_ip(req);
+
+   printf("[%s] Header <%s,%s>\n", ip, field, value);
+
+   return NULL;
+}
+
+static struct ws_response *on_header_complete(struct ws_request *req)
+{
+   const char *ip = ws_request_get_client_ip(req);
+
+   printf("[%s] Headers complete\n", ip);
+
+   return NULL;
+}
+
+static struct ws_response *on_body(struct ws_request *req,
+      const char *chunk, size_t len)
+{
+   const char *ip = ws_request_get_client_ip(req);
+   
+   printf("[%s] Body chunk: '%.*s'", ip, len, chunk);
+
+   return NULL;
+}
+
+static struct ws_response *on_complete(struct ws_request *req)
+{
+   char *msg;
+   const char *ip = ws_request_get_client_ip(req);
+
+   printf("[%s] Message complete\n", ip);
+
+   msg = malloc((6+strlen(ip)+1)*sizeof(char));
+   sprintf(msg, "Hello %s", ip);
+
+   return ws_response_create(req, WS_HTTP_200, msg);
 }
 
 static void exit_cb(int sig)
@@ -78,8 +117,12 @@ int main()
 
    struct ws_settings settings = WS_SETTINGS_DEFAULT;
    settings.port = WS_PORT_HTTP_ALT;
-   settings.on_request_header_complete = &dummy_receive_header;
-   settings.on_request_complete = &dummy_receive_body;
+   settings.on_request_begin = on_begin;
+   settings.on_request_url = on_url;
+   settings.on_request_header = on_header;
+   settings.on_request_header_complete = on_header_complete;
+   settings.on_request_body = on_body;
+   settings.on_request_complete = on_complete;
 
    signal(SIGINT, exit_cb);
    signal(SIGTERM, exit_cb);

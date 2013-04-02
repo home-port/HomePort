@@ -1,4 +1,4 @@
-// ws_http.c
+// ws_response.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   
@@ -31,10 +31,9 @@
 *  as representing official policies, either expressed.
 */
 
-#include "ws_http.h"
-#include "ws_client.h"
-#include "ws_parser.h"
-#include "http-parser/http_parser.h"
+#include "ws_response.h"
+#include "ws_request.h"
+#include "webserver.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -45,16 +44,6 @@
 #define SP " "
 #define CRLF "\r\n"
 
-struct ws_request
-{
-   struct ws_client *client;
-   struct ws_parser *parser;
-
-   char *url;                    ///< The URL requested.
-   enum http_method method;      ///< The used method for a request.
-   char *body;                   ///< The BODY from the request.
-};
-
 struct ws_response
 {
    struct ws_client *client;
@@ -63,65 +52,6 @@ struct ws_response
 	char* body;
 	char* full_string;
 };
-
-static int check_request(struct ws_request *req)
-{
-   size_t size = sizeof(req)+sizeof(req->url)+sizeof(req->body);
-   if (size > ws_client_get_settings(req->client)->max_request_size)
-      return 1;
-   else
-      return 0;
-}
-
-void ws_request_destroy(struct ws_request *req)
-{
-   ws_parser_destroy(req->parser);
-   free(req->body);
-   free(req->url);
-   free(req);
-}
-
-struct ws_request *ws_request_create(struct ws_client *client)
-{
-   struct ws_request *req = malloc(sizeof(struct ws_request));
-	if(req == NULL) {
-		fprintf(stderr, "ERROR: Cannot allocate memory\n");
-		return NULL;
-	}
-
-   req->client = client;
-   req->parser = ws_parser_create();
-   req->url = NULL;
-   req->body = NULL;
-   req->method = -1;
-
-   // Allocate initial url
-   req->url = malloc(sizeof(char));
-   if (req->url == NULL) {
-      fprintf(stderr, "ERROR: Cannot allocate memory\n");
-      ws_request_destroy(req);
-      return NULL;
-   }
-   req->url[0] = '\0';
-
-   // Allocate initial body
-   req->body = malloc(sizeof(char));
-   if (req->body == NULL) {
-      fprintf(stderr, "ERROR: Cannot allocate memory\n");
-      ws_request_destroy(req);
-      return NULL;
-   }
-   req->body[0] = '\0';
-
-   // Check initial size
-   if (check_request(req) != 0) {
-      fprintf(stderr, "ERROR: Max request size is set too low\n");
-      ws_request_destroy(req);
-      return NULL;
-   }
-
-   return req;
-}
 
 struct ws_response *ws_response_create(
       struct ws_request *req,
@@ -135,7 +65,7 @@ struct ws_response *ws_response_create(
 		return NULL;
 	}
 
-   res->client = req->client;
+   res->client = ws_request_get_client(req);
    res->status = status;
    res->body = NULL;
    res->full_string = NULL;
@@ -160,83 +90,6 @@ void ws_response_destroy(struct ws_response *res)
    free(res->body);
    free(res->full_string);
    free(res);
-}
-
-struct ws_client *ws_request_get_client(struct ws_request *req)
-{
-   return req->client;
-}
-
-void ws_request_set_method(struct ws_request *req, enum http_method method)
-{
-   req->method = method;
-}
-
-char *ws_request_get_url(struct ws_request *req)
-{
-   return req->url;
-}
-
-const char *ws_request_get_method_str(struct ws_request *req)
-{
-   return http_method_str(req->method);
-}
-
-char *ws_request_get_body(struct ws_request *req)
-{
-   return req->body;
-}
-
-int ws_request_cat_url(
-      struct ws_request *req,
-      const char *buf,
-      size_t len)
-{
-   size_t new_len = strlen(req->url)+len+1;
-   char *new_url = realloc(req->url, new_len);
-   
-   if (new_url == NULL) {
-      fprintf(stderr, "ERROR: Cannot allocation enough memory for " \
-            "url\n");
-      return 1;
-   }
-
-   req->url = new_url;
-   if (check_request(req) != 0) {
-      fprintf(stderr, "Request too big\n");
-      free(req->url);
-      req->url = NULL;
-      return 1;
-   }
-
-   strncat(req->url, buf, len);
-   return 0;
-}
-
-int ws_request_cat_body(
-      struct ws_request *req,
-      const char *buf,
-      size_t len)
-{
-   size_t new_len = strlen(req->body)+len+1;
-   char *new_body = realloc(req->body, new_len);
-
-   if (new_body == NULL) {
-      fprintf(stderr, "ERROR: Cannot allocation enough memory for " \
-            "body\n");
-      return 1;
-   }
-
-   req->body = new_body;
-   if (check_request(req) != 0) {
-      fprintf(stderr, "Request too big\n");
-      free(req->body);
-      req->body = NULL;
-      return 1;
-   }
-
-   strncat(req->body, buf, len);
-   return 0;
 }
 
 static char* http_status_codes_to_str(enum ws_http_status_code status)
@@ -304,13 +157,5 @@ char* ws_response_str(struct ws_response* res)
 	res->full_string = response;
 
 	return res->full_string;
-}
-
-size_t ws_request_parse(
-      struct ws_request *req,
-      const char *buf,
-      size_t len)
-{
-   return ws_parser_parse(req->parser, buf, len);
 }
 

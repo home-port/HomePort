@@ -107,18 +107,24 @@ struct ws_instance;
 struct ws_request;
 
 // Callbacks
-typedef struct ws_response *(*request_cb)(struct ws_request *req);
+typedef struct ws_response *(*nodata_cb)(struct ws_request *req);
+typedef struct ws_response *(*url_cb)(struct ws_request *req,
+      const char *url);
+typedef struct ws_response *(*header_cb)(struct ws_request *req,
+      const char *field, const char *value);
+typedef struct ws_response *(*body_cb)(struct ws_request *req,
+      const char *chunk, const size_t len);
 
 // Settings struct
 struct ws_settings {
    unsigned short int port;
    size_t max_request_size;
-   request_cb on_request_begin;
-   request_cb on_request_url;
-   request_cb on_request_header;
-   request_cb on_request_header_complete;
-   request_cb on_request_body;
-   request_cb on_request_complete;
+   nodata_cb on_request_begin;
+   url_cb on_request_url;
+   header_cb on_request_header;
+   nodata_cb on_request_header_complete;
+   body_cb on_request_body;
+   nodata_cb on_request_complete;
 };
 #define WS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
@@ -141,7 +147,7 @@ void ws_stop(struct ws_instance *instance);
 // Webserver request functions
 char *ws_request_get_url(struct ws_request *req);
 const char *ws_request_get_method_str(struct ws_request *req);
-char *ws_request_get_body(struct ws_request *req);
+const char *ws_request_get_client_ip(struct ws_request *req);
 
 // Webserver response functions
 struct ws_response *ws_response_create(

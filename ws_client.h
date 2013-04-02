@@ -41,6 +41,7 @@
 #define WS_CLIENT_H
 
 #include "webserver.h"
+#include "ws_client.h"
 
 struct ws_client;
 struct ev_io;
@@ -51,6 +52,26 @@ void ws_client_kill(struct ws_client *client);
 void ws_client_killall(struct ws_instance *instance);
 
 struct ws_settings *ws_client_get_settings(struct ws_client *client);
+const char *ws_client_get_ip(struct ws_client *client);
+
+int ws_client_on_request_begin(struct ws_client *client, struct ws_request *req);
+int ws_client_on_request_url(
+      struct ws_client *client,
+      struct ws_request *req,
+      const char *url);
+int ws_client_on_request_header(
+      struct ws_client *client,
+      struct ws_request *req,
+      const char *field,
+      const char *value);
+int ws_client_on_request_header_complete(struct ws_client *client, struct ws_request *req);
+int ws_client_on_request_body(
+      struct ws_client *client,
+      struct ws_request *req,
+      const char *buf,
+      size_t len);
+int ws_client_on_request_complete(struct ws_client *client, struct ws_request *req);
+int ws_client_on_request_error(struct ws_client *client, struct ws_request *req);
 
 #endif
 

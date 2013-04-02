@@ -31,7 +31,7 @@
 CC=gcc
 MYCFLAGS=-c -Wall -g -DDEBUG $(CFLAGS)
 MYLDFLAGS=-lev -lm $(LDFLAGS)
-SOURCES=main.c ws_client.c ws_http.c ws_instance.c ws_parser.c http-parser/http_parser.c
+SOURCES=main.c ws_client.c ws_response.c ws_instance.c ws_request.c http-parser/http_parser.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=wstest
 

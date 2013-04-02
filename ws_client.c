@@ -33,8 +33,9 @@
 
 #include "ws_client.h"
 #include "ws_instance.h"
+#include "ws_request.h"
+#include "ws_response.h"
 #include "webserver.h"
-#include "ws_http.h"
 #include "http-parser/http_parser.h"
 
 #include <stdlib.h>
@@ -92,124 +93,116 @@ static void *get_in_addr(struct sockaddr *sa)
    }
 }
 
-//static int send_response(
-//      struct ws_client *client,
-//      struct ws_response *response)
-//{
-//   if(response == NULL) return 0;
-//   
-//   ws_client_send(client, "%s", ws_response_str(response));
-//   ws_response_destroy(response);
-//   return 1;
-//}
-//
-//static int parser_message_begin_cb(http_parser *parser)
-//{
-//   struct ws_response *response;
-//   struct ws_request *request = parser->data;
-//   struct ws_client *client = ws_request_get_client(request);
-//
-//   // Get data
-//   ws_request_set_method(request);
-//
-//   // Send callback
-//   if (client->settings->on_request_begin != NULL) {
-//      response = client->settings->on_request_begin(request);
-//      return send_response(client, response);
-//   }
-//
-//   return 0;
-//}
-//
-//static int parser_url_cb(http_parser *parser, const char *buf, size_t len)
-//{
-//   struct ws_response *response;
-//   struct ws_request *request = parser->data;
-//   struct ws_client *client = ws_request_get_client(request);
-//
-//   if (ws_request_cat_url(request, buf, len) != 0) {
-//      return 1;
-//   }
-//
-//   return 0;
-//}
-//
-//static int parser_header_field_cb(http_parser *parser, const char *buf, size_t len)
-//{
-//   struct ws_request *request = parser->data;
-//
-//   char *str = malloc((len+1)*sizeof(char));
-//   strncpy(str, buf, len);
-//   str[len] = '\0';
-//   printf("Field: %s\n", str);
-//   free(str);
-//
-//   return 0;
-//}
-//
-//static int parser_header_value_cb(http_parser *parser, const char *buf, size_t len)
-//{
-//   struct ws_request *request = parser->data;
-//
-//   char *str = malloc((len+1)*sizeof(char));
-//   strncpy(str, buf, len);
-//   str[len] = '\0';
-//   printf("Value: %s\n", str);
-//   free(str);
-//
-//   return 0;
-//}
-//
-//static int parser_headers_complete_cb(http_parser *parser)
-//{
-//   struct ws_request *request = parser->data;
-//   struct ws_client *client = ws_request_get_client(request);
-//   struct ws_response *response;
-//
-//   printf("Headers complete\n");
-//
-//   //response = client->settings->on_request_header_complete(request);
-//   //if(response == NULL) {
-//   //   return 0;
-//   //} else {
-//   //   ws_client_send(client, "%s", ws_response_str(response));
-//   //   ws_response_destroy(response);
-//   //   return 1;
-//   //}
-//
-//   return 0;
-//}
-//
-//static int parser_body_cb(http_parser *parser, const char *buf, size_t len)
-//{
-//   struct ws_request *request = parser->data;
-//   struct ws_client *client = ws_request_get_client(request);
-//   struct ws_response *response;
-//
-//   if (ws_request_cat_body(request, buf, len) != 0) {
-//      return 1;
-//   }
-//   
-//   if(http_body_is_final(parser))
-//   {
-//      response = client->settings->on_request_body(request);
-//
-//      if(response == NULL)
-//      {
-//         return 1;
-//      }
-//
-//      ws_client_send(client, "%s", ws_response_str(response));
-//      ws_response_destroy(response);
-//   }
-//
-//   return 0;
-//}
-//
-//static int parser_message_complete_cb(http_parser *parser)
-//{
-//   return 0;
-//}
+static int send_response(
+      struct ws_client *client,
+      struct ws_response *response)
+{
+   if(response == NULL) return 0;
+   
+   ws_client_send(client, "%s", ws_response_str(response));
+   ws_response_destroy(response);
+
+   return 1;
+}
+
+int ws_client_on_request_begin(
+      struct ws_client *client,
+      struct ws_request *req)
+{
+   struct ws_response *res;
+
+   if (client->settings->on_request_begin != NULL) {
+      res = client->settings->on_request_begin(req);
+      return send_response(client, res);
+   }
+
+   return 0;
+}
+
+int ws_client_on_request_url(
+      struct ws_client *client,
+      struct ws_request *req,
+      const char *url)
+{
+   struct ws_response *res;
+
+   if (client->settings->on_request_url != NULL) {
+      res = client->settings->on_request_url(req, url);
+      return send_response(client, res);
+   }
+
+   return 0;
+}
+
+int ws_client_on_request_header(
+      struct ws_client *client,
+      struct ws_request *req,
+      const char *field,
+      const char *value)
+{
+   struct ws_response *res;
+
+   if (client->settings->on_request_header != NULL) {
+      res = client->settings->on_request_header(req, field, value);
+      return send_response(client, res);
+   }
+
+   return 0;
+}
+
+int ws_client_on_request_header_complete(
+      struct ws_client *client,
+      struct ws_request *req)
+{
+   struct ws_response *res;
+
+   if (client->settings->on_request_header_complete != NULL) {
+      res = client->settings->on_request_header_complete(req);
+      return send_response(client, res);
+   }
+
+   return 0;
+}
+
+int ws_client_on_request_body(
+      struct ws_client *client,
+      struct ws_request *req,
+      const char *buf,
+      size_t len)
+{
+   struct ws_response *res;
+
+   if (client->settings->on_request_body != NULL) {
+      res = client->settings->on_request_body(req, buf, len);
+      return send_response(client, res);
+   }
+
+   return 0;
+}
+
+int ws_client_on_request_complete(
+      struct ws_client *client,
+      struct ws_request *req)
+{
+   struct ws_response *res;
+
+   if (client->settings->on_request_complete != NULL) {
+      res = client->settings->on_request_complete(req);
+      return send_response(client, res);
+   }
+
+   return 0;
+}
+
+int ws_client_on_request_error(
+      struct ws_client *client,
+      struct ws_request *req)
+{
+   fprintf(stderr, "Error during parsing of request\n");
+
+   // This should return non-zero to stop the parsing
+   return 1;
+}
 
 static void client_send_cb(struct ev_loop *loop, struct ev_io *watcher,
       int revents)
@@ -422,8 +415,13 @@ void ws_client_killall(struct ws_instance *instance) {
    }
 }
 
-
 struct ws_settings *ws_client_get_settings(struct ws_client *client)
 {
    return client->settings;
 }
+
+const char *ws_client_get_ip(struct ws_client *client)
+{
+   return client->ip;
+}
+

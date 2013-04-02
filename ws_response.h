@@ -1,4 +1,4 @@
-// ws_parser.h
+// ws_response.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   
@@ -31,18 +31,12 @@
 *  as representing official policies, either expressed.
 */
 
-#ifndef WS_PARSER_H
-#define WS_PARSER_H
+#ifndef WS_RESPONSE_H
+#define WS_RESPONSE_H
 
-#include <stddef.h>
+struct ws_response;
 
-struct ws_parser;
-
-struct ws_parser *ws_parser_create();
-void ws_parser_destroy(struct ws_parser *parser);
-size_t ws_parser_parse(
-      struct ws_parser *parser,
-      const char *buf,
-      size_t len);
+void ws_response_destroy(struct ws_response *res);
+char* ws_response_str(struct ws_response* res);
 
 #endif
