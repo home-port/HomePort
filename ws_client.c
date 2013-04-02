@@ -55,33 +55,6 @@
 /// The amount of time a client may be inactive
 #define TIMEOUT  15
 
-// Methods for http_parser settings
-static int parser_message_begin_cb(http_parser *parser);
-static int parser_url_cb(http_parser *parser, const char *buf,
-      size_t len);
-static int parser_status_complete_cb(http_parser *parser);
-static int parser_header_field_cb(http_parser *parser, const char *buf,
-      size_t len);
-static int parser_header_value_cb(http_parser *parser, const char *buf,
-      size_t len);
-static int parser_headers_complete_cb(http_parser *parser);
-static int parser_body_cb(http_parser *parser, const char *buf,
-      size_t len);
-static int parser_message_complete_cb(http_parser *parser);
-
-/// Global settings for http_parser
-static http_parser_settings parser_settings = 
-{
-   .on_message_begin = parser_message_begin_cb,
-   .on_url = parser_url_cb,
-   .on_status_complete = parser_status_complete_cb,
-   .on_header_field = parser_header_field_cb,
-   .on_header_value = parser_header_value_cb,
-   .on_headers_complete = parser_headers_complete_cb,
-   .on_body = parser_body_cb,
-   .on_message_complete = parser_message_complete_cb
-};
-
 /// All data to represent a client
 struct ws_client {
    char ip[INET6_ADDRSTRLEN];            ///< IP address of client.
@@ -119,85 +92,124 @@ static void *get_in_addr(struct sockaddr *sa)
    }
 }
 
-static int parser_message_begin_cb(http_parser *parser)
-{
-   return 0;
-}
-
-static int parser_url_cb(http_parser *parser, const char *buf, size_t len)
-{
-   struct ws_request *request = parser->data;
-
-   if (ws_request_cat_url(request, buf, len) != 0) {
-      return 1;
-   }
-
-   return 0;
-}
-
-static int parser_status_complete_cb(http_parser *parser)
-{
-   return 0;
-}
-
-static int parser_header_field_cb(http_parser *parser, const char *buf, size_t len)
-{
-   return 0;
-}
-
-static int parser_header_value_cb(http_parser *parser, const char *buf, size_t len)
-{
-   return 0;
-}
-
-static int parser_headers_complete_cb(http_parser *parser)
-{
-   struct ws_request *request = parser->data;
-   struct ws_client *client = ws_request_get_client(request);
-   struct ws_response *response;
-
-   ws_request_set_method(request);
-
-   response = client->settings->on_request_header_complete(request);
-   if(response == NULL) {
-      return 0;
-   } else {
-      ws_client_send(client, "%s", ws_response_str(response));
-      ws_response_destroy(response);
-      return 1;
-   }
-}
-
-static int parser_body_cb(http_parser *parser, const char *buf, size_t len)
-{
-   struct ws_request *request = parser->data;
-   struct ws_client *client = ws_request_get_client(request);
-   struct ws_response *response;
-
-   if (ws_request_cat_body(request, buf, len) != 0) {
-      return 1;
-   }
-   
-   if(http_body_is_final(parser))
-   {
-      response = client->settings->on_request_body(request);
-
-      if(response == NULL)
-      {
-         return 1;
-      }
-
-      ws_client_send(client, "%s", ws_response_str(response));
-      ws_response_destroy(response);
-   }
-
-   return 0;
-}
-
-static int parser_message_complete_cb(http_parser *parser)
-{
-   return 0;
-}
+//static int send_response(
+//      struct ws_client *client,
+//      struct ws_response *response)
+//{
+//   if(response == NULL) return 0;
+//   
+//   ws_client_send(client, "%s", ws_response_str(response));
+//   ws_response_destroy(response);
+//   return 1;
+//}
+//
+//static int parser_message_begin_cb(http_parser *parser)
+//{
+//   struct ws_response *response;
+//   struct ws_request *request = parser->data;
+//   struct ws_client *client = ws_request_get_client(request);
+//
+//   // Get data
+//   ws_request_set_method(request);
+//
+//   // Send callback
+//   if (client->settings->on_request_begin != NULL) {
+//      response = client->settings->on_request_begin(request);
+//      return send_response(client, response);
+//   }
+//
+//   return 0;
+//}
+//
+//static int parser_url_cb(http_parser *parser, const char *buf, size_t len)
+//{
+//   struct ws_response *response;
+//   struct ws_request *request = parser->data;
+//   struct ws_client *client = ws_request_get_client(request);
+//
+//   if (ws_request_cat_url(request, buf, len) != 0) {
+//      return 1;
+//   }
+//
+//   return 0;
+//}
+//
+//static int parser_header_field_cb(http_parser *parser, const char *buf, size_t len)
+//{
+//   struct ws_request *request = parser->data;
+//
+//   char *str = malloc((len+1)*sizeof(char));
+//   strncpy(str, buf, len);
+//   str[len] = '\0';
+//   printf("Field: %s\n", str);
+//   free(str);
+//
+//   return 0;
+//}
+//
+//static int parser_header_value_cb(http_parser *parser, const char *buf, size_t len)
+//{
+//   struct ws_request *request = parser->data;
+//
+//   char *str = malloc((len+1)*sizeof(char));
+//   strncpy(str, buf, len);
+//   str[len] = '\0';
+//   printf("Value: %s\n", str);
+//   free(str);
+//
+//   return 0;
+//}
+//
+//static int parser_headers_complete_cb(http_parser *parser)
+//{
+//   struct ws_request *request = parser->data;
+//   struct ws_client *client = ws_request_get_client(request);
+//   struct ws_response *response;
+//
+//   printf("Headers complete\n");
+//
+//   //response = client->settings->on_request_header_complete(request);
+//   //if(response == NULL) {
+//   //   return 0;
+//   //} else {
+//   //   ws_client_send(client, "%s", ws_response_str(response));
+//   //   ws_response_destroy(response);
+//   //   return 1;
+//   //}
+//
+//   return 0;
+//}
+//
+//static int parser_body_cb(http_parser *parser, const char *buf, size_t len)
+//{
+//   struct ws_request *request = parser->data;
+//   struct ws_client *client = ws_request_get_client(request);
+//   struct ws_response *response;
+//
+//   if (ws_request_cat_body(request, buf, len) != 0) {
+//      return 1;
+//   }
+//   
+//   if(http_body_is_final(parser))
+//   {
+//      response = client->settings->on_request_body(request);
+//
+//      if(response == NULL)
+//      {
+//         return 1;
+//      }
+//
+//      ws_client_send(client, "%s", ws_response_str(response));
+//      ws_response_destroy(response);
+//   }
+//
+//   return 0;
+//}
+//
+//static int parser_message_complete_cb(http_parser *parser)
+//{
+//   return 0;
+//}
 
 static void client_send_cb(struct ev_loop *loop, struct ev_io *watcher,
       int revents)
@@ -250,7 +262,7 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
    }
 
    // Parse recieved data
-   parsed = ws_request_parse(client->request, &parser_settings, buffer, recieved);
+   parsed = ws_request_parse(client->request, buffer, recieved);
    if (parsed != recieved) {
       perror("parse");
       ws_client_kill(client);

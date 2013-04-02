@@ -115,7 +115,6 @@ struct ws_settings {
    size_t max_request_size;
    request_cb on_request_begin;
    request_cb on_request_url;
-   request_cb on_request_status;
    request_cb on_request_header;
    request_cb on_request_header_complete;
    request_cb on_request_body;
@@ -126,7 +125,6 @@ struct ws_settings {
    .max_request_size = 1024*1024, \
    .on_request_begin = NULL, \
    .on_request_url = NULL, \
-   .on_request_status = NULL, \
    .on_request_header = NULL, \
    .on_request_header_complete = NULL, \
    .on_request_body = NULL, \

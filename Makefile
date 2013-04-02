@@ -29,19 +29,19 @@
 # as representing official policies, either expressed.
 
 CC=gcc
-CFLAGS=-c -Wall -g -DDEBUG
-LDFLAGS=-lev -lm
-SOURCES=main.c ws_client.c ws_http.c ws_instance.c http-parser/http_parser.c
+MYCFLAGS=-c -Wall -g -DDEBUG $(CFLAGS)
+MYLDFLAGS=-lev -lm $(LDFLAGS)
+SOURCES=main.c ws_client.c ws_http.c ws_instance.c ws_parser.c http-parser/http_parser.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=wstest
 
 all: $(SOURCES) $(EXECUTABLE)
 	
 $(EXECUTABLE): $(OBJECTS) 
-	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
+	$(CC) $(OBJECTS) -o $@ $(MYLDFLAGS)
 
 .c.o:
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(MYCFLAGS) $< -o $@
 
 clean:
 	rm -rf *.o wstest

@@ -33,6 +33,7 @@
 
 #include "ws_http.h"
 #include "ws_client.h"
+#include "ws_parser.h"
 #include "http-parser/http_parser.h"
 
 #include <string.h>
@@ -47,11 +48,11 @@
 struct ws_request
 {
    struct ws_client *client;
-   http_parser parser;                   ///< The parser in use.
+   struct ws_parser *parser;
 
-   char *url;       ///< The URL requested.
+   char *url;                    ///< The URL requested.
    enum http_method method;      ///< The used method for a request.
-   char *body;     ///< The BODY from the request.
+   char *body;                   ///< The BODY from the request.
 };
 
 struct ws_response
@@ -74,6 +75,7 @@ static int check_request(struct ws_request *req)
 
 void ws_request_destroy(struct ws_request *req)
 {
+   ws_parser_destroy(req->parser);
    free(req->body);
    free(req->url);
    free(req);
@@ -88,8 +90,7 @@ struct ws_request *ws_request_create(struct ws_client *client)
 	}
 
    req->client = client;
-   http_parser_init(&(req->parser), HTTP_REQUEST);
-   req->parser.data = req;
+   req->parser = ws_parser_create();
    req->url = NULL;
    req->body = NULL;
    req->method = -1;
@@ -166,9 +167,9 @@ struct ws_client *ws_request_get_client(struct ws_request *req)
    return req->client;
 }
 
-void ws_request_set_method(struct ws_request *req)
+void ws_request_set_method(struct ws_request *req, enum http_method method)
 {
-   req->method = req->parser.method;
+   req->method = method;
 }
 
 char *ws_request_get_url(struct ws_request *req)
@@ -238,15 +239,6 @@ int ws_request_cat_body(
    return 0;
 }
 
-size_t ws_request_parse(
-      struct ws_request *req,
-      http_parser_settings *settings,
-      const char *buf,
-      size_t len)
-{
-   return http_parser_execute(&req->parser, settings, buf, len);
-}
-
 static char* http_status_codes_to_str(enum ws_http_status_code status)
 {
 #define XX(num, str) if(status == num) {return #str;}
@@ -313,3 +305,12 @@ char* ws_response_str(struct ws_response* res)
 
 	return res->full_string;
 }
+
+size_t ws_request_parse(
+      struct ws_request *req,
+      const char *buf,
+      size_t len)
+{
+   return ws_parser_parse(req->parser, buf, len);
+}
+
