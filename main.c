@@ -83,7 +83,7 @@ static struct ws_response *on_body(struct ws_request *req,
 {
    const char *ip = ws_request_get_client_ip(req);
    
-   printf("[%s] Body chunk: '%.*s'", ip, len, chunk);
+   printf("[%s] Body chunk: '%.*s'", ip, (int)len, chunk);
 
    return NULL;
 }
