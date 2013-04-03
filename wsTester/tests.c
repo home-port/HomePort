@@ -38,6 +38,11 @@ void init_tests()
 	init_libcurl();
 }
 
+void cleanup_tests()
+{
+	cleanup_libcurl();
+}
+
 int basic_get_contains_test(char* url, char* contains)
 {
 	char *received = simple_get_request(url);
@@ -65,7 +70,7 @@ int basic_get_multithreaded_stress_test(char* url, char* contains)
 	struct mt_args *args = malloc(sizeof(struct mt_args));
 	args->url = url;
 	args->contains = contains;
-	args->assaults = 9999;
+	args->assaults = 900;
 
 	while(threads < NTHREADS)
     {

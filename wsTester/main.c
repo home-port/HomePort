@@ -42,19 +42,22 @@ int main()
 	printf("Running webserver tests:\n");
 
 	printf("\tBasic connection test: ");
-	testresult = basic_get_contains_test("http://localhost", "test");
+	testresult = basic_get_contains_test("http://localhost:8080", "Hello");
 	if(testresult == 1)
 		printf("Success\n");
 	else
 		printf("Failed\n");
 
+	
 	printf("\tBasic multithreaded stress test: ");
-	testresult = basic_get_multithreaded_stress_test("http://localhost", "test");
+	testresult = basic_get_multithreaded_stress_test("http://localhost:8080", "Hello");
 	if(testresult == 1)
 		printf("Sucess\n");
 	else
 		printf("Failed\n");
+	
 
+	cleanup_tests();
 	printf("\nDone.\n");
 
 	return 0;

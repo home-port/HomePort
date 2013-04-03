@@ -40,6 +40,7 @@
  #include <pthread.h> 
 
 void init_libcurl();
+void cleanup_libcurl();
 char* simple_get_request(char* url);
 
 #endif

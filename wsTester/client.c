@@ -38,6 +38,11 @@ void init_libcurl()
 	curl_global_init(CURL_GLOBAL_ALL);
 }
 
+void cleanup_libcurl()
+{
+	curl_global_cleanup();
+}
+
 size_t data_from_curl(char *buffer, size_t buffer_size, size_t nmemb, char **userdata)
 {
 	*userdata = malloc(buffer_size*nmemb + 1);

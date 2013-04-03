@@ -36,7 +36,7 @@
 
 #include "client.h"
 
-#define NTHREADS 16
+#define NTHREADS 40
 
 int multithreaded_results;
 pthread_mutex_t lock;
@@ -49,6 +49,7 @@ struct mt_args {
 };
 
 void init_tests();
+void cleanup_tests();
 
 int basic_get_contains_test(char* url, char* contains);
 int basic_get_multithreaded_stress_test(char* url, char* contains);
