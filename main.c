@@ -98,7 +98,10 @@ static struct ws_response *on_complete(struct ws_request *req)
    msg = malloc((6+strlen(ip)+1)*sizeof(char));
    sprintf(msg, "Hello %s", ip);
 
-   return ws_response_create(req, WS_HTTP_200, msg);
+   struct ws_response *response = ws_response_create(req,WS_HTTP_200, msg);
+   free(msg);
+
+   return response;
 }
 
 static void exit_cb(int sig)

@@ -99,6 +99,7 @@ static int send_response(
 {
    if(response == NULL) return 0;
    
+   // TODO: Don't call response destroy until response is sent..
    ws_client_send(client, "%s", ws_response_str(response));
    ws_response_destroy(response);
 
