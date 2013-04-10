@@ -40,7 +40,9 @@ struct url_parser_instance {
 	struct url_parser_settings *settings;
 
 	int state;
-	char* workingBuffer;
+	unsigned int last_parsed_pos;
+	unsigned buffer_size;
+	char* buffer;
 };
 
 struct url_parser_instance *up_create(struct url_parser_settings *settings)
@@ -52,9 +54,44 @@ struct url_parser_instance *up_create(struct url_parser_settings *settings)
 	instance -> settings = malloc(sizeof(struct url_parser_settings));
 	memcpy(instance->settings, settings, sizeof(struct url_parser_settings));
 
-	
+	instance -> state = 0;
+	instance -> buffer_size = 0;
+	instance -> last_parsed_pos = 0;
 
 	return instance;
 }
 
+void up_destroy(struct url_parser_instance *instance)
+{
+	free(instance->settings);
 
+	if(instance->buffer) {
+		free(instance->buffer);
+	}
+	
+	free(instance);
+}
+
+void up_add_chunk(struct url_parser_instance *instance, char* chunk, int chunk_size) {
+	// Increase the current buffer
+	int old_buffer_size = instance->buffer_size;
+	instance->buffer_size += chunk_size;
+	instance->buffer = realloc(instance->buffer, instance->buffer_size * (sizeof(char)));
+	memcpy(instance->buffer+old_buffer_size, chunk, chunk_size);
+
+	// Parse the new chunk in buffer from last_parsed_pos to buffer_size
+	unsigned int i;
+	for(i = instance->last_parsed_pos; i < instance->buffer_size; i++)
+	{
+		char c = instance->buffer[i];
+
+		instance->last_parsed_pos++;
+	}
+}
+
+void up_complete(struct url_parser_instance *instance)
+{
+	if(instance->settings->on_complete != NULL && instance->buffer != NULL) {
+		instance->settings->on_complete(instance->buffer);
+	}
+}
