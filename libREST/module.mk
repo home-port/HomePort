@@ -28,41 +28,5 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Settings
-CFLAGS := -c -Wall -g -DDEBUG $(CFLAGS)
-EXEC := homeport
-MODULES := libWebserver libHTTP libREST
-
-# Vars that will be populated
-LIBS :=
-SRC := main.c
-
-# Modules, as according to:
-# Miller, P. (1998). Recursive make considered harmful.
-# AUUGN Journal of AUUG Inc, 19(1), 14-25.
-CFLAGS += $(patsubst %, -I%, $(MODULES))
-include $(patsubst %, %/module.mk,$(MODULES))
-OBJ := $(patsubst %.c,%.o, $(filter %.c,$(SRC)))
-LDFLAGS := $(patsubst %, -l%, $(LIBS)) $(LDFLAGS)
-
-.c.o:
-	$(CC) $(CFLAGS) $< -o $@
-
-all: $(OBJ)
-	$(CC) -o $(EXEC) $(OBJ) $(LDFLAGS)
-
-clean:
-	$(RM) $(OBJ) homeport
-
-mrproper:
-	make clean
-	make
- 
-run:
-	./$(EXEC)
- 
-debug:
-	gdb -ex run ./$(EXEC)
- 
-memcheck:
-	valgrind ./$(EXEC)
+SRC +=
+LIBS +=
