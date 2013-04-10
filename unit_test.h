@@ -1,4 +1,4 @@
-// request.h
+// unit_test.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   
@@ -31,18 +31,53 @@
 *  as representing official policies, either expressed.
 */
 
-#ifndef REQUEST_H
-#define REQUEST_H
+#include <stdio.h>
+#include <string.h>
 
-#include "libWebserver.h"
+#define TEST_START(X) \
+   int main(int argc, char **argv) { \
+      int _stat = 0; \
+      printf("unit: Starting test %s ...\n", #X);
 
-struct libws_request;
-struct libws_client;
+#define TEST_END() \
+      return _stat; \
+   }
 
-struct libws_request *libws_request_create(
-      struct libws_client *client,
-      struct libws_settings *settings);
-void libws_request_destroy(struct libws_request *req);
-size_t libws_request_parse(struct libws_request *req, const char *buf, size_t len);
+#define TEST(X) \
+   do { \
+      printf("unit: Running %s...\n", #X); \
+      int _errors = 0; \
 
-#endif
+#define TSET() \
+      if (_errors == 0) { \
+         printf("unit: Test succeeded\n"); \
+      } else { \
+         printf("unit: %i errors found!\n", _errors); \
+      } \
+   } while (0);
+
+#define ASSERT(X) \
+   if (X) { \
+      printf("   Assertion FAILED in %s at %s:%d\n", \
+            __func__, __FILE__, __LINE__); \
+      _errors++; \
+   }
+
+#define ASSERT_NOT_NULL(X) \
+   if (X == NULL) { \
+      ASSERT(1) \
+   }
+
+#define ASSERT_NULL(X) \
+   if (X != NULL) { \
+      ASSERT(1) \
+   }
+
+#define ASSERT_STR_EQUAL(X,Y) \
+   ASSERT(strcmp(X, Y)) \
+
+#define ASSERT_EQUAL(X,Y) \
+   if (X != Y) { \
+      ASSERT(1) \
+   }
+

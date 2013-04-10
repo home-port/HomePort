@@ -79,7 +79,6 @@ typedef int (*data_cb)(struct libws_request *req,
 struct libws_settings {
    unsigned short int port;
    nodata_cb on_request_begin;
-   data_cb   on_request_client_ip;
    data_cb   on_request_method;
    data_cb   on_request_url;
    nodata_cb on_request_url_complete;
@@ -92,7 +91,6 @@ struct libws_settings {
 #define LIBWS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
    .on_request_begin = NULL, \
-   .on_request_client_ip = NULL, \
    .on_request_method = NULL, \
    .on_request_url = NULL, \
    .on_request_url_complete = NULL, \

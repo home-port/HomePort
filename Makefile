@@ -35,7 +35,11 @@ MODULES := libWebserver libHTTP libREST
 
 # Vars that will be populated
 LIBS :=
-SRC := main.c
+SRC :=
+TESTS :=
+
+.PHONY : all
+all: $(EXEC)
 
 # Modules, as according to:
 # Miller, P. (1998). Recursive make considered harmful.
@@ -48,21 +52,39 @@ LDFLAGS := $(patsubst %, -l%, $(LIBS)) $(LDFLAGS)
 .c.o:
 	$(CC) $(CFLAGS) $< -o $@
 
-all: $(OBJ)
-	$(CC) -o $(EXEC) $(OBJ) $(LDFLAGS)
+$(EXEC): $(OBJ) main.o
+	$(CC) -o $(EXEC) $(OBJ) main.o $(LDFLAGS)
 
-clean:
-	$(RM) $(OBJ) homeport
-
+.PHONY : mrproper
 mrproper:
 	make clean
 	make
  
+.PHONY : run
 run:
 	./$(EXEC)
  
+.PHONY : debug
 debug:
 	gdb -ex run ./$(EXEC)
  
+.PHONY : memcheck
 memcheck:
 	valgrind ./$(EXEC)
+
+$(TESTS): $(OBJ) $(patsubst %, %.o, $(TESTS))
+	$(CC) -o $@ $(filter-out $(patsubst %_test, %.o, $@), $(OBJ)) $(patsubst %, %.o, $@) $(LDFLAGS)
+
+.PHONY : test
+test: $(TESTS)
+	for t in $(TESTS); do \
+      ./$$t; \
+   done
+
+.PHONY : clean
+clean:
+	$(RM) $(OBJ) main.o homeport
+	$(RM) -r doc/*
+	$(RM) $(TESTS) $(patsubst %, %.o, $(TESTS))
+
+

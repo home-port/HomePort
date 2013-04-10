@@ -45,6 +45,5 @@ void libws_client_accept(
       int revents);
 void libws_client_kill(struct libws_client *client);
 void libws_client_killall(struct libws_instance *instance);
-struct libws_settings *libws_client_get_settings(struct libws_client *client);
 
 #endif

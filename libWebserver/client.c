@@ -101,7 +101,7 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
    }
 
    if (client->request == NULL) {
-      client->request = libws_request_create(client);
+      client->request = libws_request_create(client, client->settings);
    }
 
    // Parse recieved data
@@ -231,7 +231,3 @@ void libws_client_killall(struct libws_instance *instance)
    }
 }
 
-struct libws_settings *libws_client_get_settings(struct libws_client *client)
-{
-   return client->settings;
-}
