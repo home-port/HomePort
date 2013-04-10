@@ -37,14 +37,7 @@
 #include "url_parser.h"
 
 struct url_parser_instance {
-	up_void_cb on_begin;
-	up_string_cb on_protocol;
-	up_string_cb on_host;
-	up_string_cb on_port;
-	up_string_cb on_path_segment;
-	up_string_cb on_path_complete;
-	up_pair_cb on_key_value;
-	up_string_cb on_complete;
+	struct url_parser_settings *settings;
 
 	int state;
 	char* workingBuffer;
@@ -52,9 +45,14 @@ struct url_parser_instance {
 
 struct url_parser_instance *up_create(struct url_parser_settings *settings)
 {
-	struct url_parser_instance *instance = malloc(sizeof(struct url_parser_instance));
+	struct url_parser_instance *instance;
 
-	instance -> on_begin = settings->on_begin;
+	instance = malloc(sizeof(struct url_parser_instance));
+
+	instance -> settings = malloc(sizeof(struct url_parser_settings));
+	memcpy(instance->settings, settings, sizeof(struct url_parser_settings));
+
+	
 
 	return instance;
 }
