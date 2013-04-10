@@ -31,116 +31,116 @@
  *  as representing official policies, either expressed.
  */
 
-#include "webserver.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ev.h>
-
-static struct ws_instance *ws_http = NULL;
-
-static struct ws_response *on_begin(struct ws_request *req)
-{
-   const char *ip = ws_request_get_client_ip(req);
-
-   printf("Message from %s\n", ip);
-
-   return NULL;
-}
-
-static struct ws_response *on_url(struct ws_request *req,
-      const char *url)
-{
-   const char *method = ws_request_get_method_str(req);
-   const char *ip = ws_request_get_client_ip(req);
-
-   printf("[%s] %s %s\n", ip, method, url);
-
-   return NULL;
-}
-
-static struct ws_response *on_header(struct ws_request *req,
-      const char *field, const char *value)
-{
-   const char *ip = ws_request_get_client_ip(req);
-
-   printf("[%s] Header <%s,%s>\n", ip, field, value);
-
-   return NULL;
-}
-
-static struct ws_response *on_header_complete(struct ws_request *req)
-{
-   const char *ip = ws_request_get_client_ip(req);
-
-   printf("[%s] Headers complete\n", ip);
-
-   return NULL;
-}
-
-static struct ws_response *on_body(struct ws_request *req,
-      const char *chunk, size_t len)
-{
-   const char *ip = ws_request_get_client_ip(req);
-   
-   printf("[%s] Body chunk: '%.*s'", ip, (int)len, chunk);
-
-   return NULL;
-}
-
-static struct ws_response *on_complete(struct ws_request *req)
-{
-   char *msg;
-   const char *ip = ws_request_get_client_ip(req);
-
-   printf("[%s] Message complete\n", ip);
-
-   msg = malloc((6+strlen(ip)+1)*sizeof(char));
-   sprintf(msg, "Hello %s", ip);
-
-   struct ws_response *response = ws_response_create(req,WS_HTTP_200, msg);
-   free(msg);
-
-   return response;
-}
-
-static void exit_cb(int sig)
-{
-   if (ws_http != NULL) {
-      ws_stop(ws_http);
-      ws_instance_free(ws_http);
-   }
-   printf("Exiting...\n");
-   exit(sig);
-}
+//#include "webserver.h"
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <string.h>
+//#include <ev.h>
+//
+//static struct ws_instance *ws_http = NULL;
+//
+//static struct ws_response *on_begin(struct ws_request *req)
+//{
+//   const char *ip = ws_request_get_client_ip(req);
+//
+//   printf("Message from %s\n", ip);
+//
+//   return NULL;
+//}
+//
+//static struct ws_response *on_url(struct ws_request *req,
+//      const char *url)
+//{
+//   const char *method = ws_request_get_method_str(req);
+//   const char *ip = ws_request_get_client_ip(req);
+//
+//   printf("[%s] %s %s\n", ip, method, url);
+//
+//   return NULL;
+//}
+//
+//static struct ws_response *on_header(struct ws_request *req,
+//      const char *field, const char *value)
+//{
+//   const char *ip = ws_request_get_client_ip(req);
+//
+//   printf("[%s] Header <%s,%s>\n", ip, field, value);
+//
+//   return NULL;
+//}
+//
+//static struct ws_response *on_header_complete(struct ws_request *req)
+//{
+//   const char *ip = ws_request_get_client_ip(req);
+//
+//   printf("[%s] Headers complete\n", ip);
+//
+//   return NULL;
+//}
+//
+//static struct ws_response *on_body(struct ws_request *req,
+//      const char *chunk, size_t len)
+//{
+//   const char *ip = ws_request_get_client_ip(req);
+//   
+//   printf("[%s] Body chunk: '%.*s'", ip, (int)len, chunk);
+//
+//   return NULL;
+//}
+//
+//static struct ws_response *on_complete(struct ws_request *req)
+//{
+//   char *msg;
+//   const char *ip = ws_request_get_client_ip(req);
+//
+//   printf("[%s] Message complete\n", ip);
+//
+//   msg = malloc((6+strlen(ip)+1)*sizeof(char));
+//   sprintf(msg, "Hello %s", ip);
+//
+//   struct ws_response *response = ws_response_create(req,WS_HTTP_200, msg);
+//   free(msg);
+//
+//   return response;
+//}
+//
+//static void exit_cb(int sig)
+//{
+//   if (ws_http != NULL) {
+//      ws_stop(ws_http);
+//      ws_instance_free(ws_http);
+//   }
+//   printf("Exiting...\n");
+//   exit(sig);
+//}
 
 int main()
 {
-   struct ev_loop *loop = EV_DEFAULT;
+   //struct ev_loop *loop = EV_DEFAULT;
 
-   struct ws_settings settings = WS_SETTINGS_DEFAULT;
-   settings.port = WS_PORT_HTTP_ALT;
-   settings.on_request_begin = on_begin;
-   settings.on_request_url = on_url;
-   settings.on_request_header = on_header;
-   settings.on_request_header_complete = on_header_complete;
-   settings.on_request_body = on_body;
-   settings.on_request_complete = on_complete;
+   //struct ws_settings settings = WS_SETTINGS_DEFAULT;
+   //settings.port = WS_PORT_HTTP_ALT;
+   //settings.on_request_begin = on_begin;
+   //settings.on_request_url = on_url;
+   //settings.on_request_header = on_header;
+   //settings.on_request_header_complete = on_header_complete;
+   //settings.on_request_body = on_body;
+   //settings.on_request_complete = on_complete;
 
-   signal(SIGINT, exit_cb);
-   signal(SIGTERM, exit_cb);
+   //signal(SIGINT, exit_cb);
+   //signal(SIGTERM, exit_cb);
 
-#ifdef DEBUG
-   printf("Debugging is set\n");
-#endif
+//#ifdef DEBUG
+   //printf("Debugging is set\n");
+//#endif
 
-   // Init webserver and start it
-   ws_http = ws_instance_create(&settings, loop);
-   ws_start(ws_http);
+   //// Init webserver and start it
+   //ws_http = ws_instance_create(&settings, loop);
+   //ws_start(ws_http);
 
-   // Start the loop
-   ev_run(loop, 0);
+   //// Start the loop
+   //ev_run(loop, 0);
 
-   exit(0);
+   //exit(0);
    return 0;
 }
