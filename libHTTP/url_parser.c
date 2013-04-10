@@ -52,7 +52,7 @@ struct url_parser_instance *up_create(struct url_parser_settings *settings)
 	instance -> settings = malloc(sizeof(struct url_parser_settings));
 	memcpy(instance->settings, settings, sizeof(struct url_parser_settings));
 
-	
+	instance -> state = 0;
 
 	return instance;
 }
