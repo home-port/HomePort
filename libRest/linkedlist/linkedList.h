@@ -34,6 +34,11 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct ListElement ListElement;
+
 struct ListElement
 {
 struct ListElement *next;
@@ -41,7 +46,7 @@ char *key;
 void *val;
 };
 
-struct ListElement create();
+struct ListElement* create(char *key, void *val);
 
 void insert(struct ListElement *head, char *key, void *val);
 
@@ -49,6 +54,6 @@ void* get(struct ListElement *head, char *key);
 
 void destroy(struct ListElement *head);
 
-void removeElement(char *key);
+void removeElement(struct ListElement *head, char *key);
 
 #endif
