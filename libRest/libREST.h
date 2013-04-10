@@ -43,11 +43,12 @@ typedef ws_response *(*lr_cb)(struct ws_request *req);
 // Functions
 struct lr_instance *lr_create();
 void lr_destroy(struct lr_instance *);
-void lr_register_service(char *url,
+void lr_register_service(struct lr_instance *instance,
+                         char *url,
                          lr_cb on_get,
                          lr_cb on_post,
                          lr_cb on_put,
                          lr_cb on_delete);
-struct ws_response *lr_lookup(struct ws_request *req, const char *url);
+struct ws_response *lr_lookup(struct lr_instance *instance ,struct ws_request *req, const char *url);
 
 #endif
