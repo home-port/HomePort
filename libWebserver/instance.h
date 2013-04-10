@@ -1,4 +1,4 @@
-// client.h
+// instance.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
  *   
@@ -31,20 +31,21 @@
  *  as representing official policies, either expressed.
  */
 
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef INSTANCE_H
+#define INSTANCE_H
 
 #include "libWebserver.h"
 
-struct ev_io;
 struct libws_client;
 
-void libws_client_accept(
-      struct ev_loop *loop,
-      struct ev_io *watcher,
-      int revents);
-void libws_client_kill(struct libws_client *client);
-void libws_client_killall(struct libws_instance *instance);
-struct libws_settings *libws_client_get_settings(struct libws_client *client);
+struct libws_settings *libws_instance_get_settings(
+      struct libws_instance *instance);
+
+void libws_instance_set_first_client(
+      struct libws_instance *instance,
+      struct libws_client *client);
+
+struct libws_client *libws_instance_get_first_client(
+      struct libws_instance *instance);
 
 #endif

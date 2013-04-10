@@ -176,5 +176,24 @@ void libws_instance_stop(struct libws_instance *instance)
    if (close(instance->sockfd) != 0) {
       perror("close");
    }
-
 }
+
+struct libws_settings *libws_instance_get_settings(
+      struct libws_instance *instance)
+{
+   return &instance->settings;
+}
+
+struct libws_client *libws_instance_get_first_client(
+      struct libws_instance *instance)
+{
+   return instance->clients;
+}
+
+void libws_instance_set_first_client(
+      struct libws_instance *instance,
+      struct libws_client *client)
+{
+   instance->clients = client;
+}
+

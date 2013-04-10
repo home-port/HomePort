@@ -78,7 +78,6 @@ typedef int (*data_cb)(struct libws_request *req,
 // Settings
 struct libws_settings {
    unsigned short int port;
-   size_t max_request_size;
    nodata_cb on_request_begin;
    data_cb   on_request_client_ip;
    data_cb   on_request_method;
@@ -92,7 +91,6 @@ struct libws_settings {
 };
 #define LIBWS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
-   .max_request_size = 1024*1024, \
    .on_request_begin = NULL, \
    .on_request_client_ip = NULL, \
    .on_request_method = NULL, \

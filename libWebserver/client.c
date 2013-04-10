@@ -31,6 +31,10 @@
  *  as representing official policies, either expressed.
  */
 
+#include "client.h"
+#include "instance.h"
+#include "request.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -43,19 +47,21 @@
 #include <stdarg.h>
 #include <ev.h>
 
+#define MAXDATASIZE 1024
 #define TIMEOUT 15
 
 struct libws_client {
-   struct ws_instance *instance;
-   struct ws_settings *settings;
+   struct libws_instance *instance;
+   struct libws_settings *settings;
    char ip[INET6_ADDRSTRLEN];
    struct ev_loop *loop;
    struct ev_timer timeout_watcher;
    struct ev_io recv_watcher;
    struct ev_io send_watcher;
-   struct ws_request *request;
-   struct ws_client *prev;
-   struct ws_client *next;
+   struct libws_request *request;
+   struct libws_client *prev;
+   struct libws_client *next;
+   char send_msg[MAXDATASIZE];
 };
 
 static void *get_in_addr(struct sockaddr *sa)
@@ -67,6 +73,68 @@ static void *get_in_addr(struct sockaddr *sa)
       // IPv6
       return &(((struct sockaddr_in6*)sa)->sin6_addr);
    }
+}
+
+static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revents)
+{
+   size_t recieved, parsed;
+   char buffer[MAXDATASIZE];
+   struct libws_client *client = watcher->data;
+
+   printf("recieving data from %s\n", client->ip);
+
+   // Receive some data
+   if ((recieved = recv(watcher->fd, buffer, MAXDATASIZE-1, 0)) < 0) {
+      if (recieved == -1 && errno == EWOULDBLOCK) {
+         fprintf(stderr, "libev callbacked called without data to " \
+                         "recieve (client: %s)", client->ip);
+         return;
+      }
+      perror("recv");
+      // TODO Handle errors better - look up error# etc.
+      libws_client_kill(client);
+      return;
+   } else if (recieved == 0) {
+      printf("connection closed by %s\n", client->ip);
+      libws_client_kill(client);
+      return;
+   }
+
+   if (client->request == NULL) {
+      client->request = libws_request_create(client);
+   }
+
+   // Parse recieved data
+   parsed = libws_request_parse(client->request, buffer, recieved);
+   if (parsed != recieved) {
+      perror("parse");
+      libws_client_kill(client);
+      return;
+   }
+
+   // Reset timeout
+   client->timeout_watcher.repeat = TIMEOUT;
+   ev_timer_again(loop, &client->timeout_watcher);
+}
+
+static void client_send_cb(struct ev_loop *loop, struct ev_io *watcher,
+      int revents)
+{
+   struct libws_client *client = watcher->data;
+
+   printf("sending response to %s\n", client->ip);
+   if (send(watcher->fd, client->send_msg, strlen(client->send_msg), 0) == -1)
+      perror("send");
+   ev_io_stop(client->loop, &client->send_watcher);
+
+   libws_client_kill(client);
+}
+
+static void client_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, int revents)
+{
+   struct libws_client *client = watcher->data;
+   printf("timeout on %s\n", client->ip);
+   libws_client_kill(client);
 }
 
 void libws_client_accept(
@@ -101,7 +169,7 @@ void libws_client_accept(
       return;
    }
    client->instance = watcher->data;
-   client->settings = ws_instance_get_settings(client->instance); 
+   client->settings = libws_instance_get_settings(client->instance); 
    strcpy(client->ip, ip_string);
    client->loop = loop;
    client->timeout_watcher.data = client;
@@ -111,10 +179,10 @@ void libws_client_accept(
 
    // Set up list
    client->prev = NULL;
-   client->next = ws_instance_get_first_client(client->instance);
+   client->next = libws_instance_get_first_client(client->instance);
    if (client->next != NULL)
       client->next->prev = client;
-   ws_instance_set_first_client(client->instance, client);
+   libws_instance_set_first_client(client->instance, client);
 
    // Start timeout and io watcher
    ev_io_init(&client->recv_watcher, client_recv_cb, in_fd, EV_READ);
@@ -144,7 +212,7 @@ void libws_client_kill(struct libws_client *client) {
    if (client->prev != NULL) {
       client->prev->next = client->next;
    } else {
-      ws_instance_set_first_client(client->instance, client->next);
+      libws_instance_set_first_client(client->instance, client->next);
    }
 
    // Cleanup
@@ -154,11 +222,16 @@ void libws_client_kill(struct libws_client *client) {
 void libws_client_killall(struct libws_instance *instance)
 {
    struct libws_client *next;
-   struct libws_client *client = ws_instance_get_first_client(instance);
+   struct libws_client *client = libws_instance_get_first_client(instance);
 
    while (client != NULL) {
       next = client->next;
       libws_client_kill(client);
       client = next;
    }
+}
+
+struct libws_settings *libws_client_get_settings(struct libws_client *client)
+{
+   return client->settings;
 }
