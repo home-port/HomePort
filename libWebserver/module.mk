@@ -28,5 +28,6 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-SRC +=
+SRC += #libWebserver/instance.c \
+       libWebserver/client.c
 LIBS +=
