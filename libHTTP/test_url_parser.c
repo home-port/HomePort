@@ -4,4 +4,6 @@
  int main()
  {
  	printf("mm\n");
+
+ 	return 0;
  }
