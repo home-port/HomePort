@@ -36,7 +36,6 @@
 
 #include "webserver.h"
 
-void libws_response_destroy(struct ws_response *res);
-char* libws_response_str(struct ws_response* res);
+void ws_response_destroy(struct ws_response *res);
 
 #endif

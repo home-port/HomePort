@@ -1,4 +1,4 @@
-// test_request.c
+// request_test.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   

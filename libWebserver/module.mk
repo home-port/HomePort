@@ -34,7 +34,8 @@ SRC += libWebserver/src/instance.c \
        libWebserver/src/response.c \
        libWebserver/src/http-parser/http_parser.c
 
-LIBS += ev m
+LIBS += ev
 
-TESTS += libWebserver/src/request_test
+TESTS += libWebserver/src/request_test \
+         libWebserver/src/response_test
 
