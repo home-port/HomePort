@@ -27,7 +27,7 @@ void on_protocol(char* protocol)
 
  	up_add_chunk(instance, chunkA, 35);
 
- 	up_add_chunk(instance, "/one",4);
+ 	//up_add_chunk(instance, "/one",4);
 
  	up_destroy(instance);
 

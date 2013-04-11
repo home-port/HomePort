@@ -85,6 +85,8 @@ void up_add_chunk(struct url_parser_instance *instance, char* chunk, int chunk_s
 	{
 		char c = instance->buffer[i];
 
+		
+
 		instance->last_parsed_pos++;
 	}
 }
