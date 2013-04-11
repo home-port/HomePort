@@ -38,11 +38,11 @@
 
 struct libws_client;
 
-struct libws_request *libws_request_create(
+struct ws_request *libws_request_create(
       struct libws_client *client,
-      struct libws_settings *settings);
-void libws_request_destroy(struct libws_request *req);
-size_t libws_request_parse(struct libws_request *req, const char *buf, size_t len);
-struct libws_client *libws_request_get_client(struct libws_request *req);
+      struct ws_settings *settings);
+void libws_request_destroy(struct ws_request *req);
+size_t libws_request_parse(struct ws_request *req, const char *buf, size_t len);
+struct libws_client *libws_request_get_client(struct ws_request *req);
 
 #endif

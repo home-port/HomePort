@@ -38,14 +38,14 @@
 
 struct libws_client;
 
-struct libws_settings *libws_instance_get_settings(
-      struct libws_instance *instance);
+struct ws_settings *libws_instance_get_settings(
+      struct ws *instance);
 
 void libws_instance_set_first_client(
-      struct libws_instance *instance,
+      struct ws *instance,
       struct libws_client *client);
 
 struct libws_client *libws_instance_get_first_client(
-      struct libws_instance *instance);
+      struct ws *instance);
 
 #endif

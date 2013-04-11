@@ -37,16 +37,16 @@
 #include <string.h>
 #include <ev.h>
 
-static struct libws_instance *libws_http = NULL;
+static struct ws *libws_http = NULL;
 
-static int on_begin(struct libws_request *req)
+static int on_begin(struct ws_request *req)
 {
    printf("New message\n");
 
    return 0;
 }
 
-static int on_method(struct libws_request *req,
+static int on_method(struct ws_request *req,
       const char *buf, size_t len)
 {
    printf("Method: %.*s\n", (int)len, buf);
@@ -54,7 +54,7 @@ static int on_method(struct libws_request *req,
    return 0;
 }
 
-static int on_url(struct libws_request *req,
+static int on_url(struct ws_request *req,
       const char *buf, size_t len)
 {
    printf("Url chunk: %.*s\n", (int)len, buf);
@@ -62,14 +62,14 @@ static int on_url(struct libws_request *req,
    return 0;
 }
 
-static int on_url_complete(struct libws_request *req)
+static int on_url_complete(struct ws_request *req)
 {
    printf("Url complete\n");
 
    return 0;
 }
 
-static int on_header_field(struct libws_request *req,
+static int on_header_field(struct ws_request *req,
       const char *buf, size_t len)
 {
    printf("Header field chunk: %.*s\n", (int)len, buf);
@@ -77,7 +77,7 @@ static int on_header_field(struct libws_request *req,
    return 0;
 }
 
-static int on_header_value(struct libws_request *req,
+static int on_header_value(struct ws_request *req,
       const char *buf, size_t len)
 {
    printf("Header value chunk: %.*s\n", (int)len, buf);
@@ -85,14 +85,14 @@ static int on_header_value(struct libws_request *req,
    return 0;
 }
 
-static int on_header_complete(struct libws_request *req)
+static int on_header_complete(struct ws_request *req)
 {
    printf("Header complete\n");
 
    return 0;
 }
 
-static int on_body(struct libws_request *req,
+static int on_body(struct ws_request *req,
       const char *buf, size_t len)
 {
    printf("Body chunk: %.*s\n", (int)len, buf);
@@ -100,7 +100,7 @@ static int on_body(struct libws_request *req,
    return 0;
 }
 
-static int on_complete(struct libws_request *req)
+static int on_complete(struct ws_request *req)
 {
    printf("Message complete\n");
 
@@ -110,8 +110,8 @@ static int on_complete(struct libws_request *req)
 static void exit_cb(int sig)
 {
    if (libws_http != NULL) {
-      libws_instance_stop(libws_http);
-      libws_instance_destroy(libws_http);
+      ws_stop(libws_http);
+      ws_destroy(libws_http);
    }
    printf("Exiting...\n");
    exit(sig);
@@ -121,8 +121,8 @@ int main()
 {
    struct ev_loop *loop = EV_DEFAULT;
 
-   struct libws_settings settings = LIBWS_SETTINGS_DEFAULT;
-   settings.port = LIBWS_PORT_HTTP_ALT;
+   struct ws_settings settings = WS_SETTINGS_DEFAULT;
+   settings.port = WS_PORT_HTTP_ALT;
    settings.on_request_begin = on_begin;
    settings.on_request_method = on_method;
    settings.on_request_url = on_url;
@@ -141,8 +141,8 @@ int main()
 #endif
 
    // Init webserver and start it
-   libws_http = libws_instance_create(&settings, loop);
-   libws_instance_start(libws_http);
+   libws_http = ws_create(&settings, loop);
+   ws_start(libws_http);
 
    // Start the loop
    ev_run(loop, 0);

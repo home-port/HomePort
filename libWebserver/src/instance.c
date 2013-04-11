@@ -47,8 +47,8 @@
 #include <fcntl.h>
 
 /// Instance of a webserver
-struct libws_instance {
-   struct libws_settings settings; ///< Settings
+struct ws {
+   struct ws_settings settings; ///< Settings
    char port_str[6];               ///< Port number
    struct ev_loop *loop;           ///< Event loop
    void *clients;                  ///< List of connected clients
@@ -133,18 +133,18 @@ static int bind_listen(char *port)
    return sockfd;
 }
 
-struct libws_instance *libws_instance_create(
-      struct libws_settings *settings,
+struct ws *ws_create(
+      struct ws_settings *settings,
       struct ev_loop *loop)
 {
-   struct libws_instance *instance = malloc(sizeof(struct libws_instance));
+   struct ws *instance = malloc(sizeof(struct ws));
    if(instance == NULL)
    {
       fprintf(stderr, "ERROR: Cannot allocate memory for a new instance struct\n");
       return NULL;
    }
 
-   memcpy(&instance->settings, settings, sizeof(struct libws_settings));
+   memcpy(&instance->settings, settings, sizeof(struct ws_settings));
    sprintf(instance->port_str, "%i", settings->port);
 
    instance->loop = loop;
@@ -153,7 +153,7 @@ struct libws_instance *libws_instance_create(
    return instance;
 }
 
-void libws_instance_destroy(struct libws_instance *instance)
+void ws_destroy(struct ws *instance)
 {
    free(instance);
 }
@@ -169,7 +169,7 @@ void libws_instance_destroy(struct libws_instance *instance)
  *  \param instance The webserver instance to start. Initialised with
  *  ws_init();
  */
-void libws_instance_start(struct libws_instance *instance)
+void ws_start(struct ws *instance)
 {
    // Check loop
    if (instance->loop == NULL) {
@@ -194,7 +194,7 @@ void libws_instance_start(struct libws_instance *instance)
  *
  *  \param instance The webserver instance to stop.
  */
-void libws_instance_stop(struct libws_instance *instance)
+void ws_stop(struct ws *instance)
 {
    // Stop accept watcher
    ev_io_stop(instance->loop, &instance->watcher);
@@ -208,20 +208,20 @@ void libws_instance_stop(struct libws_instance *instance)
    }
 }
 
-struct libws_settings *libws_instance_get_settings(
-      struct libws_instance *instance)
+struct ws_settings *libws_instance_get_settings(
+      struct ws *instance)
 {
    return &instance->settings;
 }
 
 struct libws_client *libws_instance_get_first_client(
-      struct libws_instance *instance)
+      struct ws *instance)
 {
    return instance->clients;
 }
 
 void libws_instance_set_first_client(
-      struct libws_instance *instance,
+      struct ws *instance,
       struct libws_client *client)
 {
    instance->clients = client;

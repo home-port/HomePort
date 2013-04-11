@@ -1,4 +1,4 @@
-// libWebserver.h
+// webserver.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
  *   
@@ -39,52 +39,52 @@
  *  \{
  */
 
-#ifndef LIBWEBSERVER_H
-#define LIBWEBSERVER_H
+#ifndef WEBSERVER_H
+#define WEBSERVER_H
 
 #include <stddef.h>
 
 // HTTP status codes according to
 // http://www.w3.org/Protocols/rfc2616/rfc2616.html
-#define LIBWS_HTTP_STATUS_CODE_MAP(XX) \
+#define WS_HTTP_STATUS_CODE_MAP(XX) \
 	XX(200,200 OK) \
 	XX(404,404 Not Found)
 
-enum libws_http_status_code
+enum ws_http_status_code
 {
-#define XX(num, str) LIBWS_HTTP_##num = num,
-	LIBWS_HTTP_STATUS_CODE_MAP(XX)
+#define XX(num, str) WS_HTTP_##num = num,
+	WS_HTTP_STATUS_CODE_MAP(XX)
 #undef XX
 };
 
 // Port numbers are assigned according to
 // http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml
 // (Site may have very long loading time)
-#define LIBWS_PORT_MAP(XX) \
+#define WS_PORT_MAP(XX) \
    XX(  80, HTTP    ) \
    XX( 443, HTTPS   ) \
    XX(8080, HTTP_ALT)
 
 enum ws_port
 {
-#define XX(num, str) LIBWS_PORT_##str = num,
-   LIBWS_PORT_MAP(XX)
+#define XX(num, str) WS_PORT_##str = num,
+   WS_PORT_MAP(XX)
 #undef XX
 };
 
 // Structs
 struct ev_loop;
-struct libws_instance;
-struct libws_request;
-struct libws_response;
+struct ws;
+struct ws_request;
+struct ws_response;
 
 // Callbacks
-typedef int (*nodata_cb)(struct libws_request *req);
-typedef int (*data_cb)(struct libws_request *req,
+typedef int (*nodata_cb)(struct ws_request *req);
+typedef int (*data_cb)(struct ws_request *req,
       const char *buf, size_t len);
 
 // Settings
-struct libws_settings {
+struct ws_settings {
    unsigned short int port;
    nodata_cb on_request_begin;
    data_cb   on_request_method;
@@ -96,8 +96,8 @@ struct libws_settings {
    data_cb   on_request_body;
    nodata_cb on_request_complete;
 };
-#define LIBWS_SETTINGS_DEFAULT { \
-   .port = LIBWS_PORT_HTTP, \
+#define WS_SETTINGS_DEFAULT { \
+   .port = WS_PORT_HTTP, \
    .on_request_begin = NULL, \
    .on_request_method = NULL, \
    .on_request_url = NULL, \
@@ -108,17 +108,16 @@ struct libws_settings {
    .on_request_body = NULL, \
    .on_request_complete = NULL }
 
-// Functions
-struct libws_instance *libws_instance_create(
-      struct libws_settings *settings,
-      struct ev_loop *loop);
-void libws_instance_destroy(struct libws_instance *instance);
-void libws_instance_start(struct libws_instance *instance);
-void libws_instance_stop(struct libws_instance *instance);
+// Webserver functions
+struct ws *ws_create(struct ws_settings *settings, struct ev_loop *loop);
+void ws_destroy(struct ws *instance);
+void ws_start(struct ws *instance);
+void ws_stop(struct ws *instance);
 
-struct libws_response *libws_response_create(
-      struct libws_request *req,
-      enum libws_http_status_code status,
+// Response functions
+struct ws_response *ws_response_create(
+      struct ws_request *req,
+      enum ws_http_status_code status,
       char *body);
 
 #endif

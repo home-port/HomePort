@@ -43,21 +43,21 @@
 #define SP " "
 #define CRLF "\r\n"
 
-struct libws_response
+struct ws_response
 {
    struct libws_client *client;
 
-	enum libws_http_status_code status;
+	enum ws_http_status_code status;
 	char* body;
 	char* full_string;
 };
 
-struct libws_response *libws_response_create(
-      struct libws_request *req,
-      enum libws_http_status_code status,
+struct ws_response *ws_response_create(
+      struct ws_request *req,
+      enum ws_http_status_code status,
       char *body)
 {
-   struct libws_response *res = malloc(sizeof(struct libws_response));
+   struct ws_response *res = malloc(sizeof(struct ws_response));
 	if(res == NULL)
 	{
 		fprintf(stderr, "ERROR: Cannot allocate memory\n");
@@ -84,17 +84,17 @@ struct libws_response *libws_response_create(
    return res;
 }
 
-void libws_response_destroy(struct libws_response *res)
+void libws_response_destroy(struct ws_response *res)
 {
    free(res->body);
    free(res->full_string);
    free(res);
 }
 
-static char* http_status_codes_to_str(enum libws_http_status_code status)
+static char* http_status_codes_to_str(enum ws_http_status_code status)
 {
 #define XX(num, str) if(status == num) {return #str;}
-	LIBWS_HTTP_STATUS_CODE_MAP(XX)
+	WS_HTTP_STATUS_CODE_MAP(XX)
 #undef XX
 	return NULL;
 }
@@ -125,7 +125,7 @@ static char* str_builder(char* old_msg, char* to_append)
 	return new_msg;
 }
 
-char* libws_response_str(struct libws_response* res)
+char* libws_response_str(struct ws_response* res)
 {
 	char* response = NULL;
 

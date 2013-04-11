@@ -56,14 +56,14 @@
 
 /// All data to represent a client
 struct libws_client {
-   struct libws_instance *instance; ///< Webserver instance
-   struct libws_settings *settings; ///< Webserver settings
+   struct ws *instance;             ///< Webserver instance
+   struct ws_settings *settings;    ///< Webserver settings
    char ip[INET6_ADDRSTRLEN];       ///< IP address of the client
    struct ev_loop *loop;            ///< The event loop
    struct ev_timer timeout_watcher; ///< Timeout watcher
    struct ev_io recv_watcher;       ///< Recieve watcher
    struct ev_io send_watcher;       ///< Send watcher
-   struct libws_request *request;   ///< Current request in progress
+   struct ws_request *request;      ///< Current request in progress
    struct libws_client *prev;       ///< Previous client in active list
    struct libws_client *next;       ///< Next client in active list
    char send_msg[MAXDATASIZE];      ///< Data to send
@@ -172,7 +172,7 @@ static void sendf(struct libws_client *client, char *fmt, ...) {
 
 static int send_response(
       struct libws_client *client,
-      struct libws_response *response)
+      struct ws_response *response)
 {
    if(response == NULL) return 0;
    
@@ -292,7 +292,7 @@ void libws_client_kill(struct libws_client *client) {
  *
  *  \param instance The webserver instance.
  */
-void libws_client_killall(struct libws_instance *instance)
+void libws_client_killall(struct ws *instance)
 {
    struct libws_client *next;
    struct libws_client *client = libws_instance_get_first_client(instance);
