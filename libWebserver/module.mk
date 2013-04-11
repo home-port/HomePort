@@ -36,5 +36,5 @@ SRC += libWebserver/src/instance.c \
 
 LIBS += ev m
 
-TESTS += libWebserver/request_test
+TESTS += libWebserver/src/request_test
 

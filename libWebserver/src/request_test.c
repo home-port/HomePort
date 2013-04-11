@@ -32,13 +32,13 @@
 */
 
 #include "request.c"
-#include "../unit_test.h"
+#include "../../unit_test.h"
 
 TEST_START("request.c");
 
-TEST(libws_request_create)
-   struct libws_settings settings;
-   struct libws_request *req = libws_request_create(NULL, &settings);
+TEST(ws_request_create)
+   struct ws_settings settings;
+   struct ws_request *req = libws_request_create(NULL, &settings);
 
    ASSERT_NULL(req->client);
    ASSERT_EQUAL(req->settings, &settings);
