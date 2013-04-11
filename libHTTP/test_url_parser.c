@@ -28,6 +28,11 @@ void on_path_segment(const char* seg, int length)
 	printf("SEGM: %.*s\n", length, seg);
 }
 
+void on_key_value(const char* key, int key_length, const char* value, int value_length)
+{
+	printf("PAIR: %.*s %.*s\n",key_length, key, value_length, value);
+}
+
  int main()
  {
  	printf("Its running at least...\n");
@@ -38,14 +43,15 @@ void on_path_segment(const char* seg, int length)
  	settings->on_host = &on_host;
  	settings->on_port = &on_port;
  	settings->on_path_segment = &on_path_segment;
+ 	settings->on_key_value = &on_key_value;
 
  	struct url_parser_instance *instance = up_create(settings);
 
- 	char* chunkA = "https://google.com:8080/device/washer";
+ 	char* chunkA = "https://google.com:8080/device/washer?id=2&name=hej";
 
- 	up_add_chunk(instance, chunkA, 37);
+ 	up_add_chunk(instance, chunkA, 51);
 
- 	up_add_chunk(instance,"/kitchen",8);
+ 	up_add_chunk(instance, "&evening=yes",12);
 
  	up_complete(instance);
 

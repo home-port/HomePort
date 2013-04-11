@@ -55,6 +55,9 @@ struct url_parser_instance {
 	int state;
 	unsigned int chars_parsed;
 	unsigned int last_returned;
+	char* tmp_key;
+	int tmp_key_size;
+
 	unsigned buffer_size;
 	char* buffer;
 };
@@ -170,7 +173,7 @@ void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int c
 				}
 				break;
 			case S_SEGMENT:
-				if(c == '/')
+				if(c == '/' || c == '?')
 				{
 					if(instance->settings->on_path_segment != NULL)
 					{
@@ -178,7 +181,35 @@ void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int c
 					}
 					instance->last_returned = instance->chars_parsed;
 				}
+				if(c == '?')
+				{
+					instance->state = S_KEY;
+				}
 				break;
+			case S_KEY:
+				if(c == '=')
+				{
+					if(instance->settings->on_key_value != NULL)
+					{
+						instance->tmp_key = &instance->buffer[instance->last_returned+1];
+						instance->tmp_key_size = (i-(instance->last_returned)-1);
+					}
+					instance->last_returned = instance->chars_parsed;
+					instance->state = S_VALUE;
+				}
+				break;
+			case S_VALUE:
+				if(c=='&')
+				{
+					if(instance->settings->on_key_value != NULL)
+					{
+						instance->settings->on_key_value(instance->tmp_key, instance->tmp_key_size, &instance->buffer[instance->last_returned+1], (i-(instance->last_returned)-1));
+					}
+					instance->last_returned = instance->chars_parsed;
+					instance->state = S_KEY;
+				}
+				break;
+
 			case S_ERROR:
 				printf("The URL parser has reached an error state!\n");
 				break;
@@ -194,6 +225,14 @@ void up_complete(struct url_parser_instance *instance)
 		if(instance->settings->on_path_segment != NULL)
 		{
 			instance->settings->on_path_segment(&instance->buffer[instance->last_returned+1], (instance->buffer_size-instance->last_returned-1));
+		}
+			instance->last_returned = instance->chars_parsed;
+	}
+	else if(instance->state == S_VALUE)
+	{
+		if(instance->settings->on_key_value != NULL)
+		{
+			instance->settings->on_key_value(instance->tmp_key, instance->tmp_key_size, &instance->buffer[instance->last_returned+1], (instance->buffer_size-(instance->last_returned)-1));
 		}
 			instance->last_returned = instance->chars_parsed;
 	}
