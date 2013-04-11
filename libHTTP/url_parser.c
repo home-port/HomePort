@@ -36,11 +36,25 @@
 
 #include "url_parser.h"
 
+enum url_parser_state {
+	S_START,
+	S_PROTOCOL,
+	S_GARBAGE1,
+	S_GARBAGE2,
+	S_HOST,
+	S_PORT,
+	S_SEGMENT,
+	S_KEY,
+	S_VALUE,
+	S_ERROR
+};
+
 struct url_parser_instance {
 	struct url_parser_settings *settings;
 
 	int state;
-	unsigned int last_parsed_pos;
+	unsigned int chars_parsed;
+	unsigned int last_returned;
 	unsigned buffer_size;
 	char* buffer;
 };
@@ -54,9 +68,10 @@ struct url_parser_instance *up_create(struct url_parser_settings *settings)
 	instance -> settings = malloc(sizeof(struct url_parser_settings));
 	memcpy(instance->settings, settings, sizeof(struct url_parser_settings));
 
-	instance -> state = 0;
+	instance -> state = S_START;
 	instance -> buffer_size = 0;
-	instance -> last_parsed_pos = 0;
+	instance -> chars_parsed = 0;
+	instance -> last_returned = 0;
 
 	return instance;
 }
@@ -72,7 +87,7 @@ void up_destroy(struct url_parser_instance *instance)
 	free(instance);
 }
 
-void up_add_chunk(struct url_parser_instance *instance, char* chunk, int chunk_size) {
+void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int chunk_size) {
 	// Increase the current buffer
 	int old_buffer_size = instance->buffer_size;
 	instance->buffer_size += chunk_size;
@@ -81,19 +96,109 @@ void up_add_chunk(struct url_parser_instance *instance, char* chunk, int chunk_s
 
 	// Parse the new chunk in buffer from last_parsed_pos to buffer_size
 	unsigned int i;
-	for(i = instance->last_parsed_pos; i < instance->buffer_size; i++)
+	for(i = instance->chars_parsed; i < instance->buffer_size; i++)
 	{
 		char c = instance->buffer[i];
 
-		
+		//printf("current char: %c, state: %d\n", c, instance->state);
 
-		instance->last_parsed_pos++;
+		switch(instance->state)
+		{
+			case S_START:
+				if(c == '/')
+				{
+					instance->state = S_SEGMENT;
+				}
+				else
+				{
+					instance->state = S_PROTOCOL;
+				}
+				break;
+			case S_PROTOCOL:
+				if(c == ':')
+				{
+					if(instance->settings->on_protocol != NULL)
+					{
+						instance->settings->on_protocol(instance->buffer,instance->chars_parsed);
+					}
+					instance->last_returned = instance->chars_parsed;
+					instance->state = S_GARBAGE1;
+					break;
+				}
+				break;
+			case S_GARBAGE1:
+				if(c == '/')
+				{
+					instance->state = S_GARBAGE2;
+				}
+				else
+				{
+					instance->state = S_ERROR;
+				}
+				break;
+			case S_GARBAGE2:
+				if(c == '/')
+				{
+					instance->state = S_HOST;
+				}
+				else
+				{
+					instance->state = S_ERROR;
+				}
+				break;
+			case S_HOST:
+				if(c == ':')
+				{
+					if(instance->settings->on_host != NULL)
+					{
+						instance->settings->on_host(&instance->buffer[instance->last_returned+3],(i-(instance->last_returned)-3));
+					}
+					instance->last_returned = instance->chars_parsed;
+					instance->state = S_PORT;
+					break;
+				}
+				break;
+			case S_PORT:
+				if(c == '/')
+				{
+					if(instance->settings->on_port != NULL)
+					{
+						instance->settings->on_port(&instance->buffer[instance->last_returned+1], (i-(instance->last_returned)-1));
+					}
+					instance->last_returned = instance->chars_parsed;
+					instance -> state = S_SEGMENT;
+				}
+				break;
+			case S_SEGMENT:
+				if(c == '/')
+				{
+					if(instance->settings->on_path_segment != NULL)
+					{
+						instance->settings->on_path_segment(&instance->buffer[instance->last_returned+1], (i-(instance->last_returned)-1));
+					}
+					instance->last_returned = instance->chars_parsed;
+				}
+				break;
+			case S_ERROR:
+				printf("The URL parser has reached an error state!\n");
+				break;
+		}
+		instance->chars_parsed++;
 	}
 }
 
 void up_complete(struct url_parser_instance *instance)
 {
+	if(instance->state == S_SEGMENT)
+	{
+		if(instance->settings->on_path_segment != NULL)
+		{
+			instance->settings->on_path_segment(&instance->buffer[instance->last_returned+1], (instance->buffer_size-instance->last_returned-1));
+		}
+			instance->last_returned = instance->chars_parsed;
+	}
+
 	if(instance->settings->on_complete != NULL && instance->buffer != NULL) {
-		instance->settings->on_complete(instance->buffer);
+		instance->settings->on_complete(instance->buffer, instance->buffer_size);
 	}
 }
