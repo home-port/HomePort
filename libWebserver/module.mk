@@ -28,11 +28,11 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-SRC += libWebserver/instance.c \
-       libWebserver/client.c \
-       libWebserver/request.c \
-       libWebserver/response.c \
-       libWebserver/http-parser/http_parser.c
+SRC += libWebserver/src/instance.c \
+       libWebserver/src/client.c \
+       libWebserver/src/request.c \
+       libWebserver/src/response.c \
+       libWebserver/src/http-parser/http_parser.c
 
 LIBS += ev m
 

@@ -31,7 +31,7 @@
  *  as representing official policies, either expressed.
  */
 
-#include "libWebserver.h"
+#include "instance.h"
 #include "client.h"
 
 #include <stdlib.h>

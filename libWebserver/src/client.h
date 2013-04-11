@@ -34,7 +34,7 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "libWebserver.h"
+#include "webserver.h"
 
 struct ev_io;
 struct libws_client;

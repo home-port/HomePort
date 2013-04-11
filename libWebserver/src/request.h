@@ -1,4 +1,4 @@
-// response.h
+// request.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   
@@ -31,12 +31,18 @@
 *  as representing official policies, either expressed.
 */
 
-#ifndef RESPONSE_H
-#define RESPONSE_H
+#ifndef REQUEST_H
+#define REQUEST_H
 
-#include "libWebserver.h"
+#include "webserver.h"
 
-void libws_response_destroy(struct libws_response *res);
-char* libws_response_str(struct libws_response* res);
+struct libws_client;
+
+struct libws_request *libws_request_create(
+      struct libws_client *client,
+      struct libws_settings *settings);
+void libws_request_destroy(struct libws_request *req);
+size_t libws_request_parse(struct libws_request *req, const char *buf, size_t len);
+struct libws_client *libws_request_get_client(struct libws_request *req);
 
 #endif

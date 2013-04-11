@@ -34,7 +34,7 @@
 #ifndef INSTANCE_H
 #define INSTANCE_H
 
-#include "libWebserver.h"
+#include "webserver.h"
 
 struct libws_client;
 

@@ -44,7 +44,7 @@ all: $(EXEC)
 # Modules, as according to:
 # Miller, P. (1998). Recursive make considered harmful.
 # AUUGN Journal of AUUG Inc, 19(1), 14-25.
-CFLAGS += $(patsubst %, -I%, $(MODULES))
+CFLAGS += $(patsubst %, -I%/src, $(MODULES)) $(patsubst %, -I%/include, $(MODULES))
 include $(patsubst %, %/module.mk,$(MODULES))
 OBJ := $(patsubst %.c,%.o, $(filter %.c,$(SRC)))
 LDFLAGS := $(patsubst %, -l%, $(LIBS)) $(LDFLAGS)
