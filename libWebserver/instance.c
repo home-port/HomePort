@@ -46,15 +46,26 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 
+/// Instance of a webserver
 struct libws_instance {
-   struct libws_settings settings;
-   char port_str[6];
-   struct ev_loop *loop;
-   void *clients;
-   int sockfd;
-   struct ev_io watcher;
+   struct libws_settings settings; ///< Settings
+   char port_str[6];               ///< Port number
+   struct ev_loop *loop;           ///< Event loop
+   void *clients;                  ///< List of connected clients
+   int sockfd;                     ///< Socket file descriptor
+   struct ev_io watcher;           ///< New connection watcher
 };
 
+/// Get the socket file descriptor for a port number.
+/**
+ *  This will also bind and start listening to the socket. Supports both
+ *  ipv4 and ipv6.
+ *
+ *  \param port The port number to bind to and listen on.
+ *
+ *  \return The socket file descriptor, that should be used later for
+ *  closing again.
+ */
 static int bind_listen(char *port)
 {
    int status, sockfd;
@@ -122,7 +133,7 @@ static int bind_listen(char *port)
    return sockfd;
 }
 
-struct libws_instance *ws_instance_create(
+struct libws_instance *libws_instance_create(
       struct libws_settings *settings,
       struct ev_loop *loop)
 {
@@ -147,6 +158,17 @@ void libws_instance_destroy(struct libws_instance *instance)
    free(instance);
 }
 
+/// Start the webserver
+/**
+ *  The libev-based webserver is added to an event loop by a call to
+ *  this function. It is the caller's resposibility to start the
+ *  event loop.
+ *
+ *  To stop the webserver again, one may call ws_stop().
+ *
+ *  \param instance The webserver instance to start. Initialised with
+ *  ws_init();
+ */
 void libws_instance_start(struct libws_instance *instance)
 {
    // Check loop
@@ -164,6 +186,14 @@ void libws_instance_start(struct libws_instance *instance)
    ev_io_start(instance->loop, &instance->watcher);
 }
 
+/// Stop an already running webserver.
+/**
+ *  The webserver, startet with ws_start(), may be stopped by calling
+ *  this function. It will take the webserver off the event loop and
+ *  clean up after it.
+ *
+ *  \param instance The webserver instance to stop.
+ */
 void libws_instance_stop(struct libws_instance *instance)
 {
    // Stop accept watcher

@@ -1,4 +1,4 @@
-// ws_instance.h
+// logger.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
  *   
@@ -31,21 +31,11 @@
  *  as representing official policies, either expressed.
  */
 
-#ifndef WS_INSTANCE_H
-#define WS_INSTANCE_H
+enum logger_levels {
+   WS_LOG_FATAL,
+   WS_LOG_ERROR,
+   WS_LOG_WARN,
+   WS_LOG_INFO,
+   WS_LOG_DEBUG
+};
 
-#include "webserver.h"
-
-struct ws_client;
-
-struct ws_settings *ws_instance_get_settings(
-      struct ws_instance *instance);
-
-void ws_instance_set_first_client(
-      struct ws_instance *instance,
-      struct ws_client *client);
-
-struct ws_client *ws_instance_get_first_client(
-      struct ws_instance *instance);
-
-#endif

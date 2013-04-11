@@ -1,4 +1,4 @@
-// ws_response.c
+// reponse.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   
@@ -31,9 +31,8 @@
 *  as representing official policies, either expressed.
 */
 
-#include "ws_response.h"
-#include "ws_request.h"
-#include "webserver.h"
+#include "response.h"
+#include "request.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -44,28 +43,28 @@
 #define SP " "
 #define CRLF "\r\n"
 
-struct ws_response
+struct libws_response
 {
-   struct ws_client *client;
+   struct libws_client *client;
 
-	enum ws_http_status_code status;
+	enum libws_http_status_code status;
 	char* body;
 	char* full_string;
 };
 
-struct ws_response *ws_response_create(
-      struct ws_request *req,
-      enum ws_http_status_code status,
+struct libws_response *libws_response_create(
+      struct libws_request *req,
+      enum libws_http_status_code status,
       char *body)
 {
-   struct ws_response *res = malloc(sizeof(struct ws_response));
+   struct libws_response *res = malloc(sizeof(struct libws_response));
 	if(res == NULL)
 	{
 		fprintf(stderr, "ERROR: Cannot allocate memory\n");
 		return NULL;
 	}
 
-   res->client = ws_request_get_client(req);
+   res->client = libws_request_get_client(req);
    res->status = status;
    res->body = NULL;
    res->full_string = NULL;
@@ -85,17 +84,17 @@ struct ws_response *ws_response_create(
    return res;
 }
 
-void ws_response_destroy(struct ws_response *res)
+void libws_response_destroy(struct libws_response *res)
 {
    free(res->body);
    free(res->full_string);
    free(res);
 }
 
-static char* http_status_codes_to_str(enum ws_http_status_code status)
+static char* http_status_codes_to_str(enum libws_http_status_code status)
 {
 #define XX(num, str) if(status == num) {return #str;}
-	WS_HTTP_STATUS_CODE_MAP(XX)
+	LIBWS_HTTP_STATUS_CODE_MAP(XX)
 #undef XX
 	return NULL;
 }
@@ -126,7 +125,7 @@ static char* str_builder(char* old_msg, char* to_append)
 	return new_msg;
 }
 
-char* ws_response_str(struct ws_response* res)
+char* libws_response_str(struct libws_response* res)
 {
 	char* response = NULL;
 

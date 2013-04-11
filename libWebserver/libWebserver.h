@@ -31,6 +31,14 @@
  *  as representing official policies, either expressed.
  */
 
+/** \defgroup webserver Webserver
+ *
+ *  The webserver is a single threaded event based webserver, built on
+ *  top of the event loop implemented in LibEV.
+ *
+ *  \{
+ */
+
 #ifndef LIBWEBSERVER_H
 #define LIBWEBSERVER_H
 
@@ -38,29 +46,29 @@
 
 // HTTP status codes according to
 // http://www.w3.org/Protocols/rfc2616/rfc2616.html
-#define WS_HTTP_STATUS_CODE_MAP(XX) \
+#define LIBWS_HTTP_STATUS_CODE_MAP(XX) \
 	XX(200,200 OK) \
 	XX(404,404 Not Found)
 
-enum ws_http_status_code
+enum libws_http_status_code
 {
-#define XX(num, str) WS_HTTP_##num = num,
-	WS_HTTP_STATUS_CODE_MAP(XX)
+#define XX(num, str) LIBWS_HTTP_##num = num,
+	LIBWS_HTTP_STATUS_CODE_MAP(XX)
 #undef XX
 };
 
 // Port numbers are assigned according to
 // http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml
 // (Site may have very long loading time)
-#define WS_PORT_MAP(XX) \
+#define LIBWS_PORT_MAP(XX) \
    XX(  80, HTTP    ) \
    XX( 443, HTTPS   ) \
    XX(8080, HTTP_ALT)
 
 enum ws_port
 {
-#define XX(num, str) WS_PORT_##str = num,
-   WS_PORT_MAP(XX)
+#define XX(num, str) LIBWS_PORT_##str = num,
+   LIBWS_PORT_MAP(XX)
 #undef XX
 };
 
@@ -89,7 +97,7 @@ struct libws_settings {
    nodata_cb on_request_complete;
 };
 #define LIBWS_SETTINGS_DEFAULT { \
-   .port = WS_PORT_HTTP, \
+   .port = LIBWS_PORT_HTTP, \
    .on_request_begin = NULL, \
    .on_request_method = NULL, \
    .on_request_url = NULL, \
@@ -108,4 +116,11 @@ void libws_instance_destroy(struct libws_instance *instance);
 void libws_instance_start(struct libws_instance *instance);
 void libws_instance_stop(struct libws_instance *instance);
 
+struct libws_response *libws_response_create(
+      struct libws_request *req,
+      enum libws_http_status_code status,
+      char *body);
+
 #endif
+
+/** } */

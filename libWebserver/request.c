@@ -98,13 +98,11 @@ static int parser_message_begin_cb(http_parser *parser)
          method = http_method_str(parser->method);
          stat = settings->on_request_method(req, method, strlen(method));
          if (stat) { req->state = S_STOP; return stat; }
-         break;
+         return 0;
       default:
-         break;
+         req->state = S_ERROR;
+         return 1;
    }
-
-   req->state = S_ERROR;
-   return 1;
 }
 
 static int parser_url_cb(http_parser *parser, const char *buf, size_t len)
@@ -121,13 +119,11 @@ static int parser_url_cb(http_parser *parser, const char *buf, size_t len)
       case S_URL:
          stat = settings->on_request_url(req, buf, len);
          if (stat) { req->state = S_STOP; return stat; }
-         break;
+         return 0;
       default:
-         break;
+         req->state = S_ERROR;
+         return 1;
    }
-
-   req->state = S_ERROR;
-   return 1;
 }
 
 static int parser_header_field_cb(http_parser *parser, const char *buf, size_t len)
@@ -147,13 +143,11 @@ static int parser_header_field_cb(http_parser *parser, const char *buf, size_t l
       case S_HEADER_FIELD:
          stat = settings->on_request_header_field(req, buf, len);
          if (stat) { req->state = S_STOP; return stat; }
-         break;
+         return 0;
       default:
-         break;
+         req->state = S_ERROR;
+         return 1;
    }
-
-   req->state = S_ERROR;
-   return 1;
 }
 
 static int parser_header_value_cb(http_parser *parser, const char *buf, size_t len)
@@ -170,13 +164,11 @@ static int parser_header_value_cb(http_parser *parser, const char *buf, size_t l
       case S_HEADER_VALUE:
          stat = settings->on_request_header_value(req, buf, len);
          if (stat) { req->state = S_STOP; return stat; }
-         break;
+         return 0;
       default:
-         break;
+         req->state = S_ERROR;
+         return 1;
    }
-
-   req->state = S_ERROR;
-   return 1;
 }
 
 static int parser_headers_complete_cb(http_parser *parser)
@@ -195,13 +187,11 @@ static int parser_headers_complete_cb(http_parser *parser)
          req->state = S_HEADER_COMPLETE;
          stat = settings->on_request_header_complete(req);
          if (stat) { req->state = S_STOP; return stat; }
-         break;
+         return 0;
       default:
-         break;
+         req->state = S_ERROR;
+         return 1;
    }
-
-   req->state = S_ERROR;
-   return 1;
 }
 
 static int parser_body_cb(http_parser *parser, const char *buf, size_t len)
@@ -218,13 +208,11 @@ static int parser_body_cb(http_parser *parser, const char *buf, size_t len)
       case S_BODY:
          stat = settings->on_request_body(req, buf, len);
          if (stat) { req->state = S_STOP; return stat; }
-         break;
+         return 0;
       default:
-         break;
+         req->state = S_ERROR;
+         return 1;
    }
-
-   req->state = S_ERROR;
-   return 1;
 }
 
 static int parser_message_complete_cb(http_parser *parser)
@@ -241,13 +229,11 @@ static int parser_message_complete_cb(http_parser *parser)
          req->state = S_COMPLETE;
          stat = settings->on_request_complete(req);
          if (stat) { req->state = S_STOP; return stat; }
-         break;
+         return 0;
       default:
-         break;
+         req->state = S_ERROR;
+         return 1;
    }
-
-   req->state = S_ERROR;
-   return 1;
 }
 
 struct libws_request *libws_request_create(
@@ -285,4 +271,7 @@ size_t libws_request_parse(
    return http_parser_execute(&req->parser, &parser_settings, buf, len);
 }
 
-
+struct libws_client *libws_request_get_client(struct libws_request *req)
+{
+   return req->client;
+}

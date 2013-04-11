@@ -1,4 +1,4 @@
-// ws_response.h
+// response.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   
@@ -31,12 +31,12 @@
 *  as representing official policies, either expressed.
 */
 
-#ifndef WS_RESPONSE_H
-#define WS_RESPONSE_H
+#ifndef RESPONSE_H
+#define RESPONSE_H
 
-struct ws_response;
+#include "libWebserver.h"
 
-void ws_response_destroy(struct ws_response *res);
-char* ws_response_str(struct ws_response* res);
+void libws_response_destroy(struct libws_response *res);
+char* libws_response_str(struct libws_response* res);
 
 #endif
