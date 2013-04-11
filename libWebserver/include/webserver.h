@@ -78,24 +78,75 @@ struct ws;
 struct ws_request;
 struct ws_response;
 
-// Callbacks
+/**********************************************************************
+ *  Callbacks                                                         *
+ **********************************************************************/
+
+/// No-data callback
 typedef int (*nodata_cb)(struct ws_request *req);
+
+/// Data callback (Do not expect buf to be null terminated)
 typedef int (*data_cb)(struct ws_request *req,
       const char *buf, size_t len);
 
-// Settings
+/// Settings struct for webserver
+/**
+ *  Please initialise this struct as following, to ensure that all
+ *  settings have acceptable default values:
+ *  \code
+ *  struct ws_settings *settings = WS_SETTINGS_DEFAULT;
+ *  \endcode
+ *
+ *  The settings hold a series of callbacks of type either data_cb or
+ *  nodata_cb. Do not expect the string parameter in data callbacks to
+ *  be null terminated (only on_request_method may be). All data
+ *  callbacks, except on_request_method, are called on chunks and
+ *  therefore may be called multiple times. That is
+ *  on_request_header_field may be called first with 'hos' and then with
+ *  't'. It is up to the implementer of these callbacks to concatenate
+ *  the results if needed.
+ *
+ *  The callbacks are called in the following order:
+ *  \dot
+ *  digraph callback_order {
+ *  on_request_begin -> on_request_method;
+ *  on_request_method -> on_request_url;
+ *  on_request_url -> on_request_url;
+ *  on_request_url -> on_request_url_complete;
+ *  on_request_url_complete -> on_request_header_field;
+ *  on_request_url_complete -> on_request_header_complete;
+ *  on_request_header_field -> on_request_header_field;
+ *  on_request_header_field -> on_request_header_value;
+ *  on_request_header_value -> on_request_header_value;
+ *  on_request_header_value -> on_request_header_field;
+ *  on_request_header_value -> on_request_header_complete;
+ *  on_request_header_complete -> on_request_body;
+ *  on_request_header_complete -> on_request_complete;
+ *  on_request_body -> on_request_body;
+ *  on_request_body -> on_request_complete;
+ *  }
+ *  \enddot
+ */
 struct ws_settings {
-   unsigned short int port;
-   nodata_cb on_request_begin;
-   data_cb   on_request_method;
-   data_cb   on_request_url;
-   nodata_cb on_request_url_complete;
-   data_cb   on_request_header_field;
-   data_cb   on_request_header_value;
-   nodata_cb on_request_header_complete;
-   data_cb   on_request_body;
-   nodata_cb on_request_complete;
+   enum ws_port port;                    ///< Port number
+   nodata_cb on_request_begin;           ///< Request begin
+   data_cb   on_request_method;          ///< HTTP Method
+   data_cb   on_request_url;             ///< URL chunks
+   nodata_cb on_request_url_complete;    ///< URL complete
+   data_cb   on_request_header_field;    ///< Header field chunks
+   data_cb   on_request_header_value;    ///< Header value chunks
+   nodata_cb on_request_header_complete; ///< Header complete
+   data_cb   on_request_body;            ///< Body chunks
+   nodata_cb on_request_complete;        ///< Request complete
 };
+
+/// Default settings for webserver
+/**
+ *  Use this as:
+ *  \code
+ *  struct ws_settings *settings = WS_SETTINGS_DEFAULT;
+ *  \endcode
+ */
 #define WS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
    .on_request_begin = NULL, \

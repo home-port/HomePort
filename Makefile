@@ -87,4 +87,7 @@ clean:
 	$(RM) -r doc/*
 	$(RM) $(TESTS) $(patsubst %, %.o, $(TESTS))
 
+.PHONY : doc
+doc:
+	doxygen doxygen.conf
 
