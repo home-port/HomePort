@@ -47,9 +47,9 @@ void on_key_value(const char* key, int key_length, const char* value, int value_
 
  	struct url_parser_instance *instance = up_create(settings);
 
- 	char* chunkA = "https://google.com:8080/device/washer?id=2&name=hej";
+ 	char* chunkA = "http://localhost:8080/device/washer?id=2&name=hej";
 
- 	up_add_chunk(instance, chunkA, 51);
+ 	up_add_chunk(instance, chunkA, 49);
 
  	up_add_chunk(instance, "&evening=yes",12);
 

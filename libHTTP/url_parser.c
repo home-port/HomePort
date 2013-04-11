@@ -33,6 +33,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "url_parser.h"
 
@@ -42,6 +43,7 @@ enum url_parser_state {
 	S_GARBAGE1,
 	S_GARBAGE2,
 	S_HOST,
+	S_PREPORT,
 	S_PORT,
 	S_SEGMENT,
 	S_KEY,
@@ -157,10 +159,17 @@ void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int c
 						instance->settings->on_host(&instance->buffer[instance->last_returned+3],(i-(instance->last_returned)-3));
 					}
 					instance->last_returned = instance->chars_parsed;
-					instance->state = S_PORT;
+					instance->state = S_PREPORT;
 					break;
 				}
 				break;
+
+			case S_PREPORT:
+				if(c == '/')
+					instance->state = S_ERROR;
+				instance->state = S_PORT;
+				break;
+
 			case S_PORT:
 				if(c == '/')
 				{
@@ -220,21 +229,33 @@ void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int c
 
 void up_complete(struct url_parser_instance *instance)
 {
-	if(instance->state == S_SEGMENT)
+	// Check if we need to send a last chunk and that we are in a valid end state
+	switch(instance->state)
 	{
-		if(instance->settings->on_path_segment != NULL)
-		{
-			instance->settings->on_path_segment(&instance->buffer[instance->last_returned+1], (instance->buffer_size-instance->last_returned-1));
-		}
+		case S_SEGMENT:
+			if(instance->settings->on_path_segment != NULL)
+			{
+				instance->settings->on_path_segment(&instance->buffer[instance->last_returned+1], (instance->buffer_size-instance->last_returned-1));
+			}
 			instance->last_returned = instance->chars_parsed;
-	}
-	else if(instance->state == S_VALUE)
-	{
-		if(instance->settings->on_key_value != NULL)
-		{
-			instance->settings->on_key_value(instance->tmp_key, instance->tmp_key_size, &instance->buffer[instance->last_returned+1], (instance->buffer_size-(instance->last_returned)-1));
-		}
-			instance->last_returned = instance->chars_parsed;
+			break;
+
+		case S_VALUE:
+			if(instance->settings->on_key_value != NULL)
+			{
+				instance->settings->on_key_value(instance->tmp_key, instance->tmp_key_size, &instance->buffer[instance->last_returned+1], (instance->buffer_size-(instance->last_returned)-1));
+			}
+				instance->last_returned = instance->chars_parsed;
+			break;
+
+		case S_HOST:
+			break;
+		
+		case S_PORT:
+			break;
+
+		default:
+			fprintf(stderr, "An error has happened in the URL parser. End state: %d",instance->state);
 	}
 
 	if(instance->settings->on_complete != NULL && instance->buffer != NULL) {
