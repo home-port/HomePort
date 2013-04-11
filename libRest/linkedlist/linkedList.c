@@ -69,8 +69,8 @@ void* get(ListElement *head, char *key)
       {
          return tempElement->val;
       }
-      
    }
+   return NULL;
 }
 
 void destroy(ListElement *head)
