@@ -51,6 +51,11 @@ struct url_parser_settings {
 	up_string_cb on_complete;
 };
 
+#define URL_PARSER_SETTINGS_DEFAULT {\
+	.on_begin = NULL, .on_protocol = NULL, .on_host = NULL, \
+	.on_port = NULL, .on_path_segment = NULL, .on_path_complete = NULL, \
+	.on_key_value = NULL, .on_complete = NULL }
+
 struct url_parser_instance *up_create(struct url_parser_settings*);
 void up_destroy(struct url_parser_instance*);
 

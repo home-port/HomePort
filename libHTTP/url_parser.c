@@ -57,7 +57,7 @@ struct url_parser_instance {
 	int state;
 	unsigned int chars_parsed;
 	unsigned int last_returned;
-	char* tmp_key;
+	int tmp_key_begin;
 	int tmp_key_size;
 
 	unsigned buffer_size;
@@ -77,6 +77,7 @@ struct url_parser_instance *up_create(struct url_parser_settings *settings)
 	instance -> buffer_size = 0;
 	instance -> chars_parsed = 0;
 	instance -> last_returned = 0;
+	instance -> buffer = NULL;
 
 	return instance;
 }
@@ -200,7 +201,8 @@ void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int c
 				{
 					if(instance->settings->on_key_value != NULL)
 					{
-						instance->tmp_key = &instance->buffer[instance->last_returned+1];
+						//instance->tmp_key = &instance->buffer[instance->last_returned+1];
+						instance->tmp_key_begin = instance->last_returned+1;
 						instance->tmp_key_size = (i-(instance->last_returned)-1);
 					}
 					instance->last_returned = instance->chars_parsed;
@@ -212,7 +214,9 @@ void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int c
 				{
 					if(instance->settings->on_key_value != NULL)
 					{
-						instance->settings->on_key_value(instance->tmp_key, instance->tmp_key_size, &instance->buffer[instance->last_returned+1], (i-(instance->last_returned)-1));
+						instance->settings->on_key_value(&instance->buffer[instance->tmp_key_begin], instance->tmp_key_size,
+														 &instance->buffer[instance->last_returned+1],
+														 (i-(instance->last_returned)-1));
 					}
 					instance->last_returned = instance->chars_parsed;
 					instance->state = S_KEY;
@@ -220,7 +224,6 @@ void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int c
 				break;
 
 			case S_ERROR:
-				printf("The URL parser has reached an error state!\n");
 				break;
 		}
 		instance->chars_parsed++;
@@ -235,7 +238,8 @@ void up_complete(struct url_parser_instance *instance)
 		case S_SEGMENT:
 			if(instance->settings->on_path_segment != NULL)
 			{
-				instance->settings->on_path_segment(&instance->buffer[instance->last_returned+1], (instance->buffer_size-instance->last_returned-1));
+				instance->settings->on_path_segment(&instance->buffer[instance->last_returned+1],
+													(instance->buffer_size-instance->last_returned-1));
 			}
 			instance->last_returned = instance->chars_parsed;
 			break;
@@ -243,7 +247,10 @@ void up_complete(struct url_parser_instance *instance)
 		case S_VALUE:
 			if(instance->settings->on_key_value != NULL)
 			{
-				instance->settings->on_key_value(instance->tmp_key, instance->tmp_key_size, &instance->buffer[instance->last_returned+1], (instance->buffer_size-(instance->last_returned)-1));
+				instance->settings->on_key_value(&instance->buffer[instance->tmp_key_begin],
+												 instance->tmp_key_size,
+												 &instance->buffer[instance->last_returned+1],
+												 (instance->buffer_size-(instance->last_returned)-1));
 			}
 				instance->last_returned = instance->chars_parsed;
 			break;
@@ -255,7 +262,7 @@ void up_complete(struct url_parser_instance *instance)
 			break;
 
 		default:
-			fprintf(stderr, "An error has happened in the URL parser. End state: %d",instance->state);
+			fprintf(stderr, "An error has happened in the URL parser. End state: %d\n",instance->state);
 	}
 
 	if(instance->settings->on_complete != NULL && instance->buffer != NULL) {

@@ -37,15 +37,16 @@ void on_key_value(const char* key, int key_length, const char* value, int value_
  {
  	printf("Its running at least...\n");
 
- 	struct url_parser_settings *settings = malloc(sizeof(struct url_parser_settings));
- 	settings->on_begin = &on_begin;
- 	settings->on_protocol = &on_protocol;
- 	settings->on_host = &on_host;
- 	settings->on_port = &on_port;
- 	settings->on_path_segment = &on_path_segment;
- 	settings->on_key_value = &on_key_value;
+ 	struct url_parser_settings settings = URL_PARSER_SETTINGS_DEFAULT;
 
- 	struct url_parser_instance *instance = up_create(settings);
+ 	settings.on_begin = &on_begin;
+ 	settings.on_protocol = &on_protocol;
+ 	settings.on_host = &on_host;
+ 	settings.on_port = &on_port;
+ 	settings.on_path_segment = &on_path_segment;
+ 	settings.on_key_value = &on_key_value;
+
+ 	struct url_parser_instance *instance = up_create(&settings);
 
  	char* chunkA = "http://localhost:8080/device/washer?id=2&name=hej";
 
