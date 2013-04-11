@@ -1,4 +1,4 @@
-// ws_instance.h
+// instance.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
  *   
@@ -31,21 +31,21 @@
  *  as representing official policies, either expressed.
  */
 
-#ifndef WS_INSTANCE_H
-#define WS_INSTANCE_H
+#ifndef INSTANCE_H
+#define INSTANCE_H
 
 #include "webserver.h"
 
-struct ws_client;
+struct libws_client;
 
-struct ws_settings *ws_instance_get_settings(
-      struct ws_instance *instance);
+struct ws_settings *libws_instance_get_settings(
+      struct ws *instance);
 
-void ws_instance_set_first_client(
-      struct ws_instance *instance,
-      struct ws_client *client);
+void libws_instance_set_first_client(
+      struct ws *instance,
+      struct libws_client *client);
 
-struct ws_client *ws_instance_get_first_client(
-      struct ws_instance *instance);
+struct libws_client *libws_instance_get_first_client(
+      struct ws *instance);
 
 #endif

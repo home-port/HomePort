@@ -31,7 +31,7 @@
  *  as representing official policies, either expressed.
  */
 
-#include "libWebserver.h"
+#include "instance.h"
 #include "client.h"
 
 #include <stdlib.h>
@@ -46,15 +46,26 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 
-struct libws_instance {
-   struct libws_settings settings;
-   char port_str[6];
-   struct ev_loop *loop;
-   void *clients;
-   int sockfd;
-   struct ev_io watcher;
+/// Instance of a webserver
+struct ws {
+   struct ws_settings settings; ///< Settings
+   char port_str[6];               ///< Port number
+   struct ev_loop *loop;           ///< Event loop
+   void *clients;                  ///< List of connected clients
+   int sockfd;                     ///< Socket file descriptor
+   struct ev_io watcher;           ///< New connection watcher
 };
 
+/// Get the socket file descriptor for a port number.
+/**
+ *  This will also bind and start listening to the socket. Supports both
+ *  ipv4 and ipv6.
+ *
+ *  \param port The port number to bind to and listen on.
+ *
+ *  \return The socket file descriptor, that should be used later for
+ *  closing again.
+ */
 static int bind_listen(char *port)
 {
    int status, sockfd;
@@ -122,18 +133,18 @@ static int bind_listen(char *port)
    return sockfd;
 }
 
-struct libws_instance *ws_instance_create(
-      struct libws_settings *settings,
+struct ws *ws_create(
+      struct ws_settings *settings,
       struct ev_loop *loop)
 {
-   struct libws_instance *instance = malloc(sizeof(struct libws_instance));
+   struct ws *instance = malloc(sizeof(struct ws));
    if(instance == NULL)
    {
       fprintf(stderr, "ERROR: Cannot allocate memory for a new instance struct\n");
       return NULL;
    }
 
-   memcpy(&instance->settings, settings, sizeof(struct libws_settings));
+   memcpy(&instance->settings, settings, sizeof(struct ws_settings));
    sprintf(instance->port_str, "%i", settings->port);
 
    instance->loop = loop;
@@ -142,12 +153,23 @@ struct libws_instance *ws_instance_create(
    return instance;
 }
 
-void libws_instance_destroy(struct libws_instance *instance)
+void ws_destroy(struct ws *instance)
 {
    free(instance);
 }
 
-void libws_instance_start(struct libws_instance *instance)
+/// Start the webserver
+/**
+ *  The libev-based webserver is added to an event loop by a call to
+ *  this function. It is the caller's resposibility to start the
+ *  event loop.
+ *
+ *  To stop the webserver again, one may call ws_stop().
+ *
+ *  \param instance The webserver instance to start. Initialised with
+ *  ws_init();
+ */
+void ws_start(struct ws *instance)
 {
    // Check loop
    if (instance->loop == NULL) {
@@ -164,7 +186,15 @@ void libws_instance_start(struct libws_instance *instance)
    ev_io_start(instance->loop, &instance->watcher);
 }
 
-void libws_instance_stop(struct libws_instance *instance)
+/// Stop an already running webserver.
+/**
+ *  The webserver, startet with ws_start(), may be stopped by calling
+ *  this function. It will take the webserver off the event loop and
+ *  clean up after it.
+ *
+ *  \param instance The webserver instance to stop.
+ */
+void ws_stop(struct ws *instance)
 {
    // Stop accept watcher
    ev_io_stop(instance->loop, &instance->watcher);
@@ -178,20 +208,20 @@ void libws_instance_stop(struct libws_instance *instance)
    }
 }
 
-struct libws_settings *libws_instance_get_settings(
-      struct libws_instance *instance)
+struct ws_settings *libws_instance_get_settings(
+      struct ws *instance)
 {
    return &instance->settings;
 }
 
 struct libws_client *libws_instance_get_first_client(
-      struct libws_instance *instance)
+      struct ws *instance)
 {
    return instance->clients;
 }
 
 void libws_instance_set_first_client(
-      struct libws_instance *instance,
+      struct ws *instance,
       struct libws_client *client)
 {
    instance->clients = client;

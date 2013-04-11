@@ -34,6 +34,7 @@
 #include "client.h"
 #include "instance.h"
 #include "request.h"
+#include "response.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -47,23 +48,38 @@
 #include <stdarg.h>
 #include <ev.h>
 
+/// The maximum data size we can recieve or send
 #define MAXDATASIZE 1024
+
+/// The amount of time a client may be inactive, in seconds
 #define TIMEOUT 15
 
+/// All data to represent a client
 struct libws_client {
-   struct libws_instance *instance;
-   struct libws_settings *settings;
-   char ip[INET6_ADDRSTRLEN];
-   struct ev_loop *loop;
-   struct ev_timer timeout_watcher;
-   struct ev_io recv_watcher;
-   struct ev_io send_watcher;
-   struct libws_request *request;
-   struct libws_client *prev;
-   struct libws_client *next;
-   char send_msg[MAXDATASIZE];
+   struct ws *instance;             ///< Webserver instance
+   struct ws_settings *settings;    ///< Webserver settings
+   char ip[INET6_ADDRSTRLEN];       ///< IP address of the client
+   struct ev_loop *loop;            ///< The event loop
+   struct ev_timer timeout_watcher; ///< Timeout watcher
+   struct ev_io recv_watcher;       ///< Recieve watcher
+   struct ev_io send_watcher;       ///< Send watcher
+   struct ws_request *request;      ///< Current request in progress
+   struct libws_client *prev;       ///< Previous client in active list
+   struct libws_client *next;       ///< Next client in active list
+   char send_msg[MAXDATASIZE];      ///< Data to send
 };
 
+/// Get the in_addr from a sockaddr (IPv4 or IPv6)
+/**
+ *  Get the in_addr for either IPv4 or IPv6. The type depends on the
+ *  protocal, which is why this returns a void pointer. It works nicely
+ *  to pass the result of this function as the second argument to
+ *  inet_ntop().
+ *
+ *  \param sa The sockaddr
+ *
+ *  \return An in_addr or in6_addr depending on the protocol.
+ */
 static void *get_in_addr(struct sockaddr *sa)
 {
    if (sa->sa_family == AF_INET) {
@@ -137,6 +153,48 @@ static void client_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, in
    libws_client_kill(client);
 }
 
+static void sendf(struct libws_client *client, char *fmt, ...) {
+   int status;
+   va_list arg;
+
+   va_start(arg, fmt);
+   status = vsnprintf(client->send_msg, MAXDATASIZE, fmt, arg);
+   va_end(arg);
+
+   if (status >= MAXDATASIZE) {
+      fprintf(stderr, "Data is too large to send!");
+      libws_client_kill(client);
+      return;
+   }
+
+   ev_io_start(client->loop, &client->send_watcher);
+}
+
+static int send_response(
+      struct libws_client *client,
+      struct ws_response *response)
+{
+   if(response == NULL) return 0;
+   
+   // TODO: Don't call response destroy until response is sent..
+   sendf(client, "%s", libws_response_str(response));
+   libws_response_destroy(response);
+
+   return 1;
+}
+
+/// Initialise and accept client
+/**
+ *  This function is designed to be used as a callback function within
+ *  LibEV. It will accept the conncetion as described inside the file
+ *  descripter within the watcher. It will also add timeout and io
+ *  watchers to the loop, which will handle the further communication
+ *  with the client.
+ *
+ *  \param loop The running event loop.
+ *  \param watcher The watcher that was tiggered on the connection.
+ *  \param revents Not used.
+ */
 void libws_client_accept(
       struct ev_loop *loop,
       struct ev_io *watcher,
@@ -194,6 +252,13 @@ void libws_client_accept(
 
 }
 
+/// Kill and clean up after a client
+/**
+ *  This function stops the LibEV watchers, closes the socket, and frees
+ *  the data structures used be a client.
+ *
+ *  \param client The client to kill.
+ */
 void libws_client_kill(struct libws_client *client) {
    // Stop watchers
    int sockfd = client->recv_watcher.fd;
@@ -219,7 +284,15 @@ void libws_client_kill(struct libws_client *client) {
    free(client);
 }
 
-void libws_client_killall(struct libws_instance *instance)
+/// Kill all clients in a runnning webserver instance
+/**
+ *  Designed to be used within ws_stop, but can also be used for other
+ *  purposes, where the desidered effect is to remove all clients from
+ *  the event loop and close their sockets.
+ *
+ *  \param instance The webserver instance.
+ */
+void libws_client_killall(struct ws *instance)
 {
    struct libws_client *next;
    struct libws_client *client = libws_instance_get_first_client(instance);

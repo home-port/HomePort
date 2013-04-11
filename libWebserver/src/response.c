@@ -1,4 +1,4 @@
-// ws_response.c
+// reponse.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   
@@ -31,9 +31,8 @@
 *  as representing official policies, either expressed.
 */
 
-#include "ws_response.h"
-#include "ws_request.h"
-#include "webserver.h"
+#include "response.h"
+#include "request.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -46,7 +45,7 @@
 
 struct ws_response
 {
-   struct ws_client *client;
+   struct libws_client *client;
 
 	enum ws_http_status_code status;
 	char* body;
@@ -65,7 +64,7 @@ struct ws_response *ws_response_create(
 		return NULL;
 	}
 
-   res->client = ws_request_get_client(req);
+   res->client = libws_request_get_client(req);
    res->status = status;
    res->body = NULL;
    res->full_string = NULL;
@@ -85,7 +84,7 @@ struct ws_response *ws_response_create(
    return res;
 }
 
-void ws_response_destroy(struct ws_response *res)
+void libws_response_destroy(struct ws_response *res)
 {
    free(res->body);
    free(res->full_string);
@@ -126,7 +125,7 @@ static char* str_builder(char* old_msg, char* to_append)
 	return new_msg;
 }
 
-char* ws_response_str(struct ws_response* res)
+char* libws_response_str(struct ws_response* res)
 {
 	char* response = NULL;
 
