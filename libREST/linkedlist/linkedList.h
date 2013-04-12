@@ -36,7 +36,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 typedef struct ListElement ListElement;
 
 struct ListElement
@@ -46,7 +46,7 @@ char *key;
 void *val;
 };
 
-struct ListElement* create(char *key, void *val);
+ListElement* create(char *key, void *val);
 
 void insert(struct ListElement *head, char *key, void *val);
 
@@ -54,6 +54,6 @@ void* get(struct ListElement *head, char *key);
 
 void destroy(struct ListElement *head);
 
-void removeElement(struct ListElement *head, char *key);
+ListElement* removeElement(struct ListElement *head, char *key);
 
 #endif

@@ -177,8 +177,8 @@ static int send_response(
    if(response == NULL) return 0;
    
    // TODO: Don't call response destroy until response is sent..
-   sendf(client, "%s", libws_response_str(response));
-   libws_response_destroy(response);
+   //sendf(client, "%s", libws_response_str(response));
+   ws_response_destroy(response);
 
    return 1;
 }

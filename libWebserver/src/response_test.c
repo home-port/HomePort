@@ -1,4 +1,4 @@
-// request_test.c
+// response_test.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   
@@ -31,19 +31,53 @@
 *  as representing official policies, either expressed.
 */
 
-#include "request.c"
+#include "response.c"
 #include "../../unit_test.h"
 
-TEST_START("request.c");
+TEST_START("response.c");
 
-TEST(ws_request_create)
+TEST(public interface)
    struct ws_settings settings;
    struct ws_request *req = libws_request_create(NULL, &settings);
+   struct ws_response *res = ws_response_create(req, WS_HTTP_200);
 
-   ASSERT_NULL(req->client);
-   ASSERT_EQUAL(req->settings, &settings);
-   ASSERT_EQUAL(req->state, S_START);
+   ASSERT_NULL(res->client);
+   ASSERT_EQUAL(res->state, S_START);
+   ASSERT_STR_EQUAL(res->msg, "HTTP/1.1 200 OK\r\n");
 
+   ws_response_add_header_field(res, "hd", 2);
+   ASSERT_EQUAL(res->state, S_HEADER_FIELD);
+   ASSERT_STR_EQUAL(res->msg, "HTTP/1.1 200 OK\r\nhd");
+
+   ws_response_add_header_field(res, "r1", 2);
+   ASSERT_EQUAL(res->state, S_HEADER_FIELD);
+   ASSERT_STR_EQUAL(res->msg, "HTTP/1.1 200 OK\r\nhdr1");
+   
+   ws_response_add_header_value(res, "valu", 4);
+   ASSERT_EQUAL(res->state, S_HEADER_VALUE);
+   ASSERT_STR_EQUAL(res->msg, "HTTP/1.1 200 OK\r\nhdr1:valu");
+
+   ws_response_add_header_value(res, "e1", 2);
+   ASSERT_EQUAL(res->state, S_HEADER_VALUE);
+   ASSERT_STR_EQUAL(res->msg, "HTTP/1.1 200 OK\r\nhdr1:value1");
+
+   ws_response_add_header_field(res, "hdr2", 4);
+   ASSERT_EQUAL(res->state, S_HEADER_FIELD);
+   ASSERT_STR_EQUAL(res->msg, "HTTP/1.1 200 OK\r\nhdr1:value1\r\nhdr2");
+   
+   ws_response_add_header_value(res, "value2", 6);
+   ASSERT_EQUAL(res->state, S_HEADER_VALUE);
+   ASSERT_STR_EQUAL(res->msg, "HTTP/1.1 200 OK\r\nhdr1:value1\r\nhdr2:value2");
+
+   ws_response_add_body(res, "A looo", 6);
+   ASSERT_EQUAL(res->state, S_BODY);
+   ASSERT_STR_EQUAL(res->msg, "HTTP/1.1 200 OK\r\nhdr1:value1\r\nhdr2:value2\r\n\r\nA looo");
+
+   ws_response_add_body(res, "oong body", 9);
+   ASSERT_EQUAL(res->state, S_BODY);
+   ASSERT_STR_EQUAL(res->msg, "HTTP/1.1 200 OK\r\nhdr1:value1\r\nhdr2:value2\r\n\r\nA looooong body");
+
+   ws_response_destroy(res);
    libws_request_destroy(req);
 TSET()
 

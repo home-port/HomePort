@@ -33,7 +33,7 @@
 
 #include "linkedList.h"
 
-struct ListElement *create(char* key, void* val)
+ListElement *create(char* key, void* val)
 {
    ListElement *headElement = malloc(sizeof(*headElement));
    if(headElement == NULL)
@@ -52,7 +52,8 @@ void insert(ListElement *head, char *key, void *val)
    ListElement *element = malloc(sizeof(*element));
    ListElement *tempElement = head;
 
-   while(tempElement->next != NULL);
+   while(tempElement->next != NULL)
+      tempElement = tempElement->next;
 
    tempElement->next = element;
    element->next = NULL;
@@ -62,13 +63,14 @@ void insert(ListElement *head, char *key, void *val)
 
 void* get(ListElement *head, char *key)
 {
-   ListElement *tempElement = head->next;
+   ListElement *tempElement = head;
    while(tempElement != NULL)
    {
-      if(tempElement->key == key)
+      if(strcmp(tempElement->key, key) == 0)
       {
          return tempElement->val;
       }
+      tempElement = tempElement->next;
    }
    return NULL;
 }
@@ -85,17 +87,23 @@ void destroy(ListElement *head)
    free(head);
 }
 
-void removeElement(ListElement *head, char *key)
+ListElement* removeElement(ListElement *head, char *key)
 {  
    ListElement *target = head;
    ListElement *prev = NULL;
-   while(target->next != NULL)
+   while(target != NULL)
    {
-      if(target->key == key)
+      if(strcmp(target->key, key) == 0)
       {
          if(prev != NULL)
             prev->next = target->next;
+         else 
+            head = target->next;
          free(target);
+         return head;
       }
+      prev = target;
+      target = target->next;
    }
+   return head;
 }

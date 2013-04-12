@@ -168,8 +168,14 @@ void ws_stop(struct ws *instance);
 // Response functions
 struct ws_response *ws_response_create(
       struct ws_request *req,
-      enum ws_http_status_code status,
-      char *body);
+      enum ws_http_status_code status);
+void ws_response_destroy(struct ws_response *res);
+int ws_response_add_header_field(struct ws_response *res,
+      const char *buf, size_t len);
+int ws_response_add_header_value(struct ws_response *res,
+      const char *buf, size_t len);
+int ws_response_add_body(struct ws_response *res,
+      const char *buf, size_t len);
 
 #endif
 

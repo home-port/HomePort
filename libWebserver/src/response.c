@@ -37,59 +37,23 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
 
-#define HTTP_VERSION "HTTP/1.1"
-#define SP " "
+#define HTTP_VERSION "HTTP/1.1 "
 #define CRLF "\r\n"
+
+enum response_state {
+   S_START,
+   S_HEADER_FIELD,
+   S_HEADER_VALUE,
+   S_BODY
+};
 
 struct ws_response
 {
    struct libws_client *client;
-
-	enum ws_http_status_code status;
-	char* body;
-	char* full_string;
+   enum response_state state;
+   char *msg;
 };
-
-struct ws_response *ws_response_create(
-      struct ws_request *req,
-      enum ws_http_status_code status,
-      char *body)
-{
-   struct ws_response *res = malloc(sizeof(struct ws_response));
-	if(res == NULL)
-	{
-		fprintf(stderr, "ERROR: Cannot allocate memory\n");
-		return NULL;
-	}
-
-   res->client = libws_request_get_client(req);
-   res->status = status;
-   res->body = NULL;
-   res->full_string = NULL;
-
-   if (body != NULL) {
-      res->body = malloc((strlen(body)+1)*sizeof(char));
-	   if(res->body == NULL)
-	   {
-	   	fprintf(stderr, "ERROR: Cannot allocate memory\n");
-	   	return NULL;
-	   }
-      strcpy(res->body, body);
-   } else {
-      res->body = NULL;
-   }
-
-   return res;
-}
-
-void libws_response_destroy(struct ws_response *res)
-{
-   free(res->body);
-   free(res->full_string);
-   free(res);
-}
 
 static char* http_status_codes_to_str(enum ws_http_status_code status)
 {
@@ -99,62 +63,167 @@ static char* http_status_codes_to_str(enum ws_http_status_code status)
 	return NULL;
 }
 
-static char* str_builder(char* old_msg, char* to_append)
+void ws_response_destroy(struct ws_response *res)
 {
-	// TODO: Need to allocate space in 1 step (pre-calculate it)
-	char* new_msg;
-	size_t len = strlen(to_append)+1;
-
-	if(old_msg != NULL)	{
-		len += strlen(old_msg);
-	}
-
-	new_msg = realloc(old_msg, len * sizeof(char));
-	
-	if(new_msg == NULL)	{
-		perror("Failed when allocating response message: ");
-		return old_msg;
-	}
-
-	if(old_msg == NULL)	{
-		strcpy(new_msg, to_append);
-	} else {
-		strcat(new_msg, to_append);
-	}
-
-	return new_msg;
+   free(res->msg);
+   free(res);
 }
 
-char* libws_response_str(struct ws_response* res)
+struct ws_response *ws_response_create(
+      struct ws_request *req,
+      enum ws_http_status_code status)
 {
-	char* response = NULL;
+   struct ws_response *res = NULL;
+   int len;
 
-	response = str_builder(response, HTTP_VERSION);
-	response = str_builder(response, SP);
-	response = str_builder(response, http_status_codes_to_str(res->status));
-	response = str_builder(response, CRLF);
+   // Get data
+   char *status_str = http_status_codes_to_str(status);
 
-	if(res->body != NULL)
-	{
-		int body_length = strlen(res->body);
-		char body_length_str[(int)floor(log10(abs(body_length))) + 2];
-		sprintf(body_length_str, "%d", body_length);
+   // Calculate msg length
+   len = 1;
+   len += strlen(HTTP_VERSION);
+   len += strlen(status_str);
+   len += strlen(CRLF);
+   
+   // Allocate space
+   res = malloc(sizeof(struct ws_response));
+   if (res == NULL) {
+      fprintf(stderr, "ERROR: Cannot allocate memory\n");
+      return NULL;
+   }
+   res->msg = malloc(len*sizeof(char));
+   if (res == NULL) {
+      fprintf(stderr, "ERROR: Cannot allocate memory\n");
+      ws_response_destroy(res);
+      return NULL;
+   }
+  
+   // Init struct
+   res->client = libws_request_get_client(req);
+   res->state = S_START;
 
-		response = str_builder(response, "Content-Length:");
-		response = str_builder(response, body_length_str);
-		response = str_builder(response, CRLF);
-	}
+   // Construct msg
+   strcpy(res->msg, HTTP_VERSION);
+   strcat(res->msg, status_str);
+   strcat(res->msg, CRLF);
 
-	response = str_builder(response, CRLF);
-	if(res->body != NULL)
-	{
-		response = str_builder(response, res->body);
-	}
+   return res;
+}
 
-	if(res->full_string != NULL)
-		free(res->full_string);
-	res->full_string = response;
+int ws_response_add_header_field(struct ws_response *res,
+      const char *buf, size_t len)
+{
+   char *msg;
+   int msg_len = strlen(res->msg)+1;
 
-	return res->full_string;
+   // Calculate new message size
+   switch(res->state) {
+      case S_HEADER_VALUE:
+         msg_len += strlen(CRLF);
+      case S_START:
+      case S_HEADER_FIELD:
+         msg_len += len;
+      default:
+         break;
+   }
+
+   // Allocate
+   msg = realloc(res->msg, msg_len);
+   if (msg == NULL) {
+      fprintf(stderr, "ERROR: Cannot allocate memory\n");
+      return 1;
+   }
+   res->msg = msg;
+
+   // Expand msg
+   switch(res->state) {
+      case S_HEADER_VALUE:
+         strcat(res->msg, CRLF);
+      case S_START:
+         res->state = S_HEADER_FIELD;
+      case S_HEADER_FIELD:
+         sprintf(&(res->msg[strlen(msg)]), "%.*s", (int)len, buf);
+         return 0;
+      default:
+         return 1;
+   }
+}
+
+int ws_response_add_header_value(struct ws_response *res,
+      const char *buf, size_t len)
+{
+   char *msg;
+   int msg_len = strlen(res->msg)+1;
+
+   // Calculate new message size
+   switch(res->state) {
+      case S_HEADER_FIELD:
+         msg_len++;
+      case S_HEADER_VALUE:
+         msg_len += len;
+      default:
+         break;
+   }
+
+   // Allocate
+   msg = realloc(res->msg, msg_len);
+   if (msg == NULL) {
+      fprintf(stderr, "ERROR: Cannot allocate memory\n");
+      return 1;
+   }
+   res->msg = msg;
+   
+   // Expand msg
+   switch(res->state) {
+      case S_HEADER_FIELD:
+         strcat(res->msg, ":");
+         res->state = S_HEADER_VALUE;
+      case S_HEADER_VALUE:
+         sprintf(&(res->msg[strlen(msg)]), "%.*s", (int)len, buf);
+         return 0;
+      default:
+         return 1;
+   }
+}
+
+int ws_response_add_body(struct ws_response *res,
+      const char *buf, size_t len)
+{
+   char *msg;
+   int msg_len = strlen(res->msg)+1;
+
+   // Calculate new message size
+   switch(res->state) {
+      case S_HEADER_VALUE:
+         msg_len += strlen(CRLF);
+      case S_START:
+         msg_len += strlen(CRLF);
+      case S_BODY:
+         msg_len += len;
+      default:
+         break;
+   }
+
+   // Allocate
+   msg = realloc(res->msg, msg_len);
+   if (msg == NULL) {
+      fprintf(stderr, "ERROR: Cannot allocate memory\n");
+      return 1;
+   }
+   res->msg = msg;
+   
+   // Expand msg
+   switch(res->state) {
+      case S_HEADER_VALUE:
+         strcat(res->msg, CRLF);
+      case S_START:
+         strcat(res->msg, CRLF);
+         res->state = S_BODY;
+      case S_BODY:
+         sprintf(&(res->msg[strlen(msg)]), "%.*s", (int)len, buf);
+         return 0;
+      default:
+         return 1;
+   }
 }
 

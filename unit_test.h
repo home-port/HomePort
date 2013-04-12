@@ -73,8 +73,31 @@
       ASSERT(1) \
    }
 
+#define PRINT_CHAR(X) \
+   switch (X) { \
+      case '\r': \
+         printf("\\r"); \
+         break; \
+      case '\n': \
+         printf("\\n"); \
+         break; \
+      default: \
+         printf("%c", X); \
+         break; \
+   }
+
 #define ASSERT_STR_EQUAL(X,Y) \
-   ASSERT(strcmp(X, Y)) \
+   if (strcmp(X,Y)) { \
+      char *c; \
+      ASSERT(1) \
+      printf("   Got '"); \
+      for (c = X; c != '\0'; c++) \
+         PRINT_CHAR(*c); \
+      printf("' - expected '"); \
+      for (c = X; c != '\0'; c++) \
+         PRINT_CHAR(*c); \
+      printf("'\n"); \
+   }
 
 #define ASSERT_EQUAL(X,Y) \
    if (X != Y) { \
