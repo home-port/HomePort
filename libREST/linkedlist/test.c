@@ -12,7 +12,7 @@ void main()
    get(head, "there");
    printf("get\n");
 
-   removeElement(head, "Hello");
+   head = removeElement(head, "Hello");
    printf("remove\n");
    
    //removeElement(head, "there");

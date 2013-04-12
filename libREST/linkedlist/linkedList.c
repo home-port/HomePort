@@ -33,7 +33,7 @@
 
 #include "linkedList.h"
 
-struct ListElement *create(char* key, void* val)
+ListElement *create(char* key, void* val)
 {
    ListElement *headElement = malloc(sizeof(*headElement));
    if(headElement == NULL)
@@ -87,7 +87,7 @@ void destroy(ListElement *head)
    free(head);
 }
 
-void removeElement(ListElement *head, char *key)
+ListElement* removeElement(ListElement *head, char *key)
 {  
    ListElement *target = head;
    ListElement *prev = NULL;
@@ -97,10 +97,13 @@ void removeElement(ListElement *head, char *key)
       {
          if(prev != NULL)
             prev->next = target->next;
+         else 
+            head = target->next;
          free(target);
-         return;
+         return head;
       }
       prev = target;
       target = target->next;
    }
+   return head;
 }
