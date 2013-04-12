@@ -28,10 +28,5 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-SRC += webserver/ws_client.c \
-       webserver/ws_response.c \
-       webserver/ws_instance.c \
-       webserver/ws_request.c \
-       webserver/http-parser/http_parser.c
-
-LIBS += ev m
+SRC +=
+LIBS +=

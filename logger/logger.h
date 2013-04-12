@@ -1,4 +1,4 @@
-// client.h
+// logger.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
  *   
@@ -31,19 +31,11 @@
  *  as representing official policies, either expressed.
  */
 
-#ifndef CLIENT_H
-#define CLIENT_H
+enum logger_levels {
+   WS_LOG_FATAL,
+   WS_LOG_ERROR,
+   WS_LOG_WARN,
+   WS_LOG_INFO,
+   WS_LOG_DEBUG
+};
 
-#include "libWebserver.h"
-
-struct ev_io;
-struct libws_client;
-
-void libws_client_accept(
-      struct ev_loop *loop,
-      struct ev_io *watcher,
-      int revents);
-void libws_client_kill(struct libws_client *client);
-void libws_client_killall(struct libws_instance *instance);
-
-#endif

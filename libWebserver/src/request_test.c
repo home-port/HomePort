@@ -1,4 +1,4 @@
-// request.h
+// request_test.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   
@@ -31,18 +31,21 @@
 *  as representing official policies, either expressed.
 */
 
-#ifndef REQUEST_H
-#define REQUEST_H
+#include "request.c"
+#include "../../unit_test.h"
 
-#include "libWebserver.h"
+TEST_START("request.c");
 
-struct libws_request;
-struct libws_client;
+TEST(ws_request_create)
+   struct ws_settings settings;
+   struct ws_request *req = libws_request_create(NULL, &settings);
 
-struct libws_request *libws_request_create(
-      struct libws_client *client,
-      struct libws_settings *settings);
-void libws_request_destroy(struct libws_request *req);
-size_t libws_request_parse(struct libws_request *req, const char *buf, size_t len);
+   ASSERT_NULL(req->client);
+   ASSERT_EQUAL(req->settings, &settings);
+   ASSERT_EQUAL(req->state, S_START);
 
-#endif
+   libws_request_destroy(req);
+TSET()
+
+TEST_END()
+

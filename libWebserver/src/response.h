@@ -1,4 +1,4 @@
-// ws_request.h
+// response.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   
@@ -31,17 +31,11 @@
 *  as representing official policies, either expressed.
 */
 
-#ifndef WS_REQUEST_H
-#define WS_REQUEST_H
+#ifndef RESPONSE_H
+#define RESPONSE_H
 
-#include "ws_client.h"
-#include "http-parser/http_parser.h"
-#include <stddef.h>
+#include "webserver.h"
 
-struct ws_request;
-
-struct ws_request *ws_request_create(struct ws_client *client);
-struct ws_client *ws_request_get_client(struct ws_request *req);
-size_t ws_request_parse(struct ws_request *req, const char *buf, size_t len);
+void ws_response_destroy(struct ws_response *res);
 
 #endif
