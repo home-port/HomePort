@@ -14,9 +14,9 @@ void main()
 
    removeElement(head, "Hello");
    printf("remove\n");
-
+   
+   //removeElement(head, "there");
    destroy(head);
    printf("destroyed\n");
-
 }
 
