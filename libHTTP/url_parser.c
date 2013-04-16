@@ -153,7 +153,7 @@ void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int c
 				}
 				break;
 			case S_HOST:
-				if(c == ':')
+				if(c == ':' || c == '/')
 				{
 					if(instance->settings->on_host != NULL)
 					{
