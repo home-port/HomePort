@@ -117,11 +117,11 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
    }
 
    if (client->request == NULL) {
-      client->request = libws_request_create(client, client->settings);
+      client->request = ws_request_create(client, client->settings);
    }
 
    // Parse recieved data
-   parsed = libws_request_parse(client->request, buffer, recieved);
+   parsed = ws_request_parse(client->request, buffer, recieved);
    if (parsed != recieved) {
       perror("parse");
       libws_client_kill(client);

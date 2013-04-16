@@ -99,7 +99,7 @@ struct ws_response *ws_response_create(
    }
   
    // Init struct
-   res->client = libws_request_get_client(req);
+   res->client = ws_request_get_client(req);
    res->state = S_START;
 
    // Construct msg
