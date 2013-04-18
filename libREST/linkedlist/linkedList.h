@@ -38,22 +38,29 @@
 #include <stdlib.h>
 #include <string.h>
 typedef struct ListElement ListElement;
+typedef struct LinkedList LinkedList;
+
+struct LinkedList
+{
+   ListElement *head;
+   ListElement *tail;
+};
 
 struct ListElement
 {
-struct ListElement *next;
-char *key;
-void *val;
+   ListElement *next;
+   char *key;
+   void *val;
 };
 
-ListElement* create(char *key, void *val);
+LinkedList* create();
 
-ListElement* insert(struct ListElement *head, char *key, void *val);
+int insert(LinkedList *ll, char *key, void *val);
 
-void* get(struct ListElement *head, char *key);
+void* get(LinkedList *ll, char *key);
 
-void destroy(struct ListElement *head);
+void destroy(LinkedList *ll);
 
-ListElement* removeElement(struct ListElement *head, char *key);
+void removeElement(LinkedList *ll, char *key);
 
 #endif
