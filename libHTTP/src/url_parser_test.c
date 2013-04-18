@@ -9,6 +9,16 @@ int on_port_called_correctly = 0;
 int on_path_segment_called_correctly = 0;
 int on_key_value_called_correctly = 0;
 
+void reset_values()
+{
+	on_begin_called_correctly = 0;
+	on_protocol_called_correctly = 0;
+	on_host_called_correctly = 0;
+	on_port_called_correctly = 0;
+	on_path_segment_called_correctly = 0;
+	on_key_value_called_correctly = 0;
+}
+
 void on_begin()
 {
 	on_begin_called_correctly = 1;
@@ -64,6 +74,8 @@ TEST_START("url_parser.c")
 
 TEST(non chunked url parsing)
 
+	reset_values();
+
 	char* url = "http://localhost:8080/device/tv?id=1&brand=Apple";
 	int url_len = 48;
 
@@ -88,6 +100,65 @@ TEST(non chunked url parsing)
 	ASSERT_EQUAL(on_port_called_correctly, 1);
 	ASSERT_EQUAL(on_path_segment_called_correctly, 2);
 	ASSERT_EQUAL(on_key_value_called_correctly, 2);
+
+TSET()
+
+TEST(chunked url parsing)
+
+	reset_values();
+
+	char* url1 = "http://localhost:8080/device/";
+	int url1_len = 29;
+
+	char* url2 = "tv?id=1&brand=Apple";
+	int url2_len = 19;
+
+	struct url_parser_settings settings = URL_PARSER_SETTINGS_DEFAULT;
+
+ 	settings.on_begin = &on_begin;
+ 	settings.on_protocol = &on_protocol;
+ 	settings.on_host = &on_host;
+ 	settings.on_port = &on_port;
+ 	settings.on_path_segment = &on_path_segment;
+ 	settings.on_key_value = &on_key_value;
+
+	struct url_parser_instance *instance = up_create(&settings);
+
+	up_add_chunk(instance, url1, url1_len);
+
+	// Check that part of the URL has been parsed
+	ASSERT_EQUAL(on_begin_called_correctly,1);
+	ASSERT_EQUAL(on_protocol_called_correctly, 1);
+	ASSERT_EQUAL(on_host_called_correctly, 1);
+	ASSERT_EQUAL(on_port_called_correctly, 1);
+	ASSERT_EQUAL(on_path_segment_called_correctly, 1);
+	ASSERT_EQUAL(on_key_value_called_correctly, 0);
+
+	up_add_chunk(instance, url2, url2_len);
+
+	up_complete(instance);
+	up_destroy(instance);
+
+	ASSERT_EQUAL(on_begin_called_correctly,1);
+	ASSERT_EQUAL(on_protocol_called_correctly, 1);
+	ASSERT_EQUAL(on_host_called_correctly, 1);
+	ASSERT_EQUAL(on_port_called_correctly, 1);
+	ASSERT_EQUAL(on_path_segment_called_correctly, 2);
+	ASSERT_EQUAL(on_key_value_called_correctly, 2);
+
+TSET()
+
+TEST(fail on bad character)
+	reset_values();
+
+	struct url_parser_settings settings = URL_PARSER_SETTINGS_DEFAULT;
+
+ 	settings.on_begin = &on_begin;
+ 	settings.on_protocol = &on_protocol;
+ 	settings.on_host = &on_host;
+ 	settings.on_port = &on_port;
+
+ 	up_add_chunk(instance, "localhost:80|2", 15);
 
 TSET()
 
