@@ -28,5 +28,13 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-SRC +=
-LIBS +=
+# Webserver Test
+add_executable(webserver_test EXCLUDE_FROM_ALL
+      client.c
+      webserver_test.c
+      tests.c
+      )
+target_link_libraries(webserver_test curl)
+add_test(webserver_test ${CMAKE_CURRENT_BINARY_DIR}/webserver_test)
+add_dependencies(check webserver_test)
+

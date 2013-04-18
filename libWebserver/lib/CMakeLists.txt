@@ -28,6 +28,6 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-SRC += libHTTP/src/url_parser.c
+add_subdirectory(http-parser)
 
-TESTS += libHTTP/src/url_parser_test
+

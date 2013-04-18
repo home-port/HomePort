@@ -28,14 +28,16 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-cmake_minimum_required(VERSION 2.6)
-project(HOMEPORT C)
+# Hashtable
+add_library(hashtable
+      hashtable.c
+      )
 
-enable_testing()
-
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-
-add_subdirectory(homeport)
-add_subdirectory(libWebserver)
-add_subdirectory(misc)
+# Hashtable Test
+add_executable(hashtable_test EXCLUDE_FROM_ALL
+      hashtable_test.c
+      hashtable.c
+      )
+add_test(hashtable_test ${CMAKE_CURRENT_BINARY_DIR}/hashtable_test)
+add_dependencies(check hashtable_test)
 

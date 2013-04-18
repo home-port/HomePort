@@ -32,7 +32,7 @@
 */
 
 #include "response.c"
-#include "../../unit_test.h"
+#include "unit_test.h"
 
 TEST_START("response.c");
 
