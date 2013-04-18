@@ -40,6 +40,22 @@ typedef void (*up_void_cb)();
 
 struct url_parser_instance;
 
+/// Settings struct for the URL Parser
+/**
+ *  Please initialise this struct as following, to ensure that all
+ *  settings have acceptable default values:
+ *  \code
+ *  struct url_parser_settings *settings = URL_PARSER_SETTINGS_DEFAULT;
+ *  \endcode
+ *
+ *  The settings hold a series of callbacks of type either up_string_cb, up_pair_cb or up_void_cb.
+ *	Strings received in up_pair_cb and up_string_cb are never null-terminated, and they always have a length.
+ *	The callbacks are called when the URL parser finishes parsing a specific chunk.
+ *	The callback with the last part of a segment (e.g. the c in /a/b/c) might first be called when up_complete has been called,
+ *	as it cannot know if c is the last character of the segment unless it terminates with a /.
+ *
+ */
+
 struct url_parser_settings {
 	up_void_cb on_begin;
 	up_string_cb on_protocol;
