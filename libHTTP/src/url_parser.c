@@ -117,6 +117,11 @@ void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int c
 	int old_buffer_size = instance->buffer_size;
 	instance->buffer_size += chunk_size;
 
+	if(instance->buffer == NULL && instance->settings->on_begin != NULL)
+	{
+		instance->settings->on_begin();
+	}
+
 	instance->buffer = realloc(instance->buffer, instance->buffer_size * (sizeof(char)));
 	if(instance->buffer == NULL)
 	{

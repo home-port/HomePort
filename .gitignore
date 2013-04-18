@@ -25,3 +25,4 @@
 /libWebserver/src/request_test
 /libWebserver/src/response_test
 /doc/
+/libHTTP/src/url_parser_test

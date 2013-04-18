@@ -36,15 +36,17 @@
 
 TEST_START("request.c");
 
+// TODO: THOMAS WHAT HAVE YOU DONE????????
+
 TEST(libws_request_create)
    struct ws_settings settings;
-   struct ws_request *req = libws_request_create(NULL, &settings);
+   struct ws_request *req = ws_request_create(NULL, &settings); // BAD CHANGE
 
    ASSERT_NULL(req->client);
    ASSERT_EQUAL(req->settings, &settings);
    ASSERT_EQUAL(req->state, S_START);
 
-   libws_request_destroy(req);
+   ws_request_destroy(req); // BAD CHANGE
 TSET()
 
 /*
