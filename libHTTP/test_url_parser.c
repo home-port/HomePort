@@ -56,8 +56,6 @@ void on_key_value(const char* key, int key_length, const char* value, int value_
 
  	up_complete(instance);
 
- 	//up_add_chunk(instance, "/one",4);
-
  	up_destroy(instance);
 
  	printf("Over and out.\n");

@@ -93,20 +93,38 @@ void up_destroy(struct url_parser_instance *instance)
 	free(instance);
 }
 
+int isLegalURLChar(char c)
+{
+	if ((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122) || c == '-' || c == '.' || c == '_' || c == '~' || c == ':' ||
+	     c == '/' || c == '?' || c == '#' || c == '[' || c == ']' || c == '@' || c == '!' || c == '$' || c == '&' || c == '\'' || c == '(' ||
+	     c == ')' || c == '*' || c == '+' || c == ',' || c == ';' || c == '=')
+		return 1;
+
+	return 0;
+}
+
 void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int chunk_size) {
-	// Increase the current buffer
+	// Increase the current buffer so the chunk can be added
 	int old_buffer_size = instance->buffer_size;
 	instance->buffer_size += chunk_size;
 	instance->buffer = realloc(instance->buffer, instance->buffer_size * (sizeof(char)));
 	memcpy(instance->buffer+old_buffer_size, chunk, chunk_size);
+	
 
-	// Parse the new chunk in buffer from last_parsed_pos to buffer_size
+	// Parse the new chunk in buffer
 	unsigned int i;
 	for(i = instance->chars_parsed; i < instance->buffer_size; i++)
 	{
 		char c = instance->buffer[i];
 
 		//printf("current char: %c, state: %d\n", c, instance->state);
+
+		// Check if it is a valid URL char. If not, print an error message and set parser to error state
+		if (!isLegalURLChar(c))
+		{
+			fprintf(stderr, "The URL parser received an invalid character: %c\n", c);
+			instance->state = S_ERROR;
+		}
 
 		switch(instance->state)
 		{
@@ -224,6 +242,7 @@ void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int c
 				break;
 
 			case S_ERROR:
+					fprintf(stderr,"The URL parser has reached an error state\n");
 				break;
 		}
 		instance->chars_parsed++;
@@ -256,9 +275,11 @@ void up_complete(struct url_parser_instance *instance)
 			break;
 
 		case S_HOST:
+				// It is valid to call complete after a host has been found
 			break;
 		
 		case S_PORT:
+				// It is valid to call complete after a port has been found for the host
 			break;
 
 		default:
