@@ -16,15 +16,11 @@
 *.out
 *.app
 
-# Temp files removed
+# Temp folders files
+.DS_Store
 *~
 
-.DS_Store
-/.gitignore
-.gitignore
-/wstest
-/wsTester/wsTester
-/libWebserver/src/request_test
-/libWebserver/src/response_test
+# Folders
+/build/
 /doc/
-/libHTTP/src/url_parser_test
+
