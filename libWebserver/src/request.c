@@ -32,7 +32,7 @@
 */
 
 #include "request.h"
-#include "http-parser/http_parser.h"
+#include "http_parser.h"
 
 #include <stdlib.h>
 #include <stdio.h>
