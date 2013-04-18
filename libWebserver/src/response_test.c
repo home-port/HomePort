@@ -38,7 +38,7 @@ TEST_START("response.c");
 
 TEST(public interface)
    struct ws_settings settings;
-   struct ws_request *req = libws_request_create(NULL, &settings);
+   struct ws_request *req = ws_request_create(NULL, &settings);
    struct ws_response *res = ws_response_create(req, WS_HTTP_200);
 
    ASSERT_NULL(res->client);
@@ -78,7 +78,7 @@ TEST(public interface)
    ASSERT_STR_EQUAL(res->msg, "HTTP/1.1 200 OK\r\nhdr1:value1\r\nhdr2:value2\r\n\r\nA looooong body");
 
    ws_response_destroy(res);
-   libws_request_destroy(req);
+   ws_request_destroy(req);
 TSET()
 
 TEST_END()
