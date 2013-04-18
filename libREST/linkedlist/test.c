@@ -6,7 +6,7 @@ void main()
    ListElement *head = create("Hello", NULL);
    printf("created a new linked list\n");
       
-   insert(head, "there", NULL);
+   head = insert(head, "there", NULL);
    printf("added element\n");
 
    get(head, "there");

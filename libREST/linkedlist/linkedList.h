@@ -48,7 +48,7 @@ void *val;
 
 ListElement* create(char *key, void *val);
 
-void insert(struct ListElement *head, char *key, void *val);
+ListElement* insert(struct ListElement *head, char *key, void *val);
 
 void* get(struct ListElement *head, char *key);
 

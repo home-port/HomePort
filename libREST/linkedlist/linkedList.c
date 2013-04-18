@@ -47,18 +47,15 @@ ListElement *create(char* key, void* val)
    return headElement;
 }
 
-void insert(ListElement *head, char *key, void *val)
+ListElement* insert(ListElement *head, char *key, void *val)
 {
    ListElement *element = malloc(sizeof(*element));
-   ListElement *tempElement = head;
 
-   while(tempElement->next != NULL)
-      tempElement = tempElement->next;
-
-   tempElement->next = element;
-   element->next = NULL;
+   element->next = head;
    element->val = val;
    element->key = key;
+
+   return element;
 }
 
 void* get(ListElement *head, char *key)
