@@ -16,6 +16,9 @@
 *.out
 *.app
 
+# Temp files removed
+*~
+
 .DS_Store
 /.gitignore
 .gitignore
