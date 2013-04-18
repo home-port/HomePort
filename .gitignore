@@ -21,7 +21,6 @@
 .gitignore
 /wstest
 /wsTester/wsTester
-/homeport
 /libWebserver/src/request_test
 /libWebserver/src/response_test
 /doc/
