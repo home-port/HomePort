@@ -3,20 +3,20 @@
 
 void main()
 {
-   ListElement *head = create("Hello", NULL);
+   LinkedList *linkedlist = create();
    printf("created a new linked list\n");
       
-   head = insert(head, "there", NULL);
+   insert(linkedlist, "Hello", NULL);
+   insert(linkedlist, "there", NULL);
    printf("added element\n");
 
-   get(head, "there");
+   get(linkedlist, "there");
    printf("get\n");
 
-   head = removeElement(head, "Hello");
+   removeElement(linkedlist, "there");
    printf("remove\n");
    
-   //removeElement(head, "there");
-   destroy(head);
+   destroy(linkedlist);
    printf("destroyed\n");
 }
 

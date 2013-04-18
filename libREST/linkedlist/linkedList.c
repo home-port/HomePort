@@ -32,35 +32,66 @@
  */
 
 #include "linkedList.h"
-
-ListElement *create(char* key, void* val)
+/// Create linked list
+/**
+ * Empty LinkedList container is created, initialised with head and tail
+ * pointing at NULL.
+ *
+ * \param
+ */
+LinkedList *create()
 {
-   ListElement *headElement = malloc(sizeof(*headElement));
-   if(headElement == NULL)
+   LinkedList *linkedList = malloc(sizeof(*linkedList));
+   if(!linkedList)
    {
-	   return NULL;	
+      fprintf(stderr, "Linked list not allocated\n");
+      return NULL;
    }
-   headElement->next = NULL;
-   headElement->val = val;
-   headElement->key = key;
+   linkedList->head = NULL;
+   linkedList->tail = NULL;
 
-   return headElement;
+   return linkedList;
 }
 
-ListElement* insert(ListElement *head, char *key, void *val)
+/// Insert list element
+/**
+ * Insert new element into linked list.
+ *
+ * \param linked list to insert into.
+ * \param string key to retrieve value.
+ * \param value pointer with any data.
+ */
+int insert(LinkedList *ll, char *key, void *val)
 {
    ListElement *element = malloc(sizeof(*element));
+   if(!element)
+   {
+      fprintf(stderr, "List element not allocated\n" );
+      return 1;
+   }
 
-   element->next = head;
+   if(ll->head == NULL)
+      ll->head = element;
+   else
+      ll->tail->next = element;
+   ll->tail = element;
+   element->next = NULL;
    element->val = val;
    element->key = key;
 
-   return element;
+   return 0;
 }
 
-void* get(ListElement *head, char *key)
+/// get linked list element
+/**
+ * Lookup list element and if found the value is returned
+ *
+ * \param linked list to get element from.
+ * \param key string to perform lookup with.
+ */
+void* get(LinkedList *ll, char *key)
 {
-   ListElement *tempElement = head;
+   ListElement *tempElement = ll->head;
    while(tempElement != NULL)
    {
       if(strcmp(tempElement->key, key) == 0)
@@ -72,21 +103,36 @@ void* get(ListElement *head, char *key)
    return NULL;
 }
 
-void destroy(ListElement *head)
+/// Destroy linked list and elements
+/**
+ * Destoys the linked list and frees the list elements ans lastly the
+ * container
+ *
+ * \param linked list to be destroyed.
+ */
+void destroy(LinkedList *ll)
 {
-   while(head->next != NULL)
+   while(ll->head->next != NULL)
    {
       //moving head down the list as elements are freed
-      ListElement *target = head;
-      head = head->next;
+      ListElement *target = ll->head;
+      ll->head = ll->head->next;
       free(target);
    }
-   free(head);
+   free(ll->head);
+   free(ll);
 }
 
-ListElement* removeElement(ListElement *head, char *key)
+/// remove element for linked list
+/**
+ * Searches for an element and if found, the element is removed. 
+ *
+ * /param linked list to remove element from
+ * /param key string to compare elements for removal 
+ */
+void removeElement(LinkedList *ll, char *key)
 {  
-   ListElement *target = head;
+   ListElement *target = ll->head;
    ListElement *prev = NULL;
    while(target != NULL)
    {
@@ -95,12 +141,10 @@ ListElement* removeElement(ListElement *head, char *key)
          if(prev != NULL)
             prev->next = target->next;
          else 
-            head = target->next;
+            ll->head = target->next;
          free(target);
-         return head;
       }
       prev = target;
       target = target->next;
    }
-   return head;
 }
