@@ -3,10 +3,9 @@
 #include "hashtable.h"
 
 #define HASHSIZE 101
-static struct nlist *hashtab[HASHSIZE]; /* pointer table */
 
 /* hash: form hash value for string s */
-unsigned hash(char *s)
+static unsigned hash(char *s)
 {   
     unsigned hashval;
     for (hashval = 0; *s != '\0'; s++)

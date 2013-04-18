@@ -31,16 +31,37 @@
  *  as representing official policies, either expressed.
  */
 
-#ifndef CLIENT_H
-#define CLIENT_H
+#include <stdio.h>
+#include "tests.h"
 
-#include <curl/curl.h>
-#include <stdlib.h>
- #include <string.h>
- #include <pthread.h> 
+int main()
+{
+	int testresult;
+   int ret =1;
+	init_tests();
 
-void init_libcurl();
-void cleanup_libcurl();
-char* simple_get_request(char* url);
+	printf("Running webserver tests:\n");
 
-#endif
+	printf("\tBasic connection test: ");
+	testresult = basic_get_contains_test("http://localhost:8080", "Hello");
+	if(testresult == 1)
+		printf("Success\n");
+	else
+		printf("Failed\n");
+   ret += testresult;
+
+	
+	printf("\tBasic multithreaded stress test: ");
+	testresult = basic_get_multithreaded_stress_test("http://localhost:8080", "Hello");
+	if(testresult == 1)
+		printf("Sucess\n");
+	else
+		printf("Failed\n");
+   ret += testresult;
+	
+
+	cleanup_tests();
+	printf("\nDone.\n");
+
+	return ret;
+}

@@ -28,34 +28,11 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_subdirectory(lib/http-parser)
+add_subdirectory(lib)
 
+include_directories(${PROJECT_SOURCE_DIR}/misc/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/http-parser)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-# Main library
-add_library(libWebserver
-      src/instance.c
-      src/client.c
-      src/request.c
-      src/response.c
-      )
-target_link_libraries(libWebserver ev http-parser)
-
-# Request Test
-add_executable(request_test EXCLUDE_FROM_ALL
-      src/request_test.c
-      )
-target_link_libraries(request_test http-parser)
-add_test(request_test ${CMAKE_CURRENT_BINARY_DIR}/request_test)
-add_dependencies(check request_test)
-
-# Response Test
-add_executable(response_test EXCLUDE_FROM_ALL
-      src/request.c
-      src/response_test.c
-      )
-target_link_libraries(response_test http-parser)
-add_test(response_test ${CMAKE_CURRENT_BINARY_DIR}/response_test)
-add_dependencies(check response_test)
+add_subdirectory(src)
 

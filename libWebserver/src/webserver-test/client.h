@@ -1,4 +1,4 @@
-// logger.h
+// main.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
  *   
@@ -31,11 +31,16 @@
  *  as representing official policies, either expressed.
  */
 
-enum logger_levels {
-   WS_LOG_FATAL,
-   WS_LOG_ERROR,
-   WS_LOG_WARN,
-   WS_LOG_INFO,
-   WS_LOG_DEBUG
-};
+#ifndef CLIENT_H
+#define CLIENT_H
 
+#include <curl/curl.h>
+#include <stdlib.h>
+#include <string.h>
+#include <pthread.h> 
+
+void init_libcurl();
+void cleanup_libcurl();
+char* simple_get_request(char* url);
+
+#endif

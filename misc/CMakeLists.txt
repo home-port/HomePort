@@ -28,14 +28,7 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-cmake_minimum_required(VERSION 2.6)
-project(HOMEPORT C)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-enable_testing()
-
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-
-add_subdirectory(homeport)
-add_subdirectory(libWebserver)
-add_subdirectory(misc)
+add_subdirectory(src)
 

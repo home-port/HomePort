@@ -31,34 +31,29 @@
  *  as representing official policies, either expressed.
  */
 
-#include <stdio.h>
-#include "tests.h"
+#ifndef TESTS_H
+#define TESTS_H
 
-int main()
-{
-	int testresult;
-	init_tests();
+#include "client.h"
 
-	printf("Running webserver tests:\n");
+#define NTHREADS 40
 
-	printf("\tBasic connection test: ");
-	testresult = basic_get_contains_test("http://localhost:8080", "Hello");
-	if(testresult == 1)
-		printf("Success\n");
-	else
-		printf("Failed\n");
+int multithreaded_results;
+pthread_mutex_t lock;
+pthread_t threadID[NTHREADS];
 
-	
-	printf("\tBasic multithreaded stress test: ");
-	testresult = basic_get_multithreaded_stress_test("http://localhost:8080", "Hello");
-	if(testresult == 1)
-		printf("Sucess\n");
-	else
-		printf("Failed\n");
-	
+struct mt_args {
+    char *url;
+    char* contains;
+    unsigned long assaults;
+};
 
-	cleanup_tests();
-	printf("\nDone.\n");
+void init_tests();
+void cleanup_tests();
 
-	return 0;
-}
+int basic_get_contains_test(char* url, char* contains);
+int basic_get_multithreaded_stress_test(char* url, char* contains);
+
+void *get_mt_loop(void *args);
+
+#endif
