@@ -31,5 +31,10 @@
 cmake_minimum_required(VERSION 2.6)
 project(HOMEPORT C)
 
+enable_testing()
+
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+
 add_subdirectory(homeport)
 add_subdirectory(libWebserver)
+
