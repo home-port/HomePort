@@ -71,6 +71,13 @@ struct url_parser_instance *up_create(struct url_parser_settings *settings)
 	instance = malloc(sizeof(struct url_parser_instance));
 
 	instance -> settings = malloc(sizeof(struct url_parser_settings));
+
+	if(instance->settings == NULL)
+	{
+		fprintf(stderr, "Malloc failed in URL parser when allocating space for URL parser settings\n");
+		return NULL;
+	}
+
 	memcpy(instance->settings, settings, sizeof(struct url_parser_settings));
 
 	instance -> state = S_START;
@@ -84,9 +91,11 @@ struct url_parser_instance *up_create(struct url_parser_settings *settings)
 
 void up_destroy(struct url_parser_instance *instance)
 {
-	free(instance->settings);
+	if(instance->settings != NULL) {
+		free(instance->settings);
+	}
 
-	if(instance->buffer) {
+	if(instance->buffer != NULL) {
 		free(instance->buffer);
 	}
 	
@@ -95,7 +104,7 @@ void up_destroy(struct url_parser_instance *instance)
 
 int isLegalURLChar(char c)
 {
-	if ((c >= 48 && c <= 57) || (c >= 65 && c <= 90) || (c >= 97 && c <= 122) || c == '-' || c == '.' || c == '_' || c == '~' || c == ':' ||
+	if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '-' || c == '.' || c == '_' || c == '~' || c == ':' ||
 	     c == '/' || c == '?' || c == '#' || c == '[' || c == ']' || c == '@' || c == '!' || c == '$' || c == '&' || c == '\'' || c == '(' ||
 	     c == ')' || c == '*' || c == '+' || c == ',' || c == ';' || c == '=')
 		return 1;
@@ -107,9 +116,17 @@ void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int c
 	// Increase the current buffer so the chunk can be added
 	int old_buffer_size = instance->buffer_size;
 	instance->buffer_size += chunk_size;
+
 	instance->buffer = realloc(instance->buffer, instance->buffer_size * (sizeof(char)));
+	if(instance->buffer == NULL)
+	{
+		fprintf(stderr, "Realloc failed in URL parser when allocating space for new URL chunk\n");
+		instance->state = S_ERROR;
+		return;
+	}
+
 	memcpy(instance->buffer+old_buffer_size, chunk, chunk_size);
-	
+
 
 	// Parse the new chunk in buffer
 	unsigned int i;
