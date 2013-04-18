@@ -28,29 +28,8 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Hashtable
-add_library(hashtable
-      hashtable.c
-      )
+include_directories(${PROJECT_SOURCE_DIR}/misc/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-# Hashtable Test
-add_executable(hashtable_test EXCLUDE_FROM_ALL
-      hashtable_test.c
-      hashtable.c
-      )
-add_test(hashtable_test ${CMAKE_CURRENT_BINARY_DIR}/hashtable_test)
-add_dependencies(check hashtable_test)
-
-# Linkedlist
-add_library(linkedlist
-      linkedlist.c
-      )
-
-# Linkedlist Test
-add_executable(linkedlist_test EXCLUDE_FROM_ALL
-      linkedlist_test.c
-      linkedlist.c
-      )
-add_test(linkedlist_test ${CMAKE_CURRENT_BINARY_DIR}/linkedlist_test)
-add_dependencies(check linkedlist_test)
+add_subdirectory(src)
 

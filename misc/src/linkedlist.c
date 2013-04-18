@@ -31,7 +31,7 @@
  *  as representing official policies, either expressed.
  */
 
-#include "linkedList.h"
+#include "linkedlist.h"
 /// Create linked list
 /**
  * Empty LinkedList container is created, initialised with head and tail

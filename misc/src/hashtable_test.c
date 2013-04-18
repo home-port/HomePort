@@ -6,10 +6,10 @@ static struct nlist* table[10];
 
 TEST_START("hashtable.c")
 
+TEST(lookup)
+
 install("a", "apple", table);
 install("b", "banana", table);
-
-TEST(lookup)
 
 char *fruit = lookup("a", table)->defn;
 ASSERT_STR_EQUAL(fruit, "apple")
