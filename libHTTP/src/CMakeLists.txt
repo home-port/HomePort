@@ -28,15 +28,15 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-cmake_minimum_required(VERSION 2.6)
-project(HOMEPORT C)
+# URLParser
+add_library(urlparser
+      url_parser.c
+      )
 
-enable_testing()
-
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-
-add_subdirectory(homeport)
-add_subdirectory(libHTTP)
-add_subdirectory(libWebserver)
-add_subdirectory(misc)
+# Request Test
+add_executable(url_parser_test EXCLUDE_FROM_ALL
+      url_parser_test.c
+      )
+add_test(url_parser_test ${CMAKE_CURRENT_BINARY_DIR}/url_parser_test)
+add_dependencies(check url_parser_test)
 
