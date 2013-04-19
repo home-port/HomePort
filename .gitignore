@@ -1,0 +1,32 @@
+# Object files
+*.o
+
+# Libraries
+*.lib
+*.a
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Temp folders files
+.DS_Store
+*~
+
+# Folders
+/build/
+/doc/
+
+
+/libHTTP/src/url_parser_test
+/libWebserver/src/request_test
+/libWebserver/src/response_test
+/wstest
+/misc/src/a.out.dSYM/
