@@ -83,10 +83,18 @@ struct ws_response;
  **********************************************************************/
 
 /// No-data callback
-typedef int (*nodata_cb)(struct ws_request *req);
+/**
+ *  Request is of type struct ws_request *, but is supplied as void *
+ *  for compatability with url parser.
+ */
+typedef int (*nodata_cb)(void *data, void *req);
 
 /// Data callback (Do not expect buf to be null terminated)
-typedef int (*data_cb)(struct ws_request *req,
+/**
+ *  Request is of type struct ws_request *, but is supplied as void *
+ *  for compatability with url parser.
+ */
+typedef int (*data_cb)(void *data, void *req,
       const char *buf, size_t len);
 
 /// Settings struct for webserver
@@ -129,14 +137,19 @@ typedef int (*data_cb)(struct ws_request *req,
  */
 struct ws_settings {
    enum ws_port port;                    ///< Port number
+   void *    on_request_data;
    nodata_cb on_request_begin;           ///< Request begin
    data_cb   on_request_method;          ///< HTTP Method
+   void *    on_request_method_data;
    data_cb   on_request_url;             ///< URL chunks
    nodata_cb on_request_url_complete;    ///< URL complete
+   void *    on_request_url_data;
    data_cb   on_request_header_field;    ///< Header field chunks
    data_cb   on_request_header_value;    ///< Header value chunks
    nodata_cb on_request_header_complete; ///< Header complete
+   void *    on_request_header_data;
    data_cb   on_request_body;            ///< Body chunks
+   void *    on_request_body_data;
    nodata_cb on_request_complete;        ///< Request complete
 };
 
@@ -149,14 +162,19 @@ struct ws_settings {
  */
 #define WS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
+   .on_request_data = NULL, \
    .on_request_begin = NULL, \
    .on_request_method = NULL, \
+   .on_request_method_data = NULL, \
    .on_request_url = NULL, \
    .on_request_url_complete = NULL, \
+   .on_request_url_data = NULL, \
    .on_request_header_field = NULL, \
    .on_request_header_value = NULL, \
    .on_request_header_complete = NULL, \
+   .on_request_header_data = NULL, \
    .on_request_body = NULL, \
+   .on_request_body_data = NULL, \
    .on_request_complete = NULL }
 
 // Webserver functions
