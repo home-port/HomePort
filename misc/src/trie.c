@@ -64,6 +64,8 @@ TrieNode* create_trie()
 
 ListElement* insert_trie_key(TrieNode* root, char* key)
 {
+   printf("Inserting %s\n",key);
+
    key = substring_from(key, 0); // allocate our own copy of the key
    if(root->children == NULL)
    {
@@ -94,8 +96,15 @@ ListElement* insert_trie_key(TrieNode* root, char* key)
 
          if(listkey[tmp_pos] == '\0'&& key[current_pos] == '\0')
          {
-            printf("The element is already in the trie. We need to handle this!\n");
-            return  NULL;
+            if(listElement->value == NULL)
+            {
+               return  listElement;
+            }
+            else
+            {
+               // Element is already in trie
+               return NULL;
+            }
          }
          else if(listkey[tmp_pos] == '\0')
          {
@@ -145,7 +154,27 @@ ListElement* insert_trie_key(TrieNode* root, char* key)
          }
          else //Neither the key or listkey is done, they simply differ
          {
-            
+            char *matchingPart = substring_from_to(listkey,0, tmp_pos);
+            char *nonMatchingPart = substring_from_to(listkey, tmp_pos, strlen(listkey));
+
+            TrieNode *node = malloc(sizeof(TrieNode));
+            if(node == NULL)
+            {
+               fprintf(stderr, "malloc failed when creating a trie node\n");
+               return NULL;
+            }
+
+            node->children = create_linkedList();
+            ListElement *element = insert_listElement(node->children, nonMatchingPart, listElement->node);
+            element->value = listElement->value;
+
+            listElement->value = NULL;
+            listElement->key = matchingPart;
+            listElement->node = node;
+
+            element = insert_listElement(node->children, substring_from_to(key, current_pos, strlen(key)),NULL);
+
+            return element;
          }
 
       }
