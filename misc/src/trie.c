@@ -34,10 +34,18 @@
 #include <string.h>
 #include "trie.h"
 
-char* get_partial_key(char* key, int from)
+char* substring_from(char* key, int from)
 {
    char *partialKey = malloc(strlen(key)+1-from);
    strcpy(partialKey,&key[from]);
+   return partialKey;
+}
+
+char* substring_from_to(char* key, int from, int to)
+{
+   char *partialKey = malloc(strlen(key)+1-(to-from));
+   strncpy(partialKey, &key[from], (to-from));
+   partialKey[(to-from)+1] = '\0';
    return partialKey;
 }
 
@@ -56,7 +64,7 @@ TrieNode* create_trie()
 
 ListElement* insert_trie_key(TrieNode* root, char* key)
 {
-   key = get_partial_key(key, 0); // allocate our own copy of the key
+   key = substring_from(key, 0); // allocate our own copy of the key
    if(root->children == NULL)
    {
       LinkedList* list = create_linkedList();
@@ -100,21 +108,44 @@ ListElement* insert_trie_key(TrieNode* root, char* key)
                   return NULL;
                }
 
+               node->children = create_linkedList();
+               ListElement *element = insert_listElement(node->children, substring_from(key, current_pos), NULL);
+
                listElement->node = node;
 
-               node->children = create_linkedList();
-               char *clol = get_partial_key(key, current_pos);
-               ListElement *element = insert_listElement(node->children, get_partial_key(key, current_pos), NULL);
                return element;
             }
             else
             {
-
+               ListElement *element = insert_listElement(listElement->node->children, substring_from(key, current_pos), NULL);
+               return element;
             }
          }
-         else
+         else if (key[current_pos] == '\0')
          {
+            char *matchingPart = substring_from_to(listkey,0, tmp_pos);
+            char *nonMatchingPart = substring_from_to(listkey, tmp_pos, strlen(listkey));
 
+            TrieNode *node = malloc(sizeof(TrieNode));
+            if(node == NULL)
+            {
+               fprintf(stderr, "malloc failed when creating a trie node\n");
+               return NULL;
+            }
+
+            node->children = create_linkedList();
+            ListElement *element = insert_listElement(node->children, nonMatchingPart, listElement->node);
+            element->value = listElement->value;
+
+            listElement->key = matchingPart;
+            listElement->value = NULL;
+            listElement->node = node;
+
+            return listElement;
+         }
+         else //Neither the key or listkey is done, they simply differ
+         {
+            
          }
 
       }
@@ -125,7 +156,7 @@ ListElement* insert_trie_key(TrieNode* root, char* key)
 
    if(treeElement->children != NULL)
    {
-      ListElement *element = insert_listElement(treeElement->children, get_partial_key(key, current_pos), NULL);
+      ListElement *element = insert_listElement(treeElement->children, substring_from(key, current_pos), NULL);
       return element;
    }
    else
@@ -150,14 +181,16 @@ ListElement* lookup_trieNode(TrieNode* root, char* key)
    while(listElement!=NULL)
    {
       tmp_pos = 0;
+
       if(listkey[tmp_pos] == key[current_pos])
       {
          current_pos++;
          tmp_pos++;
          while(listkey[tmp_pos] != '\0'&& key[current_pos]!=
-               '\0' && listkey[current_pos] == key[current_pos]){
+               '\0' && listkey[tmp_pos] == key[current_pos]){
             current_pos++;
             tmp_pos++;
+
          }
          if(listkey[tmp_pos] == '\0'&& key[current_pos] == '\0')
          {
@@ -168,9 +201,9 @@ ListElement* lookup_trieNode(TrieNode* root, char* key)
             treeElement = listElement->node;
             if(treeElement == NULL || treeElement->children == NULL)
                return NULL;
+
             listElement = treeElement->children->head;
             listkey = listElement->key;
-
             continue;
          }
          else 
