@@ -37,6 +37,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "trie.h"
 typedef struct ListElement ListElement;
 typedef struct LinkedList LinkedList;
 
@@ -50,17 +51,18 @@ struct ListElement
 {
    ListElement *next;
    char *key;
-   void *val;
+   void *value
+   struct TrieNode *node;
 };
 
-LinkedList* create();
+LinkedList* create_linkedList();
 
-int insert(LinkedList *ll, char *key, void *val);
+int insert_listElement(LinkedList *ll, char *key, struct TrieNode* node);
 
-void* get(LinkedList *ll, char *key);
+void* get_value(LinkedList *ll, char *key);
 
-void destroy(LinkedList *ll);
+void destroy_linkedList(LinkedList *ll);
 
-void removeElement(LinkedList *ll, char *key);
+void remove_listElement(LinkedList *ll, char *key);
 
 #endif

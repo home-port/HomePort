@@ -39,7 +39,7 @@
  *
  * \param
  */
-LinkedList *create()
+LinkedList *create_linkedList()
 {
    LinkedList *linkedList = malloc(sizeof(*linkedList));
    if(!linkedList)
@@ -61,7 +61,7 @@ LinkedList *create()
  * \param string key to retrieve value.
  * \param value pointer with any data.
  */
-int insert(LinkedList *ll, char *key, void *val)
+int insert_listElement(LinkedList *ll, char *key, struct TrieNode* node)
 {
    ListElement *element = malloc(sizeof(*element));
    if(!element)
@@ -76,8 +76,8 @@ int insert(LinkedList *ll, char *key, void *val)
       ll->tail->next = element;
    ll->tail = element;
    element->next = NULL;
-   element->val = val;
    element->key = key;
+   element->node = node;
 
    return 0;
 }
@@ -89,7 +89,8 @@ int insert(LinkedList *ll, char *key, void *val)
  * \param linked list to get element from.
  * \param key string to perform lookup with.
  */
-void* get(LinkedList *ll, char *key)
+
+void* get_value(LinkedList *ll, char *key)
 {
    ListElement *tempElement = ll->head;
    while(tempElement != NULL)
@@ -110,7 +111,7 @@ void* get(LinkedList *ll, char *key)
  *
  * \param linked list to be destroyed.
  */
-void destroy(LinkedList *ll)
+void destroy_linkedList(LinkedList *ll)
 {
    while(ll->head->next != NULL)
    {
@@ -130,7 +131,7 @@ void destroy(LinkedList *ll)
  * /param linked list to remove element from
  * /param key string to compare elements for removal 
  */
-void removeElement(LinkedList *ll, char *key)
+void remove_listElement(LinkedList *ll, char *key)
 {  
    ListElement *target = ll->head;
    ListElement *prev = NULL;
