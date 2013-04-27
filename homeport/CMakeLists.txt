@@ -29,7 +29,8 @@
 # as representing official policies, either expressed.
 
 include_directories(${HOMEPORT_SOURCE_DIR}/libWebserver/include)
+include_directories(${HOMEPORT_SOURCE_DIR}/libHTTP/include)
 
 add_executable(homeport homeport.c)
 
-target_link_libraries(homeport libWebserver)
+target_link_libraries(homeport libWebserver urlparser)

@@ -75,7 +75,7 @@ struct url_parser_settings {
 struct url_parser_instance *up_create(struct url_parser_settings*);
 void up_destroy(struct url_parser_instance*);
 
-void up_add_chunk(struct url_parser_instance*, const char*, int);
-void up_complete(struct url_parser_instance*);
+int up_add_chunk(void *, void *, const char *, size_t);
+int up_complete(void *, void *);
 
 #endif

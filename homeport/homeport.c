@@ -32,107 +32,45 @@
  */
 
 #include "webserver.h"
+#include "url_parser.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ev.h>
 
-static struct ws *libws_http = NULL;
+// Server instance
+static struct ws *ws = NULL;
+static struct url_parser_instance *up = NULL;
 
-static int on_begin(struct ws_request *req)
-{
-   printf("New message\n");
-
-   return 0;
-}
-
-static int on_method(struct ws_request *req,
-      const char *buf, size_t len)
-{
-   printf("Method: %.*s\n", (int)len, buf);
-
-   return 0;
-}
-
-static int on_url(struct ws_request *req,
-      const char *buf, size_t len)
-{
-   printf("Url chunk: %.*s\n", (int)len, buf);
-
-   return 0;
-}
-
-static int on_url_complete(struct ws_request *req)
-{
-   printf("Url complete\n");
-
-   return 0;
-}
-
-static int on_header_field(struct ws_request *req,
-      const char *buf, size_t len)
-{
-   printf("Header field chunk: %.*s\n", (int)len, buf);
-
-   return 0;
-}
-
-static int on_header_value(struct ws_request *req,
-      const char *buf, size_t len)
-{
-   printf("Header value chunk: %.*s\n", (int)len, buf);
-
-   return 0;
-}
-
-static int on_header_complete(struct ws_request *req)
-{
-   printf("Header complete\n");
-
-   return 0;
-}
-
-static int on_body(struct ws_request *req,
-      const char *buf, size_t len)
-{
-   printf("Body chunk: %.*s\n", (int)len, buf);
-
-   return 0;
-}
-
-static int on_complete(struct ws_request *req)
-{
-   printf("Message complete\n");
-
-   return 0;
-}
-
+// Shutdown webserver and exit
 static void exit_cb(int sig)
 {
-   if (libws_http != NULL) {
-      ws_stop(libws_http);
-      ws_destroy(libws_http);
+   if (ws != NULL) {
+      ws_stop(ws);
+      ws_destroy(ws);
    }
+   if (up != NULL) up_destroy(up);
    printf("Exiting...\n");
    exit(sig);
 }
 
+// Main function
 int main()
 {
    struct ev_loop *loop = EV_DEFAULT;
+   struct ws_settings ws_settings = WS_SETTINGS_DEFAULT;
+   struct url_parser_settings up_settings = URL_PARSER_SETTINGS_DEFAULT;
 
-   struct ws_settings settings = WS_SETTINGS_DEFAULT;
-   settings.port = WS_PORT_HTTP_ALT;
-   settings.on_request_begin = on_begin;
-   settings.on_request_method = on_method;
-   settings.on_request_url = on_url;
-   settings.on_request_url_complete = on_url_complete;
-   settings.on_request_header_field = on_header_field;
-   settings.on_request_header_value = on_header_value;
-   settings.on_request_header_complete = on_header_complete;
-   settings.on_request_body = on_body;
-   settings.on_request_complete = on_complete;
+   // Set settings for webserver
+   ws_settings.port = WS_PORT_HTTP_ALT;
 
+   // Set up url parser for url parsing
+   up = up_create(&up_settings);
+   ws_settings.on_request_url_data = up;
+   ws_settings.on_request_url = up_add_chunk;
+   ws_settings.on_request_url_complete = up_complete;
+
+   // Connect signals for handling exiting correctly
    signal(SIGINT, exit_cb);
    signal(SIGTERM, exit_cb);
 
@@ -141,12 +79,13 @@ int main()
 #endif
 
    // Init webserver and start it
-   libws_http = ws_create(&settings, loop);
-   ws_start(libws_http);
+   ws = ws_create(&ws_settings, loop);
+   ws_start(ws);
 
-   // Start the loop
+   // Start the event loop
    ev_run(loop, 0);
 
+   // Exit
    exit(0);
    return 0;
 }

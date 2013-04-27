@@ -159,7 +159,10 @@ int isLegalURLChar(char c)
  *	@param	chunk A pointer to the chunk (non zero terminated)
  *	@param chunk_size The size of the chunk
  */
-void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int chunk_size) {
+int up_add_chunk(void *_instance, void *data,
+                  const char* chunk, size_t chunk_size) {
+   struct url_parser_instance *instance = _instance;
+
 	// Increase the current buffer so the chunk can be added
 	int old_buffer_size = instance->buffer_size;
 	instance->buffer_size += chunk_size;
@@ -174,7 +177,7 @@ void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int c
 	{
 		fprintf(stderr, "Realloc failed in URL parser when allocating space for new URL chunk\n");
 		instance->state = S_ERROR;
-		return;
+		return 1;
 	}
 
 	memcpy(instance->buffer+old_buffer_size, chunk, chunk_size);
@@ -328,8 +331,10 @@ void up_add_chunk(struct url_parser_instance *instance, const char* chunk, int c
  *
  *  @param  instance A pointer to an URL Parser instance
  */
-void up_complete(struct url_parser_instance *instance)
+int up_complete(void *_instance, void *data)
 {
+   struct url_parser_instance *instance = _instance;
+
 	// Check if we need to send a last chunk and that we are in a valid end state
 	switch(instance->state)
 	{
