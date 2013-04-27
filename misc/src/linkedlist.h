@@ -51,15 +51,19 @@ struct ListElement
 {
    ListElement *next;
    char *key;
-   void *value
+   void *value;
    struct TrieNode *node;
 };
 
 LinkedList* create_linkedList();
 
-int insert_listElement(LinkedList *ll, char *key, struct TrieNode* node);
+ListElement* insert_listElement(LinkedList *ll, char *key, struct TrieNode* node);
 
 void* get_value(LinkedList *ll, char *key);
+
+void set_listElement_value(ListElement *element, void* value);
+
+void* get_listElement_value(ListElement *element);
 
 void destroy_linkedList(LinkedList *ll);
 

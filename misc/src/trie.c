@@ -1,6 +1,6 @@
-// tree.c
+// trie.c
 
-/*Copyright 2013 Aalborg University. All rights reserved.
+/*  Copyright 2013 Aalborg University. All rights reserved.
  *   
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -31,51 +31,91 @@
  *  as representing official policies, either expressed.
  */
 
+#include <string.h>
 #include "trie.h"
+
+char* get_partial_key(char* key, int from)
+{
+   char *partialKey = malloc(strlen(key)+1-from);
+   strcpy(partialKey,&key[from]);
+   return partialKey;
+}
 
 TrieNode* create_trie()
 {
    TrieNode* root = malloc(sizeof(TrieNode));
    if(root == NULL)
    {
-      fprintf(stderr,"malloc failed for creating a root of trie");
+      fprintf(stderr,"malloc failed for creating a root of trie\n");
       return NULL;
    }
-   root->value = NULL;
    root->children = NULL;
 
    return root;
 }
 
-void* get_trieNode_value(TrieNode* node)
+ListElement* insert_trie_key(TrieNode* root, char* key)
 {
-   return node->value;
-}
-
-void set_trieNode_value(TrieNode* node, void* value)
-{
-   node->value = value;
-}
-
-TrieNode* insert_trie_key(TrieNode* root, char* key)
-{
+   key = get_partial_key(key, 0); // allocate our own copy of the key
    if(root->children == NULL)
    {
       LinkedList* list = create_linkedList();
-      insert_listElement(list, key, NULL);
+      ListElement* element = insert_listElement(list, key, NULL);
       root->children = list;
-      return root;
+      return element;
    }
+
    unsigned int current_pos = 0, tmp_pos = 0;
    TrieNode* treeElement = root;
-   ListElement* listElement = treeElement->childrent->head;
-   char* listkey = ListElement->key;
+   ListElement* listElement = treeElement->children->head;
+   char* listkey = listElement->key;
 
    while(listElement!= NULL)
    {
       tmp_pos = 0;
       if(listkey[tmp_pos] == key[current_pos])
       {
+         tmp_pos++;
+         current_pos++;
+
+         while(listkey[tmp_pos] != '\0'&& key[current_pos]!=
+               '\0' && listkey[current_pos] == key[current_pos]){
+            current_pos++;
+            tmp_pos++;
+         }
+
+         if(listkey[tmp_pos] == '\0'&& key[current_pos] == '\0')
+         {
+            printf("The element is already in the trie. We need to handle this!\n");
+            return  NULL;
+         }
+         else if(listkey[tmp_pos] == '\0')
+         {
+            if(listElement->node == NULL)
+            {
+               TrieNode *node = malloc(sizeof(TrieNode));
+               if(node == NULL)
+               {
+                  fprintf(stderr, "malloc failed when creating a trie node\n");
+                  return NULL;
+               }
+
+               listElement->node = node;
+
+               node->children = create_linkedList();
+               char *clol = get_partial_key(key, current_pos);
+               ListElement *element = insert_listElement(node->children, get_partial_key(key, current_pos), NULL);
+               return element;
+            }
+            else
+            {
+
+            }
+         }
+         else
+         {
+
+         }
 
       }
       listElement = listElement->next;
@@ -83,13 +123,21 @@ TrieNode* insert_trie_key(TrieNode* root, char* key)
          listkey = listElement->key;
    }
 
-   insert_listElememt(treeElement->children,key, node);
-   
-   TrieNode* newNode = malloc(sizeof(TrieNode));
+   if(treeElement->children != NULL)
+   {
+      ListElement *element = insert_listElement(treeElement->children, get_partial_key(key, current_pos), NULL);
+      return element;
+   }
+   else
+   {
+      printf("ARMAGEDDON IS UPON US!! THIS SHOULD NOT HAPPEN\n");
+   }
+
+   //insert_listElement(treeElement->children,key, NULL);
+   //TrieNode* newNode = malloc(sizeof(TrieNode));
 }
 
-
-TrieNode* lookup_trieNode(TrieNode* root, char* key)
+ListElement* lookup_trieNode(TrieNode* root, char* key)
 {
    if(root->children == NULL)
       return NULL;
@@ -113,13 +161,16 @@ TrieNode* lookup_trieNode(TrieNode* root, char* key)
          }
          if(listkey[tmp_pos] == '\0'&& key[current_pos] == '\0')
          {
-            return treeElement;
+            return listElement;
          }
          else if(listkey[tmp_pos] == '\0')
          {
             treeElement = listElement->node;
+            if(treeElement == NULL || treeElement->children == NULL)
+               return NULL;
             listElement = treeElement->children->head;
             listkey = listElement->key;
+
             continue;
          }
          else 

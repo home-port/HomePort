@@ -61,13 +61,13 @@ LinkedList *create_linkedList()
  * \param string key to retrieve value.
  * \param value pointer with any data.
  */
-int insert_listElement(LinkedList *ll, char *key, struct TrieNode* node)
+ListElement* insert_listElement(LinkedList *ll, char *key, struct TrieNode* node)
 {
    ListElement *element = malloc(sizeof(*element));
    if(!element)
    {
       fprintf(stderr, "List element not allocated\n" );
-      return 1;
+      return NULL;
    }
 
    if(ll->head == NULL)
@@ -78,8 +78,9 @@ int insert_listElement(LinkedList *ll, char *key, struct TrieNode* node)
    element->next = NULL;
    element->key = key;
    element->node = node;
+   element->value = NULL;
 
-   return 0;
+   return element;
 }
 
 /// get linked list element
@@ -97,11 +98,21 @@ void* get_value(LinkedList *ll, char *key)
    {
       if(strcmp(tempElement->key, key) == 0)
       {
-         return tempElement->val;
+         return tempElement->value;
       }
       tempElement = tempElement->next;
    }
    return NULL;
+}
+
+void set_listElement_value(ListElement *element, void* value)
+{
+   element->value = value;
+}
+
+void* get_listElement_value(ListElement *element)
+{
+   return element->value;
 }
 
 /// Destroy linked list and elements

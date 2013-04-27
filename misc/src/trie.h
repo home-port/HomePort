@@ -1,4 +1,4 @@
-// tree.h
+// trie.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
  *   
@@ -47,11 +47,9 @@ struct TrieNode
 };
 
 TrieNode* create_trie();
-TrieNode* insert_trie_key(TrieNode* root, char* key);
-TrieNode* remove_trieNode(TrieNode* root, char* key);
-TrieNode* lookup_trieNode(TrieNode* root, char* key);
-void* get_trieNode_value(TrieNode* node);
-void set_trieNode_value(TrieNode* node, void* value);
+struct ListElement* insert_trie_key(TrieNode* root, char* key);
+void remove_trieNode(TrieNode* root, char* key);
+struct ListElement* lookup_trieNode(TrieNode* root, char* key);
 void destroy_trie(TrieNode* root);
 
 #endif
