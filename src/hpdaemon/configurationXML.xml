@@ -1,1 +1,0 @@
-<?xml?><configure><selector><device type="Example"><service type="Lamp"><parameter id="0"/></service></device></selector><selected><device location="SomewhereInTheKitchen"><service desc="CorrectedThatDescription"><parameter max="newMaxValueForThatParameter"/></service></device></selected></configure>
