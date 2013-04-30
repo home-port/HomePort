@@ -30,3 +30,26 @@
 *  documentation are those of the authors and should not be interpreted
 *  as representing official policies, either expressed.
 */
+
+#ifndef URL_PARSER_H
+#define URL_PARSER_H
+
+typedef void (*hp_string_cb)(const char* field, int field_length, const char* value, int value_length);
+
+struct header_parser_instance;
+
+struct header_parser_settings {
+	hp_string_cb on_field_value_pair;
+};
+
+#define HEADER_PARSER_SETTINGS_DEFAULT {\
+	.on_field_value_pair = NULL }
+
+struct header_parser_instance *hp_create(struct header_parser_settings*);
+void hp_destroy(struct header_parser_instance*);
+
+void hp_on_header_field(struct header_parser_instance *instance ,char* field_chunk, int length);
+void hp_on_header_value(struct header_parser_instance *instance, char* value_chunk, int length);
+void hp_on_header_complete(struct header_parser_instance *instance);
+
+#endif

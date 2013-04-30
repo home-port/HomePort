@@ -119,16 +119,18 @@ struct url_parser_instance *up_create(struct url_parser_settings *settings)
  */
 void up_destroy(struct url_parser_instance *instance)
 {
-	if(instance->settings != NULL) {
-		free(instance->settings);
-	}
+	if(instance != NULL) {
 
-	if(instance->buffer != NULL) {
-		free(instance->buffer);
-	}
-	
-	if(instance != NULL)
+		if(instance->settings != NULL) {
+			free(instance->settings);
+		}
+
+		if(instance->buffer != NULL) {
+			free(instance->buffer);
+		}
+		
 		free(instance);
+	}
 }
 
 /// Check if a given char is valid in an URL
