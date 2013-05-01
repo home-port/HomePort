@@ -154,7 +154,7 @@ static void client_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, in
    libws_client_kill(client);
 }
 
-static void sendf(struct libws_client *client, char *fmt, ...) {
+void ws_client_sendf(struct libws_client *client, char *fmt, ...) {
    int status;
    va_list arg;
 
@@ -169,19 +169,6 @@ static void sendf(struct libws_client *client, char *fmt, ...) {
    }
 
    ev_io_start(client->loop, &client->send_watcher);
-}
-
-static int send_response(
-      struct libws_client *client,
-      struct ws_response *response)
-{
-   if(response == NULL) return 0;
-   
-   // TODO: Don't call response destroy until response is sent..
-   //sendf(client, "%s", libws_response_str(response));
-   ws_response_destroy(response);
-
-   return 1;
 }
 
 /// Initialise and accept client

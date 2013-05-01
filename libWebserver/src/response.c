@@ -227,3 +227,8 @@ int ws_response_add_body(struct ws_response *res,
    }
 }
 
+void ws_response_send(struct ws_response *res)
+{
+   fprintf(stderr, "ws_response_send is in a very early alpha version!\n");
+   ws_client_sendf(res->client, res->msg);
+}
