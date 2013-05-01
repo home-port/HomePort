@@ -50,7 +50,7 @@ enum lr_method
 };
 
 // Callbacks
-typedef void (*lr_cb)(const char* url, size_t url_len);
+typedef void (*lr_cb)(void *data, const char* url, size_t url_len);
 
 // libREST instance functions
 struct lr *lr_create();
@@ -63,7 +63,7 @@ void lr_register_service(struct lr *ins,
                          lr_cb on_delete);
 
 // libREST request functions
-struct lr_request *lr_request_create(struct lr *ins);
+struct lr_request *lr_request_create(struct lr *ins, void *data);
 void lr_request_destroy(struct lr_request *req);
 int lr_request_method(void *req, const char *chunk, size_t len);
 int lr_request_url(void *req, const char *chuck, size_t len);

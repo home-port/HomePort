@@ -185,6 +185,8 @@ int ws_response_add_header_value(struct ws_response *res,
 int ws_response_add_body(struct ws_response *res,
       const char *buf, size_t len);
 
+void ws_response_send(struct ws_response *res);
+
 void ws_request_set_data(struct ws_request *req, void *data);
 
 #endif

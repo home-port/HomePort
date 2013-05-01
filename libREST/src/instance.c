@@ -121,28 +121,28 @@ void lr_register_service(struct lr *ins,
    set_listElement_value(element, service);
 }
 
-void lr_service_call(struct lr_service *service, enum lr_method method, const char *path, size_t len)
+void lr_service_call(struct lr_service *service, enum lr_method method, void *data, const char *path, size_t len)
 {
 	switch(method)
 	{
 		case GET:
 			if(service->on_get)
-				service->on_get(path, len);
+				service->on_get(data, path, len);
 		break;
 
 		case POST:
 			if(service->on_post)
-				service->on_post(path, len);
+				service->on_post(data, path, len);
 		break;
 
 		case PUT:
 			if(service->on_put)
-				service->on_put(path, len);
+				service->on_put(data, path, len);
 		break;
 
 		case DELETE:
 			if(service->on_delete)
-				service->on_delete(path, len);
+				service->on_delete(data, path, len);
 		break;
 	}
 }

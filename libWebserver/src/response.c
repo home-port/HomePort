@@ -33,6 +33,7 @@
 
 #include "response.h"
 #include "request.h"
+#include "client.h"
 
 #include <string.h>
 #include <stdlib.h>

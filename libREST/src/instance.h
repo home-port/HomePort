@@ -41,6 +41,6 @@ struct lr;
 struct lr_service;
 struct TrieNode *lr_get_trie(struct lr *instance);
 
-void lr_service_call(struct lr_service *service, enum lr_method method, const char *path, size_t len);
+void lr_service_call(struct lr_service *service, enum lr_method method, void *data, const char *path, size_t len);
 
 #endif

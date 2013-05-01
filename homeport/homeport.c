@@ -46,16 +46,23 @@ static struct lr *lr = NULL;
 static int request_begin_cb(void *_req)
 {
    struct ws_request *req = _req;
-   void *lr_req = lr_request_create(lr);
+   void *lr_req = lr_request_create(lr, req);
 
    ws_request_set_data(req, lr_req);
 
    return 0;
 }
 
-static void my_get(const char *url, size_t len)
+static void my_get(void *data, const char *url, size_t len)
 {
    printf("Get on: %.*s\n", (int)len, url);
+   struct ws_request *req = data;
+
+   struct ws_response *response = ws_response_create(req, 200);
+   ws_response_add_body(response, "hello world",11);
+
+   ws_response_send(response);
+   ws_response_destroy(response);
 }
 
 // Clean up requests

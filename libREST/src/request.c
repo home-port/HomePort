@@ -44,6 +44,7 @@ struct lr_request {
 	struct lr *instance;
 	struct url_parser_instance *url_parser;
 	enum lr_method method;
+	void *data;
 };
 
 static void on_path_complete(void *_req, const char* path, size_t len)
@@ -57,7 +58,7 @@ static void on_path_complete(void *_req, const char* path, size_t len)
 
 		struct lr_service *service = get_listElement_value(el);
 
-		lr_service_call(service, req->method, path, len);
+		lr_service_call(service, req->method, req->data, path, len);
 
 	} else {
 		printf("Not in trie! %.*s \n", (int)len, path);
@@ -65,7 +66,7 @@ static void on_path_complete(void *_req, const char* path, size_t len)
 
 }
 
-struct lr_request *lr_request_create(struct lr *instance)
+struct lr_request *lr_request_create(struct lr *instance, void *data)
 {
 	struct lr_request *request = malloc(sizeof(struct lr_request));
 
@@ -82,6 +83,8 @@ struct lr_request *lr_request_create(struct lr *instance)
 	request->url_parser = url_parser;
 
 	request->instance = instance;
+
+	request->data = data;
 
 	return request;
 }
