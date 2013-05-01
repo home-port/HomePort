@@ -33,23 +33,75 @@
 
 #include "libREST.h"
 
+#include <stdlib.h>
+#include <stdio.h>
+
 struct lr {
+   struct lr_service *services;
+};
+
+struct lr_service {
+   lr_cb on_get;
+   lr_cb on_post;
+   lr_cb on_put;
+   lr_cb on_delete;
+   struct lr_service *next;
 };
 
 struct lr *lr_create()
 {
+   struct lr *ins = malloc(sizeof(struct lr));
+   if (ins == NULL) {
+      fprintf(stderr, "Cannot allocate lr instance\n");
+      return NULL;
+   }
+
+   ins->services = NULL;
+
+   return ins;
 }
 
 void lr_destroy(struct lr *ins)
 {
+   struct lr_service *next;
+   struct lr_service *service = ins->services;
+
+   while (service != NULL) {
+      next = service->next;
+      free(service);
+      service = next;
+   }
+
+   free(ins);
 }
 
-void lr_register_service(struct lr *instance,
+void lr_register_service(struct lr *ins,
                          char *url,
                          lr_cb on_get,
                          lr_cb on_post,
                          lr_cb on_put,
                          lr_cb on_delete)
 {
+   struct lr_service *service = ins->services;
+
+   if (service == NULL) {
+      ins->services = malloc(sizeof(struct lr_service));
+      service = ins->services;
+   } else {
+      while (service->next != NULL) service = service->next;
+      service->next = malloc(sizeof(struct lr_service));
+      service = service->next;
+   }
+   
+   if (service == NULL) {
+      fprintf(stderr, "Not enough memory to allocate service\n");
+      return;
+   }
+
+   service->on_get = on_get;
+   service->on_post = on_post;
+   service->on_put = on_put;
+   service->on_delete = on_delete;
+   service->next = NULL;
 }
 

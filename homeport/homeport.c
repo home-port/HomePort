@@ -106,12 +106,15 @@ int main(int argc, char *argv[])
    printf("Debugging is set\n");
 #endif
 
-   // Init webserver and start it
-   ws = ws_create(&ws_settings, loop);
-   ws_start(ws);
-
    // Init libREST
    lr = lr_create();
+
+   // Create services
+   lr_register_service(lr, "/homeport/devices", NULL, NULL, NULL, NULL);
+
+   // Create webserver
+   ws = ws_create(&ws_settings, loop);
+   ws_start(ws);
 
    // Start the event loop
    ev_run(loop, 0);

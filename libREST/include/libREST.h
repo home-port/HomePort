@@ -46,7 +46,7 @@ typedef void (*lr_cb)();
 // libREST instance functions
 struct lr *lr_create();
 void lr_destroy(struct lr *ins);
-void lr_register_service(struct lr *instance,
+void lr_register_service(struct lr *ins,
                          char *url,
                          lr_cb on_get,
                          lr_cb on_post,
