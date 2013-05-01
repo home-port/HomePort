@@ -31,6 +31,7 @@
  *  as representing official policies, either expressed.
  */
 
+#include <stdlib.h>
 #include "libREST.h"
 
 struct lr_request {
@@ -38,10 +39,20 @@ struct lr_request {
 
 struct lr_request *lr_request_create(struct lr_instance *ins)
 {
+	struct lr_request *request = malloc(sizeof(struct lr_request));
+
+	if(request == NULL)
+	{
+		fprintf(stderr, "malloc failed in libREST when creating instance\n");
+	}
+
+	return request;
 }
 
 void lr_request_destroy(struct lr_request *req)
 {
+	if(req)
+		free(req);
 }
 
 int lr_request_url(void *req, const char *chuck, size_t len)
