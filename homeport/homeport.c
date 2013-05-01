@@ -38,57 +38,37 @@
 #include <string.h>
 #include <ev.h>
 
-//struct request_data
-//{
-//   struct ws_request *req;
-//   struct url_parser_instance *up;
-//};
-//
 // Server instance
 static struct ws *ws = NULL;
-//static struct url_parser_settings up_settings = URL_PARSER_SETTINGS_DEFAULT;
-//
-//static int request_begin_cb(void *_req)
-//{
-//   struct ws_request *req = _req;
-//   struct request_data *req_data = malloc(sizeof(struct request_data));
-//   
-//   req_data->up=up_create(&up_settings);
-//   req_data->req = req;
-//
-//   ws_request_set_data(req,req_data);
-//
-//   return 0;
-//}
-//
-//static int request_url_cb(void *_req_data, const char *chunk, size_t chunk_length)
-//{
-//   struct request_data *req_data = _req_data;
-//   return up_add_chunk(req_data->up, chunk, chunk_length);
-//}
-//
-//static int request_url_complete_cb(void *_req_data)
-//{
-//   struct request_data *req_data = _req_data;
-//   return up_complete(req_data->up);
-//}
-//
-//static int request_complete_cb(void *_req_data)
-//{
-//   struct request_data *req_data = _req_data;
-//   up_destroy(req_data->up);
-//
-//   ws_request_set_data(req_data->req, NULL);
-//
-//   free(req_data);
-//
-//   return 0;
-//}
-//
-//static void url_p_complete(const char* parsed, size_t seg_len)
-//{
-//   printf("%.*s\n", (int)seg_len, parsed); 
-//}
+static struct lr
+
+// Handle requests
+static int request_begin_cb(void *_req)
+{
+   struct ws_request *req = _req;
+   void *lr_req = lr_request_create(;
+   
+   req_data->up=up_create(&up_settings);
+   req_data->req = req;
+
+   ws_request_set_data(req, req_data);
+
+   return 0;
+}
+
+// Clean up requests
+static int request_cmpl_cb(void *_req)
+{
+   struct ws_request *req = _req;
+   struct request_data *req_data = malloc(sizeof(struct request_data));
+   
+   req_data->up=up_create(&up_settings);
+   req_data->req = req;
+
+   ws_request_set_data(req,req_data);
+
+   return 0;
+}
 
 // Shutdown webserver and exit
 static void exit_cb(int sig)
@@ -112,14 +92,14 @@ int main(int argc, char *argv[])
 
    // Set up url parser for url parsing
    //ws_settings.on_request_begin;
-   //ws_settings.on_request_method;
+   ws_settings.on_request_method = lr_request_method;
    ws_settings.on_request_url = lr_request_url;
-   //ws_settings.on_request_url_complete;
-   //ws_settings.on_request_header_field;
-   //ws_settings.on_request_header_value;
-   //ws_settings.on_request_header_complete;
-   //ws_settings.on_request_body;
-   //ws_settings.on_request_complete;
+   ws_settings.on_request_url_complete = lr_request_url_cmpl;
+   ws_settings.on_request_header_field = lr_request_hdr_field;
+   ws_settings.on_request_header_value = lr_request_hdr_value;
+   ws_settings.on_request_header_complete = lr_request_hdr_cmpl;
+   ws_settings.on_request_body = lr_request_body;
+   ws_settings.on_request_complete = lr_request_cmpl;
 
    // Connect signals for handling exiting correctly
    signal(SIGINT, exit_cb);

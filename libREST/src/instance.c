@@ -33,18 +33,18 @@
 
 #include "libREST.h"
 
-struct lr_instance {
+struct lr {
 };
 
-struct lr_instance *lr_create()
+struct lr *lr_create()
 {
 }
 
-void lr_destroy(struct lr_instance *ins)
+void lr_destroy(struct lr *ins)
 {
 }
 
-void lr_register_service(struct lr_instance *instance,
+void lr_register_service(struct lr *instance,
                          char *url,
                          lr_cb on_get,
                          lr_cb on_post,

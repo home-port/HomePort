@@ -37,16 +37,16 @@
 #include <stddef.h>
 
 // Structs
-struct lr_instance;
+struct lr;
 struct lr_request;
 
 // Callbacks
 typedef void (*lr_cb)();
 
 // libREST instance functions
-struct lr_instance *lr_create();
-void lr_destroy(struct lr_instance *ins);
-void lr_register_service(struct lr_instance *instance,
+struct lr *lr_create();
+void lr_destroy(struct lr *ins);
+void lr_register_service(struct lr *instance,
                          char *url,
                          lr_cb on_get,
                          lr_cb on_post,
@@ -54,8 +54,9 @@ void lr_register_service(struct lr_instance *instance,
                          lr_cb on_delete);
 
 // libREST request functions
-struct lr_request *lr_request_create(struct lr_instance *ins);
+struct lr_request *lr_request_create(struct lr *ins);
 void lr_request_destroy(struct lr_request *req);
+int lr_request_method(void *req, const char *chunk, size_t len);
 int lr_request_url(void *req, const char *chuck, size_t len);
 int lr_request_url_cmpl(void *req);
 int lr_request_hdr_field(void *req, const char *chuck, size_t len);
