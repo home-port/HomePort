@@ -69,38 +69,41 @@ void lr_request_destroy(struct lr_request *req)
 
 int lr_request_method(void *req, const char *chunk, size_t len)
 {
-	
+	return 0;
 }
 
 int lr_request_url(void *req, const char *chunk, size_t len)
 {
-
+	return 0;
 }
 
 int lr_request_url_cmpl(void *req)
 {
-
+	return 0;
 }
 
 int lr_request_hdr_field(void *req, const char *chunk, size_t len)
 {
-
+	return 0;
 }
 
 int lr_request_hdr_value(void *req, const char *chunk, size_t len)
 {
+	return 0;
 }
 
 int lr_request_hdr_cmpl(void *req)
 {
+	return 0;
 }
 
 int lr_request_body(void *req, const char *chunk, size_t len)
 {
+	return 0;
 }
 
 int lr_request_cmpl(void *req)
 {
+	return 0;
 }
-
 
