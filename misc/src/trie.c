@@ -188,10 +188,6 @@ ListElement* insert_trie_key(TrieNode* root, char* key)
       ListElement *element = insert_listElement(treeElement->children, substring_from(key, current_pos), NULL);
       return element;
    }
-   else
-   {
-      printf("ARMAGEDDON IS UPON US!! THIS SHOULD NOT HAPPEN\n");
-   }
 
    //insert_listElement(treeElement->children,key, NULL);
    //TrieNode* newNode = malloc(sizeof(TrieNode));
