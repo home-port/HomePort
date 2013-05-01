@@ -70,10 +70,10 @@ struct url_parser_instance {
 	int state;
 	unsigned int chars_parsed;
 	unsigned int last_returned;
-	int tmp_key_begin;
-	int tmp_key_size;
+	size_t tmp_key_begin;
+	size_t tmp_key_size;
 
-	unsigned buffer_size;
+	size_t buffer_size;
 	char* buffer;
 };
 
@@ -166,7 +166,7 @@ int up_add_chunk(void *_instance, void *data,
    struct url_parser_instance *instance = _instance;
 
 	// Increase the current buffer so the chunk can be added
-	int old_buffer_size = instance->buffer_size;
+	size_t old_buffer_size = instance->buffer_size;
 	instance->buffer_size += chunk_size;
 
 	if(instance->buffer == NULL && instance->settings->on_begin != NULL)
@@ -185,7 +185,7 @@ int up_add_chunk(void *_instance, void *data,
 	memcpy(instance->buffer+old_buffer_size, chunk, chunk_size);
 
 	// Parse the new chunk in buffer
-	unsigned int i;
+	size_t i;
 	for(i = instance->chars_parsed; i < instance->buffer_size; i++)
 	{
 		char c = instance->buffer[i];
@@ -316,10 +316,12 @@ int up_add_chunk(void *_instance, void *data,
 
 			case S_ERROR:
 					fprintf(stderr,"The URL parser has reached an error state\n");
+					return 1;
 				break;
 		}
 		instance->chars_parsed++;
 	}
+	return 0;
 }
 
 /// Informs the parser that the URL is complete
@@ -370,9 +372,11 @@ int up_complete(void *_instance, void *data)
 
 		default:
 			fprintf(stderr, "An error has happened in the URL parser. End state: %d\n",instance->state);
+			return 1;
 	}
 
 	if(instance->settings->on_complete != NULL && instance->buffer != NULL) {
 		instance->settings->on_complete(instance->buffer, instance->buffer_size);
 	}
+	return 0;
 }

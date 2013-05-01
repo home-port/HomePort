@@ -34,8 +34,8 @@
 #ifndef URL_PARSER_H
 #define URL_PARSER_H
 
-typedef void (*up_string_cb)(const char* parsedSegment, int segment_length);
-typedef void (*up_pair_cb)(const char* key, int key_length, const char* value, int value_length);
+typedef void (*up_string_cb)(const char* parsedSegment, size_t segment_length);
+typedef void (*up_pair_cb)(const char* key, size_t key_length, const char* value, size_t value_length);
 typedef void (*up_void_cb)();
 
 struct url_parser_instance;

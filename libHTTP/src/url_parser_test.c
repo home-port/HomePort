@@ -71,7 +71,7 @@ void on_begin()
 	on_begin_called_correctly = 1;
 }
 
-void on_protocol(const char* protocol, int length)
+void on_protocol(const char* protocol, size_t length)
 {
 	if(strncmp(protocol, "http", 4) == 0)
 	{
@@ -79,7 +79,7 @@ void on_protocol(const char* protocol, int length)
 	}
 }
 
-void on_host(const char* host, int length)
+void on_host(const char* host, size_t length)
 {
 	printf("%.*s\n", length , host);
 
@@ -89,7 +89,7 @@ void on_host(const char* host, int length)
 	}
 }
 
-void on_port(const char* port, int length)
+void on_port(const char* port, size_t length)
 {
 	if(strncmp(port, "8080", 4) == 0)
 	{
@@ -97,7 +97,7 @@ void on_port(const char* port, int length)
 	}
 }
 
-void on_path_segment(const char* seg, int length)
+void on_path_segment(const char* seg, size_t length)
 {
 	if((length == 6 && strncmp(seg, "device",6) == 0) || (length == 2 && strncmp(seg, "tv",2) == 0) ||
 		(length == 1 && (strncmp(seg, "a", 1) == 0 || strncmp(seg,"b", 1) == 0 || strncmp(seg, "c", 1) == 0)))
@@ -106,7 +106,7 @@ void on_path_segment(const char* seg, int length)
 	}
 }
 
-void on_key_value(const char* key, int key_length, const char* value, int value_length)
+void on_key_value(const char* key, size_t key_length, const char* value, size_t value_length)
 {
 	if(key_length == 2 && strncmp(key, "id", 2) == 0 && strncmp(value, "1",1) == 0)
 	{
