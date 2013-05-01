@@ -84,6 +84,7 @@ void lr_destroy(struct lr *ins)
       service = next;
    }
 
+   destroy_trie(ins->trie);
    free(ins);
 }
 
