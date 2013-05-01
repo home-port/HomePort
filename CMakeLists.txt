@@ -39,6 +39,7 @@ add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 
 add_subdirectory(homeport)
 add_subdirectory(libHTTP)
+add_subdirectory(libREST)
 add_subdirectory(libWebserver)
 add_subdirectory(misc)
 

@@ -28,3 +28,9 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
+# Main library
+add_library(libREST
+      instance.c
+      request.c
+      )
+
