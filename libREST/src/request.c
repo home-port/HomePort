@@ -34,8 +34,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "libREST.h"
+#include "url_parser.h"
 
 struct lr_request {
+	struct url_parser_instance *url_parser;
 };
 
 struct lr_request *lr_request_create(struct lr *instance)
@@ -45,30 +47,42 @@ struct lr_request *lr_request_create(struct lr *instance)
 	if(request == NULL)
 	{
 		fprintf(stderr, "malloc failed in libREST when creating instance\n");
+		return NULL;
 	}
+
+	struct url_parser_settings settings = URL_PARSER_SETTINGS_DEFAULT;
+	struct url_parser_instance *url_parser = up_create(&settings);
+
+	request->url_parser = url_parser;
 
 	return request;
 }
 
 void lr_request_destroy(struct lr_request *req)
 {
-	if(req)
+	if(req) {
+		up_destroy(req->url_parser);
+
 		free(req);
+	}
 }
 
-int lr_request_url(void *req, const char *chuck, size_t len)
+int lr_request_url(void *req, const char *chunk, size_t len)
 {
+
 }
 
 int lr_request_url_cmpl(void *req)
 {
+
 }
 
-int lr_request_hdr_field(void *req, const char *chuck, size_t len)
+int lr_request_hdr_field(void *req, const char *chunk, size_t len)
 {
+
 }
 
-int lr_request_hdr_value(void *req, const char *chuck, size_t len)
+int lr_request_hdr_value(void *req, const char *chunk, size_t len)
 {
 }
 
@@ -76,7 +90,7 @@ int lr_request_hdr_cmpl(void *req)
 {
 }
 
-int lr_request_body(void *req, const char *chuck, size_t len)
+int lr_request_body(void *req, const char *chunk, size_t len)
 {
 }
 
