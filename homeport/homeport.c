@@ -46,7 +46,7 @@ static struct lr *lr = NULL;
 static int request_begin_cb(void *_req)
 {
    struct ws_request *req = _req;
-   void *lr_req = lr_request_create(lr);;
+   void *lr_req = lr_request_create(lr);
 
    ws_request_set_data(req, lr_req);
 
@@ -54,15 +54,12 @@ static int request_begin_cb(void *_req)
 }
 
 // Clean up requests
-static int request_cmpl_cb(void *_req)
+static int request_cmpl_cb(void *_lr_req)
 {
-   //struct ws_request *req = _req;
-   //struct request_data *req_data = malloc(sizeof(struct request_data));
-   //
-   //req_data->up=up_create(&up_settings);
-   //req_data->req = req;
+   struct lr_request *lr_req = _lr_req;
 
-   //ws_request_set_data(req,req_data);
+   lr_request_cmpl(lr_req);
+   lr_request_destroy(lr_req);
 
    return 0;
 }
@@ -91,7 +88,7 @@ int main(int argc, char *argv[])
    ws_settings.port = WS_PORT_HTTP_ALT;
 
    // Set up url parser for url parsing
-   //ws_settings.on_request_begin;
+   ws_settings.on_request_begin = request_begin_cb;
    ws_settings.on_request_method = lr_request_method;
    ws_settings.on_request_url = lr_request_url;
    ws_settings.on_request_url_complete = lr_request_url_cmpl;
@@ -99,7 +96,7 @@ int main(int argc, char *argv[])
    ws_settings.on_request_header_value = lr_request_hdr_value;
    ws_settings.on_request_header_complete = lr_request_hdr_cmpl;
    ws_settings.on_request_body = lr_request_body;
-   ws_settings.on_request_complete = lr_request_cmpl;
+   ws_settings.on_request_complete = request_cmpl_cb;
 
    // Connect signals for handling exiting correctly
    signal(SIGINT, exit_cb);

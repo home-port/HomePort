@@ -29,6 +29,7 @@
 # as representing official policies, either expressed.
 
 include_directories(${PROJECT_SOURCE_DIR}/misc/include)
+include_directories(${PROJECT_SOURCE_DIR}/libHTTP/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_subdirectory(src)
