@@ -58,4 +58,5 @@ add_dependencies(check linkedlist_test)
 add_library(trie
       trie.c
       )
+target_link_libraries(trie linkedlist)
 
