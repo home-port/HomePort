@@ -67,6 +67,11 @@ void lr_request_destroy(struct lr_request *req)
 	}
 }
 
+int lr_request_method(void *req, const char *chunk, size_t len)
+{
+	
+}
+
 int lr_request_url(void *req, const char *chunk, size_t len)
 {
 
