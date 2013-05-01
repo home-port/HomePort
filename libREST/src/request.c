@@ -33,16 +33,36 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+
 #include "libREST.h"
 #include "url_parser.h"
+#include "instance.h"
+
+
 
 struct lr_request {
+	struct lr *instance;
 	struct url_parser_instance *url_parser;
+	enum lr_method method;
 };
 
-static void on_path_complete(const char* path, size_t len)
+static void on_path_complete(void *_req, const char* path, size_t len)
 {
-	printf("URL Path: %.*s\n", (int)len, path);
+	struct lr_request *req = _req;
+
+	struct TrieNode *trie = lr_get_trie(req->instance); 
+
+	struct ListElement *el = lookup_trieNode(trie, path);
+	if(el != NULL) {
+
+		struct lr_service *service = get_listElement_value(el);
+
+		lr_service_call(service, req->method, path, len);
+
+	} else {
+		printf("Not in trie! %.*s \n", (int)len, path);
+	}
+
 }
 
 struct lr_request *lr_request_create(struct lr *instance)
@@ -58,8 +78,10 @@ struct lr_request *lr_request_create(struct lr *instance)
 	struct url_parser_settings settings = URL_PARSER_SETTINGS_DEFAULT;
 	settings.on_path_complete = on_path_complete;
 
-	struct url_parser_instance *url_parser = up_create(&settings);
+	struct url_parser_instance *url_parser = up_create(&settings, request);
 	request->url_parser = url_parser;
+
+	request->instance = instance;
 
 	return request;
 }
@@ -76,6 +98,20 @@ void lr_request_destroy(struct lr_request *req)
 int lr_request_method(void *_req, const char *chunk, size_t len)
 {
 	struct lr_request *req = _req;
+
+	if(len == 6 && strncmp("DELETE",chunk,len) == 0){
+		req->method = DELETE;
+	} else if(len == 4 && strncmp("POST",chunk,len) == 0){
+		req->method = POST;
+	} else if(len == 3 && strncmp("GET",chunk,len) == 0){
+		req->method = GET;
+	} else if(len == 3 && strncmp("PUT",chunk,len) == 0){
+		req->method = PUT;
+	} else {
+		fprintf(stderr, "Unsupported method: %.*s\n", (int)len, chunk);
+		return 1;
+	}
+
 	return 0;
 }
 

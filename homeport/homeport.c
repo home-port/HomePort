@@ -53,6 +53,11 @@ static int request_begin_cb(void *_req)
    return 0;
 }
 
+static void my_get(const char *url, size_t len)
+{
+   printf("Get on: %.*s\n", (int)len, url);
+}
+
 // Clean up requests
 static int request_cmpl_cb(void *_lr_req)
 {
@@ -110,7 +115,7 @@ int main(int argc, char *argv[])
    lr = lr_create();
 
    // Create services
-   lr_register_service(lr, "/homeport/devices", NULL, NULL, NULL, NULL);
+   lr_register_service(lr, "/homeport/devices", my_get, NULL, NULL, NULL);
 
    // Create webserver
    ws = ws_create(&ws_settings, loop);

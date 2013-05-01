@@ -34,9 +34,9 @@
 #ifndef URL_PARSER_H
 #define URL_PARSER_H
 
-typedef void (*up_string_cb)(const char* parsedSegment, size_t segment_length);
-typedef void (*up_pair_cb)(const char* key, size_t key_length, const char* value, size_t value_length);
-typedef void (*up_void_cb)();
+typedef void (*up_string_cb)(void *data, const char* parsedSegment, size_t segment_length);
+typedef void (*up_pair_cb)(void *data, const char* key, size_t key_length, const char* value, size_t value_length);
+typedef void (*up_void_cb)(void *data);
 
 struct url_parser_instance;
 
@@ -72,7 +72,7 @@ struct url_parser_settings {
 	.on_port = NULL, .on_path_segment = NULL, .on_path_complete = NULL, \
 	.on_key_value = NULL, .on_complete = NULL }
 
-struct url_parser_instance *up_create(struct url_parser_settings*);
+struct url_parser_instance *up_create(struct url_parser_settings *settings, void* data);
 void up_destroy(struct url_parser_instance*);
 
 int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size);

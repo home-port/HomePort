@@ -31,6 +31,7 @@
  *  as representing official policies, either expressed.
  */
 
+#include "instance.h"
 #include "libREST.h"
 #include "trie.h"
 
@@ -63,6 +64,13 @@ struct lr *lr_create()
    ins->services = NULL;
 
    return ins;
+}
+
+struct TrieNode *lr_get_trie(struct lr *instance)
+{
+	if(instance)
+		return instance->trie;
+	return NULL;
 }
 
 void lr_destroy(struct lr *ins)
@@ -107,5 +115,33 @@ void lr_register_service(struct lr *ins,
    service->on_put = on_put;
    service->on_delete = on_delete;
    service->next = NULL;
+
+   struct ListElement* element = insert_trie_key(ins->trie, url);
+   set_listElement_value(element, service);
 }
 
+void lr_service_call(struct lr_service *service, enum lr_method method, const char *path, size_t len)
+{
+	switch(method)
+	{
+		case GET:
+			if(service->on_get)
+				service->on_get(path, len);
+		break;
+
+		case POST:
+			if(service->on_post)
+				service->on_post(path, len);
+		break;
+
+		case PUT:
+			if(service->on_put)
+				service->on_put(path, len);
+		break;
+
+		case DELETE:
+			if(service->on_delete)
+				service->on_delete(path, len);
+		break;
+	}
+}

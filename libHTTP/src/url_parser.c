@@ -67,6 +67,8 @@ enum url_parser_state {
 struct url_parser_instance {
 	struct url_parser_settings *settings;
 
+	void *data;
+
 	int state;
 	unsigned int chars_parsed;
 	unsigned int last_returned;
@@ -87,7 +89,7 @@ struct url_parser_instance {
  *  @param  settings A pointer to a url_parser_settings struct
  *  @return a pointer to the newly created instance
  */
-struct url_parser_instance *up_create(struct url_parser_settings *settings)
+struct url_parser_instance *up_create(struct url_parser_settings *settings, void *data)
 {
 	struct url_parser_instance *instance;
 
@@ -109,6 +111,8 @@ struct url_parser_instance *up_create(struct url_parser_settings *settings)
 	instance -> last_returned = 0;
 	instance -> path_start = -1;
 	instance -> buffer = NULL;
+
+	instance->data = data;
 
 	return instance;
 }
@@ -173,7 +177,7 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 
 	if(instance->buffer == NULL && instance->settings->on_begin != NULL)
 	{
-		instance->settings->on_begin();
+		instance->settings->on_begin(instance->data);
 	}
 
 	instance->buffer = realloc(instance->buffer, instance->buffer_size * (sizeof(char)));
@@ -218,7 +222,7 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 				{
 					if(instance->settings->on_protocol != NULL)
 					{
-						instance->settings->on_protocol(instance->buffer,instance->chars_parsed);
+						instance->settings->on_protocol(instance->data, instance->buffer,instance->chars_parsed);
 					}
 					instance->last_returned = instance->chars_parsed;
 					instance->state = S_GARBAGE1;
@@ -250,7 +254,7 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 				{
 					if(instance->settings->on_host != NULL)
 					{
-						instance->settings->on_host(&instance->buffer[instance->last_returned+3],(i-(instance->last_returned)-3));
+						instance->settings->on_host(instance->data, &instance->buffer[instance->last_returned+3],(i-(instance->last_returned)-3));
 					}
 					instance->last_returned = instance->chars_parsed;
 					instance->state = S_PREPORT;
@@ -269,7 +273,7 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 				{
 					if(instance->settings->on_port != NULL)
 					{
-						instance->settings->on_port(&instance->buffer[instance->last_returned+1], (i-(instance->last_returned)-1));
+						instance->settings->on_port(instance->data, &instance->buffer[instance->last_returned+1], (i-(instance->last_returned)-1));
 					}
 					instance->last_returned = instance->chars_parsed;
 					instance -> state = S_SEGMENT;
@@ -284,7 +288,7 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 				{
 					if(instance->settings->on_path_segment != NULL)
 					{
-						instance->settings->on_path_segment(&instance->buffer[instance->last_returned+1], (i-(instance->last_returned)-1));
+						instance->settings->on_path_segment(instance->data, &instance->buffer[instance->last_returned+1], (i-(instance->last_returned)-1));
 					}
 					instance->last_returned = instance->chars_parsed;
 				}
@@ -292,7 +296,7 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 				{
 					if(instance->settings->on_path_complete != NULL)
 					{
-						instance->settings->on_path_complete(&instance->buffer[instance->path_start], i-(instance->path_start));
+						instance->settings->on_path_complete(instance->data, &instance->buffer[instance->path_start], i-(instance->path_start));
 					}
 					instance->state = S_KEY;
 				}
@@ -315,7 +319,8 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 				{
 					if(instance->settings->on_key_value != NULL)
 					{
-						instance->settings->on_key_value(&instance->buffer[instance->tmp_key_begin], instance->tmp_key_size,
+						instance->settings->on_key_value(instance->data, &instance->buffer[instance->tmp_key_begin], 
+														 instance->tmp_key_size,
 														 &instance->buffer[instance->last_returned+1],
 														 (i-(instance->last_returned)-1));
 					}
@@ -355,13 +360,15 @@ int up_complete(void *_instance)
 		case S_SEGMENT:
 			if(instance->settings->on_path_segment != NULL)
 			{
-				instance->settings->on_path_segment(&instance->buffer[instance->last_returned+1],
+				instance->settings->on_path_segment(instance->data, 
+													&instance->buffer[instance->last_returned+1],
 													(instance->buffer_size-instance->last_returned-1));
 			}
 
 			if(instance->settings->on_path_complete != NULL)
 			{	
-				instance->settings->on_path_complete(&instance->buffer[instance->path_start],
+				instance->settings->on_path_complete(instance->data, 
+													&instance->buffer[instance->path_start],
 													 ((instance->buffer_size)-instance->path_start));
 			}
 
@@ -372,7 +379,8 @@ int up_complete(void *_instance)
 		case S_VALUE:
 			if(instance->settings->on_key_value != NULL)
 			{
-				instance->settings->on_key_value(&instance->buffer[instance->tmp_key_begin],
+				instance->settings->on_key_value(instance->data, 
+												 &instance->buffer[instance->tmp_key_begin],
 												 instance->tmp_key_size,
 												 &instance->buffer[instance->last_returned+1],
 												 (instance->buffer_size-(instance->last_returned)-1));
@@ -394,7 +402,7 @@ int up_complete(void *_instance)
 	}
 
 	if(instance->settings->on_complete != NULL && instance->buffer != NULL) {
-		instance->settings->on_complete(instance->buffer, instance->buffer_size);
+		instance->settings->on_complete(instance->data, instance->buffer, instance->buffer_size);
 	}
 	return 0;
 }
