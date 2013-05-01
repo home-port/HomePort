@@ -40,6 +40,11 @@ struct lr_request {
 	struct url_parser_instance *url_parser;
 };
 
+static void on_path_complete(const char* path, size_t len)
+{
+	printf("URL Path: %.*s\n", (int)len, path);
+}
+
 struct lr_request *lr_request_create(struct lr *instance)
 {
 	struct lr_request *request = malloc(sizeof(struct lr_request));
@@ -51,8 +56,9 @@ struct lr_request *lr_request_create(struct lr *instance)
 	}
 
 	struct url_parser_settings settings = URL_PARSER_SETTINGS_DEFAULT;
-	struct url_parser_instance *url_parser = up_create(&settings);
+	settings.on_path_complete = on_path_complete;
 
+	struct url_parser_instance *url_parser = up_create(&settings);
 	request->url_parser = url_parser;
 
 	return request;
@@ -67,43 +73,51 @@ void lr_request_destroy(struct lr_request *req)
 	}
 }
 
-int lr_request_method(void *req, const char *chunk, size_t len)
+int lr_request_method(void *_req, const char *chunk, size_t len)
 {
+	struct lr_request *req = _req;
 	return 0;
 }
 
-int lr_request_url(void *req, const char *chunk, size_t len)
+int lr_request_url(void *_req, const char *chunk, size_t len)
 {
+	struct lr_request *req = _req;
+	return up_add_chunk(req->url_parser, chunk, len);
+}
+
+int lr_request_url_cmpl(void *_req)
+{
+	struct lr_request *req = _req;
+	return up_complete(req->url_parser);
+}
+
+int lr_request_hdr_field(void *_req, const char *chunk, size_t len)
+{
+	struct lr_request *req = _req;
 	return 0;
 }
 
-int lr_request_url_cmpl(void *req)
+int lr_request_hdr_value(void *_req, const char *chunk, size_t len)
 {
+	struct lr_request *req = _req;
 	return 0;
 }
 
-int lr_request_hdr_field(void *req, const char *chunk, size_t len)
+int lr_request_hdr_cmpl(void *_req)
 {
+	struct lr_request *req = _req;
 	return 0;
 }
 
-int lr_request_hdr_value(void *req, const char *chunk, size_t len)
+int lr_request_body(void *_req, const char *chunk, size_t len)
 {
+	struct lr_request *req = _req;
 	return 0;
 }
 
-int lr_request_hdr_cmpl(void *req)
+int lr_request_cmpl(void *_req)
 {
-	return 0;
-}
-
-int lr_request_body(void *req, const char *chunk, size_t len)
-{
-	return 0;
-}
-
-int lr_request_cmpl(void *req)
-{
+	struct lr_request *req = _req;
 	return 0;
 }
 

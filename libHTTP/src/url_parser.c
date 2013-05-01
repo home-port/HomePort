@@ -70,6 +70,7 @@ struct url_parser_instance {
 	int state;
 	unsigned int chars_parsed;
 	unsigned int last_returned;
+	int path_start;
 	size_t tmp_key_begin;
 	size_t tmp_key_size;
 
@@ -106,6 +107,7 @@ struct url_parser_instance *up_create(struct url_parser_settings *settings)
 	instance -> buffer_size = 0;
 	instance -> chars_parsed = 0;
 	instance -> last_returned = 0;
+	instance -> path_start = -1;
 	instance -> buffer = NULL;
 
 	return instance;
@@ -274,6 +276,10 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 				}
 				break;
 			case S_SEGMENT:
+
+				if(instance -> path_start < 0)
+					instance -> path_start = instance->last_returned;
+
 				if(c == '/' || c == '?')
 				{
 					if(instance->settings->on_path_segment != NULL)
@@ -284,6 +290,10 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 				}
 				if(c == '?')
 				{
+					if(instance->settings->on_path_complete != NULL)
+					{
+						instance->settings->on_path_complete(&instance->buffer[instance->path_start], i-(instance->path_start));
+					}
 					instance->state = S_KEY;
 				}
 				break;
@@ -348,7 +358,15 @@ int up_complete(void *_instance)
 				instance->settings->on_path_segment(&instance->buffer[instance->last_returned+1],
 													(instance->buffer_size-instance->last_returned-1));
 			}
+
+			if(instance->settings->on_path_complete != NULL)
+			{	
+				instance->settings->on_path_complete(&instance->buffer[instance->path_start],
+													 ((instance->buffer_size)-instance->path_start));
+			}
+
 			instance->last_returned = instance->chars_parsed;
+
 			break;
 
 		case S_VALUE:

@@ -38,6 +38,7 @@ struct lr {
 
 struct lr *lr_create()
 {
+	return NULL;
 }
 
 void lr_destroy(struct lr *ins)
