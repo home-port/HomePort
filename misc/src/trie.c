@@ -246,3 +246,82 @@ ListElement* lookup_trieNode(TrieNode* root, char* key)
    }
    return NULL;
 }
+
+void remove_trie_key(TrieNode* root, char* key)
+{
+   if(root->children == NULL)
+      return;
+         
+   unsigned int current_pos = 0, tmp_pos = 0;
+   TrieNode* treeElement = root;
+   ListElement *parent = NULL, *listElement = root->children->head;
+   char* listkey = listElement->key;
+   
+   while(listElement!=NULL)
+   {
+      tmp_pos = 0;
+
+      if(listkey[tmp_pos] == key[current_pos])
+      {
+         current_pos++;
+         tmp_pos++;
+         while(listkey[tmp_pos] != '\0'&& key[current_pos]!=
+               '\0' && listkey[tmp_pos] == key[current_pos]){
+            current_pos++;
+            tmp_pos++;
+
+         }
+         if(listkey[tmp_pos] == '\0'&& key[current_pos] == '\0')
+         {
+            //case: key is a subset of another key
+            if(listkey->node != NULL)
+            {
+               //key has only one child, colaps
+               if(listkey->node->children->next != NULL)
+               {
+                  listkey->value = listkey->node->children->head->value;
+                  lsitkey->key = strcat()
+
+               }
+            }
+            remove_listElement(treeElement->children,listkey);
+            printf("colaps trie\n");
+            // case: only one child left and parent is not end of
+            // another key
+            if(treeElement->children->head->next == NULL && parent->value != NULL)
+            {
+               parent->key == strcat(parent->key,
+                     treeElement->children->head->key);
+
+            }
+            return; 
+         }
+         else if(listkey[tmp_pos] == '\0')
+         {
+            treeElement = listElement->node;
+            if(treeElement == NULL || treeElement->children == NULL)
+               return;
+
+            listElement = treeElement->children->head;
+            listkey = listElement->key;
+            continue;
+         }
+         else 
+         {
+            return;
+         }
+      }
+      parent = listElement;
+      listElement = listElement->next;
+      if(listElement != NULL)
+         listkey = listElement->key;
+   }
+   return;     
+}
+
+
+
+
+
+
+

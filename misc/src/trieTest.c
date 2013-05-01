@@ -75,7 +75,8 @@ int main()
 
    printf("Whos the strongest man in the world? %s\n",(char*)(get_listElement_value(lookup_trieNode(root,"fiskekutter\0"))));
 
-
+   printf("removing abekat\n");
+   remove_trie_key(root,"abekat\0");
    // INSERTION OF ABEKAT
 
 

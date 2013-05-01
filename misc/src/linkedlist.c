@@ -76,7 +76,7 @@ ListElement* insert_listElement(LinkedList *ll, char *key, struct TrieNode* node
       ll->tail->next = element;
    ll->tail = element;
    element->next = NULL;
-   element->key = key;
+   element->key = strcpy(key);
    element->node = node;
    element->value = NULL;
 
@@ -107,7 +107,8 @@ void* get_value(LinkedList *ll, char *key)
 
 void set_listElement_value(ListElement *element, void* value)
 {
-   element->value = value;
+   if(value != NULL)
+      element->value = value;
 }
 
 void* get_listElement_value(ListElement *element)
