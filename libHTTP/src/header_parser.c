@@ -49,10 +49,10 @@ struct header_parser_instance {
 	int state;
 
 	char* field_buffer;
-	int field_buffer_size;
+	size_t field_buffer_size;
 
 	char* value_buffer;
-	int value_buffer_size;
+	size_t value_buffer_size;
 };
 
 void reset_buffers(struct header_parser_instance *instance)
@@ -95,14 +95,14 @@ struct header_parser_instance *hp_create(struct header_parser_settings *settings
 	return instance;
 }
 
-void hp_on_header_field(struct header_parser_instance *instance ,char* field_chunk, int length)
+void hp_on_header_field(struct header_parser_instance *instance ,char* field_chunk, size_t length)
 {
 	if(instance->state == S_COMPLETED) {
 		fprintf(stderr, "The header parser received additional data after a call to completed\n");
 		return;
 	}
 
-	int old_buffer_size = instance->field_buffer_size;
+	size_t old_buffer_size = instance->field_buffer_size;
 
 	// If state is S_VALUE, yield a field-value pair
 	if(instance->state == S_VALUE) {
@@ -126,7 +126,7 @@ void hp_on_header_field(struct header_parser_instance *instance ,char* field_chu
 	return;
 }
 
-void hp_on_header_value(struct header_parser_instance *instance, char* value_chunk, int length)
+void hp_on_header_value(struct header_parser_instance *instance, char* value_chunk, size_t length)
 {
 	if(instance->state == S_COMPLETED) {
 		fprintf(stderr, "The header parser received additional data after a call to completed\n");
@@ -135,7 +135,7 @@ void hp_on_header_value(struct header_parser_instance *instance, char* value_chu
 
 	instance->state = S_VALUE;
 
-	int old_buffer_size = instance->value_buffer_size;
+	size_t old_buffer_size = instance->value_buffer_size;
 
 	instance->value_buffer_size += length;
 
