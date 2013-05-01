@@ -33,5 +33,5 @@ add_library(libREST
       instance.c
       request.c
       )
-target_link_libraries(libREST urlparser)
+target_link_libraries(libREST urlparser trie)
 

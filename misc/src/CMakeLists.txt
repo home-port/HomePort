@@ -54,3 +54,8 @@ add_executable(linkedlist_test EXCLUDE_FROM_ALL
 add_test(linkedlist_test ${CMAKE_CURRENT_BINARY_DIR}/linkedlist_test)
 add_dependencies(check linkedlist_test)
 
+# Trie
+add_library(trie
+      trie.c
+      )
+
