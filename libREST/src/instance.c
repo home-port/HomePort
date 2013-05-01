@@ -32,12 +32,14 @@
  */
 
 #include "libREST.h"
+#include "trie.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 
 struct lr {
    struct lr_service *services;
+   struct TrieNode *trie;
 };
 
 struct lr_service {
@@ -55,6 +57,8 @@ struct lr *lr_create()
       fprintf(stderr, "Cannot allocate lr instance\n");
       return NULL;
    }
+
+   ins->trie = create_trie();
 
    ins->services = NULL;
 
