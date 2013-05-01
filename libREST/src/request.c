@@ -32,12 +32,13 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include "libREST.h"
 
 struct lr_request {
 };
 
-struct lr_request *lr_request_create(struct lr_instance *ins)
+struct lr_request *lr_request_create(struct lr *instance)
 {
 	struct lr_request *request = malloc(sizeof(struct lr_request));
 
