@@ -40,18 +40,15 @@
 
 // Server instance
 static struct ws *ws = NULL;
-static struct lr
+static struct lr *lr = NULL;
 
 // Handle requests
 static int request_begin_cb(void *_req)
 {
    struct ws_request *req = _req;
-   void *lr_req = lr_request_create(;
-   
-   req_data->up=up_create(&up_settings);
-   req_data->req = req;
+   void *lr_req = lr_request_create(lr);;
 
-   ws_request_set_data(req, req_data);
+   ws_request_set_data(req, lr_req);
 
    return 0;
 }
@@ -59,13 +56,13 @@ static int request_begin_cb(void *_req)
 // Clean up requests
 static int request_cmpl_cb(void *_req)
 {
-   struct ws_request *req = _req;
-   struct request_data *req_data = malloc(sizeof(struct request_data));
-   
-   req_data->up=up_create(&up_settings);
-   req_data->req = req;
+   //struct ws_request *req = _req;
+   //struct request_data *req_data = malloc(sizeof(struct request_data));
+   //
+   //req_data->up=up_create(&up_settings);
+   //req_data->req = req;
 
-   ws_request_set_data(req,req_data);
+   //ws_request_set_data(req,req_data);
 
    return 0;
 }
@@ -76,6 +73,9 @@ static void exit_cb(int sig)
    if (ws != NULL) {
       ws_stop(ws);
       ws_destroy(ws);
+   }
+   if (lr != NULL) {
+      lr_destroy(lr);
    }
    printf("Exiting...\n");
    exit(sig);
@@ -112,6 +112,9 @@ int main(int argc, char *argv[])
    // Init webserver and start it
    ws = ws_create(&ws_settings, loop);
    ws_start(ws);
+
+   // Init libREST
+   lr = lr_create();
 
    // Start the event loop
    ev_run(loop, 0);
