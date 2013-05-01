@@ -30,7 +30,8 @@
 
 include_directories(${HOMEPORT_SOURCE_DIR}/libWebserver/include)
 include_directories(${HOMEPORT_SOURCE_DIR}/libHTTP/include)
+include_directories(${HOMEPORT_SOURCE_DIR}/libREST/include)
 
 add_executable(homeport homeport.c)
 
-target_link_libraries(homeport libWebserver urlparser)
+target_link_libraries(homeport libWebserver libREST)

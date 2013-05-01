@@ -34,7 +34,7 @@
 #ifndef URL_PARSER_H
 #define URL_PARSER_H
 
-typedef void (*hp_string_cb)(const char* field, int field_length, const char* value, int value_length);
+typedef void (*hp_string_cb)(const char* field, size_t field_length, const char* value, size_t value_length);
 
 struct header_parser_instance;
 
@@ -48,8 +48,8 @@ struct header_parser_settings {
 struct header_parser_instance *hp_create(struct header_parser_settings*);
 void hp_destroy(struct header_parser_instance*);
 
-void hp_on_header_field(struct header_parser_instance *instance ,char* field_chunk, int length);
-void hp_on_header_value(struct header_parser_instance *instance, char* value_chunk, int length);
+void hp_on_header_field(struct header_parser_instance *instance ,char* field_chunk, size_t length);
+void hp_on_header_value(struct header_parser_instance *instance, char* value_chunk, size_t length);
 void hp_on_header_complete(struct header_parser_instance *instance);
 
 #endif

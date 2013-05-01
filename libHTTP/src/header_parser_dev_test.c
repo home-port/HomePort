@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include "header_parser.h"
 
-void on_field_value(const char* field, int field_length, const char* value, int value_length)
+void on_field_value(const char* field, size_t field_length, const char* value, size_t value_length)
 {
-	printf("Key-value: %.*s", field_length, field); 
-	printf(" : %.*s \n", value_length, value); 
+	printf("Key-value: %.*s", (int)field_length, field); 
+	printf(" : %.*s \n", (int)value_length, value); 
 }
 
 int main()

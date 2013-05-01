@@ -32,7 +32,7 @@
  */
 
 #include "webserver.h"
-#include "url_parser.h"
+#include "libREST.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -40,7 +40,29 @@
 
 // Server instance
 static struct ws *ws = NULL;
-static struct url_parser_instance *up = NULL;
+static struct lr *lr = NULL;
+
+// Handle requests
+static int request_begin_cb(void *_req)
+{
+   struct ws_request *req = _req;
+   void *lr_req = lr_request_create(lr);
+
+   ws_request_set_data(req, lr_req);
+
+   return 0;
+}
+
+// Clean up requests
+static int request_cmpl_cb(void *_lr_req)
+{
+   struct lr_request *lr_req = _lr_req;
+
+   lr_request_cmpl(lr_req);
+   lr_request_destroy(lr_req);
+
+   return 0;
+}
 
 // Shutdown webserver and exit
 static void exit_cb(int sig)
@@ -49,26 +71,32 @@ static void exit_cb(int sig)
       ws_stop(ws);
       ws_destroy(ws);
    }
-   if (up != NULL) up_destroy(up);
+   if (lr != NULL) {
+      lr_destroy(lr);
+   }
    printf("Exiting...\n");
    exit(sig);
 }
 
 // Main function
-int main()
+int main(int argc, char *argv[])
 {
    struct ev_loop *loop = EV_DEFAULT;
    struct ws_settings ws_settings = WS_SETTINGS_DEFAULT;
-   struct url_parser_settings up_settings = URL_PARSER_SETTINGS_DEFAULT;
 
    // Set settings for webserver
    ws_settings.port = WS_PORT_HTTP_ALT;
 
    // Set up url parser for url parsing
-   up = up_create(&up_settings);
-   ws_settings.on_request_url_data = up;
-   ws_settings.on_request_url = up_add_chunk;
-   ws_settings.on_request_url_complete = up_complete;
+   ws_settings.on_request_begin = request_begin_cb;
+   ws_settings.on_request_method = lr_request_method;
+   ws_settings.on_request_url = lr_request_url;
+   ws_settings.on_request_url_complete = lr_request_url_cmpl;
+   ws_settings.on_request_header_field = lr_request_hdr_field;
+   ws_settings.on_request_header_value = lr_request_hdr_value;
+   ws_settings.on_request_header_complete = lr_request_hdr_cmpl;
+   ws_settings.on_request_body = lr_request_body;
+   ws_settings.on_request_complete = request_cmpl_cb;
 
    // Connect signals for handling exiting correctly
    signal(SIGINT, exit_cb);
@@ -81,6 +109,9 @@ int main()
    // Init webserver and start it
    ws = ws_create(&ws_settings, loop);
    ws_start(ws);
+
+   // Init libREST
+   lr = lr_create();
 
    // Start the event loop
    ev_run(loop, 0);

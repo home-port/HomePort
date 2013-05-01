@@ -1,4 +1,4 @@
-// libREST.h
+// request.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
  *   
@@ -31,48 +31,71 @@
  *  as representing official policies, either expressed.
  */
 
-#ifndef LIBREST_H
-#define LIBREST_H
+#include <stdlib.h>
+#include <stdio.h>
+#include "libREST.h"
+#include "url_parser.h"
 
-#include <stddef.h>
+struct lr_request {
+	struct url_parser_instance *url_parser;
+};
 
-// Structs
-struct lr;
-struct lr_request;
+struct lr_request *lr_request_create(struct lr *instance)
+{
+	struct lr_request *request = malloc(sizeof(struct lr_request));
 
-// Callbacks
-typedef void (*lr_cb)();
+	if(request == NULL)
+	{
+		fprintf(stderr, "malloc failed in libREST when creating instance\n");
+		return NULL;
+	}
 
-// libREST instance functions
-struct lr *lr_create();
-void lr_destroy(struct lr *ins);
-void lr_register_service(struct lr *instance,
-                         char *url,
-                         lr_cb on_get,
-                         lr_cb on_post,
-                         lr_cb on_put,
-                         lr_cb on_delete);
+	struct url_parser_settings settings = URL_PARSER_SETTINGS_DEFAULT;
+	struct url_parser_instance *url_parser = up_create(&settings);
 
-// libREST request functions
-struct lr_request *lr_request_create(struct lr *ins);
-void lr_request_destroy(struct lr_request *req);
-int lr_request_method(void *req, const char *chunk, size_t len);
-int lr_request_url(void *req, const char *chuck, size_t len);
-int lr_request_url_cmpl(void *req);
-int lr_request_hdr_field(void *req, const char *chuck, size_t len);
-int lr_request_hdr_value(void *req, const char *chuck, size_t len);
-int lr_request_hdr_cmpl(void *req);
-int lr_request_body(void *req, const char *chuck, size_t len);
-int lr_request_cmpl(void *req);
+	request->url_parser = url_parser;
 
-#endif
+	return request;
+}
 
+void lr_request_destroy(struct lr_request *req)
+{
+	if(req) {
+		up_destroy(req->url_parser);
 
+		free(req);
+	}
+}
 
+int lr_request_url(void *req, const char *chunk, size_t len)
+{
 
+}
 
+int lr_request_url_cmpl(void *req)
+{
 
+}
 
+int lr_request_hdr_field(void *req, const char *chunk, size_t len)
+{
 
+}
+
+int lr_request_hdr_value(void *req, const char *chunk, size_t len)
+{
+}
+
+int lr_request_hdr_cmpl(void *req)
+{
+}
+
+int lr_request_body(void *req, const char *chunk, size_t len)
+{
+}
+
+int lr_request_cmpl(void *req)
+{
+}
 
 

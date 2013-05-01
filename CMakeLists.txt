@@ -31,12 +31,15 @@
 cmake_minimum_required(VERSION 2.6)
 project(HOMEPORT C)
 
+set(CMAKE_C_FLAGS_DEBUG "-DDEBUG")
+
 enable_testing()
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 
 add_subdirectory(homeport)
 add_subdirectory(libHTTP)
+add_subdirectory(libREST)
 add_subdirectory(libWebserver)
 add_subdirectory(misc)
 
