@@ -129,6 +129,7 @@ struct ws_request
    struct ws_settings *settings; ///< Settings of the webserver
    http_parser parser;           ///< HTTP parser in use
    enum request_state state;     ///< Current state of the request
+   void *data;                   ///< User data
 };
 
 // Methods for http_parser settings
@@ -169,9 +170,7 @@ static int parser_message_begin_cb(http_parser *parser)
    struct ws_request *req = parser->data;
    struct ws_settings *settings = req->settings;
    nodata_cb begin_cb = settings->on_request_begin;
-   void *begin_data = settings->on_request_data;
    data_cb method_cb = settings->on_request_method;
-   void *method_data = settings->on_request_method_data;
 
    switch (req->state) {
       case S_STOP:
@@ -179,11 +178,24 @@ static int parser_message_begin_cb(http_parser *parser)
       case S_START:
          req->state = S_BEGIN;
          // Send request begin
-         stat = begin_cb(begin_data, req);
+         if(begin_cb) {
+         if(req->data != NULL)
+            stat = begin_cb(req->data);
+         else
+            stat = begin_cb(req);
+      }
+
          if (stat) { req->state = S_STOP; return stat; }
          // Send method
          method = http_method_str(parser->method);
-         stat = method_cb(method_data, req, method, strlen(method));
+
+         if(method_cb) {
+         if(req->data != NULL)
+            stat = method_cb(req->data, method, strlen(method));
+         else
+            stat = method_cb(req, method, strlen(method));
+      }
+
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -209,7 +221,6 @@ static int parser_url_cb(http_parser *parser, const char *buf, size_t len)
    struct ws_request *req = parser->data;
    struct ws_settings *settings = req->settings;
    data_cb url_cb = settings->on_request_url;
-   void * url_data = settings->on_request_url_data;
 
    switch (req->state) {
       case S_STOP:
@@ -217,7 +228,14 @@ static int parser_url_cb(http_parser *parser, const char *buf, size_t len)
       case S_BEGIN:
          req->state = S_URL;
       case S_URL:
-         stat = url_cb(url_data, req, buf, len);
+
+         if(url_cb) {
+         if(req->data != NULL)
+            stat = url_cb(req->data, buf, len);
+         else
+            stat = url_cb(req, buf, len);
+      }
+
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -245,20 +263,32 @@ static int parser_header_field_cb(http_parser *parser, const char *buf, size_t l
    struct ws_request *req = parser->data;
    struct ws_settings *settings = req->settings;
    nodata_cb url_cmpl_cb = settings->on_request_url_complete;
-   void *url_data = settings->on_request_url_data;
    data_cb header_field_cb = settings->on_request_header_field;
-   void *header_data = settings->on_request_header_data;
 
    switch (req->state) {
       case S_STOP:
          return 1;
       case S_URL:
-         stat = url_cmpl_cb(url_data, req);
+
+         if(url_cmpl_cb) {
+         if(req->data != NULL)
+            stat = url_cmpl_cb(req->data);
+         else
+            stat = url_cmpl_cb(req);
+      }
+
          if (stat) { req->state = S_STOP; return stat; }
       case S_HEADER_VALUE:
          req->state = S_HEADER_FIELD;
       case S_HEADER_FIELD:
-         stat = header_field_cb(header_data, req, buf, len);
+
+         if(header_field_cb) {
+         if(req->data != NULL)
+            stat = header_field_cb(req->data, buf, len);
+         else
+            stat = header_field_cb(req, buf, len);
+      }
+
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -285,7 +315,6 @@ static int parser_header_value_cb(http_parser *parser, const char *buf, size_t l
    struct ws_request *req = parser->data;
    struct ws_settings *settings = req->settings;
    data_cb header_value_cb = settings->on_request_header_value;
-   void *header_data = settings->on_request_header_data;
 
    switch (req->state) {
       case S_STOP:
@@ -293,7 +322,14 @@ static int parser_header_value_cb(http_parser *parser, const char *buf, size_t l
       case S_HEADER_FIELD:
          req->state = S_HEADER_VALUE;
       case S_HEADER_VALUE:
-         stat = header_value_cb(header_data, req, buf, len);
+
+         if(header_value_cb) {
+         if(req->data != NULL)
+            stat = header_value_cb(req->data, buf, len);
+         else
+            stat = header_value_cb(req, buf, len);
+      }
+
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -320,19 +356,31 @@ static int parser_headers_complete_cb(http_parser *parser)
    struct ws_request *req = parser->data;
    struct ws_settings *settings = req->settings;
    nodata_cb url_cmpl_cb = settings->on_request_url_complete;
-   void *url_data = settings->on_request_url_data;
    nodata_cb header_cmpl_cb = settings->on_request_header_complete;
-   void *header_data = settings->on_request_header_data;
 
    switch (req->state) {
       case S_STOP:
          return 1;
       case S_URL:
-         stat = url_cmpl_cb(url_data, req);
+
+         if(url_cmpl_cb) {
+         if(req->data != NULL)
+            stat = url_cmpl_cb(req->data);
+         else
+            stat = url_cmpl_cb(req);
+      }
+
          if (stat) { req->state = S_STOP; return stat; }
       case S_HEADER_VALUE:
          req->state = S_HEADER_COMPLETE;
-         stat = header_cmpl_cb(header_data, req);
+
+         if(header_cmpl_cb) {
+         if(req->data != NULL)
+            stat = header_cmpl_cb(req->data);
+         else
+            stat = header_cmpl_cb(req);
+      }
+
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -359,7 +407,6 @@ static int parser_body_cb(http_parser *parser, const char *buf, size_t len)
    struct ws_request *req = parser->data;
    struct ws_settings *settings = req->settings;
    data_cb body_cb = settings->on_request_body;
-   void *body_data = settings->on_request_body_data;
 
    switch (req->state) {
       case S_STOP:
@@ -367,7 +414,14 @@ static int parser_body_cb(http_parser *parser, const char *buf, size_t len)
       case S_HEADER_COMPLETE:
          req->state = S_BODY;
       case S_BODY:
-         stat = body_cb(body_data, req, buf, len);
+
+         if(body_cb) {
+         if(req->data != NULL)
+            stat = body_cb(req->data, buf, len);
+         else
+            stat = body_cb(req, buf, len);
+      }
+
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -390,7 +444,6 @@ static int parser_message_complete_cb(http_parser *parser)
    struct ws_request *req = parser->data;
    struct ws_settings *settings = req->settings;
    nodata_cb complete_cb = settings->on_request_complete;
-   void *request_data = settings->on_request_data;
 
    switch (req->state) {
       case S_STOP:
@@ -398,7 +451,14 @@ static int parser_message_complete_cb(http_parser *parser)
       case S_HEADER_COMPLETE:
       case S_BODY:
          req->state = S_COMPLETE;
-         stat = complete_cb(request_data, req);
+
+         if(complete_cb) {
+         if(req->data != NULL)
+            stat = complete_cb(req->data);
+         else
+            stat = complete_cb(req);
+      }
+
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -432,6 +492,7 @@ struct ws_request *ws_request_create(
    // Init references
    req->client = client;
    req->settings = settings;
+   req->data = NULL;
 
    // Init parser
    http_parser_init(&(req->parser), HTTP_REQUEST);
@@ -482,4 +543,9 @@ size_t ws_request_parse(
 struct libws_client *ws_request_get_client(struct ws_request *req)
 {
    return req->client;
+}
+
+void ws_request_set_data(struct ws_request *req, void *data)
+{
+   req->data = data;
 }

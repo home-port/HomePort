@@ -38,9 +38,57 @@
 #include <string.h>
 #include <ev.h>
 
+struct request_data
+{
+   struct ws_request *req;
+   struct url_parser_instance *up;
+};
+
 // Server instance
 static struct ws *ws = NULL;
-static struct url_parser_instance *up = NULL;
+static struct url_parser_settings up_settings = URL_PARSER_SETTINGS_DEFAULT;
+
+static int request_begin_cb(void *_req)
+{
+   struct ws_request *req = _req;
+   struct request_data *req_data = malloc(sizeof(struct request_data));
+   
+   req_data->up=up_create(&up_settings);
+   req_data->req = req;
+
+   ws_request_set_data(req,req_data);
+
+   return 0;
+}
+
+static int request_url_cb(void *_req_data, const char *chunk, size_t chunk_length)
+{
+   struct request_data *req_data = _req_data;
+   return up_add_chunk(req_data->up, chunk, chunk_length);
+}
+
+static int request_url_complete_cb(void *_req_data)
+{
+   struct request_data *req_data = _req_data;
+   return up_complete(req_data->up);
+}
+
+static int request_complete_cb(void *_req_data)
+{
+   struct request_data *req_data = _req_data;
+   up_destroy(req_data->up);
+
+   ws_request_set_data(req_data->req, NULL);
+
+   free(req_data);
+
+   return 0;
+}
+
+static void url_p_complete(const char* parsed, size_t seg_len)
+{
+   printf("%.*s\n", (int)seg_len, parsed); 
+}
 
 // Shutdown webserver and exit
 static void exit_cb(int sig)
@@ -49,7 +97,6 @@ static void exit_cb(int sig)
       ws_stop(ws);
       ws_destroy(ws);
    }
-   if (up != NULL) up_destroy(up);
    printf("Exiting...\n");
    exit(sig);
 }
@@ -59,16 +106,17 @@ int main()
 {
    struct ev_loop *loop = EV_DEFAULT;
    struct ws_settings ws_settings = WS_SETTINGS_DEFAULT;
-   struct url_parser_settings up_settings = URL_PARSER_SETTINGS_DEFAULT;
 
    // Set settings for webserver
    ws_settings.port = WS_PORT_HTTP_ALT;
 
    // Set up url parser for url parsing
-   up = up_create(&up_settings);
-   ws_settings.on_request_url_data = up;
-   ws_settings.on_request_url = up_add_chunk;
-   ws_settings.on_request_url_complete = up_complete;
+   ws_settings.on_request_url = request_url_cb;
+   ws_settings.on_request_url_complete = request_url_complete_cb;
+   ws_settings.on_request_begin = request_begin_cb;
+   ws_settings.on_request_complete = request_complete_cb;
+
+   up_settings.on_complete = url_p_complete;
 
    // Connect signals for handling exiting correctly
    signal(SIGINT, exit_cb);

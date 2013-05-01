@@ -161,8 +161,8 @@ int isLegalURLChar(char c)
  *	@param	chunk A pointer to the chunk (non zero terminated)
  *	@param chunk_size The size of the chunk
  */
-int up_add_chunk(void *_instance, void *data,
-                  const char* chunk, size_t chunk_size) {
+int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
+{
    struct url_parser_instance *instance = _instance;
 
 	// Increase the current buffer so the chunk can be added
@@ -335,7 +335,7 @@ int up_add_chunk(void *_instance, void *data,
  *
  *  @param  instance A pointer to an URL Parser instance
  */
-int up_complete(void *_instance, void *data)
+int up_complete(void *_instance)
 {
    struct url_parser_instance *instance = _instance;
 
