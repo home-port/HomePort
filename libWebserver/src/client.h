@@ -43,7 +43,5 @@ void ws_client_accept(
       struct ev_loop *loop,
       struct ev_io *watcher,
       int revents);
-void ws_client_kill(struct ws_client *client);
-void ws_client_sendf(struct ws_client *client, char *fmt, ...);
 
 #endif

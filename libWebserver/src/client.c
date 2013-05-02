@@ -33,8 +33,6 @@
 
 #include "client.h"
 #include "instance.h"
-#include "request.h"
-#include "response.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -63,8 +61,8 @@ struct ws_client {
    struct ev_timer timeout_watcher; ///< Timeout watcher
    struct ev_io recv_watcher;       ///< Recieve watcher
    struct ev_io send_watcher;       ///< Send watcher
-   struct ws_request *request;      ///< Current request in progress
    char send_msg[MAXDATASIZE];      ///< Data to send
+   void *data;
 };
 
 /// Get the in_addr from a sockaddr (IPv4 or IPv6)
@@ -115,14 +113,8 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
       return;
    }
 
-   if (client->request == NULL) {
-      client->request = ws_request_create(client, client->settings);
-   }
-
-   // Parse recieved data
-   parsed = ws_request_parse(client->request, buffer, recieved);
-   if (parsed != recieved) {
-      perror("parse");
+   if (client->settings->on_receive(client, client->data,
+                                    buffer, recieved)) {
       ws_client_kill(client);
       return;
    }
@@ -219,7 +211,7 @@ void ws_client_accept(
    client->timeout_watcher.data = client;
    client->recv_watcher.data = client;
    client->send_watcher.data = client;
-   client->request = NULL;
+   client->data = NULL;
 
    // Set up list
    ws_instance_add_client(client->instance, client);
@@ -241,6 +233,9 @@ void ws_client_accept(
  *  \param client The client to kill.
  */
 void ws_client_kill(struct ws_client *client) {
+
+   printf("killing client %s\n", client->ip);
+
    // Stop watchers
    int sockfd = client->recv_watcher.fd;
    ev_io_stop(client->loop, &client->recv_watcher);
@@ -257,5 +252,10 @@ void ws_client_kill(struct ws_client *client) {
 
    // Cleanup
    free(client);
+}
+
+void ws_client_set_data(struct ws_client *client, void *data)
+{
+   client->data = data;
 }
 

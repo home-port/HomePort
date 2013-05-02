@@ -50,7 +50,7 @@
 /// Instance of a webserver
 struct ws {
    struct ws_settings settings;    ///< Settings
-   char port_str[6];               ///< Port number
+   char port_str[6];               ///< Port number - as a string
    struct ev_loop *loop;           ///< Event loop
    struct ll *clients;             ///< Linked List of connected clients
    int sockfd;                     ///< Socket file descriptor

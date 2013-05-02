@@ -32,28 +32,7 @@
 add_library(libWebserver
       instance.c
       client.c
-      request.c
-      response.c
       )
 target_link_libraries(libWebserver ev http-parser)
-
-# Request Test
-add_executable(request_test EXCLUDE_FROM_ALL
-      request_test.c
-      )
-target_link_libraries(request_test http-parser)
-add_test(request_test ${CMAKE_CURRENT_BINARY_DIR}/request_test)
-add_dependencies(check request_test)
-
-# Response Test
-add_executable(response_test EXCLUDE_FROM_ALL
-      request.c
-      client.c
-      instance.c
-      response_test.c
-      )
-target_link_libraries(response_test http-parser ev)
-add_test(response_test ${CMAKE_CURRENT_BINARY_DIR}/response_test)
-add_dependencies(check response_test)
 
 add_subdirectory(webserver-test)
