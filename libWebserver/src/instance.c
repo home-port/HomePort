@@ -48,7 +48,7 @@
 
 /// Instance of a webserver
 struct ws {
-   struct ws_settings settings; ///< Settings
+   struct ws_settings settings;    ///< Settings
    char port_str[6];               ///< Port number
    struct ev_loop *loop;           ///< Event loop
    void *clients;                  ///< List of connected clients

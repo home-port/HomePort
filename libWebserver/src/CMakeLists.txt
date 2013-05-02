@@ -48,9 +48,11 @@ add_dependencies(check request_test)
 # Response Test
 add_executable(response_test EXCLUDE_FROM_ALL
       request.c
+      client.c
+      instance.c
       response_test.c
       )
-target_link_libraries(response_test http-parser)
+target_link_libraries(response_test http-parser ev)
 add_test(response_test ${CMAKE_CURRENT_BINARY_DIR}/response_test)
 add_dependencies(check response_test)
 

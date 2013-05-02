@@ -54,6 +54,7 @@
       } else { \
          printf("unit: %i errors found!\n", _errors); \
       } \
+      _stat += _errors; \
    } while (0);
 
 #define ASSERT(X) \
