@@ -64,8 +64,6 @@ struct libws_client {
    struct ev_io recv_watcher;       ///< Recieve watcher
    struct ev_io send_watcher;       ///< Send watcher
    struct ws_request *request;      ///< Current request in progress
-   struct libws_client *prev;       ///< Previous client in active list
-   struct libws_client *next;       ///< Next client in active list
    char send_msg[MAXDATASIZE];      ///< Data to send
 };
 
@@ -224,11 +222,7 @@ void libws_client_accept(
    client->request = NULL;
 
    // Set up list
-   client->prev = NULL;
-   client->next = libws_instance_get_first_client(client->instance);
-   if (client->next != NULL)
-      client->next->prev = client;
-   libws_instance_set_first_client(client->instance, client);
+   libws_instance_add_client(client->instance, client);
 
    // Start timeout and io watcher
    ev_io_init(&client->recv_watcher, client_recv_cb, in_fd, EV_READ);
@@ -260,35 +254,9 @@ void libws_client_kill(struct libws_client *client) {
    }
 
    // Remove from list
-   if (client->next != NULL)
-      client->next->prev = client->prev;
-   if (client->prev != NULL) {
-      client->prev->next = client->next;
-   } else {
-      libws_instance_set_first_client(client->instance, client->next);
-   }
+   libws_instance_rm_client(client->instance, client);
 
    // Cleanup
    free(client);
-}
-
-/// Kill all clients in a runnning webserver instance
-/**
- *  Designed to be used within ws_stop, but can also be used for other
- *  purposes, where the desidered effect is to remove all clients from
- *  the event loop and close their sockets.
- *
- *  \param instance The webserver instance.
- */
-void libws_client_killall(struct ws *instance)
-{
-   struct libws_client *next;
-   struct libws_client *client = libws_instance_get_first_client(instance);
-
-   while (client != NULL) {
-      next = client->next;
-      libws_client_kill(client);
-      client = next;
-   }
 }
 

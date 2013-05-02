@@ -123,4 +123,28 @@ TEST(navigate_forward)
    ll_destroy(list);
 TSET()
 
+TEST(search)
+   struct ll *list;
+   struct ll_iter *it;
+   int a = 1;
+   int b = 2;
+   int c = 3;
+   int d = 4;
+   int e = 5;
+   int *i;
+
+   ll_create(list);
+   ll_insert(list, &a);
+   ll_insert(list, &b);
+   ll_insert(list, &c);
+   ll_insert(list, &d);
+   ll_insert(list, &e);
+
+   ll_find(it, list, &d);
+   i = ll_data(it);
+   ASSERT_EQUAL(*i, d);
+
+   ll_destroy(list);
+TSET()
+
 TEST_END()

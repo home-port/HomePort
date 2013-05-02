@@ -112,6 +112,13 @@ struct ll {
 #define ll_prev(ITER) ITER->prev
 #define ll_data(ITER) ITER->data
 
+#define ll_find(ITER, LIST, DATA) \
+   { \
+      for (ITER = ll_head(LIST); \
+           ITER != NULL && ll_data(ITER) != DATA; \
+           ITER = ll_next(ITER) ); \
+   }
+
 #endif
 
 

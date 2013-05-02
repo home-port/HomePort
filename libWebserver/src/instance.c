@@ -33,6 +33,7 @@
 
 #include "instance.h"
 #include "client.h"
+#include "linked_list.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -51,7 +52,7 @@ struct ws {
    struct ws_settings settings;    ///< Settings
    char port_str[6];               ///< Port number
    struct ev_loop *loop;           ///< Event loop
-   void *clients;                  ///< List of connected clients
+   struct ll *clients;             ///< List of connected clients
    int sockfd;                     ///< Socket file descriptor
    struct ev_io watcher;           ///< New connection watcher
 };
@@ -148,13 +149,14 @@ struct ws *ws_create(
    sprintf(instance->port_str, "%i", settings->port);
 
    instance->loop = loop;
-   instance->clients = NULL;
+   ll_create(instance->clients);
 
    return instance;
 }
 
 void ws_destroy(struct ws *instance)
 {
+   ll_destroy(instance->clients);
    free(instance);
 }
 
@@ -196,11 +198,15 @@ void ws_start(struct ws *instance)
  */
 void ws_stop(struct ws *instance)
 {
+   struct ll_iter *it;
+
    // Stop accept watcher
    ev_io_stop(instance->loop, &instance->watcher);
 
    // Kill all clients
-   libws_client_killall(instance);
+   for (it = ll_head(instance->clients); it != NULL; it = ll_next(it)) {
+      libws_client_kill(ll_data(it));
+   }
 
    // Close socket
    if (close(instance->sockfd) != 0) {
@@ -214,16 +220,17 @@ struct ws_settings *libws_instance_get_settings(
    return &instance->settings;
 }
 
-struct libws_client *libws_instance_get_first_client(
-      struct ws *instance)
+void libws_instance_add_client(struct ws *instance, struct libws_client
+      *client)
 {
-   return instance->clients;
+   ll_insert(instance->clients, client);
 }
 
-void libws_instance_set_first_client(
-      struct ws *instance,
-      struct libws_client *client)
+void libws_instance_rm_client(struct ws *instance, struct libws_client
+      *client)
 {
-   instance->clients = client;
-}
+   struct ll_iter *iter;
 
+   ll_find(iter, instance->clients, client);
+   ll_remove(iter);
+}

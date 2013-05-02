@@ -44,7 +44,6 @@ void libws_client_accept(
       struct ev_io *watcher,
       int revents);
 void libws_client_kill(struct libws_client *client);
-void libws_client_killall(struct ws *instance);
 void ws_client_sendf(struct libws_client *client, char *fmt, ...);
 
 #endif
