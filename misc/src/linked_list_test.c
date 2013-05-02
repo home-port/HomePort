@@ -13,7 +13,7 @@ TEST(insert)
    struct ll *list;
    int i = 3;
    ll_create(list);
-   ll_insert(list, &i);
+   ll_insert(list, ll_tail(list), &i);
    ll_destroy(list);
 TSET()
 
@@ -28,11 +28,11 @@ TEST(navigate_forward)
    int *i;
 
    ll_create(list);
-   ll_insert(list, &a);
-   ll_insert(list, &b);
-   ll_insert(list, &c);
-   ll_insert(list, &d);
-   ll_insert(list, &e);
+   ll_insert(list, ll_tail(list), &a);
+   ll_insert(list, ll_tail(list), &b);
+   ll_insert(list, ll_tail(list), &c);
+   ll_insert(list, ll_tail(list), &d);
+   ll_insert(list, ll_tail(list), &e);
 
    it = ll_head(list);
    i = ll_data(it);
@@ -65,11 +65,11 @@ TEST(navigate_backward)
    int *i;
 
    ll_create(list);
-   ll_insert(list, &a);
-   ll_insert(list, &b);
-   ll_insert(list, &c);
-   ll_insert(list, &d);
-   ll_insert(list, &e);
+   ll_insert(list, ll_tail(list), &a);
+   ll_insert(list, ll_tail(list), &b);
+   ll_insert(list, ll_tail(list), &c);
+   ll_insert(list, ll_tail(list), &d);
+   ll_insert(list, ll_tail(list), &e);
 
    it = ll_tail(list);
    i = ll_data(it);
@@ -100,9 +100,9 @@ TEST(navigate_forward)
    int *i;
    
    ll_create(list);
-   ll_insert(list, &a);
-   ll_insert(list, &b);
-   ll_insert(list, &c);
+   ll_insert(list, ll_tail(list), &a);
+   ll_insert(list, ll_tail(list), &b);
+   ll_insert(list, ll_tail(list), &c);
 
    it = ll_head(list);
    it = ll_next(it);
@@ -134,11 +134,11 @@ TEST(search)
    int *i;
 
    ll_create(list);
-   ll_insert(list, &a);
-   ll_insert(list, &b);
-   ll_insert(list, &c);
-   ll_insert(list, &d);
-   ll_insert(list, &e);
+   ll_insert(list, ll_tail(list), &a);
+   ll_insert(list, ll_tail(list), &b);
+   ll_insert(list, ll_tail(list), &c);
+   ll_insert(list, ll_tail(list), &d);
+   ll_insert(list, ll_tail(list), &e);
 
    ll_find(it, list, &d);
    i = ll_data(it);

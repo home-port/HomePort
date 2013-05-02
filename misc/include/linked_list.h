@@ -47,6 +47,7 @@ struct ll_iter {
 
 struct ll {
    struct ll_iter *head;
+   struct ll_iter *last; // Last inserted element
    struct ll_iter *tail;
 };
 
@@ -56,8 +57,6 @@ struct ll {
       if (LIST) { \
          LIST->head = NULL; \
          LIST->tail = NULL; \
-      } else { \
-         fprintf(stderr, "Not enough memory for linked list\n"); \
       } \
    }
 
@@ -65,34 +64,38 @@ struct ll {
    { \
       if (LIST->head != NULL) { \
          while (LIST->head->next != NULL) { \
-            struct ll_iter *_e = LIST->head; \
             LIST->head = LIST->head->next; \
-            free(_e); \
+            free(LIST->head->prev); \
          } \
          free(LIST->head); \
       } \
       free(LIST); \
    }
 
-#define ll_insert(LIST, DATA) \
-   { \
-      struct ll_iter *_e = malloc(sizeof(struct ll_iter)); \
-      if (_e) { \
-         _e->list = LIST; \
-         _e->next = NULL; \
-         _e->data = DATA; \
-         if (LIST->head == NULL) { \
-            _e->prev = LIST->head; \
-            LIST->head = _e; \
-         } else { \
-            LIST->tail->next = _e; \
-            _e->prev = LIST->tail; \
-         } \
-         LIST->tail = _e; \
+#define ll_insert(LIST, ITER, DATA) \
+   do { \
+      LIST->last = malloc(sizeof(struct ll_iter)); \
+      if (!LIST->last) break; \
+      LIST->last->list = LIST; \
+      LIST->last->data = DATA; \
+      LIST->last->prev = ITER; \
+      if (ITER) { \
+         if (ITER->next) \
+            ITER->next->prev = LIST->last; \
+         LIST->last->next = ITER->next; \
+         ITER->next = LIST->last; \
+         if (ITER == LIST->tail) \
+            LIST->tail = LIST->last; \
       } else { \
-         fprintf(stderr, "Not enough memory to insert element\n"); \
+         LIST->last->next = LIST->head; \
+         LIST->head = LIST->last; \
+         if (!LIST->tail) \
+            LIST->tail = LIST->last; \
       } \
-   }
+      if (LIST->last->next) \
+         LIST->last->next->prev = LIST->last; \
+   } while (0);
+
 
 #define ll_remove(ITER) \
    { \

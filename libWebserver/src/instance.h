@@ -40,7 +40,7 @@ struct ws_client;
 
 struct ws_settings *ws_instance_get_settings(
       struct ws *instance);
-void ws_instance_add_client(struct ws *instance, struct ws_client
+int ws_instance_add_client(struct ws *instance, struct ws_client
       *client);
 void ws_instance_rm_client(struct ws *instance, struct ws_client
       *client);

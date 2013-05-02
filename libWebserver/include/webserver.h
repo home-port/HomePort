@@ -142,7 +142,7 @@ struct ws_settings {
 // Webserver functions
 struct ws *ws_create(struct ws_settings *settings, struct ev_loop *loop);
 void ws_destroy(struct ws *instance);
-void ws_start(struct ws *instance);
+int ws_start(struct ws *instance);
 void ws_stop(struct ws *instance);
 
 // Client functions
