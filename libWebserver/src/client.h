@@ -37,13 +37,13 @@
 #include "webserver.h"
 
 struct ev_io;
-struct libws_client;
+struct ws_client;
 
-void libws_client_accept(
+void ws_client_accept(
       struct ev_loop *loop,
       struct ev_io *watcher,
       int revents);
-void libws_client_kill(struct libws_client *client);
-void ws_client_sendf(struct libws_client *client, char *fmt, ...);
+void ws_client_kill(struct ws_client *client);
+void ws_client_sendf(struct ws_client *client, char *fmt, ...);
 
 #endif

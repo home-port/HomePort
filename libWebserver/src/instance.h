@@ -36,13 +36,13 @@
 
 #include "webserver.h"
 
-struct libws_client;
+struct ws_client;
 
-struct ws_settings *libws_instance_get_settings(
+struct ws_settings *ws_instance_get_settings(
       struct ws *instance);
-void libws_instance_add_client(struct ws *instance, struct libws_client
+void ws_instance_add_client(struct ws *instance, struct ws_client
       *client);
-void libws_instance_rm_client(struct ws *instance, struct libws_client
+void ws_instance_rm_client(struct ws *instance, struct ws_client
       *client);
 
 #endif

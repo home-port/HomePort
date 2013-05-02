@@ -125,7 +125,7 @@ enum request_state {
  */
 struct ws_request
 {
-   struct libws_client *client;  ///< The client that sent the request
+   struct ws_client *client;     ///< The client that sent the request
    struct ws_settings *settings; ///< Settings of the webserver
    http_parser parser;           ///< HTTP parser in use
    enum request_state state;     ///< Current state of the request
@@ -480,7 +480,7 @@ static int parser_message_complete_cb(http_parser *parser)
  *  @return The newly create ws_request.
  */
 struct ws_request *ws_request_create(
-      struct libws_client *client,
+      struct ws_client *client,
       struct ws_settings *settings)
 {
    struct ws_request *req = malloc(sizeof(struct ws_request));
@@ -540,7 +540,7 @@ size_t ws_request_parse(
  *  @return The client, as provided to ws_request_create(), when the
  *  request was created.
  */
-struct libws_client *ws_request_get_client(struct ws_request *req)
+struct ws_client *ws_request_get_client(struct ws_request *req)
 {
    return req->client;
 }

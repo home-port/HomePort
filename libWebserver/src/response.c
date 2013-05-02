@@ -51,7 +51,7 @@ enum response_state {
 
 struct ws_response
 {
-   struct libws_client *client;
+   struct ws_client *client;
    enum response_state state;
    char *msg;
 };

@@ -36,13 +36,13 @@
 
 #include "webserver.h"
 
-struct libws_client;
+struct ws_client;
 
 struct ws_request *ws_request_create(
-      struct libws_client *client,
+      struct ws_client *client,
       struct ws_settings *settings);
 void ws_request_destroy(struct ws_request *req);
 size_t ws_request_parse(struct ws_request *req, const char *buf, size_t len);
-struct libws_client *ws_request_get_client(struct ws_request *req);
+struct ws_client *ws_request_get_client(struct ws_request *req);
 
 #endif

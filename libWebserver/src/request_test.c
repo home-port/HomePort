@@ -36,7 +36,7 @@
 
 TEST_START("request.c");
 
-TEST(libws_request_create)
+TEST(ws_request_create)
    struct ws_settings settings;
    struct ws_request *req = ws_request_create(NULL, &settings);
 
@@ -46,12 +46,6 @@ TEST(libws_request_create)
 
    ws_request_destroy(req);
 TSET()
-
-/*
-TEST(libws_request_parse)
-	ASSERT_EQUAL(1,0);
-TSET()
-*/
 
 TEST_END()
 

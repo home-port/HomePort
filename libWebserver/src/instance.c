@@ -52,7 +52,7 @@ struct ws {
    struct ws_settings settings;    ///< Settings
    char port_str[6];               ///< Port number
    struct ev_loop *loop;           ///< Event loop
-   struct ll *clients;             ///< List of connected clients
+   struct ll *clients;             ///< Linked List of connected clients
    int sockfd;                     ///< Socket file descriptor
    struct ev_io watcher;           ///< New connection watcher
 };
@@ -141,7 +141,8 @@ struct ws *ws_create(
    struct ws *instance = malloc(sizeof(struct ws));
    if(instance == NULL)
    {
-      fprintf(stderr, "ERROR: Cannot allocate memory for a new instance struct\n");
+      fprintf(stderr, "ERROR: Cannot allocate memory for a new " \
+                      "instance struct\n");
       return NULL;
    }
 
@@ -181,10 +182,12 @@ void ws_start(struct ws *instance)
    }
 
    // Start server
-   fprintf(stderr, "Starting server on port '%s'\n", instance->port_str);
+   fprintf(stderr, "Starting server on port '%s'\n",
+           instance->port_str);
    instance->sockfd = bind_listen(instance->port_str);
    instance->watcher.data = instance;
-   ev_io_init(&instance->watcher, libws_client_accept, instance->sockfd, EV_READ);
+   ev_io_init(&instance->watcher, ws_client_accept, instance->sockfd,
+              EV_READ);
    ev_io_start(instance->loop, &instance->watcher);
 }
 
@@ -205,7 +208,7 @@ void ws_stop(struct ws *instance)
 
    // Kill all clients
    for (it = ll_head(instance->clients); it != NULL; it = ll_next(it)) {
-      libws_client_kill(ll_data(it));
+      ws_client_kill(ll_data(it));
    }
 
    // Close socket
@@ -214,19 +217,19 @@ void ws_stop(struct ws *instance)
    }
 }
 
-struct ws_settings *libws_instance_get_settings(
+struct ws_settings *ws_instance_get_settings(
       struct ws *instance)
 {
    return &instance->settings;
 }
 
-void libws_instance_add_client(struct ws *instance, struct libws_client
+void ws_instance_add_client(struct ws *instance, struct ws_client
       *client)
 {
    ll_insert(instance->clients, client);
 }
 
-void libws_instance_rm_client(struct ws *instance, struct libws_client
+void ws_instance_rm_client(struct ws *instance, struct ws_client
       *client)
 {
    struct ll_iter *iter;
