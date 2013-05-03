@@ -28,4 +28,9 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
+# Main library
+add_library(http-webserver
+      http-webserver.c
+      )
+target_link_libraries(http-webserver webserver)
 

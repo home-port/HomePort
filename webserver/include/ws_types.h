@@ -31,37 +31,22 @@
  *  as representing official policies, either expressed.
  */
 
-#ifndef HTTP_WEBSERVER_H
-#define HTTP_WEBSERVER_H
+#ifndef WS_TYPES_H
+#define WS_TYPES_H
 
-#include "ws_types.h"
+// Port numbers are assigned according to
+// http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml
+// (Site may have very long loading time)
+#define WS_PORT_MAP(XX) \
+   XX(  80, HTTP    ) \
+   XX( 443, HTTPS   ) \
+   XX(8080, HTTP_ALT)
 
-// HTTP status codes according to
-// http://www.w3.org/Protocols/rfc2616/rfc2616.html
-#define WS_HTTP_STATUS_CODE_MAP(XX) \
-	XX(200,200 OK) \
-	XX(404,404 Not Found)
-
-enum ws_http_status_code
+enum ws_port
 {
-#define XX(num, str) WS_HTTP_##num = num,
-	WS_HTTP_STATUS_CODE_MAP(XX)
+#define XX(num, str) WS_PORT_##str = num,
+   WS_PORT_MAP(XX)
 #undef XX
 };
-
-struct ev_loop;
-struct httpws;
-
-struct httpws_settings {
-   enum ws_port port;
-};
-#define HTTPWS_SETTINGS_DEFAULT { \
-   .port = WS_PORT_HTTP }
-
-struct httpws *httpws_create(struct httpws_settings *settings,
-                             struct ev_loop *loop);
-void httpws_destroy(struct httpws *instance);
-int httpws_start(struct httpws *instance);
-void httpws_stop(struct httpws *instance);
 
 #endif

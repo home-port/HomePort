@@ -43,34 +43,7 @@
 #define WEBSERVER_H
 
 #include <stddef.h>
-
-// HTTP status codes according to
-// http://www.w3.org/Protocols/rfc2616/rfc2616.html
-#define WS_HTTP_STATUS_CODE_MAP(XX) \
-	XX(200,200 OK) \
-	XX(404,404 Not Found)
-
-enum ws_http_status_code
-{
-#define XX(num, str) WS_HTTP_##num = num,
-	WS_HTTP_STATUS_CODE_MAP(XX)
-#undef XX
-};
-
-// Port numbers are assigned according to
-// http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml
-// (Site may have very long loading time)
-#define WS_PORT_MAP(XX) \
-   XX(  80, HTTP    ) \
-   XX( 443, HTTPS   ) \
-   XX(8080, HTTP_ALT)
-
-enum ws_port
-{
-#define XX(num, str) WS_PORT_##str = num,
-   WS_PORT_MAP(XX)
-#undef XX
-};
+#include "ws_types.h"
 
 // Structs
 struct ev_loop;

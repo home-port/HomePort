@@ -1,4 +1,4 @@
-// http-webserver.h
+// http-webserver.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
  *   
@@ -31,37 +31,73 @@
  *  as representing official policies, either expressed.
  */
 
-#ifndef HTTP_WEBSERVER_H
-#define HTTP_WEBSERVER_H
+#include "http-webserver.h"
+#include "webserver.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
-#include "ws_types.h"
+/// http-webserver instance struct
+struct httpws {
+   struct httpws_settings settings;
+   struct ws *webserver;
+};
 
-// HTTP status codes according to
-// http://www.w3.org/Protocols/rfc2616/rfc2616.html
-#define WS_HTTP_STATUS_CODE_MAP(XX) \
-	XX(200,200 OK) \
-	XX(404,404 Not Found)
-
-enum ws_http_status_code
+/// Callback for webserver library
+static int on_connect(struct ws_client *client)
 {
-#define XX(num, str) WS_HTTP_##num = num,
-	WS_HTTP_STATUS_CODE_MAP(XX)
-#undef XX
-};
+   return 0;
+}
 
-struct ev_loop;
-struct httpws;
+/// Callback for webserver library
+static int on_receive(struct ws_client *client, void *data,
+                      const char *buf, size_t len)
+{
+   return 0;
+}
 
-struct httpws_settings {
-   enum ws_port port;
-};
-#define HTTPWS_SETTINGS_DEFAULT { \
-   .port = WS_PORT_HTTP }
-
+/// Create a new http-server instance
 struct httpws *httpws_create(struct httpws_settings *settings,
-                             struct ev_loop *loop);
-void httpws_destroy(struct httpws *instance);
-int httpws_start(struct httpws *instance);
-void httpws_stop(struct httpws *instance);
+                             struct ev_loop *loop)
+{
+   // Allocate instance
+   struct httpws *instance = malloc(sizeof(struct httpws));
+   if (instance == NULL) {
+      fprintf(stderr, "ERROR: Cannot allocate memory for a " \
+                      "webserver instance\n");
+      return NULL;
+   }
 
-#endif
+   // Copy settings
+   memcpy(&instance->settings, settings,
+          sizeof(struct httpws_settings));
+
+   // Construct settings for webserver
+   struct ws_settings ws_settings;
+   ws_settings.port = settings->port;
+   ws_settings.on_connect = on_connect;
+   ws_settings.on_receive = on_receive;
+
+   // Create webserver
+   instance->webserver = ws_create(&ws_settings, loop);
+}
+
+/// Destroy a http-server instance (remember to stop first)
+void httpws_destroy(struct httpws *instance)
+{
+   ws_destroy(instance->webserver);
+   free(instance);
+}
+
+/// Start a http-server instance
+int httpws_start(struct httpws *instance)
+{
+   return ws_start(instance->webserver);
+}
+
+/// Stop a http-server instance
+void httpws_stop(struct httpws *instance)
+{
+   ws_stop(instance->webserver);
+}
+

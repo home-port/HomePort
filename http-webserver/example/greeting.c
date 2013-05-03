@@ -1,4 +1,4 @@
-// http-webserver.h
+// main.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
  *   
@@ -31,37 +31,56 @@
  *  as representing official policies, either expressed.
  */
 
-#ifndef HTTP_WEBSERVER_H
-#define HTTP_WEBSERVER_H
+#include "http-webserver.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ev.h>
 
-#include "ws_types.h"
+// The server instance
+static struct httpws *server = NULL;
 
-// HTTP status codes according to
-// http://www.w3.org/Protocols/rfc2616/rfc2616.html
-#define WS_HTTP_STATUS_CODE_MAP(XX) \
-	XX(200,200 OK) \
-	XX(404,404 Not Found)
-
-enum ws_http_status_code
+// Handle correct exiting
+static void exit_handler(int sig)
 {
-#define XX(num, str) WS_HTTP_##num = num,
-	WS_HTTP_STATUS_CODE_MAP(XX)
-#undef XX
-};
+   // Stop server
+   if (server) {
+      httpws_stop(server);
+      httpws_destroy(server);
+   }
 
-struct ev_loop;
-struct httpws;
+   // Exit
+   printf("Exiting....\n");
+   exit(sig);
+}
 
-struct httpws_settings {
-   enum ws_port port;
-};
-#define HTTPWS_SETTINGS_DEFAULT { \
-   .port = WS_PORT_HTTP }
+// Main function
+int main(int argc, char *argv[])
+{
+   // The event loop for the webserver to run on
+   struct ev_loop *loop = EV_DEFAULT;
 
-struct httpws *httpws_create(struct httpws_settings *settings,
-                             struct ev_loop *loop);
-void httpws_destroy(struct httpws *instance);
-int httpws_start(struct httpws *instance);
-void httpws_stop(struct httpws *instance);
+   // Set settings for the webserver
+   struct httpws_settings settings = HTTPWS_SETTINGS_DEFAULT;
+   settings.port = WS_PORT_HTTP_ALT;
 
+   // Inform if we have been built with debug flag
+#ifdef DEBUG
+   printf("Debugging is set\n");
 #endif
+
+   // Register signals for correctly exiting
+   signal(SIGINT, exit_handler);
+   signal(SIGTERM, exit_handler);
+
+   // Create server
+   server = httpws_create(&settings, loop);
+
+   // Start the event loop and webserver
+   if (httpws_start(server))
+      ev_run(loop, 0);
+
+   // Exit
+   exit_handler(0);
+   return 0;
+}
