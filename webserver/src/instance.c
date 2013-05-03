@@ -263,3 +263,8 @@ void ws_instance_rm_client(struct ws *instance, struct ws_client
    ll_find(iter, instance->clients, client);
    ll_remove(iter);
 }
+
+void *ws_get_ctx(struct ws *instance)
+{
+   return instance->settings.ws_ctx;
+}

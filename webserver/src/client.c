@@ -62,7 +62,7 @@ struct ws_client {
    struct ev_io recv_watcher;       ///< Recieve watcher
    struct ev_io send_watcher;       ///< Send watcher
    char send_msg[MAXDATASIZE];      ///< Data to send
-   void *data;
+   void *ctx;
 };
 
 /// Get the in_addr from a sockaddr (IPv4 or IPv6)
@@ -113,7 +113,7 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
       return;
    }
 
-   if (client->settings->on_receive(client, client->data,
+   if (client->settings->on_receive(client->instance, client,
                                     buffer, recieved)) {
       ws_client_kill(client);
       return;
@@ -211,14 +211,14 @@ void ws_client_accept(
    client->timeout_watcher.data = client;
    client->recv_watcher.data = client;
    client->send_watcher.data = client;
-   client->data = NULL;
+   client->ctx = NULL;
 
    // Set up list
    ws_instance_add_client(client->instance, client);
 
    // Call back
    if (client->settings->on_connect) {
-      if (client->settings->on_connect(client)) {
+      if (client->settings->on_connect(client->instance, client)) {
          ws_client_kill(client);
          return;
       }
@@ -260,14 +260,19 @@ void ws_client_kill(struct ws_client *client) {
 
    // Call back
    if (client->settings->on_disconnect)
-      client->settings->on_disconnect(client, client->data);
+      client->settings->on_disconnect(client->instance, client);
 
    // Cleanup
    free(client);
 }
 
-void ws_client_set_data(struct ws_client *client, void *data)
+void ws_client_set_ctx(struct ws_client *client, void *ctx)
 {
-   client->data = data;
+   client->ctx = ctx;
+}
+
+void *ws_client_get_ctx(struct ws_client *client)
+{
+   return client->ctx;
 }
 

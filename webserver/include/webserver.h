@@ -54,10 +54,11 @@ struct ws_client;
  *  Callbacks                                                         *
  **********************************************************************/
 
-typedef int  (*ws_conn_cb)(struct ws_client *client);
-typedef int  (*ws_recv_cb)(struct ws_client *client, void *data,
-                           const char *buf, size_t len);
-typedef void (*ws_kill_cb)(struct ws_client *client, void *data);
+typedef int  (*ws_nodata_cb)(struct ws *instance,
+                             struct ws_client *client);
+typedef int  (*ws_data_cb)  (struct ws *instance,
+                             struct ws_client *client,
+                             const char *buf, size_t len);
 
 /// Settings struct for webserver
 /**
@@ -99,9 +100,10 @@ typedef void (*ws_kill_cb)(struct ws_client *client, void *data);
  */
 struct ws_settings {
    enum ws_port port; ///< Port number
-   ws_conn_cb on_connect;
-   ws_recv_cb on_receive;
-   ws_kill_cb on_disconnect;
+   ws_nodata_cb on_connect;
+   ws_data_cb   on_receive;
+   ws_nodata_cb on_disconnect;
+   void *ws_ctx;
 };
 
 /// Default settings for webserver
@@ -114,16 +116,20 @@ struct ws_settings {
 #define WS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
    .on_connect = NULL, \
-   .on_receive = NULL }
+   .on_receive = NULL, \
+   .on_disconnect = NULL, \
+   .ws_ctx = NULL }
 
 // Webserver functions
 struct ws *ws_create(struct ws_settings *settings, struct ev_loop *loop);
 void ws_destroy(struct ws *instance);
 int ws_start(struct ws *instance);
 void ws_stop(struct ws *instance);
+void *ws_get_ctx(struct ws *instance);
 
 // Client functions
-void ws_client_set_data(struct ws_client *client, void *data);
+void ws_client_set_ctx(struct ws_client *client, void *ctx);
+void *ws_client_get_ctx(struct ws_client *client);
 void ws_client_kill(struct ws_client *client);
 void ws_client_sendf(struct ws_client *client, char *fmt, ...);
 

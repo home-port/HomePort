@@ -46,21 +46,22 @@ struct httpws {
 };
 
 /// Callback for webserver library
-static int on_connect(struct ws_client *client)
+static int on_connect(struct ws *instance, struct ws_client *client)
 {
    return 0;
 }
 
 /// Callback for webserver library
-static int on_receive(struct ws_client *client, void *data,
+static int on_receive(struct ws *instance, struct ws_client *client,
                       const char *buf, size_t len)
 {
    return 0;
 }
 
 /// Callback for webserver library
-static void on_disconnect(struct ws_client *client, void *data)
+static int on_disconnect(struct ws *instance, struct ws_client *client)
 {
+   return 0;
 }
 
 /// Create a new http-server instance

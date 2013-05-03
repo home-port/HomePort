@@ -41,7 +41,7 @@
 static struct ws *ws = NULL;
 
 // Receive messages
-static int on_receive(struct ws_client *client, void *data,
+static int on_receive(struct ws *instance, struct ws_client *client,
                       const char *buf, size_t len)
 {
    ws_client_sendf(client, "%.*s", (int)len, buf);
