@@ -217,9 +217,11 @@ void ws_client_accept(
    ws_instance_add_client(client->instance, client);
 
    // Call back
-   if (client->settings->on_connect(client)) {
-      ws_client_kill(client);
-      return;
+   if (client->settings->on_connect) {
+      if (client->settings->on_connect(client)) {
+         ws_client_kill(client);
+         return;
+      }
    }
 
    // Start timeout and io watcher
@@ -255,6 +257,10 @@ void ws_client_kill(struct ws_client *client) {
 
    // Remove from list
    ws_instance_rm_client(client->instance, client);
+
+   // Call back
+   if (client->settings->on_disconnect)
+      client->settings->on_disconnect(client, client->data);
 
    // Cleanup
    free(client);
