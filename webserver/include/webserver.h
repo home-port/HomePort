@@ -54,9 +54,10 @@ struct ws_client;
  *  Callbacks                                                         *
  **********************************************************************/
 
-typedef int (*client_cb)(struct ws_client *client);
-typedef int (*recv_cb)(struct ws_client *client, void *data,
-                       const char *buf, size_t len);
+typedef int (*ws_client_cb)(struct ws_client *client);
+typedef int (*ws_data_cb)(struct ws_client *client, void *data);
+typedef int (*ws_chunk_cb)(struct ws_client *client, void *data,
+                           const char *buf, size_t len);
 
 /// Settings struct for webserver
 /**
@@ -97,9 +98,9 @@ typedef int (*recv_cb)(struct ws_client *client, void *data,
  *  \enddot
  */
 struct ws_settings {
-   enum ws_port port;                    ///< Port number
-   client_cb on_connect;
-   recv_cb on_receive;
+   enum ws_port port; ///< Port number
+   ws_client_cb on_connect;
+   ws_chunk_cb on_receive;
 };
 
 /// Default settings for webserver

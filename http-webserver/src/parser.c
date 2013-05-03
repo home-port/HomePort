@@ -167,8 +167,8 @@ static int parser_msg_begin(http_parser *parser)
    const char *method;
    struct httpws_parser *p = parser->data;
    const struct httpws_settings *settings = p->settings;
-   const nodata_cb begin_cb = settings->on_req_begin;
-   const data_cb method_cb = settings->on_req_method;
+   const httpws_nodata_cb begin_cb = settings->on_req_begin;
+   const httpws_data_cb method_cb = settings->on_req_method;
 
    switch (p->state) {
       case S_STOP:
@@ -208,7 +208,7 @@ static int parser_url(http_parser *parser, const char *buf, size_t len)
    int stat = 0;
    struct httpws_parser *p = parser->data;
    struct httpws_settings *settings = p->settings;
-   data_cb url_cb = settings->on_req_url;
+   httpws_data_cb url_cb = settings->on_req_url;
 
    switch (p->state) {
       case S_STOP:
@@ -244,8 +244,8 @@ static int parser_hdr_field(http_parser *parser, const char *buf, size_t len)
    int stat = 0;
    struct httpws_parser *p = parser->data;
    struct httpws_settings *settings = p->settings;
-   nodata_cb url_cmpl_cb = settings->on_req_url_cmpl;
-   data_cb header_field_cb = settings->on_req_hdr_field;
+   httpws_nodata_cb url_cmpl_cb = settings->on_req_url_cmpl;
+   httpws_data_cb header_field_cb = settings->on_req_hdr_field;
 
    switch (p->state) {
       case S_STOP:
@@ -284,7 +284,7 @@ static int parser_hdr_value(http_parser *parser, const char *buf, size_t len)
    int stat = 0;
    struct httpws_parser *p = parser->data;
    struct httpws_settings *settings = p->settings;
-   data_cb header_value_cb = settings->on_req_hdr_value;
+   httpws_data_cb header_value_cb = settings->on_req_hdr_value;
 
    switch (p->state) {
       case S_STOP:
@@ -319,8 +319,8 @@ static int parser_hdr_cmpl(http_parser *parser)
    int stat = 0;
    struct httpws_parser *p = parser->data;
    struct httpws_settings *settings = p->settings;
-   nodata_cb url_cmpl_cb = settings->on_req_url_cmpl;
-   nodata_cb header_cmpl_cb = settings->on_req_hdr_cmpl;
+   httpws_nodata_cb url_cmpl_cb = settings->on_req_url_cmpl;
+   httpws_nodata_cb header_cmpl_cb = settings->on_req_hdr_cmpl;
 
    switch (p->state) {
       case S_STOP:
@@ -358,7 +358,7 @@ static int parser_body(http_parser *parser, const char *buf, size_t len)
    int stat = 0;
    struct httpws_parser *p = parser->data;
    struct httpws_settings *settings = p->settings;
-   data_cb body_cb = settings->on_req_body;
+   httpws_data_cb body_cb = settings->on_req_body;
 
    switch (p->state) {
       case S_STOP:
@@ -389,7 +389,7 @@ static int parser_msg_cmpl(http_parser *parser)
    int stat = 0;
    struct httpws_parser *p = parser->data;
    struct httpws_settings *settings = p->settings;
-   nodata_cb complete_cb = settings->on_req_cmpl;
+   httpws_nodata_cb complete_cb = settings->on_req_cmpl;
 
    switch (p->state) {
       case S_STOP:

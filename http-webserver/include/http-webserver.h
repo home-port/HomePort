@@ -39,34 +39,34 @@
 
 // HTTP status codes according to
 // http://www.w3.org/Protocols/rfc2616/rfc2616.html
-#define WS_HTTP_STATUS_CODE_MAP(XX) \
+#define HTTPWS_HTTP_STATUS_CODE_MAP(XX) \
 	XX(200,200 OK) \
 	XX(404,404 Not Found)
 
-enum ws_http_status_code
+enum httpws_http_status_code
 {
 #define XX(num, str) WS_HTTP_##num = num,
-	WS_HTTP_STATUS_CODE_MAP(XX)
+	HTTPWS_HTTP_STATUS_CODE_MAP(XX)
 #undef XX
 };
 
 struct ev_loop;
 struct httpws;
 
-typedef int (*data_cb)(const char *buf, size_t len);
-typedef int (*nodata_cb)();
+typedef int (*httpws_data_cb)(const char *buf, size_t len);
+typedef int (*httpws_nodata_cb)();
 
 struct httpws_settings {
    enum ws_port port;
-   nodata_cb    on_req_begin;
-   data_cb      on_req_method;
-   data_cb      on_req_url;
-   nodata_cb    on_req_url_cmpl;
-   data_cb      on_req_hdr_field;
-   data_cb      on_req_hdr_value;
-   nodata_cb    on_req_hdr_cmpl;
-   data_cb      on_req_body;
-   nodata_cb    on_req_cmpl;
+   httpws_nodata_cb on_req_begin;
+   httpws_data_cb   on_req_method;
+   httpws_data_cb   on_req_url;
+   httpws_nodata_cb on_req_url_cmpl;
+   httpws_data_cb   on_req_hdr_field;
+   httpws_data_cb   on_req_hdr_value;
+   httpws_nodata_cb on_req_hdr_cmpl;
+   httpws_data_cb   on_req_body;
+   httpws_nodata_cb on_req_cmpl;
 };
 #define HTTPWS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
