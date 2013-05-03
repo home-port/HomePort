@@ -33,6 +33,8 @@
 
 #include "http-webserver.h"
 #include "webserver.h"
+#include "parser.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -56,6 +58,11 @@ static int on_receive(struct ws_client *client, void *data,
    return 0;
 }
 
+/// Callback for webserver library
+static void on_disconnect(struct ws_client *client, void *data)
+{
+}
+
 /// Create a new http-server instance
 struct httpws *httpws_create(struct httpws_settings *settings,
                              struct ev_loop *loop)
@@ -74,9 +81,10 @@ struct httpws *httpws_create(struct httpws_settings *settings,
 
    // Construct settings for webserver
    struct ws_settings ws_settings;
-   ws_settings.port = settings->port;
-   ws_settings.on_connect = on_connect;
-   ws_settings.on_receive = on_receive;
+   ws_settings.port          = settings->port;
+   ws_settings.on_connect    = on_connect;
+   ws_settings.on_receive    = on_receive;
+   ws_settings.on_disconnect = on_disconnect;
 
    // Create webserver
    instance->webserver = ws_create(&ws_settings, loop);
