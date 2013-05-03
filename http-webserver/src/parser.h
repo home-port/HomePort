@@ -38,6 +38,7 @@
 #include <stddef.h>
 
 struct httpws_parser *httpws_parser_create(
+      struct httpws_client *client,
       struct httpws_settings *settings);
 void httpws_parser_destroy(struct httpws_parser *p);
 size_t httpws_parser_parse(struct httpws_parser *p,

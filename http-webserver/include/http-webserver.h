@@ -52,9 +52,11 @@ enum httpws_http_status_code
 
 struct ev_loop;
 struct httpws;
+struct httpws_client;
 
-typedef int (*httpws_data_cb)(const char *buf, size_t len);
-typedef int (*httpws_nodata_cb)();
+typedef int (*httpws_data_cb)(struct httpws_client *client,
+                              const char *buf, size_t len);
+typedef int (*httpws_nodata_cb)(struct httpws_client *client);
 
 struct httpws_settings {
    enum ws_port port;

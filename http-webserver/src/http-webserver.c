@@ -45,13 +45,30 @@ struct httpws {
    struct ws *webserver;
 };
 
+/// http-webserver client struct
+struct httpws_client {
+   struct httpws *instance;
+   struct httpws_parser *parser;
+   struct ws_client *client;
+};
+
 /// Callback for webserver library
 static int on_connect(struct ws *instance, struct ws_client *client)
 {
-   struct httpws *httpws = ws_get_ctx(instance);
-   struct httpws_parser *parser =
-      httpws_parser_create(&httpws->settings);
-   ws_client_set_ctx(client, parser);
+   // Alloc client struct
+   struct httpws_client *ctx = malloc(sizeof(struct httpws_client));
+   if (!ctx) {
+      fprintf(stderr, "Not enough memory for client\n");
+      return 1;
+   }
+   
+   // Initialise struct
+   ctx->instance = ws_get_ctx(instance);
+   ctx->parser = httpws_parser_create(ctx, &ctx->instance->settings);
+   ctx->client = client;
+
+   // Set it as client context
+   ws_client_set_ctx(client, ctx);
 
    return 0;
 }
@@ -69,8 +86,10 @@ static int on_receive(struct ws *instance, struct ws_client *client,
 /// Callback for webserver library
 static int on_disconnect(struct ws *instance, struct ws_client *client)
 {
-   struct httpws_parser *parser = ws_client_get_ctx(client);
-   httpws_parser_destroy(parser);
+   struct httpws_client *ctx = ws_client_get_ctx(client);
+
+   httpws_parser_destroy(ctx->parser);
+   free(ctx);
 
    return 0;
 }
