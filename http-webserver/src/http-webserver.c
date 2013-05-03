@@ -48,6 +48,11 @@ struct httpws {
 /// Callback for webserver library
 static int on_connect(struct ws *instance, struct ws_client *client)
 {
+   struct httpws *httpws = ws_get_ctx(instance);
+   struct httpws_parser *parser =
+      httpws_parser_create(&httpws->settings);
+   ws_client_set_ctx(client, parser);
+
    return 0;
 }
 
@@ -55,12 +60,18 @@ static int on_connect(struct ws *instance, struct ws_client *client)
 static int on_receive(struct ws *instance, struct ws_client *client,
                       const char *buf, size_t len)
 {
+   struct httpws_parser *parser = ws_client_get_ctx(client);
+   httpws_parser_parse(parser, buf, len);
+
    return 0;
 }
 
 /// Callback for webserver library
 static int on_disconnect(struct ws *instance, struct ws_client *client)
 {
+   struct httpws_parser *parser = ws_client_get_ctx(client);
+   httpws_parser_destroy(parser);
+
    return 0;
 }
 
@@ -86,6 +97,7 @@ struct httpws *httpws_create(struct httpws_settings *settings,
    ws_settings.on_connect    = on_connect;
    ws_settings.on_receive    = on_receive;
    ws_settings.on_disconnect = on_disconnect;
+   ws_settings.ws_ctx        = instance;
 
    // Create webserver
    instance->webserver = ws_create(&ws_settings, loop);
