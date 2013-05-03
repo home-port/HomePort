@@ -125,6 +125,7 @@ typedef int (*recv_cb)(struct ws_client *client, void *data,
  */
 struct ws_settings {
    enum ws_port port;                    ///< Port number
+   client_cb on_connect;
    recv_cb on_receive;
 };
 
@@ -137,6 +138,7 @@ struct ws_settings {
  */
 #define WS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
+   .on_connect = NULL, \
    .on_receive = NULL }
 
 // Webserver functions

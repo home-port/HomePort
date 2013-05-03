@@ -216,6 +216,12 @@ void ws_client_accept(
    // Set up list
    ws_instance_add_client(client->instance, client);
 
+   // Call back
+   if (client->settings->on_connect(client)) {
+      ws_client_kill(client);
+      return;
+   }
+
    // Start timeout and io watcher
    ev_io_init(&client->recv_watcher, client_recv_cb, in_fd, EV_READ);
    ev_io_init(&client->send_watcher, client_send_cb, in_fd, EV_WRITE);

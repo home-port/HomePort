@@ -28,11 +28,5 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Main library
-add_library(libWebserver
-      instance.c
-      client.c
-      )
-target_link_libraries(libWebserver ev http-parser)
 
 add_subdirectory(webserver-test)

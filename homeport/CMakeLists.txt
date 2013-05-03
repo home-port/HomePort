@@ -28,10 +28,11 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
+include_directories(${HOMEPORT_SOURCE_DIR}/webserver/include)
 include_directories(${HOMEPORT_SOURCE_DIR}/libWebserver/include)
 include_directories(${HOMEPORT_SOURCE_DIR}/libHTTP/include)
 include_directories(${HOMEPORT_SOURCE_DIR}/libREST/include)
 
 add_executable(homeport homeport.c)
 
-target_link_libraries(homeport libWebserver libREST)
+target_link_libraries(homeport webserver libREST)
