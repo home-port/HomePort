@@ -31,6 +31,7 @@
 # Main library
 add_library(http-webserver
       http-webserver.c
+      parser.c
       )
 target_link_libraries(http-webserver webserver)
 

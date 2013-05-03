@@ -35,6 +35,7 @@
 #define HTTP_WEBSERVER_H
 
 #include "ws_types.h"
+#include <stddef.h>
 
 // HTTP status codes according to
 // http://www.w3.org/Protocols/rfc2616/rfc2616.html
@@ -52,11 +53,32 @@ enum ws_http_status_code
 struct ev_loop;
 struct httpws;
 
+typedef int (*data_cb)(const char *buf, size_t len);
+typedef int (*nodata_cb)();
+
 struct httpws_settings {
    enum ws_port port;
+   nodata_cb    on_req_begin;
+   data_cb      on_req_method;
+   data_cb      on_req_url;
+   nodata_cb    on_req_url_cmpl;
+   data_cb      on_req_hdr_field;
+   data_cb      on_req_hdr_value;
+   nodata_cb    on_req_hdr_cmpl;
+   data_cb      on_req_body;
+   nodata_cb    on_req_cmpl;
 };
 #define HTTPWS_SETTINGS_DEFAULT { \
-   .port = WS_PORT_HTTP }
+   .port = WS_PORT_HTTP, \
+   .on_req_begin = NULL, \
+   .on_req_method = NULL, \
+   .on_req_url = NULL, \
+   .on_req_url_cmpl = NULL, \
+   .on_req_hdr_field = NULL, \
+   .on_req_hdr_value = NULL, \
+   .on_req_hdr_cmpl = NULL, \
+   .on_req_body = NULL, \
+   .on_req_cmpl = NULL }
 
 struct httpws *httpws_create(struct httpws_settings *settings,
                              struct ev_loop *loop);
