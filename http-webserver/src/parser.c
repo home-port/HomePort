@@ -127,7 +127,7 @@ struct http_request
 {
    struct httpws *webserver;
    struct httpws_settings *settings;
-   struct ws_client *client;
+   struct ws_conn *conn;
    http_parser parser;               ///< HTTP parser in use
    enum state state;                 ///< Current state of the request
 };
@@ -179,12 +179,12 @@ static int parser_msg_begin(http_parser *parser)
          req->state = S_BEGIN;
          // Send request begin
          if(begin_cb)
-            stat = begin_cb(req->client);
+            stat = begin_cb(req->conn);
          if (stat) { req->state = S_STOP; return stat; }
          // Send method
          method = http_method_str(parser->method);
          if(method_cb)
-            stat = method_cb(req->client, method, strlen(method));
+            stat = method_cb(req->conn, method, strlen(method));
 
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
@@ -219,7 +219,7 @@ static int parser_url(http_parser *parser, const char *buf, size_t len)
          req->state = S_URL;
       case S_URL:
          if(url_cb)
-            stat = url_cb(req->client, buf, len);
+            stat = url_cb(req->conn, buf, len);
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -254,13 +254,13 @@ static int parser_hdr_field(http_parser *parser, const char *buf, size_t len)
          return 1;
       case S_URL:
          if(url_cmpl_cb)
-            stat = url_cmpl_cb(req->client);
+            stat = url_cmpl_cb(req->conn);
          if (stat) { req->state = S_STOP; return stat; }
       case S_HEADER_VALUE:
          req->state = S_HEADER_FIELD;
       case S_HEADER_FIELD:
          if(header_field_cb)
-            stat = header_field_cb(req->client, buf, len);
+            stat = header_field_cb(req->conn, buf, len);
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -295,7 +295,7 @@ static int parser_hdr_value(http_parser *parser, const char *buf, size_t len)
          req->state = S_HEADER_VALUE;
       case S_HEADER_VALUE:
          if(header_value_cb)
-            stat = header_value_cb(req->client, buf, len);
+            stat = header_value_cb(req->conn, buf, len);
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -329,12 +329,12 @@ static int parser_hdr_cmpl(http_parser *parser)
          return 1;
       case S_URL:
          if(url_cmpl_cb)
-            stat = url_cmpl_cb(req->client);
+            stat = url_cmpl_cb(req->conn);
          if (stat) { req->state = S_STOP; return stat; }
       case S_HEADER_VALUE:
          req->state = S_HEADER_COMPLETE;
          if(header_cmpl_cb)
-            stat = header_cmpl_cb(req->client);
+            stat = header_cmpl_cb(req->conn);
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -369,7 +369,7 @@ static int parser_body(http_parser *parser, const char *buf, size_t len)
          req->state = S_BODY;
       case S_BODY:
          if(body_cb)
-            stat = body_cb(req->client, buf, len);
+            stat = body_cb(req->conn, buf, len);
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -400,7 +400,7 @@ static int parser_msg_cmpl(http_parser *parser)
       case S_BODY:
          req->state = S_COMPLETE;
          if(complete_cb)
-            stat = complete_cb(req->client);
+            stat = complete_cb(req->conn);
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -424,7 +424,7 @@ static int parser_msg_cmpl(http_parser *parser)
 struct http_request *http_request_create(
       struct httpws *webserver,
       struct httpws_settings *settings,
-      struct ws_client *client)
+      struct ws_conn *conn)
 {
    struct http_request *req = malloc(sizeof(struct http_request));
 	if(req == NULL) {
@@ -434,7 +434,7 @@ struct http_request *http_request_create(
 
    // Init references
    req->webserver = webserver;
-   req->client = client;
+   req->conn = conn;
    req->settings = settings;
 
    // Init parser

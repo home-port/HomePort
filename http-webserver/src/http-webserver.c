@@ -46,13 +46,13 @@ struct httpws {
 };
 
 /// Callback for webserver library
-static int on_connect(struct ws *instance, struct ws_client *client,
+static int on_connect(struct ws *instance, struct ws_conn *conn,
                       void *http_ins, void **req)
 {
    struct httpws *parent = http_ins;
-   *req = http_request_create(parent, &parent->settings, client);
+   *req = http_request_create(parent, &parent->settings, conn);
    if (!req) {
-      fprintf(stderr, "Not enough memory for client\n");
+      fprintf(stderr, "Not enough memory for request\n");
       return 1;
    }
 
@@ -60,7 +60,7 @@ static int on_connect(struct ws *instance, struct ws_client *client,
 }
 
 /// Callback for webserver library
-static int on_receive(struct ws *instance, struct ws_client *client,
+static int on_receive(struct ws *instance, struct ws_conn *conn,
                       void *http_ins, void **req,
                       const char *buf, size_t len)
 {
@@ -70,7 +70,7 @@ static int on_receive(struct ws *instance, struct ws_client *client,
 }
 
 /// Callback for webserver library
-static int on_disconnect(struct ws *instance, struct ws_client *client,
+static int on_disconnect(struct ws *instance, struct ws_conn *conn,
                       void *http_ins, void **req)
 {
    http_request_destroy(*req);
