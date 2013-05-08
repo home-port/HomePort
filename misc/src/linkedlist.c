@@ -64,6 +64,7 @@ LinkedList *create_linkedList()
 ListElement* insert_listElement(LinkedList *ll, char *key, struct TrieNode* node)
 {
    ListElement *element = malloc(sizeof(*element));
+   size_t len = strlen(key);
    if(!element)
    {
       fprintf(stderr, "List element not allocated\n" );
@@ -76,7 +77,8 @@ ListElement* insert_listElement(LinkedList *ll, char *key, struct TrieNode* node
       ll->tail->next = element;
    ll->tail = element;
    element->next = NULL;
-   element->key = strcpy(key);
+   element->key = malloc(strlen(key) *(sizeof(char))+1);
+   element->key = key;
    element->node = node;
    element->value = NULL;
 

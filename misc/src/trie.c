@@ -71,6 +71,7 @@ ListElement* insert_trie_key(TrieNode* root, char* key)
    {
       LinkedList* list = create_linkedList();
       ListElement* element = insert_listElement(list, key, NULL);
+      printf("key actually inserted: %s\n", element->key);
       root->children = list;
       return element;
    }
@@ -269,27 +270,32 @@ void remove_trie_key(TrieNode* root, char* key)
          }
          if(listkey[tmp_pos] == '\0'&& key[current_pos] == '\0')
          {
-            //case: key is a subset of another key
-            if(listkey->node != NULL)
+            //case: key is only child, and parent has no value
+            if(treeElement->children->head->next == NULL && parent->value != NULL)
             {
-               //key has only one child, colaps
-               if(listkey->node->children->next != NULL)
+               parent->key == strcat(parent->key,treeElement->children->head->key);
+            }
+            //case: key is a subset of another key
+            if(listElement->node != NULL)
+            {
+               //key has only one child, colaps onto keys listElement
+               if(listElement->node->children->head->next != NULL)
                {
-                  listkey->value = listkey->node->children->head->value;
-                  lsitkey->key = strcat()
-
+                  listElement->value = listElement->node->children->head->value;
+                  listElement->key = realloc(listElement->key,strlen(listElement->node->children->head->key)*(sizeof(char)));
+                  //freeing the keys child
+                  struct LinkedList *tmp_ll = listElement->node->children;
+                  listElement->node = listElement->node->children->head->node;                  
+                  destroy_linkedList(tmp_ll);
+                  return;
+               } else //key has multiple children, simply remove value
+               {
+                  listElement->value = NULL;
+                  return;
                }
             }
             remove_listElement(treeElement->children,listkey);
-            printf("colaps trie\n");
-            // case: only one child left and parent is not end of
-            // another key
-            if(treeElement->children->head->next == NULL && parent->value != NULL)
-            {
-               parent->key == strcat(parent->key,
-                     treeElement->children->head->key);
-
-            }
+            // case: only one child left and parent is not end of another key
             return; 
          }
          else if(listkey[tmp_pos] == '\0')
