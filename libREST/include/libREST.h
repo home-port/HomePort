@@ -76,10 +76,21 @@ int lr_request_cmpl(void *req);
 
 #endif
 
+//NEW FOR WEDNESDAY
+typedef void (*lr_cb)(struct lr *ins, struct http_request *req);
 
+struct lr *lr_create();
+void lr_destroy(struct lr *ins);
+void lr_register_service(struct lr *ins,
+                         char *url,
+                         lr_cb on_get,
+                         lr_cb on_post,
+                         lr_cb on_put,
+                         lr_cb on_delete);
 
+void lr_unregister_service(struct lr *ins, char *url);
 
-
+int lr_handle(struct lr *ins, struct http_request *req);
 
 
 
