@@ -202,8 +202,8 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
       return;
    }
 
-   if (client->instance->settings.on_receive(client->instance, client,
-                                    buffer, recieved)) {
+   if (client->instance->settings.on_receive(client->instance, client, 
+                                             client->instance->settings.ws_ctx, buffer, recieved)) {
       ws_client_kill(client);
       return;
    }
@@ -302,7 +302,7 @@ static void ws_client_accept(
 
    // Call back
    if (client->instance->settings.on_connect) {
-      if (client->instance->settings.on_connect(client->instance, client)) {
+      if (client->instance->settings.on_connect(client->instance, client, client->instance->settings.ws_ctx)) {
          ws_client_kill(client);
          return;
       }
@@ -370,7 +370,7 @@ void ws_client_kill(struct ws_client *client) {
 
    // Call back
    if (client->instance->settings.on_disconnect)
-      client->instance->settings.on_disconnect(client->instance, client);
+      client->instance->settings.on_disconnect(client->instance, client, client->instance->settings.ws_ctx);
 
    // Cleanup
    free(client);

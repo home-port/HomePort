@@ -55,9 +55,9 @@ struct ws_client;
  **********************************************************************/
 
 typedef int  (*ws_nodata_cb)(struct ws *instance,
-                             struct ws_client *client);
+                             struct ws_client *client, void *ws_ctx);
 typedef int  (*ws_data_cb)  (struct ws *instance,
-                             struct ws_client *client,
+                             struct ws_client *client, void *ws_ctw,
                              const char *buf, size_t len);
 
 /// Settings struct for webserver
