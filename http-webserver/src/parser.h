@@ -37,11 +37,14 @@
 #include "http-webserver.h"
 #include <stddef.h>
 
-struct httpws_parser *httpws_parser_create(
-      struct httpws_client *client,
-      struct httpws_settings *settings);
-void httpws_parser_destroy(struct httpws_parser *p);
-size_t httpws_parser_parse(struct httpws_parser *p,
-                           const char *buf, size_t len);
+struct http_request *http_request_create(
+      struct httpws *webserver,
+      struct httpws_settings *settings,
+      struct ws_conn *conn);
+void http_request_destroy(struct http_request *req);
+size_t http_request_parse(
+      struct http_request *req,
+      const char *buf,
+      size_t len);
 
 #endif

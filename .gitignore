@@ -19,6 +19,7 @@
 # Temp folders files
 .DS_Store
 *~
+.*.swp
 
 # Folders
 /build/
@@ -30,3 +31,4 @@
 /libWebserver/src/response_test
 /wstest
 /misc/src/a.out.dSYM/
+/Figures/pkgs.graffle

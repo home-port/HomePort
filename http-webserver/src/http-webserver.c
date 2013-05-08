@@ -45,51 +45,36 @@ struct httpws {
    struct ws *webserver;
 };
 
-/// http-webserver client struct
-struct httpws_client {
-   struct httpws *instance;
-   struct httpws_parser *parser;
-   struct ws_client *client;
-};
-
 /// Callback for webserver library
-static int on_connect(struct ws *instance, struct ws_client *client)
+static int on_connect(struct ws *instance, struct ws_conn *conn,
+                      void *http_ins, void **req)
 {
-   // Alloc client struct
-   struct httpws_client *ctx = malloc(sizeof(struct httpws_client));
-   if (!ctx) {
-      fprintf(stderr, "Not enough memory for client\n");
+   struct httpws *parent = http_ins;
+   *req = http_request_create(parent, &parent->settings, conn);
+   if (!req) {
+      fprintf(stderr, "Not enough memory for request\n");
       return 1;
    }
-   
-   // Initialise struct
-   ctx->instance = ws_get_ctx(instance);
-   ctx->parser = httpws_parser_create(ctx, &ctx->instance->settings);
-   ctx->client = client;
-
-   // Set it as client context
-   ws_client_set_ctx(client, ctx);
 
    return 0;
 }
 
 /// Callback for webserver library
-static int on_receive(struct ws *instance, struct ws_client *client,
+static int on_receive(struct ws *instance, struct ws_conn *conn,
+                      void *http_ins, void **req,
                       const char *buf, size_t len)
 {
-   struct httpws_parser *parser = ws_client_get_ctx(client);
-   httpws_parser_parse(parser, buf, len);
+   http_request_parse(*req, buf, len);
 
    return 0;
 }
 
 /// Callback for webserver library
-static int on_disconnect(struct ws *instance, struct ws_client *client)
+static int on_disconnect(struct ws *instance, struct ws_conn *conn,
+                      void *http_ins, void **req)
 {
-   struct httpws_client *ctx = ws_client_get_ctx(client);
-
-   httpws_parser_destroy(ctx->parser);
-   free(ctx);
+   http_request_destroy(*req);
+   *req = NULL;
 
    return 0;
 }
@@ -120,6 +105,8 @@ struct httpws *httpws_create(struct httpws_settings *settings,
 
    // Create webserver
    instance->webserver = ws_create(&ws_settings, loop);
+
+   return instance;
 }
 
 /// Destroy a http-server instance (remember to stop first)
