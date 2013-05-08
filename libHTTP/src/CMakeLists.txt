@@ -28,15 +28,4 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# URLParser
-add_library(urlparser
-      url_parser.c
-      )
-
-# Request Test
-add_executable(url_parser_test EXCLUDE_FROM_ALL
-      url_parser_test.c
-      )
-add_test(url_parser_test ${CMAKE_CURRENT_BINARY_DIR}/url_parser_test)
-add_dependencies(check url_parser_test)
 

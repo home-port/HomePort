@@ -19,6 +19,7 @@
 # Temp folders files
 .DS_Store
 *~
+.*.swp
 
 # Folders
 /build/
