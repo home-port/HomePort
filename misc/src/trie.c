@@ -32,7 +32,7 @@
  */
 
 #include <string.h>
-#include "trie.h"
+#include "../include/trie.h"
 
 char* substring_from(char* key, int from)
 {
@@ -275,31 +275,64 @@ void remove_trie_key(TrieNode* root, char* key)
          }
          if(listkey[tmp_pos] == '\0'&& key[current_pos] == '\0')
          {
-            //case: key is only child, and parent has no value
-            if(treeElement->children->head->next == NULL && parent->value != NULL)
+            if(parent != NULL)
             {
-               parent->key == strcat(parent->key,treeElement->children->head->key);
-            }
-            //case: key is a subset of another key
-            if(listElement->node != NULL)
-            {
-               //key has only one child, colaps onto keys listElement
-               if(listElement->node->children->head->next != NULL)
+               //case: targeted key is an only child, and parent has no value
+               if(treeElement->children->head->next == NULL &&
+                     parent->value == NULL && listElement->node->children !=
+                     NULL)
                {
-                  listElement->value = listElement->node->children->head->value;
-                  listElement->key = realloc(listElement->key,strlen(listElement->node->children->head->key)*(sizeof(char)));
-                  //freeing the keys child
-                  struct LinkedList *tmp_ll = listElement->node->children;
-                  listElement->node = listElement->node->children->head->node;                  
-                  destroy_linkedList(tmp_ll);
+                  parent->key == strcat(parent->key,listkey);
+                  parent->node = listElement->node;
+                  remove_listElement(treeElement->children, listkey);
+                  free(treeElement);
                   return;
-               } else //key has multiple children, simply remove value
+               } else if(treeElement->children->head->next == NULL &&
+                     parent->value != NULL && listElement->node->children
+                     != NULL)
                {
-                  listElement->value = NULL;
-                  return;
+                  if(listElement->node->children->head->next != NULL)
+                  {
+                     listElement->value = NULL;
+                     return;
+                  } else {
+                     listElement->value = listElement->node->children->head->value;
+                     listElement->key = realloc(listElement->key,strlen(listElement->node->children->head->key)*(sizeof(char)));
+                     listElement->key = strcat(listElement->key,
+                           listElement->node->children->head->key);
+                      //freeing the keys child
+                     struct LinkedList *tmp_ll = listElement->node->children;
+                     listElement->node = listElement->node->children->head->node;                  
+                     destroy_linkedList(tmp_ll);
+                     return;
+                  }
+               }
+               
+            } else {
+               if(treeElement->children->head->next == NULL &&
+                     listElement->node->children != NULL)
+               {
+                  if(listElement->node->children->head->next != NULL)
+                  {
+                     listElement->value == NULL;
+                     return;
+                  } else
+                  {
+                     listElement->value = listElement->node->children->head->value;
+                     listElement->key = realloc(listElement->key,strlen(listElement->node->children->head->key)*(sizeof(char)));
+                     listElement->key = strcat(listElement->key,
+                           listElement->node->children->head->key);
+                      //freeing the keys child
+                     struct LinkedList *tmp_ll = listElement->node->children;
+                     listElement->node = listElement->node->children->head->node;                  
+                     destroy_linkedList(tmp_ll);
+                     return;
+                  }
                }
             }
+            
             remove_listElement(treeElement->children,listkey);
+            
             // case: only one child left and parent is not end of another key
             return; 
          }
