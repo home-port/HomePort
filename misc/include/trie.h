@@ -48,7 +48,7 @@ struct TrieNode
 
 TrieNode* create_trie();
 struct ListElement* insert_trie_key(TrieNode* root, char* key);
-void remove_trieNode(TrieNode* root, char* key);
+void remove_trie_key(TrieNode* root, char* key);
 struct ListElement* lookup_trieNode(TrieNode* root, char* key);
 void destroy_trie(TrieNode* root);
 
