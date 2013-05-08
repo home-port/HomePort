@@ -50,13 +50,19 @@ enum httpws_http_status_code
 #undef XX
 };
 
+// HTTP methods
+enum httpws_http_method
+{
+   GET, POST, PUT, DELETE
+};
+
 struct ev_loop;
 struct httpws;
-struct httpws_client;
+struct ws_client;
 
-typedef int (*httpws_data_cb)(struct httpws_client *client,
+typedef int (*httpws_data_cb)(struct ws_client *client,
                               const char *buf, size_t len);
-typedef int (*httpws_nodata_cb)(struct httpws_client *client);
+typedef int (*httpws_nodata_cb)(struct ws_client *client);
 
 struct httpws_settings {
    enum ws_port port;

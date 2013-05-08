@@ -123,10 +123,11 @@ enum state {
  * \enddot
  *
  */
-struct httpws_parser
+struct http_request
 {
-   struct httpws_client *client;
-   struct httpws_settings *settings; ///< Settings of the webserver
+   struct httpws *webserver;
+   struct httpws_settings *settings;
+   struct ws_client *client;
    http_parser parser;               ///< HTTP parser in use
    enum state state;                 ///< Current state of the request
 };
@@ -166,29 +167,29 @@ static int parser_msg_begin(http_parser *parser)
 {
    int stat = 0;
    const char *method;
-   struct httpws_parser *p = parser->data;
-   const struct httpws_settings *settings = p->settings;
+   struct http_request *req = parser->data;
+   const struct httpws_settings *settings = req->settings;
    const httpws_nodata_cb begin_cb = settings->on_req_begin;
    const httpws_data_cb method_cb = settings->on_req_method;
 
-   switch (p->state) {
+   switch (req->state) {
       case S_STOP:
          return 1;
       case S_START:
-         p->state = S_BEGIN;
+         req->state = S_BEGIN;
          // Send request begin
          if(begin_cb)
-            stat = begin_cb(p->client);
-         if (stat) { p->state = S_STOP; return stat; }
+            stat = begin_cb(req->client);
+         if (stat) { req->state = S_STOP; return stat; }
          // Send method
          method = http_method_str(parser->method);
          if(method_cb)
-            stat = method_cb(p->client, method, strlen(method));
+            stat = method_cb(req->client, method, strlen(method));
 
-         if (stat) { p->state = S_STOP; return stat; }
+         if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
-         p->state = S_ERROR;
+         req->state = S_ERROR;
          return 1;
    }
 }
@@ -207,22 +208,22 @@ static int parser_msg_begin(http_parser *parser)
 static int parser_url(http_parser *parser, const char *buf, size_t len)
 {
    int stat = 0;
-   struct httpws_parser *p = parser->data;
-   struct httpws_settings *settings = p->settings;
+   struct http_request *req = parser->data;
+   struct httpws_settings *settings = req->settings;
    httpws_data_cb url_cb = settings->on_req_url;
 
-   switch (p->state) {
+   switch (req->state) {
       case S_STOP:
          return 1;
       case S_BEGIN:
-         p->state = S_URL;
+         req->state = S_URL;
       case S_URL:
          if(url_cb)
-            stat = url_cb(p->client, buf, len);
-         if (stat) { p->state = S_STOP; return stat; }
+            stat = url_cb(req->client, buf, len);
+         if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
-         p->state = S_ERROR;
+         req->state = S_ERROR;
          return 1;
    }
 }
@@ -243,27 +244,27 @@ static int parser_url(http_parser *parser, const char *buf, size_t len)
 static int parser_hdr_field(http_parser *parser, const char *buf, size_t len)
 {
    int stat = 0;
-   struct httpws_parser *p = parser->data;
-   struct httpws_settings *settings = p->settings;
+   struct http_request *req = parser->data;
+   struct httpws_settings *settings = req->settings;
    httpws_nodata_cb url_cmpl_cb = settings->on_req_url_cmpl;
    httpws_data_cb header_field_cb = settings->on_req_hdr_field;
 
-   switch (p->state) {
+   switch (req->state) {
       case S_STOP:
          return 1;
       case S_URL:
          if(url_cmpl_cb)
-            stat = url_cmpl_cb(p->client);
-         if (stat) { p->state = S_STOP; return stat; }
+            stat = url_cmpl_cb(req->client);
+         if (stat) { req->state = S_STOP; return stat; }
       case S_HEADER_VALUE:
-         p->state = S_HEADER_FIELD;
+         req->state = S_HEADER_FIELD;
       case S_HEADER_FIELD:
          if(header_field_cb)
-            stat = header_field_cb(p->client, buf, len);
-         if (stat) { p->state = S_STOP; return stat; }
+            stat = header_field_cb(req->client, buf, len);
+         if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
-         p->state = S_ERROR;
+         req->state = S_ERROR;
          return 1;
    }
 }
@@ -283,22 +284,22 @@ static int parser_hdr_field(http_parser *parser, const char *buf, size_t len)
 static int parser_hdr_value(http_parser *parser, const char *buf, size_t len)
 {
    int stat = 0;
-   struct httpws_parser *p = parser->data;
-   struct httpws_settings *settings = p->settings;
+   struct http_request *req = parser->data;
+   struct httpws_settings *settings = req->settings;
    httpws_data_cb header_value_cb = settings->on_req_hdr_value;
 
-   switch (p->state) {
+   switch (req->state) {
       case S_STOP:
          return 1;
       case S_HEADER_FIELD:
-         p->state = S_HEADER_VALUE;
+         req->state = S_HEADER_VALUE;
       case S_HEADER_VALUE:
          if(header_value_cb)
-            stat = header_value_cb(p->client, buf, len);
-         if (stat) { p->state = S_STOP; return stat; }
+            stat = header_value_cb(req->client, buf, len);
+         if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
-         p->state = S_ERROR;
+         req->state = S_ERROR;
          return 1;
    }
 }
@@ -318,26 +319,26 @@ static int parser_hdr_value(http_parser *parser, const char *buf, size_t len)
 static int parser_hdr_cmpl(http_parser *parser)
 {
    int stat = 0;
-   struct httpws_parser *p = parser->data;
-   struct httpws_settings *settings = p->settings;
+   struct http_request *req = parser->data;
+   struct httpws_settings *settings = req->settings;
    httpws_nodata_cb url_cmpl_cb = settings->on_req_url_cmpl;
    httpws_nodata_cb header_cmpl_cb = settings->on_req_hdr_cmpl;
 
-   switch (p->state) {
+   switch (req->state) {
       case S_STOP:
          return 1;
       case S_URL:
          if(url_cmpl_cb)
-            stat = url_cmpl_cb(p->client);
-         if (stat) { p->state = S_STOP; return stat; }
+            stat = url_cmpl_cb(req->client);
+         if (stat) { req->state = S_STOP; return stat; }
       case S_HEADER_VALUE:
-         p->state = S_HEADER_COMPLETE;
+         req->state = S_HEADER_COMPLETE;
          if(header_cmpl_cb)
-            stat = header_cmpl_cb(p->client);
-         if (stat) { p->state = S_STOP; return stat; }
+            stat = header_cmpl_cb(req->client);
+         if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
-         p->state = S_ERROR;
+         req->state = S_ERROR;
          return 1;
    }
 }
@@ -357,22 +358,22 @@ static int parser_hdr_cmpl(http_parser *parser)
 static int parser_body(http_parser *parser, const char *buf, size_t len)
 {
    int stat = 0;
-   struct httpws_parser *p = parser->data;
-   struct httpws_settings *settings = p->settings;
+   struct http_request *req = parser->data;
+   struct httpws_settings *settings = req->settings;
    httpws_data_cb body_cb = settings->on_req_body;
 
-   switch (p->state) {
+   switch (req->state) {
       case S_STOP:
          return 1;
       case S_HEADER_COMPLETE:
-         p->state = S_BODY;
+         req->state = S_BODY;
       case S_BODY:
          if(body_cb)
-            stat = body_cb(p->client, buf, len);
-         if (stat) { p->state = S_STOP; return stat; }
+            stat = body_cb(req->client, buf, len);
+         if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
-         p->state = S_ERROR;
+         req->state = S_ERROR;
          return 1;
    }
 }
@@ -388,22 +389,22 @@ static int parser_body(http_parser *parser, const char *buf, size_t len)
 static int parser_msg_cmpl(http_parser *parser)
 {
    int stat = 0;
-   struct httpws_parser *p = parser->data;
-   struct httpws_settings *settings = p->settings;
+   struct http_request *req = parser->data;
+   struct httpws_settings *settings = req->settings;
    httpws_nodata_cb complete_cb = settings->on_req_cmpl;
 
-   switch (p->state) {
+   switch (req->state) {
       case S_STOP:
          return 1;
       case S_HEADER_COMPLETE:
       case S_BODY:
-         p->state = S_COMPLETE;
+         req->state = S_COMPLETE;
          if(complete_cb)
-            stat = complete_cb(p->client);
-         if (stat) { p->state = S_STOP; return stat; }
+            stat = complete_cb(req->client);
+         if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
-         p->state = S_ERROR;
+         req->state = S_ERROR;
          return 1;
    }
 }
@@ -420,26 +421,28 @@ static int parser_msg_cmpl(http_parser *parser)
  *                   call on events.
  *  @return The newly create ws_request.
  */
-struct httpws_parser *httpws_parser_create(
-      struct httpws_client *client,
-      struct httpws_settings *settings)
+struct http_request *http_request_create(
+      struct httpws *webserver,
+      struct httpws_settings *settings,
+      struct ws_client *client)
 {
-   struct httpws_parser *p = malloc(sizeof(struct httpws_parser));
-	if(p == NULL) {
+   struct http_request *req = malloc(sizeof(struct http_request));
+	if(req == NULL) {
 		fprintf(stderr, "ERROR: Cannot allocate memory\n");
 		return NULL;
 	}
 
    // Init references
-   p->client = client;
-   p->settings = settings;
+   req->webserver = webserver;
+   req->client = client;
+   req->settings = settings;
 
    // Init parser
-   http_parser_init(&(p->parser), HTTP_REQUEST);
-   p->parser.data = p;
-   p->state = S_START;
+   http_parser_init(&(req->parser), HTTP_REQUEST);
+   req->parser.data = req;
+   req->state = S_START;
 
-   return p;
+   return req;
 }
 
 /// Destroy a ws_request
@@ -449,9 +452,9 @@ struct httpws_parser *httpws_parser_create(
  *
  *  @param req The request to be destroyed.
  */
-void httpws_parser_destroy(struct httpws_parser *p)
+void http_request_destroy(struct http_request *req)
 {
-   free(p);
+   free(req);
 }
 
 /// Parse a new chunk of the message.
@@ -466,11 +469,11 @@ void httpws_parser_destroy(struct httpws_parser *p)
  *  @param  len Length of the chuck.
  *  @return What http_parser_execute() returns.
  */
-size_t httpws_parser_parse(
-      struct httpws_parser *p,
+size_t http_request_parse(
+      struct http_request *req,
       const char *buf,
       size_t len)
 {
-   return http_parser_execute(&p->parser, &parser_settings, buf, len);
+   return http_parser_execute(&req->parser, &parser_settings, buf, len);
 }
 
