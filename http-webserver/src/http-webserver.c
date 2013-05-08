@@ -49,15 +49,12 @@ struct httpws {
 static int on_connect(struct ws *instance, struct ws_client *client,
                       void *http_ins, void **req)
 {
-   struct httpws *parent = ws_get_ctx(instance);
+   struct httpws *parent = http_ins;
    *req = http_request_create(parent, &parent->settings, client);
    if (!req) {
       fprintf(stderr, "Not enough memory for client\n");
       return 1;
    }
-   
-   // Set it as client context
-   ws_client_set_ctx(client, req);
 
    return 0;
 }
@@ -67,7 +64,7 @@ static int on_receive(struct ws *instance, struct ws_client *client,
                       void *http_ins, void **req,
                       const char *buf, size_t len)
 {
-   httpws_parser_parse(*req, buf, len);
+   http_request_parse(*req, buf, len);
 
    return 0;
 }
