@@ -1,4 +1,4 @@
-// client.h
+// http-webserver.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
  *   
@@ -31,19 +31,22 @@
  *  as representing official policies, either expressed.
  */
 
-#ifndef CLIENT_H
-#define CLIENT_H
+#ifndef WS_TYPES_H
+#define WS_TYPES_H
 
-#include "webserver.h"
+// Port numbers are assigned according to
+// http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml
+// (Site may have very long loading time)
+#define WS_PORT_MAP(XX) \
+   XX(  80, HTTP    ) \
+   XX( 443, HTTPS   ) \
+   XX(8080, HTTP_ALT)
 
-struct ev_io;
-struct libws_client;
-
-void libws_client_accept(
-      struct ev_loop *loop,
-      struct ev_io *watcher,
-      int revents);
-void libws_client_kill(struct libws_client *client);
-void libws_client_killall(struct ws *instance);
+enum ws_port
+{
+#define XX(num, str) WS_PORT_##str = num,
+   WS_PORT_MAP(XX)
+#undef XX
+};
 
 #endif

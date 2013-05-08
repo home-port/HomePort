@@ -28,10 +28,9 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Main library
-add_library(libREST
-      instance.c
-      request.c
-      )
-target_link_libraries(libREST urlparser trie)
+include_directories(${PROJECT_SOURCE_DIR}/misc/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+add_subdirectory(src)
+add_subdirectory(example)
 

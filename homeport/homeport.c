@@ -38,85 +38,100 @@
 #include <string.h>
 #include <ev.h>
 
-// Server instance
-static struct ws *ws = NULL;
-static struct lr *lr = NULL;
-
-// Handle requests
-static int request_begin_cb(void *_req)
-{
-   struct ws_request *req = _req;
-   void *lr_req = lr_request_create(lr);
-
-   ws_request_set_data(req, lr_req);
-
-   return 0;
-}
-
-// Clean up requests
-static int request_cmpl_cb(void *_lr_req)
-{
-   struct lr_request *lr_req = _lr_req;
-
-   lr_request_cmpl(lr_req);
-   lr_request_destroy(lr_req);
-
-   return 0;
-}
-
-// Shutdown webserver and exit
-static void exit_cb(int sig)
-{
-   if (ws != NULL) {
-      ws_stop(ws);
-      ws_destroy(ws);
-   }
-   if (lr != NULL) {
-      lr_destroy(lr);
-   }
-   printf("Exiting...\n");
-   exit(sig);
-}
+//// Server instance
+//static struct ws *ws = NULL;
+//static struct lr *lr = NULL;
+//
+//// Handle requests
+//static int request_begin_cb(void *_req)
+//{
+//   struct ws_request *req = _req;
+//   void *lr_req = lr_request_create(lr, req);
+//
+//   ws_request_set_data(req, lr_req);
+//
+//   return 0;
+//}
+//
+//static void my_get(void *data, const char *url, size_t len)
+//{
+//   printf("Get on: %.*s\n", (int)len, url);
+//   struct ws_request *req = data;
+//
+//   struct ws_response *response = ws_response_create(req, 200);
+//   ws_response_add_body(response, "hello world",11);
+//
+//   ws_response_send(response);
+//   ws_response_destroy(response);
+//}
+//
+//// Clean up requests
+//static int request_cmpl_cb(void *_lr_req)
+//{
+//   struct lr_request *lr_req = _lr_req;
+//
+//   lr_request_cmpl(lr_req);
+//   lr_request_destroy(lr_req);
+//
+//   return 0;
+//}
+//
+//// Shutdown webserver and exit
+//static void exit_cb(int sig)
+//{
+//   if (ws != NULL) {
+//      ws_stop(ws);
+//      ws_destroy(ws);
+//   }
+//   if (lr != NULL) {
+//      lr_destroy(lr);
+//   }
+//   printf("Exiting...\n");
+//   exit(sig);
+//}
 
 // Main function
 int main(int argc, char *argv[])
 {
-   struct ev_loop *loop = EV_DEFAULT;
-   struct ws_settings ws_settings = WS_SETTINGS_DEFAULT;
-
-   // Set settings for webserver
-   ws_settings.port = WS_PORT_HTTP_ALT;
-
-   // Set up url parser for url parsing
-   ws_settings.on_request_begin = request_begin_cb;
-   ws_settings.on_request_method = lr_request_method;
-   ws_settings.on_request_url = lr_request_url;
-   ws_settings.on_request_url_complete = lr_request_url_cmpl;
-   ws_settings.on_request_header_field = lr_request_hdr_field;
-   ws_settings.on_request_header_value = lr_request_hdr_value;
-   ws_settings.on_request_header_complete = lr_request_hdr_cmpl;
-   ws_settings.on_request_body = lr_request_body;
-   ws_settings.on_request_complete = request_cmpl_cb;
-
-   // Connect signals for handling exiting correctly
-   signal(SIGINT, exit_cb);
-   signal(SIGTERM, exit_cb);
-
-#ifdef DEBUG
-   printf("Debugging is set\n");
-#endif
-
-   // Init webserver and start it
-   ws = ws_create(&ws_settings, loop);
-   ws_start(ws);
-
-   // Init libREST
-   lr = lr_create();
-
-   // Start the event loop
-   ev_run(loop, 0);
-
-   // Exit
-   exit(0);
+//   struct ev_loop *loop = EV_DEFAULT;
+//   struct ws_settings ws_settings = WS_SETTINGS_DEFAULT;
+//
+//   // Set settings for webserver
+//   ws_settings.port = WS_PORT_HTTP_ALT;
+//
+//   // Set up url parser for url parsing
+//   ws_settings.on_request_begin = request_begin_cb;
+//   ws_settings.on_request_method = lr_request_method;
+//   ws_settings.on_request_url = lr_request_url;
+//   ws_settings.on_request_url_complete = lr_request_url_cmpl;
+//   ws_settings.on_request_header_field = lr_request_hdr_field;
+//   ws_settings.on_request_header_value = lr_request_hdr_value;
+//   ws_settings.on_request_header_complete = lr_request_hdr_cmpl;
+//   ws_settings.on_request_body = lr_request_body;
+//   ws_settings.on_request_complete = request_cmpl_cb;
+//
+//   // Connect signals for handling exiting correctly
+//   signal(SIGINT, exit_cb);
+//   signal(SIGTERM, exit_cb);
+//
+//#ifdef DEBUG
+//   printf("Debugging is set\n");
+//#endif
+//
+//   // Init libREST
+//   lr = lr_create();
+//
+//   // Create services
+//   lr_register_service(lr, "/homeport/devices", my_get, NULL, NULL, NULL);
+//
+//   // Create webserver
+//   ws = ws_create(&ws_settings, loop);
+//   ws_start(ws);
+//
+//   // Start the event loop
+//   ev_run(loop, 0);
+//
+//   // Exit
+//   exit(0);
    return 0;
 }

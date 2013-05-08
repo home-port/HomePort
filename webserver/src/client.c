@@ -33,8 +33,6 @@
 
 #include "client.h"
 #include "instance.h"
-#include "request.h"
-#include "response.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -55,7 +53,7 @@
 #define TIMEOUT 15
 
 /// All data to represent a client
-struct libws_client {
+struct ws_client {
    struct ws *instance;             ///< Webserver instance
    struct ws_settings *settings;    ///< Webserver settings
    char ip[INET6_ADDRSTRLEN];       ///< IP address of the client
@@ -63,10 +61,8 @@ struct libws_client {
    struct ev_timer timeout_watcher; ///< Timeout watcher
    struct ev_io recv_watcher;       ///< Recieve watcher
    struct ev_io send_watcher;       ///< Send watcher
-   struct ws_request *request;      ///< Current request in progress
-   struct libws_client *prev;       ///< Previous client in active list
-   struct libws_client *next;       ///< Next client in active list
    char send_msg[MAXDATASIZE];      ///< Data to send
+   void *ctx;
 };
 
 /// Get the in_addr from a sockaddr (IPv4 or IPv6)
@@ -96,7 +92,7 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
    ssize_t recieved;
    size_t parsed;
    char buffer[MAXDATASIZE];
-   struct libws_client *client = watcher->data;
+   struct ws_client *client = watcher->data;
 
    printf("recieving data from %s\n", client->ip);
 
@@ -109,23 +105,17 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
       }
       perror("recv");
       // TODO Handle errors better - look up error# etc.
-      libws_client_kill(client);
+      ws_client_kill(client);
       return;
    } else if (recieved == 0) {
       printf("connection closed by %s\n", client->ip);
-      libws_client_kill(client);
+      ws_client_kill(client);
       return;
    }
 
-   if (client->request == NULL) {
-      client->request = ws_request_create(client, client->settings);
-   }
-
-   // Parse recieved data
-   parsed = ws_request_parse(client->request, buffer, recieved);
-   if (parsed != recieved) {
-      perror("parse");
-      libws_client_kill(client);
+   if (client->settings->on_receive(client->instance, client,
+                                    buffer, recieved)) {
+      ws_client_kill(client);
       return;
    }
 
@@ -137,24 +127,24 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
 static void client_send_cb(struct ev_loop *loop, struct ev_io *watcher,
       int revents)
 {
-   struct libws_client *client = watcher->data;
+   struct ws_client *client = watcher->data;
 
    printf("sending response to %s\n", client->ip);
    if (send(watcher->fd, client->send_msg, strlen(client->send_msg), 0) == -1)
       perror("send");
    ev_io_stop(client->loop, &client->send_watcher);
 
-   libws_client_kill(client);
+   ws_client_kill(client);
 }
 
 static void client_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, int revents)
 {
-   struct libws_client *client = watcher->data;
+   struct ws_client *client = watcher->data;
    printf("timeout on %s\n", client->ip);
-   libws_client_kill(client);
+   ws_client_kill(client);
 }
 
-static void sendf(struct libws_client *client, char *fmt, ...) {
+void ws_client_sendf(struct ws_client *client, char *fmt, ...) {
    int status;
    va_list arg;
 
@@ -164,24 +154,11 @@ static void sendf(struct libws_client *client, char *fmt, ...) {
 
    if (status >= MAXDATASIZE) {
       fprintf(stderr, "Data is too large to send!");
-      libws_client_kill(client);
+      ws_client_kill(client);
       return;
    }
 
    ev_io_start(client->loop, &client->send_watcher);
-}
-
-static int send_response(
-      struct libws_client *client,
-      struct ws_response *response)
-{
-   if(response == NULL) return 0;
-   
-   // TODO: Don't call response destroy until response is sent..
-   //sendf(client, "%s", libws_response_str(response));
-   ws_response_destroy(response);
-
-   return 1;
 }
 
 /// Initialise and accept client
@@ -196,7 +173,7 @@ static int send_response(
  *  \param watcher The watcher that was tiggered on the connection.
  *  \param revents Not used.
  */
-void libws_client_accept(
+void ws_client_accept(
       struct ev_loop *loop,
       struct ev_io *watcher,
       int revents)
@@ -205,7 +182,7 @@ void libws_client_accept(
    int in_fd;
    socklen_t in_size;
    struct sockaddr_storage in_addr;
-   struct libws_client *client;
+   struct ws_client *client;
    
    // Accept connection
    in_size = sizeof in_addr;
@@ -222,26 +199,30 @@ void libws_client_accept(
    printf("got connection from %s\n", ip_string);
 
    // Create client and parser
-   client = malloc(sizeof(struct libws_client));
+   client = malloc(sizeof(struct ws_client));
    if (client == NULL) {
       fprintf(stderr, "ERROR: Cannot accept client (malloc return NULL)\n");
       return;
    }
    client->instance = watcher->data;
-   client->settings = libws_instance_get_settings(client->instance); 
+   client->settings = ws_instance_get_settings(client->instance); 
    strcpy(client->ip, ip_string);
    client->loop = loop;
    client->timeout_watcher.data = client;
    client->recv_watcher.data = client;
    client->send_watcher.data = client;
-   client->request = NULL;
+   client->ctx = NULL;
 
    // Set up list
-   client->prev = NULL;
-   client->next = libws_instance_get_first_client(client->instance);
-   if (client->next != NULL)
-      client->next->prev = client;
-   libws_instance_set_first_client(client->instance, client);
+   ws_instance_add_client(client->instance, client);
+
+   // Call back
+   if (client->settings->on_connect) {
+      if (client->settings->on_connect(client->instance, client)) {
+         ws_client_kill(client);
+         return;
+      }
+   }
 
    // Start timeout and io watcher
    ev_io_init(&client->recv_watcher, client_recv_cb, in_fd, EV_READ);
@@ -250,7 +231,6 @@ void libws_client_accept(
    ev_init(&client->timeout_watcher, client_timeout_cb);
    client->timeout_watcher.repeat = TIMEOUT;
    ev_timer_again(loop, &client->timeout_watcher);
-
 }
 
 /// Kill and clean up after a client
@@ -260,7 +240,10 @@ void libws_client_accept(
  *
  *  \param client The client to kill.
  */
-void libws_client_kill(struct libws_client *client) {
+void ws_client_kill(struct ws_client *client) {
+
+   printf("killing client %s\n", client->ip);
+
    // Stop watchers
    int sockfd = client->recv_watcher.fd;
    ev_io_stop(client->loop, &client->recv_watcher);
@@ -273,35 +256,23 @@ void libws_client_kill(struct libws_client *client) {
    }
 
    // Remove from list
-   if (client->next != NULL)
-      client->next->prev = client->prev;
-   if (client->prev != NULL) {
-      client->prev->next = client->next;
-   } else {
-      libws_instance_set_first_client(client->instance, client->next);
-   }
+   ws_instance_rm_client(client->instance, client);
+
+   // Call back
+   if (client->settings->on_disconnect)
+      client->settings->on_disconnect(client->instance, client);
 
    // Cleanup
    free(client);
 }
 
-/// Kill all clients in a runnning webserver instance
-/**
- *  Designed to be used within ws_stop, but can also be used for other
- *  purposes, where the desidered effect is to remove all clients from
- *  the event loop and close their sockets.
- *
- *  \param instance The webserver instance.
- */
-void libws_client_killall(struct ws *instance)
+void ws_client_set_ctx(struct ws_client *client, void *ctx)
 {
-   struct libws_client *next;
-   struct libws_client *client = libws_instance_get_first_client(instance);
+   client->ctx = ctx;
+}
 
-   while (client != NULL) {
-      next = client->next;
-      libws_client_kill(client);
-      client = next;
-   }
+void *ws_client_get_ctx(struct ws_client *client)
+{
+   return client->ctx;
 }
 

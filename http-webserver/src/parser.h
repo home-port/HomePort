@@ -1,4 +1,4 @@
-// request.h
+// parser.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   
@@ -31,18 +31,17 @@
 *  as representing official policies, either expressed.
 */
 
-#ifndef REQUEST_H
-#define REQUEST_H
+#ifndef PARSER_H
+#define PARSER_H
 
-#include "webserver.h"
+#include "http-webserver.h"
+#include <stddef.h>
 
-struct libws_client;
-
-struct ws_request *ws_request_create(
-      struct libws_client *client,
-      struct ws_settings *settings);
-void ws_request_destroy(struct ws_request *req);
-size_t ws_request_parse(struct ws_request *req, const char *buf, size_t len);
-struct libws_client *ws_request_get_client(struct ws_request *req);
+struct httpws_parser *httpws_parser_create(
+      struct httpws_client *client,
+      struct httpws_settings *settings);
+void httpws_parser_destroy(struct httpws_parser *p);
+size_t httpws_parser_parse(struct httpws_parser *p,
+                           const char *buf, size_t len);
 
 #endif

@@ -33,6 +33,7 @@
 
 #include "instance.h"
 #include "client.h"
+#include "linked_list.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -48,10 +49,10 @@
 
 /// Instance of a webserver
 struct ws {
-   struct ws_settings settings; ///< Settings
-   char port_str[6];               ///< Port number
+   struct ws_settings settings;    ///< Settings
+   char port_str[6];               ///< Port number - as a string
    struct ev_loop *loop;           ///< Event loop
-   void *clients;                  ///< List of connected clients
+   struct ll *clients;             ///< Linked List of connected clients
    int sockfd;                     ///< Socket file descriptor
    struct ev_io watcher;           ///< New connection watcher
 };
@@ -81,7 +82,7 @@ static int bind_listen(char *port)
    // Get address infos we later use to open socket with
    if ((status = getaddrinfo(NULL, port, &hints, &servinfo)) != 0) {
       fprintf(stderr, "getaddrinfo error: %s\n", gai_strerror(status));
-      exit(1);
+      return -1;
    }
 
    // Loop through results and bind to first
@@ -100,6 +101,7 @@ static int bind_listen(char *port)
 #ifdef DEBUG
       int yes = 1;
       if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+         close(sockfd);
          perror("setsockopt");
          continue;
       }
@@ -117,8 +119,9 @@ static int bind_listen(char *port)
 
    // Check if we binded to anything
    if (p == NULL) {
+      close(sockfd);
       fprintf(stderr, "failed to bind\n");
-      exit(1);
+      return -1;
    }
 
    // Clean up
@@ -126,11 +129,18 @@ static int bind_listen(char *port)
 
    // Listen on socket
    if (listen(sockfd, SOMAXCONN) < 0) {
+      close(sockfd);
       perror("listen");
-      exit(1);
+      return -1;
    }
 
    return sockfd;
+}
+
+void ws_destroy(struct ws *instance)
+{
+   ll_destroy(instance->clients);
+   free(instance);
 }
 
 struct ws *ws_create(
@@ -138,9 +148,9 @@ struct ws *ws_create(
       struct ev_loop *loop)
 {
    struct ws *instance = malloc(sizeof(struct ws));
-   if(instance == NULL)
-   {
-      fprintf(stderr, "ERROR: Cannot allocate memory for a new instance struct\n");
+   if (instance == NULL) {
+      fprintf(stderr, "ERROR: Cannot allocate memory for a new " \
+                      "webserver struct\n");
       return NULL;
    }
 
@@ -148,14 +158,15 @@ struct ws *ws_create(
    sprintf(instance->port_str, "%i", settings->port);
 
    instance->loop = loop;
-   instance->clients = NULL;
+   ll_create(instance->clients);
+   if (instance->clients == NULL) {
+      fprintf(stderr, "ERROR: Cannot allocate memory for a new " \
+                      "webserver struct\n");
+      ws_destroy(instance);
+      return NULL;
+   }
 
    return instance;
-}
-
-void ws_destroy(struct ws *instance)
-{
-   free(instance);
 }
 
 /// Start the webserver
@@ -169,7 +180,7 @@ void ws_destroy(struct ws *instance)
  *  \param instance The webserver instance to start. Initialised with
  *  ws_init();
  */
-void ws_start(struct ws *instance)
+int ws_start(struct ws *instance)
 {
    // Check loop
    if (instance->loop == NULL) {
@@ -178,12 +189,24 @@ void ws_start(struct ws *instance)
       instance->loop = EV_DEFAULT;
    }
 
-   // Start server
-   fprintf(stderr, "Starting server on port '%s'\n", instance->port_str);
+   // Print message
+   printf("Starting server on port '%s'\n", instance->port_str);
+
+   // Bind to socket
    instance->sockfd = bind_listen(instance->port_str);
+   if (instance->sockfd < 0) {
+      fprintf(stderr, "Could not bind to port [%s]\n",
+            instance->port_str);
+      return 1;
+   }
+
+   // Set listener on libev
    instance->watcher.data = instance;
-   ev_io_init(&instance->watcher, libws_client_accept, instance->sockfd, EV_READ);
+   ev_io_init(&instance->watcher, ws_client_accept, instance->sockfd,
+              EV_READ);
    ev_io_start(instance->loop, &instance->watcher);
+
+   return 0;
 }
 
 /// Stop an already running webserver.
@@ -196,11 +219,15 @@ void ws_start(struct ws *instance)
  */
 void ws_stop(struct ws *instance)
 {
+   struct ll_iter *it;
+
    // Stop accept watcher
    ev_io_stop(instance->loop, &instance->watcher);
 
    // Kill all clients
-   libws_client_killall(instance);
+   for (it = ll_head(instance->clients); it != NULL; it = ll_next(it)) {
+      ws_client_kill(ll_data(it));
+   }
 
    // Close socket
    if (close(instance->sockfd) != 0) {
@@ -208,22 +235,36 @@ void ws_stop(struct ws *instance)
    }
 }
 
-struct ws_settings *libws_instance_get_settings(
+struct ws_settings *ws_instance_get_settings(
       struct ws *instance)
 {
    return &instance->settings;
 }
 
-struct libws_client *libws_instance_get_first_client(
-      struct ws *instance)
+int ws_instance_add_client(struct ws *instance, struct ws_client
+      *client)
 {
-   return instance->clients;
+   struct ll_iter *it = ll_tail(instance->clients);
+   ll_insert(instance->clients, it, client);
+   if (it) it = ll_next(it);
+   else it = ll_tail(instance->clients);
+   if (it == NULL) {
+      fprintf(stderr, "Not enough memory to add client\n");
+      return 1;
+   }
+   return 0;
 }
 
-void libws_instance_set_first_client(
-      struct ws *instance,
-      struct libws_client *client)
+void ws_instance_rm_client(struct ws *instance, struct ws_client
+      *client)
 {
-   instance->clients = client;
+   struct ll_iter *iter;
+
+   ll_find(iter, instance->clients, client);
+   ll_remove(iter);
 }
 
+void *ws_get_ctx(struct ws *instance)
+{
+   return instance->settings.ws_ctx;
+}

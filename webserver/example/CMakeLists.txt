@@ -28,10 +28,10 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Main library
-add_library(libREST
-      instance.c
-      request.c
+# Echo webserver
+add_executable(echo-server EXCLUDE_FROM_ALL
+      echo.c
       )
-target_link_libraries(libREST urlparser trie)
+target_link_libraries(echo-server webserver)
+add_dependencies(example echo-server)
 

@@ -62,6 +62,11 @@ TrieNode* create_trie()
    return root;
 }
 
+void destroy_trie(TrieNode* root)
+{
+   fprintf(stderr, "Remember to code the trie destroy function!!!\n");
+}
+
 ListElement* insert_trie_key(TrieNode* root, char* key)
 {
    printf("Inserting %s\n",key);

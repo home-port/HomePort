@@ -29,9 +29,9 @@
 # as representing official policies, either expressed.
 
 # Main library
-add_library(libREST
+add_library(webserver
       instance.c
-      request.c
+      client.c
       )
-target_link_libraries(libREST urlparser trie)
+target_link_libraries(webserver ev)
 

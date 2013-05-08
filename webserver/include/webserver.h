@@ -43,59 +43,22 @@
 #define WEBSERVER_H
 
 #include <stddef.h>
-
-// HTTP status codes according to
-// http://www.w3.org/Protocols/rfc2616/rfc2616.html
-#define WS_HTTP_STATUS_CODE_MAP(XX) \
-	XX(200,200 OK) \
-	XX(404,404 Not Found)
-
-enum ws_http_status_code
-{
-#define XX(num, str) WS_HTTP_##num = num,
-	WS_HTTP_STATUS_CODE_MAP(XX)
-#undef XX
-};
-
-// Port numbers are assigned according to
-// http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml
-// (Site may have very long loading time)
-#define WS_PORT_MAP(XX) \
-   XX(  80, HTTP    ) \
-   XX( 443, HTTPS   ) \
-   XX(8080, HTTP_ALT)
-
-enum ws_port
-{
-#define XX(num, str) WS_PORT_##str = num,
-   WS_PORT_MAP(XX)
-#undef XX
-};
+#include "ws_types.h"
 
 // Structs
 struct ev_loop;
 struct ws;
-struct ws_request;
-struct ws_response;
+struct ws_client;
 
 /**********************************************************************
  *  Callbacks                                                         *
  **********************************************************************/
 
-/// No-data callback
-/**
- *  Request is of type struct ws_request *, but is supplied as void *
- *  for compatability with url parser.
- */
-typedef int (*nodata_cb)(void *data);
-
-/// Data callback (Do not expect buf to be null terminated)
-/**
- *  Request is of type struct ws_request *, but is supplied as void *
- *  for compatability with url parser.
- */
-typedef int (*data_cb)(void *data,
-      const char *buf, size_t len);
+typedef int  (*ws_nodata_cb)(struct ws *instance,
+                             struct ws_client *client);
+typedef int  (*ws_data_cb)  (struct ws *instance,
+                             struct ws_client *client,
+                             const char *buf, size_t len);
 
 /// Settings struct for webserver
 /**
@@ -136,16 +99,11 @@ typedef int (*data_cb)(void *data,
  *  \enddot
  */
 struct ws_settings {
-   enum ws_port port;                    ///< Port number
-   nodata_cb on_request_begin;           ///< Request begin
-   data_cb   on_request_method;          ///< HTTP Method
-   data_cb   on_request_url;             ///< URL chunks
-   nodata_cb on_request_url_complete;    ///< URL complete
-   data_cb   on_request_header_field;    ///< Header field chunks
-   data_cb   on_request_header_value;    ///< Header value chunks
-   nodata_cb on_request_header_complete; ///< Header complete
-   data_cb   on_request_body;            ///< Body chunks
-   nodata_cb on_request_complete;        ///< Request complete
+   enum ws_port port; ///< Port number
+   ws_nodata_cb on_connect;
+   ws_data_cb   on_receive;
+   ws_nodata_cb on_disconnect;
+   void *ws_ctx;
 };
 
 /// Default settings for webserver
@@ -157,35 +115,23 @@ struct ws_settings {
  */
 #define WS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
-   .on_request_begin = NULL, \
-   .on_request_method = NULL, \
-   .on_request_url = NULL, \
-   .on_request_url_complete = NULL, \
-   .on_request_header_field = NULL, \
-   .on_request_header_value = NULL, \
-   .on_request_header_complete = NULL, \
-   .on_request_body = NULL, \
-   .on_request_complete = NULL }
+   .on_connect = NULL, \
+   .on_receive = NULL, \
+   .on_disconnect = NULL, \
+   .ws_ctx = NULL }
 
 // Webserver functions
 struct ws *ws_create(struct ws_settings *settings, struct ev_loop *loop);
 void ws_destroy(struct ws *instance);
-void ws_start(struct ws *instance);
+int ws_start(struct ws *instance);
 void ws_stop(struct ws *instance);
+void *ws_get_ctx(struct ws *instance);
 
-// Response functions
-struct ws_response *ws_response_create(
-      struct ws_request *req,
-      enum ws_http_status_code status);
-void ws_response_destroy(struct ws_response *res);
-int ws_response_add_header_field(struct ws_response *res,
-      const char *buf, size_t len);
-int ws_response_add_header_value(struct ws_response *res,
-      const char *buf, size_t len);
-int ws_response_add_body(struct ws_response *res,
-      const char *buf, size_t len);
-
-void ws_request_set_data(struct ws_request *req, void *data);
+// Client functions
+void ws_client_set_ctx(struct ws_client *client, void *ctx);
+void *ws_client_get_ctx(struct ws_client *client);
+void ws_client_kill(struct ws_client *client);
+void ws_client_sendf(struct ws_client *client, char *fmt, ...);
 
 #endif
 

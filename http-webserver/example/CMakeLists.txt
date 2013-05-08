@@ -28,10 +28,10 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Main library
-add_library(libREST
-      instance.c
-      request.c
+# Greetings http-webserver
+add_executable(greeting-server EXCLUDE_FROM_ALL
+      greeting.c
       )
-target_link_libraries(libREST urlparser trie)
+target_link_libraries(greeting-server http-webserver)
+add_dependencies(example greeting-server)
 
