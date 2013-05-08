@@ -192,7 +192,7 @@ static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revent
          return;
       }
       perror("recv");
-      // TODO Handle errors better - look up error# etc.
+      // TODO Handle errors better - look up error# etc. 
       ws_conn_kill(conn);
       return;
    } else if (recieved == 0) {
