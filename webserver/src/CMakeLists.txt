@@ -30,8 +30,7 @@
 
 # Main library
 add_library(webserver
-      instance.c
-      client.c
+      webserver.c
       )
 target_link_libraries(webserver ev)
 
