@@ -179,7 +179,6 @@ static void *get_in_addr(struct sockaddr *sa)
 static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revents)
 {
    ssize_t recieved;
-   size_t parsed;
    char buffer[MAXDATASIZE];
    struct ws_conn *conn = watcher->data;
 
