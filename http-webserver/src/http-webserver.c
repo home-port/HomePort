@@ -105,6 +105,8 @@ struct httpws *httpws_create(struct httpws_settings *settings,
 
    // Create webserver
    instance->webserver = ws_create(&ws_settings, loop);
+
+   return instance;
 }
 
 /// Destroy a http-server instance (remember to stop first)

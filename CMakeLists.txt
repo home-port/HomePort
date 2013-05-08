@@ -31,7 +31,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(HOMEPORT C)
 
-set(CMAKE_C_FLAGS_DEBUG "-DDEBUG")
+set(CMAKE_C_FLAGS_DEBUG "-DDEBUG -Wall")
 
 enable_testing()
 
