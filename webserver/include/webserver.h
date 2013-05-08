@@ -125,7 +125,6 @@ struct ws *ws_create(struct ws_settings *settings, struct ev_loop *loop);
 void ws_destroy(struct ws *instance);
 int ws_start(struct ws *instance);
 void ws_stop(struct ws *instance);
-void *ws_get_ctx(struct ws *instance);
 
 // Client functions
 void ws_client_kill(struct ws_client *client);
