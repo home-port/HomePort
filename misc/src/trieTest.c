@@ -26,13 +26,13 @@ int main()
    ListElement *fish = insert_trie_key(root, "fiskekutter\0");
    char *thxForAllTheFish = "poppeye the sailor man!\0";
    set_listElement_value(fish, thxForAllTheFish);
-
+   
    ListElement *aab = insert_trie_key(root, "ab\0");
    char *aab2 = "A football club!\0";
    set_listElement_value(aab, aab2);
-
+   
    ListElement *inTheTrie = lookup_trieNode(root, "abe\0");
-
+   printf("helllllllllllllo\n");
    char *out = (char*)get_listElement_value(inTheTrie);
 
    printf("Lookup of abe: %s\n",out);
@@ -75,7 +75,8 @@ int main()
 
    printf("Whos the strongest man in the world? %s\n",(char*)(get_listElement_value(lookup_trieNode(root,"fiskekutter\0"))));
 
-
+   printf("removing abekat\n");
+   remove_trie_key(root,"abekat\0");
    // INSERTION OF ABEKAT
 
 

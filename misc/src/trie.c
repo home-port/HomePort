@@ -76,6 +76,7 @@ ListElement* insert_trie_key(TrieNode* root, char* key)
    {
       LinkedList* list = create_linkedList();
       ListElement* element = insert_listElement(list, key, NULL);
+      printf("key actually inserted: %s\n", element->key);
       root->children = list;
       return element;
    }
@@ -247,3 +248,87 @@ ListElement* lookup_trieNode(TrieNode* root, char* key)
    }
    return NULL;
 }
+
+void remove_trie_key(TrieNode* root, char* key)
+{
+   if(root->children == NULL)
+      return;
+         
+   unsigned int current_pos = 0, tmp_pos = 0;
+   TrieNode* treeElement = root;
+   ListElement *parent = NULL, *listElement = root->children->head;
+   char* listkey = listElement->key;
+   
+   while(listElement!=NULL)
+   {
+      tmp_pos = 0;
+
+      if(listkey[tmp_pos] == key[current_pos])
+      {
+         current_pos++;
+         tmp_pos++;
+         while(listkey[tmp_pos] != '\0'&& key[current_pos]!=
+               '\0' && listkey[tmp_pos] == key[current_pos]){
+            current_pos++;
+            tmp_pos++;
+
+         }
+         if(listkey[tmp_pos] == '\0'&& key[current_pos] == '\0')
+         {
+            //case: key is only child, and parent has no value
+            if(treeElement->children->head->next == NULL && parent->value != NULL)
+            {
+               parent->key == strcat(parent->key,treeElement->children->head->key);
+            }
+            //case: key is a subset of another key
+            if(listElement->node != NULL)
+            {
+               //key has only one child, colaps onto keys listElement
+               if(listElement->node->children->head->next != NULL)
+               {
+                  listElement->value = listElement->node->children->head->value;
+                  listElement->key = realloc(listElement->key,strlen(listElement->node->children->head->key)*(sizeof(char)));
+                  //freeing the keys child
+                  struct LinkedList *tmp_ll = listElement->node->children;
+                  listElement->node = listElement->node->children->head->node;                  
+                  destroy_linkedList(tmp_ll);
+                  return;
+               } else //key has multiple children, simply remove value
+               {
+                  listElement->value = NULL;
+                  return;
+               }
+            }
+            remove_listElement(treeElement->children,listkey);
+            // case: only one child left and parent is not end of another key
+            return; 
+         }
+         else if(listkey[tmp_pos] == '\0')
+         {
+            treeElement = listElement->node;
+            if(treeElement == NULL || treeElement->children == NULL)
+               return;
+
+            listElement = treeElement->children->head;
+            listkey = listElement->key;
+            continue;
+         }
+         else 
+         {
+            return;
+         }
+      }
+      parent = listElement;
+      listElement = listElement->next;
+      if(listElement != NULL)
+         listkey = listElement->key;
+   }
+   return;     
+}
+
+
+
+
+
+
+
