@@ -28,19 +28,6 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Hashtable
-add_library(hashtable
-      hashtable.c
-      )
-
-# Hashtable Test
-add_executable(hashtable_test EXCLUDE_FROM_ALL
-      hashtable_test.c
-      hashtable.c
-      )
-add_test(hashtable_test ${CMAKE_CURRENT_BINARY_DIR}/hashtable_test)
-add_dependencies(check hashtable_test)
-
 # Linkedlist
 add_library(linkedlist
       linkedlist.c

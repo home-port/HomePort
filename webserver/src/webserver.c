@@ -376,16 +376,6 @@ void ws_client_kill(struct ws_client *client) {
    free(client);
 }
 
-void ws_client_set_ctx(struct ws_client *client, void *ctx)
-{
-   client->ctx = ctx;
-}
-
-void *ws_client_get_ctx(struct ws_client *client)
-{
-   return client->ctx;
-}
-
 void ws_destroy(struct ws *instance)
 {
    ll_destroy(instance->clients);
