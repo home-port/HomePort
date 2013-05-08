@@ -50,7 +50,7 @@
 /// The maximum data size we can recieve or send
 #define MAXDATASIZE 1024
 
-/// The amount of time a client may be inactive, in seconds
+/// The amount of time a connection may be inactive, in seconds
 #define TIMEOUT 15
 
 /// Instance of a webserver
@@ -58,15 +58,15 @@ struct ws {
    struct ws_settings settings;    ///< Settings
    char port_str[6];               ///< Port number - as a string
    struct ev_loop *loop;           ///< Event loop
-   struct ll *clients;             ///< Linked List of connected clients
+   struct ll *conns;             ///< Linked List of connections
    int sockfd;                     ///< Socket file descriptor
    struct ev_io watcher;           ///< New connection watcher
 };
 
-/// All data to represent a client
-struct ws_client {
+/// All data to represent a connection
+struct ws_conn {
    struct ws *instance;             ///< Webserver instance
-   char ip[INET6_ADDRSTRLEN];       ///< IP address of the client
+   char ip[INET6_ADDRSTRLEN];       ///< IP address of the connection
    struct ev_timer timeout_watcher; ///< Timeout watcher
    struct ev_io recv_watcher;       ///< Recieve watcher
    struct ev_io send_watcher;       ///< Send watcher
@@ -176,90 +176,90 @@ static void *get_in_addr(struct sockaddr *sa)
    }
 }
 
-static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revents)
+static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revents)
 {
    ssize_t recieved;
    size_t parsed;
    char buffer[MAXDATASIZE];
-   struct ws_client *client = watcher->data;
+   struct ws_conn *conn = watcher->data;
 
-   printf("recieving data from %s\n", client->ip);
+   printf("recieving data from %s\n", conn->ip);
 
    // Receive some data
    if ((recieved = recv(watcher->fd, buffer, MAXDATASIZE-1, 0)) < 0) {
       if (recieved == -1 && errno == EWOULDBLOCK) {
          fprintf(stderr, "libev callbacked called without data to " \
-                         "recieve (client: %s)", client->ip);
+                         "recieve (conn: %s)", conn->ip);
          return;
       }
       perror("recv");
       // TODO Handle errors better - look up error# etc.
-      ws_client_kill(client);
+      ws_conn_kill(conn);
       return;
    } else if (recieved == 0) {
-      printf("connection closed by %s\n", client->ip);
-      ws_client_kill(client);
+      printf("connection closed by %s\n", conn->ip);
+      ws_conn_kill(conn);
       return;
    }
 
-   if (client->instance->settings.on_receive(client->instance, client, 
-                                             client->instance->settings.ws_ctx, &client->ctx, buffer, recieved)) {
-      ws_client_kill(client);
+   if (conn->instance->settings.on_receive(conn->instance, conn, 
+                                             conn->instance->settings.ws_ctx, &conn->ctx, buffer, recieved)) {
+      ws_conn_kill(conn);
       return;
    }
 
    // Reset timeout
-   client->timeout_watcher.repeat = TIMEOUT;
-   ev_timer_again(loop, &client->timeout_watcher);
+   conn->timeout_watcher.repeat = TIMEOUT;
+   ev_timer_again(loop, &conn->timeout_watcher);
 }
 
-static void client_send_cb(struct ev_loop *loop, struct ev_io *watcher,
+static void conn_send_cb(struct ev_loop *loop, struct ev_io *watcher,
       int revents)
 {
-   struct ws_client *client = watcher->data;
+   struct ws_conn *conn = watcher->data;
 
-   printf("sending response to %s\n", client->ip);
-   if (send(watcher->fd, client->send_msg, strlen(client->send_msg), 0) == -1)
+   printf("sending response to %s\n", conn->ip);
+   if (send(watcher->fd, conn->send_msg, strlen(conn->send_msg), 0) == -1)
       perror("send");
-   ev_io_stop(client->instance->loop, &client->send_watcher);
+   ev_io_stop(conn->instance->loop, &conn->send_watcher);
 
-   ws_client_kill(client);
+   ws_conn_kill(conn);
 }
 
-static void client_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, int revents)
+static void conn_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, int revents)
 {
-   struct ws_client *client = watcher->data;
-   printf("timeout on %s\n", client->ip);
-   ws_client_kill(client);
+   struct ws_conn *conn = watcher->data;
+   printf("timeout on %s\n", conn->ip);
+   ws_conn_kill(conn);
 }
 
-int ws_instance_add_client(struct ws *instance, struct ws_client
-      *client)
+int ws_instance_add_conn(struct ws *instance, struct ws_conn
+      *conn)
 {
-   struct ll_iter *it = ll_tail(instance->clients);
-   ll_insert(instance->clients, it, client);
+   struct ll_iter *it = ll_tail(instance->conns);
+   ll_insert(instance->conns, it, conn);
    if (it) it = ll_next(it);
-   else it = ll_tail(instance->clients);
+   else it = ll_tail(instance->conns);
    if (it == NULL) {
-      fprintf(stderr, "Not enough memory to add client\n");
+      fprintf(stderr, "Not enough memory to add connection\n");
       return 1;
    }
    return 0;
 }
 
-/// Initialise and accept client
+/// Initialise and accept connection
 /**
  *  This function is designed to be used as a callback function within
  *  LibEV. It will accept the conncetion as described inside the file
  *  descripter within the watcher. It will also add timeout and io
  *  watchers to the loop, which will handle the further communication
- *  with the client.
+ *  with the connection.
  *
  *  \param loop The running event loop.
  *  \param watcher The watcher that was tiggered on the connection.
  *  \param revents Not used.
  */
-static void ws_client_accept(
+static void ws_conn_accept(
       struct ev_loop *loop,
       struct ev_io *watcher,
       int revents)
@@ -268,7 +268,7 @@ static void ws_client_accept(
    int in_fd;
    socklen_t in_size;
    struct sockaddr_storage in_addr;
-   struct ws_client *client;
+   struct ws_conn *conn;
    
    // Accept connection
    in_size = sizeof in_addr;
@@ -284,81 +284,81 @@ static void ws_client_accept(
          sizeof ip_string);
    printf("got connection from %s\n", ip_string);
 
-   // Create client and parser
-   client = malloc(sizeof(struct ws_client));
-   if (client == NULL) {
-      fprintf(stderr, "ERROR: Cannot accept client (malloc return NULL)\n");
+   // Create conn and parser
+   conn = malloc(sizeof(struct ws_conn));
+   if (conn == NULL) {
+      fprintf(stderr, "ERROR: Cannot accept connection (malloc return NULL)\n");
       return;
    }
-   client->instance = watcher->data;
-   strcpy(client->ip, ip_string);
-   client->timeout_watcher.data = client;
-   client->recv_watcher.data = client;
-   client->send_watcher.data = client;
-   client->ctx = NULL;
+   conn->instance = watcher->data;
+   strcpy(conn->ip, ip_string);
+   conn->timeout_watcher.data = conn;
+   conn->recv_watcher.data = conn;
+   conn->send_watcher.data = conn;
+   conn->ctx = NULL;
 
    // Set up list
-   ws_instance_add_client(client->instance, client);
+   ws_instance_add_conn(conn->instance, conn);
 
    // Call back
-   if (client->instance->settings.on_connect) {
-      if (client->instance->settings.on_connect(client->instance, client, client->instance->settings.ws_ctx, &client->ctx)) {
-         ws_client_kill(client);
+   if (conn->instance->settings.on_connect) {
+      if (conn->instance->settings.on_connect(conn->instance, conn, conn->instance->settings.ws_ctx, &conn->ctx)) {
+         ws_conn_kill(conn);
          return;
       }
    }
 
    // Start timeout and io watcher
-   ev_io_init(&client->recv_watcher, client_recv_cb, in_fd, EV_READ);
-   ev_io_init(&client->send_watcher, client_send_cb, in_fd, EV_WRITE);
-   ev_io_start(loop, &client->recv_watcher);
-   ev_init(&client->timeout_watcher, client_timeout_cb);
-   client->timeout_watcher.repeat = TIMEOUT;
-   ev_timer_again(loop, &client->timeout_watcher);
+   ev_io_init(&conn->recv_watcher, conn_recv_cb, in_fd, EV_READ);
+   ev_io_init(&conn->send_watcher, conn_send_cb, in_fd, EV_WRITE);
+   ev_io_start(loop, &conn->recv_watcher);
+   ev_init(&conn->timeout_watcher, conn_timeout_cb);
+   conn->timeout_watcher.repeat = TIMEOUT;
+   ev_timer_again(loop, &conn->timeout_watcher);
 }
 
-void ws_client_sendf(struct ws_client *client, char *fmt, ...) {
+void ws_conn_sendf(struct ws_conn *conn, char *fmt, ...) {
    int status;
    va_list arg;
 
    va_start(arg, fmt);
-   status = vsnprintf(client->send_msg, MAXDATASIZE, fmt, arg);
+   status = vsnprintf(conn->send_msg, MAXDATASIZE, fmt, arg);
    va_end(arg);
 
    if (status >= MAXDATASIZE) {
       fprintf(stderr, "Data is too large to send!");
-      ws_client_kill(client);
+      ws_conn_kill(conn);
       return;
    }
 
-   ev_io_start(client->instance->loop, &client->send_watcher);
+   ev_io_start(conn->instance->loop, &conn->send_watcher);
 }
 
-static void ws_instance_rm_client(struct ws *instance, struct ws_client
-      *client)
+static void ws_instance_rm_conn(struct ws *instance, struct ws_conn
+      *conn)
 {
    struct ll_iter *iter;
 
-   ll_find(iter, instance->clients, client);
+   ll_find(iter, instance->conns, conn);
    ll_remove(iter);
 }
 
-/// Kill and clean up after a client
+/// Kill and clean up after a connection
 /**
  *  This function stops the LibEV watchers, closes the socket, and frees
- *  the data structures used be a client.
+ *  the data structures used by a connection.
  *
- *  \param client The client to kill.
+ *  \param conn The connection to kill.
  */
-void ws_client_kill(struct ws_client *client) {
+void ws_conn_kill(struct ws_conn *conn) {
 
-   printf("killing client %s\n", client->ip);
+   printf("killing connection %s\n", conn->ip);
 
    // Stop watchers
-   int sockfd = client->recv_watcher.fd;
-   ev_io_stop(client->instance->loop, &client->recv_watcher);
-   ev_io_stop(client->instance->loop, &client->send_watcher);
-   ev_timer_stop(client->instance->loop, &client->timeout_watcher);
+   int sockfd = conn->recv_watcher.fd;
+   ev_io_stop(conn->instance->loop, &conn->recv_watcher);
+   ev_io_stop(conn->instance->loop, &conn->send_watcher);
+   ev_timer_stop(conn->instance->loop, &conn->timeout_watcher);
 
    // Close socket
    if (close(sockfd) != 0) {
@@ -366,19 +366,19 @@ void ws_client_kill(struct ws_client *client) {
    }
 
    // Remove from list
-   ws_instance_rm_client(client->instance, client);
+   ws_instance_rm_conn(conn->instance, conn);
 
    // Call back
-   if (client->instance->settings.on_disconnect)
-      client->instance->settings.on_disconnect(client->instance, client, client->instance->settings.ws_ctx, &client->ctx);
+   if (conn->instance->settings.on_disconnect)
+      conn->instance->settings.on_disconnect(conn->instance, conn, conn->instance->settings.ws_ctx, &conn->ctx);
 
    // Cleanup
-   free(client);
+   free(conn);
 }
 
 void ws_destroy(struct ws *instance)
 {
-   ll_destroy(instance->clients);
+   ll_destroy(instance->conns);
    free(instance);
 }
 
@@ -397,8 +397,8 @@ struct ws *ws_create(
    sprintf(instance->port_str, "%i", settings->port);
 
    instance->loop = loop;
-   ll_create(instance->clients);
-   if (instance->clients == NULL) {
+   ll_create(instance->conns);
+   if (instance->conns == NULL) {
       fprintf(stderr, "ERROR: Cannot allocate memory for a new " \
                       "webserver struct\n");
       ws_destroy(instance);
@@ -441,7 +441,7 @@ int ws_start(struct ws *instance)
 
    // Set listener on libev
    instance->watcher.data = instance;
-   ev_io_init(&instance->watcher, ws_client_accept, instance->sockfd,
+   ev_io_init(&instance->watcher, ws_conn_accept, instance->sockfd,
               EV_READ);
    ev_io_start(instance->loop, &instance->watcher);
 
@@ -463,9 +463,9 @@ void ws_stop(struct ws *instance)
    // Stop accept watcher
    ev_io_stop(instance->loop, &instance->watcher);
 
-   // Kill all clients
-   for (it = ll_head(instance->clients); it != NULL; it = ll_next(it)) {
-      ws_client_kill(ll_data(it));
+   // Kill all connections
+   for (it = ll_head(instance->conns); it != NULL; it = ll_next(it)) {
+      ws_conn_kill(ll_data(it));
    }
 
    // Close socket

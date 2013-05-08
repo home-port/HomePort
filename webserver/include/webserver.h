@@ -48,16 +48,16 @@
 // Structs
 struct ev_loop;
 struct ws;
-struct ws_client;
+struct ws_conn;
 
 /**********************************************************************
  *  Callbacks                                                         *
  **********************************************************************/
 
 typedef int  (*ws_nodata_cb)(struct ws *instance,
-                             struct ws_client *client, void *ws_ctx, void **data);
+                             struct ws_conn *conn, void *ws_ctx, void **data);
 typedef int  (*ws_data_cb)  (struct ws *instance,
-                             struct ws_client *client, void *ws_ctw, void **data,
+                             struct ws_conn *conn, void *ws_ctw, void **data,
                              const char *buf, size_t len);
 
 /// Settings struct for webserver
@@ -127,8 +127,8 @@ int ws_start(struct ws *instance);
 void ws_stop(struct ws *instance);
 
 // Client functions
-void ws_client_kill(struct ws_client *client);
-void ws_client_sendf(struct ws_client *client, char *fmt, ...);
+void ws_conn_kill(struct ws_conn *conn);
+void ws_conn_sendf(struct ws_conn *conn, char *fmt, ...);
 
 #endif
 
