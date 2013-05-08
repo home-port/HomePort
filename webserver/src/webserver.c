@@ -66,9 +66,7 @@ struct ws {
 /// All data to represent a client
 struct ws_client {
    struct ws *instance;             ///< Webserver instance
-   struct ws_settings *settings;    ///< Webserver settings
    char ip[INET6_ADDRSTRLEN];       ///< IP address of the client
-   struct ev_loop *loop;            ///< The event loop
    struct ev_timer timeout_watcher; ///< Timeout watcher
    struct ev_io recv_watcher;       ///< Recieve watcher
    struct ev_io send_watcher;       ///< Send watcher
@@ -204,7 +202,7 @@ static void client_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int reve
       return;
    }
 
-   if (client->settings->on_receive(client->instance, client,
+   if (client->instance->settings.on_receive(client->instance, client,
                                     buffer, recieved)) {
       ws_client_kill(client);
       return;
@@ -223,7 +221,7 @@ static void client_send_cb(struct ev_loop *loop, struct ev_io *watcher,
    printf("sending response to %s\n", client->ip);
    if (send(watcher->fd, client->send_msg, strlen(client->send_msg), 0) == -1)
       perror("send");
-   ev_io_stop(client->loop, &client->send_watcher);
+   ev_io_stop(client->instance->loop, &client->send_watcher);
 
    ws_client_kill(client);
 }
@@ -233,6 +231,20 @@ static void client_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, in
    struct ws_client *client = watcher->data;
    printf("timeout on %s\n", client->ip);
    ws_client_kill(client);
+}
+
+int ws_instance_add_client(struct ws *instance, struct ws_client
+      *client)
+{
+   struct ll_iter *it = ll_tail(instance->clients);
+   ll_insert(instance->clients, it, client);
+   if (it) it = ll_next(it);
+   else it = ll_tail(instance->clients);
+   if (it == NULL) {
+      fprintf(stderr, "Not enough memory to add client\n");
+      return 1;
+   }
+   return 0;
 }
 
 /// Initialise and accept client
@@ -279,9 +291,7 @@ static void ws_client_accept(
       return;
    }
    client->instance = watcher->data;
-   client->settings = &client->instance->settings; 
    strcpy(client->ip, ip_string);
-   client->loop = loop;
    client->timeout_watcher.data = client;
    client->recv_watcher.data = client;
    client->send_watcher.data = client;
@@ -291,8 +301,8 @@ static void ws_client_accept(
    ws_instance_add_client(client->instance, client);
 
    // Call back
-   if (client->settings->on_connect) {
-      if (client->settings->on_connect(client->instance, client)) {
+   if (client->instance->settings.on_connect) {
+      if (client->instance->settings.on_connect(client->instance, client)) {
          ws_client_kill(client);
          return;
       }
@@ -321,7 +331,7 @@ void ws_client_sendf(struct ws_client *client, char *fmt, ...) {
       return;
    }
 
-   ev_io_start(client->loop, &client->send_watcher);
+   ev_io_start(client->instance->loop, &client->send_watcher);
 }
 
 static void ws_instance_rm_client(struct ws *instance, struct ws_client
@@ -346,9 +356,9 @@ void ws_client_kill(struct ws_client *client) {
 
    // Stop watchers
    int sockfd = client->recv_watcher.fd;
-   ev_io_stop(client->loop, &client->recv_watcher);
-   ev_io_stop(client->loop, &client->send_watcher);
-   ev_timer_stop(client->loop, &client->timeout_watcher);
+   ev_io_stop(client->instance->loop, &client->recv_watcher);
+   ev_io_stop(client->instance->loop, &client->send_watcher);
+   ev_timer_stop(client->instance->loop, &client->timeout_watcher);
 
    // Close socket
    if (close(sockfd) != 0) {
@@ -359,8 +369,8 @@ void ws_client_kill(struct ws_client *client) {
    ws_instance_rm_client(client->instance, client);
 
    // Call back
-   if (client->settings->on_disconnect)
-      client->settings->on_disconnect(client->instance, client);
+   if (client->instance->settings.on_disconnect)
+      client->instance->settings.on_disconnect(client->instance, client);
 
    // Cleanup
    free(client);
@@ -480,55 +490,7 @@ struct ws_settings *ws_instance_get_settings(
    return &instance->settings;
 }
 
-int ws_instance_add_client(struct ws *instance, struct ws_client
-      *client)
-{
-   struct ll_iter *it = ll_tail(instance->clients);
-   ll_insert(instance->clients, it, client);
-   if (it) it = ll_next(it);
-   else it = ll_tail(instance->clients);
-   if (it == NULL) {
-      fprintf(stderr, "Not enough memory to add client\n");
-      return 1;
-   }
-   return 0;
-}
-
 void *ws_get_ctx(struct ws *instance)
 {
    return instance->settings.ws_ctx;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -128,8 +128,6 @@ void ws_stop(struct ws *instance);
 void *ws_get_ctx(struct ws *instance);
 
 // Client functions
-void ws_client_set_ctx(struct ws_client *client, void *ctx);
-void *ws_client_get_ctx(struct ws_client *client);
 void ws_client_kill(struct ws_client *client);
 void ws_client_sendf(struct ws_client *client, char *fmt, ...);
 
