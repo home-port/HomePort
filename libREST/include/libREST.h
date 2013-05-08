@@ -77,6 +77,8 @@ int lr_request_cmpl(void *req);
 #endif
 
 //NEW FOR WEDNESDAY
+
+#ifdef NDEF
 typedef void (*lr_cb)(struct lr *ins, struct http_request *req);
 
 struct lr *lr_create();
@@ -91,8 +93,6 @@ void lr_register_service(struct lr *ins,
 void lr_unregister_service(struct lr *ins, char *url);
 
 int lr_handle(struct lr *ins, struct http_request *req);
-
-
-
+#endif
 
 
