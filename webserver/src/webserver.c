@@ -479,8 +479,3 @@ struct ws_settings *ws_instance_get_settings(
 {
    return &instance->settings;
 }
-
-void *ws_get_ctx(struct ws *instance)
-{
-   return instance->settings.ws_ctx;
-}
