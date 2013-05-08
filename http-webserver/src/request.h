@@ -1,4 +1,4 @@
-// parser.h
+// request.h
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   

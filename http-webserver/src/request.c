@@ -1,4 +1,4 @@
-// parser.c
+// request.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   
@@ -31,7 +31,7 @@
 *  as representing official policies, either expressed.
 */
 
-#include "parser.h"
+#include "request.h"
 #include "http_parser.h"
 
 #include <stdlib.h>
