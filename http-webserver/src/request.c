@@ -1,4 +1,4 @@
-// parser.c
+// request.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
 *   
@@ -31,8 +31,9 @@
 *  as representing official policies, either expressed.
 */
 
-#include "parser.h"
+#include "request.h"
 #include "http_parser.h"
+#include "url_parser.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -130,6 +131,8 @@ struct http_request
    struct ws_conn *conn;
    http_parser parser;               ///< HTTP parser in use
    enum state state;                 ///< Current state of the request
+   struct url_parser_instance *url_parser;
+   char *url;
 };
 
 // Methods for http_parser settings
@@ -153,6 +156,19 @@ static http_parser_settings parser_settings =
    .on_body = parser_body,
    .on_message_complete = parser_msg_cmpl
 };
+
+static void url_parser_path_complete(void *data, const char* parsedSegment, size_t segment_length)
+{
+   struct http_request *req = data;
+   char *newUrl = realloc(req->url, sizeof(char)*(segment_length+1));
+   if(newUrl == NULL){
+      fprintf(stderr, "realloc failed in url_parser_path_complete\n");
+      return;
+   }
+   req->url = newUrl;
+   strncpy(req->url, parsedSegment, segment_length);
+   req->url[segment_length] = '\0';
+}
 
 /// Message begin callback for http_parser
 /**
@@ -218,6 +234,7 @@ static int parser_url(http_parser *parser, const char *buf, size_t len)
       case S_BEGIN:
          req->state = S_URL;
       case S_URL:
+         up_add_chunk(req->url_parser, buf, len);
          if(url_cb)
             stat = url_cb(req->conn, buf, len);
          if (stat) { req->state = S_STOP; return stat; }
@@ -253,6 +270,7 @@ static int parser_hdr_field(http_parser *parser, const char *buf, size_t len)
       case S_STOP:
          return 1;
       case S_URL:
+         up_complete(req->url_parser);
          if(url_cmpl_cb)
             stat = url_cmpl_cb(req->conn);
          if (stat) { req->state = S_STOP; return stat; }
@@ -328,6 +346,7 @@ static int parser_hdr_cmpl(http_parser *parser)
       case S_STOP:
          return 1;
       case S_URL:
+         up_complete(req->url_parser);
          if(url_cmpl_cb)
             stat = url_cmpl_cb(req->conn);
          if (stat) { req->state = S_STOP; return stat; }
@@ -442,6 +461,11 @@ struct http_request *http_request_create(
    req->parser.data = req;
    req->state = S_START;
 
+   struct url_parser_settings up_settings = URL_PARSER_SETTINGS_DEFAULT;
+   req->url_parser = up_create(&up_settings, req);
+
+   req->url = NULL;
+
    return req;
 }
 
@@ -454,7 +478,11 @@ struct http_request *http_request_create(
  */
 void http_request_destroy(struct http_request *req)
 {
-   free(req);
+   if(req){
+      up_destroy(req->url_parser);
+      free(req->url);
+      free(req);
+   }
 }
 
 /// Parse a new chunk of the message.
