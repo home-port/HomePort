@@ -194,7 +194,7 @@ ListElement* insert_trie_key(TrieNode* root, char* key)
       ListElement *element = insert_listElement(treeElement->children, substring_from(key, current_pos), NULL);
       return element;
    }
-
+   return NULL;
    //insert_listElement(treeElement->children,key, NULL);
    //TrieNode* newNode = malloc(sizeof(TrieNode));
 }
@@ -282,7 +282,7 @@ void remove_trie_key(TrieNode* root, char* key)
                      parent->value == NULL && listElement->node->children !=
                      NULL)
                {
-                  parent->key == strcat(parent->key,listkey);
+                  parent->key = strcat(parent->key,listkey);
                   parent->node = listElement->node;
                   remove_listElement(treeElement->children, listkey);
                   free(treeElement);
@@ -314,7 +314,7 @@ void remove_trie_key(TrieNode* root, char* key)
                {
                   if(listElement->node->children->head->next != NULL)
                   {
-                     listElement->value == NULL;
+                     listElement->value = NULL;
                      return;
                   } else
                   {
