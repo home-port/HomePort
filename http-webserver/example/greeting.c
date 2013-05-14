@@ -54,6 +54,16 @@ static void exit_handler(int sig)
    exit(sig);
 }
 
+int handle_request(struct http_request *req)
+{
+   const char *method = http_method_str(http_request_get_method(req));
+   const char *url = http_request_get_url(req);
+
+   printf("Got %s request on %s\n", method, url);
+   
+   return 0;
+}
+
 // Main function
 int main(int argc, char *argv[])
 {
@@ -62,6 +72,7 @@ int main(int argc, char *argv[])
 
    // Set settings for the webserver
    struct httpws_settings settings = HTTPWS_SETTINGS_DEFAULT;
+   settings.on_req_cmpl = handle_request;
    settings.port = WS_PORT_HTTP_ALT;
 
    // Inform if we have been built with debug flag
@@ -77,7 +88,7 @@ int main(int argc, char *argv[])
    server = httpws_create(&settings, loop);
 
    // Start the event loop and webserver
-   if (httpws_start(server))
+   if (!httpws_start(server))
       ev_run(loop, 0);
 
    // Exit
