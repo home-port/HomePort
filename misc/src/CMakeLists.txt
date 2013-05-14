@@ -48,9 +48,13 @@ add_executable(linked_list_test EXCLUDE_FROM_ALL
 add_test(linked_list_test ${CMAKE_CURRENT_BINARY_DIR}/linked_list_test)
 add_dependencies(check linked_list_test)
 
+# LinkedMap
+add_library(linkedmap
+	linkedmap.c
+		)
+
 # Trie
 add_library(trie
       trie.c
       )
 target_link_libraries(trie linkedlist)
-
