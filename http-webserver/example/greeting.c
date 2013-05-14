@@ -56,7 +56,7 @@ static void exit_handler(int sig)
 
 void header_printer(const char* key, const char* value)
 {
-   printf("\tHeader key/value = {%s,%s}\n",key,value);
+   printf("\tHeader key/value = {%s : %s}\n",key,value);
 }
 
 int handle_request(struct http_request *req)

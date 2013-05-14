@@ -113,6 +113,7 @@ void hp_on_header_field(struct header_parser_instance *instance, const char* fie
 		instance->settings->on_field_value_pair(instance->settings->data, instance->field_buffer, instance->field_buffer_size, instance->value_buffer, instance->value_buffer_size);
 
 		reset_buffers(instance);
+		old_buffer_size = 0;
 	}
 
 	instance->state = S_FIELD;
