@@ -130,8 +130,9 @@ struct http_request
    struct httpws_settings *settings;
    struct ws_conn *conn;
    http_parser parser;               ///< HTTP parser in use
-   enum state state;                 ///< Current state of the request
    struct url_parser_instance *url_parser;
+   enum state state;                 ///< Current state of the request
+   const char *method;
    char *url;
 };
 
@@ -182,7 +183,6 @@ static void url_parser_path_complete(void *data, const char* parsedSegment, size
 static int parser_msg_begin(http_parser *parser)
 {
    int stat = 0;
-   const char *method;
    struct http_request *req = parser->data;
    const struct httpws_settings *settings = req->settings;
    const httpws_nodata_cb begin_cb = settings->on_req_begin;
@@ -198,9 +198,9 @@ static int parser_msg_begin(http_parser *parser)
             stat = begin_cb(req->conn);
          if (stat) { req->state = S_STOP; return stat; }
          // Send method
-         method = http_method_str(parser->method);
+         req->method = http_method_str(parser->method);
          if(method_cb)
-            stat = method_cb(req->conn, method, strlen(method));
+            stat = method_cb(req->conn, req->method, strlen(req->method));
 
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
@@ -462,6 +462,7 @@ struct http_request *http_request_create(
    req->state = S_START;
 
    struct url_parser_settings up_settings = URL_PARSER_SETTINGS_DEFAULT;
+	up_settings.on_path_complete = url_parser_path_complete;
    req->url_parser = up_create(&up_settings, req);
 
    req->url = NULL;
