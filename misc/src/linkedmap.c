@@ -125,7 +125,7 @@ void* lm_find(struct lm *map, char* key)
 
 	if(map){
 		for(it = ll_head(map->pairs); it != NULL; it = ll_next(it)) {
-			if(it != NULL && strcmp(key, ((struct pair*)ll_data(it))->key) == 0) {
+			if(strcmp(key, ((struct pair*)ll_data(it))->key) == 0) {
 				return ((struct pair*)ll_data(it))->value;
 			}
 		}
