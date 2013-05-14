@@ -132,7 +132,6 @@ struct http_request
    http_parser parser;               ///< HTTP parser in use
    struct url_parser_instance *url_parser;
    enum state state;                 ///< Current state of the request
-   const char *method;
    char *url;
 };
 
@@ -187,6 +186,7 @@ static int parser_msg_begin(http_parser *parser)
    const struct httpws_settings *settings = req->settings;
    const httpws_nodata_cb begin_cb = settings->on_req_begin;
    const httpws_data_cb method_cb = settings->on_req_method;
+   const char *method;
 
    switch (req->state) {
       case S_STOP:
@@ -198,9 +198,9 @@ static int parser_msg_begin(http_parser *parser)
             stat = begin_cb(req);
          if (stat) { req->state = S_STOP; return stat; }
          // Send method
-         req->method = http_method_str(parser->method);
+         method = http_method_str(parser->method);
          if(method_cb)
-            stat = method_cb(req, req->method, strlen(req->method));
+            stat = method_cb(req, method, strlen(method));
 
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
@@ -506,3 +506,12 @@ size_t http_request_parse(
    return http_parser_execute(&req->parser, &parser_settings, buf, len);
 }
 
+enum http_method http_request_get_method(struct http_request *req)
+{
+   return req->parser.method;
+}
+
+const char *http_request_get_url(struct http_request *req)
+{
+   return req->url;
+}

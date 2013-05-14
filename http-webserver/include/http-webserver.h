@@ -35,6 +35,7 @@
 #define HTTP_WEBSERVER_H
 
 #include "ws_types.h"
+#include "http_parser.h"
 #include <stddef.h>
 
 // HTTP status codes according to
@@ -48,12 +49,6 @@ enum httpws_http_status_code
 #define XX(num, str) WS_HTTP_##num = num,
 	HTTPWS_HTTP_STATUS_CODE_MAP(XX)
 #undef XX
-};
-
-// HTTP methods
-enum httpws_http_method
-{
-   GET, POST, PUT, DELETE
 };
 
 struct ev_loop;
@@ -93,5 +88,8 @@ struct httpws *httpws_create(struct httpws_settings *settings,
 void httpws_destroy(struct httpws *instance);
 int httpws_start(struct httpws *instance);
 void httpws_stop(struct httpws *instance);
+
+enum http_method http_request_get_method(struct http_request *req);
+const char *http_request_get_url(struct http_request *req);
 
 #endif
