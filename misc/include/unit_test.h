@@ -95,7 +95,7 @@
       for (c = X; c != '\0'; c++) \
          PRINT_CHAR(*c); \
       printf("' - expected '"); \
-      for (c = X; c != '\0'; c++) \
+      for (c = Y; c != '\0'; c++) \
          PRINT_CHAR(*c); \
       printf("'\n"); \
    }
