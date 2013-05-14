@@ -54,12 +54,22 @@ static void exit_handler(int sig)
    exit(sig);
 }
 
+void header_printer(const char* key, const char* value)
+{
+   printf("\tHeader key/value = {%s,%s}\n",key,value);
+}
+
 int handle_request(struct http_request *req)
 {
    const char *method = http_method_str(http_request_get_method(req));
    const char *url = http_request_get_url(req);
 
+   struct lm *headers = http_request_get_headers(req);
+
    printf("Got %s request on %s\n", method, url);
+
+   // print headers
+   lm_map(headers, header_printer);
    
    return 0;
 }

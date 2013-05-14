@@ -37,7 +37,7 @@
 
 #include "header_parser.h"
 
-enum url_parser_state {
+enum header_parser_state {
 	S_FIELD,
 	S_VALUE,
 	S_COMPLETED
@@ -46,7 +46,7 @@ enum url_parser_state {
 struct header_parser_instance {
 	struct header_parser_settings *settings;
 
-	int state;
+	enum header_parser_state state;
 
 	char* field_buffer;
 	size_t field_buffer_size;
@@ -90,12 +90,16 @@ struct header_parser_instance *hp_create(struct header_parser_settings *settings
 
 	instance -> state = S_FIELD;
 
-	reset_buffers(instance);
+	instance -> field_buffer_size = 0;
+    instance -> field_buffer = NULL;
+
+	instance -> value_buffer_size = 0;
+	instance -> value_buffer = NULL;
 
 	return instance;
 }
 
-void hp_on_header_field(struct header_parser_instance *instance ,char* field_chunk, size_t length)
+void hp_on_header_field(struct header_parser_instance *instance, const char* field_chunk, size_t length)
 {
 	if(instance->state == S_COMPLETED) {
 		fprintf(stderr, "The header parser received additional data after a call to completed\n");
@@ -106,7 +110,7 @@ void hp_on_header_field(struct header_parser_instance *instance ,char* field_chu
 
 	// If state is S_VALUE, yield a field-value pair
 	if(instance->state == S_VALUE) {
-		instance->settings->on_field_value_pair(instance->field_buffer, instance->field_buffer_size, instance->value_buffer, instance->value_buffer_size);
+		instance->settings->on_field_value_pair(instance->settings->data, instance->field_buffer, instance->field_buffer_size, instance->value_buffer, instance->value_buffer_size);
 
 		reset_buffers(instance);
 	}
@@ -126,7 +130,7 @@ void hp_on_header_field(struct header_parser_instance *instance ,char* field_chu
 	return;
 }
 
-void hp_on_header_value(struct header_parser_instance *instance, char* value_chunk, size_t length)
+void hp_on_header_value(struct header_parser_instance *instance, const char* value_chunk, size_t length)
 {
 	if(instance->state == S_COMPLETED) {
 		fprintf(stderr, "The header parser received additional data after a call to completed\n");
@@ -155,7 +159,7 @@ void hp_on_header_complete(struct header_parser_instance *instance)
 {
 	if(instance->state == S_VALUE)
 	{
-		instance->settings->on_field_value_pair(instance->field_buffer, instance->field_buffer_size, instance->value_buffer, instance->value_buffer_size);
+		instance->settings->on_field_value_pair(instance->settings->data, instance->field_buffer, instance->field_buffer_size, instance->value_buffer, instance->value_buffer_size);
 		instance->state = S_COMPLETED;
 	} else if (instance->state == S_FIELD) {
 		fprintf(stderr, "The header parser was missing a value when the call to completed was made\n");

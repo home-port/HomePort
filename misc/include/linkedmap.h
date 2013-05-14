@@ -34,15 +34,17 @@
 #ifndef LINKEDMAP_H
 #define LINKEDMAP_H
 
-#include "linked_list.h"
+ typedef void (*lm_map_cb)(const char* key, const char* value);
 
  struct lm;
 
  struct lm *lm_create();
  void lm_destroy(struct lm *map);
 
- int lm_insert(struct lm *map, char* key, void* value); // Returns 0 if inserted correctly, or 1 if key already exists.
- void lm_remove(struct lm *map, char* key);
- void* lm_find(struct lm *map, char* key);
+ int lm_insert(struct lm *map, const char* key, const char* value); // Returns 0 if inserted correctly, or 1 if key already exists.
+ void lm_remove(struct lm *map, const char* key);
+ char* lm_find(struct lm *map, const char* key);
+ struct ll *lm_get_keys(struct lm*map);
+ void lm_map(struct lm *map, lm_map_cb func);
 
  #endif

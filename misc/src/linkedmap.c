@@ -33,6 +33,7 @@
 
 #include <string.h>
 #include "../include/linkedmap.h"
+#include "linked_list.h"
 
 struct lm
 {
@@ -42,7 +43,7 @@ struct lm
 struct pair
 {
 	char* key;
-	void* value;
+	char* value;
 };
 
 struct lm *lm_create()
@@ -70,6 +71,7 @@ void lm_destroy(struct lm *map)
 		// Loop through and destroy all keys
 		for(it = ll_head(map->pairs); it != NULL; it = ll_next(it))	{
 			free(((struct pair*)ll_data(it))->key);
+			free(((struct pair*)ll_data(it))->value);
 			free(((struct pair*)ll_data(it)));
 		}
 
@@ -77,7 +79,7 @@ void lm_destroy(struct lm *map)
 	}
 }
 
-int lm_insert(struct lm *map, char* key, void* value)
+int lm_insert(struct lm *map, const char* key, const char* value)
 {
 	// Check if the item is already in the list
 	if(lm_find(map, key) != NULL)
@@ -89,37 +91,46 @@ int lm_insert(struct lm *map, char* key, void* value)
 		return 2;
 	}
 
+	char *mValue = malloc(strlen(value)*sizeof(char));
+	if(mValue == NULL) {
+		fprintf(stderr, "Malloc failed when allocating value for linkedmap\n");
+		return 2;
+	}
+
 	struct pair *p = malloc(sizeof(struct pair));
 	if(p == NULL) {
 		fprintf(stderr, "Malloc failed when allocating pair struct for linkedmap\n");
 		return 2;
 	}
 
+	strcpy(mValue, value);
 	strcpy(mKey, key);
 
 	p->key = mKey;
-	p->value = value;
+	p->value = mValue;
 
 	ll_insert(map->pairs, ll_tail(map->pairs), p);
 
 	return 0;
 }
 
-void lm_remove(struct lm *map, char* key)
+void lm_remove(struct lm *map, const char* key)
 {
 	struct ll_iter *it;
 
 	if(map){
-		for(it = ll_head(map->pairs); it != NULL && strcmp(((struct pair*)ll_data(it))->key,key)!=0; it = ll_next(it));
-		if(it != NULL) {
-			free(((struct pair*)ll_data(it))->key);
-			free(((struct pair*)ll_data(it)));
-			ll_remove(it);
+		for(it = ll_head(map->pairs); it != NULL; it = ll_next(it)) {
+			if(strcmp(((struct pair*)ll_data(it))->key,key) == 0) {
+				free(((struct pair*)ll_data(it))->key);
+				free(((struct pair*)ll_data(it))->value);
+				free(((struct pair*)ll_data(it)));
+				ll_remove(it);
+			}
 		}
 	}
 }
 
-void* lm_find(struct lm *map, char* key)
+char* lm_find(struct lm *map, const char* key)
 {
 	struct ll_iter *it;
 
@@ -132,3 +143,19 @@ void* lm_find(struct lm *map, char* key)
 	}
 	return NULL;
 }
+
+void lm_map(struct lm *map, lm_map_cb func)
+{
+	if(map && func) {
+	struct ll_iter *it;
+	for(it = ll_head(map->pairs); it != NULL; it = ll_next(it)) {
+		func(((struct pair*)ll_data(it))->key, ((struct pair*)ll_data(it))->value);
+	}
+}
+}
+
+
+
+
+
+

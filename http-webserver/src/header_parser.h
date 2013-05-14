@@ -31,25 +31,27 @@
 *  as representing official policies, either expressed.
 */
 
-#ifndef URL_PARSER_H
-#define URL_PARSER_H
+#ifndef HEADER_PARSER_H
+#define HEADER_PARSER_H
 
-typedef void (*hp_string_cb)(const char* field, size_t field_length, const char* value, size_t value_length);
+typedef void (*hp_string_cb)(void* data, const char* field, size_t field_length, const char* value, size_t value_length);
 
 struct header_parser_instance;
 
 struct header_parser_settings {
 	hp_string_cb on_field_value_pair;
+	void* data;
 };
 
 #define HEADER_PARSER_SETTINGS_DEFAULT {\
-	.on_field_value_pair = NULL }
+	.on_field_value_pair = NULL, \
+	.data = NULL }
 
 struct header_parser_instance *hp_create(struct header_parser_settings*);
 void hp_destroy(struct header_parser_instance*);
 
-void hp_on_header_field(struct header_parser_instance *instance ,char* field_chunk, size_t length);
-void hp_on_header_value(struct header_parser_instance *instance, char* value_chunk, size_t length);
+void hp_on_header_field(struct header_parser_instance *instance, const char* field_chunk, size_t length);
+void hp_on_header_value(struct header_parser_instance *instance, const char* value_chunk, size_t length);
 void hp_on_header_complete(struct header_parser_instance *instance);
 
 #endif

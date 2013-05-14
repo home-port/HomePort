@@ -35,7 +35,7 @@ add_library(http-webserver
       url_parser.c
       header_parser.c
       )
-target_link_libraries(http-webserver webserver http-parser)
+target_link_libraries(http-webserver webserver http-parser linkedmap)
 
 # URL Parser Test
 add_executable(url_parser_test EXCLUDE_FROM_ALL
@@ -43,4 +43,3 @@ add_executable(url_parser_test EXCLUDE_FROM_ALL
       )
 add_test(url_parser_test ${CMAKE_CURRENT_BINARY_DIR}/url_parser_test)
 add_dependencies(check url_parser_test)
-

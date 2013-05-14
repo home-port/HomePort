@@ -34,6 +34,8 @@
 #include "request.h"
 #include "http_parser.h"
 #include "url_parser.h"
+#include "linkedmap.h"
+#include "header_parser.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -131,8 +133,10 @@ struct http_request
    struct ws_conn *conn;
    http_parser parser;               ///< HTTP parser in use
    struct url_parser_instance *url_parser;
+   struct header_parser_instance *header_parser;
    enum state state;                 ///< Current state of the request
    char *url;
+   struct lm *headers;
 };
 
 // Methods for http_parser settings
@@ -168,6 +172,27 @@ static void url_parser_path_complete(void *data, const char* parsedSegment, size
    req->url = newUrl;
    strncpy(req->url, parsedSegment, segment_length);
    req->url[segment_length] = '\0';
+}
+
+static void header_parser_field_value_pair_complete(void* data, const char* field, size_t field_length, const char* value, size_t value_length)
+{
+   struct http_request *req = data;
+
+   char *tmpField = malloc((field_length+1)*sizeof(char));
+   char *tmpValue = malloc((value_length+1)*sizeof(char));
+
+   if(tmpField == NULL || tmpValue == NULL) {
+      fprintf(stderr, "Malloc failed for tmpField or tmpValue in request.c\n");
+      return;
+   }
+
+   strncpy(tmpField, field, field_length);
+   tmpField[field_length] = '\0';
+
+   strncpy(tmpValue, value, value_length);
+   tmpValue[value_length] = '\0';
+
+   lm_insert(req->headers, tmpField, tmpValue);
 }
 
 /// Message begin callback for http_parser
@@ -277,6 +302,7 @@ static int parser_hdr_field(http_parser *parser, const char *buf, size_t len)
       case S_HEADER_VALUE:
          req->state = S_HEADER_FIELD;
       case S_HEADER_FIELD:
+         hp_on_header_field(req->header_parser, buf, len);
          if(header_field_cb)
             stat = header_field_cb(req, buf, len);
          if (stat) { req->state = S_STOP; return stat; }
@@ -312,6 +338,7 @@ static int parser_hdr_value(http_parser *parser, const char *buf, size_t len)
       case S_HEADER_FIELD:
          req->state = S_HEADER_VALUE;
       case S_HEADER_VALUE:
+         hp_on_header_value(req->header_parser, buf, len);
          if(header_value_cb)
             stat = header_value_cb(req, buf, len);
          if (stat) { req->state = S_STOP; return stat; }
@@ -351,6 +378,7 @@ static int parser_hdr_cmpl(http_parser *parser)
             stat = url_cmpl_cb(req);
          if (stat) { req->state = S_STOP; return stat; }
       case S_HEADER_VALUE:
+         hp_on_header_complete(req->header_parser);
          req->state = S_HEADER_COMPLETE;
          if(header_cmpl_cb)
             stat = header_cmpl_cb(req);
@@ -465,6 +493,13 @@ struct http_request *http_request_create(
 	up_settings.on_path_complete = url_parser_path_complete;
    req->url_parser = up_create(&up_settings, req);
 
+   struct header_parser_settings hp_settings = HEADER_PARSER_SETTINGS_DEFAULT;
+   hp_settings.data = req;
+   hp_settings.on_field_value_pair = header_parser_field_value_pair_complete;
+   req->header_parser = hp_create(&hp_settings);
+
+   req->headers = lm_create();
+
    req->url = NULL;
 
    return req;
@@ -481,6 +516,8 @@ void http_request_destroy(struct http_request *req)
 {
    if(req){
       up_destroy(req->url_parser);
+      lm_destroy(req->headers);
+      hp_destroy(req->header_parser);
       free(req->url);
       free(req);
    }
@@ -514,4 +551,9 @@ enum http_method http_request_get_method(struct http_request *req)
 const char *http_request_get_url(struct http_request *req)
 {
    return req->url;
+}
+
+struct lm *http_request_get_headers(struct http_request *req)
+{
+   return req->headers;
 }
