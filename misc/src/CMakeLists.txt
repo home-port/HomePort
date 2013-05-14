@@ -53,6 +53,14 @@ add_library(linkedmap
 	linkedmap.c
 		)
 
+# LinkedMap Test
+add_executable(linkedmap_test EXCLUDE_FROM_ALL
+      linkedmap_test.c
+      linkedmap.c
+      )
+add_test(linkedmap_test ${CMAKE_CURRENT_BINARY_DIR}/linkedmap_test)
+add_dependencies(check linkedmap_test)
+
 # Trie
 add_library(trie
       trie.c
