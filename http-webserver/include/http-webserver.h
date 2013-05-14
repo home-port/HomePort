@@ -58,11 +58,11 @@ enum httpws_http_method
 
 struct ev_loop;
 struct httpws;
-struct ws_conn;
+struct http_request;
 
-typedef int (*httpws_data_cb)(struct ws_conn *conn,
+typedef int (*httpws_data_cb)(struct http_request *req,
                               const char *buf, size_t len);
-typedef int (*httpws_nodata_cb)(struct ws_conn *conn);
+typedef int (*httpws_nodata_cb)(struct http_request *req);
 
 struct httpws_settings {
    enum ws_port port;

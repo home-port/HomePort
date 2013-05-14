@@ -37,6 +37,8 @@
 #include "http-webserver.h"
 #include <stddef.h>
 
+struct ws_conn;
+
 struct http_request *http_request_create(
       struct httpws *webserver,
       struct httpws_settings *settings,
