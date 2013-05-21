@@ -59,18 +59,11 @@ struct lr *lr_create()
       return NULL;
    }
 
-   ins->trie = create_trie();
+   ins->trie = trie_create();
 
    ins->services = NULL;
 
    return ins;
-}
-
-struct TrieNode *lr_get_trie(struct lr *instance)
-{
-	if(instance)
-		return instance->trie;
-	return NULL;
 }
 
 void lr_destroy(struct lr *ins)
@@ -84,7 +77,7 @@ void lr_destroy(struct lr *ins)
       service = next;
    }
 
-   destroy_trie(ins->trie);
+   trie_destroy(ins->trie);
    free(ins);
 }
 
@@ -117,32 +110,6 @@ void lr_register_service(struct lr *ins,
    service->on_delete = on_delete;
    service->next = NULL;
 
-   struct ListElement* element = insert_trie_key(ins->trie, url);
+   struct ListElement* element = trie_insert(ins->trie, url);
    set_listElement_value(element, service);
-}
-
-void lr_service_call(struct lr_service *service, enum lr_method method, void *data, const char *path, size_t len)
-{
-	switch(method)
-	{
-		case GET:
-			if(service->on_get)
-				service->on_get(data, path, len);
-		break;
-
-		case POST:
-			if(service->on_post)
-				service->on_post(data, path, len);
-		break;
-
-		case PUT:
-			if(service->on_put)
-				service->on_put(data, path, len);
-		break;
-
-		case DELETE:
-			if(service->on_delete)
-				service->on_delete(data, path, len);
-		break;
-	}
 }

@@ -70,6 +70,17 @@ int handle_request(struct http_request *req)
 
    // print headers
    lm_map(headers, header_printer);
+
+   char *body1 = "<html><body><h1>Hello</h1>Your language: ";
+   char *body2 = lm_find(headers, "Accept-Language");
+   char *body3 = "</body></html>";
+   char *body = malloc((strlen(body1)+strlen(body2)+strlen(body3)+1)*sizeof(char));
+   sprintf(body, "%s%s%s",body1, body2, body3);
+
+   struct http_response *res = http_response_create(req, WS_HTTP_200);
+   http_response_send(res, body);
+
+   free(body);
    
    return 0;
 }
