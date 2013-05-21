@@ -7,27 +7,27 @@ int main()
    printf("inserting key\n");
 
 
-   ListElement *newnew = trie_insert_key(root, "fisk\0");
+   ListElement *newnew = trie_insert(root, "fisk\0");
    char *c2 = "FiskFisk\0";
    set_listElement_value(newnew, c2);
 
-   ListElement *newAbe = trie_insert_key(root, "abekat\0");
+   ListElement *newAbe = trie_insert(root, "abekat\0");
    char *c3 = "this is abekat\0";
    set_listElement_value(newAbe, c3);
 
-   ListElement *newAbe2 = trie_insert_key(root, "abenar\0");
+   ListElement *newAbe2 = trie_insert(root, "abenar\0");
    char *c32 = "this is a weird type of monkey\0";
    set_listElement_value(newAbe2, c32);
 
-      ListElement *element = trie_insert_key(root,"abe\0");
+      ListElement *element = trie_insert(root,"abe\0");
    char *c = "Hello this is abe\0";
    set_listElement_value(element, c);
 
-   ListElement *fish = trie_insert_key(root, "fiskekutter\0");
+   ListElement *fish = trie_insert(root, "fiskekutter\0");
    char *thxForAllTheFish = "poppeye the sailor man!\0";
    set_listElement_value(fish, thxForAllTheFish);
    
-   ListElement *aab = trie_insert_key(root, "ab\0");
+   ListElement *aab = trie_insert(root, "ab\0");
    char *aab2 = "A football club!\0";
    set_listElement_value(aab, aab2);
    

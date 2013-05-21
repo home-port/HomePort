@@ -63,7 +63,7 @@ TrieNode* trie_create()
    return root;
 }
 
-ListElement* trie_insert_key(TrieNode* root, char* key)
+ListElement* trie_insert(TrieNode* root, char* key)
 {
    printf("Inserting %s\n",key);
 
