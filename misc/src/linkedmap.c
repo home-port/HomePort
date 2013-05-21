@@ -147,11 +147,11 @@ char* lm_find(struct lm *map, const char* key)
 void lm_map(struct lm *map, lm_map_cb func)
 {
 	if(map && func) {
-	struct ll_iter *it;
-	for(it = ll_head(map->pairs); it != NULL; it = ll_next(it)) {
-		func(((struct pair*)ll_data(it))->key, ((struct pair*)ll_data(it))->value);
+		struct ll_iter *it;
+		for(it = ll_head(map->pairs); it != NULL; it = ll_next(it)) {
+			func(((struct pair*)ll_data(it))->key, ((struct pair*)ll_data(it))->value);
+		}
 	}
-}
 }
 
 
