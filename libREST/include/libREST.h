@@ -62,16 +62,4 @@ void lr_register_service(struct lr *ins,
                          lr_cb on_put,
                          lr_cb on_delete);
 
-// libREST request functions
-struct lr_request *lr_request_create(struct lr *ins, void *data);
-void lr_request_destroy(struct lr_request *req);
-int lr_request_method(void *req, const char *chunk, size_t len);
-int lr_request_url(void *req, const char *chuck, size_t len);
-int lr_request_url_cmpl(void *req);
-int lr_request_hdr_field(void *req, const char *chuck, size_t len);
-int lr_request_hdr_value(void *req, const char *chuck, size_t len);
-int lr_request_hdr_cmpl(void *req);
-int lr_request_body(void *req, const char *chuck, size_t len);
-int lr_request_cmpl(void *req);
-
 #endif
