@@ -1,6 +1,7 @@
 // trie.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
+    
  *   
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -76,7 +77,6 @@ ListElement* insert_trie_key(TrieNode* root, char* key)
    {
       LinkedList* list = create_linkedList();
       ListElement* element = insert_listElement(list, key, NULL);
-      printf("key actually inserted: %s\n", element->key);
       root->children = list;
       return element;
    }
@@ -282,20 +282,19 @@ void remove_trie_key(TrieNode* root, char* key)
                      parent->value == NULL && listElement->node->children !=
                      NULL)
                {
+                  parent->key = realloc(parent->key,strlen(listElement->key)*(sizeof(char)));
                   parent->key = strcat(parent->key,listkey);
                   parent->node = listElement->node;
                   remove_listElement(treeElement->children, listkey);
                   free(treeElement);
                   return;
-               } else if(treeElement->children->head->next == NULL &&
+               } 
+               else if(treeElement->children->head->next == NULL &&
                      parent->value != NULL && listElement->node->children
                      != NULL)
                {
-                  if(listElement->node->children->head->next != NULL)
+                  if(listElement->node->children->head->next == NULL)
                   {
-                     listElement->value = NULL;
-                     return;
-                  } else {
                      listElement->value = listElement->node->children->head->value;
                      listElement->key = realloc(listElement->key,strlen(listElement->node->children->head->key)*(sizeof(char)));
                      listElement->key = strcat(listElement->key,
@@ -310,13 +309,9 @@ void remove_trie_key(TrieNode* root, char* key)
                
             } else {
                if(treeElement->children->head->next == NULL &&
-                     listElement->node->children != NULL)
+                     listElement->node != NULL)
                {
-                  if(listElement->node->children->head->next != NULL)
-                  {
-                     listElement->value = NULL;
-                     return;
-                  } else
+                  if(listElement->node->children->head->next == NULL)
                   {
                      listElement->value = listElement->node->children->head->value;
                      listElement->key = realloc(listElement->key,strlen(listElement->node->children->head->key)*(sizeof(char)));
@@ -329,6 +324,12 @@ void remove_trie_key(TrieNode* root, char* key)
                      return;
                   }
                }
+            }
+            if(listElement->node != NULL &&
+                  listElement->node->children->head->next != NULL)
+            {
+               listElement->value = NULL;
+               return;
             }
             
             remove_listElement(treeElement->children,listkey);
@@ -359,7 +360,22 @@ void remove_trie_key(TrieNode* root, char* key)
    return;     
 }
 
-
+void destroy_tree(TrieNode* subtree)
+{
+   ListElement* tmp = NULL;
+   if(subtree->children != NULL)
+   {
+      tmp = subtree->children->head;
+      while(tmp != NULL)
+      {
+         if(tmp->node != NULL)
+            destroy_tree(tmp->node);
+         tmp = tmp->next;
+      }
+      destroy_linkedList(subtree->children);
+      free(subtree);
+   }
+}
 
 
 

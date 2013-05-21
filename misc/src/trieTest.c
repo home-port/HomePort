@@ -78,7 +78,7 @@ int main()
    printf("removing abekat\n");
    remove_trie_key(root,"abekat\0");
    // INSERTION OF ABEKAT
-
+   destroy_tree(root);
 
    /*
    char* c = "hello\0";
