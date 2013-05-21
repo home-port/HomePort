@@ -35,14 +35,14 @@
 #include <string.h>
 #include "../include/trie.h"
 
-char* substring_from(char* key, int from)
+static char* substring_from(char* key, int from)
 {
    char *partialKey = malloc(strlen(key)+1-from);
    strcpy(partialKey,&key[from]);
    return partialKey;
 }
 
-char* substring_from_to(char* key, int from, int to)
+static char* substring_from_to(char* key, int from, int to)
 {
    char *partialKey = malloc(strlen(key)+1-(to-from));
    strncpy(partialKey, &key[from], (to-from));
@@ -50,7 +50,7 @@ char* substring_from_to(char* key, int from, int to)
    return partialKey;
 }
 
-TrieNode* create_trie()
+TrieNode* trie_create()
 {
    TrieNode* root = malloc(sizeof(TrieNode));
    if(root == NULL)
@@ -63,12 +63,7 @@ TrieNode* create_trie()
    return root;
 }
 
-void destroy_trie(TrieNode* root)
-{
-   fprintf(stderr, "Remember to code the trie destroy function!!!\n");
-}
-
-ListElement* insert_trie_key(TrieNode* root, char* key)
+ListElement* trie_insert_key(TrieNode* root, char* key)
 {
    printf("Inserting %s\n",key);
 
@@ -199,7 +194,7 @@ ListElement* insert_trie_key(TrieNode* root, char* key)
    //TrieNode* newNode = malloc(sizeof(TrieNode));
 }
 
-ListElement* lookup_trieNode(TrieNode* root, char* key)
+ListElement* trie_lookup_node(TrieNode* root, char* key)
 {
    if(root->children == NULL)
       return NULL;
@@ -249,7 +244,7 @@ ListElement* lookup_trieNode(TrieNode* root, char* key)
    return NULL;
 }
 
-void remove_trie_key(TrieNode* root, char* key)
+void trie_remove_key(TrieNode* root, char* key)
 {
    if(root->children == NULL)
       return;
@@ -360,7 +355,7 @@ void remove_trie_key(TrieNode* root, char* key)
    return;     
 }
 
-void destroy_tree(TrieNode* subtree)
+void trie_destroy(TrieNode* subtree)
 {
    ListElement* tmp = NULL;
    if(subtree->children != NULL)
@@ -369,7 +364,7 @@ void destroy_tree(TrieNode* subtree)
       while(tmp != NULL)
       {
          if(tmp->node != NULL)
-            destroy_tree(tmp->node);
+            trie_destroy(tmp->node);
          tmp = tmp->next;
       }
       destroy_linkedList(subtree->children);

@@ -46,10 +46,10 @@ struct TrieNode
    struct LinkedList* children;
 };
 
-TrieNode* create_trie();
-struct ListElement* insert_trie_key(TrieNode* root, char* key);
-void remove_trie_key(TrieNode* root, char* key);
-struct ListElement* lookup_trieNode(TrieNode* root, char* key);
-void destroy_trie(TrieNode* root);
+TrieNode* trie_create();
+struct ListElement* trie_insert_key(TrieNode* root, char* key);
+void trie_remove_key(TrieNode* root, char* key);
+struct ListElement* trie_lookup_node(TrieNode* root, char* key);
+void trie_destroy(TrieNode* root);
 
 #endif

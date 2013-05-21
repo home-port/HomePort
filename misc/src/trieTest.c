@@ -3,35 +3,35 @@
 int main()
 {
    printf("creating tree\n");
-   TrieNode* root = create_trie();
+   TrieNode* root = trie_create();
    printf("inserting key\n");
 
 
-   ListElement *newnew = insert_trie_key(root, "fisk\0");
+   ListElement *newnew = trie_insert_key(root, "fisk\0");
    char *c2 = "FiskFisk\0";
    set_listElement_value(newnew, c2);
 
-   ListElement *newAbe = insert_trie_key(root, "abekat\0");
+   ListElement *newAbe = trie_insert_key(root, "abekat\0");
    char *c3 = "this is abekat\0";
    set_listElement_value(newAbe, c3);
 
-   ListElement *newAbe2 = insert_trie_key(root, "abenar\0");
+   ListElement *newAbe2 = trie_insert_key(root, "abenar\0");
    char *c32 = "this is a weird type of monkey\0";
    set_listElement_value(newAbe2, c32);
 
-      ListElement *element = insert_trie_key(root,"abe\0");
+      ListElement *element = trie_insert_key(root,"abe\0");
    char *c = "Hello this is abe\0";
    set_listElement_value(element, c);
 
-   ListElement *fish = insert_trie_key(root, "fiskekutter\0");
+   ListElement *fish = trie_insert_key(root, "fiskekutter\0");
    char *thxForAllTheFish = "poppeye the sailor man!\0";
    set_listElement_value(fish, thxForAllTheFish);
    
-   ListElement *aab = insert_trie_key(root, "ab\0");
+   ListElement *aab = trie_insert_key(root, "ab\0");
    char *aab2 = "A football club!\0";
    set_listElement_value(aab, aab2);
    
-   ListElement *inTheTrie = lookup_trieNode(root, "abe\0");
+   ListElement *inTheTrie = trie_lookup_node(root, "abe\0");
    printf("helllllllllllllo\n");
    char *out = (char*)get_listElement_value(inTheTrie);
 
@@ -47,17 +47,17 @@ int main()
    ListElement *newElement = insert_trie_key(root,"abekat");
    */
 
-   inTheTrie = lookup_trieNode(root, "ab\0");
+   inTheTrie = trie_lookup_node(root, "ab\0");
    out = (char*)get_listElement_value(inTheTrie);
    printf("Lookup of ab: %s\n",out);
 
 
-   ListElement *found = lookup_trieNode(root, "fisk\0");
+   ListElement *found = trie_lookup_node(root, "fisk\0");
    char *out2 = (char*)get_listElement_value(found);
 
    printf("Lookup of fisk: %s\n",out2);
 
-   ListElement *ff = lookup_trieNode(root,"abekat\0");
+   ListElement *ff = trie_lookup_node(root,"abekat\0");
 
    if(ff == NULL)
    {
@@ -69,16 +69,16 @@ int main()
    printf("Lookup of abekat: %s\n", o2);
    }
 
-   ListElement * lollol = lookup_trieNode(root,"abenar\0");
+   ListElement * lollol = trie_lookup_node(root,"abenar\0");
    char* out123 = (char*)get_listElement_value(lollol);
    printf("Lookup of abenar: %s\n",out123);
 
-   printf("Whos the strongest man in the world? %s\n",(char*)(get_listElement_value(lookup_trieNode(root,"fiskekutter\0"))));
+   printf("Whos the strongest man in the world?%s\n",(char*)(get_listElement_value(trie_lookup_node(root,"fiskekutter\0"))));
 
    printf("removing abekat\n");
-   remove_trie_key(root,"abekat\0");
+   trie_remove_key(root,"abekat\0");
    // INSERTION OF ABEKAT
-   destroy_tree(root);
+   trie_destroy(root);
 
    /*
    char* c = "hello\0";
