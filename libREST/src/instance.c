@@ -113,3 +113,27 @@ void lr_register_service(struct lr *ins,
    struct ListElement* element = trie_insert(ins->trie, url);
    set_listElement_value(element, service);
 }
+
+lr_cb lr_lookup_service(struct lr *ins, char *url, enum lr_method method)
+{
+  struct ListElement* element = trie_lookup_node(ins->trie, url);
+  if(element != NULL) {
+    struct lr_service *service = get_ListElement_value(element);
+    if(service != NULL) {
+      switch(method) {
+        case GET:
+          return service->on_get;
+        break;
+        case POST:
+          return service->on_post;
+        break;
+        case PUT:
+          return service->on_put;
+        break;
+        case DELETE:
+          return service->on_delete;
+        break;
+      }
+    }
+  }
+}
