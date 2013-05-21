@@ -43,7 +43,7 @@
 
  int lm_insert(struct lm *map, const char* key, const char* value); // Returns 0 if inserted correctly, or 1 if key already exists.
  void lm_remove(struct lm *map, const char* key);
- char* lm_find(struct lm *map, const char* key);
+ char* lm_find(struct lm *map, const char* key); // Returns the first found element with the specified key
  struct ll *lm_get_keys(struct lm*map);
  void lm_map(struct lm *map, lm_map_cb func);
 

@@ -42,8 +42,10 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
 
-#include <stddef.h>
 #include "ws_types.h"
+
+#include <stddef.h>
+#include <stdarg.h>
 
 // Structs
 struct ev_loop;
@@ -129,6 +131,8 @@ void ws_stop(struct ws *instance);
 // Client functions
 void ws_conn_kill(struct ws_conn *conn);
 void ws_conn_sendf(struct ws_conn *conn, char *fmt, ...);
+
+void ws_conn_vsendf(struct ws_conn *conn, char *fmt, va_list arg);
 
 #endif
 

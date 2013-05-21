@@ -557,3 +557,8 @@ struct lm *http_request_get_headers(struct http_request *req)
 {
    return req->headers;
 }
+
+struct ws_conn *http_request_get_connection(struct http_request *req)
+{
+   return req->conn;
+}

@@ -49,4 +49,6 @@ size_t http_request_parse(
       const char *buf,
       size_t len);
 
+struct ws_conn *http_request_get_connection(struct http_request *req);
+
 #endif

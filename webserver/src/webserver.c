@@ -43,7 +43,6 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <errno.h>
-#include <stdarg.h>
 #include <ev.h>
 #include <fcntl.h>
 
@@ -317,12 +316,15 @@ static void ws_conn_accept(
 }
 
 void ws_conn_sendf(struct ws_conn *conn, char *fmt, ...) {
-   int status;
    va_list arg;
-
    va_start(arg, fmt);
-   status = vsnprintf(conn->send_msg, MAXDATASIZE, fmt, arg);
+   ws_conn_vsendf(conn, fmt, arg);
    va_end(arg);
+}
+
+void ws_conn_vsendf(struct ws_conn *conn, char *fmt, va_list arg)
+{
+   int status = vsnprintf(conn->send_msg, MAXDATASIZE, fmt, arg);
 
    if (status >= MAXDATASIZE) {
       fprintf(stderr, "Data is too large to send!");

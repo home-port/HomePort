@@ -34,6 +34,7 @@ add_library(http-webserver
       request.c
       url_parser.c
       header_parser.c
+      response.c
       )
 target_link_libraries(http-webserver webserver http-parser linkedmap)
 
