@@ -49,9 +49,6 @@
 /// The maximum data size we can recieve or send
 #define MAXDATASIZE 1024
 
-/// The amount of time a connection may be inactive, in seconds
-#define TIMEOUT 15
-
 /// Instance of a webserver
 struct ws {
    struct ws_settings settings;    ///< Settings
@@ -207,7 +204,7 @@ static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revent
    }
 
    // Reset timeout
-   conn->timeout_watcher.repeat = TIMEOUT;
+   conn->timeout_watcher.repeat = conn->instance->settings.timeout;
    ev_timer_again(loop, &conn->timeout_watcher);
 }
 
@@ -311,7 +308,7 @@ static void ws_conn_accept(
    ev_io_init(&conn->send_watcher, conn_send_cb, in_fd, EV_WRITE);
    ev_io_start(loop, &conn->recv_watcher);
    ev_init(&conn->timeout_watcher, conn_timeout_cb);
-   conn->timeout_watcher.repeat = TIMEOUT;
+   conn->timeout_watcher.repeat = conn->instance->settings.timeout;
    ev_timer_again(loop, &conn->timeout_watcher);
 }
 
