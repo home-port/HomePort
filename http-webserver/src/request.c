@@ -558,6 +558,11 @@ struct lm *http_request_get_headers(struct http_request *req)
    return req->headers;
 }
 
+const char *http_request_get_header(struct http_request *req, const char* key)
+{
+   return lm_find(req->headers, key);
+}
+
 struct ws_conn *http_request_get_connection(struct http_request *req)
 {
    return req->conn;
