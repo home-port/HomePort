@@ -65,6 +65,7 @@ typedef int (*httpws_nodata_cb)(struct http_request *req);
 
 struct httpws_settings {
    enum ws_port port;
+   int timeout;
    httpws_nodata_cb on_req_begin;
    httpws_data_cb   on_req_method;
    httpws_data_cb   on_req_url;
@@ -77,6 +78,7 @@ struct httpws_settings {
 };
 #define HTTPWS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
+   .timeout = 0, \
    .on_req_begin = NULL, \
    .on_req_method = NULL, \
    .on_req_url = NULL, \
