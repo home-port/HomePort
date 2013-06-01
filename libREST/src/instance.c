@@ -52,6 +52,28 @@ struct lr_service {
    struct lr_service *next;
 };
 
+// on_req_url_cmpl
+static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data)
+{
+  struct lr *lr_ins = ws_ctx;
+  const char *url = http_request_get_url(req);
+  struct ListElement *node = trie_lookup_node(lr_ins->trie, url);
+
+  if(node == NULL) // URL not registered
+  {
+    struct http_response *res = http_response_create(req, WS_HTTP_404);
+    // TODO: Find out if we need to add headers
+
+    http_response_send(res, "Resource not found"); // TODO: Decide on appropriate body
+
+    return 1;
+  }
+
+  void* value = get_listElement_value(node);
+
+  return 0;
+}
+
 struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop)
 {
    struct lr *ins = malloc(sizeof(struct lr));
@@ -68,6 +90,7 @@ struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop)
    ws_set.port = settings->port;
    ws_set.timeout = settings->timeout;
    ws_set.ws_ctx = ins;
+   ws_set.on_req_url_cmpl = on_url_cmpl;
 
    ins->webserver = httpws_create(&ws_set, loop);
 
@@ -93,38 +116,17 @@ void lr_destroy(struct lr *ins)
  }
 }
 
-void lr_start(struct lr *ins)
+int lr_start(struct lr *ins)
 {
   if(ins)
-    httpws_start(ins->webserver);
+    return httpws_start(ins->webserver);
+  return 1;
 }
 
 void lr_stop(struct lr *ins)
 {
   if(ins)
     httpws_stop(ins->webserver);
-}
-
-// on_req_url_cmpl
-static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data)
-{
-  struct lr *lr_ins = ws_ctx;
-  const char *url = http_request_get_url(req);
-  struct ListElement *node = trie_lookup_node(lr_ins->trie, url);
-
-  if(node == NULL) // URL not registered
-  {
-    struct http_response *res = http_response_create(req, WS_HTTP_404);
-    // TODO: Find out if we need to add headers
-
-    http_response_send(res, "Resource not found"); // TODO: Decide on appropriate body
-
-    return 1;
-  }
-
-  void* value = get_listElement_value(node);
-
-  return 0;
 }
 
 void lr_register_service(struct lr *ins,

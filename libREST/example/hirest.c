@@ -1,4 +1,4 @@
-// greeting.c
+// hirest.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
  *   
@@ -31,22 +31,22 @@
  *  as representing official policies, either expressed.
  */
 
-#include "http-webserver.h"
+#include "librest.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ev.h>
 
-// The server instance
-static struct httpws *server = NULL;
+// libREST instance
+static struct lr *rest = NULL;
 
 // Handle correct exiting
 static void exit_handler(int sig)
 {
    // Stop server
-   if (server) {
-      httpws_stop(server);
-      httpws_destroy(server);
+   if (rest) {
+      lr_stop(rest);
+      lr_destroy(rest);
    }
 
    // Exit
@@ -54,65 +54,34 @@ static void exit_handler(int sig)
    exit(sig);
 }
 
-void header_printer(const char* key, const char* value)
-{
-   printf("\tHeader key/value = {%s : %s}\n",key,value);
-}
-
-int handle_request(struct http_request *req)
-{
-   const char *method = http_method_str(http_request_get_method(req));
-   const char *url = http_request_get_url(req);
-
-   struct lm *headers = http_request_get_headers(req);
-
-   printf("Got %s request on %s\n", method, url);
-
-   // print headers
-   lm_map(headers, header_printer);
-
-   char *body1 = "<html><body><h1>Hello</h1>Your language: ";
-   char *body2 = lm_find(headers, "Accept-Language");
-   char *body3 = "</body></html>";
-   char *body = malloc((strlen(body1)+strlen(body2)+strlen(body3)+1)*sizeof(char));
-   sprintf(body, "%s%s%s",body1, body2, body3);
-
-   struct http_response *res = http_response_create(req, WS_HTTP_200);
-   http_response_send(res, body);
-
-   free(body);
-   
-   return 0;
-}
-
-// Main function
 int main(int argc, char *argv[])
 {
-   // The event loop for the webserver to run on
-   struct ev_loop *loop = EV_DEFAULT;
+	struct ev_loop *loop = EV_DEFAULT;
 
-   // Set settings for the webserver
-   struct httpws_settings settings = HTTPWS_SETTINGS_DEFAULT;
-   settings.on_req_cmpl = handle_request;
-   settings.port = WS_PORT_HTTP_ALT;
+	struct lr_settings set = LR_SETTINGS_DEFAULT;
+	set.port = WS_PORT_HTTP_ALT;
 
-   // Inform if we have been built with debug flag
-#ifdef DEBUG
-   printf("Debugging is set\n");
-#endif
+	#ifdef DEBUG
+	printf("Debugging is set\n");
+	#endif
 
-   // Register signals for correctly exiting
+	// Register signals for correctly exiting
    signal(SIGINT, exit_handler);
    signal(SIGTERM, exit_handler);
 
    // Create server
-   server = httpws_create(&settings, loop);
+   rest = lr_create(&set, loop);
 
-   // Start the event loop and webserver
-   if (!httpws_start(server))
-      ev_run(loop, 0);
+   if(!lr_start(rest))
+   	ev_run(loop, 0);
 
-   // Exit
-   exit_handler(0);
-   return 0;
+	exit_handler(0);
+	return 0;
 }
+
+
+
+
+
+
+

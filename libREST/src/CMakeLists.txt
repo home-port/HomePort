@@ -32,5 +32,5 @@
 add_library(libREST
       instance.c
       )
-target_link_libraries(libREST trie linkedlist)
+target_link_libraries(libREST trie linkedlist http-webserver)
 

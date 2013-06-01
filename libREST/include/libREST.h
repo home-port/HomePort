@@ -67,7 +67,7 @@ typedef void (*lr_cb)(void *data, const char* url, size_t url_len);
 struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop);
 void lr_destroy(struct lr *ins);
 
-void lr_start(struct lr *ins);
+int lr_start(struct lr *ins);
 void lr_stop(struct lr *ins);
 
 void lr_register_service(struct lr *ins,
