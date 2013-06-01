@@ -92,6 +92,7 @@ enum http_method
 #undef XX
   };
 #endif
+const char *http_method_str(enum http_method m);
 
 // TODO: Move timeouts here from the webserver
 
