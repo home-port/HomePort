@@ -76,7 +76,7 @@ typedef int (*http_cb) (http_parser*);
 
 
 /* Request Methods */
-#ifndef HTTP_METHOD_MAP(XX)
+#ifndef HTTP_METHOD_MAP
 #define HTTP_METHOD_MAP(XX)         \
   XX(0,  DELETE,      DELETE)       \
   XX(1,  GET,         GET)          \

@@ -110,9 +110,21 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ct
 {
   struct lr *lr_ins = ws_ctx;
   const char *url = http_request_get_url(req);
-  void* value = get_listElement_value(trie_lookup_node(lr_ins->trie, url));
+  struct ListElement *node = trie_lookup_node(lr_ins->trie, url);
 
-  return 1010;
+  if(node == NULL) // URL not registered
+  {
+    struct http_response *res = http_response_create(req, WS_HTTP_404);
+    // TODO: Find out if we need to add headers
+
+    http_response_send(res, "Resource not found"); // TODO: Decide on appropriate body
+
+    return 1;
+  }
+
+  void* value = get_listElement_value(node);
+
+  return 0;
 }
 
 void lr_register_service(struct lr *ins,

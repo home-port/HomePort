@@ -51,7 +51,8 @@ enum httpws_http_status_code
 #undef XX
 };
 
-#ifndef HTTP_METHOD_MAP(XX)
+// Copied from http-parser.h
+#ifndef HTTP_METHOD_MAP
 #define HTTP_METHOD_MAP(XX)         \
   XX(0,  DELETE,      DELETE)       \
   XX(1,  GET,         GET)          \
