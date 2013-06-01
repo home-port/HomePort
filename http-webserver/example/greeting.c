@@ -59,7 +59,7 @@ void header_printer(const char* key, const char* value)
    printf("\tHeader key/value = {%s : %s}\n",key,value);
 }
 
-int handle_request(struct http_request *req)
+int handle_request(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data)
 {
    const char *method = http_method_str(http_request_get_method(req));
    const char *url = http_request_get_url(req);

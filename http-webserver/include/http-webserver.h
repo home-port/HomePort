@@ -42,7 +42,9 @@
 // http://www.w3.org/Protocols/rfc2616/rfc2616.html
 #define HTTPWS_HTTP_STATUS_CODE_MAP(XX) \
 	XX(200,200 OK) \
-	XX(404,404 Not Found)
+   XX(400,400 Bad Request) \
+	XX(404,404 Not Found) \
+   XX(405,405 Method Not Allowed)
 
 enum httpws_http_status_code
 {

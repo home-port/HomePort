@@ -61,7 +61,7 @@ enum lr_method
 };
 
 // Callbacks
-typedef void (*lr_cb)(void *data, const char* url, size_t url_len);
+typedef int (*lr_cb)(void *data, const char* url, size_t url_len);
 
 // libREST instance functions
 struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop);

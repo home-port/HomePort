@@ -52,11 +52,27 @@ struct lr_service {
    struct lr_service *next;
 };
 
+static void method_not_allowed(struct http_request *req)
+{
+  struct http_response *res = http_response_create(req, WS_HTTP_405);
+  
+  http_response_send(res, "Method Not Allowed");
+}
+
 // on_req_url_cmpl
 static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data)
 {
   struct lr *lr_ins = ws_ctx;
   const char *url = http_request_get_url(req);
+
+  if(url == NULL)
+  {
+    struct http_response *res = http_response_create(req, WS_HTTP_400);
+    http_response_send(res, "Malformed URL");
+
+    return 1;
+  }
+
   struct ListElement *node = trie_lookup_node(lr_ins->trie, url);
 
   if(node == NULL) // URL not registered
@@ -65,13 +81,85 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ct
     // TODO: Find out if we need to add headers
 
     http_response_send(res, "Resource not found"); // TODO: Decide on appropriate body
-
     return 1;
   }
 
-  void* value = get_listElement_value(node);
+  struct lr_service *service = get_listElement_value(node);
+  if(service == NULL)
+  {
+    fprintf(stderr, "Error: The service for an element in the trie was NULL!\n");
+    method_not_allowed(req);
+    return 1;
+  }
+
+  switch(http_request_get_method(req))
+  {
+    case HTTP_GET:
+      if(service->on_get == NULL){
+        method_not_allowed(req);
+        return 1;
+      }
+    break;
+
+    case HTTP_DELETE:
+      if(service->on_delete == NULL){
+        method_not_allowed(req);
+        return 1;
+      }
+
+    break;
+
+    case HTTP_POST:
+      if(service->on_post == NULL){
+        method_not_allowed(req);
+        return 1;
+      }
+
+    break;
+
+    case HTTP_PUT:
+      if(service->on_put == NULL){
+        method_not_allowed(req);
+        return 1;
+      }
+    break;
+
+    default:
+        method_not_allowed(req);
+        return 1;
+  }
+
+  *req_data = service;
 
   return 0;
+}
+
+static int on_body(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data, const char* chunk, size_t len)
+{
+  struct lr_service *service = *req_data;
+
+  switch(http_request_get_method(req))
+  {
+    case HTTP_GET:
+      return service->on_get(req, chunk, len);
+
+    case HTTP_DELETE:
+      return service->on_delete(req, chunk, len);
+
+    case HTTP_POST:
+      return service->on_post(req, chunk, len);
+
+    case HTTP_PUT:
+      return service->on_put(req, chunk, len);
+
+    default:
+      return 1;
+  }
+}
+
+static int on_cmpl(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data)
+{
+  return on_body(ins, req, ws_ctx, req_data, NULL, 0);
 }
 
 struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop)
@@ -91,6 +179,8 @@ struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop)
    ws_set.timeout = settings->timeout;
    ws_set.ws_ctx = ins;
    ws_set.on_req_url_cmpl = on_url_cmpl;
+   ws_set.on_req_body = on_body;
+   ws_set.on_req_cmpl = on_cmpl;
 
    ins->webserver = httpws_create(&ws_set, loop);
 

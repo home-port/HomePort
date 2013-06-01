@@ -40,6 +40,12 @@
 // libREST instance
 static struct lr *rest = NULL;
 
+int testCB(void *data, const char* url, size_t url_len)
+{
+	printf("CB called!!!\n");
+	return 0;
+}
+
 // Handle correct exiting
 static void exit_handler(int sig)
 {
@@ -71,6 +77,9 @@ int main(int argc, char *argv[])
 
    // Create server
    rest = lr_create(&set, loop);
+
+    // register service
+   lr_register_service(rest, "/device/a", NULL, testCB, NULL, NULL);
 
    if(!lr_start(rest))
    	ev_run(loop, 0);
