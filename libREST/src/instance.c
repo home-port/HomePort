@@ -114,6 +114,8 @@ void lr_register_service(struct lr *ins,
    set_listElement_value(element, service);
 }
 
+// TODO: Make lookup_service private and make a function which actually calls the callback
+//       int lr_call(struct lr *ins, url, method)?
 lr_cb lr_lookup_service(struct lr *ins, char *url, enum lr_method method)
 {
   struct ListElement* element = trie_lookup_node(ins->trie, url);
@@ -136,4 +138,5 @@ lr_cb lr_lookup_service(struct lr *ins, char *url, enum lr_method method)
       }
     }
   }
+  return NULL;
 }

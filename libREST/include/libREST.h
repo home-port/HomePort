@@ -62,4 +62,26 @@ void lr_register_service(struct lr *ins,
                          lr_cb on_put,
                          lr_cb on_delete);
 
+lr_cb lr_lookup_service(struct lr *ins, char *url, enum lr_method method);
+
+// Features libREST should have:
+// Register a callback
+// Start, stop (webserver. Should also have port etc.)
+// Call callback (maybe with chunks). It has to connect it with a request (to know which chunks belong together). That will be the void *
+// Start send chunk, send chunk, stop send chunk etc.
+
+// call_cb(req, 
+// send(req,
+// start_send(req, 
+// send_chunk(req, 		#error if called without start_send
+// stop_send(req, 
+// lr create    		#should also create a webserver etc.
+// destroy(lr, 
+// start(lr, 
+// stop(lr,
+// register(lr, url, method, 
+// unregister(lr, 
+
+// libREST will register on on_url etc, and handle the answers if the url is not registered etc. 
+
 #endif
