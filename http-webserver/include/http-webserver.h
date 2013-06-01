@@ -96,7 +96,7 @@ void httpws_stop(struct httpws *instance);
 enum http_method http_request_get_method(struct http_request *req);
 const char *http_request_get_url(struct http_request *req);
 struct lm *http_request_get_headers(struct http_request *req);
-// TODO: Provide a get header function here as well
+const char *http_request_get_header(struct http_request *req, const char* key);
 
 void http_response_destroy(struct http_response *res);
 struct http_response *http_response_create(struct http_request *req, enum httpws_http_status_code status);
