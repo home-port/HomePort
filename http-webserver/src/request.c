@@ -137,6 +137,7 @@ struct http_request
    enum state state;                 ///< Current state of the request
    char *url;
    struct lm *headers;
+   void* data;
 };
 
 // Methods for http_parser settings
@@ -220,12 +221,12 @@ static int parser_msg_begin(http_parser *parser)
          req->state = S_BEGIN;
          // Send request begin
          if(begin_cb)
-            stat = begin_cb(req);
+            stat = begin_cb(req->webserver, req, settings->ws_ctx, &req->data);
          if (stat) { req->state = S_STOP; return stat; }
          // Send method
          method = http_method_str(parser->method);
          if(method_cb)
-            stat = method_cb(req, method, strlen(method));
+            stat = method_cb(req->webserver, req, settings->ws_ctx, &req->data, method, strlen(method));
 
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
@@ -261,7 +262,7 @@ static int parser_url(http_parser *parser, const char *buf, size_t len)
       case S_URL:
          up_add_chunk(req->url_parser, buf, len);
          if(url_cb)
-            stat = url_cb(req, buf, len);
+            stat = url_cb(req->webserver, req, settings->ws_ctx, &req->data, buf, len);
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -297,14 +298,14 @@ static int parser_hdr_field(http_parser *parser, const char *buf, size_t len)
       case S_URL:
          up_complete(req->url_parser);
          if(url_cmpl_cb)
-            stat = url_cmpl_cb(req);
+            stat = url_cmpl_cb(req->webserver, req, settings->ws_ctx, &req->data);
          if (stat) { req->state = S_STOP; return stat; }
       case S_HEADER_VALUE:
          req->state = S_HEADER_FIELD;
       case S_HEADER_FIELD:
          hp_on_header_field(req->header_parser, buf, len);
          if(header_field_cb)
-            stat = header_field_cb(req, buf, len);
+            stat = header_field_cb(req->webserver, req, settings->ws_ctx, &req->data, buf, len);
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -340,7 +341,7 @@ static int parser_hdr_value(http_parser *parser, const char *buf, size_t len)
       case S_HEADER_VALUE:
          hp_on_header_value(req->header_parser, buf, len);
          if(header_value_cb)
-            stat = header_value_cb(req, buf, len);
+            stat = header_value_cb(req->webserver, req, settings->ws_ctx, &req->data, buf, len);
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -375,13 +376,13 @@ static int parser_hdr_cmpl(http_parser *parser)
       case S_URL:
          up_complete(req->url_parser);
          if(url_cmpl_cb)
-            stat = url_cmpl_cb(req);
+            stat = url_cmpl_cb(req->webserver, req, settings->ws_ctx, &req->data);
          if (stat) { req->state = S_STOP; return stat; }
       case S_HEADER_VALUE:
          hp_on_header_complete(req->header_parser);
          req->state = S_HEADER_COMPLETE;
          if(header_cmpl_cb)
-            stat = header_cmpl_cb(req);
+            stat = header_cmpl_cb(req->webserver, req, settings->ws_ctx, &req->data);
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -416,7 +417,7 @@ static int parser_body(http_parser *parser, const char *buf, size_t len)
          req->state = S_BODY;
       case S_BODY:
          if(body_cb)
-            stat = body_cb(req, buf, len);
+            stat = body_cb(req->webserver, req, settings->ws_ctx, &req->data, buf, len);
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -447,7 +448,7 @@ static int parser_msg_cmpl(http_parser *parser)
       case S_BODY:
          req->state = S_COMPLETE;
          if(complete_cb)
-            stat = complete_cb(req);
+            stat = complete_cb(req->webserver, req, settings->ws_ctx, &req->data);
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
@@ -501,6 +502,8 @@ struct http_request *http_request_create(
    req->headers = lm_create();
 
    req->url = NULL;
+
+   req->data = NULL;
 
    return req;
 }
