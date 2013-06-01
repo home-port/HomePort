@@ -59,7 +59,7 @@ struct ws_conn;
 typedef int  (*ws_nodata_cb)(struct ws *instance,
                              struct ws_conn *conn, void *ws_ctx, void **data);
 typedef int  (*ws_data_cb)  (struct ws *instance,
-                             struct ws_conn *conn, void *ws_ctw, void **data,
+                             struct ws_conn *conn, void *ws_ctx, void **data,
                              const char *buf, size_t len);
 
 /// Settings struct for webserver
