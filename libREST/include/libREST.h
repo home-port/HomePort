@@ -34,11 +34,22 @@
 #ifndef LIBREST_H
 #define LIBREST_H
 
+#include "ws_types.h"
+
 #include <stddef.h>
 
 // Structs
 struct lr;
 struct lr_request;
+struct ev_loop;
+
+struct lr_settings {
+	int port;
+	int timeout;
+};
+#define LR_SETTINGS_DEFAULT { \
+	.port = WS_PORT_HTTP, \
+	.timeout = 15 }
 
 // Enums
 enum lr_method
@@ -53,8 +64,12 @@ enum lr_method
 typedef void (*lr_cb)(void *data, const char* url, size_t url_len);
 
 // libREST instance functions
-struct lr *lr_create();
+struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop);
 void lr_destroy(struct lr *ins);
+
+void lr_start(struct lr *ins);
+void lr_stop(struct lr *ins);
+
 void lr_register_service(struct lr *ins,
                          char *url,
                          lr_cb on_get,
@@ -62,7 +77,7 @@ void lr_register_service(struct lr *ins,
                          lr_cb on_put,
                          lr_cb on_delete);
 
-lr_cb lr_lookup_service(struct lr *ins, char *url, enum lr_method method);
+void lr_unregister_service(struct lr *ins, char *url);
 
 // Features libREST should have:
 // Register a callback

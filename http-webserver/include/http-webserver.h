@@ -51,7 +51,8 @@ enum httpws_http_status_code
 #undef XX
 };
 
-#ifndef HTTP_METHOD_MAP(XX)
+// Copied from http-parser.h
+#ifndef HTTP_METHOD_MAP
 #define HTTP_METHOD_MAP(XX)         \
   XX(0,  DELETE,      DELETE)       \
   XX(1,  GET,         GET)          \
@@ -101,13 +102,14 @@ struct httpws;
 struct http_request;
 struct http_response;
 
-typedef int (*httpws_data_cb)(struct http_request *req,
-                              const char *buf, size_t len);
-typedef int (*httpws_nodata_cb)(struct http_request *req);
+typedef int (*httpws_data_cb)(struct httpws *ins, struct http_request *req,
+                              void* ws_ctx, void** req_data, const char *buf, size_t len);
+typedef int (*httpws_nodata_cb)(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data);
 
 struct httpws_settings {
    enum ws_port port;
    int timeout;
+   void* ws_ctx;
    httpws_nodata_cb on_req_begin;
    httpws_data_cb   on_req_method;
    httpws_data_cb   on_req_url;
@@ -120,7 +122,8 @@ struct httpws_settings {
 };
 #define HTTPWS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
-   .timeout = 0, \
+   .timeout = 15, \
+   .ws_ctx = NULL, \
    .on_req_begin = NULL, \
    .on_req_method = NULL, \
    .on_req_url = NULL, \

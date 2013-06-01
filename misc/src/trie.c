@@ -194,7 +194,7 @@ ListElement* trie_insert(TrieNode* root, char* key)
    //TrieNode* newNode = malloc(sizeof(TrieNode));
 }
 
-ListElement* trie_lookup_node(TrieNode* root, char* key)
+ListElement* trie_lookup_node(TrieNode* root, const char* key)
 {
    if(root->children == NULL)
       return NULL;

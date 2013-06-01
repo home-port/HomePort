@@ -31,16 +31,17 @@
  *  as representing official policies, either expressed.
  */
 
-#include "instance.h"
 #include "libREST.h"
 #include "trie.h"
+#include "http-webserver.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 
 struct lr {
-   struct lr_service *services;
+   struct lr_service *services; // TODO: Use the trie. Implement a map function on it!
    struct TrieNode *trie;
+   struct httpws *webserver;
 };
 
 struct lr_service {
@@ -51,7 +52,7 @@ struct lr_service {
    struct lr_service *next;
 };
 
-struct lr *lr_create()
+struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop)
 {
    struct lr *ins = malloc(sizeof(struct lr));
    if (ins == NULL) {
@@ -63,22 +64,67 @@ struct lr *lr_create()
 
    ins->services = NULL;
 
+   struct httpws_settings ws_set = HTTPWS_SETTINGS_DEFAULT;
+   ws_set.port = settings->port;
+   ws_set.timeout = settings->timeout;
+   ws_set.ws_ctx = ins;
+
+   ins->webserver = httpws_create(&ws_set, loop);
+
    return ins;
 }
 
 void lr_destroy(struct lr *ins)
 {
-   struct lr_service *next;
-   struct lr_service *service = ins->services;
+  if(ins != NULL) {
+     struct lr_service *next;
+     struct lr_service *service = ins->services;
 
-   while (service != NULL) {
-      next = service->next;
-      free(service);
-      service = next;
-   }
+     while (service != NULL) {
+        next = service->next;
+        free(service);
+        service = next;
+     }
 
-   trie_destroy(ins->trie);
-   free(ins);
+     httpws_destroy(ins->webserver);
+
+     trie_destroy(ins->trie);
+     free(ins);
+ }
+}
+
+void lr_start(struct lr *ins)
+{
+  if(ins)
+    httpws_start(ins->webserver);
+}
+
+void lr_stop(struct lr *ins)
+{
+  if(ins)
+    httpws_stop(ins->webserver);
+}
+
+// on_req_url_cmpl
+static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data)
+{
+  struct lr *lr_ins = ws_ctx;
+  const char *url = http_request_get_url(req);
+  struct ListElement *node = trie_lookup_node(lr_ins->trie, url);
+
+  if(node == NULL) // URL not registered
+  {
+    struct http_response *res = http_response_create(req, WS_HTTP_404);
+    // TODO: Find out if we need to add headers
+
+    http_response_send(res, "Resource not found"); // TODO: Decide on appropriate body
+
+    return 1;
+  }
+
+  void* value = get_listElement_value(node);
+
+  return 0;
 }
 
 void lr_register_service(struct lr *ins,
@@ -114,6 +160,10 @@ void lr_register_service(struct lr *ins,
    set_listElement_value(element, service);
 }
 
+
+// TODO: Make lr_unregister_service
+
+/*
 // TODO: Make lookup_service private and make a function which actually calls the callback
 //       int lr_call(struct lr *ins, url, method)?
 lr_cb lr_lookup_service(struct lr *ins, char *url, enum lr_method method)
@@ -140,3 +190,4 @@ lr_cb lr_lookup_service(struct lr *ins, char *url, enum lr_method method)
   }
   return NULL;
 }
+*/
