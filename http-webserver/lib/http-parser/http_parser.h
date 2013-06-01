@@ -76,6 +76,7 @@ typedef int (*http_cb) (http_parser*);
 
 
 /* Request Methods */
+#ifndef HTTP_METHOD_MAP(XX)
 #define HTTP_METHOD_MAP(XX)         \
   XX(0,  DELETE,      DELETE)       \
   XX(1,  GET,         GET)          \
@@ -115,7 +116,7 @@ enum http_method
   HTTP_METHOD_MAP(XX)
 #undef XX
   };
-
+#endif
 
 enum http_parser_type { HTTP_REQUEST, HTTP_RESPONSE, HTTP_BOTH };
 
