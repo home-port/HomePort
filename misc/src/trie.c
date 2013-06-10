@@ -1,7 +1,6 @@
 // trie.c
 
 /*  Copyright 2013 Aalborg University. All rights reserved.
-    
  *   
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -99,7 +98,7 @@ ListElement* trie_insert(TrieNode* root, char* key)
          {
             if(listElement->value == NULL)
             {
-               return  listElement;
+               return listElement;
             }
             else
             {
@@ -244,15 +243,16 @@ ListElement* trie_lookup_node(TrieNode* root, const char* key)
    return NULL;
 }
 
-void trie_remove_key(TrieNode* root, char* key)
+void* trie_remove_key(TrieNode* root, char* key)
 {
    if(root->children == NULL)
-      return;
+      return NULL;
          
    unsigned int current_pos = 0, tmp_pos = 0;
    TrieNode* treeElement = root;
    ListElement *parent = NULL, *listElement = root->children->head;
    char* listkey = listElement->key;
+   void* value = NULL;
    
    while(listElement!=NULL)
    {
@@ -280,9 +280,10 @@ void trie_remove_key(TrieNode* root, char* key)
                   parent->key = realloc(parent->key,strlen(listElement->key)*(sizeof(char)));
                   parent->key = strcat(parent->key,listkey);
                   parent->node = listElement->node;
+                  value = listElement->value;
                   remove_listElement(treeElement->children, listkey);
                   free(treeElement);
-                  return;
+                  return value;
                } 
                else if(treeElement->children->head->next == NULL &&
                      parent->value != NULL && listElement->node->children
@@ -290,15 +291,16 @@ void trie_remove_key(TrieNode* root, char* key)
                {
                   if(listElement->node->children->head->next == NULL)
                   {
+                     value = listElement->value;
                      listElement->value = listElement->node->children->head->value;
                      listElement->key = realloc(listElement->key,strlen(listElement->node->children->head->key)*(sizeof(char)));
                      listElement->key = strcat(listElement->key,
-                           listElement->node->children->head->key);
-                      //freeing the keys child
+                     listElement->node->children->head->key);
+                     //freeing the keys child
                      struct LinkedList *tmp_ll = listElement->node->children;
                      listElement->node = listElement->node->children->head->node;                  
                      destroy_linkedList(tmp_ll);
-                     return;
+                     return value;
                   }
                }
                
@@ -308,6 +310,7 @@ void trie_remove_key(TrieNode* root, char* key)
                {
                   if(listElement->node->children->head->next == NULL)
                   {
+                     value = listElement->value;
                      listElement->value = listElement->node->children->head->value;
                      listElement->key = realloc(listElement->key,strlen(listElement->node->children->head->key)*(sizeof(char)));
                      listElement->key = strcat(listElement->key,
@@ -316,27 +319,28 @@ void trie_remove_key(TrieNode* root, char* key)
                      struct LinkedList *tmp_ll = listElement->node->children;
                      listElement->node = listElement->node->children->head->node;                  
                      destroy_linkedList(tmp_ll);
-                     return;
+                     return value;
                   }
                }
             }
             if(listElement->node != NULL &&
                   listElement->node->children->head->next != NULL)
             {
+               value = listElement->value;
                listElement->value = NULL;
-               return;
+               return value;
             }
-            
+            value = listElement->value;
             remove_listElement(treeElement->children,listkey);
             
             // case: only one child left and parent is not end of another key
-            return; 
+            return value; 
          }
          else if(listkey[tmp_pos] == '\0')
          {
             treeElement = listElement->node;
             if(treeElement == NULL || treeElement->children == NULL)
-               return;
+               return NULL;
 
             listElement = treeElement->children->head;
             listkey = listElement->key;
@@ -344,7 +348,7 @@ void trie_remove_key(TrieNode* root, char* key)
          }
          else 
          {
-            return;
+            return NULL;
          }
       }
       parent = listElement;
@@ -352,10 +356,10 @@ void trie_remove_key(TrieNode* root, char* key)
       if(listElement != NULL)
          listkey = listElement->key;
    }
-   return;     
+   return NULL;     
 }
 
-void trie_destroy(TrieNode* subtree)
+void trie_destroy(TrieNode* subtree, dealloc_cb remove_value)
 {
    ListElement* tmp = NULL;
    if(subtree->children != NULL)
@@ -363,12 +367,15 @@ void trie_destroy(TrieNode* subtree)
       tmp = subtree->children->head;
       while(tmp != NULL)
       {
+         remove_value(tmp->value);
+         free(tmp->key);
          if(tmp->node != NULL)
-            trie_destroy(tmp->node);
+            trie_destroy(tmp->node, remove_value);
          tmp = tmp->next;
       }
       destroy_linkedList(subtree->children);
       free(subtree);
+      free(tmp);
    }
 }
 

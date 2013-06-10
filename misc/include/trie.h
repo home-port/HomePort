@@ -40,6 +40,7 @@
 #include "linkedlist.h"
 
 typedef struct TrieNode TrieNode;
+typedef void(*dealloc_cb)(void* value);
 
 struct TrieNode
 {
@@ -48,8 +49,8 @@ struct TrieNode
 
 TrieNode* trie_create();
 struct ListElement* trie_insert(TrieNode* root, char* key);
-void trie_remove_key(TrieNode* root, char* key);
+void* trie_remove_key(TrieNode* root, char* key);
 struct ListElement* trie_lookup_node(TrieNode* root, const char* key);
-void trie_destroy(TrieNode* root);
+void trie_destroy(TrieNode* subtree, dealloc_cb remove_value);
 
 #endif

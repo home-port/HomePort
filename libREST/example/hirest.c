@@ -81,6 +81,10 @@ int main(int argc, char *argv[])
     // register service
    lr_register_service(rest, "/device/a", NULL, testCB, NULL, NULL);
 
+   lr_register_service(rest, "/device/b", NULL, testCB, NULL, NULL);
+   lr_register_service(rest, "/device/b", NULL, testCB, NULL, NULL);
+   lr_unregister_service(rest, "/device/b");
+
    if(!lr_start(rest))
    	ev_run(loop, 0);
 

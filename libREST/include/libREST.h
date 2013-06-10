@@ -70,7 +70,8 @@ void lr_destroy(struct lr *ins);
 int lr_start(struct lr *ins);
 void lr_stop(struct lr *ins);
 
-void lr_register_service(struct lr *ins,
+// Registers a new service. Returns 1 if the url is already registered or not enough memory
+int lr_register_service(struct lr *ins,
                          char *url,
                          lr_cb on_get,
                          lr_cb on_post,
