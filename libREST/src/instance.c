@@ -39,7 +39,6 @@
 #include <stdio.h>
 
 struct lr {
-   struct lr_service *services; // TODO: Use the trie. Implement a map function on it!
    struct TrieNode *trie;
    struct httpws *webserver;
 };
@@ -49,7 +48,6 @@ struct lr_service {
    lr_cb on_post;
    lr_cb on_put;
    lr_cb on_delete;
-   struct lr_service *next;
 };
 
 static void method_not_allowed(struct http_request *req)
@@ -172,8 +170,6 @@ struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop)
 
    ins->trie = trie_create();
 
-   ins->services = NULL;
-
    struct httpws_settings ws_set = HTTPWS_SETTINGS_DEFAULT;
    ws_set.port = settings->port;
    ws_set.timeout = settings->timeout;
@@ -187,23 +183,17 @@ struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop)
    return ins;
 }
 
+void free_service(void *element)
+{
+	free(element);
+}
+
 void lr_destroy(struct lr *ins)
 {
-   // TODO Remove the list and this destroy hack, when trie supports a
-   // function to free objects
    if(ins != NULL) {
-      struct lr_service *next;
-      struct lr_service *service = ins->services;
- 
-      while (service != NULL) {
-         next = service->next;
-         free(service);
-         service = next;
-      }
- 
       httpws_destroy(ins->webserver);
- 
-      trie_destroy(ins->trie);
+      trie_destroy(ins->trie, free_service);
+
       free(ins);
    }
 }
@@ -221,39 +211,35 @@ void lr_stop(struct lr *ins)
     httpws_stop(ins->webserver);
 }
 
-void lr_register_service(struct lr *ins,
+int lr_register_service(struct lr *ins,
                          char *url,
                          lr_cb on_get,
                          lr_cb on_post,
                          lr_cb on_put,
                          lr_cb on_delete)
 {
-   struct lr_service *service = ins->services;
+   struct lr_service *service = malloc(sizeof(struct lr_service));
 
    if (service == NULL) {
-      ins->services = malloc(sizeof(struct lr_service));
-      service = ins->services;
-   } else {
-      while (service->next != NULL) service = service->next;
-      service->next = malloc(sizeof(struct lr_service));
-      service = service->next;
-   }
-   
-   if (service == NULL) {
       fprintf(stderr, "Not enough memory to allocate service\n");
-      return;
+      return 1;
    }
 
    service->on_get = on_get;
    service->on_post = on_post;
    service->on_put = on_put;
    service->on_delete = on_delete;
-   service->next = NULL;
 
    struct ListElement* element = trie_insert(ins->trie, url);
+
+   if(element == NULL)
+   	return 1;
+
    set_listElement_value(element, service);
+   return 0;
 }
 
-
-// TODO: Make lr_unregister_service
-
+void lr_unregister_service(struct lr *ins, char *url)
+{
+	free(trie_remove_key(ins->trie, url)); 
+}
