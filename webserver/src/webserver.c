@@ -66,7 +66,8 @@ struct ws_conn {
    struct ev_timer timeout_watcher; ///< Timeout watcher
    struct ev_io recv_watcher;       ///< Recieve watcher
    struct ev_io send_watcher;       ///< Send watcher
-   char send_msg[MAXDATASIZE];      ///< Data to send
+   char *send_msg;                  ///< Data to send
+   size_t send_len;                ///< Length of data to send
    void *ctx;
 };
 
@@ -214,10 +215,10 @@ static void conn_send_cb(struct ev_loop *loop, struct ev_io *watcher,
    struct ws_conn *conn = watcher->data;
 
    printf("sending response to %s\n", conn->ip);
-   if (send(watcher->fd, conn->send_msg, strlen(conn->send_msg), 0) == -1)
+   if (send(watcher->fd, conn->send_msg, conn->send_len, 0) == -1)
       perror("send");
-   ev_io_stop(conn->instance->loop, &conn->send_watcher);
 
+   ev_io_stop(conn->instance->loop, &conn->send_watcher);
    ws_conn_kill(conn);
 }
 
@@ -291,6 +292,8 @@ static void ws_conn_accept(
    conn->recv_watcher.data = conn;
    conn->send_watcher.data = conn;
    conn->ctx = NULL;
+   conn->send_msg = NULL;
+   conn->send_len = 0;
 
    // Set up list
    ws_instance_add_conn(conn->instance, conn);
@@ -312,24 +315,48 @@ static void ws_conn_accept(
    ev_timer_again(loop, &conn->timeout_watcher);
 }
 
-void ws_conn_sendf(struct ws_conn *conn, char *fmt, ...) {
+int ws_conn_sendf(struct ws_conn *conn, char *fmt, ...) {
+   int stat;
    va_list arg;
+
    va_start(arg, fmt);
-   ws_conn_vsendf(conn, fmt, arg);
+   stat = ws_conn_vsendf(conn, fmt, arg);
    va_end(arg);
+
+   return stat;
 }
 
-void ws_conn_vsendf(struct ws_conn *conn, char *fmt, va_list arg)
+int ws_conn_vsendf(struct ws_conn *conn, char *fmt, va_list arg)
 {
-   int status = vsnprintf(conn->send_msg, MAXDATASIZE, fmt, arg);
+   int stat;
+   char *new_msg;
+   size_t new_len;
 
-   if (status >= MAXDATASIZE) {
-      fprintf(stderr, "Data is too large to send!");
-      ws_conn_kill(conn);
-      return;
+   // Get the length to expand with
+   new_len = vsnprintf("", 0, fmt, arg);
+
+   // Expand message to send
+   new_msg = realloc(conn->send_msg,
+         (conn->send_len + new_len + 1)*sizeof(char));
+   if (new_msg == NULL) {
+      fprintf(stderr, "Cannot allocate enough memory\n");
+      return -1;
    }
+   conn->send_msg = new_msg;
 
-   ev_io_start(conn->instance->loop, &conn->send_watcher);
+   // Concatenate strings
+   stat = vsprintf(&(conn->send_msg[conn->send_len]), fmt, arg);
+
+   // Start send watcher
+   if (conn->send_len == 0 && conn->instance != NULL)
+      ev_io_start(conn->instance->loop, &conn->send_watcher);
+
+   // Update length
+   conn->send_len += new_len;
+
+   // Check if the whole string was added
+   if (stat < 0) return stat;
+   else return 0;
 }
 
 static void ws_instance_rm_conn(struct ws *instance, struct ws_conn
@@ -339,6 +366,10 @@ static void ws_instance_rm_conn(struct ws *instance, struct ws_conn
 
    ll_find(iter, instance->conns, conn);
    ll_remove(iter);
+}
+
+/// Close a connection, after the remaining data has been sent
+void ws_conn_close(struct ws_conn *conn) {
 }
 
 /// Kill and clean up after a connection
@@ -371,6 +402,7 @@ void ws_conn_kill(struct ws_conn *conn) {
       conn->instance->settings.on_disconnect(conn->instance, conn, conn->instance->settings.ws_ctx, &conn->ctx);
 
    // Cleanup
+   free(conn->send_msg);
    free(conn);
 }
 

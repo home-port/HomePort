@@ -34,6 +34,14 @@ add_library(webserver
       )
 target_link_libraries(webserver ev)
 
+# Webserver Test
+add_executable(webserver_test EXCLUDE_FROM_ALL
+      webserver_test.c
+      )
+target_link_libraries(webserver_test ev)
+add_test(webserver_test ${CMAKE_CURRENT_BINARY_DIR}/webserver_test)
+add_dependencies(check webserver_test)
+
 # Load Test
 add_executable(webserver_load_test EXCLUDE_FROM_ALL
       load_test.c
