@@ -15,11 +15,16 @@ TEST(insert)
 	struct lm *map;
 	map = lm_create();
 
-	int testA = 10;
-	int testB = -10;
+	char *testA = "Isis";
+	char *testB = "Bastet";
 
-	lm_insert(map, "programming", &testA);
-	lm_insert(map, "python", &testB);
+	int r1 = lm_insert(map, "programming", testA);
+	int r2 = lm_insert(map, "python", testB);
+	int r3 = lm_insert(map, "programming", testB); // Already inserted
+
+	ASSERT_EQUAL(r1,0);
+	ASSERT_EQUAL(r2,0);
+	ASSERT_EQUAL(r3,1);
 
 	lm_destroy(map);
 TSET()
@@ -28,21 +33,21 @@ TEST(find)
 	struct lm *map;
 	map = lm_create();
 
-	int testA = 10;
-	int testB = -10;
-	int testC = 5;
+	char *testA = "Anubis";
+	char *testB = "Bastet";
+	char *testC = "Seth";
 
-	lm_insert(map, "programming", &testA);
-	lm_insert(map, "python", &testB);
-	lm_insert(map, "C", &testC);
+	lm_insert(map, "programming", testA);
+	lm_insert(map, "python", testB);
+	lm_insert(map, "C", testC);
 
-	int *foundA = lm_find(map, "programming");
-	int *foundC = lm_find(map, "C");
-	int *foundB = lm_find(map, "python");
+	char *foundA = lm_find(map, "programming");
+	char *foundC = lm_find(map, "C");
+	char *foundB = lm_find(map, "python");
 
-	ASSERT_EQUAL(*foundA, testA);
-	ASSERT_EQUAL(*foundB, testB);
-	ASSERT_EQUAL(*foundC, testC);
+	ASSERT_STR_EQUAL(foundA, testA);
+	ASSERT_STR_EQUAL(foundB, testB);
+	ASSERT_STR_EQUAL(foundC, testC);
 
 	ASSERT_NULL(lm_find(map, "I AM NOT IN THE MAP"));
 
@@ -53,13 +58,13 @@ TEST(remove)
 	struct lm *map;
 	map = lm_create();
 
-	int testA = 10;
-	int testB = -10;
-	int testC = 5;
+	char *testA = "Anubis";
+	char *testB = "Bastet";
+	char *testC = "Seth";
 
-	lm_insert(map, "programming", &testA);
-	lm_insert(map, "python", &testB);
-	lm_insert(map, "C", &testC);
+	lm_insert(map, "programming", testA);
+	lm_insert(map, "python", testB);
+	lm_insert(map, "C", testC);
 
 	ASSERT_NOT_NULL(lm_find(map,"python"));
 
@@ -67,6 +72,7 @@ TEST(remove)
 
 	ASSERT_NULL(lm_find(map,"python"));
 
+	lm_destroy(map);
 TSET()
 
 TEST_END()
