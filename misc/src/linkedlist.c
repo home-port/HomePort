@@ -77,7 +77,7 @@ ListElement* insert_listElement(LinkedList *ll, char *key, struct TrieNode* node
    ll->tail = element;
    element->next = NULL;
    element->key = malloc(strlen(key) *(sizeof(char))+1);
-   strcpy(element->key, key);
+   element->key = key;
    element->node = node;
    element->value = NULL;
 
@@ -132,10 +132,10 @@ void destroy_linkedList(LinkedList *ll)
       //moving head down the list as elements are freed
       target = ll->head;
       ll->head = ll->head->next;
-      free(target->key);
+      //free(target->key);
       free(target);
    }
-   free(ll->head->key);
+   //free(ll->head->key);
    free(ll->head);
    free(ll);
 }

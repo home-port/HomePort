@@ -375,6 +375,7 @@ void trie_destroy(TrieNode* subtree, dealloc_cb remove_value)
       }
       destroy_linkedList(subtree->children);
       free(subtree);
+      free(tmp);
    }
 }
 
