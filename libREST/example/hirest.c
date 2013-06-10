@@ -31,7 +31,7 @@
  *  as representing official policies, either expressed.
  */
 
-#include "librest.h"
+#include "libREST.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
