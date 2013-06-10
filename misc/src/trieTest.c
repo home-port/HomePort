@@ -21,7 +21,8 @@ int main()
    
 
    ListElement *newAbe = trie_insert(root, "fisk\0");
-   //char *c4 = "this is abekat\0";
+   char *c4 = "this is \0";
+   strcpy(c3,c4);
    set_listElement_value(newAbe, c3);
 /*
    ListElement *newAbe2 = trie_insert(root, "abenar\0");

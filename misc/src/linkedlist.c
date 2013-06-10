@@ -108,7 +108,7 @@ void* get_value(LinkedList *ll, char *key)
 
 void set_listElement_value(ListElement *element, void* value)
 {
-   if(value != NULL)
+   if(element != NULL)
       element->value = value;
 }
 
