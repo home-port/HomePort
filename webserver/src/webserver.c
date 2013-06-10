@@ -323,7 +323,7 @@ int ws_conn_sendf(struct ws_conn *conn, char *fmt, ...) {
    va_list arg;
 
    va_start(arg, fmt);
-   stat = ws_conn_vsendf(conn, fmt, &arg);
+   stat = ws_conn_vsendf(conn, fmt, arg);
    va_end(arg);
 
    return stat;
