@@ -219,24 +219,37 @@ static int on_receive(struct ws *instance, struct ws_conn *conn, void *ctx, void
    return 0;
 }
 
+// TODO Move this up to top of file
+static struct ev_loop *loop;
+static struct ev_async exit_watcher;
+
 // Handle correct exiting
 static void exit_handler(int sig)
 {
+   fprintf(stderr, "Sending stop signal\n");
+   ev_async_send(loop, &exit_watcher);
+}
+
+static void exit_cb(EV_P_ ev_async *watcher, int revents)
+{
+   fprintf(stderr, "Stopping webserver\n");
    // Stop webserver
    if (ws != NULL) {
       ws_stop(ws);
       ws_destroy(ws);
    }
 
-   // Exit
-   printf("Exiting....\n");
-   exit(sig);
+   ev_break(loop, EVBREAK_ALL);
 }
 
 static void *webserver_thread(void *arg)
 {
    // The event loop for the webserver to run on
-   struct ev_loop *loop = EV_DEFAULT;
+   loop = EV_DEFAULT;
+
+   // Add a watcher to stop it again
+   ev_async_init(&exit_watcher, exit_cb);
+   ev_async_start(loop, &exit_watcher);
 
    // Settings for the webserver
    struct ws_settings settings = WS_SETTINGS_DEFAULT;
@@ -260,22 +273,23 @@ static void *webserver_thread(void *arg)
    started = 1;
    ev_run(loop, 0);
 
-   // Exit
-   exit_handler(0);
-
    return NULL;
 }
 
 int main(int argc, char *argv[])
 {
+   int stat;
    pthread_t server_thread;
    pthread_create(&server_thread, NULL, webserver_thread, NULL);
 
    // TODO Someone needs too add a timeout here...
    while (!started);
 
-   test_thread();
+   stat = test_thread();
    exit_handler(0);
 
-   return 1;
+   pthread_join(server_thread, NULL);
+
+   if (stat == 0) return 1;
+   else return 0;
 }
