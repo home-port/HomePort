@@ -98,7 +98,7 @@ ListElement* trie_insert(TrieNode* root, char* key)
          {
             if(listElement->value == NULL)
             {
-               return  listElement;
+               return listElement;
             }
             else
             {
@@ -368,6 +368,7 @@ void trie_destroy(TrieNode* subtree, dealloc_cb remove_value)
       while(tmp != NULL)
       {
          remove_value(tmp->value);
+         free(tmp->key);
          if(tmp->node != NULL)
             trie_destroy(tmp->node, remove_value);
          tmp = tmp->next;
