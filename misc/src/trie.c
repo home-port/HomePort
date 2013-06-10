@@ -246,7 +246,7 @@ ListElement* trie_lookup_node(TrieNode* root, const char* key)
 void* trie_remove_key(TrieNode* root, char* key)
 {
    if(root->children == NULL)
-      return;
+      return NULL;
          
    unsigned int current_pos = 0, tmp_pos = 0;
    TrieNode* treeElement = root;
@@ -319,7 +319,7 @@ void* trie_remove_key(TrieNode* root, char* key)
                      struct LinkedList *tmp_ll = listElement->node->children;
                      listElement->node = listElement->node->children->head->node;                  
                      destroy_linkedList(tmp_ll);
-                     return;
+                     return value;
                   }
                }
             }

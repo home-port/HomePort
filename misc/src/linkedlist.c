@@ -132,8 +132,10 @@ void destroy_linkedList(LinkedList *ll)
       //moving head down the list as elements are freed
       target = ll->head;
       ll->head = ll->head->next;
+      free(target->key);
       free(target);
    }
+   free(ll->head->key);
    free(ll->head);
    free(ll);
 }
@@ -157,6 +159,7 @@ void remove_listElement(LinkedList *ll, char *key)
             prev->next = target->next;
          else 
             ll->head = target->next;
+         free(target->key);
          free(target);
       }
       prev = target;
