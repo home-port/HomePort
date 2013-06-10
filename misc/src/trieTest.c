@@ -18,11 +18,12 @@ int main()
    char *c3 = (char*)malloc((strlen(c2)+1)*sizeof(char));
    strcpy(c3,c2);
    set_listElement_value(newnew, c3);
-/*
-   ListElement *newAbe = trie_insert(root, "abekat\0");
-   char *c3 = "this is abekat\0";
-   set_listElement_value(newAbe, c3);
+   
 
+   ListElement *newAbe = trie_insert(root, "fisk\0");
+   //char *c4 = "this is abekat\0";
+   set_listElement_value(newAbe, c3);
+/*
    ListElement *newAbe2 = trie_insert(root, "abenar\0");
    char *c32 = "this is a weird type of monkey\0";
    set_listElement_value(newAbe2, c32);

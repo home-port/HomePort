@@ -77,7 +77,7 @@ ListElement* insert_listElement(LinkedList *ll, char *key, struct TrieNode* node
    ll->tail = element;
    element->next = NULL;
    element->key = malloc(strlen(key) *(sizeof(char))+1);
-   element->key = key;
+   strcpy(element->key, key);
    element->node = node;
    element->value = NULL;
 
