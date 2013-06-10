@@ -189,21 +189,23 @@ struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop)
 
 void lr_destroy(struct lr *ins)
 {
-  if(ins != NULL) {
-     struct lr_service *next;
-     struct lr_service *service = ins->services;
-
-     while (service != NULL) {
-        next = service->next;
-        free(service);
-        service = next;
-     }
-
-     httpws_destroy(ins->webserver);
-
-     trie_destroy(ins->trie);
-     free(ins);
- }
+   // TODO Remove the list and this destroy hack, when trie supports a
+   // function to free objects
+   if(ins != NULL) {
+      struct lr_service *next;
+      struct lr_service *service = ins->services;
+ 
+      while (service != NULL) {
+         next = service->next;
+         free(service);
+         service = next;
+      }
+ 
+      httpws_destroy(ins->webserver);
+ 
+      trie_destroy(ins->trie);
+      free(ins);
+   }
 }
 
 int lr_start(struct lr *ins)
@@ -255,31 +257,3 @@ void lr_register_service(struct lr *ins,
 
 // TODO: Make lr_unregister_service
 
-/*
-// TODO: Make lookup_service private and make a function which actually calls the callback
-//       int lr_call(struct lr *ins, url, method)?
-lr_cb lr_lookup_service(struct lr *ins, char *url, enum lr_method method)
-{
-  struct ListElement* element = trie_lookup_node(ins->trie, url);
-  if(element != NULL) {
-    struct lr_service *service = get_ListElement_value(element);
-    if(service != NULL) {
-      switch(method) {
-        case GET:
-          return service->on_get;
-        break;
-        case POST:
-          return service->on_post;
-        break;
-        case PUT:
-          return service->on_put;
-        break;
-        case DELETE:
-          return service->on_delete;
-        break;
-      }
-    }
-  }
-  return NULL;
-}
-*/
