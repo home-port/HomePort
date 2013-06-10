@@ -216,6 +216,7 @@ static int on_receive(struct ws *instance, struct ws_conn *conn, void *ctx, void
                       const char *buf, size_t len)
 {
    ws_conn_sendf(conn, "HTTP/1.1 200 OK\r\n\r\nHello");
+   ws_conn_close(conn);
    return 0;
 }
 

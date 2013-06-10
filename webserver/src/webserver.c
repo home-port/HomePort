@@ -67,7 +67,8 @@ struct ws_conn {
    struct ev_io recv_watcher;       ///< Recieve watcher
    struct ev_io send_watcher;       ///< Send watcher
    char *send_msg;                  ///< Data to send
-   size_t send_len;                ///< Length of data to send
+   size_t send_len;                 ///< Length of data to send
+   int send_close;                  ///< Close socket after send
    void *ctx;
 };
 
@@ -219,7 +220,8 @@ static void conn_send_cb(struct ev_loop *loop, struct ev_io *watcher,
       perror("send");
 
    ev_io_stop(conn->instance->loop, &conn->send_watcher);
-   ws_conn_kill(conn);
+
+   if (conn->send_close) ws_conn_kill(conn);
 }
 
 static void conn_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, int revents)
@@ -294,6 +296,7 @@ static void ws_conn_accept(
    conn->ctx = NULL;
    conn->send_msg = NULL;
    conn->send_len = 0;
+   conn->send_close = 0;
 
    // Set up list
    ws_instance_add_conn(conn->instance, conn);
@@ -370,6 +373,7 @@ static void ws_instance_rm_conn(struct ws *instance, struct ws_conn
 
 /// Close a connection, after the remaining data has been sent
 void ws_conn_close(struct ws_conn *conn) {
+   conn->send_close = 1;
 }
 
 /// Kill and clean up after a connection

@@ -128,8 +128,10 @@ void http_response_send(struct http_response *res, const char* body)
    fprintf(stderr, "http_response_send is in a very early alpha version!\n");
 
    if(body != NULL) {
-   ws_conn_sendf(res->conn, "%s%s%s", res->msg, CRLF, body);
+      ws_conn_sendf(res->conn, "%s%s%s", res->msg, CRLF, body);
+      ws_conn_close(res->conn);
    } else {
    	ws_conn_sendf(res->conn, "%s%s", res->msg, CRLF);
+      ws_conn_close(res->conn);
    }
 }
