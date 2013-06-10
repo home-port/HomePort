@@ -348,7 +348,8 @@ int ws_conn_vsendf(struct ws_conn *conn, char *fmt, va_list arg)
    conn->send_msg = new_msg;
 
    // Concatenate strings
-   stat = vsprintf(&(conn->send_msg[conn->send_len]), fmt, arg);
+  // stat = vsnprintf(&(conn->send_msg[conn->send_len]), new_len, fmt, arg);
+   stat = vsnprintf(conn->send_msg, new_len+1, fmt, arg);
 
    // Start send watcher
    if (conn->send_len == 0 && conn->instance != NULL)
