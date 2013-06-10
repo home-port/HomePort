@@ -46,6 +46,7 @@ struct pair
 	char* value;
 };
 
+// create a new linked map
 struct lm *lm_create()
 {
 	struct lm *ret = malloc(sizeof(struct lm));
@@ -63,6 +64,7 @@ struct lm *lm_create()
 	return ret;
 }
 
+// Destroy a linked map. Also deallocates contents
 void lm_destroy(struct lm *map)
 {
 	struct ll_iter *it;
@@ -79,6 +81,7 @@ void lm_destroy(struct lm *map)
 	}
 }
 
+// Insert a key/value pair in the map. Key and value will be copied to the map
 int lm_insert(struct lm *map, const char* key, const char* value)
 {
 	// Check if the item is already in the list
@@ -114,6 +117,7 @@ int lm_insert(struct lm *map, const char* key, const char* value)
 	return 0;
 }
 
+// Remove a key and value pair
 void lm_remove(struct lm *map, const char* key)
 {
 	struct ll_iter *it;
@@ -130,6 +134,7 @@ void lm_remove(struct lm *map, const char* key)
 	}
 }
 
+// Get the value of a key in the linked map
 char* lm_find(struct lm *map, const char* key)
 {
 	struct ll_iter *it;
@@ -144,6 +149,7 @@ char* lm_find(struct lm *map, const char* key)
 	return NULL;
 }
 
+// Map a read-only function over the internal linked list.
 void lm_map(struct lm *map, lm_map_cb func)
 {
 	if(map && func) {

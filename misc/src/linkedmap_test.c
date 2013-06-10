@@ -33,7 +33,7 @@ TEST(find)
 	struct lm *map;
 	map = lm_create();
 
-	char *testA = "Anubis";
+	char *testA = "Thoth";
 	char *testB = "Bastet";
 	char *testC = "Seth";
 
@@ -58,7 +58,7 @@ TEST(remove)
 	struct lm *map;
 	map = lm_create();
 
-	char *testA = "Anubis";
+	char *testA = "Thoth";
 	char *testB = "Bastet";
 	char *testC = "Seth";
 
