@@ -126,10 +126,11 @@ void* get_listElement_value(ListElement *element)
  */
 void destroy_linkedList(LinkedList *ll)
 {
+   ListElement *target = NULL;
    while(ll->head->next != NULL)
    {
       //moving head down the list as elements are freed
-      ListElement *target = ll->head;
+      target = ll->head;
       ll->head = ll->head->next;
       free(target);
    }

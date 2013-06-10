@@ -1,5 +1,11 @@
 #include "../include/trie.h"
 
+void freeing(void* value)
+{
+   printf("freeing called \n");
+   free(value);
+}
+
 int main()
 {
    printf("creating tree\n");
@@ -9,8 +15,10 @@ int main()
 
    ListElement *newnew = trie_insert(root, "fisk\0");
    char *c2 = "FiskFisk\0";
-   set_listElement_value(newnew, c2);
-
+   char *c3 = (char*)malloc((strlen(c2)+1)*sizeof(char));
+   strcpy(c3,c2);
+   set_listElement_value(newnew, c3);
+/*
    ListElement *newAbe = trie_insert(root, "abekat\0");
    char *c3 = "this is abekat\0";
    set_listElement_value(newAbe, c3);
@@ -46,7 +54,7 @@ int main()
 
    ListElement *newElement = insert_trie_key(root,"abekat");
    */
-
+/*
    inTheTrie = trie_lookup_node(root, "ab\0");
    out = (char*)get_listElement_value(inTheTrie);
    printf("Lookup of ab: %s\n",out);
@@ -72,13 +80,13 @@ int main()
    ListElement * lollol = trie_lookup_node(root,"abenar\0");
    char* out123 = (char*)get_listElement_value(lollol);
    printf("Lookup of abenar: %s\n",out123);
+*/
+   printf("Whos the strongest man in the world?%s\n",(char*)(get_listElement_value(trie_lookup_node(root,"fisk\0"))));
 
-   printf("Whos the strongest man in the world?%s\n",(char*)(get_listElement_value(trie_lookup_node(root,"fiskekutter\0"))));
-
-   printf("removing abekat\n");
-   trie_remove_key(root,"abekat\0");
-   // INSERTION OF ABEKAT
-   trie_destroy(root);
+   //printf("removing abekat\n");
+   //trie_remove_key(root,"abekat\0");
+   printf("Destroying Tree\n");
+   trie_destroy(root, freeing);
 
    /*
    char* c = "hello\0";
