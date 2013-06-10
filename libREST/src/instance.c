@@ -232,8 +232,9 @@ int lr_register_service(struct lr *ins,
 
    struct ListElement* element = trie_insert(ins->trie, url);
 
-   if(element == NULL)
-   	return 1;
+   if(element == NULL){
+      return 1;
+   }
 
    set_listElement_value(element, service);
    return 0;
