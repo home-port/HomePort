@@ -323,20 +323,20 @@ int ws_conn_sendf(struct ws_conn *conn, char *fmt, ...) {
    va_list arg;
 
    va_start(arg, fmt);
-   stat = ws_conn_vsendf(conn, fmt, arg);
+   stat = ws_conn_vsendf(conn, fmt, &arg);
    va_end(arg);
 
    return stat;
 }
 
-int ws_conn_vsendf(struct ws_conn *conn, char *fmt, va_list arg)
+int ws_conn_vsendf(struct ws_conn *conn, char *fmt, va_list *arg)
 {
    int stat;
    char *new_msg;
    size_t new_len;
 
    // Get the length to expand with
-   new_len = vsnprintf("", 0, fmt, arg);
+   new_len = vsnprintf("", 0, fmt, *arg);
 
    // Expand message to send
    new_msg = realloc(conn->send_msg,
@@ -348,8 +348,7 @@ int ws_conn_vsendf(struct ws_conn *conn, char *fmt, va_list arg)
    conn->send_msg = new_msg;
 
    // Concatenate strings
-  // stat = vsnprintf(&(conn->send_msg[conn->send_len]), new_len, fmt, arg);
-   stat = vsnprintf(conn->send_msg, new_len+1, fmt, arg);
+   stat = vsnprintf(&(conn->send_msg[conn->send_len]), new_len+1, fmt, *arg);
 
    // Start send watcher
    if (conn->send_len == 0 && conn->instance != NULL)
