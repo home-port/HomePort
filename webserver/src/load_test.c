@@ -67,7 +67,7 @@ static size_t data_from_curl(char *buffer, size_t buffer_size, size_t nmemb, cha
 {
 	*userdata = malloc(buffer_size*nmemb + 1);
 	memcpy(*userdata, buffer, buffer_size*nmemb);
-	(*userdata)[buffer_size*nmemb + 1] = '\0';
+	(*userdata)[buffer_size*nmemb] = '\0';
 
 	return buffer_size*nmemb;
 }

@@ -42,6 +42,14 @@ target_link_libraries(webserver_test ev)
 add_test(webserver_test ${CMAKE_CURRENT_BINARY_DIR}/webserver_test)
 add_dependencies(check webserver_test)
 
+# Big Data Test
+add_executable(webserver_big_data_test EXCLUDE_FROM_ALL
+      big_data_test.c
+      )
+target_link_libraries(webserver_big_data_test curl pthread webserver)
+add_test(webserver_big_data_test ${CMAKE_CURRENT_BINARY_DIR}/webserver_big_data_test)
+add_dependencies(check webserver_big_data_test)
+
 # Load Test
 add_executable(webserver_load_test EXCLUDE_FROM_ALL
       load_test.c

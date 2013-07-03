@@ -73,6 +73,7 @@ int handle_request(struct httpws *ins, struct http_request *req, void* ws_ctx, v
 
    char *body1 = "<html><body><h1>Hello</h1>Your language: ";
    char *body2 = lm_find(headers, "Accept-Language");
+   if (body2 == NULL) body2 = "n/a";
    char *body3 = "</body></html>";
    char *body = malloc((strlen(body1)+strlen(body2)+strlen(body3)+1)*sizeof(char));
    sprintf(body, "%s%s%s",body1, body2, body3);

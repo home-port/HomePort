@@ -54,7 +54,7 @@ struct ws {
    struct ws_settings settings;    ///< Settings
    char port_str[6];               ///< Port number - as a string
    struct ev_loop *loop;           ///< Event loop
-   struct ll *conns;             ///< Linked List of connections
+   struct ll *conns;               ///< Linked List of connections
    int sockfd;                     ///< Socket file descriptor
    struct ev_io watcher;           ///< New connection watcher
 };
@@ -174,6 +174,7 @@ static void *get_in_addr(struct sockaddr *sa)
    }
 }
 
+/// Recieve callback for io-watcher
 static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revents)
 {
    ssize_t recieved;
@@ -181,8 +182,6 @@ static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revent
    struct ws_conn *conn = watcher->data;
 
    printf("recieving data from %s\n", conn->ip);
-
-   // Receive some data
    if ((recieved = recv(watcher->fd, buffer, MAXDATASIZE-1, 0)) < 0) {
       if (recieved == -1 && errno == EWOULDBLOCK) {
          fprintf(stderr, "libev callbacked called without data to " \
@@ -200,7 +199,7 @@ static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revent
    }
 
    if (conn->instance->settings.on_receive(conn->instance, conn, 
-                                             conn->instance->settings.ws_ctx, &conn->ctx, buffer, recieved)) {
+                                           conn->instance->settings.ws_ctx, &conn->ctx, buffer, recieved)) {
       ws_conn_kill(conn);
       return;
    }
