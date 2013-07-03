@@ -88,13 +88,13 @@ int lm_insert(struct lm *map, const char* key, const char* value)
 	if(lm_find(map, key) != NULL)
 		return 1;
 
-	char *mKey = malloc(strlen(key)*sizeof(char));
+	char *mKey = malloc((strlen(key)+1)*sizeof(char));
 	if(mKey == NULL) {
 		fprintf(stderr, "Malloc failed when allocating key for linkedmap\n");
 		return 2;
 	}
 
-	char *mValue = malloc(strlen(value)*sizeof(char));
+	char *mValue = malloc((strlen(value)+1)*sizeof(char));
 	if(mValue == NULL) {
 		fprintf(stderr, "Malloc failed when allocating value for linkedmap\n");
 		return 2;
