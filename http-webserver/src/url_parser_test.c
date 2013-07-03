@@ -214,4 +214,69 @@ TEST(chunked url parsing)
 
 TSET()
 
+TEST(empty path test)
+
+   char *url = "http://localhost:8080";
+
+   struct data data;
+   data.protocol = "http";
+   data.host = "localhost";
+   data.port = "8080";
+   data.path = "";
+   data.cur_path = 0;
+   data.key = "";
+   data.cur_key_value = 0;
+   data.value = "";
+   data.call_order = 0;
+   data.errors = 0;
+   data.url = malloc((strlen(url)+1)*sizeof(char));
+   data.url[0] = '\0';
+
+	struct url_parser_instance *instance = up_create(&settings, &data);
+
+	up_add_chunk(instance, url, strlen(url));
+	up_complete(instance);
+	up_destroy(instance);
+
+   ASSERT_STR_EQUAL(data.url, url);
+
+   _errors += data.errors;
+
+   free(data.url);
+
+TSET()
+
+TEST(only host test)
+
+   char *url = "http://localhost";
+
+   struct data data;
+   data.protocol = "http";
+   data.host = "localhost";
+   data.port = "";
+   data.path = "";
+   data.cur_path = 0;
+   data.key = "";
+   data.cur_key_value = 0;
+   data.value = "";
+   data.call_order = 0;
+   data.errors = 0;
+   data.url = malloc((strlen(url)+1)*sizeof(char));
+   data.url[0] = '\0';
+
+	struct url_parser_instance *instance = up_create(&settings, &data);
+
+	up_add_chunk(instance, url, strlen(url));
+	up_complete(instance);
+	up_destroy(instance);
+
+   ASSERT_STR_EQUAL(data.url, url);
+
+   _errors += data.errors;
+
+   free(data.url);
+
+TSET()
+
+
 TEST_END()

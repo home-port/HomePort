@@ -39,7 +39,7 @@
 
 /// The possible states of the URL Parser
 enum url_parser_state {
-	S_START,	///< The initial state. From here the parser can either go to S_PROTOCOL, S_SEGMENT or S_ERROR
+	S_START,	   ///< The initial state. From here the parser can either go to S_PROTOCOL, S_SEGMENT or S_ERROR
 	S_PROTOCOL,	///< In this state, the parser is parsing the protocol
 	S_GARBAGE1,	///< Used for ignoring the first slash after protocol
 	S_GARBAGE2, ///< Used for ignoring the second slash after protocol
@@ -48,7 +48,7 @@ enum url_parser_state {
 	S_PORT,		///< The parser is parsing the port of an URL
 	S_SEGMENT,	///< The parser is parsing a path segment of an url
 	S_KEY,		///< Here the parser is receiving the first part of a key/value pair
-	S_VALUE,	///< The parser goes here after receiving a key, and is now expecting a value. It may go back to key if an & is found
+	S_VALUE,	   ///< The parser goes here after receiving a key, and is now expecting a value. It may go back to key if an & is found
 	S_ERROR		///< The error state. The parser will go here if the input char is not valid in an URL, or if it received an invalid char at some point
 };
 
@@ -56,13 +56,15 @@ enum url_parser_state {
 /**
  *	<h1>Public Interface</h1>
  *	up_create is used to create an instance of this struct.
- *	The instance has a pointer to a struct containing the user-defined callbacks (see documentation for url_parser_settings).
+ *	The instance has a pointer to a struct containing the user-defined
+ *	callbacks (see documentation for url_parser_settings).
  *	
  *	<h1>Internals</h1>
- *	The instance holds information about the current state, number of chars parsed etc.
- *	The instance has only a single buffer, which is expanded when chunks are added. 
- *	When a callback is called, it receives a pointer to a specific location in this buffer and a length.
- *	This is done so that only a single buffer is allocated. 
+ *	The instance holds information about the current state, number of
+ *	chars parsed etc.  The instance has only a single buffer, which is
+ *	expanded when chunks are added.  When a callback is called, it
+ *	receives a pointer to a specific location in this buffer and a
+ *	length.  This is done so that only a single buffer is allocated. 
 */
 struct url_parser_instance {
 	struct url_parser_settings *settings;
@@ -83,13 +85,15 @@ struct url_parser_instance {
 /// Create URL parser instance
 /**
  *	This method creates an URL Parser instance.
- *	It allocates memory for itself and a copy of the settings struct, and copies the settings struct to this new location.
- *	It also sets all values to default.
+ *	It allocates memory for itself and a copy of the settings struct, and
+ *	copies the settings struct to this new location.  It also sets all
+ *	values to default.
  *
  *  @param  settings A pointer to a url_parser_settings struct
  *  @return a pointer to the newly created instance
  */
-struct url_parser_instance *up_create(struct url_parser_settings *settings, void *data)
+struct url_parser_instance *up_create(
+      struct url_parser_settings *settings, void *data)
 {
 	struct url_parser_instance *instance;
 
@@ -99,7 +103,8 @@ struct url_parser_instance *up_create(struct url_parser_settings *settings, void
 
 	if(instance->settings == NULL)
 	{
-		fprintf(stderr, "Malloc failed in URL parser when allocating space for URL parser settings\n");
+		fprintf(stderr, "Malloc failed in URL parser when allocating "
+                      "space for URL parser settings\n");
 		return NULL;
 	}
 
@@ -119,7 +124,8 @@ struct url_parser_instance *up_create(struct url_parser_settings *settings, void
 
 /// Destroy URL parser instance
 /**
- *	This method destroys an URL Parser instance, including the buffer and settings struct.
+ *	This method destroys an URL Parser instance, including the buffer and
+ *	settings struct.
  *
  *  @param  instance A pointer to an url_parser_instance to destroy
  */
@@ -141,17 +147,21 @@ void up_destroy(struct url_parser_instance *instance)
 
 /// Check if a given char is valid in an URL
 /**
- *	This method checks if a char is valid in an URL. Only specific chars are valid, others have
- *	to be encoded properly. 
+ *	This method checks if a char is valid in an URL. Only specific chars
+ *	are valid, others have to be encoded properly. 
  *
  *  @param  c A char to check
  *  @return 1 if the char is valid in an URL, 0 otherwise
  */
 int isLegalURLChar(char c)
 {
-	if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '-' || c == '.' || c == '_' || c == '~' || c == ':' ||
-	     c == '/' || c == '?' || c == '#' || c == '[' || c == ']' || c == '@' || c == '!' || c == '$' || c == '&' || c == '\'' || c == '(' ||
-	     c == ')' || c == '*' || c == '+' || c == ',' || c == ';' || c == '=')
+	if ((c >= '0' && c <= '9') || 
+       (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
+       c == '-' || c == '.' || c == '_' || c == '~' || c == ':' ||
+       c == '/' || c == '?' || c == '#' || c == '[' || c == ']' ||
+       c == '@' || c == '!' || c == '$' || c == '&' || c == '\'' ||
+       c == '(' || c == ')' || c == '*' || c == '+' || c == ',' ||
+       c == ';' || c == '=')
 		return 1;
 
 	return 0;
@@ -159,9 +169,11 @@ int isLegalURLChar(char c)
 
 /// Parse a chunk of an URL
 /**
- *	This method receives a chunk of an URL, and calls the appropriate callbacks.
- *	It increases the size of buffer, copies the new chunk to it and then parses each character and changes state accordingly.
- *	A chunk may of course be a complete URL, all of which will be parsed immediately. 
+ *	This method receives a chunk of an URL, and calls the appropriate
+ *	callbacks.  It increases the size of buffer, copies the new chunk to
+ *	it and then parses each character and changes state accordingly.  A
+ *	chunk may of course be a complete URL, all of which will be parsed
+ *	immediately. 
  *
  *  @param  instance A pointer to an URL Parser instance
  *	@param	chunk A pointer to the chunk (non zero terminated)
@@ -183,7 +195,8 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 	instance->buffer = realloc(instance->buffer, instance->buffer_size * (sizeof(char)));
 	if(instance->buffer == NULL)
 	{
-		fprintf(stderr, "Realloc failed in URL parser when allocating space for new URL chunk\n");
+		fprintf(stderr, "Realloc failed in URL parser when allocating"
+                      "space for new URL chunk\n");
 		instance->state = S_ERROR;
 		return 1;
 	}
@@ -198,10 +211,12 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 
 		//printf("current char: %c, state: %d\n", c, instance->state);
 
-		// Check if it is a valid URL char. If not, print an error message and set parser to error state
-		if (!isLegalURLChar(c))
+      // Check if it is a valid URL char. If not, print an error message
+      // and set parser to error state
+      if (!isLegalURLChar(c))
 		{
-			fprintf(stderr, "The URL parser received an invalid character: %c\n", c);
+			fprintf(stderr, "The URL parser received an invalid "
+                         "character: %c\n", c);
 			instance->state = S_ERROR;
 		}
 
@@ -222,7 +237,9 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 				{
 					if(instance->settings->on_protocol != NULL)
 					{
-						instance->settings->on_protocol(instance->data, instance->buffer,instance->chars_parsed);
+						instance->settings->on_protocol(instance->data,
+                                                  instance->buffer,
+                                                  instance->chars_parsed);
 					}
 					instance->last_returned = instance->chars_parsed;
 					instance->state = S_GARBAGE1;
@@ -254,7 +271,10 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 				{
 					if(instance->settings->on_host != NULL)
 					{
-						instance->settings->on_host(instance->data, &instance->buffer[instance->last_returned+3],(i-(instance->last_returned)-3));
+						instance->settings->on_host(
+                        instance->data,
+                        &instance->buffer[instance->last_returned+3],
+                        (i-(instance->last_returned)-3));
 					}
 					instance->last_returned = instance->chars_parsed;
 					instance->state = S_PREPORT;
@@ -273,7 +293,10 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 				{
 					if(instance->settings->on_port != NULL)
 					{
-						instance->settings->on_port(instance->data, &instance->buffer[instance->last_returned+1], (i-(instance->last_returned)-1));
+						instance->settings->on_port(
+                        instance->data,
+                        &instance->buffer[instance->last_returned+1],
+                        (i-(instance->last_returned)-1));
 					}
 					instance->last_returned = instance->chars_parsed;
 					instance -> state = S_SEGMENT;
@@ -288,7 +311,10 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 				{
 					if(instance->settings->on_path_segment != NULL)
 					{
-						instance->settings->on_path_segment(instance->data, &instance->buffer[instance->last_returned+1], (i-(instance->last_returned)-1));
+						instance->settings->on_path_segment(
+                        instance->data,
+                        &instance->buffer[instance->last_returned+1],
+                        (i-(instance->last_returned)-1));
 					}
 					instance->last_returned = instance->chars_parsed;
 				}
@@ -296,7 +322,10 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 				{
 					if(instance->settings->on_path_complete != NULL)
 					{
-						instance->settings->on_path_complete(instance->data, &instance->buffer[instance->path_start], i-(instance->path_start));
+						instance->settings->on_path_complete(
+                        instance->data,
+                        &instance->buffer[instance->path_start],
+                        i-(instance->path_start));
 					}
 					instance->state = S_KEY;
 				}
@@ -319,10 +348,12 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 				{
 					if(instance->settings->on_key_value != NULL)
 					{
-						instance->settings->on_key_value(instance->data, &instance->buffer[instance->tmp_key_begin], 
-														 instance->tmp_key_size,
-														 &instance->buffer[instance->last_returned+1],
-														 (i-(instance->last_returned)-1));
+						instance->settings->on_key_value(
+                        instance->data,
+                        &instance->buffer[instance->tmp_key_begin], 
+								instance->tmp_key_size,
+								&instance->buffer[instance->last_returned+1],
+								(i-(instance->last_returned)-1));
 					}
 					instance->last_returned = instance->chars_parsed;
 					instance->state = S_KEY;
@@ -342,11 +373,12 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 /// Informs the parser that the URL is complete
 /**
  *	This method will let the parser know that the URL is complete.
- *	This always results in the on_complete callback being called, but it may also
- *	inflict two others: on_path_segment and on_key_value. This is due to the nature
- *	of the URL parser being able to receive in chunks: it can simply now know if
- *	an URL path is complete without a / at the end. It also cannot know if a value part
- *	of a key is done before being told.
+ *	This always results in the on_complete callback being called, but it
+ *	may also inflict two others: on_path_segment and on_key_value. This
+ *	is due to the nature of the URL parser being able to receive in
+ *	chunks: it can simply now know if an URL path is complete without a /
+ *	at the end. It also cannot know if a value part of a key is done
+ *	before being told.
  *
  *  @param  instance A pointer to an URL Parser instance
  */
@@ -354,22 +386,25 @@ int up_complete(void *_instance)
 {
    struct url_parser_instance *instance = _instance;
 
-	// Check if we need to send a last chunk and that we are in a valid end state
-	switch(instance->state)
+   // Check if we need to send a last chunk and that we are in a valid
+   // end state
+   switch(instance->state)
 	{
 		case S_SEGMENT:
 			if(instance->settings->on_path_segment != NULL)
 			{
-				instance->settings->on_path_segment(instance->data, 
-													&instance->buffer[instance->last_returned+1],
-													(instance->buffer_size-instance->last_returned-1));
+				instance->settings->on_path_segment(
+                  instance->data, 
+						&instance->buffer[instance->last_returned+1],
+						(instance->buffer_size-instance->last_returned-1));
 			}
 
 			if(instance->settings->on_path_complete != NULL)
 			{	
-				instance->settings->on_path_complete(instance->data, 
-													&instance->buffer[instance->path_start],
-													 ((instance->buffer_size)-instance->path_start));
+				instance->settings->on_path_complete(
+                  instance->data, 
+						&instance->buffer[instance->path_start],
+						((instance->buffer_size)-instance->path_start));
 			}
 
 			instance->last_returned = instance->chars_parsed;
@@ -379,30 +414,54 @@ int up_complete(void *_instance)
 		case S_VALUE:
 			if(instance->settings->on_key_value != NULL)
 			{
-				instance->settings->on_key_value(instance->data, 
-												 &instance->buffer[instance->tmp_key_begin],
-												 instance->tmp_key_size,
-												 &instance->buffer[instance->last_returned+1],
-												 (instance->buffer_size-(instance->last_returned)-1));
+				instance->settings->on_key_value(
+                  instance->data, 
+						&instance->buffer[instance->tmp_key_begin],
+						instance->tmp_key_size,
+						&instance->buffer[instance->last_returned+1],
+						(instance->buffer_size-(instance->last_returned)-1));
 			}
 				instance->last_returned = instance->chars_parsed;
 			break;
 
 		case S_HOST:
 				// It is valid to call complete after a host has been found
+            if(instance->settings->on_host != NULL)
+				{
+				instance->settings->on_host(
+                  instance->data,
+                  &instance->buffer[instance->last_returned+3],
+                  (instance->buffer_size-(instance->last_returned)-3));
+				}
+				instance->last_returned = instance->chars_parsed;
+
 			break;
 		
 		case S_PORT:
-				// It is valid to call complete after a port has been found for the host
-			break;
+            // It is valid to call complete after a port has been found
+            // for the host
+            if(instance->settings->on_port != NULL)
+				{
+					instance->settings->on_port(
+                     instance->data,
+                     &instance->buffer[instance->last_returned+1],
+                     (instance->buffer_size-(instance->last_returned)-1));
+				}
+				instance->last_returned = instance->chars_parsed;
+
+         break;
 
 		default:
-			fprintf(stderr, "An error has happened in the URL parser. End state: %d\n",instance->state);
+			fprintf(stderr, "An error has happened in the URL parser. End "
+                         "state: %d\n",instance->state);
 			return 1;
 	}
 
 	if(instance->settings->on_complete != NULL && instance->buffer != NULL) {
-		instance->settings->on_complete(instance->data, instance->buffer, instance->buffer_size);
+		instance->settings->on_complete(
+            instance->data,
+            instance->buffer,
+            instance->buffer_size);
 	}
 	return 0;
 }
