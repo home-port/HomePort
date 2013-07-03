@@ -35,195 +35,183 @@
 #include "unit_test.h"
 #include <string.h>
 
-int on_begin_called = 0;
-int on_protocol_called = 0;
-int on_host_called = 0;
-int on_port_called = 0;
-int on_path_segment_called = 0;
-int on_key_value_called = 0;
+struct data {
+   char *protocol;
+   char *host;
+   char *port;
+   char *path;
+   int cur_path;
+   char *key;
+   int cur_key_value;
+   char *value;
+   int call_order;
+   int errors;
+   char *url;
+};
 
-int on_begin_called_correctly = 0;
-int on_protocol_called_correctly = 0;
-int on_host_called_correctly = 0;
-int on_port_called_correctly = 0;
-int on_path_segment_called_correctly = 0;
-int on_key_value_called_correctly = 0;
-
-void reset_values()
+void on_begin(void *data)
 {
-	on_begin_called_correctly = 0;
-	on_protocol_called_correctly = 0;
-	on_host_called_correctly = 0;
-	on_port_called_correctly = 0;
-	on_path_segment_called_correctly = 0;
-	on_key_value_called_correctly = 0;
-
-	on_begin_called = 0;
-	on_protocol_called = 0;
-	on_host_called = 0;
-	on_port_called = 0;
-	on_path_segment_called = 0;
-	on_key_value_called = 0;
+   int _errors = 0;
+   struct data *dat = data;
+   ASSERT_EQUAL(dat->call_order, 0);
+	dat->call_order = dat->call_order | 1;
+   dat->errors += _errors;
 }
 
-void on_begin()
+void on_protocol(void *data, const char* protocol, size_t length)
 {
-	on_begin_called_correctly = 1;
+   int _errors = 0;
+   struct data *dat = data;
+   ASSERT_EQUAL(dat->call_order, 1);
+   dat->call_order = dat->call_order | 2;
+	ASSERT_EQUAL(strncmp(protocol, dat->protocol, length), 0);
+   dat->errors += _errors;
+   strncat(dat->url, protocol, length);
+   strcat(dat->url, "://");
 }
 
-void on_protocol(const char* protocol, size_t length)
+void on_host(void *data, const char* host, size_t length)
 {
-	if(strncmp(protocol, "http", 4) == 0)
-	{
-		on_protocol_called_correctly = 1;
-	}
+   int _errors = 0;
+   struct data *dat = data;
+   ASSERT_EQUAL((dat->call_order & 61), 1);
+   dat->call_order = dat->call_order | 4;
+	ASSERT_EQUAL(strncmp(host, dat->host, length), 0);
+   dat->errors += _errors;
+   strncat(dat->url, host, length);
 }
 
-void on_host(const char* host, size_t length)
+void on_port(void *data, const char* port, size_t length)
 {
-	printf("%.*s\n", length , host);
-
-	if(strncmp(host, "localhost", 9) == 0)
-	{
-		on_host_called_correctly = 1;
-	}
+   int _errors = 0;
+   struct data *dat = data;
+   ASSERT_EQUAL((dat->call_order & 61), 5);
+   dat->call_order = dat->call_order | 8;
+	ASSERT_EQUAL(strncmp(port, dat->port, length), 0);
+   dat->errors += _errors;
+   strcat(dat->url, ":");
+   strncat(dat->url, port, length);
 }
 
-void on_port(const char* port, size_t length)
+void on_path_segment(void *data, const char* seg, size_t length)
 {
-	if(strncmp(port, "8080", 4) == 0)
-	{
-		on_port_called_correctly = 1;
-	}
+   int i;
+   int _errors = 0;
+   struct data *dat = data;
+   char *expect = dat->path;
+   ASSERT_EQUAL((dat->call_order & 33), 1);
+   dat->call_order = dat->call_order | 16;
+   for (i = 0; i < dat->cur_path; i++) {
+      expect = &expect[strlen(expect)+1];
+   }
+	ASSERT_EQUAL(strncmp(seg, expect, length), 0);
+   dat->cur_path++;
+   dat->errors += _errors;
+   strcat(dat->url, "/");
+   strncat(dat->url, seg, length);
 }
 
-void on_path_segment(const char* seg, size_t length)
+void on_key_value(void * data,
+                  const char* key, size_t key_length,
+                  const char* value, size_t value_length)
 {
-	if((length == 6 && strncmp(seg, "device",6) == 0) || (length == 2 && strncmp(seg, "tv",2) == 0) ||
-		(length == 1 && (strncmp(seg, "a", 1) == 0 || strncmp(seg,"b", 1) == 0 || strncmp(seg, "c", 1) == 0)))
-	{
-		on_path_segment_called_correctly++;
-	}
-}
-
-void on_key_value(const char* key, size_t key_length, const char* value, size_t value_length)
-{
-	if(key_length == 2 && strncmp(key, "id", 2) == 0 && strncmp(value, "1",1) == 0)
-	{
-		on_key_value_called_correctly++;
-	}
-
-	if(key_length == 5 && strncmp(key, "brand", 5) == 0 && strncmp(value, "Apple",5) == 0)
-	{
-		on_key_value_called_correctly++;
-	}
-
+   int i;
+   int _errors = 0;
+   struct data *dat = data;
+   char *expect_key = dat->key;
+   char *expect_val = dat->value;
+   ASSERT_EQUAL((dat->call_order & 17), 17);
+   dat->call_order = dat->call_order | 32;
+   for (i = 0; i < dat->cur_key_value; i++) {
+      expect_key = &expect_key[strlen(expect_key)+1];
+      expect_val = &expect_val[strlen(expect_val)+1];
+   }
+	ASSERT_EQUAL(strncmp(key, expect_key, key_length), 0);
+	ASSERT_EQUAL(strncmp(value, expect_val, value_length), 0);
+   dat->cur_key_value++;
+   dat->errors += _errors;
+   if (dat->cur_key_value == 1) strcat(dat->url, "?");
+   else strcat(dat->url, "&");
+   strncat(dat->url, key, key_length);
+   strcat(dat->url, "=");
+   strncat(dat->url, value, value_length);
 }
 
 TEST_START("url_parser.c")
 
-//TEST(non chunked url parsing)
-//
-//	reset_values();
-//
-//	char* url = "http://localhost:8080/device/tv?id=1&brand=Apple";
-//	int url_len = 48;
-//
-//	struct url_parser_settings settings = URL_PARSER_SETTINGS_DEFAULT;
-//
-// 	settings.on_begin = &on_begin;
-// 	settings.on_protocol = &on_protocol;
-// 	settings.on_host = &on_host;
-// 	settings.on_port = &on_port;
-// 	settings.on_path_segment = &on_path_segment;
-// 	settings.on_key_value = &on_key_value;
-//
-//	struct url_parser_instance *instance = up_create(&settings);
-//
-//	up_add_chunk(instance, url, url_len);
-//	up_complete(instance);
-//	up_destroy(instance);
-//
-//	ASSERT_EQUAL(on_begin_called_correctly,1);
-//	ASSERT_EQUAL(on_protocol_called_correctly, 1);
-//	ASSERT_EQUAL(on_host_called_correctly, 1);
-//	ASSERT_EQUAL(on_port_called_correctly, 1);
-//	ASSERT_EQUAL(on_path_segment_called_correctly, 2);
-//	ASSERT_EQUAL(on_key_value_called_correctly, 2);
-//
-//TSET()
-//
-//TEST(chunked url parsing)
-//
-//	reset_values();
-//
-//	char* url1 = "http://localhost:8080/device/";
-//	int url1_len = 29;
-//
-//	char* url2 = "tv?id=1&brand=Apple";
-//	int url2_len = 19;
-//
-//	struct url_parser_settings settings = URL_PARSER_SETTINGS_DEFAULT;
-//
-// 	settings.on_begin = &on_begin;
-// 	settings.on_protocol = &on_protocol;
-// 	settings.on_host = &on_host;
-// 	settings.on_port = &on_port;
-// 	settings.on_path_segment = &on_path_segment;
-// 	settings.on_key_value = &on_key_value;
-//
-//	struct url_parser_instance *instance = up_create(&settings);
-//
-//	up_add_chunk(instance, url1, url1_len);
-//
-//	// Check that part of the URL has been parsed
-//	ASSERT_EQUAL(on_begin_called_correctly,1);
-//	ASSERT_EQUAL(on_protocol_called_correctly, 1);
-//	ASSERT_EQUAL(on_host_called_correctly, 1);
-//	ASSERT_EQUAL(on_port_called_correctly, 1);
-//	ASSERT_EQUAL(on_path_segment_called_correctly, 1);
-//	ASSERT_EQUAL(on_key_value_called_correctly, 0);
-//
-//	up_add_chunk(instance, url2, url2_len);
-//
-//	up_complete(instance);
-//	up_destroy(instance);
-//
-//	ASSERT_EQUAL(on_begin_called_correctly,1);
-//	ASSERT_EQUAL(on_protocol_called_correctly, 1);
-//	ASSERT_EQUAL(on_host_called_correctly, 1);
-//	ASSERT_EQUAL(on_port_called_correctly, 1);
-//	ASSERT_EQUAL(on_path_segment_called_correctly, 2);
-//	ASSERT_EQUAL(on_key_value_called_correctly, 2);
-//
-//TSET()
-//
-//TEST(fail on bad character)
-//	reset_values();
-//
-//	struct url_parser_settings settings = URL_PARSER_SETTINGS_DEFAULT;
-//
-// 	settings.on_begin = &on_begin;
-// 	settings.on_protocol = &on_protocol;
-// 	settings.on_host = &on_host;
-// 	settings.on_port = &on_port;
-// 	settings.on_path_segment = &on_path_segment;
-// 	settings.on_key_value = &on_key_value;
-//
-// 	struct url_parser_instance *instance = up_create(&settings);
-//
-// 	up_add_chunk(instance, "/a/b/c/|", 8);
-//
-// 	up_complete(instance);
-//	up_destroy(instance);
-//
-//	ASSERT_EQUAL(on_protocol_called, 0);
-//	ASSERT_EQUAL(on_host_called,0);
-//	ASSERT_EQUAL(on_port_called, 0);
-//
-//	ASSERT_EQUAL(on_begin_called_correctly, 1);
-//	ASSERT_EQUAL(on_path_segment_called_correctly, 3);
-//
-//TSET()
+	struct url_parser_settings settings = URL_PARSER_SETTINGS_DEFAULT;
+ 	settings.on_begin = &on_begin;
+ 	settings.on_protocol = &on_protocol;
+ 	settings.on_host = &on_host;
+ 	settings.on_port = &on_port;
+ 	settings.on_path_segment = &on_path_segment;
+ 	settings.on_key_value = &on_key_value;
+
+TEST(non chunked url parsing)
+
+	char* url = "http://localhost:8080/device/tv?id=1&brand=Apple";
+
+   struct data data;
+   data.protocol = "http";
+   data.host = "localhost";
+   data.port = "8080";
+   data.path = "device\0tv";
+   data.cur_path = 0;
+   data.key = "id\0brand";
+   data.cur_key_value = 0;
+   data.value = "1\0Apple";
+   data.call_order = 0;
+   data.errors = 0;
+   data.url = malloc((strlen(url)+1)*sizeof(char));
+   data.url[0] = '\0';
+
+	struct url_parser_instance *instance = up_create(&settings, &data);
+
+	up_add_chunk(instance, url, strlen(url));
+	up_complete(instance);
+	up_destroy(instance);
+   
+   ASSERT_STR_EQUAL(data.url, url);
+
+   _errors += data.errors;
+
+   free(data.url);
+
+TSET()
+
+TEST(chunked url parsing)
+
+	char* url = "http://localhost:8080/device/tv?id=1&brand=Apple";
+	char* url1 = "http://localhost:8080/device/";
+	char* url2 = "tv?id=1&brand=Apple";
+
+   struct data data;
+   data.protocol = "http";
+   data.host = "localhost";
+   data.port = "8080";
+   data.path = "device\0tv";
+   data.cur_path = 0;
+   data.key = "id\0brand";
+   data.cur_key_value = 0;
+   data.value = "1\0Apple";
+   data.call_order = 0;
+   data.errors = 0;
+   data.url = malloc((strlen(url1)+strlen(url2)+1)*sizeof(char));
+   data.url[0] = '\0';
+
+	struct url_parser_instance *instance = up_create(&settings, &data);
+
+	up_add_chunk(instance, url1, strlen(url1));
+	up_add_chunk(instance, url2, strlen(url2));
+	up_complete(instance);
+	up_destroy(instance);
+   
+   ASSERT_STR_EQUAL(data.url, url);
+
+   _errors += data.errors;
+
+   free(data.url);
+
+TSET()
 
 TEST_END()

@@ -34,8 +34,12 @@
 #ifndef URL_PARSER_H
 #define URL_PARSER_H
 
-typedef void (*up_string_cb)(void *data, const char* parsedSegment, size_t segment_length);
-typedef void (*up_pair_cb)(void *data, const char* key, size_t key_length, const char* value, size_t value_length);
+typedef void (*up_string_cb)(void *data,
+                             const char* parsedSegment,
+                             size_t segment_length);
+typedef void (*up_pair_cb)(void *data,
+                           const char* key, size_t key_length,
+                           const char* value, size_t value_length);
 typedef void (*up_void_cb)(void *data);
 
 struct url_parser_instance;
@@ -48,11 +52,14 @@ struct url_parser_instance;
  *  struct url_parser_settings *settings = URL_PARSER_SETTINGS_DEFAULT;
  *  \endcode
  *
- *  The settings hold a series of callbacks of type either up_string_cb, up_pair_cb or up_void_cb.
- *	Strings received in up_pair_cb and up_string_cb are never null-terminated, and they always have a length.
- *	The callbacks are called when the URL parser finishes parsing a specific chunk.
- *	The callback with the last part of a segment (e.g. the c in /a/b/c) might first be called when up_complete has been called,
- *	as it cannot know if c is the last character of the segment unless it terminates with a /.
+ *  The settings hold a series of callbacks of type either up_string_cb,
+ *  up_pair_cb or up_void_cb.  Strings received in up_pair_cb and
+ *  up_string_cb are never null-terminated, and they always have a
+ *  length.  The callbacks are called when the URL parser finishes
+ *  parsing a specific chunk.  The callback with the last part of a
+ *  segment (e.g. the c in /a/b/c) might first be called when
+ *  up_complete has been called, as it cannot know if c is the last
+ *  character of the segment unless it terminates with a /.
  *
  */
 
@@ -72,7 +79,8 @@ struct url_parser_settings {
 	.on_port = NULL, .on_path_segment = NULL, .on_path_complete = NULL, \
 	.on_key_value = NULL, .on_complete = NULL }
 
-struct url_parser_instance *up_create(struct url_parser_settings *settings, void* data);
+struct url_parser_instance *up_create(
+      struct url_parser_settings *settings, void* data);
 void up_destroy(struct url_parser_instance*);
 
 int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size);
