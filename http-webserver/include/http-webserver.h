@@ -104,9 +104,13 @@ struct httpws;
 struct http_request;
 struct http_response;
 
-typedef int (*httpws_data_cb)(struct httpws *ins, struct http_request *req,
-                              void* ws_ctx, void** req_data, const char *buf, size_t len);
-typedef int (*httpws_nodata_cb)(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data);
+typedef int (*httpws_data_cb)(
+      struct httpws *ins, struct http_request *req,
+      void* ws_ctx, void** req_data,
+      const char *buf, size_t len);
+typedef int (*httpws_nodata_cb)(
+      struct httpws *ins, struct http_request *req,
+      void* ws_ctx, void** req_data);
 
 struct httpws_settings {
    enum ws_port port;

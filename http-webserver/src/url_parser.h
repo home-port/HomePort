@@ -42,7 +42,7 @@ typedef void (*up_pair_cb)(void *data,
                            const char* value, size_t value_length);
 typedef void (*up_void_cb)(void *data);
 
-struct url_parser_instance;
+struct up;
 
 /// Settings struct for the URL Parser
 /**
@@ -63,7 +63,7 @@ struct url_parser_instance;
  *
  */
 
-struct url_parser_settings {
+struct up_settings {
 	up_void_cb on_begin;
 	up_string_cb on_protocol;
 	up_string_cb on_host;
@@ -74,14 +74,14 @@ struct url_parser_settings {
 	up_string_cb on_complete;
 };
 
-#define URL_PARSER_SETTINGS_DEFAULT {\
+#define UP_SETTINGS_DEFAULT {\
 	.on_begin = NULL, .on_protocol = NULL, .on_host = NULL, \
 	.on_port = NULL, .on_path_segment = NULL, .on_path_complete = NULL, \
 	.on_key_value = NULL, .on_complete = NULL }
 
-struct url_parser_instance *up_create(
-      struct url_parser_settings *settings, void* data);
-void up_destroy(struct url_parser_instance*);
+struct up *up_create(
+      struct up_settings *settings, void* data);
+void up_destroy(struct up *);
 
 int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size);
 int up_complete(void *_instance);

@@ -139,7 +139,7 @@ void on_key_value(void * data,
 
 TEST_START("url_parser.c")
 
-	struct url_parser_settings settings = URL_PARSER_SETTINGS_DEFAULT;
+	struct up_settings settings = UP_SETTINGS_DEFAULT;
  	settings.on_begin = &on_begin;
  	settings.on_protocol = &on_protocol;
  	settings.on_host = &on_host;
@@ -165,7 +165,7 @@ TEST(non chunked url parsing)
    data.url = malloc((strlen(url)+1)*sizeof(char));
    data.url[0] = '\0';
 
-	struct url_parser_instance *instance = up_create(&settings, &data);
+	struct up *instance = up_create(&settings, &data);
 
 	up_add_chunk(instance, url, strlen(url));
 	up_complete(instance);
@@ -199,7 +199,7 @@ TEST(chunked url parsing)
    data.url = malloc((strlen(url1)+strlen(url2)+1)*sizeof(char));
    data.url[0] = '\0';
 
-	struct url_parser_instance *instance = up_create(&settings, &data);
+	struct up *instance = up_create(&settings, &data);
 
 	up_add_chunk(instance, url1, strlen(url1));
 	up_add_chunk(instance, url2, strlen(url2));
@@ -232,7 +232,7 @@ TEST(empty path test)
    data.url = malloc((strlen(url)+1)*sizeof(char));
    data.url[0] = '\0';
 
-	struct url_parser_instance *instance = up_create(&settings, &data);
+	struct up *instance = up_create(&settings, &data);
 
 	up_add_chunk(instance, url, strlen(url));
 	up_complete(instance);
@@ -264,7 +264,7 @@ TEST(only host test)
    data.url = malloc((strlen(url)+1)*sizeof(char));
    data.url[0] = '\0';
 
-	struct url_parser_instance *instance = up_create(&settings, &data);
+	struct up *instance = up_create(&settings, &data);
 
 	up_add_chunk(instance, url, strlen(url));
 	up_complete(instance);

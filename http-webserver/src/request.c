@@ -132,7 +132,7 @@ struct http_request
    struct httpws_settings *settings;
    struct ws_conn *conn;
    http_parser parser;               ///< HTTP parser in use
-   struct url_parser_instance *url_parser;
+   struct up *url_parser;
    struct header_parser_instance *header_parser;
    enum state state;                 ///< Current state of the request
    char *url;
@@ -490,7 +490,7 @@ struct http_request *http_request_create(
    req->parser.data = req;
    req->state = S_START;
 
-   struct url_parser_settings up_settings = URL_PARSER_SETTINGS_DEFAULT;
+   struct up_settings up_settings = UP_SETTINGS_DEFAULT;
 	up_settings.on_path_complete = url_parser_path_complete;
    req->url_parser = up_create(&up_settings, req);
 
