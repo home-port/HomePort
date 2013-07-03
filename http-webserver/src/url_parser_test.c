@@ -278,5 +278,68 @@ TEST(only host test)
 
 TSET()
 
+TEST(path test)
+
+   char *url = "/devices/";
+
+   struct data data;
+   data.protocol = "";
+   data.host = "";
+   data.port = "";
+   data.path = "devices";
+   data.cur_path = 0;
+   data.key = "";
+   data.cur_key_value = 0;
+   data.value = "";
+   data.call_order = 0;
+   data.errors = 0;
+   data.url = malloc((strlen(url)+1)*sizeof(char));
+   data.url[0] = '\0';
+
+	struct up *instance = up_create(&settings, &data);
+
+	up_add_chunk(instance, url, strlen(url));
+	up_complete(instance);
+	up_destroy(instance);
+
+   ASSERT_STR_EQUAL(data.url, url);
+
+   _errors += data.errors;
+
+   free(data.url);
+
+TSET()
+
+TEST(slash test)
+
+   char url = '/';
+
+   struct data data;
+   data.protocol = "";
+   data.host = "";
+   data.port = "";
+   data.path = "";
+   data.cur_path = 0;
+   data.key = "";
+   data.cur_key_value = 0;
+   data.value = "";
+   data.call_order = 0;
+   data.errors = 0;
+   data.url = malloc((1+1)*sizeof(char));
+   data.url[0] = '\0';
+
+	struct up *instance = up_create(&settings, &data);
+
+	up_add_chunk(instance, &url, 1);
+	up_complete(instance);
+	up_destroy(instance);
+
+   ASSERT_STR_EQUAL(data.url, "/");
+
+   _errors += data.errors;
+
+   free(data.url);
+
+TSET()
 
 TEST_END()

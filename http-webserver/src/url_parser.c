@@ -84,10 +84,10 @@ struct up {
 
 /// Create URL parser instance
 /**
- *   This method creates an URL Parser instance.
- *   It allocates memory for itself and a copy of the settings struct, and
- *   copies the settings struct to this new location.  It also sets all
- *   values to default.
+ *   This method creates an URL Parser instance.  It allocates memory
+ *   for itself and a copy of the settings struct, and copies the
+ *   settings struct to this new location.  It also sets all values to
+ *   default.
  *
  *  @param  settings A pointer to a url_parser_settings struct
  *  @return a pointer to the newly created instance
@@ -96,6 +96,8 @@ struct up *up_create(
       struct up_settings *settings, void *data)
 {
    struct up *instance;
+
+   printf("up_create()\n");
 
    instance = malloc(sizeof(struct up));
 
@@ -124,13 +126,15 @@ struct up *up_create(
 
 /// Destroy URL parser instance
 /**
- *   This method destroys an URL Parser instance, including the buffer and
- *   settings struct.
+ *  This method destroys an URL Parser instance, including the buffer
+ *  and settings struct.
  *
  *  @param  instance A pointer to an url_parser_instance to destroy
  */
 void up_destroy(struct up *instance)
 {
+   printf("up_destroy()\n");
+
    if(instance != NULL) {
 
       if(instance->settings != NULL) {
@@ -182,6 +186,9 @@ int isLegalURLChar(char c)
 int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 {
    struct up *instance = _instance;
+
+   printf("up_add_chuck('%.*s',%d)\n", (int)chunk_size, chunk,
+         (int)chunk_size);
 
    // Increase the current buffer so the chunk can be added
    size_t old_buffer_size = instance->buffer_size;
@@ -386,6 +393,8 @@ int up_complete(void *_instance)
 {
    struct up *instance = _instance;
 
+   printf("up_complete()\n");
+
    // Check if we need to send a last chunk and that we are in a valid
    // end state
    switch(instance->state)
@@ -401,10 +410,17 @@ int up_complete(void *_instance)
 
          if(instance->settings->on_path_complete != NULL)
          {   
-            instance->settings->on_path_complete(
-                  instance->data, 
-                  &instance->buffer[instance->path_start],
-                  ((instance->buffer_size)-instance->path_start));
+            if (instance->path_start == -1) {
+               instance->settings->on_path_complete(
+                     instance->data, 
+                     &instance->buffer[instance->path_start],
+                     0);
+            } else {
+               instance->settings->on_path_complete(
+                     instance->data, 
+                     &instance->buffer[instance->path_start],
+                     ((instance->buffer_size)-instance->path_start));
+            }
          }
 
          instance->last_returned = instance->chars_parsed;
