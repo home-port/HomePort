@@ -44,3 +44,10 @@ add_executable(url_parser_test EXCLUDE_FROM_ALL
       )
 add_test(url_parser_test ${CMAKE_CURRENT_BINARY_DIR}/url_parser_test)
 add_dependencies(check url_parser_test)
+
+# Header Parser Test
+add_executable(header_parser_test EXCLUDE_FROM_ALL
+      header_parser_test.c
+      )
+add_test(header_parser_test ${CMAKE_CURRENT_BINARY_DIR}/header_parser_test)
+add_dependencies(check header_parser_test)
