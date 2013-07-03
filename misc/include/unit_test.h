@@ -92,10 +92,10 @@
       char *c; \
       ASSERT(1) \
       printf("   Got '"); \
-      for (c = X; c != '\0'; c++) \
+      for (c = X; *c != '\0'; c++) \
          PRINT_CHAR(*c); \
       printf("' - expected '"); \
-      for (c = Y; c != '\0'; c++) \
+      for (c = Y; *c != '\0'; c++) \
          PRINT_CHAR(*c); \
       printf("'\n"); \
    }
