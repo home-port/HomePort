@@ -48,7 +48,6 @@ static struct ev_async exit_watcher;
 
 static size_t data_from_curl(char *buffer, size_t buffer_size, size_t nmemb, char **userdata)
 {
-   printf("Data from curl\n");
 	*userdata = realloc(*userdata, strlen(*userdata) + buffer_size*nmemb + 1);
    char *data = &(*userdata)[strlen(*userdata)];
 	memcpy(data, buffer, buffer_size*nmemb);

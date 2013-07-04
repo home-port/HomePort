@@ -45,7 +45,9 @@ struct data {
    char *method;
    char *url;
    char *hdr_field;
+   int hdr_field_l;
    char *hdr_value;
+   int hdr_value_l;
    int hdr_count;
    char *body;
    int _errors;
@@ -60,7 +62,6 @@ static struct ev_async exit_watcher;
 
 static size_t data_from_curl(char *buffer, size_t buffer_size, size_t nmemb, char **userdata)
 {
-   printf("Data from curl\n");
 	*userdata = realloc(*userdata, strlen(*userdata) + buffer_size*nmemb + 1);
    char *data = &(*userdata)[strlen(*userdata)];
 	memcpy(data, buffer, buffer_size*nmemb);
@@ -77,6 +78,8 @@ static size_t data_to_curl(void *ptr, size_t size, size_t nmemb,
    char *buf = ptr;
    size_t copied;
 
+   printf("Data to CURL\n");
+
    // Copy data
    strncpy(buf, data, size*nmemb);
 
@@ -92,6 +95,7 @@ static size_t data_to_curl(void *ptr, size_t size, size_t nmemb,
    return copied;
 }
 
+// TODO This should take method as parameter as basic_get_test does
 static char* simple_get_request(char* url)
 {
 	CURL *handle = curl_easy_init();
@@ -108,6 +112,7 @@ static char* simple_get_request(char* url)
 		curl_easy_setopt(handle, CURLOPT_WRITEDATA, &userdata);
 		curl_easy_setopt(handle, CURLOPT_READFUNCTION, data_to_curl);
 		curl_easy_setopt(handle, CURLOPT_READDATA, &sent);
+      curl_easy_setopt(handle, CURLOPT_INFILESIZE, strlen(req_data));
 #ifdef DEBUG
       //curl_easy_setopt(handle, CURLOPT_VERBOSE, 1L);
 #endif
@@ -121,6 +126,7 @@ static char* simple_get_request(char* url)
 			return "";
 		}
 
+      curl_slist_free_all(chunk);
 		curl_easy_cleanup(handle);
 		return userdata;
 	}
@@ -131,19 +137,56 @@ static char* simple_get_request(char* url)
 	}
 }
 
-static int basic_get_test(char* url)
+static int basic_get_test(enum http_method method, char *host, char* path)
 {
-   char *received = simple_get_request(url);
-   int result = 0;
-   
-   if(strstr(received, req_data) != NULL) {
-      result = 1;
-   } else {
-      printf("The following bad string was received: %s\n", received);
+   // Construct URL
+   int len = strlen(host) + strlen(path) + 1;
+   char *url = malloc(len*sizeof(char));
+   strcpy(url, host);
+   strcat(url, path);
+
+   // Perform request
+   char *res = simple_get_request(url);
+
+   // Parse errors
+   int _errors = atoi(res);
+
+   // Construct method + path
+   len = strlen(http_method_str(method)) + strlen(path) + 2;
+   char *first_line = malloc(len*sizeof(char));
+   strcpy(first_line, http_method_str(method));
+   strcat(first_line, " ");
+   strcat(first_line, path);
+
+   // Construct content-length
+   len = snprintf("", 0, "Content-Length: %i\r\n", strlen(req_data));
+   char *content_length = malloc(len*sizeof(char));
+   snprintf(content_length, len, "Content-Length: %i\r\n",
+         strlen(req_data));
+
+   // Check for method + path
+   if (strstr(res, first_line) == NULL) {
+      ASSERT(1);
+      printf("The following bad string was received: %s\n", res);
    }
-   free(received);
+
+   // Check for content-length
+   if (strstr(res, content_length) == NULL) {
+      ASSERT(1);
+      printf("The following bad string was received: %s\n", res);
+   }
+
+   // Check for body
+   if(strstr(res, req_data) == NULL) {
+      ASSERT(1);
+      printf("The following bad string was received: %s\n", res);
+   }
    
-   return result;
+   free(url);
+   free(first_line);
+   free(content_length);
+   free(res);
+   return _errors;
 }
 
 /// Test thread
@@ -157,14 +200,14 @@ static int test_thread()
 
    // Run test
 	printf("Running webserver tests\n");
-	testresult = basic_get_test("http://localhost:8080");
+	testresult = basic_get_test(HTTP_PUT, "http://localhost:8080", "/");
 
    // Check result
-   if (testresult == 1) {
-      printf("Test succeeded\n");
-   } else {
+   if (testresult) {
 		printf("Test failed\n");
       ret++;
+   } else {
+      printf("Test succeeded\n");
    }
 
    // Clean up
@@ -183,14 +226,6 @@ static char *ncat(char *s1, const char *s2, int s2_len)
    return str;
 }
 
-static char *cat(char *s1, const char *s2)
-{
-   int len = strlen(s1) + strlen(s2) + 1;
-   char *str = realloc(s1, len);
-   strcat(str, s2);
-   return str;
-}
-
 static int on_req_begin(
       struct httpws *ins, struct http_request *req,
       void *ws_ctx, void **req_data)
@@ -202,7 +237,9 @@ static int on_req_begin(
    data->method = NULL;
    data->url = NULL;
    data->hdr_field = NULL;
+   data->hdr_field_l = 0;
    data->hdr_value = NULL;
+   data->hdr_value_l = 0;
    data->hdr_count = 0;
    data->body = NULL;
    data->_errors = 0;
@@ -269,6 +306,21 @@ static int on_req_hdr_field(
    struct data *data = *req_data;
    int _errors = 0;
 
+   ASSERT_EQUAL(data->state, 15);
+   data->state = (data->state | 16);
+
+   int i;
+   char *str;
+   data->hdr_field_l += len + 1;
+   data->hdr_field = realloc(data->hdr_field,
+         data->hdr_field_l*sizeof(char));
+   str = data->hdr_field;
+   for (i = 0; i < data->hdr_count; i++) {
+      str = &str[strlen(str)+1];
+   }
+   strncpy(str, buf, len);
+   str[len] = '\0';
+
    data->_errors += _errors;
    return 0;
 }
@@ -281,6 +333,23 @@ static int on_req_hdr_value(
    struct data *data = *req_data;
    int _errors = 0;
 
+   ASSERT_EQUAL(data->state, 31);
+   data->state = (data->state & 15);
+
+   int i;
+   char *str;
+   data->hdr_value_l += len + 1;
+   data->hdr_value = realloc(data->hdr_value,
+         data->hdr_value_l*sizeof(char));
+   str = data->hdr_value;
+   for (i = 0; i < data->hdr_count; i++) {
+      str = &str[strlen(str)+1];
+   }
+   strncpy(str, buf, len);
+   str[len] = '\0';
+
+   data->hdr_count++;
+
    data->_errors += _errors;
    return 0;
 }
@@ -291,6 +360,20 @@ static int on_req_hdr_cmpl(
 {
    struct data *data = *req_data;
    int _errors = 0;
+
+   ASSERT_EQUAL(data->state, 15);
+   data->state = (data->state | 32);
+
+   int i;
+   char *f = data->hdr_field;
+   char *v = data->hdr_value;
+   for (i = 0; i < data->hdr_count; i++) {
+      const char *got = http_request_get_header(req, f);
+      ASSERT_STR_EQUAL(v, got);
+
+      f = &f[strlen(f)+1];
+      v = &v[strlen(v)+1];
+   }
 
    data->_errors += _errors;
    return 0;
@@ -304,8 +387,30 @@ static int on_req_body(
    struct data *data = *req_data;
    int _errors = 0;
 
+   ASSERT_EQUAL(data->state, 47);
+   data->state = (data->state | 64);
+   data->body = ncat(data->body, buf, len);
+
    data->_errors += _errors;
    return 0;
+}
+
+static int construct_body(char *body, int len, struct data *data)
+{
+   int l = 0, i;
+   char *field = data->hdr_field;
+   char *value = data->hdr_value;
+
+   l += snprintf(body, len, "%d %s %s\r\n", data->_errors, data->method, data->url);
+   for (i = 0; i < data->hdr_count; i++) {
+      l += snprintf(&body[l], len, "%s: %s\r\n", field, value);
+      field = &field[strlen(field)+1];
+      value = &value[strlen(value)+1];
+   }
+   if (data->body != NULL)
+      l += snprintf(&body[l], len, "\r\n%s", data->body);
+
+   return l+1;
 }
 
 static int on_req_cmpl(
@@ -314,6 +419,10 @@ static int on_req_cmpl(
 {
    struct data *data = *req_data;
    int _errors = 0;
+
+   // Check state
+   ASSERT_EQUAL((data->state & 47), 47);
+   data->state = (data->state | 64);
 
    // Check method
    enum http_method method = http_request_get_method(req);
@@ -325,11 +434,10 @@ static int on_req_cmpl(
 
    // Construct body
    data->_errors += _errors;
-   char *fmt = "%d\n";
    char *body = "";
-   int body_len = snprintf(body, 0, fmt, data->_errors) + 1;
+   int body_len = construct_body(body, 0, data);
    body = malloc(body_len*sizeof(char));
-   snprintf(body, body_len, fmt, data->_errors);
+   construct_body(body, body_len, data);
 
    // Send response
    struct http_response *res = http_response_create(req, WS_HTTP_200);
