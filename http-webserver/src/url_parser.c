@@ -68,18 +68,35 @@ enum up_state {
 */
 struct up {
    struct up_settings *settings;
-
    void *data;
 
    int state;
-   unsigned int chars_parsed;
-   unsigned int last_returned;
-   int path_start;
-   size_t tmp_key_begin;
-   size_t tmp_key_size;
 
-   size_t buffer_size;
-   char* buffer;
+   char *buffer;
+   size_t protocol;
+   size_t protocol_l;
+   size_t host;
+   size_t host_l;
+   size_t port;
+   size_t port_l;
+   size_t path;
+   size_t path_l;
+   size_t key_value;
+   size_t end;
+   size_t last_key;
+   size_t last_key_l;
+   size_t last_value;
+   size_t last_value_l;
+   size_t last_path;
+   size_t last_path_l;
+   size_t parser;
+   size_t insert;
+
+   //unsigned int chars_parsed;
+   //unsigned int last_returned;
+   //int path_start;
+   //size_t tmp_key_begin;
+   //size_t tmp_key_size;
 };
 
 /// Create URL parser instance
@@ -95,28 +112,47 @@ struct up {
 struct up *up_create(
       struct up_settings *settings, void *data)
 {
-   struct up *instance;
+   struct up *instance = malloc(sizeof(struct up));
 
-   instance = malloc(sizeof(struct up));
-
-   instance -> settings = malloc(sizeof(struct up_settings));
-
+   // Store settings
+   instance->settings = malloc(sizeof(struct up_settings));
    if(instance->settings == NULL)
    {
       fprintf(stderr, "Malloc failed in URL parser when allocating "
                       "space for URL parser settings\n");
       return NULL;
    }
-
    memcpy(instance->settings, settings, sizeof(struct up_settings));
 
-   instance -> state = S_START;
-   instance -> buffer_size = 0;
-   instance -> chars_parsed = 0;
-   instance -> last_returned = 0;
-   instance -> path_start = -1;
-   instance -> buffer = NULL;
+   // Set state
+   instance->state = S_START;
+   instance->buffer = NULL;
 
+   // Set pointers
+   instance->protocol = 0;
+   instance->protocol_l = 0;
+   instance->host = 0;
+   instance->host_l = 0;
+   instance->port = 0;
+   instance->port_l = 0;
+   instance->path = 0;
+   instance->path_l = 0;
+   instance->key_value = 0;
+   instance->end = 0;
+   instance->last_key = 0;
+   instance->last_key_l = 0;
+   instance->last_value = 0;
+   instance->last_value_l = 0;
+   instance->last_path = 0;
+   instance->last_path_l = 0;
+   instance->parser = 0;
+   instance->insert = 0;
+
+   //instance->chars_parsed = 0;
+   //instance->last_returned = 0;
+   //instance->path_start = -1;
+
+   // Store data
    instance->data = data;
 
    return instance;
@@ -179,37 +215,30 @@ int isLegalURLChar(char c)
  *   @param   chunk A pointer to the chunk (non zero terminated)
  *   @param chunk_size The size of the chunk
  */
-int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
+int up_add_chunk(void *_instance, const char* chunk, size_t len)
 {
-   struct up *instance = _instance;
+   struct up *up = _instance;
+   const struct up_settings *settings = up->settings;
+   char *buffer;
 
-   // Increase the current buffer so the chunk can be added
-   size_t old_buffer_size = instance->buffer_size;
-   instance->buffer_size += chunk_size;
-
-   if(instance->buffer == NULL && instance->settings->on_begin != NULL)
-   {
-      instance->settings->on_begin(instance->data);
-   }
-
-   instance->buffer = realloc(instance->buffer, instance->buffer_size * (sizeof(char)));
-   if(instance->buffer == NULL)
-   {
+   // Add chunk to buffer
+   //size_t old_buffer_size = up->size;
+   up->end += len;
+   buffer = realloc(up->buffer, up->end*sizeof(char));
+   if(buffer == NULL) {
       fprintf(stderr, "Realloc failed in URL parser when allocating"
                       "space for new URL chunk\n");
-      instance->state = S_ERROR;
+      up->state = S_ERROR;
       return 1;
    }
-
-   memcpy(instance->buffer+old_buffer_size, chunk, chunk_size);
+   up->buffer = buffer;
+   memcpy(&buffer[up->insert], chunk, len);
+   up->insert += len;
 
    // Parse the new chunk in buffer
-   size_t i;
-   for(i = instance->chars_parsed; i < instance->buffer_size; i++)
+   for(;up->parser < up->end; up->parser++)
    {
-      char c = instance->buffer[i];
-
-      //printf("current char: %c, state: %d\n", c, instance->state);
+      char c = up->buffer[up->parser];
 
       // Check if it is a valid URL char. If not, print an error message
       // and set parser to error state
@@ -217,146 +246,143 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
       {
          fprintf(stderr, "The URL parser received an invalid "
                          "character: %c\n", c);
-         instance->state = S_ERROR;
+         up->state = S_ERROR;
       }
 
-      switch(instance->state)
+      switch(up->state)
       {
          case S_START:
-            if(c == '/')
-            {
-               instance->state = S_SEGMENT;
+            if (settings->on_begin != NULL) {
+               settings->on_begin(up->data);
             }
-            else
-            {
-               instance->state = S_PROTOCOL;
+            if (c == '/') {
+               up->state = S_SEGMENT;
+               up->path = up->parser;
+               up->path_l++;
+               up->last_path = up->parser+1;
+            } else {
+               up->state = S_PROTOCOL;
+               up->protocol = up->parser;
+               up->protocol_l++;
             }
             break;
          case S_PROTOCOL:
-            if(c == ':')
-            {
-               if(instance->settings->on_protocol != NULL)
-               {
-                  instance->settings->on_protocol(instance->data,
-                                                  instance->buffer,
-                                                  instance->chars_parsed);
+            if (c == ':') {
+               if(settings->on_protocol != NULL) {
+                  settings->on_protocol(up->data,
+                                        &up->buffer[up->protocol],
+                                        up->parser-up->protocol);
                }
-               instance->last_returned = instance->chars_parsed;
-               instance->state = S_SLASH1;
-               break;
+               up->state = S_SLASH1;
+            } else {
+               up->protocol_l++;
             }
             break;
          case S_SLASH1:
-            if(c == '/')
-            {
-               instance->state = S_SLASH2;
-            }
-            else
-            {
-               instance->state = S_ERROR;
+            if(c == '/') {
+               up->state = S_SLASH2;
+            } else {
+               up->state = S_ERROR;
             }
             break;
          case S_SLASH2:
-            if(c == '/')
-            {
-               instance->state = S_HOST;
-            }
-            else
-            {
-               instance->state = S_ERROR;
+            if(c == '/') {
+               up->state = S_HOST;
+               up->host = up->parser + 1;
+            } else {
+               up->state = S_ERROR;
             }
             break;
          case S_HOST:
-            if(c == ':' || c == '/')
-            {
-               if(instance->settings->on_host != NULL)
-               {
-                  instance->settings->on_host(
-                        instance->data,
-                        &instance->buffer[instance->last_returned+3],
-                        (i-(instance->last_returned)-3));
+            if(c == ':' || c == '/') {
+               if (settings->on_host != NULL) {
+                  up->settings->on_host(up->data,
+                                        &up->buffer[up->host],
+                                        up->host_l);
                }
-               instance->last_returned = instance->chars_parsed;
-               instance->state = S_PREPORT;
+               if (c == ':') up->state = S_PREPORT;
+               if (c == '/') {
+                  up->state = S_SEGMENT;
+                  up->path = up->parser;
+                  up->path_l++;
+                  up->last_path = up->parser+1;
+               }
                break;
+            } else {
+               up->host_l++;
             }
             break;
-
          case S_PREPORT:
             if(c == '/')
-               instance->state = S_ERROR;
-            instance->state = S_PORT;
+               up->state = S_ERROR;
+            up->state = S_PORT;
+            up->port = up->parser;
+            up->port_l++;
             break;
-
          case S_PORT:
-            if(c == '/')
+            if (c == '/')
             {
-               if(instance->settings->on_port != NULL)
-               {
-                  instance->settings->on_port(
-                        instance->data,
-                        &instance->buffer[instance->last_returned+1],
-                        (i-(instance->last_returned)-1));
+               if (settings->on_port != NULL) {
+                  settings->on_port(up->data,
+                                    &up->buffer[up->port],
+                                    up->port_l);
                }
-               instance->last_returned = instance->chars_parsed;
-               instance -> state = S_SEGMENT;
+               up->state = S_SEGMENT;
+               up->path = up->parser;
+               up->path_l++;
+               up->last_path = up->parser+1;
+            } else {
+               up->port_l++;
             }
             break;
          case S_SEGMENT:
-
-            if(instance -> path_start < 0)
-               instance -> path_start = instance->last_returned;
-
-            if(c == '/' || c == '?')
-            {
-               if(instance->settings->on_path_segment != NULL)
-               {
-                  instance->settings->on_path_segment(
-                        instance->data,
-                        &instance->buffer[instance->last_returned+1],
-                        (i-(instance->last_returned)-1));
+            if (c == '/' || c == '?') {
+               if (settings->on_path_segment != NULL) {
+                  settings->on_path_segment(up->data,
+                                            &up->buffer[up->last_path],
+                                            up->last_path_l);
                }
-               instance->last_returned = instance->chars_parsed;
+               up->last_path = up->parser+1;
+               up->last_path_l = 0;
+            } else {
+               up->last_path_l++;
             }
-            if(c == '?')
-            {
-               if(instance->settings->on_path_complete != NULL)
-               {
-                  instance->settings->on_path_complete(
-                        instance->data,
-                        &instance->buffer[instance->path_start],
-                        i-(instance->path_start));
+            if (c == '?') {
+               if (settings->on_path_complete != NULL) {
+                  settings->on_path_complete(up->data,
+                                             &up->buffer[up->path],
+                                             up->path_l);
                }
-               instance->state = S_KEY;
+               up->state = S_KEY;
+               up->key_value = up->parser+1;
+               up->last_key = up->parser+1;
+            } else {
+               up->path_l++;
             }
             break;
          case S_KEY:
-            if(c == '=')
-            {
-               if(instance->settings->on_key_value != NULL)
-               {
-                  //instance->tmp_key = &instance->buffer[instance->last_returned+1];
-                  instance->tmp_key_begin = instance->last_returned+1;
-                  instance->tmp_key_size = (i-(instance->last_returned)-1);
-               }
-               instance->last_returned = instance->chars_parsed;
-               instance->state = S_VALUE;
+            if (c == '=') {
+               up->state = S_VALUE;
+               up->last_value = up->parser+1;
+               up->last_value_l = 0;
+            } else {
+               up->last_key_l++;
             }
             break;
          case S_VALUE:
-            if(c=='&')
-            {
-               if(instance->settings->on_key_value != NULL)
-               {
-                  instance->settings->on_key_value(
-                        instance->data,
-                        &instance->buffer[instance->tmp_key_begin], 
-                        instance->tmp_key_size,
-                        &instance->buffer[instance->last_returned+1],
-                        (i-(instance->last_returned)-1));
+            if (c == '&') {
+               if (settings->on_key_value != NULL) {
+                  settings->on_key_value(up->data,
+                                         &up->buffer[up->last_key], 
+                                         up->last_key_l,
+                                         &up->buffer[up->last_value],
+                                         up->last_value_l);
                }
-               instance->last_returned = instance->chars_parsed;
-               instance->state = S_KEY;
+               up->state = S_KEY;
+               up->last_key = up->parser+1;
+               up->last_key_l = 0;
+            } else {
+               up->last_value_l++;
             }
             break;
 
@@ -365,8 +391,8 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
                return 1;
             break;
       }
-      instance->chars_parsed++;
    }
+
    return 0;
 }
 
@@ -384,91 +410,60 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
  */
 int up_complete(void *_instance)
 {
-   struct up *instance = _instance;
+   struct up *up = _instance;
+   const struct up_settings *settings = up->settings;
 
    // Check if we need to send a last chunk and that we are in a valid
    // end state
-   switch(instance->state)
+   switch(up->state)
    {
       case S_SEGMENT:
-         if(instance->settings->on_path_segment != NULL)
-         {
-            instance->settings->on_path_segment(
-                  instance->data, 
-                  &instance->buffer[instance->last_returned+1],
-                  (instance->buffer_size-instance->last_returned-1));
+         if (settings->on_path_segment != NULL) {
+            settings->on_path_segment(up->data, 
+                                      &up->buffer[up->last_path],
+                                      up->last_path_l);
          }
-
-         if(instance->settings->on_path_complete != NULL)
-         {   
-            if (instance->path_start == -1) {
-               instance->settings->on_path_complete(
-                     instance->data, 
-                     &instance->buffer[instance->path_start],
-                     0);
-            } else {
-               instance->settings->on_path_complete(
-                     instance->data, 
-                     &instance->buffer[instance->path_start],
-                     ((instance->buffer_size)-instance->path_start));
-            }
+         if (settings->on_path_complete != NULL) {
+            settings->on_path_complete(up->data, 
+                                       &up->buffer[up->path],
+                                       up->path_l);
          }
-
-         instance->last_returned = instance->chars_parsed;
-
          break;
-
       case S_VALUE:
-         if(instance->settings->on_key_value != NULL)
-         {
-            instance->settings->on_key_value(
-                  instance->data, 
-                  &instance->buffer[instance->tmp_key_begin],
-                  instance->tmp_key_size,
-                  &instance->buffer[instance->last_returned+1],
-                  (instance->buffer_size-(instance->last_returned)-1));
+         if (settings->on_key_value != NULL) {
+            settings->on_key_value(up->data, 
+                                   &up->buffer[up->last_key],
+                                   up->last_key_l,
+                                   &up->buffer[up->last_value],
+                                   up->last_value_l);
          }
-            instance->last_returned = instance->chars_parsed;
          break;
 
       case S_HOST:
-            // It is valid to call complete after a host has been found
-            if(instance->settings->on_host != NULL)
-            {
-            instance->settings->on_host(
-                  instance->data,
-                  &instance->buffer[instance->last_returned+3],
-                  (instance->buffer_size-(instance->last_returned)-3));
+            if (settings->on_host != NULL) {
+               settings->on_host(up->data,
+                                 &up->buffer[up->host],
+                                 up->host_l);
             }
-            instance->last_returned = instance->chars_parsed;
-
          break;
-      
       case S_PORT:
-            // It is valid to call complete after a port has been found
-            // for the host
-            if(instance->settings->on_port != NULL)
-            {
-               instance->settings->on_port(
-                     instance->data,
-                     &instance->buffer[instance->last_returned+1],
-                     (instance->buffer_size-(instance->last_returned)-1));
+            if (settings->on_port != NULL) {
+               settings->on_port(up->data,
+                                 &up->buffer[up->port],
+                                 up->port_l);
             }
-            instance->last_returned = instance->chars_parsed;
-
          break;
-
       default:
          fprintf(stderr, "An error has happened in the URL parser. End "
-                         "state: %d\n",instance->state);
+                         "state: %d\n",up->state);
          return 1;
    }
 
-   if(instance->settings->on_complete != NULL && instance->buffer != NULL) {
-      instance->settings->on_complete(
-            instance->data,
-            instance->buffer,
-            instance->buffer_size);
+   if(settings->on_complete != NULL) {
+      settings->on_complete(
+            up->data,
+            up->buffer,
+            up->parser);
    }
    return 0;
 }

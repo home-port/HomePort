@@ -32,6 +32,7 @@
  */
 
 #include "http-webserver.h"
+#include "unit_test.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -215,11 +216,13 @@ static int on_req_method(
       const char *buf, size_t len)
 {
    struct data *data = *req_data;
+   int _errors = 0;
 
-   if (data->state != 1) data->_errors++;
+   ASSERT_EQUAL(data->state, 1);
    data->state = (data->state | 2);
    data->method = ncat(data->method, buf, len);
 
+   data->_errors += _errors;
    return 0;
 }
 
@@ -229,28 +232,13 @@ static int on_req_url(
       const char *buf, size_t len)
 {
    struct data *data = *req_data;
+   int _errors = 0;
 
-   // Check method
-   enum http_method method = http_request_get_method(req);
-   if (strcmp(data->method, http_method_str(method)) != 0) {
-      fprintf(stderr, "Got '%s', Expected '%s'\n", data->method,
-            http_method_str(method));
-      data->_errors++;
-   }
-   //switch(method) {
-   //   case HTTP_DELETE:
-   //      break;
-   //   case HTTP_GET:
-   //   case HTTP_POST:
-   //   case HTTP_PUT:
-   //   default:
-   //}
-
-   // Handle URL
-   if (data->state != 3) data->_errors++;
+   ASSERT_EQUAL(data->state, 3);
    data->state = (data->state | 4);
    data->url = ncat(data->url, buf, len);
 
+   data->_errors += _errors;
    return 0;
 }
 
@@ -259,10 +247,17 @@ static int on_req_url_cmpl(
       void *ws_ctx, void **req_data)
 {
    struct data *data = *req_data;
+   int _errors = 0;
 
-   if (data->state != 7) data->_errors++;
+   // Update state
+   ASSERT_EQUAL(data->state, 7);
    data->state = (data->state | 8);
 
+   // Check URL
+   const char *url = http_request_get_url(req);
+   ASSERT_STR_EQUAL(url, data->url);
+
+   data->_errors += _errors;
    return 0;
 }
 
@@ -271,6 +266,10 @@ static int on_req_hdr_field(
       void *ws_ctx, void **req_data,
       const char *buf, size_t len)
 {
+   struct data *data = *req_data;
+   int _errors = 0;
+
+   data->_errors += _errors;
    return 0;
 }
 
@@ -279,6 +278,10 @@ static int on_req_hdr_value(
       void *ws_ctx, void **req_data,
       const char *buf, size_t len)
 {
+   struct data *data = *req_data;
+   int _errors = 0;
+
+   data->_errors += _errors;
    return 0;
 }
 
@@ -286,6 +289,10 @@ static int on_req_hdr_cmpl(
       struct httpws *ins, struct http_request *req,
       void *ws_ctx, void **req_data)
 {
+   struct data *data = *req_data;
+   int _errors = 0;
+
+   data->_errors += _errors;
    return 0;
 }
 
@@ -294,6 +301,10 @@ static int on_req_body(
       void *ws_ctx, void **req_data,
       const char *buf, size_t len)
 {
+   struct data *data = *req_data;
+   int _errors = 0;
+
+   data->_errors += _errors;
    return 0;
 }
 
@@ -302,8 +313,18 @@ static int on_req_cmpl(
       void *ws_ctx, void **req_data)
 {
    struct data *data = *req_data;
+   int _errors = 0;
+
+   // Check method
+   enum http_method method = http_request_get_method(req);
+   if (strcmp(data->method, http_method_str(method)) != 0) {
+      fprintf(stderr, "Got '%s', Expected '%s'\n", data->method,
+            http_method_str(method));
+      data->_errors++;
+   }
 
    // Construct body
+   data->_errors += _errors;
    char *fmt = "%d\n";
    char *body = "";
    int body_len = snprintf(body, 0, fmt, data->_errors) + 1;

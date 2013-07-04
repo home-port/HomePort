@@ -98,17 +98,64 @@ void on_path_segment(void *data, const char* seg, size_t length)
    int i;
    int _errors = 0;
    struct data *dat = data;
+
+   // Find expect
    char *expect = dat->path;
    ASSERT_EQUAL((dat->call_order & 33), 1);
    dat->call_order = dat->call_order | 16;
    for (i = 0; i < dat->cur_path; i++) {
       expect = &expect[strlen(expect)+1];
    }
-	ASSERT_EQUAL(strncmp(seg, expect, length), 0);
+
+   // Find got
+   char *got = malloc((length+1)*sizeof(char));
+   strncpy(got, seg, length);
+   got[length] = '\0';
+
+	ASSERT_STR_EQUAL(got, expect);
    dat->cur_path++;
    dat->errors += _errors;
    strcat(dat->url, "/");
    strncat(dat->url, seg, length);
+
+   free(got);
+}
+
+void on_path_complete(void *data, const char* seg, size_t length)
+{
+   int i;
+   int _errors = 0;
+   struct data *dat = data;
+
+   // Check order
+   ASSERT_EQUAL((dat->call_order & 49), 17);
+
+   // Construct expect
+   char *expect = malloc(sizeof(char));
+   expect[0] = '\0';
+   char *ptr = dat->path;
+   int len = 1;
+   for (i = 0; i < dat->cur_path; i++) {
+      len += strlen(ptr) + 1;
+      expect = realloc(expect, len*sizeof(char));
+      strcat(expect, "/");
+      strcat(expect, ptr);
+      ptr = &ptr[strlen(ptr)+1];
+   }
+
+   // Construct got
+   char *got = malloc((length+1)*sizeof(char));
+   got[0] = '\0';
+   strncpy(got, seg, length);
+   got[length] = '\0';
+
+   // Check path
+   ASSERT_STR_EQUAL(got, expect);
+
+   // Clean up
+   free(got);
+   free(expect);
+   dat->errors += _errors;
 }
 
 void on_key_value(void * data,
@@ -145,6 +192,7 @@ TEST_START("url_parser.c")
  	settings.on_host = &on_host;
  	settings.on_port = &on_port;
  	settings.on_path_segment = &on_path_segment;
+ 	settings.on_path_complete = &on_path_complete;
  	settings.on_key_value = &on_key_value;
 
 TEST(non chunked url parsing)
@@ -155,6 +203,38 @@ TEST(non chunked url parsing)
    data.protocol = "http";
    data.host = "localhost";
    data.port = "8080";
+   data.path = "device\0tv";
+   data.cur_path = 0;
+   data.key = "id\0brand";
+   data.cur_key_value = 0;
+   data.value = "1\0Apple";
+   data.call_order = 0;
+   data.errors = 0;
+   data.url = malloc((strlen(url)+1)*sizeof(char));
+   data.url[0] = '\0';
+
+	struct up *instance = up_create(&settings, &data);
+
+	up_add_chunk(instance, url, strlen(url));
+	up_complete(instance);
+	up_destroy(instance);
+   
+   ASSERT_STR_EQUAL(data.url, url);
+
+   _errors += data.errors;
+
+   free(data.url);
+
+TSET()
+
+TEST(non chunked url parsing with no port)
+
+	char* url = "http://localhost/device/tv?id=1&brand=Apple";
+
+   struct data data;
+   data.protocol = "http";
+   data.host = "localhost";
+   data.port = "";
    data.path = "device\0tv";
    data.cur_path = 0;
    data.key = "id\0brand";
@@ -286,7 +366,7 @@ TEST(path test)
    data.protocol = "";
    data.host = "";
    data.port = "";
-   data.path = "devices";
+   data.path = "devices\0";
    data.cur_path = 0;
    data.key = "";
    data.cur_key_value = 0;
