@@ -194,6 +194,9 @@ static void header_parser_field_value_pair_complete(void* data, const char* fiel
    tmpValue[value_length] = '\0';
 
    lm_insert(req->headers, tmpField, tmpValue);
+
+   free(tmpField);
+   free(tmpValue);
 }
 
 /// Message begin callback for http_parser
