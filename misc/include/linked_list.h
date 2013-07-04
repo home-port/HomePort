@@ -107,6 +107,7 @@ struct ll {
          ITER->list->head = ITER->next; \
       if (ITER->list->tail == ITER) \
          ITER->list->tail = ITER->prev; \
+      free(ITER); \
    }
 
 #define ll_head(LIST) LIST->head

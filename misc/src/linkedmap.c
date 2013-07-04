@@ -122,16 +122,20 @@ int lm_insert(struct lm *map, const char* key, const char* value)
 // Remove a key and value pair
 void lm_remove(struct lm *map, const char* key)
 {
-	struct ll_iter *it;
+	struct ll_iter *it, *next;
 
 	if(map){
-		for(it = ll_head(map->pairs); it != NULL; it = ll_next(it)) {
+		for(it = ll_head(map->pairs); it != NULL;) {
 			if(strcmp(((struct pair*)ll_data(it))->key,key) == 0) {
 				free(((struct pair*)ll_data(it))->key);
 				free(((struct pair*)ll_data(it))->value);
 				free(((struct pair*)ll_data(it)));
+            next = ll_next(it);
 				ll_remove(it);
-			}
+            it = next;
+			} else {
+            it = ll_next(it);
+         }
 		}
 	}
 }
