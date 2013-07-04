@@ -172,10 +172,12 @@ static int test_thread()
 	return ret;
 }
 
-static char *catn(char *s1, const char *s2, int s2_len)
+static char *ncat(char *s1, const char *s2, int s2_len)
 {
-   int len = strlen(s1) + s2_len + 1;
+   int len = s2_len + 1;
+   if (s1 != NULL) len += strlen(s1);
    char *str = realloc(s1, len);
+   if (s1 == NULL) str[0] = '\0';
    strncat(str, s2, s2_len);
    return str;
 }
@@ -212,6 +214,8 @@ static int on_req_method(
       void *ws_ctx, void **req_data,
       const char *buf, size_t len)
 {
+   struct data *data = *req_data;
+   data->method = ncat(data->method, buf, len);
    return 0;
 }
 
@@ -271,6 +275,11 @@ static int on_req_cmpl(
    http_response_send(res, NULL);
    http_response_destroy(res);
 
+   free(data->method);
+   free(data->url);
+   free(data->hdr_field);
+   free(data->hdr_value);
+   free(data->body);
    free(data);
    return 0;
 }
