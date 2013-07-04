@@ -89,7 +89,7 @@
 
 #define ASSERT_STR_EQUAL(X,Y) \
    if (strcmp(X,Y)) { \
-      char *c; \
+      const char *c; \
       ASSERT(1) \
       printf("   Got '"); \
       for (c = X; *c != '\0'; c++) \
