@@ -39,6 +39,17 @@
 #include <curl/curl.h>
 #include <pthread.h> 
 
+struct data {
+   int state;
+   char *method;
+   char *url;
+   char *hdr_field;
+   char *hdr_value;
+   int hdr_count;
+   char *body;
+   int _errors;
+};
+
 static char *req_data = "Hello world";
 
 static int started = 0;
@@ -181,11 +192,18 @@ static int on_req_begin(
       struct httpws *ins, struct http_request *req,
       void *ws_ctx, void **req_data)
 {
-   char *res = malloc(sizeof(char));
-   res[0] = '\0';
-   res = cat(res, "<html><body><dl>");
+   struct data *data = malloc(sizeof(struct data));
+   *req_data = data;
 
-   *req_data = res;
+   data->state = 1;
+   data->method = NULL;
+   data->url = NULL;
+   data->hdr_field = NULL;
+   data->hdr_value = NULL;
+   data->hdr_count = 0;
+   data->body = NULL;
+   data->_errors = 0;
+
    return 0;
 }
 
@@ -194,19 +212,6 @@ static int on_req_method(
       void *ws_ctx, void **req_data,
       const char *buf, size_t len)
 {
-   char *res = *req_data;
-
-   int res_len = strlen(res);
-   if (res_len > 5 && strcmp(&res[res_len-5], "</dd>") == 0) {
-      res[res_len-5] = '\0';
-   } else {
-      res = cat(res, "<dt>Method:</dt>");
-      res = cat(res, "<dd>");
-   }
-   res = catn(res, buf, len);
-   res = cat(res, "</dd>");
-
-   *req_data = res;
    return 0;
 }
 
@@ -260,14 +265,13 @@ static int on_req_cmpl(
       struct httpws *ins, struct http_request *req,
       void *ws_ctx, void **req_data)
 {
-   char *res_body = *req_data;
-
-   res_body = cat(res_body, "</dl></body></html>");
+   struct data *data = *req_data;
 
    struct http_response *res = http_response_create(req, WS_HTTP_200);
-   http_response_send(res, res_body);
+   http_response_send(res, NULL);
+   http_response_destroy(res);
 
-   free(res_body);
+   free(data);
    return 0;
 }
 

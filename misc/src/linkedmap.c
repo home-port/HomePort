@@ -79,6 +79,8 @@ void lm_destroy(struct lm *map)
 
 		ll_destroy(map->pairs);
 	}
+
+   free(map);
 }
 
 // Insert a key/value pair in the map. Key and value will be copied to the map
