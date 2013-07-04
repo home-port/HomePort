@@ -97,8 +97,6 @@ struct up *up_create(
 {
    struct up *instance;
 
-   printf("up_create()\n");
-
    instance = malloc(sizeof(struct up));
 
    instance -> settings = malloc(sizeof(struct up_settings));
@@ -133,8 +131,6 @@ struct up *up_create(
  */
 void up_destroy(struct up *instance)
 {
-   printf("up_destroy()\n");
-
    if(instance != NULL) {
 
       if(instance->settings != NULL) {
@@ -186,9 +182,6 @@ int isLegalURLChar(char c)
 int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 {
    struct up *instance = _instance;
-
-   printf("up_add_chuck('%.*s',%d)\n", (int)chunk_size, chunk,
-         (int)chunk_size);
 
    // Increase the current buffer so the chunk can be added
    size_t old_buffer_size = instance->buffer_size;
@@ -392,8 +385,6 @@ int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size)
 int up_complete(void *_instance)
 {
    struct up *instance = _instance;
-
-   printf("up_complete()\n");
 
    // Check if we need to send a last chunk and that we are in a valid
    // end state
