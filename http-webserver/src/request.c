@@ -214,8 +214,6 @@ static int parser_msg_begin(http_parser *parser)
    struct http_request *req = parser->data;
    const struct httpws_settings *settings = req->settings;
    const httpws_nodata_cb begin_cb = settings->on_req_begin;
-   const httpws_data_cb method_cb = settings->on_req_method;
-   const char *method;
 
    switch (req->state) {
       case S_STOP:
@@ -226,10 +224,6 @@ static int parser_msg_begin(http_parser *parser)
          if(begin_cb)
             stat = begin_cb(req->webserver, req, settings->ws_ctx, &req->data);
          if (stat) { req->state = S_STOP; return stat; }
-         // Send method
-         method = http_method_str(parser->method);
-         if(method_cb)
-            stat = method_cb(req->webserver, req, settings->ws_ctx, &req->data, method, strlen(method));
 
          if (stat) { req->state = S_STOP; return stat; }
          return 0;
@@ -256,11 +250,18 @@ static int parser_url(http_parser *parser, const char *buf, size_t len)
    struct http_request *req = parser->data;
    struct httpws_settings *settings = req->settings;
    httpws_data_cb url_cb = settings->on_req_url;
+   const httpws_data_cb method_cb = settings->on_req_method;
+   const char *method;
 
    switch (req->state) {
       case S_STOP:
          return 1;
       case S_BEGIN:
+         // Send method
+         method = http_method_str(parser->method);
+         if(method_cb)
+            stat = method_cb(req->webserver, req, settings->ws_ctx, &req->data, method, strlen(method));
+
          req->state = S_URL;
       case S_URL:
          up_add_chunk(req->url_parser, buf, len);

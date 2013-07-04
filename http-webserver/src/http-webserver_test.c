@@ -215,7 +215,11 @@ static int on_req_method(
       const char *buf, size_t len)
 {
    struct data *data = *req_data;
+
+   if (data->state != 1) data->_errors++;
+   data->state = (data->state | 2);
    data->method = ncat(data->method, buf, len);
+
    return 0;
 }
 
@@ -224,6 +228,29 @@ static int on_req_url(
       void *ws_ctx, void **req_data,
       const char *buf, size_t len)
 {
+   struct data *data = *req_data;
+
+   // Check method
+   enum http_method method = http_request_get_method(req);
+   if (strcmp(data->method, http_method_str(method)) != 0) {
+      fprintf(stderr, "Got '%s', Expected '%s'\n", data->method,
+            http_method_str(method));
+      data->_errors++;
+   }
+   //switch(method) {
+   //   case HTTP_DELETE:
+   //      break;
+   //   case HTTP_GET:
+   //   case HTTP_POST:
+   //   case HTTP_PUT:
+   //   default:
+   //}
+
+   // Handle URL
+   if (data->state != 3) data->_errors++;
+   data->state = (data->state | 4);
+   data->url = ncat(data->url, buf, len);
+
    return 0;
 }
 
@@ -231,6 +258,11 @@ static int on_req_url_cmpl(
       struct httpws *ins, struct http_request *req,
       void *ws_ctx, void **req_data)
 {
+   struct data *data = *req_data;
+
+   if (data->state != 7) data->_errors++;
+   data->state = (data->state | 8);
+
    return 0;
 }
 
@@ -271,10 +303,20 @@ static int on_req_cmpl(
 {
    struct data *data = *req_data;
 
+   // Construct body
+   char *fmt = "%d\n";
+   char *body = "";
+   int body_len = snprintf(body, 0, fmt, data->_errors) + 1;
+   body = malloc(body_len*sizeof(char));
+   snprintf(body, body_len, fmt, data->_errors);
+
+   // Send response
    struct http_response *res = http_response_create(req, WS_HTTP_200);
-   http_response_send(res, NULL);
+   http_response_send(res, body);
    http_response_destroy(res);
 
+   // Clean up
+   free(body);
    free(data->method);
    free(data->url);
    free(data->hdr_field);
