@@ -34,8 +34,7 @@
 #ifndef LIBREST_H
 #define LIBREST_H
 
-#include "ws_types.h"
-
+#include "http_types.h"
 #include <stddef.h>
 
 // Structs
@@ -51,17 +50,8 @@ struct lr_settings {
 	.port = WS_PORT_HTTP, \
 	.timeout = 15 }
 
-// Enums
-enum lr_method
-{
-	GET,
-	POST,
-	PUT,
-	DELETE
-};
-
 // Callbacks
-typedef int (*lr_cb)(void *data, const char* url, size_t url_len);
+typedef int (*lr_cb)(void *req, const char* body, size_t len);
 
 // libREST instance functions
 struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop);
@@ -80,24 +70,13 @@ int lr_register_service(struct lr *ins,
 
 void lr_unregister_service(struct lr *ins, char *url);
 
-// Features libREST should have:
-// Register a callback
-// Start, stop (webserver. Should also have port etc.)
-// Call callback (maybe with chunks). It has to connect it with a request (to know which chunks belong together). That will be the void *
-// Start send chunk, send chunk, stop send chunk etc.
+// Send response functions
+void sendstr(void *req, enum httpws_http_status_code code, char *body);
+// WS_HTTP_200
 
-// call_cb(req, 
 // send(req,
 // start_send(req, 
 // send_chunk(req, 		#error if called without start_send
 // stop_send(req, 
-// lr create    		#should also create a webserver etc.
-// destroy(lr, 
-// start(lr, 
-// stop(lr,
-// register(lr, url, method, 
-// unregister(lr, 
-
-// libREST will register on on_url etc, and handle the answers if the url is not registered etc. 
 
 #endif

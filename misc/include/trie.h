@@ -31,8 +31,8 @@
  *  as representing official policies, either expressed.
  */
 
-#ifndef TREE_H
-#define TREE_H
+#ifndef TRIE_H
+#define TRIE_H
 
 #include <stdio.h>
 #include <string.h>

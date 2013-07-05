@@ -52,9 +52,9 @@ struct lr_service {
 
 static void method_not_allowed(struct http_request *req)
 {
-  struct http_response *res = http_response_create(req, WS_HTTP_405);
-  
-  http_response_send(res, "Method Not Allowed");
+   struct http_response *res = http_response_create(req, WS_HTTP_405);
+   http_response_send(res, "Method Not Allowed");
+   http_response_destroy(res);
 }
 
 // on_req_url_cmpl
@@ -67,6 +67,7 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ct
   {
     struct http_response *res = http_response_create(req, WS_HTTP_400);
     http_response_send(res, "Malformed URL");
+    http_response_destroy(res);
 
     return 1;
   }
@@ -75,11 +76,11 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ct
 
   if(iter == NULL) // URL not registered
   {
-    struct http_response *res = http_response_create(req, WS_HTTP_404);
-    // TODO: Find out if we need to add headers
-
-    http_response_send(res, "Resource not found"); // TODO: Decide on appropriate body
-    return 1;
+     struct http_response *res = http_response_create(req, WS_HTTP_404);
+     // TODO: Find out if we need to add headers
+     http_response_send(res, "Resource not found"); // TODO: Decide on appropriate body
+     http_response_destroy(res);
+     return 1;
   }
 
   struct lr_service *service = trie_value(iter);
@@ -132,7 +133,9 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ct
   return 0;
 }
 
-static int on_body(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data, const char* chunk, size_t len)
+static int on_body(struct httpws *ins, struct http_request *req,
+                   void* ws_ctx, void** req_data,
+                   const char* chunk, size_t len)
 {
   struct lr_service *service = *req_data;
 
@@ -242,4 +245,12 @@ int lr_register_service(struct lr *ins,
 void lr_unregister_service(struct lr *ins, char *url)
 {
 	free(trie_remove(ins->trie, url)); 
+}
+
+void sendstr(void *req, enum httpws_http_status_code code, char *body)
+{
+   struct http_response *res = http_response_create(req, code);
+   // TODO Consider headers to add
+   http_response_send(res, body);
+   http_response_destroy(res);
 }

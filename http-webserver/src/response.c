@@ -119,14 +119,14 @@ int http_response_add_header(struct http_response *res, const char *field, const
    strcat(res->msg, ":");
    strcat(res->msg, value);
    strcat(res->msg, CRLF);
-
+   
    return 0;
 }
 
 void http_response_send(struct http_response *res, const char* body)
 {
    fprintf(stderr, "http_response_send is in a very early alpha version!\n");
-
+   
    if(body != NULL) {
       ws_conn_sendf(res->conn, "%s%s%s", res->msg, CRLF, body);
       ws_conn_close(res->conn);

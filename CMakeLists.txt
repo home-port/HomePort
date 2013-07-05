@@ -38,9 +38,9 @@ enable_testing()
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 add_custom_target(example)
 
-#add_subdirectory(homeport)
-add_subdirectory(libREST)
+add_subdirectory(misc)
 add_subdirectory(webserver)
 add_subdirectory(http-webserver)
-add_subdirectory(misc)
+add_subdirectory(libREST)
+#add_subdirectory(homeport)
 
