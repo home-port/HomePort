@@ -68,7 +68,7 @@ HPD_Daemon *hpd_daemon;
 
 int HPD_init_daemon();
 
-int HPD_config_file_init( char *cfg_file_path );
+int HPD_config_file_init( const char *cfg_file_path );
 int HPD_config_default_init();
 int HPD_config_set_root_ca_path( char *root_ca_path );
 int HPD_config_set_server_key_path( char *server_key_path );

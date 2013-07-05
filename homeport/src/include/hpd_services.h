@@ -167,6 +167,6 @@ int remove_service_from_device( Service *service, Device *device );
 
 int cmp_ServiceElement( ServiceElement *a, ServiceElement *b );
 
-Service* matching_service( ServiceElement *service_head, char *url );
+Service* matching_service( ServiceElement *service_head, const char *url );
 
 #endif

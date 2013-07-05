@@ -74,7 +74,7 @@ HPD_init_daemon()
  * @return returns A HPD error code
  */
 int 
-HPD_config_file_init( char *cfg_file_path )
+HPD_config_file_init( const char *cfg_file_path )
 {
 	int max_log_size, log_level;
 

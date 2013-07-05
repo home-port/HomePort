@@ -166,11 +166,11 @@ init_hpd_log( int max_log_size, enum HPD_Loglevel log_level)
  */
 int 
 Log (enum HPD_Loglevel log_level, 
-     char* error_string, 
-     char* client_IP, 
-     char *method, 
-     char *uri_stem, 
-     char *uri_query)
+     const char* error_string, 
+     const char* client_IP, 
+     const char *method, 
+     const char *uri_stem, 
+     const char *uri_query)
 {
 	int ret;
 	if (hpd_log == NULL) 
@@ -254,11 +254,11 @@ set_position_for_new_message(size_t size_of_log_message)
  * @return The created message
  */
 char *
-get_allocated_log_message(char *error_string, 
-                          char *client_IP, 
-                          char *method, 
-                          char *uri_stem, 
-                          char *uri_query)
+get_allocated_log_message(const char *error_string, 
+                          const char *client_IP, 
+                          const char *method, 
+                          const char *uri_stem, 
+                          const char *uri_query)
 {
 	char* log_message;
 	char new_time[9];

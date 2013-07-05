@@ -124,7 +124,7 @@ load_file (const char *filename)
  *	   return code of MHD_queue_response otherwise
  */
 static int
-send_xml ( struct MHD_Connection *connection, const char *xmlbuff )
+send_xml ( struct MHD_Connection *connection, char *xmlbuff )
 {
 
 	int ret;
@@ -315,7 +315,7 @@ verify_certificate(gnutls_session_t session)
  */
 static int
 http_get_function( 	struct MHD_Connection *connection, 
-			char *url, char *arg,
+			const char *url, const char *arg,
 			void **con_cls,
 			HPD_web_server_struct *web_server )
 {
@@ -405,7 +405,7 @@ http_get_function( 	struct MHD_Connection *connection,
  */
 static int
 http_put_function(	struct MHD_Connection *connection, 
-			char *url, char *IP,
+			const char *url, const char *IP,
 			void **con_cls,
 			HPD_web_server_struct *web_server )
 {
@@ -575,7 +575,7 @@ answer_to_connection (	void *cls,
 
 	if( 0 == strcmp (method, MHD_HTTP_METHOD_GET) )
 	{
-		char *arg = NULL;
+		const char *arg = NULL;
 		
 		arg = MHD_lookup_connection_value(connection, MHD_GET_ARGUMENT_KIND, "x");
 		

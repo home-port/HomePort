@@ -75,7 +75,10 @@ struct ServiceId
 };
 
 Event *create_empty_event();
-Event *create_event( char* event_name, char *id, char *IP, char *data );
+Event *create_event( const char* event_name,
+                     const char *id,
+                     const char *IP,
+                     const char *data );
 Event *copy_event( Event *event );
 int destroy_event( Event *event_to_destroy );
 

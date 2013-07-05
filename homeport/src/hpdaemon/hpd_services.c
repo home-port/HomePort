@@ -633,7 +633,7 @@ cmp_ServiceElement( ServiceElement *a, ServiceElement *b )
  * @return returns the Service if it exists NULL if not
  */
 Service* 
-matching_service( ServiceElement *service_head, char *url )
+matching_service( ServiceElement *service_head, const char *url )
 {
 	ServiceElement *iterator;
 	DL_FOREACH( service_head, iterator )

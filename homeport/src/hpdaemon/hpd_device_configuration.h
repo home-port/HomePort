@@ -84,7 +84,7 @@ struct Attribute
 	Attribute *next;/**<*/
 };
 
-Attribute *new_attribute(char *name, char *value);
+Attribute *new_attribute(const char *name, const char *value);
 int destroy_attribute(Attribute *attribute_to_destroy);
 
 configurationEntity *new_configuration_entity(void* entity);

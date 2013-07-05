@@ -73,7 +73,7 @@ initiate_global_event_queue()
  * @return HPD_E_SERVICE_IS_NULL, HPD_E_EVENT_IS_NULL or HPD_E_ERROR_QUEUING_EVENT if an error occured, HPD_E_SUCCESS if successful
  */
 int 
-send_event_of_value_change( Service *service, char *value , char *IP )
+send_event_of_value_change( Service *service, const char *value , const char *IP )
 {
 	Event *new_event;
 	if( !service )
@@ -230,7 +230,7 @@ add_session_cookie( EventQueue *event_queue,
  */
 int 
 send_cookied_xml (	struct MHD_Connection *connection, 
-                  const char *xmlbuff, 
+                  char *xmlbuff, 
                   EventQueue *event_queue, 
                   int is_secure_connection)
 {

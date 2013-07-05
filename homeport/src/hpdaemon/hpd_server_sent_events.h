@@ -75,7 +75,7 @@ add_session_cookie( EventQueue *event_queue,
                    int is_secure_connection);
 
 int send_cookied_xml (	struct MHD_Connection *connection, 
-			const char *xmlbuff, 
+			char *xmlbuff, 
 			EventQueue *event_queue, 
 			int is_secure_connection);
 
@@ -85,7 +85,8 @@ char *generate_connection_id();
 
 void *consume_global_queue();
 
-int send_event_of_value_change (Service *service, char *updated_value, char *IP);
+int send_event_of_value_change (Service *service, const char
+      *updated_value, const char *IP);
 
 EventQueue *get_event_queue_with_connection_id(char *connection_id);
 

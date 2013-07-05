@@ -37,7 +37,7 @@ authors and should not be interpreted as representing official policies, either 
  * 
  */
 Attribute *
-new_attribute(char *name, char *value)
+new_attribute(const char *name, const char *value)
 {
 	if(!name || !value) return NULL;
 	Attribute *attribute = (Attribute*)malloc(sizeof(Attribute));

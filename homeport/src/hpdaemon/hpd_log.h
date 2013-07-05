@@ -75,11 +75,11 @@ int init_hpd_log(int max_log_size,
 				enum HPD_Loglevel _log_level);
 
 int Log (	enum HPD_Loglevel log_level,
-			char* error_string, 
-			char* client_IP, 
-			char *method, 
-			char *uri_stem, 
-			char *uri_query);
+			const char* error_string, 
+			const char* client_IP, 
+			const char *method, 
+			const char *uri_stem, 
+			const char *uri_query);
 
 int LogError (	int error_code, 
 				const char *message,...);
@@ -88,11 +88,11 @@ int change_hpd_log_level (enum HPD_Loglevel log_level);
 
 int set_event_sending(int send_events);
 
-char *get_allocated_log_message(	char *error_string, 
-									char *client_IP, 
-									char *method, 
-									char *uri_stem, 
-									char *uri_query);
+char *get_allocated_log_message(	const char *error_string, 
+									const char *client_IP, 
+									const char *method, 
+									const char *uri_stem, 
+									const char *uri_query);
 
 void set_position_for_new_message(size_t size_of_log_message);
 

@@ -64,7 +64,8 @@ create_empty_event()
  * @return The corresponding Event structure
  */
 Event *
-create_event( char* event_name, char *id, char *IP, char *data )
+create_event( const char* event_name, const char *id, const char *IP,
+      const char *data )
 {
 	Event *newEvent;
 
