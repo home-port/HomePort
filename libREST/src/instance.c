@@ -39,7 +39,7 @@
 #include <stdio.h>
 
 struct lr {
-   struct TrieNode *trie;
+   struct trie *trie;
    struct httpws *webserver;
 };
 
@@ -71,9 +71,9 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ct
     return 1;
   }
 
-  struct ListElement *node = trie_lookup_node(lr_ins->trie, url);
+  struct trie_iter *iter = trie_lookup(lr_ins->trie, url);
 
-  if(node == NULL) // URL not registered
+  if(iter == NULL) // URL not registered
   {
     struct http_response *res = http_response_create(req, WS_HTTP_404);
     // TODO: Find out if we need to add headers
@@ -82,7 +82,7 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ct
     return 1;
   }
 
-  struct lr_service *service = get_listElement_value(node);
+  struct lr_service *service = trie_value(iter);
   if(service == NULL)
   {
     fprintf(stderr, "Error: The service for an element in the trie was NULL!\n");
@@ -230,17 +230,16 @@ int lr_register_service(struct lr *ins,
    service->on_put = on_put;
    service->on_delete = on_delete;
 
-   struct ListElement* element = trie_insert(ins->trie, url);
+   struct trie_iter* iter = trie_insert(ins->trie, url, service);
 
-   if(element == NULL){
+   if(iter == NULL){
       return 1;
    }
 
-   set_listElement_value(element, service);
    return 0;
 }
 
 void lr_unregister_service(struct lr *ins, char *url)
 {
-	free(trie_remove_key(ins->trie, url)); 
+	free(trie_remove(ins->trie, url)); 
 }
