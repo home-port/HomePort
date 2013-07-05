@@ -37,7 +37,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "linkedlist.h"
 
 struct trie;
 struct trie_iter;

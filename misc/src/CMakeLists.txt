@@ -28,19 +28,6 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Linkedlist
-add_library(linkedlist
-      linkedlist.c
-      )
-
-# Linkedlist Test
-add_executable(linkedlist_test EXCLUDE_FROM_ALL
-      linkedlist_test.c
-      linkedlist.c
-      )
-add_test(linkedlist_test ${CMAKE_CURRENT_BINARY_DIR}/linkedlist_test)
-add_dependencies(check linkedlist_test)
-
 # linked_list.h test
 add_executable(linked_list_test EXCLUDE_FROM_ALL
       linked_list_test.c
@@ -65,14 +52,12 @@ add_dependencies(check linkedmap_test)
 add_library(trie
       trie.c
       )
-target_link_libraries(trie linkedlist)
 
 # Trie Test
 add_executable(trie_test EXCLUDE_FROM_ALL
       trie_test.c
       trie.c
       )
-target_link_libraries(trie_test linkedlist)
 add_test(trie_test ${CMAKE_CURRENT_BINARY_DIR}/trie_test)
 add_dependencies(check trie_test)
 
