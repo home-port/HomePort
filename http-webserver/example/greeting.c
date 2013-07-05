@@ -79,7 +79,7 @@ int handle_request(struct httpws *ins, struct http_request *req, void* ws_ctx, v
    sprintf(body, "%s%s%s",body1, body2, body3);
 
    struct http_response *res = http_response_create(req, WS_HTTP_200);
-   http_response_send(res, body);
+   http_response_sendf(res, body);
 
    free(body);
    

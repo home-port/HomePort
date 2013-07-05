@@ -59,6 +59,7 @@ static char* http_status_codes_to_str(enum httpws_http_status_code status)
 
 void http_response_destroy(struct http_response *res)
 {
+   ws_conn_close(res->conn);
    free(res->msg);
    free(res);
 }
@@ -123,15 +124,28 @@ int http_response_add_header(struct http_response *res, const char *field, const
    return 0;
 }
 
-void http_response_send(struct http_response *res, const char* body)
+void http_response_sendf(struct http_response *res, const char *fmt, ...)
 {
-   fprintf(stderr, "http_response_send is in a very early alpha version!\n");
-   
-   if(body != NULL) {
-      ws_conn_sendf(res->conn, "%s%s%s", res->msg, CRLF, body);
-      ws_conn_close(res->conn);
-   } else {
-   	ws_conn_sendf(res->conn, "%s%s", res->msg, CRLF);
-      ws_conn_close(res->conn);
-   }
+   va_list arg;
+   va_start(arg, fmt);
+   http_response_vsendf(res, fmt, arg);
+   va_end(arg);
 }
+
+void http_response_vsendf(struct http_response *res,
+                          const char *fmt, va_list arg)
+{
+   if (res->msg) {
+      // TODO Sendf returns a status
+      ws_conn_sendf(res->conn, "%s%s", res->msg, CRLF);
+      free(res->msg);
+      res->msg = NULL;
+   }
+
+   if (fmt) {
+      // TODO Sendf returns a status
+      ws_conn_vsendf(res->conn, fmt, arg);
+   }
+
+}
+

@@ -198,28 +198,28 @@ static void exit_cb(EV_P_ ev_async *watcher, int revents)
 static int get_cb(void *req, const char *body, size_t len)
 {
    if (body == NULL)
-      sendstr(req, WS_HTTP_200, "GET!");
+      lr_sendf(req, WS_HTTP_200, "GET!");
    return 0;
 }
 
 static int post_cb(void *req, const char *body, size_t len)
 {
    if (body == NULL)
-      sendstr(req, WS_HTTP_200, "POST!");
+      lr_sendf(req, WS_HTTP_200, "POST!");
    return 0;
 }
 
 static int put_cb(void *req, const char *body, size_t len)
 {
    if (body == NULL)
-      sendstr(req, WS_HTTP_200, "PUT!");
+      lr_sendf(req, WS_HTTP_200, "PUT!");
    return 0;
 }
 
 static int delete_cb(void *req, const char *body, size_t len)
 {
    if (body == NULL)
-      sendstr(req, WS_HTTP_200, "DELETE!");
+      lr_sendf(req, WS_HTTP_200, "DELETE!");
    return 0;
 }
 

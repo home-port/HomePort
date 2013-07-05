@@ -317,7 +317,7 @@ static void ws_conn_accept(
    ev_timer_again(loop, &conn->timeout_watcher);
 }
 
-int ws_conn_sendf(struct ws_conn *conn, char *fmt, ...) {
+int ws_conn_sendf(struct ws_conn *conn, const char *fmt, ...) {
    int stat;
    va_list arg;
 
@@ -328,7 +328,7 @@ int ws_conn_sendf(struct ws_conn *conn, char *fmt, ...) {
    return stat;
 }
 
-int ws_conn_vsendf(struct ws_conn *conn, char *fmt, va_list arg)
+int ws_conn_vsendf(struct ws_conn *conn, const char *fmt, va_list arg)
 {
    int stat;
    char *new_msg;

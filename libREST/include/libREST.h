@@ -71,8 +71,8 @@ int lr_register_service(struct lr *ins,
 void lr_unregister_service(struct lr *ins, char *url);
 
 // Send response functions
-void sendstr(void *req, enum httpws_http_status_code code, char *body);
-// WS_HTTP_200
+void lr_sendf(void *req, enum httpws_http_status_code status,
+              char *fmt, ...);
 
 // send(req,
 // start_send(req, 

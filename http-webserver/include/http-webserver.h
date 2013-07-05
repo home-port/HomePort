@@ -37,6 +37,7 @@
 #include "http_types.h"
 #include "linkedmap.h"
 #include <stddef.h>
+#include <stdarg.h>
 
 // TODO: Move timeouts here from the webserver
 
@@ -95,7 +96,8 @@ const char *http_request_get_header(struct http_request *req, const char* key);
 void http_response_destroy(struct http_response *res);
 struct http_response *http_response_create(struct http_request *req, enum httpws_http_status_code status);
 int http_response_add_header(struct http_response *res, const char *field, const char *value);
-void http_response_send(struct http_response *res, const char* body);
+void http_response_sendf(struct http_response *res, const char *fmt, ...);
+void http_response_vsendf(struct http_response *res, const char *fmt, va_list arg);
 
 
 #endif

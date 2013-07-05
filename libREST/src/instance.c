@@ -53,7 +53,7 @@ struct lr_service {
 static void method_not_allowed(struct http_request *req)
 {
    struct http_response *res = http_response_create(req, WS_HTTP_405);
-   http_response_send(res, "Method Not Allowed");
+   http_response_sendf(res, "Method Not Allowed");
    http_response_destroy(res);
 }
 
@@ -66,7 +66,7 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ct
   if(url == NULL)
   {
     struct http_response *res = http_response_create(req, WS_HTTP_400);
-    http_response_send(res, "Malformed URL");
+    http_response_sendf(res, "Malformed URL");
     http_response_destroy(res);
 
     return 1;
@@ -78,7 +78,7 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ct
   {
      struct http_response *res = http_response_create(req, WS_HTTP_404);
      // TODO: Find out if we need to add headers
-     http_response_send(res, "Resource not found"); // TODO: Decide on appropriate body
+     http_response_sendf(res, "Resource not found"); // TODO: Decide on appropriate body
      http_response_destroy(res);
      return 1;
   }
@@ -247,10 +247,17 @@ void lr_unregister_service(struct lr *ins, char *url)
 	free(trie_remove(ins->trie, url)); 
 }
 
-void sendstr(void *req, enum httpws_http_status_code code, char *body)
+void lr_sendf(void *req, enum httpws_http_status_code status,
+              char *fmt, ...)
 {
-   struct http_response *res = http_response_create(req, code);
+   va_list arg;
+   struct http_response *res = http_response_create(req, status);
    // TODO Consider headers to add
-   http_response_send(res, body);
+
+   va_start(arg, fmt);
+   http_response_vsendf(res, fmt, arg);
+
+   va_end(arg);
    http_response_destroy(res);
 }
+

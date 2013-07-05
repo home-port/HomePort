@@ -133,8 +133,8 @@ void ws_stop(struct ws *instance);
 // Client functions
 void ws_conn_kill(struct ws_conn *conn);
 void ws_conn_close(struct ws_conn *conn);
-int ws_conn_sendf(struct ws_conn *conn, char *fmt, ...);
-int ws_conn_vsendf(struct ws_conn *conn, char *fmt, va_list arg);
+int ws_conn_sendf(struct ws_conn *conn, const char *fmt, ...);
+int ws_conn_vsendf(struct ws_conn *conn, const char *fmt, va_list arg);
 
 #endif
 

@@ -441,7 +441,7 @@ static int on_req_cmpl(
 
    // Send response
    struct http_response *res = http_response_create(req, WS_HTTP_200);
-   http_response_send(res, body);
+   http_response_sendf(res, body);
    http_response_destroy(res);
 
    // Clean up
