@@ -39,18 +39,17 @@
 #include <stdlib.h>
 #include "linkedlist.h"
 
-typedef struct TrieNode TrieNode;
-typedef void(*dealloc_cb)(void* value);
+struct trie;
+struct trie_iter;
+typedef void(*dealloc_cb)(void *value);
 
-struct TrieNode
-{
-   struct LinkedList* children;
-};
-
-TrieNode* trie_create();
-struct ListElement* trie_insert(TrieNode* root, char* key);
-void* trie_remove_key(TrieNode* root, char* key);
-struct ListElement* trie_lookup_node(TrieNode* root, const char* key);
-void trie_destroy(TrieNode* subtree, dealloc_cb remove_value);
+struct trie* trie_create();
+void trie_destroy(struct trie *trie, dealloc_cb destructor);
+struct trie_iter* trie_insert(struct trie *trie, const char *key, void *value);
+void *trie_remove(struct trie* root, const char *key);
+struct trie_iter* trie_lookup(struct trie *root, const char *key);
+const char *trie_key(struct trie_iter *iter);
+void *trie_value(struct trie_iter *iter);
+void trie_print(struct trie *trie);
 
 #endif

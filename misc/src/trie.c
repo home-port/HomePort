@@ -32,354 +32,329 @@
  */
 
 #include <string.h>
-#include "../include/trie.h"
+#include "trie.h"
 
-static char* substring_from(char* key, int from)
+struct trie;
+struct trie_iter
 {
-   char *partialKey = malloc(strlen(key)+1-from);
-   strcpy(partialKey,&key[from]);
-   return partialKey;
+   struct trie *trie;
+   struct trie_iter *parent;
+   struct trie_iter *next;
+   struct trie_iter *child;
+   char *key;
+   void *value;
+};
+
+struct trie
+{
+   struct trie_iter *iter;
+};
+
+static char *substrn(const char *key, int from, int len)
+{
+   char *res = malloc((len+1)*sizeof(char));
+   strncpy(res, &key[from], len);
+   res[len] = '\0';
+   return res;
 }
 
-static char* substring_from_to(char* key, int from, int to)
+static char *substr(const char *key, int from)
 {
-   char *partialKey = malloc(strlen(key)+1-(to-from));
-   strncpy(partialKey, &key[from], (to-from));
-   partialKey[(to-from)+1] = '\0';
-   return partialKey;
+   return substrn(key, from, strlen(&key[from]));
 }
 
-TrieNode* trie_create()
+struct trie* trie_create()
 {
-   TrieNode* root = malloc(sizeof(TrieNode));
-   if(root == NULL)
+   struct trie* trie = malloc(sizeof(struct trie));
+   if(trie == NULL)
    {
-      fprintf(stderr,"malloc failed for creating a root of trie\n");
+      fprintf(stderr,"malloc failed for creating a trie\n");
       return NULL;
    }
-   root->children = NULL;
+   trie->iter = NULL;
 
-   return root;
+   return trie;
 }
 
-ListElement* trie_insert(TrieNode* root, char* key)
+static void remove_all(struct trie_iter *iter, dealloc_cb destructor)
 {
-   printf("Inserting %s\n",key);
+   if (iter == NULL) return;
+   if (iter->child != NULL) remove_all(iter->child, destructor);
+   if (iter->next != NULL) remove_all(iter->next, destructor);
+   if (destructor != NULL) destructor(iter->value);
+   free(iter->key);
+   free(iter);
+}
 
-   key = substring_from(key, 0); // allocate our own copy of the key
-   if(root->children == NULL)
-   {
-      LinkedList* list = create_linkedList();
-      ListElement* element = insert_listElement(list, key, NULL);
-      root->children = list;
-      return element;
+void trie_destroy(struct trie *trie, dealloc_cb destructor)
+{
+   if (trie->iter != NULL) remove_all(trie->iter, destructor);
+   free(trie);
+}
+
+static int prefix(const char *a, const char *b)
+{
+   int i;
+   const int al = strlen(a);
+   const int bl = strlen(b);
+   for (i = 0; i < al && i < bl && a[i] == b[i]; i++);
+   return i;
+}
+
+static struct trie_iter* lookup(struct trie_iter *iter, const char *key,
+                                int *iter_ptr, int *key_ptr)
+{
+   if (iter == NULL) return NULL;
+
+   const int il = strlen(iter->key);
+   int match = prefix(iter->key, &key[*key_ptr]);
+
+   if (match == 0) {
+      // No match
+      if (iter->next) return lookup(iter->next, key, iter_ptr, key_ptr);
+      else return iter->parent;
+   } else if (match == il) {
+      // Full match
+      *iter_ptr = il;
+      *key_ptr += match;
+      if (*key_ptr == strlen(key)) return iter;
+      else if (iter->child) return lookup(iter->child, key, iter_ptr, key_ptr);
+      else return iter;
+   } else {
+      // Parial match
+      *iter_ptr = match;
+      *key_ptr += match;
+      return iter;
+   }
+}
+
+struct trie_iter* trie_insert(struct trie *trie,
+                              const char *key, void *value)
+{
+   int iter_ptr, key_ptr;
+
+   // Invalid cases
+   if (key == NULL) return NULL;
+   if (value == NULL) return NULL;
+
+   // Construct new entry
+   struct trie_iter *new = malloc(sizeof(struct trie_iter));
+   new->trie = trie;
+   new->parent = NULL;
+   new->next = NULL;
+   new->child = NULL;
+   new->key = NULL;
+   new->value = value;
+
+   // The empty trie case
+   if (trie->iter == NULL) {
+      new->key = substr(key, 0);
+      trie->iter = new;
+      return new;
    }
 
-   unsigned int current_pos = 0, tmp_pos = 0;
-   TrieNode* treeElement = root;
-   ListElement* listElement = treeElement->children->head;
-   char* listkey = listElement->key;
+   // Lookup key
+   iter_ptr = 0;
+   key_ptr = 0;
+   struct trie_iter *iter = lookup(trie->iter, key, &iter_ptr, &key_ptr);
 
-   while(listElement!= NULL)
-   {
-      tmp_pos = 0;
-      if(listkey[tmp_pos] == key[current_pos])
-      {
-         tmp_pos++;
-         current_pos++;
+   // No matching prefix case
+   if (iter == NULL) {
+      iter = trie->iter;
+      while (iter->next != NULL) iter = iter->next;
+      new->key = substr(key, 0);
+      iter->next = new;
+      return new;
+   }
 
-         while(listkey[tmp_pos] != '\0'&& key[current_pos]!=
-               '\0' && listkey[current_pos] == key[current_pos]){
-            current_pos++;
-            tmp_pos++;
-         }
+   // Get lengths
+   const int iter_len = strlen(iter->key);
+   const int key_len = strlen(key);
 
-         if(listkey[tmp_pos] == '\0'&& key[current_pos] == '\0')
-         {
-            if(listElement->value == NULL)
-            {
-               return listElement;
-            }
-            else
-            {
-               // Element is already in trie
-               return NULL;
-            }
-         }
-         else if(listkey[tmp_pos] == '\0')
-         {
-            if(listElement->node == NULL)
-            {
-               TrieNode *node = malloc(sizeof(TrieNode));
-               if(node == NULL)
-               {
-                  fprintf(stderr, "malloc failed when creating a trie node\n");
-                  return NULL;
-               }
-
-               node->children = create_linkedList();
-               ListElement *element = insert_listElement(node->children, substring_from(key, current_pos), NULL);
-
-               listElement->node = node;
-
-               return element;
-            }
-            else
-            {
-               ListElement *element = insert_listElement(listElement->node->children, substring_from(key, current_pos), NULL);
-               return element;
-            }
-         }
-         else if (key[current_pos] == '\0')
-         {
-            char *matchingPart = substring_from_to(listkey,0, tmp_pos);
-            char *nonMatchingPart = substring_from_to(listkey, tmp_pos, strlen(listkey));
-
-            TrieNode *node = malloc(sizeof(TrieNode));
-            if(node == NULL)
-            {
-               fprintf(stderr, "malloc failed when creating a trie node\n");
-               return NULL;
-            }
-
-            node->children = create_linkedList();
-            ListElement *element = insert_listElement(node->children, nonMatchingPart, listElement->node);
-            element->value = listElement->value;
-
-            listElement->key = matchingPart;
-            listElement->value = NULL;
-            listElement->node = node;
-
-            return listElement;
-         }
-         else //Neither the key or listkey is done, they simply differ
-         {
-            char *matchingPart = substring_from_to(listkey,0, tmp_pos);
-            char *nonMatchingPart = substring_from_to(listkey, tmp_pos, strlen(listkey));
-
-            TrieNode *node = malloc(sizeof(TrieNode));
-            if(node == NULL)
-            {
-               fprintf(stderr, "malloc failed when creating a trie node\n");
-               return NULL;
-            }
-
-            node->children = create_linkedList();
-            ListElement *element = insert_listElement(node->children, nonMatchingPart, listElement->node);
-            element->value = listElement->value;
-
-            listElement->value = NULL;
-            listElement->key = matchingPart;
-            listElement->node = node;
-
-            element = insert_listElement(node->children, substring_from_to(key, current_pos, strlen(key)),NULL);
-
-            return element;
-         }
-
+   // Full match - key is already present
+   if (iter_ptr == iter_len && key_ptr == key_len) {
+      if (iter->value == NULL) {
+         iter->value = value;
+         free(new);
+         return iter;
+      } else {
+         free(new);
+         return NULL;
       }
-      listElement = listElement->next;
-      if(listElement != NULL)
-         listkey = listElement->key;
    }
 
-   if(treeElement->children != NULL)
-   {
-      ListElement *element = insert_listElement(treeElement->children, substring_from(key, current_pos), NULL);
-      return element;
-   }
-   return NULL;
-   //insert_listElement(treeElement->children,key, NULL);
-   //TrieNode* newNode = malloc(sizeof(TrieNode));
-}
+   // Iter needs to be broken
+   if (iter_ptr < iter_len) {
+      // New is parent
+      if (key_ptr == key_len) {
+         // Set keys
+         new->key = substr(key, key_len-iter_ptr);
+         char *str = iter->key;
+         iter->key = substr(str, iter_ptr);
+         free(str);
 
-ListElement* trie_lookup_node(TrieNode* root, const char* key)
-{
-   if(root->children == NULL)
-      return NULL;
-
-   unsigned int current_pos = 0, tmp_pos = 0;
-   TrieNode* treeElement = root;
-   ListElement* listElement = root->children->head;
-   char* listkey = listElement->key;
-   
-   while(listElement!=NULL)
-   {
-      tmp_pos = 0;
-
-      if(listkey[tmp_pos] == key[current_pos])
-      {
-         current_pos++;
-         tmp_pos++;
-         while(listkey[tmp_pos] != '\0'&& key[current_pos]!=
-               '\0' && listkey[tmp_pos] == key[current_pos]){
-            current_pos++;
-            tmp_pos++;
-
-         }
-         if(listkey[tmp_pos] == '\0'&& key[current_pos] == '\0')
-         {
-            return listElement;
-         }
-         else if(listkey[tmp_pos] == '\0')
-         {
-            treeElement = listElement->node;
-            if(treeElement == NULL || treeElement->children == NULL)
-               return NULL;
-
-            listElement = treeElement->children->head;
-            listkey = listElement->key;
-            continue;
-         }
-         else 
-         {
-            return NULL;
-         }
-      }
-      listElement = listElement->next;
-      if(listElement != NULL)
-         listkey = listElement->key;
-   }
-   return NULL;
-}
-
-void* trie_remove_key(TrieNode* root, char* key)
-{
-   if(root->children == NULL)
-      return NULL;
-         
-   unsigned int current_pos = 0, tmp_pos = 0;
-   TrieNode* treeElement = root;
-   ListElement *parent = NULL, *listElement = root->children->head;
-   char* listkey = listElement->key;
-   void* value = NULL;
-   
-   while(listElement!=NULL)
-   {
-      tmp_pos = 0;
-
-      if(listkey[tmp_pos] == key[current_pos])
-      {
-         current_pos++;
-         tmp_pos++;
-         while(listkey[tmp_pos] != '\0'&& key[current_pos]!=
-               '\0' && listkey[tmp_pos] == key[current_pos]){
-            current_pos++;
-            tmp_pos++;
-
-         }
-         if(listkey[tmp_pos] == '\0'&& key[current_pos] == '\0')
-         {
-            if(parent != NULL)
-            {
-               //case: targeted key is an only child, and parent has no value
-               if(treeElement->children->head->next == NULL &&
-                     parent->value == NULL && listElement->node->children !=
-                     NULL)
-               {
-                  parent->key = realloc(parent->key,strlen(listElement->key)*(sizeof(char)));
-                  parent->key = strcat(parent->key,listkey);
-                  parent->node = listElement->node;
-                  value = listElement->value;
-                  remove_listElement(treeElement->children, listkey);
-                  free(treeElement);
-                  return value;
-               } 
-               else if(treeElement->children->head->next == NULL &&
-                     parent->value != NULL && listElement->node->children
-                     != NULL)
-               {
-                  if(listElement->node->children->head->next == NULL)
-                  {
-                     value = listElement->value;
-                     listElement->value = listElement->node->children->head->value;
-                     listElement->key = realloc(listElement->key,strlen(listElement->node->children->head->key)*(sizeof(char)));
-                     listElement->key = strcat(listElement->key,
-                     listElement->node->children->head->key);
-                     //freeing the keys child
-                     struct LinkedList *tmp_ll = listElement->node->children;
-                     listElement->node = listElement->node->children->head->node;                  
-                     destroy_linkedList(tmp_ll);
-                     return value;
-                  }
-               }
-               
+         // Fix pointers
+         new->parent = iter->parent;
+         new->next = iter->next;
+         new->child = iter;
+         iter->parent = new;
+         iter->next = NULL;
+         if (new->parent) {
+            if (new->parent->child == iter) {
+               new->parent->child = new;
             } else {
-               if(treeElement->children->head->next == NULL &&
-                     listElement->node != NULL)
-               {
-                  if(listElement->node->children->head->next == NULL)
-                  {
-                     value = listElement->value;
-                     listElement->value = listElement->node->children->head->value;
-                     listElement->key = realloc(listElement->key,strlen(listElement->node->children->head->key)*(sizeof(char)));
-                     listElement->key = strcat(listElement->key,
-                           listElement->node->children->head->key);
-                      //freeing the keys child
-                     struct LinkedList *tmp_ll = listElement->node->children;
-                     listElement->node = listElement->node->children->head->node;                  
-                     destroy_linkedList(tmp_ll);
-                     return value;
-                  }
-               }
+               struct trie_iter *i = new->parent->child;
+               while (i->next != iter) i = i->next;
+               i->next = new;
             }
-            if(listElement->node != NULL &&
-                  listElement->node->children->head->next != NULL)
-            {
-               value = listElement->value;
-               listElement->value = NULL;
-               return value;
+         } else {
+            if (trie->iter == iter) {
+               trie->iter = new;
+            } else {
+               struct trie_iter *i = trie->iter;
+               while (i->next != iter) i = i->next;
+               i->next = new;
             }
-            value = listElement->value;
-            remove_listElement(treeElement->children,listkey);
-            
-            // case: only one child left and parent is not end of another key
-            return value; 
          }
-         else if(listkey[tmp_pos] == '\0')
-         {
-            treeElement = listElement->node;
-            if(treeElement == NULL || treeElement->children == NULL)
-               return NULL;
+         return new;
+      }
 
-            listElement = treeElement->children->head;
-            listkey = listElement->key;
-            continue;
+      // Create new common parent
+      struct trie_iter *parent = malloc(sizeof(struct trie_iter));
+      parent->trie = trie;
+      parent->parent = iter->parent;
+      parent->next = iter->next;
+      parent->child = iter;
+      parent->key = substrn(iter->key, 0, iter_ptr);
+      parent->value = NULL;
+      iter->parent = parent;
+      iter->next = NULL;
+      char *str = iter->key;
+      iter->key = substr(str, iter_ptr);
+      free(str);
+      if (parent->parent) {
+         if (parent->parent->child == iter) {
+            parent->parent->child = parent;
+         } else {
+            struct trie_iter *i = parent->parent->child;
+            while (i->next != iter) i = i->next;
+            i->next = parent;
          }
-         else 
-         {
-            return NULL;
+      } else {
+         if (trie->iter == iter) {
+            trie->iter = parent;
+         } else {
+            struct trie_iter *i = trie->iter;
+            while (i->next != iter) i = i->next;
+            i->next = parent;
          }
       }
-      parent = listElement;
-      listElement = listElement->next;
-      if(listElement != NULL)
-         listkey = listElement->key;
+      iter = parent;
    }
-   return NULL;     
+
+   // Insert new key
+   if (key_ptr < key_len) {
+      new->key = substr(key, key_ptr);
+      if (iter->child) {
+         iter = iter->child;
+         while (iter->next) iter = iter->next;
+         iter->next = new;
+         new->parent = iter->parent;
+      } else {
+         iter->child = new;
+         new->parent = iter;
+      }
+      return new;
+   }
+
+   fprintf(stderr, "Trie could not handle case, this should not happen\n");
+   free(new);
+   return NULL;
 }
 
-void trie_destroy(TrieNode* subtree, dealloc_cb remove_value)
+static void remove_iter(struct trie_iter *iter)
 {
-   ListElement* tmp = NULL;
-   if(subtree->children != NULL)
-   {
-      tmp = subtree->children->head;
-      while(tmp != NULL)
-      {
-         remove_value(tmp->value);
-         free(tmp->key);
-         if(tmp->node != NULL)
-            trie_destroy(tmp->node, remove_value);
-         tmp = tmp->next;
+   // TODO Possibilities to combine nodes are not considered
+   if (iter == NULL) return;
+   if (iter->child != NULL) return;
+
+   if (iter->parent == NULL) {
+      if (iter->trie->iter == iter) {
+         iter->trie->iter = iter->next;
+      } else {
+         struct trie_iter *i = iter->trie->iter;
+         while (i->next != iter) i = i->next;
+         i->next = iter->next;
       }
-      destroy_linkedList(subtree->children);
-      free(subtree);
-      free(tmp);
+   } else {
+      if (iter->parent->child == iter) {
+         iter->parent->child = iter->next;
+      } else {
+         struct trie_iter *i = iter->parent->child;
+         while (i->next != iter) i = i->next;
+         i->next = iter->next;
+      }
    }
+
+   remove_iter(iter->parent);
+   free(iter->key);
+   free(iter);
 }
 
+void *trie_remove(struct trie* trie, const char *key)
+{
+   struct trie_iter *iter = trie_lookup(trie, key);
 
+   // Key not found
+   if (iter == NULL) return NULL;
 
+   // Key found
+   void *value = iter->value;
+   iter->value = NULL;
+   remove_iter(iter);
 
+   return value;
+}
+
+struct trie_iter* trie_lookup(struct trie *trie, const char *key)
+{
+   int iter_ptr = 0, key_ptr = 0;
+   struct trie_iter *iter = lookup(trie->iter, key,
+                                   &iter_ptr, &key_ptr);
+
+   if (iter == NULL) return NULL;
+
+   const int iter_len = strlen(iter->key);
+   const int key_len = strlen(key);
+   
+   if (iter_ptr == iter_len && key_ptr == key_len && iter->value)
+      return iter;
+   else
+      return NULL;
+}
+
+const char *trie_key(struct trie_iter *iter)
+{
+   return iter->key;
+}
+
+void *trie_value(struct trie_iter *iter)
+{
+   return iter->value;
+}
+
+static void print_iter(struct trie_iter *iter, int depth)
+{
+   int i;
+
+   for (i = 0; i < depth; i++) printf("  ");
+   printf("%s\n", iter->key);
+   if (iter->child) print_iter(iter->child, depth+1);
+   if (iter->next) print_iter(iter->next, depth);
+}
+
+void trie_print(struct trie *trie)
+{
+   print_iter(trie->iter, 0);
+}
 

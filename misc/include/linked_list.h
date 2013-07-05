@@ -35,7 +35,6 @@
 #define LINKED_LIST_H
 
 #include <stdlib.h>
-#include <stdio.h>
 
 struct ll;
 struct ll_iter {

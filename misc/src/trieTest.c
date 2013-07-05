@@ -10,15 +10,13 @@ int main()
 {
    printf("creating tree\n");
    TrieNode* root = trie_create();
+
    printf("inserting key\n");
-
-
    ListElement *newnew = trie_insert(root, "fisk\0");
    char *c2 = "FiskFisk\0";
    char *c3 = (char*)malloc((strlen(c2)+1)*sizeof(char));
    strcpy(c3,c2);
    set_listElement_value(newnew, c3);
-   
 
    ListElement *newAbe = trie_insert(root, "fisk\0");
    char *c4 = "this is \0";

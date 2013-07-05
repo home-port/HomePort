@@ -4,6 +4,7 @@
 
 TEST_START("linkedlist.c")
 
+// TODO Make asserts
 TEST(linkedlist)
    LinkedList *linkedlist = create_linkedList();
    insert_listElement(linkedlist, "Hello", NULL);

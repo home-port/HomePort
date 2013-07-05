@@ -31,9 +31,10 @@
  *  as representing official policies, either expressed.
  */
 
-#include <string.h>
-#include "../include/linkedmap.h"
+#include "linkedmap.h"
 #include "linked_list.h"
+#include <string.h>
+#include <stdio.h>
 
 struct lm
 {

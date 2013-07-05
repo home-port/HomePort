@@ -66,3 +66,13 @@ add_library(trie
       trie.c
       )
 target_link_libraries(trie linkedlist)
+
+# Trie Test
+add_executable(trie_test EXCLUDE_FROM_ALL
+      trie_test.c
+      trie.c
+      )
+target_link_libraries(trie_test linkedlist)
+add_test(trie_test ${CMAKE_CURRENT_BINARY_DIR}/trie_test)
+add_dependencies(check trie_test)
+
