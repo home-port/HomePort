@@ -52,7 +52,7 @@ struct lr_settings {
 	.timeout = 15 }
 
 // Callbacks
-typedef int (*lr_cb)(struct lr_request *req, const char* body, size_t len);
+typedef int (*lr_cb)(void *data, struct lr_request *req, const char* body, size_t len);
 
 // libREST instance functions
 struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop);
@@ -67,9 +67,11 @@ int lr_register_service(struct lr *ins,
                          lr_cb on_get,
                          lr_cb on_post,
                          lr_cb on_put,
-                         lr_cb on_delete);
+                         lr_cb on_delete,
+                         void *data);
 
-void lr_unregister_service(struct lr *ins, char *url);
+// Unregister service. Returns the data stored in the service
+void *lr_unregister_service(struct lr *ins, char *url);
 
 // Request functions
 void lr_sendf(struct lr_request *req, enum httpws_http_status_code status,

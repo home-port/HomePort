@@ -195,7 +195,7 @@ static void exit_cb(EV_P_ ev_async *watcher, int revents)
    ev_break(loop, EVBREAK_ALL);
 }
 
-static int get_cb(struct lr_request *req, const char *body, size_t len)
+static int get_cb(void *data, struct lr_request *req, const char *body, size_t len)
 {
    if (body == NULL) {
       lr_sendf(req, WS_HTTP_200, "GET!");
@@ -204,7 +204,7 @@ static int get_cb(struct lr_request *req, const char *body, size_t len)
    return 0;
 }
 
-static int post_cb(struct lr_request *req, const char *body, size_t len)
+static int post_cb(void *data, struct lr_request *req, const char *body, size_t len)
 {
    if (body == NULL) {
       lr_sendf(req, WS_HTTP_200, "POST!");
@@ -213,7 +213,7 @@ static int post_cb(struct lr_request *req, const char *body, size_t len)
    return 0;
 }
 
-static int put_cb(struct lr_request *req, const char *body, size_t len)
+static int put_cb(void *data, struct lr_request *req, const char *body, size_t len)
 {
    if (body == NULL) {
       lr_sendf(req, WS_HTTP_200, "PUT!");
@@ -222,7 +222,7 @@ static int put_cb(struct lr_request *req, const char *body, size_t len)
    return 0;
 }
 
-static int delete_cb(struct lr_request *req, const char *body, size_t len)
+static int delete_cb(void *data, struct lr_request *req, const char *body, size_t len)
 {
    if (body == NULL) {
       lr_sendf(req, WS_HTTP_200, "DELETE!");
@@ -256,8 +256,10 @@ static void *webserver_thread(void *arg)
 
    // Create webserver
    ws = lr_create(&settings, loop);
-   lr_register_service(ws, "/device", get_cb, NULL, NULL, NULL);
-   lr_register_service(ws, "/devices", get_cb, post_cb, put_cb, delete_cb);
+   lr_register_service(ws, "/device", get_cb, NULL, NULL, NULL, NULL);
+   lr_register_service(ws, "/devices",
+                       get_cb, post_cb, put_cb, delete_cb,
+                       NULL);
    lr_start(ws);
 
    // Start the event loop and webserver

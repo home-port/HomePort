@@ -40,7 +40,7 @@
 // libREST instance
 static struct lr *rest = NULL;
 
-int testCB(struct lr_request *lr, const char* url, size_t url_len)
+int testCB(void *data, struct lr_request *lr, const char* url, size_t url_len)
 {
 	printf("CB called!!!\n");
 	return 0;
@@ -79,10 +79,10 @@ int main(int argc, char *argv[])
    rest = lr_create(&set, loop);
 
     // register service
-   lr_register_service(rest, "/device/a", NULL, testCB, NULL, NULL);
+   lr_register_service(rest, "/device/a", NULL, testCB, NULL, NULL, NULL);
 
-   lr_register_service(rest, "/device/b", NULL, testCB, NULL, NULL);
-   lr_register_service(rest, "/device/b", NULL, testCB, NULL, NULL);
+   lr_register_service(rest, "/device/b", NULL, testCB, NULL, NULL, NULL);
+   lr_register_service(rest, "/device/b", NULL, testCB, NULL, NULL, NULL);
    lr_unregister_service(rest, "/device/b");
 
    if(!lr_start(rest))
