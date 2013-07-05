@@ -262,6 +262,13 @@ void *lr_unregister_service(struct lr *ins, char *url)
    return data;
 }
 
+void *lr_lookup_service(struct lr *ins, char *url)
+{
+   struct trie_iter *iter = trie_lookup(ins->trie, url);
+   if (!iter) return NULL;
+   return trie_value(iter);
+}
+
 void lr_sendf(struct lr_request *req, enum httpws_http_status_code status,
               char *fmt, ...)
 {

@@ -73,6 +73,8 @@ int lr_register_service(struct lr *ins,
 // Unregister service. Returns the data stored in the service
 void *lr_unregister_service(struct lr *ins, char *url);
 
+void *lr_lookup_service(struct lr *ins, char *url);
+
 // Request functions
 void lr_sendf(struct lr_request *req, enum httpws_http_status_code status,
               char *fmt, ...);
@@ -82,10 +84,5 @@ void lr_send_start(struct lr_request *req,
 void lr_send_chunkf(struct lr_request *req, char *fmt, ...);
 void lr_send_vchunkf(struct lr_request *req, char *fmt, va_list arg);
 void lr_send_stop(struct lr_request *req);
-
-// send(req,
-// start_send(req, 
-// send_chunk(req, 		#error if called without start_send
-// stop_send(req, 
 
 #endif
