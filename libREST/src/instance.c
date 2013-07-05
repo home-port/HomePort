@@ -50,6 +50,12 @@ struct lr_service {
    lr_cb on_delete;
 };
 
+struct lr_request {
+   struct lr_service *service;
+   struct http_request *req;
+   struct http_response *res;
+};
+
 static void method_not_allowed(struct http_request *req)
 {
    struct http_response *res = http_response_create(req, WS_HTTP_405);
@@ -58,13 +64,13 @@ static void method_not_allowed(struct http_request *req)
 }
 
 // on_req_url_cmpl
-static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data)
+static int on_url_cmpl(struct httpws *ins, struct http_request *req,
+                       void* ws_ctx, void** req_data)
 {
   struct lr *lr_ins = ws_ctx;
   const char *url = http_request_get_url(req);
 
-  if(url == NULL)
-  {
+  if(url == NULL) {
     struct http_response *res = http_response_create(req, WS_HTTP_400);
     http_response_sendf(res, "Malformed URL");
     http_response_destroy(res);
@@ -74,8 +80,7 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ct
 
   struct trie_iter *iter = trie_lookup(lr_ins->trie, url);
 
-  if(iter == NULL) // URL not registered
-  {
+  if(iter == NULL) { // URL not registered
      struct http_response *res = http_response_create(req, WS_HTTP_404);
      // TODO: Find out if we need to add headers
      http_response_sendf(res, "Resource not found"); // TODO: Decide on appropriate body
@@ -84,8 +89,7 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ct
   }
 
   struct lr_service *service = trie_value(iter);
-  if(service == NULL)
-  {
+  if(service == NULL) {
     fprintf(stderr, "Error: The service for an element in the trie was NULL!\n");
     method_not_allowed(req);
     return 1;
@@ -128,7 +132,11 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ct
         return 1;
   }
 
-  *req_data = service;
+  struct lr_request *lrreq = malloc(sizeof(struct lr_request));
+  lrreq->service = service;
+  lrreq->req = req;
+  lrreq->res = NULL;
+  *req_data = lrreq;
 
   return 0;
 }
@@ -137,21 +145,22 @@ static int on_body(struct httpws *ins, struct http_request *req,
                    void* ws_ctx, void** req_data,
                    const char* chunk, size_t len)
 {
-  struct lr_service *service = *req_data;
+  struct lr_request *lrreq = *req_data;
+  struct lr_service *service = lrreq->service;
 
   switch(http_request_get_method(req))
   {
     case HTTP_GET:
-      return service->on_get(req, chunk, len);
+      return service->on_get(lrreq, chunk, len);
 
     case HTTP_DELETE:
-      return service->on_delete(req, chunk, len);
+      return service->on_delete(lrreq, chunk, len);
 
     case HTTP_POST:
-      return service->on_post(req, chunk, len);
+      return service->on_post(lrreq, chunk, len);
 
     case HTTP_PUT:
-      return service->on_put(req, chunk, len);
+      return service->on_put(lrreq, chunk, len);
 
     default:
       return 1;
@@ -247,17 +256,45 @@ void lr_unregister_service(struct lr *ins, char *url)
 	free(trie_remove(ins->trie, url)); 
 }
 
-void lr_sendf(void *req, enum httpws_http_status_code status,
+void lr_sendf(struct lr_request *req, enum httpws_http_status_code status,
               char *fmt, ...)
 {
    va_list arg;
-   struct http_response *res = http_response_create(req, status);
-   // TODO Consider headers to add
 
    va_start(arg, fmt);
-   http_response_vsendf(res, fmt, arg);
-
+   lr_send_start(req, status);
+   lr_send_vchunkf(req, fmt, arg);
+   lr_send_stop(req);
    va_end(arg);
-   http_response_destroy(res);
+}
+
+void lr_request_destroy(struct lr_request *req)
+{
+   free(req);
+}
+
+void lr_send_start(struct lr_request *req,
+                   enum httpws_http_status_code status)
+{
+   req->res = http_response_create(req->req, status);
+   // TODO Consider headers to add
+}
+
+void lr_send_chunkf(struct lr_request *req, char *fmt, ...)
+{
+   va_list arg;
+   va_start(arg, fmt);
+   lr_send_vchunkf(req, fmt, arg);
+   va_end(arg);
+}
+
+void lr_send_vchunkf(struct lr_request *req, char *fmt, va_list arg)
+{
+   http_response_vsendf(req->res, fmt, arg);
+}
+
+void lr_send_stop(struct lr_request *req)
+{
+   http_response_destroy(req->res);
 }
 

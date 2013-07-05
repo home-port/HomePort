@@ -36,6 +36,7 @@
 
 #include "http_types.h"
 #include <stddef.h>
+#include <stdarg.h>
 
 // Structs
 struct lr;
@@ -51,7 +52,7 @@ struct lr_settings {
 	.timeout = 15 }
 
 // Callbacks
-typedef int (*lr_cb)(void *req, const char* body, size_t len);
+typedef int (*lr_cb)(struct lr_request *req, const char* body, size_t len);
 
 // libREST instance functions
 struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop);
@@ -70,9 +71,15 @@ int lr_register_service(struct lr *ins,
 
 void lr_unregister_service(struct lr *ins, char *url);
 
-// Send response functions
-void lr_sendf(void *req, enum httpws_http_status_code status,
+// Request functions
+void lr_sendf(struct lr_request *req, enum httpws_http_status_code status,
               char *fmt, ...);
+void lr_request_destroy(struct lr_request *req);
+void lr_send_start(struct lr_request *req,
+                   enum httpws_http_status_code status);
+void lr_send_chunkf(struct lr_request *req, char *fmt, ...);
+void lr_send_vchunkf(struct lr_request *req, char *fmt, va_list arg);
+void lr_send_stop(struct lr_request *req);
 
 // send(req,
 // start_send(req, 

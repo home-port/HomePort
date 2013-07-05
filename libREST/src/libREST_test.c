@@ -195,31 +195,39 @@ static void exit_cb(EV_P_ ev_async *watcher, int revents)
    ev_break(loop, EVBREAK_ALL);
 }
 
-static int get_cb(void *req, const char *body, size_t len)
+static int get_cb(struct lr_request *req, const char *body, size_t len)
 {
-   if (body == NULL)
+   if (body == NULL) {
       lr_sendf(req, WS_HTTP_200, "GET!");
+      lr_request_destroy(req);
+   }
    return 0;
 }
 
-static int post_cb(void *req, const char *body, size_t len)
+static int post_cb(struct lr_request *req, const char *body, size_t len)
 {
-   if (body == NULL)
+   if (body == NULL) {
       lr_sendf(req, WS_HTTP_200, "POST!");
+      lr_request_destroy(req);
+   }
    return 0;
 }
 
-static int put_cb(void *req, const char *body, size_t len)
+static int put_cb(struct lr_request *req, const char *body, size_t len)
 {
-   if (body == NULL)
+   if (body == NULL) {
       lr_sendf(req, WS_HTTP_200, "PUT!");
+      lr_request_destroy(req);
+   }
    return 0;
 }
 
-static int delete_cb(void *req, const char *body, size_t len)
+static int delete_cb(struct lr_request *req, const char *body, size_t len)
 {
-   if (body == NULL)
+   if (body == NULL) {
       lr_sendf(req, WS_HTTP_200, "DELETE!");
+      lr_request_destroy(req);
+   }
    return 0;
 }
 
