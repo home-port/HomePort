@@ -113,7 +113,7 @@ parse_option_va( va_list ap )
  * @return A HPD error code
  */
 int 
-HPD_start( unsigned int option, char *hostname, ... )
+HPD_start( unsigned int option, struct ev_loop *loop, char *hostname, ... )
 {
 
 	int rc;
@@ -180,7 +180,7 @@ HPD_start( unsigned int option, char *hostname, ... )
 
 	va_end(ap);	
 
-	return start_server(hostname, NULL);
+	return start_server(hostname, NULL, loop);
 }
 
 

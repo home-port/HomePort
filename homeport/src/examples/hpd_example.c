@@ -26,6 +26,7 @@ authors and should not be interpreted as representing official policies, either 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ev.h>
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -33,6 +34,12 @@ authors and should not be interpreted as representing official policies, either 
 
 /** Once the library is installed, should be remplaced by <hpdaemon/homeport.h> */
 #include "homeport.h"
+
+static Service *service_lamp0 = NULL;
+static Service *service_lamp1 = NULL;
+static Service *service_switch0 = NULL;
+static Service *service_switch1 = NULL;
+static Device *secure_device = NULL;
 
 /** A GET function for a service
 *	Takes a Service structure in parameter, and return a service value as a char*
@@ -63,15 +70,59 @@ get_switch ( Service* service, char *buffer, size_t max_buffer_size )
 	return strlen(buffer);
 }
 
+static void
+exit_handler ( int sig )
+{
+	/** Unregistering services is not necessary, calling HPD_stop unregisters and 
+	    deallocates the services and devices that are still register in HPD		   */
+	/** However when unregistering a service note that the memory is not deallocated   */
+	/** Also note that attempting to free a service that is still registered will fail */
+
+#if HPD_HTTP	
+	/** Unregister a service from the HPD web server */
+   if (service_lamp0)
+	   HPD_unregister_service (service_lamp0);
+   if (service_lamp1)
+	   HPD_unregister_service (service_lamp1);
+   if (service_switch0)
+	   HPD_unregister_service (service_switch0);
+   if (service_switch1)
+	   HPD_unregister_service (service_switch1);
+	/** Deallocate the memory of the services. When deallocating the last service of a device, 
+	    the device is deallocated too, so there is no need to call destroy_device_struct       */
+	destroy_service_struct(service_lamp0);
+	destroy_service_struct(service_lamp1);
+	destroy_service_struct(service_switch0);
+	destroy_service_struct(service_switch1);
+#endif
+
+#if HPD_HTTPS
+	/** Unregister all the services of a device */
+	HPD_unregister_device_services(secure_device);
+	/** Deallocate the memory of the device, and all the services linked to this device */
+	destroy_device_struct(secure_device);
+#endif
+
+	/** Stops the HPD daemon */
+	HPD_stop ();
+
+   exit(sig);
+}
 
 int 
 main()
 {	
-
 	int rc;
 
+   /** Create the event loop */
+   struct ev_loop *loop = EV_DEFAULT;
+   
+   // Register signals for correctly exiting
+   signal(SIGINT, exit_handler);
+   signal(SIGTERM, exit_handler);
+
 	/** Starts the hpdaemon. If using avahi-core pass a host name for the server, otherwise pass NULL */
-	if( rc = HPD_start( HPD_USE_CFG_FILE, "Homeport", HPD_OPTION_CFG_PATH, "./hpd.cfg" ) )
+	if( rc = HPD_start( HPD_USE_CFG_FILE, loop, "Homeport", HPD_OPTION_CFG_PATH, "./hpd.cfg" ) )
 	{
 		printf("Failed to start HPD %d\n", rc);
 		return 1;
@@ -112,24 +163,24 @@ main()
 	* 8th parameter : The service's PUT function (optional)
 	* 9th parameter : The service's parameter structure
 	*/
-	Service *service_lamp0 = create_service_struct ("Lamp0", "0", "Lamp", "ON/OFF", device, 
+	service_lamp0 = create_service_struct ("Lamp0", "0", "Lamp", "ON/OFF", device, 
 	                                                 get_lamp, put_lamp, 
 	                                                 create_parameter_struct ("0", NULL, NULL,
 	                                                                          NULL, NULL, NULL,
 	                                                                          NULL, NULL)
 							,NULL);
-	Service *service_lamp1 = create_service_struct ("Lamp1", "1", "Lamp", "ON/OFF", device,
+	service_lamp1 = create_service_struct ("Lamp1", "1", "Lamp", "ON/OFF", device,
 	                                                 get_lamp, put_lamp, 
 	                                                 create_parameter_struct ("0", NULL, NULL,
 	                                                                          NULL, NULL, NULL,
 	                                                                          NULL, NULL),NULL);
-	Service *service_switch0 = create_service_struct ("Switch0", "0", "Switch", "ON/OFF", device,
+	service_switch0 = create_service_struct ("Switch0", "0", "Switch", "ON/OFF", device,
 	                                                   get_switch, NULL, 
 	                                                   create_parameter_struct ("0", NULL, NULL,
 	                                                                            NULL, NULL, NULL,
 	                                                                            NULL, NULL),NULL);
 
-	Service *service_switch1 = create_service_struct ("Switch1", "1", "Switch", "ON/OFF", device,
+	service_switch1 = create_service_struct ("Switch1", "1", "Switch", "ON/OFF", device,
 	                                                   get_switch, NULL, 
 	                                                   create_parameter_struct ("0", NULL, NULL,
 	                                                                            NULL, NULL, NULL,
@@ -149,7 +200,7 @@ main()
 
 #if HPD_HTTPS /** Creation and registration of secure services */
 	/** Create a secured device that will contain the secured services */
-	Device *secure_device = create_device_struct("SecureExample", 
+	secure_device = create_device_struct("SecureExample", 
 						"1", 
 						"0x01", 
 						"0x01", 
@@ -196,37 +247,9 @@ main()
 
 #endif
 
-	getchar();
+   ev_run(loop, 0);
 
-	/** Unregistering services is not necessary, calling HPD_stop unregisters and 
-	    deallocates the services and devices that are still register in HPD		   */
-	/** However when unregistering a service note that the memory is not deallocated   */
-	/** Also note that attempting to free a service that is still registered will fail */
-
-#if HPD_HTTP	
-	/** Unregister a service from the HPD web server */
-	HPD_unregister_service (service_lamp0);
-	HPD_unregister_service (service_lamp1);
-	HPD_unregister_service (service_switch0);
-	HPD_unregister_service (service_switch1);
-	/** Deallocate the memory of the services. When deallocating the last service of a device, 
-	    the device is deallocated too, so there is no need to call destroy_device_struct       */
-	destroy_service_struct(service_lamp0);
-	destroy_service_struct(service_lamp1);
-	destroy_service_struct(service_switch0);
-	destroy_service_struct(service_switch1);
-#endif
-
-#if HPD_HTTPS
-	/** Unregister all the services of a device */
-	HPD_unregister_device_services(secure_device);
-	/** Deallocate the memory of the device, and all the services linked to this device */
-	destroy_device_struct(secure_device);
-#endif
-
-	/** Stops the HPD daemon */
-	HPD_stop ();
-
+   exit_handler(0);
 	return (0);
 }
 

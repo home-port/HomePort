@@ -34,7 +34,7 @@ authors and should not be interpreted as representing official policies, either 
 #include "hpd_error.h"
 
 #if HPD_HTTP
-HPD_web_server_struct *unsecure_web_server;
+struct lr *unsecure_web_server;
 #endif
 
 #if HPD_HTTPS
@@ -100,7 +100,7 @@ destroy_HPD_web_server_struct( HPD_web_server_struct* to_destroy )
  */
 
 int 
-start_server(char* hostname, char *domain_name)
+start_server(char* hostname, char *domain_name, struct ev_loop *loop)
 {
 	int rc;
 
@@ -118,16 +118,19 @@ start_server(char* hostname, char *domain_name)
 		return rc;
 	}
 
+   struct lr_settings settings = LR_SETTINGS_DEFAULT;
+   settings.port = hpd_daemon->http_port;
+
 #if HPD_HTTP
 	
-	unsecure_web_server = create_HPD_web_server_struct( HPD_IS_UNSECURE_CONNECTION );
+	unsecure_web_server = lr_create(&settings, loop);
+   if (!unsecure_web_server)
+      return HPD_E_MHD_ERROR;
 
-	rc = start_unsecure_web_server( unsecure_web_server );
-	if( rc < 0 )
-	{	
-		printf("Failed to start HTTP server\n");
-		return rc;
-	}
+   if (lr_start(unsecure_web_server))
+      return HPD_E_MHD_ERROR;
+
+   rc = HPD_E_SUCCESS;
 #endif
 
 #if HPD_HTTPS
@@ -168,11 +171,9 @@ stop_server()
 	free_server_sent_events_ressources();
 
 #if HPD_HTTP
-	rc = stop_web_server( unsecure_web_server );
-	if( rc < HPD_E_SUCCESS )
-		return rc;
-		
-	destroy_HPD_web_server_struct( unsecure_web_server );
+   lr_stop(unsecure_web_server);
+   lr_destroy(unsecure_web_server);
+	rc = HPD_E_SUCCESS;
 #endif
 
 #if HPD_HTTPS
@@ -192,6 +193,25 @@ stop_server()
 
 }
 
+static int answer_get(void *data, struct lr_request *req,
+                      const char *body, size_t len)
+{
+   Service *service = data;
+
+   // TODO Write this
+
+   return 0;
+}
+
+static int answer_put(void *data, struct lr_request *req,
+                      const char *body, size_t len)
+{
+   Service *service = data;
+
+   // TODO Write this
+
+   return 0;
+}
 
 /**
  * Add a service to the XML file, the server(s), and the AVAHI client or server
@@ -209,18 +229,19 @@ register_service( Service *service_to_register )
 	if( service_to_register->device->secure_device == HPD_NON_SECURE_DEVICE )
 	{
 #if HPD_HTTP
-		rc = is_service_registered_in_web_server( service_to_register, unsecure_web_server );	
-
-		if( rc == 1 )
-		{
+      Service *s = lr_lookup_service(unsecure_web_server, service_to_register->value_url);
+		if (s) {
 			printf("A similar service is already registered in the unsecure server\n");
 			return HPD_E_SERVICE_ALREADY_REGISTER;
 		}
 
 		printf("Registering non secure service\n");
-		rc = register_service_in_web_server ( service_to_register, unsecure_web_server );
-		if( rc < HPD_E_SUCCESS )
-			return rc;
+		rc = lr_register_service(unsecure_web_server,
+                               service_to_register->value_url,
+                               answer_get, NULL, answer_put, NULL,
+                               service_to_register);
+		if(rc)
+			return HPD_E_MHD_ERROR;
 #else
 		printf("Trying to register non secure service without HTTP support\n");
 		return HPD_E_NO_HTTP;
@@ -292,15 +313,17 @@ unregister_service( Service *service_to_unregister )
 
 	int rc;
 
-	if( !is_service_registered( service_to_unregister ) )
-		return HPD_E_SERVICE_NOT_REGISTER;
-
 	if( service_to_unregister->device->secure_device == HPD_NON_SECURE_DEVICE )
 	{
 #if HPD_HTTP
-		rc = unregister_service_in_web_server ( service_to_unregister, unsecure_web_server );
-		if( rc < HPD_E_SUCCESS )
-			return rc;
+      Service *s = lr_lookup_service(unsecure_web_server, service_to_unregister->value_url);
+	   if( !s )
+		   return HPD_E_SERVICE_NOT_REGISTER;
+
+		s = lr_unregister_service ( unsecure_web_server,
+            service_to_unregister->value_url );
+		if( !s )
+			return HPD_E_MHD_ERROR;
 #else
 		printf("Unregistering non secure service without HTTP feature (Service is not register anyway)\n");
 		return HPD_E_NO_HTTP;
@@ -310,6 +333,9 @@ unregister_service( Service *service_to_unregister )
 	else if( service_to_unregister->device->secure_device == HPD_SECURE_DEVICE )
 	{
 #if HPD_HTTPS
+	   if( !is_service_registered( service_to_unregister ) )
+		   return HPD_E_SERVICE_NOT_REGISTER;
+
 		rc = unregister_service_in_web_server ( service_to_unregister, secure_web_server );
 		if( rc < HPD_E_SUCCESS )
 			return rc;
@@ -415,7 +441,9 @@ is_service_registered( Service *service )
 #if HPD_HTTP
 	if( service->device->secure_device == HPD_NON_SECURE_DEVICE )
 	{
-		return is_service_registered_in_web_server( service, unsecure_web_server );
+      Service *s = lr_lookup_service(unsecure_web_server, service->value_url);
+      if (s) return 1;
+      else return 0;
 	}	
 #endif
 
@@ -448,9 +476,15 @@ get_service( char *device_type, char *device_ID, char *service_type, char *servi
 	Service *service = NULL;
 
 #if HPD_HTTP
-	service = get_service_from_web_server ( device_type, device_ID, 
-						service_type, service_ID,
-						unsecure_web_server );
+   // TODO This is not the best solution (duplicated code), nor the best
+   // place to do this
+	char *value_url = malloc(sizeof(char)*( strlen("/") + strlen(service->device->type) + strlen("/") 
+	                                           + strlen(service->device->ID) + strlen("/") + strlen(service->type)
+	                                           + strlen("/") + strlen(service->ID) + 1 ) );
+	sprintf( value_url,"/%s/%s/%s/%s", service->device->type, service->device->ID, service->type,
+	         service->ID );
+	service = lr_lookup_service(unsecure_web_server, value_url);
+   free(value_url);
 #endif
 #if HPD_HTTPS
 	if( service == NULL )
@@ -477,9 +511,19 @@ Device*
 get_device( char *device_type, char *device_ID)
 {
 	Device *device = NULL;
+	Service *service = NULL;
 
 #if HPD_HTTP
-	device = get_device_from_web_server ( device_type, device_ID, unsecure_web_server );
+   // TODO This is not the best solution (duplicated code), nor the best
+   // place to do this
+	char *value_url = malloc(sizeof(char)*( strlen("/") + strlen(service->device->type) + strlen("/") 
+	                                           + strlen(service->device->ID) + strlen("/") + strlen(service->type)
+	                                           + strlen("/") + strlen(service->ID) + 1 ) );
+	sprintf( value_url,"/%s/%s/%s/%s", service->device->type, service->device->ID, service->type,
+	         service->ID );
+	service = lr_lookup_service(unsecure_web_server, value_url);
+   free(value_url);
+	device = service->device;
 #endif
 #if HPD_HTTPS
 	if( device == NULL )

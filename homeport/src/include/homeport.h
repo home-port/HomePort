@@ -121,6 +121,8 @@ To use the HomePort Daemon library with your own application, make sure that the
 
 #include <stdarg.h>
 
+#include "libREST.h"
+
 #include "hpd_services.h"
 #include "hpd_configure.h"
 
@@ -151,7 +153,7 @@ enum HPD_OPTION
 
 };
 
-int HPD_start( unsigned int option, char *hostname, ... );
+int HPD_start( unsigned int option, struct ev_loop *loop, char *hostname, ... );
 int HPD_stop();
 int HPD_register_service( Service *service_to_register );
 int HPD_unregister_service( Service *service_to_unregister );
