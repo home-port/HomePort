@@ -420,9 +420,10 @@ static int parser_body(http_parser *parser, const char *buf, size_t len)
       case S_HEADER_COMPLETE:
          req->state = S_BODY;
       case S_BODY:
-         if(body_cb)
+         if (body_cb) {
             stat = body_cb(req->webserver, req, settings->ws_ctx, &req->data, buf, len);
-         if (stat) { req->state = S_STOP; return stat; }
+            if (stat) { req->state = S_STOP; return stat; }
+         }
          return 0;
       default:
          req->state = S_ERROR;
