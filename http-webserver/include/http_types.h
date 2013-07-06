@@ -42,7 +42,8 @@
 	XX(200,200 OK) \
    XX(400,400 Bad Request) \
 	XX(404,404 Not Found) \
-   XX(405,405 Method Not Allowed)
+   XX(405,405 Method Not Allowed) \
+   XX(500,500 Internal Server Error)
 
 enum httpws_http_status_code
 {
