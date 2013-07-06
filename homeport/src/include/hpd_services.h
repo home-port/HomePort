@@ -87,6 +87,7 @@ struct Service
 	char *DNS_SD_type;/**<*/
 	char* zeroConfName;/**<The name used to advertise the service using ZeroConf*/
 	char* get_function_buffer;
+   char *put_value;
 	Device *device;/**<The Device that contains the Service*/
 	HPD_GetFunction get_function;/**<A pointer to the GET function of the Service*/
 	HPD_PutFunction put_function;/**<A pointer to the PUT function of the Service*/

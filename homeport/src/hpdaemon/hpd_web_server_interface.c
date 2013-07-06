@@ -198,6 +198,7 @@ stop_server()
 }
 
 #if HPD_HTTP
+// TODO Do I need to add more to this (like logging, etc.)
 static int answer_get(void *data, struct lr_request *req,
                       const char *body, size_t len)
 {
@@ -220,11 +221,46 @@ static int answer_get(void *data, struct lr_request *req,
 #endif
 
 #if HPD_HTTP
+// TODO Do I need to add more to this (like logging, etc.)
 static int answer_put(void *data, struct lr_request *req,
                       const char *body, size_t len)
 {
-   //Service *service = data;
-   // TODO Write this
+   Service *service = data;
+   char *buffer = malloc(MHD_MAX_BUFFER_SIZE * sizeof(char));
+   char *new_put;
+   size_t new_len;
+
+   if (!service->get_function) {
+      lr_sendf(req, WS_HTTP_405, "405 Method Not Allowed");
+      lr_request_destroy(req);
+      return 1;
+   }
+
+   if (body) {
+      new_len = strlen(service->put_value)+len+1;
+      new_put = realloc(service->put_value, new_len*sizeof(char));
+      if (!new_put) {
+         free(service->put_value);
+         service->put_value = NULL;
+         lr_sendf(req, WS_HTTP_500,"500 Internal Server Error");
+         lr_request_destroy(req);
+         return 1;
+      }
+
+      strncat(new_put, body, len);
+      new_put[new_len-1] = '\0';
+      service->put_value = new_put;
+   } else {
+      int buf_len = service->put_function(service,
+                                          buffer, MHD_MAX_BUFFER_SIZE,
+                                          service->put_value);
+      free(service->put_value);
+      service->put_value = NULL;
+      lr_sendf(req, WS_HTTP_200, "%.*s", buf_len, buffer);
+      lr_request_destroy(req);
+   }
+
+   free(buffer);
 
    return 0;
 }

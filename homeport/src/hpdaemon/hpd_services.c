@@ -210,6 +210,8 @@ create_service_struct(
 		return NULL;
 	}
 
+   service->put_value = NULL;
+
 	return service;
 }
 
@@ -278,6 +280,9 @@ destroy_service_struct( Service *service_to_destroy )
 
 		if( service_to_destroy->mutex )
 			free(service_to_destroy->mutex);
+
+      if (service_to_destroy->put_value)
+         free(service_to_destroy->put_value);
 
 		free(service_to_destroy);
 	}
