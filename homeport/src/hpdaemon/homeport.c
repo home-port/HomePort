@@ -48,7 +48,6 @@ parse_option_va( va_list ap )
 {
 	enum HPD_OPTION opt;
 	int log_level, max_log_size;
-	char *log_file_name;
 
 	while( HPD_OPTION_END != ( opt = va_arg( ap, enum HPD_OPTION ) ) )
 	{
@@ -118,7 +117,7 @@ HPD_start( unsigned int option, struct ev_loop *loop, char *hostname, ... )
 
 	int rc;
 
-	if( rc = HPD_init_daemon() )
+	if( (rc = HPD_init_daemon()) )
 	{
 		printf("Error initializing HPD_Daemon struct\n");
 		return rc;
@@ -147,7 +146,7 @@ HPD_start( unsigned int option, struct ev_loop *loop, char *hostname, ... )
 			return HPD_E_BAD_PARAMETER;
 		}		
 
-		if( rc = HPD_config_file_init( va_arg( ap, const char* ) ) )
+		if( (rc = HPD_config_file_init( va_arg( ap, const char* ) )) )
 		{
 			printf("Error loading config file %d\n", rc);
 			return rc;
@@ -156,7 +155,7 @@ HPD_start( unsigned int option, struct ev_loop *loop, char *hostname, ... )
 
 	else
 	{	
-		if( rc = parse_option_va(ap) )
+		if( (rc = parse_option_va(ap)) )
 			return rc;
 
 

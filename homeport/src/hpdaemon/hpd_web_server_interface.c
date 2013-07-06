@@ -49,6 +49,7 @@ HPD_web_server_struct *secure_web_server;
  *
  * @return A newly allocated HPD_web_server_struct pointer or NULL if an error occured
  */
+#if HPD_HTTPS
 static HPD_web_server_struct* 
 create_HPD_web_server_struct( int is_secure )
 {
@@ -67,6 +68,7 @@ create_HPD_web_server_struct( int is_secure )
 	
 	return new_HPD_web_server_struct;
 }
+#endif
 
 /**
  * Destroy a HPD_web_server_struct and deallocate its memory, should not be used anywhere but 
@@ -76,6 +78,7 @@ create_HPD_web_server_struct( int is_secure )
  *
  * @return HPD_YES if successful or HPD_E_NULL_POINTER if the pointer given is NULL
  */
+#if HPD_HTTPS
 static int 
 destroy_HPD_web_server_struct( HPD_web_server_struct* to_destroy )
 {
@@ -88,6 +91,7 @@ destroy_HPD_web_server_struct( HPD_web_server_struct* to_destroy )
 	
 	return HPD_YES;
 }
+#endif
 
 /**
  * Start the MHD web server(s) and the AVAHI client or server
@@ -196,8 +200,7 @@ stop_server()
 static int answer_get(void *data, struct lr_request *req,
                       const char *body, size_t len)
 {
-   Service *service = data;
-
+   //Service *service = data;
    // TODO Write this
 
    return 0;
@@ -206,8 +209,7 @@ static int answer_get(void *data, struct lr_request *req,
 static int answer_put(void *data, struct lr_request *req,
                       const char *body, size_t len)
 {
-   Service *service = data;
-
+   //Service *service = data;
    // TODO Write this
 
    return 0;

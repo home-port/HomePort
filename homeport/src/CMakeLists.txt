@@ -28,19 +28,9 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-cmake_minimum_required(VERSION 2.6)
-project(HOMEPORT C)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/hpdaemon)
 
-set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG -DHPD_HTTP -Wall")
-
-enable_testing()
-
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-add_custom_target(example)
-
-add_subdirectory(misc)
-add_subdirectory(webserver)
-add_subdirectory(http-webserver)
-add_subdirectory(libREST)
-add_subdirectory(homeport)
+add_subdirectory(hpdaemon)
+add_subdirectory(examples)
 

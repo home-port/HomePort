@@ -52,6 +52,7 @@ const int continue_flag = 1;
  * @return the size of the file, or zero if the file could not be open
  *
 */
+#if HPD_HTTPS
 static long
 get_file_size (const char *filename)
 {
@@ -72,6 +73,7 @@ get_file_size (const char *filename)
 	else
 		return 0;
 }
+#endif
 
 /**
  * load a file
@@ -81,6 +83,7 @@ get_file_size (const char *filename)
  * @return a malloc'd buffer containing the content of the file
  *
 */
+#if HPD_HTTPS
 static char *
 load_file (const char *filename)
 {
@@ -112,6 +115,7 @@ load_file (const char *filename)
 	fclose (fp);
 	return buffer;
 }
+#endif
 
 /**
  * Add an XML response to the queue of the server
@@ -657,7 +661,6 @@ int
 register_service_in_web_server( Service *service_to_register, 
 				HPD_web_server_struct *web_server )
 {
-	int rc;
 	ServiceElement *new_se = NULL;
 
 	if( !service_to_register )
@@ -691,7 +694,6 @@ int
 unregister_service_in_web_server( Service *service_to_unregister, 
 				  HPD_web_server_struct *web_server )
 {
-	int rc;
 	ServiceElement *tmp, *iterator;
 	assert(web_server->daemon);
 	

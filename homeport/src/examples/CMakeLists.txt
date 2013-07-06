@@ -28,19 +28,10 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-cmake_minimum_required(VERSION 2.6)
-project(HOMEPORT C)
-
-set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG -DHPD_HTTP -Wall")
-
-enable_testing()
-
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-add_custom_target(example)
-
-add_subdirectory(misc)
-add_subdirectory(webserver)
-add_subdirectory(http-webserver)
-add_subdirectory(libREST)
-add_subdirectory(homeport)
+# Echo webserver
+add_executable(hpd_example EXCLUDE_FROM_ALL
+      hpd_example.c
+      )
+target_link_libraries(hpd_example hpd ev)
+add_dependencies(example hpd_example)
 

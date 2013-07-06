@@ -69,11 +69,6 @@ int remove_event_from_queue(Event *event, EventQueue *queue);
 
 EventQueue *get_queue(struct MHD_Connection *connection);
 
-static void
-add_session_cookie( EventQueue *event_queue, 
-                   struct MHD_Response *response, 
-                   int is_secure_connection);
-
 int send_cookied_xml (	struct MHD_Connection *connection, 
 			char *xmlbuff, 
 			EventQueue *event_queue, 
@@ -89,13 +84,6 @@ int send_event_of_value_change (Service *service, const char
       *updated_value, const char *IP);
 
 EventQueue *get_event_queue_with_connection_id(char *connection_id);
-
-static ssize_t server_sent_events_callback (	void *cls, 
-						uint64_t pos, 
-						char *buf, 
-						size_t max);
-
-static void server_sent_events_free_callback (void *cls);
 
 int subscribe_to_service(struct MHD_Connection *connection, 
 			Service *requested_service, 

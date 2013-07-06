@@ -207,6 +207,7 @@ add_session_cookie( EventQueue *event_queue,
 			break;
 	}
 	pthread_mutex_unlock(event_queue->mutex);
+   // TODO Needs change to new webserver
 	if(MHD_NO == MHD_add_response_header (response, 
 	                                      MHD_HTTP_HEADER_SET_COOKIE, 
 	                                      cstr))
@@ -237,6 +238,7 @@ send_cookied_xml (	struct MHD_Connection *connection,
 	int ret;
 	struct MHD_Response *response;
 
+   // TODO Needs change to new webserver
 	response = MHD_create_response_from_buffer (strlen(xmlbuff),
 	                                            xmlbuff, 
 	                                            MHD_RESPMEM_MUST_FREE);
@@ -249,6 +251,7 @@ send_cookied_xml (	struct MHD_Connection *connection,
 	}	
 
 	add_session_cookie(event_queue, response, is_secure_connection);
+   // TODO Needs change to new webserver
 	MHD_add_response_header (response, "Content-Type", "text/xml");
 	ret = MHD_queue_response (connection, MHD_HTTP_OK, response);
 	MHD_destroy_response(response);
@@ -422,7 +425,6 @@ server_sent_events_free_callback (void *cls)
 int 
 subscribe_to_service(struct MHD_Connection *connection, Service *requested_service, void **con_cls, int is_secure_connection)
 {
-	int ret;
 	char *xmlbuff;
 	ServiceId *new_service_id;
 	EventQueue *event_queue = get_queue(connection);
@@ -491,11 +493,8 @@ subscribe_to_service(struct MHD_Connection *connection, Service *requested_servi
 int 
 subscribe_to_log_events(struct MHD_Connection *connection, void **con_cls, int is_secure_connection)
 {
-	int ret;
-	int i = 0;
 	char *xmlbuff;
 	EventQueue *event_queue = get_queue(connection);
-	EventQueue *iterator;
 
 
 	/*Is there a queue for this cookie ?*/
@@ -575,6 +574,7 @@ set_up_server_sent_event_connection(struct MHD_Connection *connection,
 
 	if(event_queue-> service_id_head != NULL || event_queue-> send_log_events == HPD_SEND_LOG_EVENTS)
 	{
+   // TODO Needs change to new webserver
 		response = MHD_create_response_from_callback (MHD_SIZE_UNKNOWN,
 		                                              32 * 1024,
 		                                              &server_sent_events_callback,
@@ -584,6 +584,7 @@ set_up_server_sent_event_connection(struct MHD_Connection *connection,
 
 		add_session_cookie(event_queue, response, is_secure_connection);
 
+   // TODO Needs change to new webserver
 		MHD_add_response_header (response, "Content-Type", "text/event-stream; charset=utf-8");
 		ret = MHD_queue_response (connection, MHD_HTTP_OK, response);
 		if(response != NULL)
@@ -628,6 +629,7 @@ get_queue(struct MHD_Connection *connection)
 {
 
 	EventQueue *iterator;
+   // TODO Needs change to new webserver
 	const char *session_id = MHD_lookup_connection_value (connection,
 	                                                      MHD_COOKIE_KIND,
 	                                                      COOKIE_NAME);

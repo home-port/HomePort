@@ -28,19 +28,21 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-cmake_minimum_required(VERSION 2.6)
-project(HOMEPORT C)
-
-set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG -DHPD_HTTP -Wall")
-
-enable_testing()
-
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-add_custom_target(example)
-
-add_subdirectory(misc)
-add_subdirectory(webserver)
-add_subdirectory(http-webserver)
-add_subdirectory(libREST)
-add_subdirectory(homeport)
+# Main library
+add_library(hpd
+      homeport.c
+#      hpd_avahi_publish.c
+#      hpd_avahi_publish_client.c
+#      hpd_avahi_publish_core.c
+      hpd_configure.c
+      hpd_device_configuration.c
+      hpd_events.c
+      hpd_log.c
+      hpd_server_sent_events.c
+      hpd_services.c
+      hpd_web_server_core.c
+      hpd_web_server_interface.c
+      hpd_xml.c
+      )
+target_link_libraries(hpd config pthread uuid libREST mxml microhttpd)
 

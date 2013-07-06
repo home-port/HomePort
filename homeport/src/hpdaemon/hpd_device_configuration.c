@@ -396,16 +396,8 @@ manage_configuration_xml( char *configuration_xml , ServiceElement *service_head
 	ServiceElement *iterator = NULL;
 	ServiceElement *iterator2 = NULL;
 	ServiceElement *iterator3 = NULL;
-	Parameter *parameter = NULL;
-	Attribute *att_iterator = NULL;
-	Service *new_service = NULL;
-	Service *new_parameter = NULL;
-	configurationEntity *par_iterator = NULL;
-	configurationEntity *ser_iterator = NULL;
-	configurationEntity *dev_iterator = NULL;
 	configurationEntity *newConfEntity = NULL;
 	int is_legit = HPD_YES;
-	int i=0;
 
 	configurationXML * configure = new_configuration_xml();
 

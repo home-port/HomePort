@@ -68,7 +68,6 @@ create_hpd_log( int max_log_size, enum HPD_Loglevel log_level)
 	else
 	{
 		char buffer[256];
-		int error = 0;
 		fgets(buffer, 256, return_log->log_file);
 		fgets(buffer, 256, return_log->log_file);
 		fgets(buffer, 256, return_log->log_file);
