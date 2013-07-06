@@ -197,15 +197,29 @@ stop_server()
 
 }
 
+#if HPD_HTTP
 static int answer_get(void *data, struct lr_request *req,
                       const char *body, size_t len)
 {
-   //Service *service = data;
-   // TODO Write this
+   Service *service = data;
+   char *buffer = malloc(MHD_MAX_BUFFER_SIZE * sizeof(char));
+
+   if (!service->get_function) {
+      lr_sendf(req, WS_HTTP_405, "405 Method Not Allowed");
+      return 1;
+   }
+
+   int buf_len = service->get_function(service, buffer, MHD_MAX_BUFFER_SIZE);
+   lr_sendf(req, WS_HTTP_200, "%.*s", buf_len, buffer);
+   lr_request_destroy(req);
+
+   free(buffer);
 
    return 0;
 }
+#endif
 
+#if HPD_HTTP
 static int answer_put(void *data, struct lr_request *req,
                       const char *body, size_t len)
 {
@@ -214,6 +228,7 @@ static int answer_put(void *data, struct lr_request *req,
 
    return 0;
 }
+#endif
 
 /**
  * Add a service to the XML file, the server(s), and the AVAHI client or server

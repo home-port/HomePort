@@ -31,6 +31,7 @@
 # Main library
 add_library(hpd
       homeport.c
+#TODO what about the avahi library ?
 #      hpd_avahi_publish.c
 #      hpd_avahi_publish_client.c
 #      hpd_avahi_publish_core.c
@@ -44,5 +45,6 @@ add_library(hpd
       hpd_web_server_interface.c
       hpd_xml.c
       )
+#TODO microhttpd should be removed here when the time is right :)
 target_link_libraries(hpd config pthread uuid libREST mxml microhttpd)
 

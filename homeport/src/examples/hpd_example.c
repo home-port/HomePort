@@ -35,11 +35,15 @@ authors and should not be interpreted as representing official policies, either 
 /** Once the library is installed, should be remplaced by <hpdaemon/homeport.h> */
 #include "homeport.h"
 
+#if HPD_HTTP 
 static Service *service_lamp0 = NULL;
 static Service *service_lamp1 = NULL;
 static Service *service_switch0 = NULL;
 static Service *service_switch1 = NULL;
+#endif
+#if HPD_HTTPS
 static Device *secure_device = NULL;
+#endif
 
 /** A GET function for a service
 *	Takes a Service structure in parameter, and return a service value as a char*
@@ -122,7 +126,8 @@ main()
    signal(SIGTERM, exit_handler);
 
 	/** Starts the hpdaemon. If using avahi-core pass a host name for the server, otherwise pass NULL */
-	if( rc = HPD_start( HPD_USE_CFG_FILE, loop, "Homeport", HPD_OPTION_CFG_PATH, "./hpd.cfg" ) )
+	if( (rc = HPD_start( HPD_USE_CFG_FILE, loop, "Homeport",
+               HPD_OPTION_CFG_PATH, "./hpd.cfg" )) )
 	{
 		printf("Failed to start HPD %d\n", rc);
 		return 1;
