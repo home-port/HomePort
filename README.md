@@ -41,6 +41,10 @@ Then compile:
 
 # Run tests
 
+Install requirements:
+
+`sudo apt-get install libcurl4-gnutls-dev`
+
 Run cmake as normal:
 
 `mkdir build && cd build`
