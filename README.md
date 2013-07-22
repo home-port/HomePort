@@ -13,6 +13,11 @@ Clone the repository:
 
 `git clone https://github.com/home-port/HomePort.git HomePort`
 
+Switch branch:
+
+`cd HomePort`
+`git checkout ConsolidatedRelease`
+
 # Compile
 
 Install the dependencies:
