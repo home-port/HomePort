@@ -11,7 +11,7 @@ Install git:
 
 Clone the repository:
 
-`git clone https://github.com/eudyptula/Encourage.git encourage`
+`git clone https://github.com/home-port/HomePort.git HomePort`
 
 # Compile
 
