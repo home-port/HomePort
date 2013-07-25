@@ -28,5 +28,10 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
+include_directories(${PROJECT_SOURCE_DIR}/libREST/include)
+include_directories(${PROJECT_SOURCE_DIR}/http-webserver/include)
+include_directories(${PROJECT_SOURCE_DIR}/webserver/include)
+include_directories(${PROJECT_SOURCE_DIR}/misc/include)
+
 add_subdirectory(src)
 
