@@ -36,6 +36,7 @@
 #include "url_parser.h"
 #include "linkedmap.h"
 #include "header_parser.h"
+#include "webserver.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -588,4 +589,9 @@ const char *http_request_get_argument(struct http_request *req, const char* key)
 struct ws_conn *http_request_get_connection(struct http_request *req)
 {
    return req->conn;
+}
+
+const char *http_request_get_ip(struct http_request *req)
+{
+   return ws_conn_get_ip(req->conn);
 }

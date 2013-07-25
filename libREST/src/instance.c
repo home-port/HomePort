@@ -341,4 +341,8 @@ const char *lr_request_get_argument(struct lr_request *req, const char* key)
    return http_request_get_argument(req->req, key);
 }
 
+const char *lr_request_get_ip(struct lr_request *req)
+{
+   return http_request_get_ip(req->req);
+}
 

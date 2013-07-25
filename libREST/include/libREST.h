@@ -91,5 +91,6 @@ struct lm *lr_request_get_headers(struct lr_request *req);
 const char *lr_request_get_header(struct lr_request *req, const char* key);
 struct lm *lr_request_get_arguments(struct lr_request *req);
 const char *lr_request_get_argument(struct lr_request *req, const char* key);
+const char *lr_request_get_ip(struct lr_request *req);
 
 #endif

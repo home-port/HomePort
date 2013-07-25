@@ -516,3 +516,8 @@ struct ws_settings *ws_instance_get_settings(
 {
    return &instance->settings;
 }
+
+const char *ws_conn_get_ip(struct ws_conn *conn)
+{
+   return conn->ip;
+}
