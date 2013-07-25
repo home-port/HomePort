@@ -126,7 +126,6 @@ start_server(char* hostname, char *domain_name, struct ev_loop *loop)
    settings.port = hpd_daemon->http_port;
 
 #if HPD_HTTP
-	
 	unsecure_web_server = lr_create(&settings, loop);
    if (!unsecure_web_server)
       return HPD_E_MHD_ERROR;
@@ -203,17 +202,35 @@ static int answer_get(void *data, struct lr_request *req,
                       const char *body, size_t len)
 {
    Service *service = data;
-   char *buffer = malloc(MHD_MAX_BUFFER_SIZE * sizeof(char));
+   char *buffer;
+   const char *arg, *url, *ip;
+   enum http_method method;
 
+   // Check if allowed
    if (!service->get_function) {
       lr_sendf(req, WS_HTTP_405, "405 Method Not Allowed");
       return 1;
    }
 
+   // Check arguments
+   arg = lr_request_get_argument(req, "x");
+   if (arg) arg = "x=1";
+   else {
+      arg = lr_request_get_argument(req, "p");
+      if (arg) arg = "p=1";
+   }
+
+   // Log request
+   method = lr_request_get_method(req);
+   url = lr_request_get_url(req);
+   ip = lr_request_get_ip(req);
+   Log (HPD_LOG_ONLY_REQUESTS, NULL, ip, http_method_str(method), url, arg);
+
+   // Call callback and send response
+   buffer = malloc(MHD_MAX_BUFFER_SIZE * sizeof(char));
    int buf_len = service->get_function(service, buffer, MHD_MAX_BUFFER_SIZE);
    lr_sendf(req, WS_HTTP_200, "%.*s", buf_len, buffer);
    lr_request_destroy(req);
-
    free(buffer);
 
    return 0;
@@ -226,10 +243,10 @@ static int answer_put(void *data, struct lr_request *req,
                       const char *body, size_t len)
 {
    Service *service = data;
-   char *buffer = malloc(MHD_MAX_BUFFER_SIZE * sizeof(char));
    char *new_put;
    size_t new_len;
 
+   // Check if allowed
    if (!service->get_function) {
       lr_sendf(req, WS_HTTP_405, "405 Method Not Allowed");
       lr_request_destroy(req);
@@ -251,6 +268,7 @@ static int answer_put(void *data, struct lr_request *req,
       new_put[new_len-1] = '\0';
       service->put_value = new_put;
    } else {
+      char *buffer = malloc(MHD_MAX_BUFFER_SIZE * sizeof(char));
       int buf_len = service->put_function(service,
                                           buffer, MHD_MAX_BUFFER_SIZE,
                                           service->put_value);
@@ -258,9 +276,8 @@ static int answer_put(void *data, struct lr_request *req,
       service->put_value = NULL;
       lr_sendf(req, WS_HTTP_200, "%.*s", buf_len, buffer);
       lr_request_destroy(req);
+      free(buffer);
    }
-
-   free(buffer);
 
    return 0;
 }
@@ -293,8 +310,10 @@ register_service( Service *service_to_register )
                                service_to_register->value_url,
                                answer_get, NULL, answer_put, NULL,
                                service_to_register);
-		if(rc)
+		if(rc) {
+         printf("Failed to register non secure service\n");
 			return HPD_E_MHD_ERROR;
+      }
 #else
 		printf("Trying to register non secure service without HTTP support\n");
 		return HPD_E_NO_HTTP;
