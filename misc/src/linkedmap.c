@@ -153,18 +153,24 @@ void lm_remove(struct lm *map, const char* key)
 }
 
 // Get the value of a key in the linked map
-char* lm_find(struct lm *map, const char* key)
+char* lm_find_n(struct lm *map, const char* key, size_t key_len)
 {
 	struct ll_iter *it;
 
 	if(map){
 		for(it = ll_head(map->pairs); it != NULL; it = ll_next(it)) {
-			if(strcmp(key, ((struct pair*)ll_data(it))->key) == 0) {
+			if(strncmp(((struct pair*)ll_data(it))->key, key, key_len) == 0) {
 				return ((struct pair*)ll_data(it))->value;
 			}
 		}
 	}
 	return NULL;
+}
+
+// Get the value of a key in the linked map
+char* lm_find(struct lm *map, const char* key)
+{
+   return lm_find_n(map, key, strlen(key));
 }
 
 // Map a read-only function over the internal linked list.
