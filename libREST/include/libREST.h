@@ -35,6 +35,7 @@
 #define LIBREST_H
 
 #include "http_types.h"
+#include "linkedmap.h"
 #include <stddef.h>
 #include <stdarg.h>
 
@@ -84,5 +85,11 @@ void lr_send_start(struct lr_request *req,
 void lr_send_chunkf(struct lr_request *req, char *fmt, ...);
 void lr_send_vchunkf(struct lr_request *req, char *fmt, va_list arg);
 void lr_send_stop(struct lr_request *req);
+enum http_method lr_request_get_method(struct lr_request *req);
+const char *lr_request_get_url(struct lr_request *req);
+struct lm *lr_request_get_headers(struct lr_request *req);
+const char *lr_request_get_header(struct lr_request *req, const char* key);
+struct lm *lr_request_get_arguments(struct lr_request *req);
+const char *lr_request_get_argument(struct lr_request *req, const char* key);
 
 #endif

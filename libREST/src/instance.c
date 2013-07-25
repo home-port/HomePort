@@ -311,3 +311,34 @@ void lr_send_stop(struct lr_request *req)
    http_response_destroy(req->res);
 }
 
+enum http_method lr_request_get_method(struct lr_request *req)
+{
+   return http_request_get_method(req->req);
+}
+
+const char *lr_request_get_url(struct lr_request *req)
+{
+   return http_request_get_url(req->req);
+}
+
+struct lm *lr_request_get_headers(struct lr_request *req)
+{
+   return http_request_get_headers(req->req);
+}
+
+const char *lr_request_get_header(struct lr_request *req, const char* key)
+{
+   return http_request_get_header(req->req, key);
+}
+
+struct lm *lr_request_get_arguments(struct lr_request *req)
+{
+   return http_request_get_arguments(req->req);
+}
+
+const char *lr_request_get_argument(struct lr_request *req, const char* key)
+{
+   return http_request_get_argument(req->req, key);
+}
+
+
