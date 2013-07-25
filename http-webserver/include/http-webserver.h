@@ -98,6 +98,9 @@ const char *      http_request_get_header    (struct http_request *req,
 struct lm *       http_request_get_arguments (struct http_request *req);
 const char *      http_request_get_argument  (struct http_request *req,
                                               const char* key);
+struct lm *       http_request_get_cookies   (struct http_request *req);
+const char *      http_request_get_cookie    (struct http_request *req,
+                                              const char* key);
 const char *      http_request_get_ip        (struct http_request *req);
 
 // Response functions

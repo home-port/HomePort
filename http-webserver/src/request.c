@@ -139,6 +139,7 @@ struct http_request
    char *url;
    struct lm *arguments;
    struct lm *headers;
+   struct lm *cookies;
    void* data;
 };
 
@@ -195,6 +196,27 @@ static void header_parser_field_value_pair_complete(void* data,
    struct http_request *req = data;
    char *existing = lm_find_n(req->headers, field, field_length);
 
+   // If cookie, then store it in cookie list
+   if (strncmp(field, "Cookie", 6) == 0) {
+      int key_s = 0, key_e, val_s, val_e;
+
+      while (key_s < value_length) {
+         for (key_e = key_s;
+              key_e < value_length && value[key_e] != '=';
+              key_e++);
+         // TODO If key_e reached value_length it is an error
+         val_s = key_e + 1;
+         for (val_e = val_s;
+              val_e < value_length && strncmp(&value[val_e], "; ", 2) != 0;
+              val_e++);
+         if (key_e-key_s > 0 && val_e-val_s > 0)
+            lm_insert_n(req->cookies, &value[key_s], key_e-key_s,
+                                      &value[val_s], val_e-val_s);
+         key_s = val_e + 2;
+      }
+   }
+
+   // Store header in headers list
    if (existing) {
       // Combine values
       size_t new_len = strlen(existing) + 1 + value_length + 1;
@@ -529,6 +551,7 @@ struct http_request *http_request_create(
    // Create linked maps
    req->arguments = lm_create();
    req->headers = lm_create();
+   req->cookies = lm_create();
 
    req->url = NULL;
 
@@ -550,6 +573,7 @@ void http_request_destroy(struct http_request *req)
       up_destroy(req->url_parser);
       lm_destroy(req->arguments);
       lm_destroy(req->headers);
+      lm_destroy(req->cookies);
       hp_destroy(req->header_parser);
       free(req->url);
       free(req);
@@ -573,6 +597,9 @@ size_t http_request_parse(
       const char *buf,
       size_t len)
 {
+   // TODO This needs to send some kind of error message if any of the
+   // parsers fails (http, header, url, etc.), including their callbacks
+   // in this file
    return http_parser_execute(&req->parser, &parser_settings, buf, len);
 }
 
@@ -604,6 +631,16 @@ struct lm *http_request_get_arguments(struct http_request *req)
 const char *http_request_get_argument(struct http_request *req, const char* key)
 {
    return lm_find(req->arguments, key);
+}
+
+struct lm *http_request_get_cookies(struct http_request *req)
+{
+   return req->cookies;
+}
+
+const char *http_request_get_cookie(struct http_request *req, const char* key)
+{
+   return lm_find(req->cookies, key);
 }
 
 struct ws_conn *http_request_get_connection(struct http_request *req)

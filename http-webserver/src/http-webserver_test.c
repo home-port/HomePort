@@ -118,6 +118,8 @@ static char* simple_get_request(char* url)
 #endif
       struct curl_slist *chunk = NULL;
       chunk = curl_slist_append(chunk, "Transfer-Encoding:");
+      chunk = curl_slist_append(chunk,
+            "Cookie: cookie1=val1; cookie2=val2");
       curl_easy_setopt(handle, CURLOPT_HTTPHEADER, chunk);
 
 		if((c = curl_easy_perform(handle)) != CURLE_OK)
@@ -431,6 +433,13 @@ static int on_req_cmpl(
             http_method_str(method));
       data->_errors++;
    }
+
+   // Check cookie
+   const char *cookie;
+   cookie = http_request_get_cookie(req, "cookie1");
+   ASSERT_STR_EQUAL(cookie, "val1");
+   cookie = http_request_get_cookie(req, "cookie2");
+   ASSERT_STR_EQUAL(cookie, "val2");
 
    // Construct body
    data->_errors += _errors;
