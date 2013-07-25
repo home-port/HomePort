@@ -82,25 +82,41 @@ struct httpws_settings {
    .on_req_body = NULL, \
    .on_req_cmpl = NULL }
 
-struct httpws *httpws_create(struct httpws_settings *settings,
-                             struct ev_loop *loop);
-void httpws_destroy(struct httpws *instance);
-int httpws_start(struct httpws *instance);
-void httpws_stop(struct httpws *instance);
+// Webserver functions
+struct httpws *  httpws_create  (struct httpws_settings *settings,
+                                 struct ev_loop *loop);
+void             httpws_destroy (struct httpws *instance);
+int              httpws_start   (struct httpws *instance);
+void             httpws_stop    (struct httpws *instance);
 
-enum http_method http_request_get_method(struct http_request *req);
-const char *http_request_get_url(struct http_request *req);
-struct lm *http_request_get_headers(struct http_request *req);
-const char *http_request_get_header(struct http_request *req, const char* key);
-struct lm *http_request_get_arguments(struct http_request *req);
-const char *http_request_get_argument(struct http_request *req, const char* key);
-const char *http_request_get_ip(struct http_request *req);
+// Request functions
+enum http_method  http_request_get_method    (struct http_request *req);
+const char *      http_request_get_url       (struct http_request *req);
+struct lm *       http_request_get_headers   (struct http_request *req);
+const char *      http_request_get_header    (struct http_request *req,
+                                              const char* key);
+struct lm *       http_request_get_arguments (struct http_request *req);
+const char *      http_request_get_argument  (struct http_request *req,
+                                              const char* key);
+const char *      http_request_get_ip        (struct http_request *req);
 
-void http_response_destroy(struct http_response *res);
-struct http_response *http_response_create(struct http_request *req, enum httpws_http_status_code status);
-int http_response_add_header(struct http_response *res, const char *field, const char *value);
-void http_response_sendf(struct http_response *res, const char *fmt, ...);
-void http_response_vsendf(struct http_response *res, const char *fmt, va_list arg);
+// Response functions
+void  http_response_destroy    (struct http_response *res);
+struct http_response *
+      http_response_create     (struct http_request *req,
+                                enum httpws_http_status_code status);
+int   http_response_add_header (struct http_response *res,
+                                const char *field, const char *value);
+void  http_response_sendf      (struct http_response *res,
+                                const char *fmt, ...);
+void  http_response_vsendf     (struct http_response *res,
+                                const char *fmt, va_list arg);
+int   http_response_add_cookie (struct http_response *res,
+                                const char *field, const char *value,
+                                const char *expires, const char *max_age,
+                                const char *domain, const char *path,
+                                int secure, int http_only,
+                                const char *extension);
 
 
 #endif

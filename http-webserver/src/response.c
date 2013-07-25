@@ -104,7 +104,8 @@ struct http_response *http_response_create(
    return res;
 }
 
-int http_response_add_header(struct http_response *res, const char *field, const char *value)
+int http_response_add_header(struct http_response *res,
+                             const char *field, const char *value)
 {
 	char *msg;
 	int msg_len = strlen(res->msg)+strlen(field)+1+strlen(value)+strlen(CRLF)+1;
@@ -123,6 +124,72 @@ int http_response_add_header(struct http_response *res, const char *field, const
    
    return 0;
 }
+
+// According to RFC 6265
+int http_response_add_cookie(struct http_response *res,
+                             const char *field, const char *value,
+                             const char *expires, const char *max_age,
+                             const char *domain, const char *path,
+                             int secure, int http_only,
+                             const char *extension)
+{
+   if (!res || !field || !value) return 1;
+
+	char *msg;
+	int msg_len = strlen(res->msg) + 12 +
+                 strlen(field) + 1 +
+                 strlen(value) +
+                 strlen(CRLF) + 1;
+
+   // Calculate length
+   if (expires)   msg_len += 10 + strlen(expires);
+   if (max_age)   msg_len += 10 + strlen(max_age);
+   if (domain)    msg_len +=  9 + strlen(domain);
+   if (path)      msg_len +=  7 + strlen(path);
+   if (secure)    msg_len +=  8;
+   if (http_only) msg_len += 10;
+   if (extension) msg_len +=  2 + strlen(extension);
+
+   // Reallocate message
+	msg = realloc(res->msg, msg_len*sizeof(char));
+	 if (msg == NULL) {
+      	fprintf(stderr, "ERROR: Cannot allocate memory\n");
+      	return 1;
+   }
+   res->msg = msg;
+
+   // Apply header
+   strcat(res->msg, "Set-Cookie: ");
+   strcat(res->msg, field);
+   strcat(res->msg, "=");
+   strcat(res->msg, value);
+   strcat(res->msg, CRLF);
+   if (expires) {
+      strcat(res->msg, "; Expires=");
+      strcat(res->msg, expires);
+   }
+   if (max_age) {
+      strcat(res->msg, "; Max-Age=");
+      strcat(res->msg, max_age);
+   }
+   if (domain) {
+      strcat(res->msg, "; Domain=");
+      strcat(res->msg, domain);
+   }
+   if (path) {
+      strcat(res->msg, "; Domain=");
+      strcat(res->msg, domain);
+   }
+   if (secure) strcat(res->msg, "; Secure");
+   if (http_only) strcat(res->msg, "; HttpOnly");
+   if (extension) {
+      strcat(res->msg, "; ");
+      strcat(res->msg, extension);
+   }
+   
+   return 0;
+}
+
 
 void http_response_sendf(struct http_response *res, const char *fmt, ...)
 {
