@@ -48,6 +48,7 @@ int lm_insert_n(struct lm *map, const char* key, size_t key_len,
                                 const char* value, size_t value_len);
 
 void lm_remove(struct lm *map, const char* key);
+void lm_remove_n(struct lm *map, const char* key, size_t key_len);
 char* lm_find(struct lm *map, const char* key); // Returns the first found element with the specified key
 char* lm_find_n(struct lm *map, const char* key, size_t key_len);
 void lm_map(struct lm *map, lm_map_cb func, void *data);

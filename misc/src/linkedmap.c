@@ -132,13 +132,13 @@ int lm_insert(struct lm *map, const char* key, const char* value)
 }
 
 // Remove a key and value pair
-void lm_remove(struct lm *map, const char* key)
+void lm_remove_n(struct lm *map, const char* key, size_t key_len)
 {
 	struct ll_iter *it, *next;
 
 	if(map){
 		for(it = ll_head(map->pairs); it != NULL;) {
-			if(strcmp(((struct pair*)ll_data(it))->key,key) == 0) {
+			if(strncmp(((struct pair*)ll_data(it))->key, key, key_len) == 0) {
 				free(((struct pair*)ll_data(it))->key);
 				free(((struct pair*)ll_data(it))->value);
 				free(((struct pair*)ll_data(it)));
@@ -150,6 +150,12 @@ void lm_remove(struct lm *map, const char* key)
          }
 		}
 	}
+}
+
+// Remove a key and value pair
+void lm_remove(struct lm *map, const char* key)
+{
+   lm_remove_n(map, key, strlen(key));
 }
 
 // Get the value of a key in the linked map
