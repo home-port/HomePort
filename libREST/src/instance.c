@@ -304,6 +304,24 @@ void lr_send_start(struct lr_request *req,
    lm_map(headers, add_header, req->res);
 }
 
+int lr_send_add_cookie(struct lr_request *req,
+                       const char *field, const char *value,
+                       const char *expires, const char *max_age,
+                       const char *domain, const char *path,
+                       int secure, int http_only,
+                       const char *extension)
+{
+   return http_response_add_cookie(req->res, field, value, expires,
+         max_age, domain, path, secure, http_only, extension);
+}
+
+int lr_send_add_cookie_simple(struct lr_request *req,
+                              const char *field, const char *value)
+{
+   return lr_send_add_cookie(req, field, value,
+                             NULL, NULL, NULL, NULL, 0,0, NULL);
+}
+
 void lr_send_chunkf(struct lr_request *req, char *fmt, ...)
 {
    va_list arg;
@@ -350,6 +368,16 @@ struct lm *lr_request_get_arguments(struct lr_request *req)
 const char *lr_request_get_argument(struct lr_request *req, const char* key)
 {
    return http_request_get_argument(req->req, key);
+}
+
+struct lm *lr_request_get_cookies(struct lr_request *req)
+{
+   return http_request_get_cookies(req->req);
+}
+
+const char *lr_request_get_cookie(struct lr_request *req, const char* key)
+{
+   return http_request_get_cookie(req->req, key);
 }
 
 const char *lr_request_get_ip(struct lr_request *req)

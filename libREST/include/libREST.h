@@ -84,6 +84,8 @@ struct lm *lr_request_get_headers(struct lr_request *req);
 const char *lr_request_get_header(struct lr_request *req, const char* key);
 struct lm *lr_request_get_arguments(struct lr_request *req);
 const char *lr_request_get_argument(struct lr_request *req, const char* key);
+struct lm *lr_request_get_cookies(struct lr_request *req);
+const char *lr_request_get_cookie(struct lr_request *req, const char* key);
 const char *lr_request_get_ip(struct lr_request *req);
 
 // Send response functions
@@ -93,6 +95,14 @@ void lr_sendf(struct lr_request *req,
 void lr_send_start(struct lr_request *req,
                    enum httpws_http_status_code status,
                    struct lm *headers);
+int lr_send_add_cookie_simple(struct lr_request *req,
+                              const char *field, const char *value);
+int lr_send_add_cookie(struct lr_request *req,
+                       const char *field, const char *value,
+                       const char *expires, const char *max_age,
+                       const char *domain, const char *path,
+                       int secure, int http_only,
+                       const char *extension);
 void lr_send_chunkf(struct lr_request *req, char *fmt, ...);
 void lr_send_vchunkf(struct lr_request *req, char *fmt, va_list arg);
 void lr_send_stop(struct lr_request *req);

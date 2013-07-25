@@ -107,11 +107,14 @@ struct http_response *http_response_create(
 int http_response_add_header(struct http_response *res,
                              const char *field, const char *value)
 {
+   // Headers already sent
+   if (!res->msg) return 1;
+
 	char *msg;
 	int msg_len = strlen(res->msg)+strlen(field)+1+strlen(value)+strlen(CRLF)+1;
 
 	msg = realloc(res->msg, msg_len*sizeof(char));
-	 if (msg == NULL) {
+	if (msg == NULL) {
       	fprintf(stderr, "ERROR: Cannot allocate memory\n");
       	return 1;
    }
@@ -134,6 +137,9 @@ int http_response_add_cookie(struct http_response *res,
                              const char *extension)
 {
    if (!res || !field || !value) return 1;
+
+   // Headers already sent
+   if (!res->msg) return 1;
 
 	char *msg;
 	int msg_len = strlen(res->msg) + 12 +
