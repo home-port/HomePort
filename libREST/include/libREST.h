@@ -77,14 +77,7 @@ void *lr_unregister_service(struct lr *ins, char *url);
 void *lr_lookup_service(struct lr *ins, char *url);
 
 // Request functions
-void lr_sendf(struct lr_request *req, enum httpws_http_status_code status,
-              char *fmt, ...);
 void lr_request_destroy(struct lr_request *req);
-void lr_send_start(struct lr_request *req,
-                   enum httpws_http_status_code status);
-void lr_send_chunkf(struct lr_request *req, char *fmt, ...);
-void lr_send_vchunkf(struct lr_request *req, char *fmt, va_list arg);
-void lr_send_stop(struct lr_request *req);
 enum http_method lr_request_get_method(struct lr_request *req);
 const char *lr_request_get_url(struct lr_request *req);
 struct lm *lr_request_get_headers(struct lr_request *req);
@@ -92,5 +85,16 @@ const char *lr_request_get_header(struct lr_request *req, const char* key);
 struct lm *lr_request_get_arguments(struct lr_request *req);
 const char *lr_request_get_argument(struct lr_request *req, const char* key);
 const char *lr_request_get_ip(struct lr_request *req);
+
+// Send response functions
+void lr_sendf(struct lr_request *req,
+              enum httpws_http_status_code status,
+              struct lm *headers, char *fmt, ...);
+void lr_send_start(struct lr_request *req,
+                   enum httpws_http_status_code status,
+                   struct lm *headers);
+void lr_send_chunkf(struct lr_request *req, char *fmt, ...);
+void lr_send_vchunkf(struct lr_request *req, char *fmt, va_list arg);
+void lr_send_stop(struct lr_request *req);
 
 #endif

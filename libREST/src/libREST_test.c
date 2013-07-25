@@ -198,7 +198,7 @@ static void exit_cb(EV_P_ ev_async *watcher, int revents)
 static int get_cb(void *data, struct lr_request *req, const char *body, size_t len)
 {
    if (body == NULL) {
-      lr_sendf(req, WS_HTTP_200, "GET!");
+      lr_sendf(req, WS_HTTP_200, NULL, "GET!");
       lr_request_destroy(req);
    }
    return 0;
@@ -207,7 +207,7 @@ static int get_cb(void *data, struct lr_request *req, const char *body, size_t l
 static int post_cb(void *data, struct lr_request *req, const char *body, size_t len)
 {
    if (body == NULL) {
-      lr_sendf(req, WS_HTTP_200, "POST!");
+      lr_sendf(req, WS_HTTP_200, NULL, "POST!");
       lr_request_destroy(req);
    }
    return 0;
@@ -216,7 +216,7 @@ static int post_cb(void *data, struct lr_request *req, const char *body, size_t 
 static int put_cb(void *data, struct lr_request *req, const char *body, size_t len)
 {
    if (body == NULL) {
-      lr_sendf(req, WS_HTTP_200, "PUT!");
+      lr_sendf(req, WS_HTTP_200, NULL, "PUT!");
       lr_request_destroy(req);
    }
    return 0;
@@ -225,7 +225,7 @@ static int put_cb(void *data, struct lr_request *req, const char *body, size_t l
 static int delete_cb(void *data, struct lr_request *req, const char *body, size_t len)
 {
    if (body == NULL) {
-      lr_sendf(req, WS_HTTP_200, "DELETE!");
+      lr_sendf(req, WS_HTTP_200, NULL, "DELETE!");
       lr_request_destroy(req);
    }
    return 0;

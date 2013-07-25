@@ -208,7 +208,7 @@ static int answer_get(void *data, struct lr_request *req,
 
    // Check if allowed
    if (!service->get_function) {
-      lr_sendf(req, WS_HTTP_405, "405 Method Not Allowed");
+      lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
       return 1;
    }
 
@@ -229,7 +229,7 @@ static int answer_get(void *data, struct lr_request *req,
    // Call callback and send response
    buffer = malloc(MHD_MAX_BUFFER_SIZE * sizeof(char));
    int buf_len = service->get_function(service, buffer, MHD_MAX_BUFFER_SIZE);
-   lr_sendf(req, WS_HTTP_200, "%.*s", buf_len, buffer);
+   lr_sendf(req, WS_HTTP_200, NULL, "%.*s", buf_len, buffer);
    lr_request_destroy(req);
    free(buffer);
 
@@ -248,7 +248,7 @@ static int answer_put(void *data, struct lr_request *req,
 
    // Check if allowed
    if (!service->get_function) {
-      lr_sendf(req, WS_HTTP_405, "405 Method Not Allowed");
+      lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
       lr_request_destroy(req);
       return 1;
    }
@@ -259,7 +259,7 @@ static int answer_put(void *data, struct lr_request *req,
       if (!new_put) {
          free(service->put_value);
          service->put_value = NULL;
-         lr_sendf(req, WS_HTTP_500,"500 Internal Server Error");
+         lr_sendf(req, WS_HTTP_500, NULL, "500 Internal Server Error");
          lr_request_destroy(req);
          return 1;
       }
@@ -274,7 +274,7 @@ static int answer_put(void *data, struct lr_request *req,
                                           service->put_value);
       free(service->put_value);
       service->put_value = NULL;
-      lr_sendf(req, WS_HTTP_200, "%.*s", buf_len, buffer);
+      lr_sendf(req, WS_HTTP_200, NULL, "%.*s", buf_len, buffer);
       lr_request_destroy(req);
       free(buffer);
    }

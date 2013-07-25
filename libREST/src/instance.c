@@ -269,13 +269,14 @@ void *lr_lookup_service(struct lr *ins, char *url)
    return trie_value(iter);
 }
 
-void lr_sendf(struct lr_request *req, enum httpws_http_status_code status,
-              char *fmt, ...)
+void lr_sendf(struct lr_request *req,
+              enum httpws_http_status_code status,
+              struct lm *headers, char *fmt, ...)
 {
    va_list arg;
 
    va_start(arg, fmt);
-   lr_send_start(req, status);
+   lr_send_start(req, status, headers);
    lr_send_vchunkf(req, fmt, arg);
    lr_send_stop(req);
    va_end(arg);
@@ -286,11 +287,21 @@ void lr_request_destroy(struct lr_request *req)
    free(req);
 }
 
+static void add_header(void *data,
+                       const char *key, const char *value)
+{
+   struct http_response *res = data;
+   // TODO Has a return value
+   http_response_add_header(res, key, value);
+}
+
 void lr_send_start(struct lr_request *req,
-                   enum httpws_http_status_code status)
+                   enum httpws_http_status_code status,
+                   struct lm *headers)
 {
    req->res = http_response_create(req->req, status);
    // TODO Consider headers to add
+   lm_map(headers, add_header, req->res);
 }
 
 void lr_send_chunkf(struct lr_request *req, char *fmt, ...)
