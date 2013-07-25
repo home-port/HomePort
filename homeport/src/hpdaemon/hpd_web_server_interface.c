@@ -93,108 +93,21 @@ destroy_HPD_web_server_struct( HPD_web_server_struct* to_destroy )
 }
 #endif
 
-/**
- * Start the MHD web server(s) and the AVAHI client or server
- *
- * @param hostname Hostname for the local address of the server
- *
- * @param domain_name Domain name for the local address of the server (if NULL = .local)
- *
- * @return A HPD error code
- */
-
-int 
-start_server(char* hostname, char *domain_name, struct ev_loop *loop)
-{
-	int rc;
-
-	rc = init_xml_file (XML_FILE_NAME,DEVICE_LIST_ID);
-	if( rc < 0 )
-	{	
-		printf("Failed to initiate XML file\n");
-		return rc;
-	}
-
-	rc = initiate_global_event_queue();
-	if( rc < 0 )
-	{	
-		printf("Failed to initiate Server Sent Event Queue\n");
-		return rc;
-	}
-
-   struct lr_settings settings = LR_SETTINGS_DEFAULT;
-   settings.port = hpd_daemon->http_port;
-
 #if HPD_HTTP
-	unsecure_web_server = lr_create(&settings, loop);
-   if (!unsecure_web_server)
-      return HPD_E_MHD_ERROR;
-
-   if (lr_start(unsecure_web_server))
-      return HPD_E_MHD_ERROR;
-
-   rc = HPD_E_SUCCESS;
-#endif
-
-#if HPD_HTTPS
-	secure_web_server = create_HPD_web_server_struct( HPD_IS_SECURE_CONNECTION );
-
-	rc = start_secure_web_server( secure_web_server );
-	if( rc < 0 )
-	{	
-		printf("Failed to start HTTPS server\n");
-		return rc;
-	}
-#endif
-
-#if USE_AVAHI
-	rc = avahi_start (hostname, domain_name);
-	if( rc < 0 )
-	{
-		printf("Failed to start avahi\n");
-		return rc;
-	}	
-#endif
-
-	return rc;
-
-
-}
-
-/**
- * Stop the MHD web server(s) and the AVAHI client or server
- *
- * @return A HPD error code
- */
-int 
-stop_server()
+static int answer_get_devices(void *data, struct lr_request *req,
+                              const char *body, size_t len)
 {
-	int rc;
+   char *xmlbuff = get_xml_device_list();
+   struct lm *headers = lm_create();
 
-	free_server_sent_events_ressources();
+   lm_insert(headers, "Content-Type", "text/xml");
+   lr_sendf(req, WS_HTTP_200, headers, xmlbuff);
 
-#if HPD_HTTP
-   lr_stop(unsecure_web_server);
-   lr_destroy(unsecure_web_server);
-	rc = HPD_E_SUCCESS;
-#endif
-
-#if HPD_HTTPS
-	rc = stop_web_server( secure_web_server );
-	if( rc < HPD_E_SUCCESS )
-		return rc;
-	destroy_HPD_web_server_struct( secure_web_server );
-#endif
-
-	delete_xml(XML_FILE_NAME);
-
-#if USE_AVAHI
-	avahi_quit ();
-#endif
-
-	return rc;
-
+   lm_destroy(headers);
+   free(xmlbuff);
+   return 0;
 }
+#endif
 
 #if HPD_HTTP
 // TODO Do I need to add more to this (like logging, etc.)
@@ -282,6 +195,117 @@ static int answer_put(void *data, struct lr_request *req,
    return 0;
 }
 #endif
+
+/**
+ * Start the MHD web server(s) and the AVAHI client or server
+ *
+ * @param hostname Hostname for the local address of the server
+ *
+ * @param domain_name Domain name for the local address of the server (if NULL = .local)
+ *
+ * @return A HPD error code
+ */
+int 
+start_server(char* hostname, char *domain_name, struct ev_loop *loop)
+{
+	int rc;
+
+	rc = init_xml_file (XML_FILE_NAME,DEVICE_LIST_ID);
+	if( rc < 0 )
+	{	
+		printf("Failed to initiate XML file\n");
+		return rc;
+	}
+
+	rc = initiate_global_event_queue();
+	if( rc < 0 )
+	{	
+		printf("Failed to initiate Server Sent Event Queue\n");
+		return rc;
+	}
+
+   struct lr_settings settings = LR_SETTINGS_DEFAULT;
+   settings.port = hpd_daemon->http_port;
+
+#if HPD_HTTP
+	unsecure_web_server = lr_create(&settings, loop);
+   if (!unsecure_web_server)
+      return HPD_E_MHD_ERROR;
+
+   if (lr_start(unsecure_web_server))
+      return HPD_E_MHD_ERROR;
+
+   rc = lr_register_service(unsecure_web_server,
+                            "/devices",
+                            answer_get_devices, NULL, NULL, NULL,
+                            NULL);
+   if (rc) {
+      printf("Failed to register non secure service\n");
+		return HPD_E_MHD_ERROR;
+   }
+
+   rc = HPD_E_SUCCESS;
+#endif
+
+#if HPD_HTTPS
+	secure_web_server = create_HPD_web_server_struct( HPD_IS_SECURE_CONNECTION );
+
+	rc = start_secure_web_server( secure_web_server );
+	if( rc < 0 )
+	{	
+		printf("Failed to start HTTPS server\n");
+		return rc;
+	}
+#endif
+
+#if USE_AVAHI
+	rc = avahi_start (hostname, domain_name);
+	if( rc < 0 )
+	{
+		printf("Failed to start avahi\n");
+		return rc;
+	}	
+#endif
+
+	return rc;
+
+
+}
+
+/**
+ * Stop the MHD web server(s) and the AVAHI client or server
+ *
+ * @return A HPD error code
+ */
+int 
+stop_server()
+{
+	int rc;
+
+	free_server_sent_events_ressources();
+
+#if HPD_HTTP
+   lr_stop(unsecure_web_server);
+   lr_destroy(unsecure_web_server);
+	rc = HPD_E_SUCCESS;
+#endif
+
+#if HPD_HTTPS
+	rc = stop_web_server( secure_web_server );
+	if( rc < HPD_E_SUCCESS )
+		return rc;
+	destroy_HPD_web_server_struct( secure_web_server );
+#endif
+
+	delete_xml(XML_FILE_NAME);
+
+#if USE_AVAHI
+	avahi_quit ();
+#endif
+
+	return rc;
+
+}
 
 /**
  * Add a service to the XML file, the server(s), and the AVAHI client or server
