@@ -193,9 +193,29 @@ static void header_parser_field_value_pair_complete(void* data,
       const char* value, size_t value_length)
 {
    struct http_request *req = data;
+   char *existing = lm_find_n(req->headers, field, field_length);
 
-   // TODO Has a return value
-   lm_insert_n(req->headers, field, field_length, value, value_length);
+   if (existing) {
+      // Combine values
+      size_t new_len = strlen(existing) + 1 + value_length + 1;
+      char *new = malloc(new_len * sizeof(char));
+      strcpy(new, existing);
+      strcat(new, ",");
+      strncat(new, value, value_length);
+      new[new_len-1] = '\0';
+
+      // Replace
+      lm_remove_n(req->headers, field, field_length);
+      // TODO Has a return value
+      lm_insert_n(req->headers, field, field_length,
+                                new, new_len);
+
+      // Clean up
+      free(new);
+   } else {
+      // TODO Has a return value
+      lm_insert_n(req->headers, field, field_length, value, value_length);
+   }
 }
 
 /// Message begin callback for http_parser
