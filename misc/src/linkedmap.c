@@ -168,12 +168,12 @@ char* lm_find(struct lm *map, const char* key)
 }
 
 // Map a read-only function over the internal linked list.
-void lm_map(struct lm *map, lm_map_cb func)
+void lm_map(struct lm *map, lm_map_cb func, void *data)
 {
 	if(map && func) {
 		struct ll_iter *it;
 		for(it = ll_head(map->pairs); it != NULL; it = ll_next(it)) {
-			func(((struct pair*)ll_data(it))->key, ((struct pair*)ll_data(it))->value);
+			func(data, ((struct pair*)ll_data(it))->key, ((struct pair*)ll_data(it))->value);
 		}
 	}
 }

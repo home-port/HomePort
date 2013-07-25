@@ -54,7 +54,7 @@ static void exit_handler(int sig)
    exit(sig);
 }
 
-void header_printer(const char* key, const char* value)
+void header_printer(void *data, const char* key, const char* value)
 {
    printf("\tHeader key/value = {%s : %s}\n",key,value);
 }
@@ -69,7 +69,7 @@ int handle_request(struct httpws *ins, struct http_request *req, void* ws_ctx, v
    printf("Got %s request on %s\n", method, url);
 
    // print headers
-   lm_map(headers, header_printer);
+   lm_map(headers, header_printer, NULL);
 
    char *body1 = "<html><body><h1>Hello</h1>Your language: ";
    char *body2 = lm_find(headers, "Accept-Language");
