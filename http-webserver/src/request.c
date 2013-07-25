@@ -136,6 +136,7 @@ struct http_request
    struct header_parser_instance *header_parser;
    enum state state;                 ///< Current state of the request
    char *url;
+   struct lm *arguments;
    struct lm *headers;
    void* data;
 };
@@ -175,28 +176,25 @@ static void url_parser_path_complete(void *data, const char* parsedSegment, size
    req->url[segment_length] = '\0';
 }
 
-static void header_parser_field_value_pair_complete(void* data, const char* field, size_t field_length, const char* value, size_t value_length)
+// TODO Write test that covers URL arguements
+static void url_parser_key_value(void *data,
+                                 const char *key, size_t key_len,
+                                 const char *value, size_t value_len)
 {
    struct http_request *req = data;
 
-   char *tmpField = malloc((field_length+1)*sizeof(char));
-   char *tmpValue = malloc((value_length+1)*sizeof(char));
+   // TODO Has a return value
+   lm_insert_n(req->headers, key, value_len, value, value_len);
+}
 
-   if(tmpField == NULL || tmpValue == NULL) {
-      fprintf(stderr, "Malloc failed for tmpField or tmpValue in request.c\n");
-      return;
-   }
+static void header_parser_field_value_pair_complete(void* data,
+      const char* field, size_t field_length,
+      const char* value, size_t value_length)
+{
+   struct http_request *req = data;
 
-   strncpy(tmpField, field, field_length);
-   tmpField[field_length] = '\0';
-
-   strncpy(tmpValue, value, value_length);
-   tmpValue[value_length] = '\0';
-
-   lm_insert(req->headers, tmpField, tmpValue);
-
-   free(tmpField);
-   free(tmpValue);
+   // TODO Has a return value
+   lm_insert_n(req->headers, field, field_length, value, value_length);
 }
 
 /// Message begin callback for http_parser
@@ -495,15 +493,20 @@ struct http_request *http_request_create(
    req->parser.data = req;
    req->state = S_START;
 
+   // Init URL Parser
    struct up_settings up_settings = UP_SETTINGS_DEFAULT;
 	up_settings.on_path_complete = url_parser_path_complete;
+	up_settings.on_key_value = url_parser_key_value;
    req->url_parser = up_create(&up_settings, req);
 
+   // Init Header Parser
    struct header_parser_settings hp_settings = HEADER_PARSER_SETTINGS_DEFAULT;
    hp_settings.data = req;
    hp_settings.on_field_value_pair = header_parser_field_value_pair_complete;
    req->header_parser = hp_create(&hp_settings);
 
+   // Create linked maps
+   req->arguments = lm_create();
    req->headers = lm_create();
 
    req->url = NULL;
@@ -524,6 +527,7 @@ void http_request_destroy(struct http_request *req)
 {
    if(req){
       up_destroy(req->url_parser);
+      lm_destroy(req->arguments);
       lm_destroy(req->headers);
       hp_destroy(req->header_parser);
       free(req->url);
@@ -569,6 +573,16 @@ struct lm *http_request_get_headers(struct http_request *req)
 const char *http_request_get_header(struct http_request *req, const char* key)
 {
    return lm_find(req->headers, key);
+}
+
+struct lm *http_request_get_arguments(struct http_request *req)
+{
+   return req->arguments;
+}
+
+const char *http_request_get_argument(struct http_request *req, const char* key)
+{
+   return lm_find(req->arguments, key);
 }
 
 struct ws_conn *http_request_get_connection(struct http_request *req)
