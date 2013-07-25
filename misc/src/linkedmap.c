@@ -88,7 +88,7 @@ int lm_insert_n(struct lm *map, const char* key, size_t key_len,
                                 const char* value, size_t value_len)
 {
 	// Check if the item is already in the list
-	if(lm_find(map, key) != NULL)
+	if(lm_find_n(map, key, key_len) != NULL)
 		return 1;
 
 	char *mKey = malloc((key_len+1)*sizeof(char));
