@@ -11,7 +11,13 @@ Install git:
 
 Clone the repository:
 
-`git clone https://github.com/eudyptula/Encourage.git encourage`
+`git clone https://github.com/home-port/HomePort.git HomePort`
+
+Switch branch:
+
+`cd HomePort`
+
+`git checkout ConsolidatedRelease`
 
 # Compile
 
@@ -22,30 +28,43 @@ Install the dependencies:
 Compile:
 
 It is advised to compile in a seperate directory:
+
 `mkdir build && cd build`
 
 First build your makefiles with cmake:
+
 `cmake ../`
 
 Then compile:
+
 `make`
 
 # Run tests
 
+Install requirements:
+
+`sudo apt-get install libcurl4-gnutls-dev`
+
 Run cmake as normal:
+
 `mkdir build && cd build`
+
 `cmake ../`
 
 Run the tests:
+
 `make check`
 
 # Build examples
 
 Run cmake as normal:
+
 `mkdir build && cd build`
+
 `cmake ../`
 
 Build examples
+
 `make examples`
 
 Example executables can be found in the various example directories
