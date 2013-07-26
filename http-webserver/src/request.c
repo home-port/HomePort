@@ -184,9 +184,9 @@ static void url_parser_key_value(void *data,
                                  const char *value, size_t value_len)
 {
    struct http_request *req = data;
-
+                  
    // TODO Has a return value
-   lm_insert_n(req->headers, key, value_len, value, value_len);
+   lm_insert_n(req->arguments, key, value_len, value, value_len);
 }
 
 static void header_parser_field_value_pair_complete(void* data,
