@@ -59,15 +59,15 @@ struct ws {
 /// All data to represent a connection
 struct ws_conn {
    struct ws *instance;             ///< Webserver instance
-   char ip[INET6_ADDRSTRLEN];       ///< IP address of the connection
+   char ip[INET6_ADDRSTRLEN];       ///< IP address of client
    struct ev_timer timeout_watcher; ///< Timeout watcher
    int timeout;                     ///< Restart timeout watcher ?
    struct ev_io recv_watcher;       ///< Recieve watcher
    struct ev_io send_watcher;       ///< Send watcher
    char *send_msg;                  ///< Data to send
    size_t send_len;                 ///< Length of data to send
-   int send_close;                  ///< Close socket after send
-   void *ctx;
+   int send_close;                  ///< Close socket after send ?
+   void *ctx;                       ///< Connection context
 };
 
 /// Get the socket file descriptor for a port number.
@@ -175,6 +175,15 @@ static void *get_in_addr(struct sockaddr *sa)
 }
 
 /// Recieve callback for io-watcher
+/**
+  * Recieves up to maxdatasize (from struct ws_settings) of data from a
+  * connection and calls on_recieve with it. Also resets the timeout for
+  * the connection, if one.
+  *
+  * \param  loop     The event loop
+  * \param  watcher  The io watcher causing the call
+  * \param  revents  Not used
+  */
 static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revents)
 {
    ssize_t recieved;
@@ -211,6 +220,17 @@ static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revent
       ev_timer_again(loop, &conn->timeout_watcher);
 }
 
+/// Send callback for io-watcher
+/**
+ * Sends message stored in send_msg on the connection. If not all the
+ * data could be sent at once, the remainer is store in send_msg again
+ * and the watcher is not stopped. If a connection is flaggted with
+ * close, the connection is closed when all the data has been sent.
+  *
+  * \param  loop     The event loop
+  * \param  watcher  The io watcher causing the call
+  * \param  revents  Not used
+ */
 static void conn_send_cb(struct ev_loop *loop, struct ev_io *watcher,
       int revents)
 {
@@ -236,14 +256,22 @@ static void conn_send_cb(struct ev_loop *loop, struct ev_io *watcher,
          strcpy(s, &conn->send_msg[sent]);
          free(conn->send_msg);
          conn->send_msg = s;
+         return;
       }
    }
 
    ev_io_stop(conn->instance->loop, &conn->send_watcher);
-
    if (conn->send_close) ws_conn_kill(conn);
 }
 
+/// Timeout callback for timeout watcher
+/**
+ * Kills the connection on timeout
+  *
+  * \param  loop     The event loop
+  * \param  watcher  The io watcher causing the call
+  * \param  revents  Not used
+ */
 static void conn_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, int revents)
 {
    struct ws_conn *conn = watcher->data;
@@ -251,7 +279,8 @@ static void conn_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, int 
    ws_conn_kill(conn);
 }
 
-int ws_instance_add_conn(struct ws *instance, struct ws_conn
+/// Add a connection to an instance
+static int ws_instance_add_conn(struct ws *instance, struct ws_conn
       *conn)
 {
    struct ll_iter *it = ll_tail(instance->conns);
@@ -340,6 +369,17 @@ static void ws_conn_accept(
       ev_timer_again(loop, &conn->timeout_watcher);
 }
 
+/// Send message on connection
+/**
+ * This function is used similary to the standard printf function, with
+ * a format string and variable arguments. It calls ws_conn_vsendf() to
+ * handle the actually sending, see this for more information.
+ *
+ * \param  conn  Connection to send on
+ * \param  fmt   Format string
+ *
+ * \return The same as ws_conn_vsendf() 
+ */
 int ws_conn_sendf(struct ws_conn *conn, const char *fmt, ...) {
    int stat;
    va_list arg;
@@ -351,6 +391,21 @@ int ws_conn_sendf(struct ws_conn *conn, const char *fmt, ...) {
    return stat;
 }
 
+/// Send message on connection
+/**
+ * This function is simiar to the standard vprintf function, with a
+ * format string and a list of variable arguments.
+ *
+ * Note that this function only schedules the message to be send. A send
+ * watcher on the event loop will trigger the actual sending, when the
+ * connection is ready for it.
+ *
+ * \param  conn  Connection to send on
+ * \param  fmt   Format string
+ * \param  arg   List of arguments
+ *
+ * \return  zero on success or the return value of vsprintf on failure
+ */
 int ws_conn_vsendf(struct ws_conn *conn, const char *fmt, va_list arg)
 {
    int stat;
@@ -383,11 +438,18 @@ int ws_conn_vsendf(struct ws_conn *conn, const char *fmt, va_list arg)
    // Update length
    conn->send_len += new_len;
 
-   // Check if the whole string was added
    if (stat < 0) return stat;
    else return 0;
 }
 
+/// Remove connection from instance
+/**
+ * This will remove a connection from a webserver instance. Will NOT
+ * free or close the connection.
+ *
+ * \param  instance  The webserver instance
+ * \param  conn      The connection to remove
+ */
 static void ws_instance_rm_conn(struct ws *instance, struct ws_conn
       *conn)
 {
@@ -398,12 +460,33 @@ static void ws_instance_rm_conn(struct ws *instance, struct ws_conn
 }
 
 /// Close a connection, after the remaining data has been sent
-// TODO What if data has been sent ?
+/**
+ * This sets the close flag on a connection. The connection will be
+ * closed after the remaining messages has been sent. If there is no
+ * waiting messages the connection will be closed instantly.
+ *
+ * \param  conn  The connection to close
+ */
 void ws_conn_close(struct ws_conn *conn) {
    conn->send_close = 1;
+      
+   if (conn->send_msg == NULL) {
+      ev_io_stop(conn->instance->loop, &conn->send_watcher);
+      if (conn->send_close) ws_conn_kill(conn);
+   }
 }
 
 /// Disable timeout on connection
+/**
+ *  Every connection have per default a timeout value, which is set in
+ *  the struct ws_settings. If there is no activity on the connection
+ *  before the timeout run out the connection is killed. This function
+ *  disables the timeout, so connections will stay open. A connection
+ *  will still be killed when the client closes the connection, or
+ *  kill/close is called.
+ *
+ *  \param  conn  The connection to keep open
+ */
 void ws_conn_keep_open(struct ws_conn *conn)
 {
    printf("Stoping timeout watcher [%d]\n", (int)conn);
