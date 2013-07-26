@@ -375,6 +375,7 @@ static void ws_instance_rm_conn(struct ws *instance, struct ws_conn
 }
 
 /// Close a connection, after the remaining data has been sent
+// TODO What if data has been sent ?
 void ws_conn_close(struct ws_conn *conn) {
    conn->send_close = 1;
 }

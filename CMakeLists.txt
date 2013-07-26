@@ -33,6 +33,9 @@ project(HOMEPORT C)
 
 set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG -DHPD_HTTP -Wall")
 
+set(CTEST_MEMORYCHECK_COMMAND "/usr/bin/valgrind")
+include(CTest)
+
 enable_testing()
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})

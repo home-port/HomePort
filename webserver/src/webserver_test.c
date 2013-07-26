@@ -47,6 +47,8 @@ TEST(sendf)
 
    ASSERT_STR_EQUAL(conn.send_msg, "Hello World");
    ASSERT_EQUAL(conn.send_len, 11);
+
+   free(conn.send_msg);
 TSET()
 
 TEST_END()
