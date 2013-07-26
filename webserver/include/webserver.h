@@ -103,6 +103,7 @@ typedef int  (*ws_data_cb)  (struct ws *instance,
 struct ws_settings {
    enum ws_port port; ///< Port number
    int timeout;
+   size_t maxdatasize;
    ws_nodata_cb on_connect;
    ws_data_cb   on_receive;
    ws_nodata_cb on_disconnect;
@@ -119,6 +120,7 @@ struct ws_settings {
 #define WS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
    .timeout = 15, \
+   .maxdatasize = 1024, \
    .on_connect = NULL, \
    .on_receive = NULL, \
    .on_disconnect = NULL, \

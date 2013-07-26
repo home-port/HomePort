@@ -46,9 +46,6 @@
 #include <ev.h>
 #include <fcntl.h>
 
-/// The maximum data size we can recieve or send
-#define MAXDATASIZE 1024
-
 /// Instance of a webserver
 struct ws {
    struct ws_settings settings;    ///< Settings
@@ -181,11 +178,12 @@ static void *get_in_addr(struct sockaddr *sa)
 static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revents)
 {
    ssize_t recieved;
-   char buffer[MAXDATASIZE];
    struct ws_conn *conn = watcher->data;
+   size_t maxdatasize = conn->instance->settings.maxdatasize;
+   char buffer[maxdatasize];
 
    printf("recieving data from %s\n", conn->ip);
-   if ((recieved = recv(watcher->fd, buffer, MAXDATASIZE-1, 0)) < 0) {
+   if ((recieved = recv(watcher->fd, buffer, maxdatasize-1, 0)) < 0) {
       if (recieved == -1 && errno == EWOULDBLOCK) {
          fprintf(stderr, "libev callbacked called without data to " \
                          "recieve (conn: %s)", conn->ip);

@@ -96,7 +96,7 @@ struct httpws *httpws_create(struct httpws_settings *settings,
           sizeof(struct httpws_settings));
 
    // Construct settings for webserver
-   struct ws_settings ws_settings;
+   struct ws_settings ws_settings = WS_SETTINGS_DEFAULT;
    ws_settings.port          = settings->port;
    ws_settings.timeout       = settings->timeout;
    ws_settings.on_connect    = on_connect;
