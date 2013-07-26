@@ -101,6 +101,11 @@ struct http_response *http_response_create(
    strcat(res->msg, status_str);
    strcat(res->msg, CRLF);
 
+   // TODO Real persistant connections is not supported, so tell client
+   // that we close connection after response has been sent
+   // TODO Check return value
+   http_response_add_header(res, "Connection", "close");
+
    return res;
 }
 
@@ -111,7 +116,7 @@ int http_response_add_header(struct http_response *res,
    if (!res->msg) return 1;
 
 	char *msg;
-	int msg_len = strlen(res->msg)+strlen(field)+1+strlen(value)+strlen(CRLF)+1;
+	int msg_len = strlen(res->msg)+strlen(field)+2+strlen(value)+strlen(CRLF)+1;
 
 	msg = realloc(res->msg, msg_len*sizeof(char));
 	if (msg == NULL) {
@@ -121,7 +126,7 @@ int http_response_add_header(struct http_response *res,
    res->msg = msg;
 
    strcat(res->msg, field);
-   strcat(res->msg, ":");
+   strcat(res->msg, ": ");
    strcat(res->msg, value);
    strcat(res->msg, CRLF);
    
