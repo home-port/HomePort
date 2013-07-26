@@ -163,20 +163,21 @@ static int basic_get_multithreaded_stress_test(char* url, char* contains)
 	args->assaults = 500;
 
 	while(threads < NTHREADS)
-    {
-        err=pthread_create(&(threadID[threads]), NULL, &get_mt_loop, (void*)args);
-        if(err != 0)
-            printf("\nError creating thread: %i %i %s",threads, err,strerror(err));
-        threads++;
-    }
+   {
+       err=pthread_create(&(threadID[threads]), NULL, &get_mt_loop, (void*)args);
+       if(err != 0)
+           printf("\nError creating thread: %i %i %s",threads, err,strerror(err));
+       threads++;
+   }
 
-    threads = 0;
-    while(threads < NTHREADS)
-    {
-    	pthread_join((threadID[threads]), NULL);
-    	threads++;
-    }
+   threads = 0;
+   while(threads < NTHREADS)
+   {
+   	pthread_join((threadID[threads]), NULL);
+   	threads++;
+   }
 
+   free(args);
 	return multithreaded_results;
 }
 
