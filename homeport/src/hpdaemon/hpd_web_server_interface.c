@@ -123,6 +123,7 @@ static int answer_get(void *data, struct lr_request *req,
    // Check if allowed
    if (!service->get_function) {
       lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
+      lr_request_destroy(req);
       return 1;
    }
 
@@ -139,6 +140,15 @@ static int answer_get(void *data, struct lr_request *req,
    url = lr_request_get_url(req);
    ip = lr_request_get_ip(req);
    Log (HPD_LOG_ONLY_REQUESTS, NULL, ip, http_method_str(method), url, arg);
+
+   // Argument "x=1"
+   if (arg && strcmp(arg, "x=1") == 0) {
+      xmlbuff = extract_service_xml(service);
+      lr_sendf(req, WS_HTTP_200, NULL, xmlbuff);
+      free(xmlbuff);
+      lr_request_destroy(req);
+      return 0;
+   }
 
    // Call callback and send response
    buffer = malloc((MHD_MAX_BUFFER_SIZE+1) * sizeof(char));
