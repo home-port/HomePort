@@ -115,9 +115,10 @@ static int answer_get(void *data, struct lr_request *req,
                       const char *body, size_t len)
 {
    Service *service = data;
-   char *buffer;
+   char *buffer, *xmlbuff;
    const char *arg, *url, *ip;
    enum http_method method;
+   int buf_len;
 
    // Check if allowed
    if (!service->get_function) {
@@ -140,12 +141,19 @@ static int answer_get(void *data, struct lr_request *req,
    Log (HPD_LOG_ONLY_REQUESTS, NULL, ip, http_method_str(method), url, arg);
 
    // Call callback and send response
-   buffer = malloc(MHD_MAX_BUFFER_SIZE * sizeof(char));
-   int buf_len = service->get_function(service, buffer, MHD_MAX_BUFFER_SIZE);
-   lr_sendf(req, WS_HTTP_200, NULL, "%.*s", buf_len, buffer);
-   lr_request_destroy(req);
+   buffer = malloc((MHD_MAX_BUFFER_SIZE+1) * sizeof(char));
+   buf_len = service->get_function(service, buffer, MHD_MAX_BUFFER_SIZE);
+   if (buf_len) {
+      buffer[buf_len] = '\0';
+      xmlbuff = get_xml_value(buffer);
+      lr_sendf(req, WS_HTTP_200, NULL, xmlbuff);
+      free(xmlbuff);
+   } else {
+      lr_sendf(req, WS_HTTP_500, NULL, "Internal Server Error");
+   }
    free(buffer);
 
+   lr_request_destroy(req);
    return 0;
 }
 #endif
