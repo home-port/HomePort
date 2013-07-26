@@ -108,6 +108,7 @@ static char* simple_get_request(char* url)
 			return "";
 		}
 
+      curl_slist_free_all(chunk);
 		curl_easy_cleanup(handle);
 		return userdata;
 	}
