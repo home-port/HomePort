@@ -94,7 +94,8 @@ destroy_HPD_web_server_struct( HPD_web_server_struct* to_destroy )
 #endif
 
 #if HPD_HTTP
-static int answer_get_devices(void *data, struct lr_request *req,
+static int answer_get_devices(void *srv_data, void **req_data,
+                              struct lr_request *req,
                               const char *body, size_t len)
 {
    char *xmlbuff = get_xml_device_list();
@@ -110,7 +111,8 @@ static int answer_get_devices(void *data, struct lr_request *req,
 #endif
 
 #if HPD_HTTP
-static int answer_get_event_socket(void *data, struct lr_request *req,
+static int answer_get_event_socket(void *srv_data, void **req_data,
+                                   struct lr_request *req,
                                    const char *body, size_t len)
 {
    // TODO THIS !!!
@@ -118,7 +120,8 @@ static int answer_get_event_socket(void *data, struct lr_request *req,
 #endif
 
 #if HPD_HTTP
-static int answer_post_events(void *data, struct lr_request *req,
+static int answer_post_events(void *srv_data, void **req_data,
+                              struct lr_request *req,
                               const char *body, size_t len)
 {
    int rc;
@@ -153,10 +156,11 @@ static int answer_post_events(void *data, struct lr_request *req,
 
 #if HPD_HTTP
 // TODO Do I need to add more to this (like logging, etc.)
-static int answer_get(void *data, struct lr_request *req,
+static int answer_get(void *srv_data, void **req_data,
+                      struct lr_request *req,
                       const char *body, size_t len)
 {
-   Service *service = data;
+   Service *service = srv_data;
    char *buffer, *xmlbuff;
    const char *arg, *url, *ip;
    enum http_method method;
@@ -209,10 +213,11 @@ static int answer_get(void *data, struct lr_request *req,
 
 #if HPD_HTTP
 // TODO Do I need to add more to this (like logging, etc.)
-static int answer_put(void *data, struct lr_request *req,
+static int answer_put(void *srv_data, void **req_data,
+                      struct lr_request *req,
                       const char *body, size_t len)
 {
-   Service *service = data;
+   Service *service = srv_data;
    char *new_put;
    size_t new_len;
 

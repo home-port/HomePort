@@ -40,7 +40,9 @@
 // libREST instance
 static struct lr *rest = NULL;
 
-int testCB(void *data, struct lr_request *lr, const char* url, size_t url_len)
+int testCB(void *srv_data, void **req_data,
+           struct lr_request *lr,
+           const char* url, size_t url_len)
 {
    // TODO This is not a good example
 	printf("CB called!!!\n");

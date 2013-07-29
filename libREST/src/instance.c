@@ -56,6 +56,7 @@ struct lr_request {
    struct lr_service *service;
    struct http_request *req;
    struct http_response *res;
+   void *data;
 };
 
 static void method_not_allowed(struct http_request *req)
@@ -138,6 +139,7 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req,
   lrreq->service = service;
   lrreq->req = req;
   lrreq->res = NULL;
+  lrreq->data = NULL;
   *req_data = lrreq;
 
   return 0;
@@ -153,16 +155,16 @@ static int on_body(struct httpws *ins, struct http_request *req,
   switch(http_request_get_method(req))
   {
     case HTTP_GET:
-      return service->on_get(service->srv_data, lrreq, chunk, len);
+      return service->on_get(service->srv_data, &lrreq->data, lrreq, chunk, len);
 
     case HTTP_DELETE:
-      return service->on_delete(service->srv_data, lrreq, chunk, len);
+      return service->on_delete(service->srv_data, &lrreq->data, lrreq, chunk, len);
 
     case HTTP_POST:
-      return service->on_post(service->srv_data, lrreq, chunk, len);
+      return service->on_post(service->srv_data, &lrreq->data, lrreq, chunk, len);
 
     case HTTP_PUT:
-      return service->on_put(service->srv_data, lrreq, chunk, len);
+      return service->on_put(service->srv_data, &lrreq->data, lrreq, chunk, len);
 
     default:
       return 1;

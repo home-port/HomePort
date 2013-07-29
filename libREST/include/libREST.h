@@ -53,9 +53,11 @@ struct lr_settings {
 	.timeout = 15 }
 
 // Callbacks
-typedef int (*lr_data_cb)(void *srv_data, struct lr_request *req,
+typedef int (*lr_data_cb)(void *srv_data, void **req_data,
+                          struct lr_request *req,
                           const char* body, size_t len);
-typedef int (*lr_nodata_cb)(void *srv_data, struct lr_request *req);
+typedef int (*lr_nodata_cb)(void *srv_data, void **req_data,
+                            struct lr_request *req);
 
 // libREST instance functions
 struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop);

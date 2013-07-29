@@ -195,7 +195,8 @@ static void exit_cb(EV_P_ ev_async *watcher, int revents)
    ev_break(loop, EVBREAK_ALL);
 }
 
-static int get_cb(void *data, struct lr_request *req, const char *body, size_t len)
+static int get_cb(void *srv_data, void **req_data,
+                  struct lr_request *req, const char *body, size_t len)
 {
    if (body == NULL) {
       lr_sendf(req, WS_HTTP_200, NULL, "GET!");
@@ -203,7 +204,8 @@ static int get_cb(void *data, struct lr_request *req, const char *body, size_t l
    return 0;
 }
 
-static int post_cb(void *data, struct lr_request *req, const char *body, size_t len)
+static int post_cb(void *srv_data, void **req_data,
+                   struct lr_request *req, const char *body, size_t len)
 {
    if (body == NULL) {
       lr_sendf(req, WS_HTTP_200, NULL, "POST!");
@@ -211,7 +213,8 @@ static int post_cb(void *data, struct lr_request *req, const char *body, size_t 
    return 0;
 }
 
-static int put_cb(void *data, struct lr_request *req, const char *body, size_t len)
+static int put_cb(void *srv_data, void **req_data,
+                  struct lr_request *req, const char *body, size_t len)
 {
    if (body == NULL) {
       lr_sendf(req, WS_HTTP_200, NULL, "PUT!");
@@ -219,7 +222,8 @@ static int put_cb(void *data, struct lr_request *req, const char *body, size_t l
    return 0;
 }
 
-static int delete_cb(void *data, struct lr_request *req, const char *body, size_t len)
+static int delete_cb(void *srv_data, void **req_data,
+                     struct lr_request *req, const char *body, size_t len)
 {
    if (body == NULL) {
       lr_sendf(req, WS_HTTP_200, NULL, "DELETE!");
