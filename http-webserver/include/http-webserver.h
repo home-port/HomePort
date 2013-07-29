@@ -67,6 +67,7 @@ struct httpws_settings {
    httpws_nodata_cb on_req_hdr_cmpl;
    httpws_data_cb   on_req_body;
    httpws_nodata_cb on_req_cmpl;
+   httpws_nodata_cb on_req_destroy;
 };
 #define HTTPWS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
@@ -80,6 +81,7 @@ struct httpws_settings {
    .on_req_hdr_value = NULL, \
    .on_req_hdr_cmpl = NULL, \
    .on_req_body = NULL, \
+   .on_req_destroy = NULL, \
    .on_req_cmpl = NULL }
 
 // Webserver functions

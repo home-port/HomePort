@@ -569,15 +569,22 @@ struct http_request *http_request_create(
  */
 void http_request_destroy(struct http_request *req)
 {
-   if(req){
-      up_destroy(req->url_parser);
-      lm_destroy(req->arguments);
-      lm_destroy(req->headers);
-      lm_destroy(req->cookies);
-      hp_destroy(req->header_parser);
-      free(req->url);
-      free(req);
-   }
+   if (!req) return;
+
+   // Call callback
+   struct httpws_settings *settings = req->settings;
+   httpws_nodata_cb destroy_cb = settings->on_req_destroy;
+   if (destroy_cb)
+      destroy_cb(req->webserver, req, settings->ws_ctx, &req->data);
+
+   // Free request
+   up_destroy(req->url_parser);
+   lm_destroy(req->arguments);
+   lm_destroy(req->headers);
+   lm_destroy(req->cookies);
+   hp_destroy(req->header_parser);
+   free(req->url);
+   free(req);
 }
 
 /// Parse a new chunk of the message.

@@ -44,11 +44,12 @@ struct lr {
 };
 
 struct lr_service {
-   lr_cb on_get;
-   lr_cb on_post;
-   lr_cb on_put;
-   lr_cb on_delete;
-   void *data;
+   lr_data_cb on_get;
+   lr_data_cb on_post;
+   lr_data_cb on_put;
+   lr_data_cb on_delete;
+   lr_nodata_cb on_destroy;
+   void *srv_data;
 };
 
 struct lr_request {
@@ -152,16 +153,16 @@ static int on_body(struct httpws *ins, struct http_request *req,
   switch(http_request_get_method(req))
   {
     case HTTP_GET:
-      return service->on_get(service->data, lrreq, chunk, len);
+      return service->on_get(service->srv_data, lrreq, chunk, len);
 
     case HTTP_DELETE:
-      return service->on_delete(service->data, lrreq, chunk, len);
+      return service->on_delete(service->srv_data, lrreq, chunk, len);
 
     case HTTP_POST:
-      return service->on_post(service->data, lrreq, chunk, len);
+      return service->on_post(service->srv_data, lrreq, chunk, len);
 
     case HTTP_PUT:
-      return service->on_put(service->data, lrreq, chunk, len);
+      return service->on_put(service->srv_data, lrreq, chunk, len);
 
     default:
       return 1;
@@ -226,11 +227,12 @@ void lr_stop(struct lr *ins)
 
 int lr_register_service(struct lr *ins,
                          char *url,
-                         lr_cb on_get,
-                         lr_cb on_post,
-                         lr_cb on_put,
-                         lr_cb on_delete,
-                         void *data)
+                         lr_data_cb on_get,
+                         lr_data_cb on_post,
+                         lr_data_cb on_put,
+                         lr_data_cb on_delete,
+                         lr_nodata_cb on_destroy,
+                         void *srv_data)
 {
    struct lr_service *service = malloc(sizeof(struct lr_service));
 
@@ -243,7 +245,8 @@ int lr_register_service(struct lr *ins,
    service->on_post = on_post;
    service->on_put = on_put;
    service->on_delete = on_delete;
-   service->data = data;
+   service->on_destroy = on_destroy;
+   service->srv_data = srv_data;
 
    struct trie_iter* iter = trie_insert(ins->trie, url, service);
 
@@ -257,9 +260,9 @@ int lr_register_service(struct lr *ins,
 void *lr_unregister_service(struct lr *ins, char *url)
 {
    struct lr_service *service  = trie_remove(ins->trie, url);
-   void *data = service->data;
+   void *srv_data = service->srv_data;
    free(service);
-   return data;
+   return srv_data;
 }
 
 void *lr_lookup_service(struct lr *ins, char *url)

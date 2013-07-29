@@ -252,10 +252,11 @@ static void *webserver_thread(void *arg)
 
    // Create webserver
    ws = lr_create(&settings, loop);
-   lr_register_service(ws, "/device", get_cb, NULL, NULL, NULL, NULL);
+   lr_register_service(ws, "/device", get_cb, NULL, NULL, NULL, NULL,
+         NULL);
    lr_register_service(ws, "/devices",
                        get_cb, post_cb, put_cb, delete_cb,
-                       NULL);
+                       NULL, NULL);
    lr_start(ws);
 
    // Start the event loop and webserver

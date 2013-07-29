@@ -53,7 +53,9 @@ struct lr_settings {
 	.timeout = 15 }
 
 // Callbacks
-typedef int (*lr_cb)(void *data, struct lr_request *req, const char* body, size_t len);
+typedef int (*lr_data_cb)(void *srv_data, struct lr_request *req,
+                          const char* body, size_t len);
+typedef int (*lr_nodata_cb)(void *srv_data, struct lr_request *req);
 
 // libREST instance functions
 struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop);
@@ -62,14 +64,16 @@ void lr_destroy(struct lr *ins);
 int lr_start(struct lr *ins);
 void lr_stop(struct lr *ins);
 
-// Registers a new service. Returns 1 if the url is already registered or not enough memory
+// Registers a new service. Returns 1 if the url is already registered
+// or not enough memory
 int lr_register_service(struct lr *ins,
                          char *url,
-                         lr_cb on_get,
-                         lr_cb on_post,
-                         lr_cb on_put,
-                         lr_cb on_delete,
-                         void *data);
+                         lr_data_cb on_get,
+                         lr_data_cb on_post,
+                         lr_data_cb on_put,
+                         lr_data_cb on_delete,
+                         lr_nodata_cb on_destroy,
+                         void *srv_data);
 
 // Unregister service. Returns the data stored in the service
 void *lr_unregister_service(struct lr *ins, char *url);

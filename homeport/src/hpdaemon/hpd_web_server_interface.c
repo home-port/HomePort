@@ -131,10 +131,11 @@ static int answer_post_events(void *data, struct lr_request *req,
    rc = lr_register_service(unsecure_web_server,
                             socket->url,
                             answer_get_event_socket, NULL, NULL, NULL,
-                            socket);
+                            NULL, socket);
    if (rc) {
       printf("Failed to register new event url\n");
       lr_sendf(req, WS_HTTP_500, NULL, "Internal server error");
+      return 0;
    }
 
    // TODO THIS !
@@ -291,11 +292,11 @@ start_server(char* hostname, char *domain_name, struct ev_loop *loop)
    rc = lr_register_service(unsecure_web_server,
                             "/devices",
                             answer_get_devices, NULL, NULL, NULL,
-                            NULL);
+                            NULL, NULL);
    rc = lr_register_service(unsecure_web_server,
                             "/events",
                             NULL, answer_post_events, NULL, NULL,
-                            NULL);
+                            NULL, NULL);
    if (rc) {
       printf("Failed to register non secure service\n");
 		return HPD_E_MHD_ERROR;
@@ -390,7 +391,7 @@ register_service( Service *service_to_register )
 		rc = lr_register_service(unsecure_web_server,
                                service_to_register->value_url,
                                answer_get, NULL, answer_put, NULL,
-                               service_to_register);
+                               NULL, service_to_register);
 		if(rc) {
          printf("Failed to register non secure service\n");
 			return HPD_E_MHD_ERROR;
