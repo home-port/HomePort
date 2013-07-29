@@ -35,7 +35,6 @@ authors and should not be interpreted as representing official policies, either 
 #define SERVER_SENT_EVENTS_H
 
 #include "hpd_web_server_interface.h"
-#include "hpd_events.h"
 
 #include <time.h>
 #include <stdlib.h>
@@ -44,47 +43,26 @@ authors and should not be interpreted as representing official policies, either 
 #include <errno.h>
 #include <uuid/uuid.h>
 
-#define SUBSCRIBE		 	"yes"
-#define UNSUBSCRIBE		 	"no"
-#define COOKIE_NAME		 	"session"
-#define HPD_DONT_SEND_LOG_EVENTS	0
-#define HPD_SEND_LOG_EVENTS 		1
-#define HPD_IS_SECURE_CONNECTION	2
-#define HPD_IS_UNSECURE_CONNECTION	3
-
-int initiate_global_event_queue();
-
-EventQueue *get_queue(struct MHD_Connection *connection);
-
-char *generate_session_id();
-
-int send_event_of_value_change (Service *service, const char
-      *updated_value, const char *IP);
-
-int subscribe_to_service(struct MHD_Connection *connection, 
-			Service *requested_service, 
-			void** con_cls, 
-			int is_secure_connection);
-
-int set_up_server_sent_event_connection(struct MHD_Connection *connection, 
-					int is_secure_connection);
-
-int free_server_sent_events_ressources();
-
-int subscribe_to_log_events(	struct MHD_Connection *connection, 
-				void** con_cls, 
-				int is_secure_connection);
-
-int send_log_event(char *log_message);
-
-int notify_service_availability(Service* service_to_notify, int availability);
-
-// New interface
+typedef void (*send_cb)(void *req, const char *fmt, ...);
 
 struct event_socket {
    char *url;
+   void *req;
+   send_cb on_send;
+   struct event_socket *next;
+   struct event_socket *prev;
 };
 
-struct event_socket *subscribe_to_events(const char *body, size_t len);
+void destroy_socket(struct event_socket *socket);
+struct event_socket *subscribe_to_events(const char *body);
+
+void open_event_socket(struct event_socket *socket,
+                       void *req, send_cb on_send);
+void close_event_socket(struct event_socket *socket);
+
+int notify_service_availability(Service* service_to_notify, int availability);
+int send_event_of_value_change (Service *service, const char
+      *updated_value, const char *IP);
+int send_log_event(char *log_message);
 
 #endif

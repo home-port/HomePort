@@ -32,6 +32,9 @@ authors and should not be interpreted as representing official policies, either 
 
 #include "hpd_web_server_interface.h"
 #include "hpd_error.h"
+#include "hpd_configure.h"
+
+#include <stdarg.h>
 
 #if HPD_HTTP
 struct lr *unsecure_web_server;
@@ -93,6 +96,24 @@ destroy_HPD_web_server_struct( HPD_web_server_struct* to_destroy )
 }
 #endif
 
+static int req_destroy_str(void *srv_data, void **req_data,
+                           struct lr_request *req)
+{
+   free(*req_data);
+   return 0;
+}
+
+static int req_destroy_socket(void *srv_data, void **req_data,
+                              struct lr_request *req)
+{
+   lr_send_stop(req);
+   // TODO For now we just close socket on connection lost
+   const char *url = lr_request_get_url(req); 
+   void *socket = lr_unregister_service(unsecure_web_server, url);
+   destroy_socket(socket);
+   return 0;
+}
+
 #if HPD_HTTP
 static int answer_get_devices(void *srv_data, void **req_data,
                               struct lr_request *req,
@@ -110,12 +131,22 @@ static int answer_get_devices(void *srv_data, void **req_data,
 }
 #endif
 
+void send_event(void *req, const char *fmt, ...)
+{
+   va_list arg;
+   va_start(arg, fmt);
+   lr_send_vchunkf(req, fmt, arg);
+   va_end(arg);
+}
+
 #if HPD_HTTP
 static int answer_get_event_socket(void *srv_data, void **req_data,
                                    struct lr_request *req,
                                    const char *body, size_t len)
 {
-   // TODO THIS !!!
+   lr_send_start(req, WS_HTTP_200, NULL);
+   open_event_socket(srv_data, req, send_event);
+   return 0;
 }
 #endif
 
@@ -126,30 +157,46 @@ static int answer_post_events(void *srv_data, void **req_data,
 {
    int rc;
    struct event_socket *socket;
+   char *str;
+   char *req_str = *req_data;
+
+   // Recieve data
+   if (body) {
+      if (*req_data) len += strlen(req_str);
+      str = realloc(*req_data, (len+1)*sizeof(char));
+      if (!str) {
+         printf("Failed to allocate memory\n");
+         lr_sendf(req, WS_HTTP_500, NULL, "Internal server error");
+         return 0;
+      }
+      strncat(str, body, len);
+      str[len] = '\0';
+      *req_data = str;
+      return 0;
+   }
    
    // Subscribe to events
-   socket = subscribe_to_events(body, len);
+   socket = subscribe_to_events(*req_data);
 
    // Register new url in libREST
    rc = lr_register_service(unsecure_web_server,
                             socket->url,
                             answer_get_event_socket, NULL, NULL, NULL,
-                            NULL, socket);
+                            req_destroy_socket, socket);
    if (rc) {
       printf("Failed to register new event url\n");
       lr_sendf(req, WS_HTTP_500, NULL, "Internal server error");
       return 0;
    }
-
-   // TODO THIS !
-   //char *xmlbuff = get_xml_device_list();
-   //struct lm *headers = lm_create();
-
-   //lm_insert(headers, "Content-Type", "text/xml");
-   //lr_sendf(req, WS_HTTP_200, headers, xmlbuff);
-
-   //lm_destroy(headers);
-   //free(xmlbuff);
+   
+   // Send respond
+   // TODO Fix body to corrispond with RFC 2616 (holds for all other
+   // bodies too.
+   struct lm *headers = lm_create();
+   lm_insert(headers, "Location", socket->url);
+   lr_sendf(req, WS_HTTP_201, headers, "Created");
+   lm_destroy(headers);
+   
    return 0;
 }
 #endif
@@ -228,7 +275,8 @@ static int answer_put(void *srv_data, void **req_data,
    }
 
    if (body) {
-      new_len = strlen(service->put_value)+len+1;
+      new_len = len+1;
+      if (service->put_value) new_len += strlen(service->put_value);
       new_put = realloc(service->put_value, new_len*sizeof(char));
       if (!new_put) {
          free(service->put_value);
@@ -276,13 +324,6 @@ start_server(char* hostname, char *domain_name, struct ev_loop *loop)
 		return rc;
 	}
 
-	rc = initiate_global_event_queue();
-	if( rc < 0 )
-	{	
-		printf("Failed to initiate Server Sent Event Queue\n");
-		return rc;
-	}
-
    struct lr_settings settings = LR_SETTINGS_DEFAULT;
    settings.port = hpd_daemon->http_port;
 
@@ -301,7 +342,7 @@ start_server(char* hostname, char *domain_name, struct ev_loop *loop)
    rc = lr_register_service(unsecure_web_server,
                             "/events",
                             NULL, answer_post_events, NULL, NULL,
-                            NULL, NULL);
+                            req_destroy_str, NULL);
    if (rc) {
       printf("Failed to register non secure service\n");
 		return HPD_E_MHD_ERROR;
@@ -344,8 +385,6 @@ int
 stop_server()
 {
 	int rc;
-
-	free_server_sent_events_ressources();
 
 #if HPD_HTTP
    lr_stop(unsecure_web_server);

@@ -42,8 +42,6 @@ authors and should not be interpreted as representing official policies, either 
 #include <config.h>
 #endif
 
-#include "hpd_web_server_core.h"
-
 int start_server(char* hostname, char *domain_name, struct ev_loop *loop);
 int stop_server();
 int register_service( Service *service_to_register );

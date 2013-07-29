@@ -37,11 +37,11 @@ add_library(hpd
 #      hpd_avahi_publish_core.c
       hpd_configure.c
       hpd_device_configuration.c
-      hpd_events.c
+#      hpd_events.c
       hpd_log.c
       hpd_server_sent_events.c
       hpd_services.c
-      hpd_web_server_core.c
+#      hpd_web_server_core.c
       hpd_web_server_interface.c
       hpd_xml.c
       )

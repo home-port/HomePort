@@ -59,6 +59,11 @@ struct lr_request {
    void *data;
 };
 
+static void lr_request_destroy(struct lr_request *req)
+{
+   free(req);
+}
+
 static void method_not_allowed(struct http_request *req)
 {
    struct http_response *res = http_response_create(req, WS_HTTP_405);
@@ -73,7 +78,9 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req,
   struct lr *lr_ins = ws_ctx;
   const char *url = http_request_get_url(req);
 
-  if(url == NULL) {
+  printf("Got request for '%s'\n", url);
+
+  if (url == NULL) {
     struct http_response *res = http_response_create(req, WS_HTTP_400);
     http_response_sendf(res, "Malformed URL");
     http_response_destroy(res);
@@ -83,7 +90,8 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req,
 
   struct trie_iter *iter = trie_lookup(lr_ins->trie, url);
 
-  if(iter == NULL) { // URL not registered
+  if (iter == NULL) { // URL not registered
+     fprintf(stderr, "Service on '%s' not found\n", url);
      struct http_response *res = http_response_create(req, WS_HTTP_404);
      // TODO: Find out if we need to add headers
      http_response_sendf(res, "Resource not found"); // TODO: Decide on appropriate body
@@ -176,6 +184,21 @@ static int on_cmpl(struct httpws *ins, struct http_request *req, void* ws_ctx, v
   return on_body(ins, req, ws_ctx, req_data, NULL, 0);
 }
 
+static int on_destroy(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data)
+{
+   int rc = 0;
+   if (*req_data == NULL) return 0;
+   struct lr_request *lrreq = *req_data;
+   struct lr_service *service = lrreq->service;
+
+   if (service->on_destroy != NULL)
+      rc = service->on_destroy(service->srv_data, &lrreq->data, lrreq);
+
+   lr_request_destroy(lrreq);
+
+   return rc;
+}
+
 struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop)
 {
    struct lr *ins = malloc(sizeof(struct lr));
@@ -193,6 +216,7 @@ struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop)
    ws_set.on_req_url_cmpl = on_url_cmpl;
    ws_set.on_req_body = on_body;
    ws_set.on_req_cmpl = on_cmpl;
+   ws_set.on_req_destroy = on_destroy;
 
    ins->webserver = httpws_create(&ws_set, loop);
 
@@ -261,7 +285,8 @@ int lr_register_service(struct lr *ins,
 
 void *lr_unregister_service(struct lr *ins, const char *url)
 {
-   struct lr_service *service  = trie_remove(ins->trie, url);
+   printf("Unregistering service on '%s'\n", url);
+   struct lr_service *service = trie_remove(ins->trie, url);
    void *srv_data = service->srv_data;
    free(service);
    return srv_data;
@@ -276,7 +301,7 @@ void *lr_lookup_service(struct lr *ins, char *url)
 
 void lr_sendf(struct lr_request *req,
               enum httpws_http_status_code status,
-              struct lm *headers, char *fmt, ...)
+              struct lm *headers, const char *fmt, ...)
 {
    va_list arg;
 
@@ -285,11 +310,6 @@ void lr_sendf(struct lr_request *req,
    lr_send_vchunkf(req, fmt, arg);
    lr_send_stop(req);
    va_end(arg);
-}
-
-static void lr_request_destroy(struct lr_request *req)
-{
-   free(req);
 }
 
 static void add_header(void *data,
@@ -327,7 +347,7 @@ int lr_send_add_cookie_simple(struct lr_request *req,
                              NULL, NULL, NULL, NULL, 0,0, NULL);
 }
 
-void lr_send_chunkf(struct lr_request *req, char *fmt, ...)
+void lr_send_chunkf(struct lr_request *req, const char *fmt, ...)
 {
    va_list arg;
    va_start(arg, fmt);
@@ -335,7 +355,7 @@ void lr_send_chunkf(struct lr_request *req, char *fmt, ...)
    va_end(arg);
 }
 
-void lr_send_vchunkf(struct lr_request *req, char *fmt, va_list arg)
+void lr_send_vchunkf(struct lr_request *req, const char *fmt, va_list arg)
 {
    http_response_vsendf(req->res, fmt, arg);
 }
@@ -344,7 +364,6 @@ void lr_send_stop(struct lr_request *req)
 {
    if (req->res)
       http_response_destroy(req->res);
-   lr_request_destroy(req);
 }
 
 enum http_method lr_request_get_method(struct lr_request *req)

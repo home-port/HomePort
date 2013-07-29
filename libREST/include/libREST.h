@@ -96,7 +96,7 @@ const char *lr_request_get_ip(struct lr_request *req);
 // Send response functions
 void lr_sendf(struct lr_request *req,
               enum httpws_http_status_code status,
-              struct lm *headers, char *fmt, ...);
+              struct lm *headers, const char *fmt, ...);
 void lr_send_start(struct lr_request *req,
                    enum httpws_http_status_code status,
                    struct lm *headers);
@@ -108,8 +108,8 @@ int lr_send_add_cookie(struct lr_request *req,
                        const char *domain, const char *path,
                        int secure, int http_only,
                        const char *extension);
-void lr_send_chunkf(struct lr_request *req, char *fmt, ...);
-void lr_send_vchunkf(struct lr_request *req, char *fmt, va_list arg);
+void lr_send_chunkf(struct lr_request *req, const char *fmt, ...);
+void lr_send_vchunkf(struct lr_request *req, const char *fmt, va_list arg);
 void lr_send_stop(struct lr_request *req);
 
 #endif

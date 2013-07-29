@@ -574,8 +574,9 @@ void http_request_destroy(struct http_request *req)
    // Call callback
    struct httpws_settings *settings = req->settings;
    httpws_nodata_cb destroy_cb = settings->on_req_destroy;
-   if (destroy_cb)
+   if (destroy_cb) {
       destroy_cb(req->webserver, req, settings->ws_ctx, &req->data);
+   }
 
    // Free request
    up_destroy(req->url_parser);

@@ -40,6 +40,7 @@
 // http://www.w3.org/Protocols/rfc2616/rfc2616.html
 #define HTTPWS_HTTP_STATUS_CODE_MAP(XX) \
 	XX(200,200 OK) \
+	XX(201,201 Created) \
 	XX(303,303 See Other) \
    XX(400,400 Bad Request) \
 	XX(404,404 Not Found) \
