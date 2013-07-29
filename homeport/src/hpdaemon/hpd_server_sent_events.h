@@ -54,36 +54,12 @@ authors and should not be interpreted as representing official policies, either 
 
 int initiate_global_event_queue();
 
-Event *create_a_copy_of_event(Event *event);
-
-int destroy_event(Event *event);
-
-int link_queue_to_connection(	EventQueue *event_queue, 
-				char *connection_id);
-
-void print_event_queue(EventQueue *event_queue);
-
-int add_event_to_queue(Event *event, EventQueue *queue);
-
-int remove_event_from_queue(Event *event, EventQueue *queue);
-
 EventQueue *get_queue(struct MHD_Connection *connection);
-
-int send_cookied_xml (	struct MHD_Connection *connection, 
-			char *xmlbuff, 
-			EventQueue *event_queue, 
-			int is_secure_connection);
 
 char *generate_session_id();
 
-char *generate_connection_id();
-
-void *consume_global_queue();
-
 int send_event_of_value_change (Service *service, const char
       *updated_value, const char *IP);
-
-EventQueue *get_event_queue_with_connection_id(char *connection_id);
 
 int subscribe_to_service(struct MHD_Connection *connection, 
 			Service *requested_service, 
@@ -102,8 +78,6 @@ int subscribe_to_log_events(	struct MHD_Connection *connection,
 int send_log_event(char *log_message);
 
 int notify_service_availability(Service* service_to_notify, int availability);
-
-int service_timed_out(Service* service);
 
 
 
