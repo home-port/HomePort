@@ -684,6 +684,10 @@ notify_service_availability(Service* service_to_notify, int availability)
 	return HPD_E_SUCCESS;	
 }
 
-
+struct event_socket *subscribe_to_events(const char *body, size_t len)
+{
+   // TODO THIS
+   return NULL;
+}
 
 

@@ -42,6 +42,7 @@ static struct lr *rest = NULL;
 
 int testCB(void *data, struct lr_request *lr, const char* url, size_t url_len)
 {
+   // TODO This is not a good example
 	printf("CB called!!!\n");
 	return 0;
 }

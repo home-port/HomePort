@@ -79,6 +79,12 @@ int send_log_event(char *log_message);
 
 int notify_service_availability(Service* service_to_notify, int availability);
 
+// New interface
 
+struct event_socket {
+   char *url;
+};
+
+struct event_socket *subscribe_to_events(const char *body, size_t len);
 
 #endif

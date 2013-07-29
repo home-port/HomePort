@@ -282,7 +282,7 @@ void lr_sendf(struct lr_request *req,
    va_end(arg);
 }
 
-void lr_request_destroy(struct lr_request *req)
+static void lr_request_destroy(struct lr_request *req)
 {
    free(req);
 }
@@ -337,7 +337,9 @@ void lr_send_vchunkf(struct lr_request *req, char *fmt, va_list arg)
 
 void lr_send_stop(struct lr_request *req)
 {
-   http_response_destroy(req->res);
+   if (req->res)
+      http_response_destroy(req->res);
+   lr_request_destroy(req);
 }
 
 enum http_method lr_request_get_method(struct lr_request *req)

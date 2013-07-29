@@ -77,7 +77,6 @@ void *lr_unregister_service(struct lr *ins, char *url);
 void *lr_lookup_service(struct lr *ins, char *url);
 
 // Request functions
-void lr_request_destroy(struct lr_request *req);
 enum http_method lr_request_get_method(struct lr_request *req);
 const char *lr_request_get_url(struct lr_request *req);
 struct lm *lr_request_get_headers(struct lr_request *req);

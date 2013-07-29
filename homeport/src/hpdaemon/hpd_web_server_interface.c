@@ -110,6 +110,47 @@ static int answer_get_devices(void *data, struct lr_request *req,
 #endif
 
 #if HPD_HTTP
+static int answer_get_event_socket(void *data, struct lr_request *req,
+                                   const char *body, size_t len)
+{
+   // TODO THIS !!!
+}
+#endif
+
+#if HPD_HTTP
+static int answer_post_events(void *data, struct lr_request *req,
+                              const char *body, size_t len)
+{
+   int rc;
+   struct event_socket *socket;
+   
+   // Subscribe to events
+   socket = subscribe_to_events(body, len);
+
+   // Register new url in libREST
+   rc = lr_register_service(unsecure_web_server,
+                            socket->url,
+                            answer_get_event_socket, NULL, NULL, NULL,
+                            socket);
+   if (rc) {
+      printf("Failed to register new event url\n");
+      lr_sendf(req, WS_HTTP_500, NULL, "Internal server error");
+   }
+
+   // TODO THIS !
+   //char *xmlbuff = get_xml_device_list();
+   //struct lm *headers = lm_create();
+
+   //lm_insert(headers, "Content-Type", "text/xml");
+   //lr_sendf(req, WS_HTTP_200, headers, xmlbuff);
+
+   //lm_destroy(headers);
+   //free(xmlbuff);
+   return 0;
+}
+#endif
+
+#if HPD_HTTP
 // TODO Do I need to add more to this (like logging, etc.)
 static int answer_get(void *data, struct lr_request *req,
                       const char *body, size_t len)
@@ -123,7 +164,6 @@ static int answer_get(void *data, struct lr_request *req,
    // Check if allowed
    if (!service->get_function) {
       lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
-      lr_request_destroy(req);
       return 1;
    }
 
@@ -146,7 +186,6 @@ static int answer_get(void *data, struct lr_request *req,
       xmlbuff = extract_service_xml(service);
       lr_sendf(req, WS_HTTP_200, NULL, xmlbuff);
       free(xmlbuff);
-      lr_request_destroy(req);
       return 0;
    }
 
@@ -163,7 +202,6 @@ static int answer_get(void *data, struct lr_request *req,
    }
    free(buffer);
 
-   lr_request_destroy(req);
    return 0;
 }
 #endif
@@ -180,7 +218,6 @@ static int answer_put(void *data, struct lr_request *req,
    // Check if allowed
    if (!service->get_function) {
       lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
-      lr_request_destroy(req);
       return 1;
    }
 
@@ -191,7 +228,6 @@ static int answer_put(void *data, struct lr_request *req,
          free(service->put_value);
          service->put_value = NULL;
          lr_sendf(req, WS_HTTP_500, NULL, "500 Internal Server Error");
-         lr_request_destroy(req);
          return 1;
       }
 
@@ -206,7 +242,6 @@ static int answer_put(void *data, struct lr_request *req,
       free(service->put_value);
       service->put_value = NULL;
       lr_sendf(req, WS_HTTP_200, NULL, "%.*s", buf_len, buffer);
-      lr_request_destroy(req);
       free(buffer);
    }
 
@@ -256,6 +291,10 @@ start_server(char* hostname, char *domain_name, struct ev_loop *loop)
    rc = lr_register_service(unsecure_web_server,
                             "/devices",
                             answer_get_devices, NULL, NULL, NULL,
+                            NULL);
+   rc = lr_register_service(unsecure_web_server,
+                            "/events",
+                            NULL, answer_post_events, NULL, NULL,
                             NULL);
    if (rc) {
       printf("Failed to register non secure service\n");
