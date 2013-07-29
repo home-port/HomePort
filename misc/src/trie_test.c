@@ -277,4 +277,33 @@ TEST(multi_insert_4)
    trie_destroy(root, NULL);
 TSET()
 
+TEST(events)
+   struct trie_iter *iter;
+   char *key;
+   char *val = "Value";
+   char *value;
+   struct trie *trie = trie_create();
+
+   key = "/events";
+   iter = trie_insert(trie, key, val);
+   ASSERT_STR_EQUAL(trie_key(iter), key);
+   ASSERT_STR_EQUAL(trie_value(iter), val);
+
+   key = "/events/1";
+   iter = trie_insert(trie, key, val);
+   ASSERT_STR_EQUAL(trie_key(iter), &key[7]);
+   ASSERT_STR_EQUAL(trie_value(iter), val);
+
+   value = trie_remove(trie, key);
+   ASSERT_STR_EQUAL(value, val);
+   iter = trie_lookup(trie, key);
+   ASSERT_EQUAL(iter, NULL);
+   
+   key = "/events";
+   iter = trie_lookup(trie, key);
+   ASSERT_STR_EQUAL(trie_key(iter), key);
+
+   trie_destroy(trie, NULL);
+TSET()
+
 TEST_END()

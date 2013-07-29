@@ -276,6 +276,7 @@ static void remove_iter(struct trie_iter *iter)
 {
    // TODO Possibilities to combine nodes are not considered
    if (iter == NULL) return;
+   if (iter->value != NULL) return;
    if (iter->child != NULL) return;
 
    if (iter->parent == NULL) {
