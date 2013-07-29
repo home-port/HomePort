@@ -259,7 +259,7 @@ int lr_register_service(struct lr *ins,
    return 0;
 }
 
-void *lr_unregister_service(struct lr *ins, char *url)
+void *lr_unregister_service(struct lr *ins, const char *url)
 {
    struct lr_service *service  = trie_remove(ins->trie, url);
    void *srv_data = service->srv_data;

@@ -78,7 +78,7 @@ int lr_register_service(struct lr *ins,
                          void *srv_data);
 
 // Unregister service. Returns the data stored in the service
-void *lr_unregister_service(struct lr *ins, char *url);
+void *lr_unregister_service(struct lr *ins, const char *url);
 
 void *lr_lookup_service(struct lr *ins, char *url);
 
