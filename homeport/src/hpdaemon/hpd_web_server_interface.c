@@ -36,65 +36,7 @@ authors and should not be interpreted as representing official policies, either 
 
 #include <stdarg.h>
 
-#if HPD_HTTP
 struct lr *unsecure_web_server;
-#endif
-
-#if HPD_HTTPS
-HPD_web_server_struct *secure_web_server;
-#endif
-
-/**
- * Creates a HPD_web_server_struct and allocate memory for it, should not be used anywhere but 
- * in this file (static).
- *
- * @param is_secure HPD_IS_SECURE_CONNECTION or HPD_IS_UNSECURE_CONNECTION
- *
- * @return A newly allocated HPD_web_server_struct pointer or NULL if an error occured
- */
-#if HPD_HTTPS
-static HPD_web_server_struct* 
-create_HPD_web_server_struct( int is_secure )
-{
-
-	HPD_web_server_struct *new_HPD_web_server_struct = malloc( sizeof( HPD_web_server_struct ) );
-	new_HPD_web_server_struct->service_head = NULL;
-	new_HPD_web_server_struct->is_configuring = HPD_NO;
-	new_HPD_web_server_struct->is_secure = is_secure;
-	
-	if( pthread_mutex_init( &new_HPD_web_server_struct->configure_mutex, NULL ) )
-	{
-		printf("Error while initializing configure mutex\n");
-		free( new_HPD_web_server_struct );
-		return NULL;
-	}
-	
-	return new_HPD_web_server_struct;
-}
-#endif
-
-/**
- * Destroy a HPD_web_server_struct and deallocate its memory, should not be used anywhere but 
- * in this file (static).
- *
- * @param to_destroy The HPD_web_server_struct to destroy
- *
- * @return HPD_YES if successful or HPD_E_NULL_POINTER if the pointer given is NULL
- */
-#if HPD_HTTPS
-static int 
-destroy_HPD_web_server_struct( HPD_web_server_struct* to_destroy )
-{
-	if( !to_destroy )
-		return HPD_E_NULL_POINTER;
-
-	pthread_mutex_destroy( &to_destroy->configure_mutex );
-	
-	free( to_destroy );
-	
-	return HPD_YES;
-}
-#endif
 
 static int req_destroy_str(void *srv_data, void **req_data,
                            struct lr_request *req)
@@ -114,7 +56,6 @@ static int req_destroy_socket(void *srv_data, void **req_data,
    return 0;
 }
 
-#if HPD_HTTP
 static int answer_get_devices(void *srv_data, void **req_data,
                               struct lr_request *req,
                               const char *body, size_t len)
@@ -129,17 +70,17 @@ static int answer_get_devices(void *srv_data, void **req_data,
    free(xmlbuff);
    return 0;
 }
-#endif
 
 void send_event(void *req, const char *fmt, ...)
 {
+   char *ip = lr_request_get_ip(req);
+   printf("Send value change: %s\n", ip);
    va_list arg;
    va_start(arg, fmt);
    lr_send_vchunkf(req, fmt, arg);
    va_end(arg);
 }
 
-#if HPD_HTTP
 static int answer_get_event_socket(void *srv_data, void **req_data,
                                    struct lr_request *req,
                                    const char *body, size_t len)
@@ -148,9 +89,7 @@ static int answer_get_event_socket(void *srv_data, void **req_data,
    open_event_socket(srv_data, req, send_event);
    return 0;
 }
-#endif
 
-#if HPD_HTTP
 static int answer_post_events(void *srv_data, void **req_data,
                               struct lr_request *req,
                               const char *body, size_t len)
@@ -199,9 +138,7 @@ static int answer_post_events(void *srv_data, void **req_data,
    
    return 0;
 }
-#endif
 
-#if HPD_HTTP
 // TODO Do I need to add more to this (like logging, etc.)
 static int answer_get(void *srv_data, void **req_data,
                       struct lr_request *req,
@@ -256,9 +193,7 @@ static int answer_get(void *srv_data, void **req_data,
 
    return 0;
 }
-#endif
 
-#if HPD_HTTP
 // TODO Do I need to add more to this (like logging, etc.)
 static int answer_put(void *srv_data, void **req_data,
                       struct lr_request *req,
@@ -285,23 +220,46 @@ static int answer_put(void *srv_data, void **req_data,
          return 1;
       }
 
-      strncat(new_put, body, len);
+      strncpy(new_put, body, len);
       new_put[new_len-1] = '\0';
       service->put_value = new_put;
    } else {
-      char *buffer = malloc(MHD_MAX_BUFFER_SIZE * sizeof(char));
-      int buf_len = service->put_function(service,
-                                          buffer, MHD_MAX_BUFFER_SIZE,
-                                          service->put_value);
+      // Get value from XML
+      char *value = get_value_from_xml_value(service->put_value);
       free(service->put_value);
       service->put_value = NULL;
-      lr_sendf(req, WS_HTTP_200, NULL, "%.*s", buf_len, buffer);
+      if (!value) {
+         lr_sendf(req, WS_HTTP_400, NULL, "400 Bad Request");
+         return 1;
+      }
+
+      // Call callback
+      char *buffer = malloc((MHD_MAX_BUFFER_SIZE+1) * sizeof(char));
+      int buf_len = service->put_function(service,
+                                          buffer, MHD_MAX_BUFFER_SIZE,
+                                          value);
+      free(value);
+
+      // Send response
+      if (buf_len == 0) {
+         lr_sendf(req, WS_HTTP_500, NULL, "500 Internal Server Error");
+         free(buffer);
+         return 1;
+      } else {
+         // Send value change event
+         const char *IP = lr_request_get_ip(req);
+         buffer[buf_len] = '\0';
+         send_event_of_value_change(service, buffer, IP);
+         
+         // Reply to request
+         const char *xmlbuff = get_xml_value(buffer);
+         lr_sendf(req, WS_HTTP_200, NULL, xmlbuff);
+      }
       free(buffer);
    }
 
    return 0;
 }
-#endif
 
 /**
  * Start the MHD web server(s) and the AVAHI client or server
@@ -327,7 +285,6 @@ start_server(char* hostname, char *domain_name, struct ev_loop *loop)
    struct lr_settings settings = LR_SETTINGS_DEFAULT;
    settings.port = hpd_daemon->http_port;
 
-#if HPD_HTTP
 	unsecure_web_server = lr_create(&settings, loop);
    if (!unsecure_web_server)
       return HPD_E_MHD_ERROR;
@@ -349,18 +306,6 @@ start_server(char* hostname, char *domain_name, struct ev_loop *loop)
    }
 
    rc = HPD_E_SUCCESS;
-#endif
-
-#if HPD_HTTPS
-	secure_web_server = create_HPD_web_server_struct( HPD_IS_SECURE_CONNECTION );
-
-	rc = start_secure_web_server( secure_web_server );
-	if( rc < 0 )
-	{	
-		printf("Failed to start HTTPS server\n");
-		return rc;
-	}
-#endif
 
 #if USE_AVAHI
 	rc = avahi_start (hostname, domain_name);
@@ -372,8 +317,6 @@ start_server(char* hostname, char *domain_name, struct ev_loop *loop)
 #endif
 
 	return rc;
-
-
 }
 
 /**
@@ -390,13 +333,6 @@ stop_server()
    lr_stop(unsecure_web_server);
    lr_destroy(unsecure_web_server);
 	rc = HPD_E_SUCCESS;
-#endif
-
-#if HPD_HTTPS
-	rc = stop_web_server( secure_web_server );
-	if( rc < HPD_E_SUCCESS )
-		return rc;
-	destroy_HPD_web_server_struct( secure_web_server );
 #endif
 
 	delete_xml(XML_FILE_NAME);
@@ -424,7 +360,6 @@ register_service( Service *service_to_register )
 
 	if( service_to_register->device->secure_device == HPD_NON_SECURE_DEVICE )
 	{
-#if HPD_HTTP
       Service *s = lr_lookup_service(unsecure_web_server, service_to_register->value_url);
 		if (s) {
 			printf("A similar service is already registered in the unsecure server\n");
@@ -440,36 +375,8 @@ register_service( Service *service_to_register )
          printf("Failed to register non secure service\n");
 			return HPD_E_MHD_ERROR;
       }
-#else
-		printf("Trying to register non secure service without HTTP support\n");
-		return HPD_E_NO_HTTP;
-#endif
-	}
-
-	else if( service_to_register->device->secure_device == HPD_SECURE_DEVICE )
-	{
-#if HPD_HTTPS
-		rc = is_service_registered_in_web_server( service_to_register, 
-							  secure_web_server );
-
-		if( rc == 1 )
-		{
-			printf("A similar service is already registered in the unsecure server\n");
-			return HPD_E_SERVICE_ALREADY_REGISTER;
-		}
-
-		printf("Registering secure service\n");
-		rc = register_service_in_web_server ( service_to_register, secure_web_server );
-		if( rc < HPD_E_SUCCESS )
-			return rc;
-#else
-		printf("Trying to register secure service without HTTPS support\n");
-		return HPD_E_NO_HTTPS;
-#endif
-	}
-
-	else 
-		return HPD_E_BAD_PARAMETER;
+	} else
+      return HPD_E_BAD_PARAMETER;
 
 	/* Add to XML */
 	rc = add_service_to_xml ( service_to_register );
@@ -513,7 +420,6 @@ unregister_service( Service *service_to_unregister )
 
 	if( service_to_unregister->device->secure_device == HPD_NON_SECURE_DEVICE )
 	{
-#if HPD_HTTP
       Service *s = lr_lookup_service(unsecure_web_server, service_to_unregister->value_url);
 	   if( !s )
 		   return HPD_E_SERVICE_NOT_REGISTER;
@@ -522,25 +428,6 @@ unregister_service( Service *service_to_unregister )
             service_to_unregister->value_url );
 		if( !s )
 			return HPD_E_MHD_ERROR;
-#else
-		printf("Unregistering non secure service without HTTP feature (Service is not register anyway)\n");
-		return HPD_E_NO_HTTP;
-#endif
-	}
-
-	else if( service_to_unregister->device->secure_device == HPD_SECURE_DEVICE )
-	{
-#if HPD_HTTPS
-	   if( !is_service_registered( service_to_unregister ) )
-		   return HPD_E_SERVICE_NOT_REGISTER;
-
-		rc = unregister_service_in_web_server ( service_to_unregister, secure_web_server );
-		if( rc < HPD_E_SUCCESS )
-			return rc;
-#else
-		printf("Unregistering secure service without HTTPS feature (Service is not register anyway)\n");
-		return HPD_E_NO_HTTPS;
-#endif
 	}
 	else 
 		return HPD_E_BAD_PARAMETER;
@@ -636,21 +523,12 @@ is_service_registered( Service *service )
 	if( service == NULL )
 		return HPD_E_NULL_POINTER;
 
-#if HPD_HTTP
 	if( service->device->secure_device == HPD_NON_SECURE_DEVICE )
 	{
       Service *s = lr_lookup_service(unsecure_web_server, service->value_url);
       if (s) return 1;
       else return 0;
 	}	
-#endif
-
-#if HPD_HTTPS
-	if( service->device->secure_device == HPD_SECURE_DEVICE )
-	{
-		return is_service_registered_in_web_server( service, secure_web_server );
-	}	
-#endif
 
 	return 0;
 }
@@ -673,7 +551,6 @@ get_service( char *device_type, char *device_ID, char *service_type, char *servi
 {
 	Service *service = NULL;
 
-#if HPD_HTTP
    // TODO This is not the best solution (duplicated code), nor the best
    // place to do this
 	char *value_url = malloc(sizeof(char)*( strlen("/") + strlen(service->device->type) + strlen("/") 
@@ -683,15 +560,6 @@ get_service( char *device_type, char *device_ID, char *service_type, char *servi
 	         service->ID );
 	service = lr_lookup_service(unsecure_web_server, value_url);
    free(value_url);
-#endif
-#if HPD_HTTPS
-	if( service == NULL )
-	{
-		service = get_service_from_web_server ( device_type, device_ID, 
-							service_type, service_ID,
-							secure_web_server );
-	}
-#endif
 	return service;
 }
 
@@ -711,7 +579,6 @@ get_device( char *device_type, char *device_ID)
 	Device *device = NULL;
 	Service *service = NULL;
 
-#if HPD_HTTP
    // TODO This is not the best solution (duplicated code), nor the best
    // place to do this
 	char *value_url = malloc(sizeof(char)*( strlen("/") + strlen(service->device->type) + strlen("/") 
@@ -722,12 +589,5 @@ get_device( char *device_type, char *device_ID)
 	service = lr_lookup_service(unsecure_web_server, value_url);
    free(value_url);
 	device = service->device;
-#endif
-#if HPD_HTTPS
-	if( device == NULL )
-	{
-		device = get_device_from_web_server( device_type, device_ID, secure_web_server );
-	}
-#endif
 	return device;
 }

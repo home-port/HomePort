@@ -97,6 +97,7 @@ static int bind_listen(char *port)
    // Get address infos we later use to open socket with
    if ((status = getaddrinfo(NULL, port, &hints, &servinfo)) != 0) {
       fprintf(stderr, "getaddrinfo error: %s\n", gai_strerror(status));
+      freeaddrinfo(servinfo);
       return -1;
    }
 
@@ -136,6 +137,7 @@ static int bind_listen(char *port)
    if (p == NULL) {
       close(sockfd);
       fprintf(stderr, "failed to bind\n");
+      freeaddrinfo(servinfo);
       return -1;
    }
 
@@ -213,10 +215,29 @@ static void conn_send_cb(struct ev_loop *loop, struct ev_io *watcher,
       int revents)
 {
    struct ws_conn *conn = watcher->data;
+   size_t sent;
 
-   printf("sending response to %s\n", conn->ip);
-   if (send(watcher->fd, conn->send_msg, conn->send_len, 0) == -1)
+   sent = send(watcher->fd, conn->send_msg, conn->send_len, 0);
+   if (sent == -1) {
       perror("send");
+   } else if (sent == conn->send_len) {
+      free(conn->send_msg);
+      conn->send_msg = NULL;
+      conn->send_len = 0;
+   } else {
+      conn->send_len -= sent;
+      char *s = malloc(conn->send_len*sizeof(char));
+      if (!s) {
+         fprintf(stderr, "Cannot allocate enough memory\n");
+         free(conn->send_msg);
+         conn->send_msg = NULL;
+         conn->send_len = 0;
+      } else {
+         strcpy(s, &conn->send_msg[sent]);
+         free(conn->send_msg);
+         conn->send_msg = s;
+      }
+   }
 
    ev_io_stop(conn->instance->loop, &conn->send_watcher);
 
@@ -360,6 +381,8 @@ int ws_conn_vsendf(struct ws_conn *conn, const char *fmt, va_list arg)
    // Update length
    conn->send_len += new_len;
 
+   printf("Sending '%.*s'\n", conn->send_len, conn->send_msg);
+
    // Check if the whole string was added
    if (stat < 0) return stat;
    else return 0;
@@ -496,14 +519,17 @@ int ws_start(struct ws *instance)
  */
 void ws_stop(struct ws *instance)
 {
-   struct ll_iter *it;
+   struct ll_iter *it, *next;
 
    // Stop accept watcher
    ev_io_stop(instance->loop, &instance->watcher);
 
    // Kill all connections
-   for (it = ll_head(instance->conns); it != NULL; it = ll_next(it)) {
+   it = ll_head(instance->conns);
+   while (it != NULL) {
+      next = ll_next(it);
       ws_conn_kill(ll_data(it));
+      it = next;
    }
 
    // Close socket

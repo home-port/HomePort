@@ -58,6 +58,7 @@ static struct event_socket *create_socket()
 void destroy_socket(struct event_socket *socket)
 {
    // TODO Is this done ?
+   close_event_socket(socket);
    free(socket->url);
    free(socket);
 }

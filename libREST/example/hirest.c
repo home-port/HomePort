@@ -41,11 +41,17 @@
 static struct lr *rest = NULL;
 
 int testCB(void *srv_data, void **req_data,
-           struct lr_request *lr,
+           struct lr_request *req,
            const char* url, size_t url_len)
 {
    // TODO This is not a good example
 	printf("CB called!!!\n");
+
+   lr_send_start(req, WS_HTTP_500, NULL);
+   lr_send_chunkf(req, "Hello ");
+   lr_send_chunkf(req, "world");
+   lr_send_stop(req);
+
 	return 0;
 }
 
@@ -82,7 +88,7 @@ int main(int argc, char *argv[])
    rest = lr_create(&set, loop);
 
     // register service
-   lr_register_service(rest, "/device/a", NULL, testCB, NULL, NULL,
+   lr_register_service(rest, "/device/a", testCB, NULL, NULL, NULL,
          NULL, NULL);
 
    lr_register_service(rest, "/device/b", NULL, testCB, NULL, NULL,

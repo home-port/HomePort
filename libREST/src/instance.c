@@ -303,6 +303,7 @@ void lr_sendf(struct lr_request *req,
               enum httpws_http_status_code status,
               struct lm *headers, const char *fmt, ...)
 {
+   printf("%d  %s\n", (int)(req), __func__);
    va_list arg;
 
    va_start(arg, fmt);
@@ -324,6 +325,7 @@ void lr_send_start(struct lr_request *req,
                    enum httpws_http_status_code status,
                    struct lm *headers)
 {
+   printf("%d  %s\n", (int)(req), __func__);
    req->res = http_response_create(req->req, status);
    // TODO Consider headers to add
    lm_map(headers, add_header, req->res);
@@ -349,6 +351,7 @@ int lr_send_add_cookie_simple(struct lr_request *req,
 
 void lr_send_chunkf(struct lr_request *req, const char *fmt, ...)
 {
+   printf("%d  %s\n", (int)(req), __func__);
    va_list arg;
    va_start(arg, fmt);
    lr_send_vchunkf(req, fmt, arg);
@@ -357,11 +360,13 @@ void lr_send_chunkf(struct lr_request *req, const char *fmt, ...)
 
 void lr_send_vchunkf(struct lr_request *req, const char *fmt, va_list arg)
 {
+   printf("%d  %s\n", (int)(req), __func__);
    http_response_vsendf(req->res, fmt, arg);
 }
 
 void lr_send_stop(struct lr_request *req)
 {
+   printf("%d  %s\n", (int)(req), __func__);
    if (req->res)
       http_response_destroy(req->res);
 }
