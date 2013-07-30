@@ -136,6 +136,7 @@ void ws_conn_close(struct ws_conn *conn);
 int ws_conn_sendf(struct ws_conn *conn, const char *fmt, ...);
 int ws_conn_vsendf(struct ws_conn *conn, const char *fmt, va_list arg);
 const char *ws_conn_get_ip(struct ws_conn *conn);
+void ws_conn_keep_open(struct ws_conn *conn);
 
 #endif
 

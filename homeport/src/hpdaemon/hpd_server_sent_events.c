@@ -33,14 +33,34 @@ authors and should not be interpreted as representing official policies, either 
 #include 	"hpd_server_sent_events.h"
 #include	"hpd_error.h"
 
+// TODO FIND A BETTER LOCATION FOR THIS
+#define TIMEOUT 15
+
 static struct event_socket *sockets = NULL;
 
-static struct event_socket *create_socket()
+void destroy_socket(struct event_socket *socket)
 {
+   // TODO Is this done ?
+   ev_timer_stop(socket->loop, &socket->timeout_watcher);
+   close_event_socket(socket);
+   free(socket->url);
+   free(socket);
+}
+
+static void timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, int revents)
+{
+   struct event_socket *socket = watcher->data;
+   printf("Socket timeout - closing it\n");
+   unregister_socket(socket);
+   destroy_socket(socket);
+}
+
+struct event_socket *subscribe_to_events(const char *body, struct
+      ev_loop *loop)
+{ 
    struct event_socket *socket = malloc(sizeof(struct event_socket));
    socket->url = NULL;
    socket->req = NULL;
-   socket->on_send = NULL;
    socket->next = NULL;
    socket->prev = NULL;
 
@@ -52,27 +72,21 @@ static struct event_socket *create_socket()
 	uuid_unparse(uuid, &socket->url[8]);
 	uuid_clear(uuid);
    
+   // Add timeout on socket
+   socket->loop = loop;
+   ev_init(&socket->timeout_watcher, timeout_cb);
+   socket->timeout_watcher.repeat = TIMEOUT;
+   ev_timer_again(loop, &socket->timeout_watcher);
+   socket->timeout_watcher.data = socket;
+
    return socket;
 }
 
-void destroy_socket(struct event_socket *socket)
-{
-   // TODO Is this done ?
-   close_event_socket(socket);
-   free(socket->url);
-   free(socket);
-}
-
-struct event_socket *subscribe_to_events(const char *body)
-{
-   return create_socket();
-}
-
 void open_event_socket(struct event_socket *socket,
-                       void *req, send_cb on_send)
+                       void *req)
 {
+   ev_timer_stop(socket->loop, &socket->timeout_watcher);
    socket->req = req;
-   socket->on_send = on_send;
    if (sockets) sockets->prev = socket;
    socket->next = sockets;
    sockets = socket;
@@ -81,7 +95,6 @@ void open_event_socket(struct event_socket *socket,
 void close_event_socket(struct event_socket *socket)
 {
    socket->req = NULL;
-   socket->on_send = NULL;
 
    if (sockets == socket) sockets = socket->next;
    if (socket->next) socket->next->prev = socket->prev;
@@ -109,7 +122,7 @@ notify_service_availability(Service* service_to_notify, int availability)
 		return HPD_E_SERVICE_IS_NULL;
 
    for (s = sockets; s != NULL; s = s->next) {
-      s->on_send(s->req, "event: %s\ndata: %s\ndata: %s\nid: %s\n\n",
+      send_event(s, "event: %s\ndata: %s\ndata: %s\nid: %s\n\n",
             "service_availability",
             (availability == HPD_YES) ? "available" : "unavailable",
             "",
@@ -140,7 +153,7 @@ send_event_of_value_change( Service *service, const char *value , const char *IP
 		return HPD_E_SERVICE_IS_NULL;
 
    for (s = sockets; s != NULL; s = s->next) {
-      s->on_send(s->req, "event: %s\ndata: %s\ndata: %s\nid: %s\n\n",
+      send_event(s, "event: %s\ndata: %s\ndata: %s\nid: %s\n\n",
             "value_change",
             value,
             IP,
@@ -166,7 +179,7 @@ send_log_event( char *log_data)
 		return HPD_E_LOG_DATA_IS_NULL;
 
    for (s = sockets; s != NULL; s = s->next) {
-      s->on_send(s->req, "event: %s\ndata: %s\ndata: %s\nid: %s\n\n",
+      send_event(s, "event: %s\ndata: %s\ndata: %s\nid: %s\n\n",
             "log",
             log_data,
             NULL,

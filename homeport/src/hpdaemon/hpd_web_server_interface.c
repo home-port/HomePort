@@ -45,6 +45,11 @@ static int req_destroy_str(void *srv_data, void **req_data,
    return 0;
 }
 
+void unregister_socket(struct event_socket *s)
+{
+   lr_unregister_service(unsecure_web_server, s->url);
+}
+
 static int req_destroy_socket(void *srv_data, void **req_data,
                               struct lr_request *req)
 {
@@ -71,9 +76,10 @@ static int answer_get_devices(void *srv_data, void **req_data,
    return 0;
 }
 
-void send_event(void *req, const char *fmt, ...)
+void send_event(struct event_socket *s, const char *fmt, ...)
 {
-   char *ip = lr_request_get_ip(req);
+   struct lr_request *req = s->req;
+   const char *ip = lr_request_get_ip(req);
    printf("Send value change: %s\n", ip);
    va_list arg;
    va_start(arg, fmt);
@@ -85,8 +91,9 @@ static int answer_get_event_socket(void *srv_data, void **req_data,
                                    struct lr_request *req,
                                    const char *body, size_t len)
 {
+   lr_request_keep_open(req);
    lr_send_start(req, WS_HTTP_200, NULL);
-   open_event_socket(srv_data, req, send_event);
+   open_event_socket(srv_data, req);
    return 0;
 }
 
@@ -98,6 +105,7 @@ static int answer_post_events(void *srv_data, void **req_data,
    struct event_socket *socket;
    char *str;
    char *req_str = *req_data;
+   struct ev_loop *loop = srv_data;
 
    // Recieve data
    if (body) {
@@ -115,7 +123,7 @@ static int answer_post_events(void *srv_data, void **req_data,
    }
    
    // Subscribe to events
-   socket = subscribe_to_events(*req_data);
+   socket = subscribe_to_events(*req_data, loop);
 
    // Register new url in libREST
    rc = lr_register_service(unsecure_web_server,
@@ -299,7 +307,7 @@ start_server(char* hostname, char *domain_name, struct ev_loop *loop)
    rc = lr_register_service(unsecure_web_server,
                             "/events",
                             NULL, answer_post_events, NULL, NULL,
-                            req_destroy_str, NULL);
+                            req_destroy_str, loop);
    if (rc) {
       printf("Failed to register non secure service\n");
 		return HPD_E_MHD_ERROR;

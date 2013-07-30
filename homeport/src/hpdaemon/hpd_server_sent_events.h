@@ -42,22 +42,23 @@ authors and should not be interpreted as representing official policies, either 
 #include <stdio.h>
 #include <errno.h>
 #include <uuid/uuid.h>
-
-typedef void (*send_cb)(void *req, const char *fmt, ...);
+#include <ev.h>
 
 struct event_socket {
    char *url;
    void *req;
-   send_cb on_send;
+   struct ev_loop *loop;
+   struct ev_timer timeout_watcher;
    struct event_socket *next;
    struct event_socket *prev;
 };
 
 void destroy_socket(struct event_socket *socket);
-struct event_socket *subscribe_to_events(const char *body);
+struct event_socket *subscribe_to_events(const char *body, struct
+      ev_loop *loop);
 
 void open_event_socket(struct event_socket *socket,
-                       void *req, send_cb on_send);
+                       void *req);
 void close_event_socket(struct event_socket *socket);
 
 int notify_service_availability(Service* service_to_notify, int availability);

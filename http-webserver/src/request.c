@@ -660,3 +660,8 @@ const char *http_request_get_ip(struct http_request *req)
 {
    return ws_conn_get_ip(req->conn);
 }
+
+void http_request_keep_open(struct http_request *req)
+{
+   ws_conn_keep_open(req->conn);
+}

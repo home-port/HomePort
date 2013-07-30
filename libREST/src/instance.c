@@ -416,3 +416,7 @@ const char *lr_request_get_ip(struct lr_request *req)
    return http_request_get_ip(req->req);
 }
 
+void lr_request_keep_open(struct lr_request *req)
+{
+   http_request_keep_open(req->req);
+}

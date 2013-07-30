@@ -42,6 +42,8 @@ authors and should not be interpreted as representing official policies, either 
 #include <config.h>
 #endif
 
+struct event_socket;
+
 int start_server(char* hostname, char *domain_name, struct ev_loop *loop);
 int stop_server();
 int register_service( Service *service_to_register );
@@ -53,5 +55,8 @@ int is_service_registered( Service *service );
 
 Service* get_service( char *device_type, char *device_ID, char *service_type, char *service_ID );
 Device* get_device( char *device_type, char *device_ID);
+
+void send_event(struct event_socket *s, const char *fmt, ...);
+void unregister_socket(struct event_socket *s);
 
 #endif

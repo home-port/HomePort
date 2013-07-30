@@ -64,6 +64,7 @@ struct ws_conn {
    struct ws *instance;             ///< Webserver instance
    char ip[INET6_ADDRSTRLEN];       ///< IP address of the connection
    struct ev_timer timeout_watcher; ///< Timeout watcher
+   int timeout;                     ///< Restart timeout watcher ?
    struct ev_io recv_watcher;       ///< Recieve watcher
    struct ev_io send_watcher;       ///< Send watcher
    char *send_msg;                  ///< Data to send
@@ -208,7 +209,8 @@ static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revent
 
    // Reset timeout
    conn->timeout_watcher.repeat = conn->instance->settings.timeout;
-   ev_timer_again(loop, &conn->timeout_watcher);
+   if (conn->timeout)
+      ev_timer_again(loop, &conn->timeout_watcher);
 }
 
 static void conn_send_cb(struct ev_loop *loop, struct ev_io *watcher,
@@ -247,7 +249,7 @@ static void conn_send_cb(struct ev_loop *loop, struct ev_io *watcher,
 static void conn_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, int revents)
 {
    struct ws_conn *conn = watcher->data;
-   printf("timeout on %s\n", conn->ip);
+   printf("timeout on %s [%d]\n", conn->ip, (int)conn);
    ws_conn_kill(conn);
 }
 
@@ -317,6 +319,7 @@ static void ws_conn_accept(
    conn->send_msg = NULL;
    conn->send_len = 0;
    conn->send_close = 0;
+   conn->timeout = 1;
 
    // Set up list
    ws_instance_add_conn(conn->instance, conn);
@@ -335,7 +338,8 @@ static void ws_conn_accept(
    ev_io_start(loop, &conn->recv_watcher);
    ev_init(&conn->timeout_watcher, conn_timeout_cb);
    conn->timeout_watcher.repeat = conn->instance->settings.timeout;
-   ev_timer_again(loop, &conn->timeout_watcher);
+   if (conn->timeout)
+      ev_timer_again(loop, &conn->timeout_watcher);
 }
 
 int ws_conn_sendf(struct ws_conn *conn, const char *fmt, ...) {
@@ -381,8 +385,6 @@ int ws_conn_vsendf(struct ws_conn *conn, const char *fmt, va_list arg)
    // Update length
    conn->send_len += new_len;
 
-   printf("Sending '%.*s'\n", conn->send_len, conn->send_msg);
-
    // Check if the whole string was added
    if (stat < 0) return stat;
    else return 0;
@@ -401,6 +403,14 @@ static void ws_instance_rm_conn(struct ws *instance, struct ws_conn
 // TODO What if data has been sent ?
 void ws_conn_close(struct ws_conn *conn) {
    conn->send_close = 1;
+}
+
+/// Disable timeout on connection
+void ws_conn_keep_open(struct ws_conn *conn)
+{
+   printf("Stoping timeout watcher [%d]\n", (int)conn);
+   conn->timeout = 0;
+   ev_timer_stop(conn->instance->loop, &conn->timeout_watcher);
 }
 
 /// Kill and clean up after a connection
