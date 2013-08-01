@@ -43,11 +43,12 @@ struct http_request *http_request_create(
       struct httpws *webserver,
       struct httpws_settings *settings,
       struct ws_conn *conn);
+
 void http_request_destroy(struct http_request *req);
-size_t http_request_parse(
-      struct http_request *req,
-      const char *buf,
-      size_t len);
+
+size_t http_request_parse(struct http_request *req,
+                          const char *buf,
+                          size_t len);
 
 struct ws_conn *http_request_get_connection(struct http_request *req);
 

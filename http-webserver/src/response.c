@@ -43,12 +43,34 @@
 #define HTTP_VERSION "HTTP/1.1 "
 #define CRLF "\r\n"
 
+/// A http response
+/**
+ *  A response should be created to an already existing request with
+ *  http_response_create(), sent with http_response_sendf() or
+ *  http_response_vsendf(), and freed with http_response_destroy().
+ *
+ *  Headers are added with http_response_add_header(), if the header is
+ *  a cookie it can also be added with http_response_add_cookie().
+ *
+ *  The body is sent in chunks by repeating the calls to
+ *  http_response_sendf() and http_response_vsentf(). The status and
+ *  headers will be sent on the first call.
+ */
 struct http_response
 {
-   struct ws_conn *conn;
-   char *msg;
+   struct ws_conn *conn; ///< The connection to send on
+   char *msg;            ///< Status/headers to send
 };
 
+/// Convert a status code to string
+/**
+ *  The result is constructed to match the textual status code in the
+ *  first line in a http response, according to RFC 2616.
+ *
+ *  \param Status code as enum
+ *
+ *  \return The status code as text
+ */
 static char* http_status_codes_to_str(enum httpws_http_status_code status)
 {
 #define XX(num, str) if(status == num) {return #str;}
@@ -57,6 +79,16 @@ static char* http_status_codes_to_str(enum httpws_http_status_code status)
 	return NULL;
 }
 
+/// Destroy a http_response
+/**
+ *  The will close the connection and free up any memory used by the
+ *  response.
+ *
+ *  Any data sent with http_response_sendf() and http_reponse_vsendf()
+ *  will be sent before the connection is closed.
+ *
+ *  \param  res  The HTTP Response to destroy
+ */
 void http_response_destroy(struct http_response *res)
 {
    ws_conn_close(res->conn);
@@ -64,6 +96,23 @@ void http_response_destroy(struct http_response *res)
    free(res);
 }
 
+/// Create a reponse to a http request
+/**
+ *  Create the reponse and constructs the status line.
+ *
+ *  Currently it also adds the header "Connection: close", because it do
+ *  not yet support persistant connections. That is, connection where
+ *  status and headers are sent multiple times.
+ *
+ *  The response is not send before one of the send functions are
+ *  called, it is possible to call these with a NULL body to send
+ *  messages without it.
+ *
+ *  \param  req     The http request to repond to
+ *  \param  status  The status code to respond with
+ *
+ *  \return  The http respond created
+ */
 struct http_response *http_response_create(
       struct http_request *req,
       enum httpws_http_status_code status)
@@ -109,11 +158,28 @@ struct http_response *http_response_create(
    return res;
 }
 
+/// Add header to a response
+/**
+ *  This returns an error if any of the send functions has already been
+ *  called.
+ *
+ *  The field/value pair is stored internally in the response.
+ *
+ *  \param  res    The response to add headers to
+ *  \param  field  The field of the header
+ *  \param  value  The value of the header
+ *
+ *  \return 0 on success and 1 on failure
+ */
 int http_response_add_header(struct http_response *res,
                              const char *field, const char *value)
 {
    // Headers already sent
-   if (!res->msg) return 1;
+   if (!res->msg) {
+      fprintf(stderr,
+            "Cannot add header, they are already sent to client\n");
+      return 1;
+   }
 
 	char *msg;
 	int msg_len = strlen(res->msg)+strlen(field)+2+strlen(value)+strlen(CRLF)+1;
@@ -133,7 +199,25 @@ int http_response_add_header(struct http_response *res,
    return 0;
 }
 
-// According to RFC 6265
+/// Add cookie header to response
+/**
+ *  Works similarily to http_response_add_header(), but constructs a
+ *  cookie header based on the details in RFC 6265. Refer to this for
+ *  the correct syntax of the parameters.
+ *
+ *  \param  res        Http reponse to add cookie to
+ *  \param  field      The field of the cookie
+ *  \param  value      The value of the cookie
+ *  \param  expires    The expiring time as string or NULL to avoid
+ *  \param  max_age    The maximum age as string or NULL to avoid
+ *  \param  domain     The domain as string or NULL to avoid
+ *  \param  path       The path as string or NULL to avoid
+ *  \param  secure     0 to avoid, any other to add the keyword
+ *  \param  http_only  0 to avoid, any other to add the keyword
+ *  \param  extension  The extension as string or NULL to avoid
+ *
+ *  \return 0 on success and 1 otherwise
+ */
 int http_response_add_cookie(struct http_response *res,
                              const char *field, const char *value,
                              const char *expires, const char *max_age,
@@ -201,7 +285,14 @@ int http_response_add_cookie(struct http_response *res,
    return 0;
 }
 
-
+/// Send response to client
+/**
+ *  Similar to the standard printf function. See http_response_vsendf()
+ *  for details.
+ *
+ *  \param  res  The respond to sent
+ *  \param  fmt  The format string for the body
+ */
 void http_response_sendf(struct http_response *res, const char *fmt, ...)
 {
    va_list arg;
@@ -210,6 +301,21 @@ void http_response_sendf(struct http_response *res, const char *fmt, ...)
    va_end(arg);
 }
 
+/// Send response to client
+/**
+ *  Similar to the standard vprintf functions
+ *
+ *  First it sends the status and header lines, if these haven't been
+ *  sent yet. Then it sends the body as given in the format string and
+ *  variable arguments.
+ *
+ *  If NULL is given as format no body is sent.
+ *
+ *  The response is sent delayed, when the connection is ready for it.
+ *
+ *  \param  res  The http response to send.
+ *  \param  fmt  The format string for the body
+ */
 void http_response_vsendf(struct http_response *res,
                           const char *fmt, va_list arg)
 {

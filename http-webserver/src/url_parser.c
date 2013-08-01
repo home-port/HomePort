@@ -53,61 +53,49 @@ enum up_state {
 };
 
 /// An URL Parser instance
-/**
- *   <h1>Public Interface</h1>
- *   up_create is used to create an instance of this struct.
- *   The instance has a pointer to a struct containing the user-defined
- *   callbacks (see documentation for url_parser_settings).
- *   
- *   <h1>Internals</h1>
- *   The instance holds information about the current state, number of
- *   chars parsed etc.  The instance has only a single buffer, which is
- *   expanded when chunks are added.  When a callback is called, it
- *   receives a pointer to a specific location in this buffer and a
- *   length.  This is done so that only a single buffer is allocated. 
-*/
 struct up {
-   struct up_settings *settings;
-   void *data;
+   struct up_settings *settings; ///< Settings
+   void *data;                   ///< User data
 
-   int state;
+   int state;                    ///< State
+   char *buffer;                 ///< URL Buffer
 
-   char *buffer;
-   size_t protocol;
-   size_t protocol_l;
-   size_t host;
-   size_t host_l;
-   size_t port;
-   size_t port_l;
-   size_t path;
-   size_t path_l;
-   size_t key_value;
-   size_t end;
-   size_t last_key;
-   size_t last_key_l;
-   size_t last_value;
-   size_t last_value_l;
-   size_t last_path;
-   size_t last_path_l;
-   size_t parser;
-   size_t insert;
+   size_t protocol;              ///< Protocol start
+   size_t protocol_l;            ///< Protocol length
+   size_t host;                  ///< Host start
+   size_t host_l;                ///< Host length
+   size_t port;                  ///< Port start
+   size_t port_l;                ///< Port length
+   size_t path;                  ///< Path start
+   size_t path_l;                ///< Path length
+   size_t key_value;             ///< Arguments start
+   size_t end;                   ///< Length of full URL
+   
+   size_t last_key;              ///< Last seen key start
+   size_t last_key_l;            ///< Last seen key length
+   size_t last_value;            ///< Last seen value start
+   size_t last_value_l;          ///< Last seen value length
+   size_t last_path;             ///< Last seen path segment start
+   size_t last_path_l;           ///< Last seen path segment length
 
-   //unsigned int chars_parsed;
-   //unsigned int last_returned;
-   //int path_start;
-   //size_t tmp_key_begin;
-   //size_t tmp_key_size;
+   size_t parser;                ///< Location of parser
+   size_t insert;                ///< Location to insert new chunks
 };
 
 /// Create URL parser instance
 /**
- *   This method creates an URL Parser instance.  It allocates memory
- *   for itself and a copy of the settings struct, and copies the
- *   settings struct to this new location.  It also sets all values to
- *   default.
+ *  This method creates an URL Parser instance.  It allocates memory
+ *  for itself and copy the settings struct.  It also sets all values
+ *  to default.
  *
- *  @param  settings A pointer to a url_parser_settings struct
- *  @return a pointer to the newly created instance
+ *  The instance should be destroyed using up_destroy when it is no
+ *  longer needed.
+ *
+ *  \param  settings  A pointer to a url_parser_settings struct
+ *  \param  data      Pointer to user data, will be supplied to
+ *                    callbacks
+ *
+ *  \return  a pointer to the newly created instance
  */
 struct up *up_create(
       struct up_settings *settings, void *data)
@@ -148,10 +136,6 @@ struct up *up_create(
    instance->parser = 0;
    instance->insert = 0;
 
-   //instance->chars_parsed = 0;
-   //instance->last_returned = 0;
-   //instance->path_start = -1;
-
    // Store data
    instance->data = data;
 
@@ -163,7 +147,7 @@ struct up *up_create(
  *  This method destroys an URL Parser instance, including the buffer
  *  and settings struct.
  *
- *  @param  instance A pointer to an url_parser_instance to destroy
+ *  \param  instance  A pointer to an url_parser_instance to destroy
  */
 void up_destroy(struct up *instance)
 {
@@ -183,8 +167,8 @@ void up_destroy(struct up *instance)
 
 /// Check if a given char is valid in an URL
 /**
- *   This method checks if a char is valid in an URL. Only specific chars
- *   are valid, others have to be encoded properly. 
+ *  This method checks if a char is valid in an URL. Only specific chars
+ *  are valid, others have to be encoded properly. 
  *
  *  @param  c A char to check
  *  @return 1 if the char is valid in an URL, 0 otherwise
@@ -205,15 +189,15 @@ int isLegalURLChar(char c)
 
 /// Parse a chunk of an URL
 /**
- *   This method receives a chunk of an URL, and calls the appropriate
- *   callbacks.  It increases the size of buffer, copies the new chunk to
- *   it and then parses each character and changes state accordingly.  A
- *   chunk may of course be a complete URL, all of which will be parsed
- *   immediately. 
+ *  This method receives a chunk of an URL, and calls the appropriate
+ *  callbacks.  It increases the size of buffer, copies the new chunk to
+ *  it and then parses each character and changes state accordingly.  A
+ *  chunk may of course be a complete URL, all of which will be parsed
+ *  immediately. 
  *
- *  @param  instance A pointer to an URL Parser instance
- *   @param   chunk A pointer to the chunk (non zero terminated)
- *   @param chunk_size The size of the chunk
+ *  @param  instance    A pointer to an URL Parser instance
+ *  @param  chunk       A pointer to the chunk (non zero terminated)
+ *  @param  chunk_size  The size of the chunk
  */
 int up_add_chunk(void *_instance, const char* chunk, size_t len)
 {
@@ -222,7 +206,6 @@ int up_add_chunk(void *_instance, const char* chunk, size_t len)
    char *buffer;
 
    // Add chunk to buffer
-   //size_t old_buffer_size = up->size;
    up->end += len;
    buffer = realloc(up->buffer, up->end*sizeof(char));
    if(buffer == NULL) {
@@ -398,13 +381,13 @@ int up_add_chunk(void *_instance, const char* chunk, size_t len)
 
 /// Informs the parser that the URL is complete
 /**
- *   This method will let the parser know that the URL is complete.
- *   This always results in the on_complete callback being called, but it
- *   may also inflict two others: on_path_segment and on_key_value. This
- *   is due to the nature of the URL parser being able to receive in
- *   chunks: it can simply now know if an URL path is complete without a /
- *   at the end. It also cannot know if a value part of a key is done
- *   before being told.
+ *  This method will let the parser know that the URL is complete.
+ *  This always results in the on_complete callback being called, but it
+ *  may also inflict two others: on_path_segment and on_key_value. This
+ *  is due to the nature of the URL parser being able to receive in
+ *  chunks: it can simply now know if an URL path is complete without a
+ *  slash at the end. It also cannot know if a value part of a key is
+ *  done before being told.
  *
  *  @param  instance A pointer to an URL Parser instance
  */
@@ -467,3 +450,4 @@ int up_complete(void *_instance)
    }
    return 0;
 }
+
