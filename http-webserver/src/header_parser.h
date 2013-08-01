@@ -36,22 +36,22 @@
 
 typedef void (*hp_string_cb)(void* data, const char* field, size_t field_length, const char* value, size_t value_length);
 
-struct header_parser_instance;
+struct hp;
 
-struct header_parser_settings {
+struct hp_settings {
 	hp_string_cb on_field_value_pair;
 	void* data;
 };
 
-#define HEADER_PARSER_SETTINGS_DEFAULT {\
+#define HP_SETTINGS_DEFAULT {\
 	.on_field_value_pair = NULL, \
 	.data = NULL }
 
-struct header_parser_instance *hp_create(struct header_parser_settings*);
-void hp_destroy(struct header_parser_instance*);
+struct hp *hp_create(struct hp_settings*);
+void hp_destroy(struct hp*);
 
-void hp_on_header_field(struct header_parser_instance *instance, const char* field_chunk, size_t length);
-void hp_on_header_value(struct header_parser_instance *instance, const char* value_chunk, size_t length);
-void hp_on_header_complete(struct header_parser_instance *instance);
+void hp_on_header_field(struct hp *instance, const char* field_chunk, size_t length);
+void hp_on_header_value(struct hp *instance, const char* value_chunk, size_t length);
+void hp_on_header_complete(struct hp *instance);
 
 #endif

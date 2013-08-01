@@ -80,7 +80,7 @@ struct ws_conn {
  *  \return The socket file descriptor, that should be used later for
  *  closing again.
  */
-static int bind_listen(char *port)
+static int bind_listen(char *port) 
 {
    int status, sockfd;
    struct addrinfo hints;
@@ -184,11 +184,13 @@ static void *get_in_addr(struct sockaddr *sa)
   * \param  watcher  The io watcher causing the call
   * \param  revents  Not used
   */
-static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revents)
+static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher,
+                         int revents)
 {
    ssize_t recieved;
    struct ws_conn *conn = watcher->data;
-   size_t maxdatasize = conn->instance->settings.maxdatasize;
+   struct ws_settings *settings = &conn->instance->settings;
+   size_t maxdatasize = settings->maxdatasize;
    char buffer[maxdatasize];
 
    printf("recieving data from %s\n", conn->ip);
@@ -199,25 +201,26 @@ static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher, int revent
          return;
       }
       perror("recv");
-      // TODO Handle errors better - look up error# etc. 
       ws_conn_kill(conn);
       return;
    } else if (recieved == 0) {
-      printf("connection closed by %s\n", conn->ip);
+      printf("ws: Connection closed by %s\n", conn->ip);
       ws_conn_kill(conn);
       return;
    }
 
-   if (conn->instance->settings.on_receive(conn->instance, conn, 
-                                           conn->instance->settings.ws_ctx, &conn->ctx, buffer, recieved)) {
+   if (settings->on_receive(conn->instance, conn, 
+                            settings->ws_ctx, &conn->ctx,
+                            buffer, recieved)) {
       ws_conn_kill(conn);
       return;
    }
 
    // Reset timeout
-   conn->timeout_watcher.repeat = conn->instance->settings.timeout;
-   if (conn->timeout)
+   if (conn->timeout) {
+      conn->timeout_watcher.repeat = conn->instance->settings.timeout;
       ev_timer_again(loop, &conn->timeout_watcher);
+   }
 }
 
 /// Send callback for io-watcher
@@ -272,7 +275,9 @@ static void conn_send_cb(struct ev_loop *loop, struct ev_io *watcher,
   * \param  watcher  The io watcher causing the call
   * \param  revents  Not used
  */
-static void conn_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, int revents)
+static void conn_timeout_cb(struct ev_loop *loop,
+                            struct ev_timer *watcher,
+                            int revents)
 {
    struct ws_conn *conn = watcher->data;
    printf("timeout on %s [%d]\n", conn->ip, (int)conn);
@@ -280,8 +285,16 @@ static void conn_timeout_cb(struct ev_loop *loop, struct ev_timer *watcher, int 
 }
 
 /// Add a connection to an instance
-static int ws_instance_add_conn(struct ws *instance, struct ws_conn
-      *conn)
+/**
+ *  Adds an already etablished connection to a webserver instance.
+ *
+ *  \param  instance  The webser instance
+ *  \param  conn      The connection to add
+ *
+ *  \return 0 on success, 1 on error
+ */
+static int ws_instance_add_conn(struct ws *instance,
+                                struct ws_conn *conn)
 {
    struct ll_iter *it = ll_tail(instance->conns);
    ll_insert(instance->conns, it, conn);
@@ -314,27 +327,30 @@ static void ws_conn_accept(
    char ip_string[INET6_ADDRSTRLEN];
    int in_fd;
    socklen_t in_size;
-   struct sockaddr_storage in_addr;
+   struct sockaddr_storage in_addr_storage;
+   struct sockaddr *in_addr = (struct sockaddr *)&in_addr_storage;
    struct ws_conn *conn;
+   struct ws_settings *settings = &((struct ws *)watcher->data)->settings;
    
    // Accept connection
    in_size = sizeof in_addr;
-   if ((in_fd = accept(watcher->fd, (struct sockaddr *)&in_addr, &in_size)) < 0) {
+   if ((in_fd = accept(watcher->fd, in_addr, &in_size)) < 0) {
       perror("accept");
       return;
    }
 
    // Print a nice message
-   inet_ntop(in_addr.ss_family,
-         get_in_addr((struct sockaddr *)&in_addr),
+   inet_ntop(in_addr_storage.ss_family,
+         get_in_addr(in_addr),
          ip_string,
          sizeof ip_string);
-   printf("got connection from %s\n", ip_string);
+   printf("ws: Got connection from %s\n", ip_string);
 
    // Create conn and parser
    conn = malloc(sizeof(struct ws_conn));
    if (conn == NULL) {
-      fprintf(stderr, "ERROR: Cannot accept connection (malloc return NULL)\n");
+      fprintf(stderr, "Cannot allocation memory for connection\n");
+      close(in_fd);
       return;
    }
    conn->instance = watcher->data;
@@ -352,8 +368,9 @@ static void ws_conn_accept(
    ws_instance_add_conn(conn->instance, conn);
 
    // Call back
-   if (conn->instance->settings.on_connect) {
-      if (conn->instance->settings.on_connect(conn->instance, conn, conn->instance->settings.ws_ctx, &conn->ctx)) {
+   if (settings->on_connect) {
+      if (settings->on_connect(conn->instance, conn,
+                               settings->ws_ctx, &conn->ctx)) {
          ws_conn_kill(conn);
          return;
       }
@@ -364,7 +381,7 @@ static void ws_conn_accept(
    ev_io_init(&conn->send_watcher, conn_send_cb, in_fd, EV_WRITE);
    ev_io_start(loop, &conn->recv_watcher);
    ev_init(&conn->timeout_watcher, conn_timeout_cb);
-   conn->timeout_watcher.repeat = conn->instance->settings.timeout;
+   conn->timeout_watcher.repeat = settings->timeout;
    if (conn->timeout)
       ev_timer_again(loop, &conn->timeout_watcher);
 }
@@ -404,7 +421,8 @@ int ws_conn_sendf(struct ws_conn *conn, const char *fmt, ...) {
  * \param  fmt   Format string
  * \param  arg   List of arguments
  *
- * \return  zero on success or the return value of vsprintf on failure
+ * \return  zero on success, -1 or the return value of vsprintf on
+ *          failure
  */
 int ws_conn_vsendf(struct ws_conn *conn, const char *fmt, va_list arg)
 {
@@ -489,7 +507,6 @@ void ws_conn_close(struct ws_conn *conn) {
  */
 void ws_conn_keep_open(struct ws_conn *conn)
 {
-   printf("Stoping timeout watcher [%d]\n", (int)conn);
    conn->timeout = 0;
    ev_timer_stop(conn->instance->loop, &conn->timeout_watcher);
 }
@@ -501,9 +518,12 @@ void ws_conn_keep_open(struct ws_conn *conn)
  *
  *  \param conn The connection to kill.
  */
-void ws_conn_kill(struct ws_conn *conn) {
+void ws_conn_kill(struct ws_conn *conn)
+{
+   struct ws_settings *settings = &conn->instance->settings;
 
-   printf("killing connection %s\n", conn->ip);
+   // Print messange
+   printf("ws: Killing connection %s\n", conn->ip);
 
    // Stop watchers
    int sockfd = conn->recv_watcher.fd;
@@ -520,20 +540,40 @@ void ws_conn_kill(struct ws_conn *conn) {
    ws_instance_rm_conn(conn->instance, conn);
 
    // Call back
-   if (conn->instance->settings.on_disconnect)
-      conn->instance->settings.on_disconnect(conn->instance, conn, conn->instance->settings.ws_ctx, &conn->ctx);
+   if (settings->on_disconnect)
+      settings->on_disconnect(conn->instance, conn,
+                              settings->ws_ctx, &conn->ctx);
 
    // Cleanup
    free(conn->send_msg);
    free(conn);
 }
 
+/// Destroy webserver and free used memory
+/**
+ *  This function destroys and frees all connections are instances. The
+ *  webserver should be stopped before destroy to properly close all
+ *  connections and sockets first.
+ *
+ *  \param  instance  The webserver instance to destroy
+ */
 void ws_destroy(struct ws *instance)
 {
    ll_destroy(instance->conns);
    free(instance);
 }
 
+/// Create new webserver instance
+/**
+ *  This creates a new webserver instances, that can be started with
+ *  ws_start() and stopped with ws_stop(). The instance should be
+ *  destroyed with ws_destroy when not longer needed.
+ *
+ *  \param  settings  The settings for the webserver.
+ *  \param  loop      The event loop to run webserver on.
+ *
+ *  \return  The new webserver instance.
+ */
 struct ws *ws_create(
       struct ws_settings *settings,
       struct ev_loop *loop)
@@ -568,8 +608,10 @@ struct ws *ws_create(
  *
  *  To stop the webserver again, one may call ws_stop().
  *
- *  \param instance The webserver instance to start. Initialised with
- *  ws_init();
+ *  \param instance The webserver instance to start. Created with
+ *  ws_create();
+ *
+ *  \return  0 on success, 1 on error.
  */
 int ws_start(struct ws *instance)
 {
@@ -581,7 +623,7 @@ int ws_start(struct ws *instance)
    }
 
    // Print message
-   printf("Starting server on port '%s'\n", instance->port_str);
+   printf("ws: Starting server on port '%s'\n", instance->port_str);
 
    // Bind to socket
    instance->sockfd = bind_listen(instance->port_str);
@@ -602,7 +644,7 @@ int ws_start(struct ws *instance)
 
 /// Stop an already running webserver.
 /**
- *  The webserver, startet with ws_start(), may be stopped by calling
+ *  The webserver, started with ws_start(), may be stopped by calling
  *  this function. It will take the webserver off the event loop and
  *  clean up after it.
  *
@@ -629,13 +671,14 @@ void ws_stop(struct ws *instance)
    }
 }
 
-struct ws_settings *ws_instance_get_settings(
-      struct ws *instance)
-{
-   return &instance->settings;
-}
-
+/// Get the IP address of the client
+/**
+ *  \param  conn  The connection on which the client is connected.
+ *
+ *  \return  The IP address in a string.
+ */
 const char *ws_conn_get_ip(struct ws_conn *conn)
 {
    return conn->ip;
 }
+

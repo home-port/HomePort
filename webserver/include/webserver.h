@@ -31,14 +31,6 @@
  *  as representing official policies, either expressed.
  */
 
-/** \defgroup webserver Webserver
- *
- *  The webserver is a single threaded event based webserver, built on
- *  top of the event loop implemented in LibEV.
- *
- *  \{
- */
-
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
 
@@ -56,10 +48,10 @@ struct ws_conn;
  *  Callbacks                                                         *
  **********************************************************************/
 
-typedef int  (*ws_nodata_cb)(struct ws *instance,
-                             struct ws_conn *conn, void *ws_ctx, void **data);
-typedef int  (*ws_data_cb)  (struct ws *instance,
-                             struct ws_conn *conn, void *ws_ctx, void **data,
+typedef int  (*ws_nodata_cb)(struct ws *instance, struct ws_conn *conn,
+                             void *ws_ctx, void **data);
+typedef int  (*ws_data_cb)  (struct ws *instance, struct ws_conn *conn,
+                             void *ws_ctx, void **data,
                              const char *buf, size_t len);
 
 /// Settings struct for webserver
@@ -72,31 +64,17 @@ typedef int  (*ws_data_cb)  (struct ws *instance,
  *
  *  The settings hold a series of callbacks of type either data_cb or
  *  nodata_cb. Do not expect the string parameter in data callbacks to
- *  be null terminated (only on_request_method may be). All data
- *  callbacks, except on_request_method, are called on chunks and
- *  therefore may be called multiple times. That is
- *  on_request_header_field may be called first with 'hos' and then with
- *  't'. It is up to the implementer of these callbacks to concatenate
- *  the results if needed.
+ *  be null terminated. All data callbacks are called on chunks and
+ *  therefore may be called multiple times. It is up to the implementer
+ *  of these callbacks to concatenate the results if needed.
  *
  *  The callbacks are called in the following order:
  *  \dot
  *  digraph callback_order {
- *  on_request_begin -> on_request_method;
- *  on_request_method -> on_request_url;
- *  on_request_url -> on_request_url;
- *  on_request_url -> on_request_url_complete;
- *  on_request_url_complete -> on_request_header_field;
- *  on_request_url_complete -> on_request_header_complete;
- *  on_request_header_field -> on_request_header_field;
- *  on_request_header_field -> on_request_header_value;
- *  on_request_header_value -> on_request_header_value;
- *  on_request_header_value -> on_request_header_field;
- *  on_request_header_value -> on_request_header_complete;
- *  on_request_header_complete -> on_request_body;
- *  on_request_header_complete -> on_request_complete;
- *  on_request_body -> on_request_body;
- *  on_request_body -> on_request_complete;
+ *  on_connect -> on_receive;
+ *  on_connect -> on_disconnect;
+ *  on_receive -> on_receive;
+ *  on_receive -> on_disconnect;
  *  }
  *  \enddot
  */
@@ -142,4 +120,3 @@ void ws_conn_keep_open(struct ws_conn *conn);
 
 #endif
 
-/** } */

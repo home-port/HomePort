@@ -47,6 +47,11 @@
    XX(405,405 Method Not Allowed) \
    XX(500,500 Internal Server Error)
 
+/// HTTP status codes
+/**
+ *  According to RFC 2616, see
+ *  http://www.w3.org/Protocols/rfc2616/rfc2616.html
+ */
 enum httpws_http_status_code
 {
 #define XX(num, str) WS_HTTP_##num = num,
@@ -89,6 +94,10 @@ enum httpws_http_status_code
   XX(24, PATCH,       PATCH)        \
   XX(25, PURGE,       PURGE)        \
 
+/// HTTP methods
+/**
+ *  Copied here from http-parser.h to make them easier accessible.
+ */
 enum http_method
   {
 #define XX(num, name, string) HTTP_##name = num,
@@ -96,6 +105,8 @@ enum http_method
 #undef XX
   };
 #endif
+
+/// Convert from enum http_method to a string
 const char *http_method_str(enum http_method m);
 
 #endif

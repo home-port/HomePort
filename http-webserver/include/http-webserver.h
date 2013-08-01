@@ -39,12 +39,15 @@
 #include <stddef.h>
 #include <stdarg.h>
 
-// TODO: Move timeouts here from the webserver
-
+// Structs
 struct ev_loop;
 struct httpws;
 struct http_request;
 struct http_response;
+
+/**********************************************************************
+ *  Callbacks                                                         *
+ **********************************************************************/
 
 typedef int (*httpws_data_cb)(
       struct httpws *ins, struct http_request *req,
@@ -54,6 +57,43 @@ typedef int (*httpws_nodata_cb)(
       struct httpws *ins, struct http_request *req,
       void* ws_ctx, void** req_data);
 
+/// Settings struct for webserver
+/**
+ *  Please initialise this struct as following, to ensure that all
+ *  settings have acceptable default values:
+ *  \code
+ *  struct httpws_settings *settings = HTTPWS_SETTINGS_DEFAULT;
+ *  \endcode
+ *
+ *  The settings hold a series of callbacks of type either data_cb or
+ *  nodata_cb. Do not expect the string parameter in data callbacks to
+ *  be null terminated. All data callbacks, except on_req_method, are
+ *  called on chunks and therefore may be called multiple times.  That
+ *  is on_req_hdr_field may be called first with 'hos' and then with
+ *  't'. It is up to the implementer of these callbacks to concatenate
+ *  the results if needed.
+ *
+ *  The callbacks are called in the following order:
+ *  \dot
+ *  digraph callback_order {
+ *  on_req_begin -> on_req_method;
+ *  on_req_method -> on_req_url;
+ *  on_req_url -> on_req_url;
+ *  on_req_url -> on_req_url_cmpl;
+ *  on_req_url_cmpl -> on_req_hdr_field;
+ *  on_req_url_cmpl -> on_req_hdr_cmpl;
+ *  on_req_hdr_field -> on_req_hdr_field;
+ *  on_req_hdr_field -> on_req_hdr_value;
+ *  on_req_hdr_value -> on_req_hdr_value;
+ *  on_req_hdr_value -> on_req_hdr_field;
+ *  on_req_hdr_value -> on_req_hdr_cmpl;
+ *  on_req_hdr_cmpl -> on_req_body;
+ *  on_req_hdr_cmpl -> on_req_cmpl;
+ *  on_req_body -> on_req_body;
+ *  on_req_body -> on_req_cmpl;
+ *  }
+ *  \enddot
+ */
 struct httpws_settings {
    enum ws_port port;
    int timeout;
@@ -69,6 +109,14 @@ struct httpws_settings {
    httpws_nodata_cb on_req_cmpl;
    httpws_nodata_cb on_req_destroy;
 };
+
+/// Default settings for http-webserver
+/**
+ *  Use this as:
+ *  \code
+ *  struct httpws_settings *settings = HTTPWS_SETTINGS_DEFAULT;
+ *  \endcode
+ */
 #define HTTPWS_SETTINGS_DEFAULT { \
    .port = WS_PORT_HTTP, \
    .timeout = 15, \

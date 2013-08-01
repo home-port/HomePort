@@ -129,18 +129,18 @@ enum state {
  */
 struct http_request
 {
-   struct httpws *webserver;
-   struct httpws_settings *settings;
-   struct ws_conn *conn;
-   http_parser parser;               ///< HTTP parser in use
-   struct up *url_parser;
-   struct header_parser_instance *header_parser;
-   enum state state;                 ///< Current state of the request
-   char *url;
-   struct lm *arguments;
-   struct lm *headers;
-   struct lm *cookies;
-   void* data;
+   struct httpws *webserver;         ///< HTTP Webserver
+   struct httpws_settings *settings; ///< Settings
+   struct ws_conn *conn;             ///< Connection to client
+   http_parser parser;               ///< HTTP parser
+   struct up *url_parser;            ///< URL Parser
+   struct hp *header_parser;         ///< Header Parser
+   enum state state;                 ///< Current state
+   char *url;                        ///< URL
+   struct lm *arguments;             ///< URL Arguments
+   struct lm *headers;               ///< Header Pairs
+   struct lm *cookies;               ///< Cookie Pairs
+   void* data;                       ///< User data
 };
 
 // Methods for http_parser settings
@@ -165,7 +165,17 @@ static http_parser_settings parser_settings =
    .on_message_complete = parser_msg_cmpl
 };
 
-static void url_parser_path_complete(void *data, const char* parsedSegment, size_t segment_length)
+/// Callback for URL parser
+/**
+ *  Called when the full path has been parsed and stores the full path
+ *  in the url field of the request.
+ *
+ *  \param  data            The HTTP Request
+ *  \param  parsendSegment  Full path, not null-terminated.
+ *  \param  segment_length  Length of path in characters
+ */
+static void url_parser_path_complete(void *data,
+      const char* parsedSegment, size_t segment_length)
 {
    struct http_request *req = data;
    char *newUrl = realloc(req->url, sizeof(char)*(segment_length+1));
@@ -178,7 +188,17 @@ static void url_parser_path_complete(void *data, const char* parsedSegment, size
    req->url[segment_length] = '\0';
 }
 
-// TODO Write test that covers URL arguements
+/// Callback for URL parser
+/**
+ *  Called when the URL parser has parsed an argument pair, with a key
+ *  and a value.
+ *
+ *  \param  data       The HTTP Request
+ *  \param  key        The key, not null-terminated
+ *  \param  key_len    The length of the key
+ *  \param  value      The value, not null-terminated
+ *  \param  value_len  The length of the value
+ */
 static void url_parser_key_value(void *data,
                                  const char *key, size_t key_len,
                                  const char *value, size_t value_len)
@@ -189,6 +209,20 @@ static void url_parser_key_value(void *data,
    lm_insert_n(req->arguments, key, value_len, value, value_len);
 }
 
+/// Callback for the header parser
+/**
+ *  Is called for each header pairs with a field and a value. If the
+ *  header pair is a cookie, the cookied will be parsed and stored in
+ *  the list of cookies. Multiple headers will be combined into a
+ *  a single with a comma-seperated list of values, according to the RFC
+ *  2616.
+ *
+ *  \param  data          The HTTP Request
+ *  \param  field         The field, not null-terminated
+ *  \param  field_length  The length of the field
+ *  \param  value         The value, not null-terminated
+ *  \param  value_length  The length of the value
+ */
 static void header_parser_field_value_pair_complete(void* data,
       const char* field, size_t field_length,
       const char* value, size_t value_length)
@@ -243,10 +277,11 @@ static void header_parser_field_value_pair_complete(void* data,
 /// Message begin callback for http_parser
 /**
  *  Called when the http request message begins, by the http_parser.
- *  This will all on_request_begin() and on_request_method() from
+ *  This will call on_request_begin() and on_request_method() from
  *  ws_settings.
  *
  *  @param  parser The http_parser calling.
+ *
  *  @return 1 to signal the parser to stop, or 0 to signal a continue.
  */
 static int parser_msg_begin(http_parser *parser)
@@ -277,7 +312,8 @@ static int parser_msg_begin(http_parser *parser)
 /// URL callback for http_parser
 /**
  *  Called from http_parser with chunks of the URL. Each chunk is sent
- *  to the on_request_url() callback in ws_settings.
+ *  to the on_request_url() callback in ws_settings and the the URL
+ *  parser.
  *
  *  @param  parser The http_parser calling.
  *  @param  buf    The buffer containing the chunk. Note that the buffer
@@ -509,10 +545,13 @@ static int parser_msg_cmpl(http_parser *parser)
  *  ws_reqeust_parse(), and it should be freed using
  *  ws_request_destroy() to avoid memory leaks.
  *
- *  @param  client   The client who sent the request.
- *  @param  settings The settings for the webserver receiving the
- *                   request. This will determine which callbacks to
- *                   call on events.
+ *  @param  webserver  The http-webserver creating the request
+ *  @param  settings   The settings for the webserver receiving the
+ *                     request. This will determine which callbacks to
+ *                     call on events.
+ *  @param  conn       The connection on which the request is being
+ *                     received
+ *
  *  @return The newly create ws_request.
  */
 struct http_request *http_request_create(
@@ -543,7 +582,7 @@ struct http_request *http_request_create(
    req->url_parser = up_create(&up_settings, req);
 
    // Init Header Parser
-   struct header_parser_settings hp_settings = HEADER_PARSER_SETTINGS_DEFAULT;
+   struct hp_settings hp_settings = HP_SETTINGS_DEFAULT;
    hp_settings.data = req;
    hp_settings.on_field_value_pair = header_parser_field_value_pair_complete;
    req->header_parser = hp_create(&hp_settings);
@@ -553,8 +592,8 @@ struct http_request *http_request_create(
    req->headers = lm_create();
    req->cookies = lm_create();
 
+   // Other field to init
    req->url = NULL;
-
    req->data = NULL;
 
    return req;
@@ -598,6 +637,7 @@ void http_request_destroy(struct http_request *req)
  *  @param  req The request, to which the chunk should be added.
  *  @param  buf The chunk, which is not assumed to be \\0 terminated.
  *  @param  len Length of the chuck.
+ *
  *  @return What http_parser_execute() returns.
  */
 size_t http_request_parse(
@@ -611,56 +651,131 @@ size_t http_request_parse(
    return http_parser_execute(&req->parser, &parser_settings, buf, len);
 }
 
+/// Get the method of the http request
+/**
+ *  \param  req  http request
+ *
+ *  \return The method as a enum http_method
+ */
 enum http_method http_request_get_method(struct http_request *req)
 {
    return req->parser.method;
 }
 
+/// Get the URL of this request
+/**
+ *  \param  req  http request
+ *
+ *  \return URL as a string
+ */
 const char *http_request_get_url(struct http_request *req)
 {
    return req->url;
 }
 
+/// Get a linked map of all headers for a request
+/**
+ *  \param  req  http request
+ *
+ *  \return Headers as a linkedmap (struct lm)
+ */
 struct lm *http_request_get_headers(struct http_request *req)
 {
    return req->headers;
 }
 
+/// Get a specific header of a request
+/**
+ *  \param  req  http request
+ *  \param  key  Key for the header to get
+ *
+ *  \return The value of the header with the specified key, or NULL if
+ *          not found
+ */
 const char *http_request_get_header(struct http_request *req, const char* key)
 {
    return lm_find(req->headers, key);
 }
 
+/// Get a linked map of all URL arguements for a request
+/**
+ *  \param  req  http request
+ *
+ *  \return Arguments as a linkedmap (struct lm)
+ */
 struct lm *http_request_get_arguments(struct http_request *req)
 {
    return req->arguments;
 }
 
+/// Get a specific argument of a request
+/**
+ *  \param  req  http request
+ *  \param  key  Key value of argument to get
+ *
+ *  \return Value of argument as string, or NULL if not found
+ */
 const char *http_request_get_argument(struct http_request *req, const char* key)
 {
    return lm_find(req->arguments, key);
 }
 
+/// Get a all cookies for a request
+/**
+ *  \param  req  http request
+ *
+ *  \return Cookies as a linkedmap (struct lm)
+ */
 struct lm *http_request_get_cookies(struct http_request *req)
 {
    return req->cookies;
 }
 
+/// Get a specific cookie for a request
+/**
+ *  \param  req  http request
+ *  \param  key  Key of cookie to get
+ *
+ *  \return The value of the cookie as String, or NULL if cookie was not
+ *          found
+ */
 const char *http_request_get_cookie(struct http_request *req, const char* key)
 {
    return lm_find(req->cookies, key);
 }
 
+/// Get the connection of a request
+/**
+ *  \param  req  http request
+ *
+ *  \return The connection
+ */
 struct ws_conn *http_request_get_connection(struct http_request *req)
 {
    return req->conn;
 }
 
+/// Get the IP of a request
+/**
+ *  \param  req  http request
+ *
+ *  \return IP as a string
+ */
 const char *http_request_get_ip(struct http_request *req)
 {
    return ws_conn_get_ip(req->conn);
 }
 
+/// Keep the connection for a request open
+/**
+ *  Normally connections are closed when there has been no activity on
+ *  it for the amount specified in the timeout field in the
+ *  http-webserver settings struct. To keep the connection open forever,
+ *  issue or call to this function with the http request. The connection
+ *  will still be closed and destroyed when the client closes it.
+ *
+ *  \param  req  http request to keep open
+ */
 void http_request_keep_open(struct http_request *req)
 {
    ws_conn_keep_open(req->conn);

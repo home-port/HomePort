@@ -63,7 +63,7 @@ void on_field_value(void * _data,
 
 TEST_START("header_parser.c")
 
-   struct header_parser_settings settings = HEADER_PARSER_SETTINGS_DEFAULT;
+   struct hp_settings settings = HP_SETTINGS_DEFAULT;
    settings.on_field_value_pair = &on_field_value;
 
 TEST(Header parser test)
@@ -75,7 +75,7 @@ TEST(Header parser test)
    data.errors = 0;
    settings.data = &data;
    
-   struct header_parser_instance *hp = hp_create(&settings);
+   struct hp *hp = hp_create(&settings);
 
 	hp_on_header_field(hp, "cat",3);
 	hp_on_header_value(hp, "yes",3);
