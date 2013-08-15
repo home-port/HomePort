@@ -47,5 +47,5 @@ add_library(hpd
       )
 #TODO microhttpd should be removed here when the time is right :)
 target_link_libraries(hpd config pthread uuid libREST mxml microhttpd)
-
+install (TARGETS hpd DESTINATION lib)
 
