@@ -100,21 +100,10 @@ parse_option_va( va_list ap )
 
 }
 
-/**
- * Starts the HomePort Daemon
- * 
- * @param option HPD option as specified in homeport.h
- *
- * @param hostname Name of the desired host
- *
- * @param ... va list of option, last option has to be HPD_OPTION_END
- *
- * @return A HPD error code
- */
-int 
-HPD_start( unsigned int option, struct ev_loop *loop, char *hostname, ... )
+static int
+HPD_vstart(unsigned int option, struct ev_loop *loop, char *hostname,
+           va_list ap)
 {
-
 	int rc;
 
 	if( (rc = HPD_init_daemon()) )
@@ -131,9 +120,6 @@ HPD_start( unsigned int option, struct ev_loop *loop, char *hostname, ... )
 #endif
 #endif
 
-	va_list ap;
-
-	va_start( ap, hostname);
 
 	if( option & HPD_USE_CFG_FILE )
 	{
@@ -177,12 +163,30 @@ HPD_start( unsigned int option, struct ev_loop *loop, char *hostname, ... )
 
 	}
 
-	va_end(ap);	
-
 	return start_server(hostname, NULL, loop);
 }
 
-
+/**
+ * Starts the HomePort Daemon
+ * 
+ * @param option HPD option as specified in homeport.h
+ *
+ * @param hostname Name of the desired host
+ *
+ * @param ... va list of option, last option has to be HPD_OPTION_END
+ *
+ * @return A HPD error code
+ */
+int 
+HPD_start( unsigned int option, struct ev_loop *loop, char *hostname, ... )
+{
+   int rc;
+	va_list ap;
+	va_start( ap, hostname);
+   rc = HPD_vstart(option, loop, hostname, ap);
+	va_end(ap);	
+   return rc;
+}
 
 /**
  * Stops the HomePort Daemon
@@ -324,4 +328,51 @@ HPD_send_event_of_value_change ( Service *service_changed, char *updated_value )
 	return send_event_of_value_change (service_changed, updated_value, NULL);
 }
 
+static void
+sig_cb ( struct ev_loop *loop, struct ev_signal *w, int revents )
+{
+   void (*deinit)() = w->data;
+
+   // Call deinit
+   deinit();
+
+   // Stop server and loop
+   HPD_stop();
+   ev_unloop(loop, EVUNLOOP_ALL);
+}
+
+int
+HPD_easy ( int (*init)(struct ev_loop *loop), void (*deinit)(),
+           unsigned int option, char *hostname, ... )
+{
+   int rc;
+
+   // Create loop
+   struct ev_loop *loop = EV_DEFAULT;
+
+   // Create signal watchers
+   struct ev_signal sigint_watcher;
+   struct ev_signal sigterm_watcher;
+   ev_signal_init(&sigint_watcher, sig_cb, SIGINT);
+   ev_signal_init(&sigterm_watcher, sig_cb, SIGTERM);
+   sigint_watcher.data = deinit;
+   sigterm_watcher.data = deinit;
+   ev_signal_start(loop, &sigint_watcher);
+   ev_signal_start(loop, &sigterm_watcher);
+
+   // Start homeport server
+	va_list ap;
+	va_start( ap, hostname);
+   rc = HPD_vstart(option, loop, hostname, ap);
+	va_end(ap);
+   if (rc) return rc;
+
+   // Call init
+   if ((rc = init(loop))) return rc;
+
+   // Start loop
+   ev_run(loop, 0);
+
+   return 0;
+}
 

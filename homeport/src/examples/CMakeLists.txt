@@ -36,10 +36,16 @@ configure_file(client-browser-cert.p12 client-browser-cert.p12 COPYONLY)
 configure_file(client-cert.pem client-cert.pem COPYONLY)
 configure_file(hpd.cfg hpd.cfg COPYONLY)
 
-# Echo webserver
+# Example
 add_executable(hpd_example EXCLUDE_FROM_ALL
       hpd_example.c
       )
 target_link_libraries(hpd_example hpd ev)
 add_dependencies(example hpd_example)
+
+add_executable(hpd_example_easy EXCLUDE_FROM_ALL
+      hpd_example_easy.c
+      )
+target_link_libraries(hpd_example_easy hpd ev)
+add_dependencies(example hpd_example_easy)
 
