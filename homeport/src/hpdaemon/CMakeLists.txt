@@ -29,7 +29,7 @@
 # as representing official policies, either expressed.
 
 # Main library
-add_library(hpd
+add_library(hpd SHARED
       homeport.c
 #TODO what about the avahi library ?
 #      hpd_avahi_publish.c
@@ -48,4 +48,5 @@ add_library(hpd
 #TODO microhttpd should be removed here when the time is right :)
 target_link_libraries(hpd config pthread uuid libREST mxml microhttpd)
 install (TARGETS hpd DESTINATION lib)
+set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
 
