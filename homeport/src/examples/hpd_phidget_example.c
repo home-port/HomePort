@@ -27,27 +27,22 @@ authors and should not be interpreted as representing official policies, either 
 #include <stdlib.h>
 #include "hpd_phidget.h"
 
-int main()
-{	
-	int rc;
-	
-	/** Starts the hpdaemon. If using avahi-core pass a host name for the server, otherwise pass NULL */
-	if( rc = HPD_start(HPD_USE_CFG_FILE, "Homeport", HPD_OPTION_CFG_PATH, "./hpd.cfg") )
-	{
-		printf("Failed to start HPD %d\n", rc);
-		return 1;
-	}
-
-	/**Init the phidget */
-	HPD_phidget_init();
-
-	getchar();
-
-	/** Deinit the phidget */
-	HPD_phidget_deinit ();
-
-	/** Stop the homeport daemon */
-	HPD_stop();
-
-	return (0);
+static int init(struct ev_loop *loop)
+{
+	return phidget_init(loop);
 }
+
+static void deinit()
+{
+   phidget_deinit();
+}
+
+int init_HPD();
+
+int main(int argc,char** argv)
+{
+   return HPD_easy(init, deinit,
+         HPD_USE_CFG_FILE, "Homeport",
+         HPD_OPTION_CFG_PATH, "./hpd.cfg");
+}
+

@@ -49,3 +49,10 @@ add_executable(hpd_example_easy EXCLUDE_FROM_ALL
 target_link_libraries(hpd_example_easy hpd ev)
 add_dependencies(example hpd_example_easy)
 
+add_executable(hpd_phidget EXCLUDE_FROM_ALL
+      hpd_phidget.c
+      hpd_phidget_example.c
+      )
+target_link_libraries(hpd_phidget hpd ev phidget21)
+add_dependencies(example hpd_phidget)
+

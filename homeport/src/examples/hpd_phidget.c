@@ -96,7 +96,7 @@ AttachHandler( CPhidgetHandle IFK, void *userptr )
 		
 	}
 
-	HPD_phidget_init ();	
+	phidget_init (NULL);	
 
 	return 0;
 
@@ -167,8 +167,8 @@ InputChangeHandler( CPhidgetInterfaceKitHandle IFK, void *usrptr, int Index, int
 }
 
 /** Init ressources needed */
-void 
-HPD_phidget_init()
+int 
+phidget_init(struct ev_loop *loop)
 {
 	CPhidgetInterfaceKit_create(&waitingIfKit);
 
@@ -182,11 +182,13 @@ HPD_phidget_init()
 	CPhidgetInterfaceKit_set_OnInputChange_Handler (waitingIfKit, InputChangeHandler, NULL);
 
 	CPhidget_open((CPhidgetHandle)waitingIfKit, -1);
+
+   return 0;
 }
 
 /** Deinit the ressources */
 void 
-HPD_phidget_deinit()
+phidget_deinit()
 {	
 	CPhidgetManagerHandle phidm = 0;
   	CPhidgetHandle *device_array;

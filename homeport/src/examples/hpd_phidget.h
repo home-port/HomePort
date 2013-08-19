@@ -3,11 +3,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <phidget21.h>
 #include "homeport.h"
 #include "../hpdaemon/utlist.h"
 
-void HPD_phidget_init();
-void HPD_phidget_deinit();
+int phidget_init(struct ev_loop *loop);
+void phidget_deinit();
 
 #endif
