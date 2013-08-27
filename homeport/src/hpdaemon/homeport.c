@@ -331,10 +331,13 @@ HPD_send_event_of_value_change ( Service *service_changed, char *updated_value )
 static void
 sig_cb ( struct ev_loop *loop, struct ev_signal *w, int revents )
 {
-   void (*deinit)() = w->data;
+   void (*deinit)(struct ev_loop *) = w->data;
 
    // Call deinit
-   deinit();
+   // TODO Might be a problem that deinit is not called on ws_stop, but
+   // only if the server is stopped by a signal. Note that this is only
+   // used in HPD_easy way of starting the server.
+   deinit(loop);
 
    // Stop server and loop
    HPD_stop();
@@ -342,7 +345,7 @@ sig_cb ( struct ev_loop *loop, struct ev_signal *w, int revents )
 }
 
 int
-HPD_easy ( int (*init)(struct ev_loop *loop), void (*deinit)(),
+HPD_easy ( int (*init)(struct ev_loop *loop), void (*deinit)(struct ev_loop *),
            unsigned int option, char *hostname, ... )
 {
    int rc;

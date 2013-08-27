@@ -32,9 +32,9 @@ static int init(struct ev_loop *loop)
 	return phidget_init(loop);
 }
 
-static void deinit()
+static void deinit(struct ev_loop *loop)
 {
-   phidget_deinit();
+   phidget_deinit(loop);
 }
 
 int init_HPD();
