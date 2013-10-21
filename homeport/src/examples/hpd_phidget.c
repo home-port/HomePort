@@ -66,7 +66,8 @@ handle_events(struct ev_loop *loop, struct ev_async *w, int revents)
 
    // Handle attachments
    while (ll_head(attach_queue) != NULL) {
-      CPhidgetHandle IFK = ll_data(ll_head(attach_queue));
+      struct ll_iter *head = ll_head(attach_queue);
+      CPhidgetHandle IFK = ll_data(head);
 	   int serialNo, i, rc;
 	   const char *name;
 	   char *serial = (char*)malloc(10*sizeof(char));
@@ -105,12 +106,14 @@ handle_events(struct ev_loop *loop, struct ev_async *w, int revents)
       free(serial);
 
       // Remove event from queue
-      ll_remove(ll_head(attach_queue));
+      struct ll_iter *iter = ll_head(attach_queue);
+      ll_remove(iter);
    }
 
    // Handle input
    while (ll_head(event_queue) != NULL) {
-      struct event *data = ll_data(ll_head(detach_queue));
+      struct ll_iter *head = ll_head(event_queue);
+      struct event *data = ll_data(head);
       CPhidgetHandle IFK = data->ifk;
       int Index = data->index;
       int State = data->state;
@@ -130,12 +133,14 @@ handle_events(struct ev_loop *loop, struct ev_async *w, int revents)
 	   HPD_send_event_of_value_change (changed_service, return_value);	
 
       // Remove event from queue
-      ll_remove(ll_head(event_queue));
+      head = ll_head(event_queue);
+      ll_remove(head);
    }
 
    // Handle detachments
    while (ll_head(detach_queue) != NULL) {
-      CPhidgetHandle IFK = ll_data(ll_head(detach_queue));
+      struct ll_iter *head = ll_head(detach_queue);
+      CPhidgetHandle IFK = ll_data(head);
       int serialNo;
 	   char serial[10];
 	   const char *name;
@@ -155,7 +160,8 @@ handle_events(struct ev_loop *loop, struct ev_async *w, int revents)
 	   CPhidget_delete(IFK);
 
       // Remove event from queue
-      ll_remove(ll_head(detach_queue));
+      head = ll_head(detach_queue);
+      ll_remove(head);
    }
 
    pthread_mutex_unlock(&queue_m);
@@ -166,10 +172,12 @@ int
 AttachHandler( CPhidgetHandle IFK, void *userptr )
 {
    struct ev_loop *loop = userptr;
+   struct ll_iter *tail;
 
    // Add handle to queue
    pthread_mutex_lock(&queue_m);
-   ll_insert(attach_queue, ll_tail(attach_queue), IFK);
+   tail = ll_tail(attach_queue);
+   ll_insert(attach_queue, tail, IFK);
    pthread_mutex_unlock(&queue_m);
 
    // Signal watcher
@@ -179,7 +187,7 @@ AttachHandler( CPhidgetHandle IFK, void *userptr )
    CPhidget_set_OnAttach_Handler((CPhidgetHandle)IFK, NULL, NULL);
 
    // TODO Why this ?!
-	phidget_init (NULL);	
+	//phidget_init (NULL);	
 
 	return 0;
 }
@@ -189,10 +197,12 @@ int
 DetachHandler( CPhidgetHandle IFK, void *userptr )
 {
    struct ev_loop *loop = userptr;
+   struct ll_iter *tail;
 
    // Add handle to queue
    pthread_mutex_lock(&queue_m);
-   ll_insert(detach_queue, ll_tail(detach_queue), IFK);
+   tail = ll_tail(detach_queue);
+   ll_insert(detach_queue, tail, IFK);
    pthread_mutex_unlock(&queue_m);
 
    // Signal watcher
@@ -219,6 +229,7 @@ InputChangeHandler( CPhidgetInterfaceKitHandle IFK, void *usrptr,
                     int Index, int State )
 {
    struct ev_loop *loop = usrptr;
+   struct ll_iter *iter;
 
    // Create data
    struct event *data = malloc(sizeof(struct event));
@@ -228,7 +239,8 @@ InputChangeHandler( CPhidgetInterfaceKitHandle IFK, void *usrptr,
 
    // Add handle to queue
    pthread_mutex_lock(&queue_m);
-   ll_insert(event_queue, ll_tail(event_queue), data);
+   iter = ll_tail(event_queue);
+   ll_insert(event_queue, iter, data);
    pthread_mutex_unlock(&queue_m);
 
    // Signal watcher
@@ -313,9 +325,10 @@ phidget_deinit(struct ev_loop *loop)
    ll_destroy(attach_queue); 
    ll_destroy(detach_queue); 
    while (ll_head(event_queue) != NULL) {
-      free(ll_data(ll_head(event_queue)));
-      ll_data(ll_head(event_queue)) = NULL;
-      ll_remove(ll_head(event_queue));
+      struct ll_iter *head = ll_head(event_queue);
+      free(ll_data(head));
+      ll_data(head) = NULL;
+      ll_remove(head);
    }
    ll_destroy(event_queue); 
    pthread_mutex_unlock(&queue_m);

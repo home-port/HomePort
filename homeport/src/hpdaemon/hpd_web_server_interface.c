@@ -232,7 +232,7 @@ static int answer_put(void *srv_data, void **req_data,
       new_put[new_len-1] = '\0';
       service->put_value = new_put;
    } else {
-      // Get value from XML
+      // Get value from XML TODO Returns NULL if no value in message !!!
       char *value = get_value_from_xml_value(service->put_value);
       free(service->put_value);
       service->put_value = NULL;
@@ -561,11 +561,14 @@ get_service( char *device_type, char *device_ID, char *service_type, char *servi
 
    // TODO This is not the best solution (duplicated code), nor the best
    // place to do this
-	char *value_url = malloc(sizeof(char)*( strlen("/") + strlen(service->device->type) + strlen("/") 
-	                                           + strlen(service->device->ID) + strlen("/") + strlen(service->type)
-	                                           + strlen("/") + strlen(service->ID) + 1 ) );
-	sprintf( value_url,"/%s/%s/%s/%s", service->device->type, service->device->ID, service->type,
-	         service->ID );
+	char *value_url = malloc(sizeof(char)*( strlen("/") + strlen(device_type) + strlen("/") 
+	                                           + strlen(device_ID) +
+                                              strlen("/") +
+                                              strlen(service_type)
+	                                           + strlen("/") +
+                                              strlen(service_ID) + 1 ) );
+	sprintf( value_url,"/%s/%s/%s/%s", device_type, device_ID, service_type,
+	         service_ID );
 	service = lr_lookup_service(unsecure_web_server, value_url);
    free(value_url);
 	return service;
@@ -589,6 +592,7 @@ get_device( char *device_type, char *device_ID)
 
    // TODO This is not the best solution (duplicated code), nor the best
    // place to do this
+   // TODO BUG DOES NOT HAVE A SERVER ID AND TYPE HERE !!!
 	char *value_url = malloc(sizeof(char)*( strlen("/") + strlen(service->device->type) + strlen("/") 
 	                                           + strlen(service->device->ID) + strlen("/") + strlen(service->type)
 	                                           + strlen("/") + strlen(service->ID) + 1 ) );

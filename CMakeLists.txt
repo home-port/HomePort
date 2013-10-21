@@ -31,7 +31,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(HOMEPORT C)
 
-set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG -DHPD_HTTP -Wall")
+set(CMAKE_C_FLAGS_DEBUG "-g -DDEBUG -DHPD_HTTP -DLR_ORIGIN -Wall")
 
 set(CTEST_MEMORYCHECK_COMMAND "/usr/bin/valgrind")
 include(CTest)

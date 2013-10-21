@@ -108,6 +108,11 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req,
 
   switch(http_request_get_method(req))
   {
+#ifdef LR_ORIGIN
+     case HTTP_OPTIONS:
+        break;
+#endif
+
     case HTTP_GET:
       if(service->on_get == NULL){
         method_not_allowed(req);
@@ -151,6 +156,56 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req,
   *req_data = lrreq;
 
   return 0;
+}
+
+static int on_hdr_cmpl(
+      struct httpws *ins, struct http_request *req,
+      void *ws_ctx, void **req_data)
+{
+  struct lr_request *lrreq = *req_data;
+  struct lr_service *service = lrreq->service;
+  struct http_response *res;
+  char methods[23];
+  methods[0] = '\0';
+
+#ifdef LR_ORIGIN
+  switch(http_request_get_method(req))
+  {
+     case HTTP_OPTIONS:
+        res = http_response_create(req, WS_HTTP_200);
+        http_response_add_header(res,
+              "Access-Control-Allow-Origin",
+              "*");
+        if (service->on_get != NULL) {
+           strcat(methods, "GET");
+        }
+        if (service->on_delete != NULL) {
+           if (strlen(methods) > 0) strcat(methods, ", ");
+           strcat(methods, "DELETE");
+        }
+        if (service->on_post != NULL) {
+           if (strlen(methods) > 0) strcat(methods, ", ");
+           strcat(methods, "POST");
+        }
+        if (service->on_put != NULL) {
+           if (strlen(methods) > 0) strcat(methods, ", ");
+           strcat(methods, "PUT");
+        }
+        http_response_add_header(res,
+              "Access-Control-Allow-Methods", methods);
+        http_response_add_header(res,
+              "Access-Control-Allow-Headers", "Content-Type");
+        http_response_sendf(res, "OK");
+        http_response_destroy(res);
+        return 1;
+        break;
+     default:
+        return 0;
+        break;
+  }
+#endif
+
+        return 0;
 }
 
 static int on_body(struct httpws *ins, struct http_request *req,
@@ -214,6 +269,7 @@ struct lr *lr_create(struct lr_settings *settings, struct ev_loop *loop)
    ws_set.timeout = settings->timeout;
    ws_set.ws_ctx = ins;
    ws_set.on_req_url_cmpl = on_url_cmpl;
+   ws_set.on_req_hdr_cmpl = on_hdr_cmpl;
    ws_set.on_req_body = on_body;
    ws_set.on_req_cmpl = on_cmpl;
    ws_set.on_req_destroy = on_destroy;
@@ -328,6 +384,11 @@ void lr_send_start(struct lr_request *req,
    printf("%d  %s\n", (int)(req), __func__);
    req->res = http_response_create(req->req, status);
    // TODO Consider headers to add
+#ifdef LR_ORIGIN
+        http_response_add_header(req->res,
+              "Access-Control-Allow-Origin",
+              "*");
+#endif
    lm_map(headers, add_header, req->res);
 }
 

@@ -230,6 +230,8 @@ static void header_parser_field_value_pair_complete(void* data,
    struct http_request *req = data;
    char *existing = lm_find_n(req->headers, field, field_length);
 
+   printf("Header: %.*s\n", (int)field_length, field);
+
    // If cookie, then store it in cookie list
    if (strncmp(field, "Cookie", 6) == 0) {
       int key_s = 0, key_e, val_s, val_e;
@@ -336,6 +338,7 @@ static int parser_url(http_parser *parser, const char *buf, size_t len)
       case S_BEGIN:
          // Send method
          method = http_method_str(parser->method);
+         printf("Method: %s\n", method);
          if(method_cb)
             stat = method_cb(req->webserver, req, settings->ws_ctx, &req->data, method, strlen(method));
 
