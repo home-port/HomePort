@@ -65,7 +65,7 @@ Run cmake as normal:
 
 Build examples
 
-`make examples`
+`make example`
 
 Example executables can be found in the various example directories
 within the build folder.
