@@ -141,6 +141,8 @@ static int answer_post_events(void *srv_data, void **req_data,
    // bodies too.
    struct lm *headers = lm_create();
    lm_insert(headers, "Location", socket->url);
+   // TODO CORS HEADER - SHOULD BE PACKED INSIDE SETTINGS OR COMPILE FLAG
+   lm_insert(headers, "Access-Control-Expose-Headers", "Location");
    lr_sendf(req, WS_HTTP_201, headers, "Created");
    lm_destroy(headers);
    
