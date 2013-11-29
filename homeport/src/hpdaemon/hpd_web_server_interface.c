@@ -257,9 +257,8 @@ static int answer_put(void *srv_data, void **req_data,
          return 1;
       } else {
          // Send value change event
-         const char *IP = lr_request_get_ip(req);
          buffer[buf_len] = '\0';
-         send_event_of_value_change(service, buffer, IP);
+         send_event_of_value_change(service, buffer);
          
          // Reply to request
          const char *xmlbuff = get_xml_value(buffer);

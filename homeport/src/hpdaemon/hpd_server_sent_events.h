@@ -63,7 +63,7 @@ void close_event_socket(struct event_socket *socket);
 
 int notify_service_availability(Service* service_to_notify, int availability);
 int send_event_of_value_change (Service *service, const char
-      *updated_value, const char *IP);
+      *updated_value);
 int send_log_event(char *log_message);
 
 #endif

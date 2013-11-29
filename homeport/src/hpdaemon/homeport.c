@@ -325,7 +325,7 @@ HPD_get_device( char *device_type, char *device_ID )
 int 
 HPD_send_event_of_value_change ( Service *service_changed, char *updated_value )
 {
-	return send_event_of_value_change (service_changed, updated_value, NULL);
+	return send_event_of_value_change (service_changed, updated_value);
 }
 
 static void

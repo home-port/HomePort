@@ -142,7 +142,7 @@ notify_service_availability(Service* service_to_notify, int availability)
  * @return HPD_E_SERVICE_IS_NULL, HPD_E_EVENT_IS_NULL or HPD_E_ERROR_QUEUING_EVENT if an error occured, HPD_E_SUCCESS if successful
  */
 int 
-send_event_of_value_change( Service *service, const char *value , const char *IP )
+send_event_of_value_change( Service *service, const char *value )
 {
    struct event_socket *s;
 
@@ -153,10 +153,9 @@ send_event_of_value_change( Service *service, const char *value , const char *IP
 		return HPD_E_SERVICE_IS_NULL;
 
    for (s = sockets; s != NULL; s = s->next) {
-      send_event(s, "event: %s\ndata: %s\ndata: %s\nid: %s\n\n",
+      send_event(s, "event: %s\ndata: %s\nid: %s\n\n",
             "value_change",
             value,
-            IP,
             service->value_url);
    }
 
