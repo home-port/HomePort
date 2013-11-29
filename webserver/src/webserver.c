@@ -525,8 +525,12 @@ void ws_conn_kill(struct ws_conn *conn)
    // Print messange
    printf("ws: Killing connection %s\n", conn->ip);
 
-   // Stop watchers
    int sockfd = conn->recv_watcher.fd;
+
+   // Stop circular calls and only kill this connection once
+   if (sockfd < 0) return;
+
+   // Stop watchers
    ev_io_stop(conn->instance->loop, &conn->recv_watcher);
    ev_io_stop(conn->instance->loop, &conn->send_watcher);
    ev_timer_stop(conn->instance->loop, &conn->timeout_watcher);
@@ -535,6 +539,7 @@ void ws_conn_kill(struct ws_conn *conn)
    if (close(sockfd) != 0) {
       perror("close");
    }
+   conn->recv_watcher.fd = -1;
 
    // Remove from list
    ws_instance_rm_conn(conn->instance, conn);
