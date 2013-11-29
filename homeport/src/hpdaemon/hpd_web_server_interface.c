@@ -114,6 +114,7 @@ static int answer_post_events(void *srv_data, void **req_data,
    if (body) {
       if (*req_data) new += strlen(req_str);
       str = realloc(*req_data, (new+1)*sizeof(char));
+      str[0] = '\0';
       if (!str) {
          printf("Failed to allocate memory\n");
          lr_sendf(req, WS_HTTP_500, NULL, "Internal server error");
