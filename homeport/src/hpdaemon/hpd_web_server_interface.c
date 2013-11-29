@@ -91,8 +91,10 @@ static int answer_get_event_socket(void *srv_data, void **req_data,
                                    struct lr_request *req,
                                    const char *body, size_t len)
 {
+   struct lm *headers = lm_create();
    lr_request_keep_open(req);
-   lr_send_start(req, WS_HTTP_200, NULL);
+   lm_insert(headers, "Content-Type", "text/event-stream");
+   lr_send_start(req, WS_HTTP_200, headers);
    open_event_socket(srv_data, req);
    return 0;
 }
