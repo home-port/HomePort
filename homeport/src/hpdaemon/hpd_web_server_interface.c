@@ -108,18 +108,19 @@ static int answer_post_events(void *srv_data, void **req_data,
    char *str;
    char *req_str = *req_data;
    struct ev_loop *loop = srv_data;
+   int new = len;
 
    // Recieve data
    if (body) {
-      if (*req_data) len += strlen(req_str);
-      str = realloc(*req_data, (len+1)*sizeof(char));
+      if (*req_data) new += strlen(req_str);
+      str = realloc(*req_data, (new+1)*sizeof(char));
       if (!str) {
          printf("Failed to allocate memory\n");
          lr_sendf(req, WS_HTTP_500, NULL, "Internal server error");
          return 0;
       }
       strncat(str, body, len);
-      str[len] = '\0';
+      str[new] = '\0';
       *req_data = str;
       return 0;
    }
