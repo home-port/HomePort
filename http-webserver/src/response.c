@@ -40,6 +40,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifdef DEBUG
+#include <execinfo.h>
+#endif
+
 #define HTTP_VERSION "HTTP/1.1 "
 #define CRLF "\r\n"
 
@@ -61,6 +65,26 @@ struct http_response
    struct ws_conn *conn; ///< The connection to send on
    char *msg;            ///< Status/headers to send
 };
+
+#ifdef DEBUG
+// TODO: Code from libc manual - can probably be removed when bug has been fixed
+void print_trace (void) {
+   void *array[10];
+   size_t size;
+   char **strings;
+   size_t i;
+   
+   size = backtrace (array, 10);
+   strings = backtrace_symbols (array, size);
+   
+   printf ("Obtained %zd stack frames.\n", size);
+   
+   for (i = 0; i < size; i++)
+      printf ("%s\n", strings[i]);
+   
+   free (strings);
+}
+#endif
 
 /// Convert a status code to string
 /**
@@ -183,6 +207,11 @@ int http_response_add_header(struct http_response *res,
 
 	char *msg;
 	int msg_len = strlen(res->msg)+strlen(field)+2+strlen(value)+strlen(CRLF)+1;
+
+#ifdef DEBUG
+   if (msg_len > 100000)
+      print_trace();
+#endif
 
 	msg = realloc(res->msg, msg_len*sizeof(char));
 	if (msg == NULL) {
