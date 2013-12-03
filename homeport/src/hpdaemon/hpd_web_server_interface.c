@@ -54,10 +54,17 @@ static int req_destroy_socket(void *srv_data, void **req_data,
                               struct lr_request *req)
 {
    lr_send_stop(req);
+
    // TODO For now we just close socket on connection lost
-   const char *url = lr_request_get_url(req); 
-   void *socket = lr_unregister_service(unsecure_web_server, url);
-   destroy_socket(socket);
+   // Only do this when it is a get request to avoid unregistering
+   // services on OPTIONS
+   enum http_method method = lr_request_get_method(req);
+   if (method == HTTP_GET) { 
+      const char *url = lr_request_get_url(req); 
+      void *socket = lr_unregister_service(unsecure_web_server, url);
+      destroy_socket(socket);
+   }
+
    return 0;
 }
 
@@ -598,11 +605,14 @@ get_device( char *device_type, char *device_ID)
    // TODO This is not the best solution (duplicated code), nor the best
    // place to do this
    // TODO BUG DOES NOT HAVE A SERVER ID AND TYPE HERE !!!
-	char *value_url = malloc(sizeof(char)*( strlen("/") + strlen(service->device->type) + strlen("/") 
-	                                           + strlen(service->device->ID) + strlen("/") + strlen(service->type)
-	                                           + strlen("/") + strlen(service->ID) + 1 ) );
-	sprintf( value_url,"/%s/%s/%s/%s", service->device->type, service->device->ID, service->type,
-	         service->ID );
+   size_t len = strlen("/") + strlen(service->device->type) +
+                strlen("/") + strlen(service->device->ID) +
+                strlen("/") + strlen(service->type) +
+                strlen("/") + strlen(service->ID) + 1;
+	char *value_url = malloc(sizeof(char)*len);
+	sprintf( value_url,"/%s/%s/%s/%s",
+            service->device->type, service->device->ID,
+            service->type, service->ID );
 	service = lr_lookup_service(unsecure_web_server, value_url);
    free(value_url);
 	device = service->device;
