@@ -193,8 +193,11 @@ static int on_hdr_cmpl(
         }
         http_response_add_header(res,
               "Access-Control-Allow-Methods", methods);
+        // TODO Having so many specified headers here is not really
+        // thaaaat good
         http_response_add_header(res,
-              "Access-Control-Allow-Headers", "Content-Type");
+              "Access-Control-Allow-Headers", "Content-Type, "
+              "Cache-Control, Accept, X-Requested-With");
         http_response_sendf(res, "OK");
         http_response_destroy(res);
         return 1;
