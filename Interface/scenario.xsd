@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="scenario">
+    <xs:complexType>
+      <xs:sequence>
+	<xs:element name="name" type="xs:string" />
+	<xs:element name="id" type="xs:string" />
+	<xs:element name="when">
+	  <xs:complexType>
+	    <xs:all>
+	      <xs:element name="event" minOccurs="1">
+		<xs:complexType>
+		  <xs:all>
+		    <xs:element name="seqNumber" type="xs:integer"/>
+		    <xs:element name="serviceId" type="xs:string"/>
+		    <xs:element name="value" type="xs:string"/>
+		    <xs:element name="duration" type="xs:string"/>
+		    <xs:element name="timeRelation" type="xs:string"/>
+		  </xs:all>
+		</xs:complexType>
+	      </xs:element>
+	    </xs:all>
+	  </xs:complexType>
+	</xs:element>
+	<xs:element name="if">
+	  <xs:complexType>
+	    <xs:all>
+	      <xs:element name="condition">
+		<xs:complexType>
+		  <xs:all>
+		    <xs:element name="serviceId" />
+		    <xs:element name="value" />
+		  </xs:all>
+		</xs:complexType>
+	      </xs:element>
+	    </xs:all>
+	  </xs:complexType>
+	</xs:element>
+	<xs:element name="then">
+	  <xs:complexType>
+	    <xs:all>
+	      <xs:element name="action" minOccurs="1">
+		<xs:complexType>
+		  <xs:all>
+		    <xs:element name="seqNumber" />
+		    <xs:element name="serviceId" />
+		    <xs:element name="value" />
+		  </xs:all>
+		</xs:complexType>
+	      </xs:element>
+	    </xs:all>
+	  </xs:complexType>
+	</xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
