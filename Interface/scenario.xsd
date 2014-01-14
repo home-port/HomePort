@@ -7,25 +7,25 @@
 	<xs:element name="id" type="xs:string" />
 	<xs:element name="when">
 	  <xs:complexType>
-	    <xs:all>
-	      <xs:element name="event" minOccurs="1">
+	    <xs:sequence>
+	      <xs:element name="event" minOccurs="1" maxOccurs="unbounded">
 		<xs:complexType>
 		  <xs:all>
 		    <xs:element name="seqNumber" type="xs:integer"/>
 		    <xs:element name="serviceId" type="xs:string"/>
 		    <xs:element name="value" type="xs:string"/>
-		    <xs:element name="duration" type="xs:string"/>
-		    <xs:element name="timeRelation" type="xs:string"/>
+		    <xs:element name="duration" type="xs:string" minOccurs="0"/>
+		    <xs:element name="timeRelation" type="xs:string" minOccurs="0"/>
 		  </xs:all>
 		</xs:complexType>
 	      </xs:element>
-	    </xs:all>
+	    </xs:sequence>
 	  </xs:complexType>
 	</xs:element>
-	<xs:element name="if">
+	<xs:element name="if" minOccurs="0">
 	  <xs:complexType>
-	    <xs:all>
-	      <xs:element name="condition">
+	    <xs:sequence>
+	      <xs:element name="condition" maxOccurs="unbounded">
 		<xs:complexType>
 		  <xs:all>
 		    <xs:element name="serviceId" />
@@ -33,13 +33,13 @@
 		  </xs:all>
 		</xs:complexType>
 	      </xs:element>
-	    </xs:all>
+	    </xs:sequence>
 	  </xs:complexType>
 	</xs:element>
-	<xs:element name="then">
+	<xs:element name="then" minOccurs="0">
 	  <xs:complexType>
-	    <xs:all>
-	      <xs:element name="action" minOccurs="1">
+	    <xs:sequence>
+	      <xs:element name="action" minOccurs="1" maxOccurs="unbounded">
 		<xs:complexType>
 		  <xs:all>
 		    <xs:element name="seqNumber" />
@@ -48,7 +48,7 @@
 		  </xs:all>
 		</xs:complexType>
 	      </xs:element>
-	    </xs:all>
+	    </xs:sequence>
 	  </xs:complexType>
 	</xs:element>
       </xs:sequence>
