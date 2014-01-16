@@ -1,9 +1,12 @@
 
 class BlockView {
-    public static GetTimedBlockView(id: string, content : HTMLElement, onDragCallback : Function, onDropCallback : Function) {
+    public static GetTimedBlockView(id: string, parentType : string, content : HTMLElement, onBeginDragCallback : Function, onDragCall : Function, onDropCallback : Function) {
         //Container element
+        
         var output = document.createElement('div');
         output.id = id;
+        output.setAttribute("data-timeline-type", parentType);
+
         output.classList.add('block');
         output.classList.add('timedBlock');
         output.classList.add('blockSpacing');
@@ -23,7 +26,7 @@ class BlockView {
         //drag area
         var drag = document.createElement('div')
         drag.id = id + "_handle";
-        drag.classList.add('dragHere'); //class used for jqueryui selector
+        drag.classList.add('dragHere'); //not used... should probably be removed if you read this.
         output.appendChild(drag);
 
         //end of arrow (pointy end)
@@ -35,13 +38,16 @@ class BlockView {
             handle: "#" + id + "_handle",
             containment: "#wrapper",
             revert: "invalid",
-            start: function (event, ui: HTMLElement) {
-                onDragCallback(event, ui);
-                console.log("START: drag of element id: " + ui.id + ".");
+            start: function (event: JQueryUI.DraggableEvent, ui: JQueryUI.DraggableEventUIParams) {
+                console.log("START: drag of element id: " + ui.helper[0].id + ".");
+                onBeginDragCallback(event, ui);
             },
-            stop: function (event, ui) {
+            drag: function (event : JQueryUI.DraggableEvent, ui: JQueryUI.DraggableEventUIParams) {
+                onDragCall(event, ui);
+            }, 
+            stop: function (event: JQueryUI.DraggableEvent, ui: JQueryUI.DraggableEventUIParams) {
+                console.log("STOP: drag of element id: " + ui.helper[0].id + ".");
                 onDropCallback(event, ui);
-                console.log("STOP: drag of element id: " + ui.id + ".");
             }
         });
 
@@ -63,11 +69,26 @@ class BlockView {
         return output;
     } 
 
+    public static GetNoneView(id: string, parentType: string, content: HTMLElement, onDragCallback: Function, onDropCallback: Function) {
 
-    public static GetTimedDropView(id: string) {
+    }
+
+    public static GetStartView(id : string) {
+        var output = document.createElement('div');
+        output.id = id;
+        output.style.display = "inline-block";
+        output.appendChild(UIHelper.CreateEndArrow(id + "_endArrow", new Array(), new Array("startTriangle", "block")));
+        return output;
+    }
+    
+
+    public static GetTimedDropView(id: string, parentType : string, afterIndex : number, onDropCallbacks : Array<Function>) {
         //Container element
         var output = document.createElement('div');
         output.id = id;
+        output.setAttribute("data-timeline-type", parentType);
+        output.setAttribute("data-after-index", afterIndex.toString());
+
         output.classList.add('block');
         output.classList.add('timedBlock');
         output.classList.add('blockSpacing');
@@ -88,8 +109,17 @@ class BlockView {
 
         var drop = document.createElement('div')
         drop.id = id +"_dropArea";
-        drop.classList.add('dropHere'); //class used for jqueryui selector
+        drop.classList.add('dropHere');
         middle.appendChild(drop);
+
+        //add handler to drop area
+        $(drop).droppable({
+            drop: function (event, ui) {
+                onDropCallbacks.forEach((callback, undex, array) => {
+                    callback(event, ui, output);
+                });
+            }
+        });
 
 
         //end of arrow (pointy end)

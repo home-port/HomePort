@@ -1,6 +1,14 @@
 /// <reference path="jquery.d.ts" />
 /// <reference path="jqueryui.d.ts" />
 
+
+
+//extend the Window interface.
+interface Window {
+    ScenarioDOM: ScenarioDOM;
+    CanvasDOM: DeviceCanvas;
+}
+
 window.onload = () => {
     //DEBUG
 
@@ -9,8 +17,8 @@ window.onload = () => {
     var thenArray = new Array<ScenarioAction>();
     for (var i = 0; i < 3; i++) {
         whenArray.push(new ScenarioEvent("whenDevice_" + i, "<5", 2 - i, 5, "foobar"));
-        ifArray.push(new ScenarioCondition("whenDevice_" + i, "<5"));
-        thenArray.push(new ScenarioAction("whenDevice_" + i, "<5", 2 - i));
+        ifArray.push(new ScenarioCondition("ifDevice_" + i, "<5"));
+        thenArray.push(new ScenarioAction("thenDevice_" + i, "<5", 2 - i));
     }
     var scenario = new Scenario(whenArray, ifArray, thenArray);
 

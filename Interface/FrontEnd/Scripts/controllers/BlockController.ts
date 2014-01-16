@@ -13,17 +13,17 @@ class Block {
     public set Id(val) { this._id = val; }
 
     private _DOMServiceType;
-    public get DOMServiceType() { return this._DOMServiceType; }
-    public set DOMServiceType(val) { this._DOMServiceType = val; }
+    public get ServiceType() { return this._DOMServiceType; }
+    public set ServiceType(val) { this._DOMServiceType = val; }
 
-    private _blockType;
-    public get BlockType() { return this._blockType; }
-    public set BlockType(val) {
-        this._blockType = val;
+    private _timelineType;
+    public get TimelineType() { return this._timelineType; }
+    public set TimelineType(val) {
+        this._timelineType = val;
         this.DOM = this.GetDOM();
     }
 
-    private _dom: Element;
+    private _dom: HTMLElement;
     public get DOM() {
         return this._dom;
     }
@@ -36,6 +36,13 @@ class Block {
     {
         DOMWrapper.innerHTML = "";
         DOMWrapper.appendChild(custom);
+    }
+
+
+    //reset the left and top css property after a drag.
+    public ResetDragOffset() {
+        this.DOM.style.removeProperty('left');
+        this.DOM.style.removeProperty('top');
     }
 
     public CreateContent(DOMWrapper: HTMLElement) : HTMLElement {
@@ -51,6 +58,9 @@ class Block {
         throw "Not implemented"; //TODO
     }
 
+    public ChangeParentInfo(newParent: string) {
+        this.DOM.dataset['timelineType'] = newParent;
+    }
 
     constructor(model, id: string) {
         this.Model = model;
@@ -79,7 +89,7 @@ class StartBlock extends Block {
     }
 
     public GetDOM() {
-        return UIHelper.CreateEndArrow(this.Id + "_endArrow", new Array(), new Array("startTriangle", "block"));
+        return BlockView.GetStartView(this.Id);
     }
 }
 
@@ -87,11 +97,11 @@ class DeviceBlock extends Block {
     constructor(model: ScenarioBlock, id: string, blockType: string) {
         super(model, id);
 
-        this.DOMServiceType = ServiceTypeEnum.Actuator; //DEBUG. TODO: get this value from the model->service->attribute?.
-        this.BlockType = blockType;
+        this.ServiceType = ServiceTypeEnum.Actuator; //DEBUG. TODO: get this value from the model->service->attribute?.
+        this.TimelineType = blockType;
     }
 
-
+    
 
     public SetContent(DOMWrapper: HTMLElement) {
         this.SetCustomContent(DOMWrapper, this.CreateContent());
@@ -102,14 +112,43 @@ class DeviceBlock extends Block {
     }
 
     public GetDOM(): HTMLElement {
-        switch (this.BlockType) {
+        var output;
+
+
+        //JqueryUI doesnt modify left, top correctly if relative position is modified by the DOM while dragging. Let's work around that :).
+        function onDrag(serviceType) {
+            return (event: JQueryUI.DraggableEvent, ui: JQueryUI.DraggableEventUIParams) => {
+                var blockDOM = ui.helper[0];
+                //Figure out the current position
+                var oldPos = blockDOM.offsetLeft;
+                blockDOM.style.position = "absolute";
+                blockDOM.style.left = (blockDOM.offsetLeft + blockDOM.style.left).toString();
+                blockDOM.classList.remove("appended");
+                blockDOM.style.zIndex = "10";
+                
+                window.ScenarioDOM.InsertDropSpaces(serviceType);
+            }
+        }
+
+        function onDrop() {
+            return (event: JQueryUI.DraggableEvent, ui: JQueryUI.DraggableEventUIParams)  => {
+                window.ScenarioDOM.RemoveDropSpaces();
+                var blockDOM = ui.helper[0];
+                blockDOM.classList.add("appended");
+                blockDOM.style.position = "relative";
+                blockDOM.style.removeProperty("zIndex");
+
+            }
+        }
+
+        switch (this.TimelineType) {
             case BlockTypeEnum.When:
-                return BlockView.GetTimedBlockView(this.Id, this.CreateContent());
+                output = BlockView.GetTimedBlockView(this.Id, this.TimelineType, this.CreateContent(), onDrag(this.ServiceType), (event, ui) => { }, onDrop() );
                 break;
             case BlockTypeEnum.If:
                 break;
             case BlockTypeEnum.Then:
-                return BlockView.GetTimedBlockView(this.Id, this.CreateContent());
+                output = BlockView.GetTimedBlockView(this.Id, this.TimelineType, this.CreateContent(), onDrag(this.ServiceType), (event, ui) => { }, onDrop() );
                 break;
             case BlockTypeEnum.None:
                 break;
@@ -117,18 +156,32 @@ class DeviceBlock extends Block {
                 throw "blocktype not set on id:" + this.Id;
                 break;
         }
+
+        this.DOM = output;
+        return output;
     }
 }
 
 
 class DropSpaceTimedBlock extends Block {
-    constructor(id: string) {
+
+    private _index: number;
+    public get Index() { return this._index; }
+    public set Index(val) { this._index = val; }
+
+    private _callbacks: Array<Function>;
+    public get Callbacks() { return this._callbacks; }
+    public set Callbacks(val) { this._callbacks = val;}
+
+    constructor(id: string, index, callbacks : Array<Function>, blockType: string) {
         super(null, id);
+        this.Index = index;
+        this.Callbacks = callbacks;
+        this.TimelineType = blockType;
     }
 
     public GetDOM() {
-        return BlockView.GetTimedDropView(this.Id);
+        return BlockView.GetTimedDropView(this.Id, this.TimelineType, this.Index, this.Callbacks);
     }
-
 }
  
