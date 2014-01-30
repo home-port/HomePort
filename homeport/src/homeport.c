@@ -325,27 +325,30 @@ HPD_get_device( char *device_type, char *device_ID )
 int 
 HPD_send_event_of_value_change ( Service *service_changed, char *updated_value )
 {
-	return send_event_of_value_change (service_changed, updated_value);
+	return send_event_of_value_change (service_changed, updated_value, NULL);
 }
 
 static void
 sig_cb ( struct ev_loop *loop, struct ev_signal *w, int revents )
 {
-   void (*deinit)(struct ev_loop *) = w->data;
+   void (*deinit)(struct ev_loop *, void *) = ((void **)w->data)[0];
 
    // Call deinit
    // TODO Might be a problem that deinit is not called on ws_stop, but
    // only if the server is stopped by a signal. Note that this is only
    // used in HPD_easy way of starting the server.
-   deinit(loop);
+   deinit(loop, ((void **)w->data)[1]);
 
    // Stop server and loop
    HPD_stop();
    ev_unloop(loop, EVUNLOOP_ALL);
+
+   // TODO Isn't it bad that we down stop watcher here?
+   free(w->data);
 }
 
 int
-HPD_easy ( int (*init)(struct ev_loop *loop), void (*deinit)(struct ev_loop *),
+HPD_easy ( int (*init)(struct ev_loop *loop, void *data), void (*deinit)(struct ev_loop *loop, void *data), void *data,
            unsigned int option, char *hostname, ... )
 {
    int rc;
@@ -358,8 +361,11 @@ HPD_easy ( int (*init)(struct ev_loop *loop), void (*deinit)(struct ev_loop *),
    struct ev_signal sigterm_watcher;
    ev_signal_init(&sigint_watcher, sig_cb, SIGINT);
    ev_signal_init(&sigterm_watcher, sig_cb, SIGTERM);
-   sigint_watcher.data = deinit;
-   sigterm_watcher.data = deinit;
+   void **w_data = malloc(2*sizeof(void *));
+   w_data[0] = deinit;
+   w_data[1] = data;
+   sigint_watcher.data = w_data;
+   sigterm_watcher.data = w_data;
    ev_signal_start(loop, &sigint_watcher);
    ev_signal_start(loop, &sigterm_watcher);
 
@@ -371,7 +377,7 @@ HPD_easy ( int (*init)(struct ev_loop *loop), void (*deinit)(struct ev_loop *),
    if (rc) return rc;
 
    // Call init
-   if ((rc = init(loop))) return rc;
+   if ((rc = init(loop, data))) return rc;
 
    // Start loop
    ev_run(loop, 0);

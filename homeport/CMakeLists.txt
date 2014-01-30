@@ -33,5 +33,10 @@ include_directories(${PROJECT_SOURCE_DIR}/http-webserver/include)
 include_directories(${PROJECT_SOURCE_DIR}/webserver/include)
 include_directories(${PROJECT_SOURCE_DIR}/misc/include)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+add_subdirectory(include)
+add_subdirectory(examples)
 add_subdirectory(src)
 

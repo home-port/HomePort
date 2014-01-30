@@ -27,12 +27,12 @@ authors and should not be interpreted as representing official policies, either 
 #include <stdlib.h>
 #include "hpd_phidget.h"
 
-static int init(struct ev_loop *loop)
+static int init(struct ev_loop *loop, void *data)
 {
 	return phidget_init(loop);
 }
 
-static void deinit(struct ev_loop *loop)
+static void deinit(struct ev_loop *loop, void *data)
 {
    phidget_deinit(loop);
 }
@@ -41,7 +41,7 @@ int init_HPD();
 
 int main(int argc,char** argv)
 {
-   return HPD_easy(init, deinit,
+   return HPD_easy(init, deinit, NULL,
          HPD_USE_CFG_FILE, "Homeport",
          HPD_OPTION_CFG_PATH, "./hpd.cfg");
 }

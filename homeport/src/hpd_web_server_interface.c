@@ -54,17 +54,10 @@ static int req_destroy_socket(void *srv_data, void **req_data,
                               struct lr_request *req)
 {
    lr_send_stop(req);
-
    // TODO For now we just close socket on connection lost
-   // Only do this when it is a get request to avoid unregistering
-   // services on OPTIONS
-   enum http_method method = lr_request_get_method(req);
-   if (method == HTTP_GET) { 
-      const char *url = lr_request_get_url(req); 
-      void *socket = lr_unregister_service(unsecure_web_server, url);
-      destroy_socket(socket);
-   }
-
+   const char *url = lr_request_get_url(req); 
+   void *socket = lr_unregister_service(unsecure_web_server, url);
+   destroy_socket(socket);
    return 0;
 }
 
@@ -98,10 +91,8 @@ static int answer_get_event_socket(void *srv_data, void **req_data,
                                    struct lr_request *req,
                                    const char *body, size_t len)
 {
-   struct lm *headers = lm_create();
    lr_request_keep_open(req);
-   lm_insert(headers, "Content-Type", "text/event-stream");
-   lr_send_start(req, WS_HTTP_200, headers);
+   lr_send_start(req, WS_HTTP_200, NULL);
    open_event_socket(srv_data, req);
    return 0;
 }
@@ -115,20 +106,18 @@ static int answer_post_events(void *srv_data, void **req_data,
    char *str;
    char *req_str = *req_data;
    struct ev_loop *loop = srv_data;
-   int new = len;
 
    // Recieve data
    if (body) {
-      if (*req_data) new += strlen(req_str);
-      str = realloc(*req_data, (new+1)*sizeof(char));
-      str[0] = '\0';
+      if (*req_data) len += strlen(req_str);
+      str = realloc(*req_data, (len+1)*sizeof(char));
       if (!str) {
          printf("Failed to allocate memory\n");
          lr_sendf(req, WS_HTTP_500, NULL, "Internal server error");
          return 0;
       }
       strncat(str, body, len);
-      str[new] = '\0';
+      str[len] = '\0';
       *req_data = str;
       return 0;
    }
@@ -225,7 +214,7 @@ static int answer_put(void *srv_data, void **req_data,
    size_t new_len;
 
    // Check if allowed
-   if (!service->put_function) {
+   if (!service->get_function) {
       lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
       return 1;
    }
@@ -268,8 +257,9 @@ static int answer_put(void *srv_data, void **req_data,
          return 1;
       } else {
          // Send value change event
+         const char *IP = lr_request_get_ip(req);
          buffer[buf_len] = '\0';
-         send_event_of_value_change(service, buffer);
+         send_event_of_value_change(service, buffer, IP);
          
          // Reply to request
          const char *xmlbuff = get_xml_value(buffer);
@@ -605,14 +595,11 @@ get_device( char *device_type, char *device_ID)
    // TODO This is not the best solution (duplicated code), nor the best
    // place to do this
    // TODO BUG DOES NOT HAVE A SERVER ID AND TYPE HERE !!!
-   size_t len = strlen("/") + strlen(service->device->type) +
-                strlen("/") + strlen(service->device->ID) +
-                strlen("/") + strlen(service->type) +
-                strlen("/") + strlen(service->ID) + 1;
-	char *value_url = malloc(sizeof(char)*len);
-	sprintf( value_url,"/%s/%s/%s/%s",
-            service->device->type, service->device->ID,
-            service->type, service->ID );
+	char *value_url = malloc(sizeof(char)*( strlen("/") + strlen(service->device->type) + strlen("/") 
+	                                           + strlen(service->device->ID) + strlen("/") + strlen(service->type)
+	                                           + strlen("/") + strlen(service->ID) + 1 ) );
+	sprintf( value_url,"/%s/%s/%s/%s", service->device->type, service->device->ID, service->type,
+	         service->ID );
 	service = lr_lookup_service(unsecure_web_server, value_url);
    free(value_url);
 	device = service->device;

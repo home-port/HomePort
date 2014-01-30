@@ -35,6 +35,7 @@ authors and should not be interpreted as representing official policies, either 
 /** Once the library is installed, should be remplaced by <hpdaemon/homeport.h> */
 #include "homeport.h"
 
+// TODO These can now be moved into a data struct in init and deinit instead
 #if HPD_HTTP 
 static Service *service_lamp0 = NULL;
 static Service *service_lamp1 = NULL;
@@ -74,7 +75,7 @@ get_switch ( Service* service, char *buffer, size_t max_buffer_size )
 	return strlen(buffer);
 }
 
-static void deinit()
+static void deinit(struct ev_loop *loop, void *data)
 {
 	/** Unregistering services is not necessary, calling HPD_stop unregisters and 
 	    deallocates the services and devices that are still register in HPD		   */
@@ -107,7 +108,7 @@ static void deinit()
 #endif
 }
 
-static int init()
+static int init(struct ev_loop *loop, void *data)
 {
 #if HPD_HTTP 
 	/** Creation and registration of non secure services */
@@ -233,7 +234,7 @@ int
 main()
 {	
 	/** Starts the hpdaemon. If using avahi-core pass a host name for the server, otherwise pass NULL */
-   return HPD_easy(init, deinit, HPD_USE_CFG_FILE, "Homeport",
+   return HPD_easy(init, deinit, NULL, HPD_USE_CFG_FILE, "Homeport",
                HPD_OPTION_CFG_PATH, "./hpd.cfg" );
 }
 

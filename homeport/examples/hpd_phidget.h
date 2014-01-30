@@ -6,7 +6,7 @@
 #include <string.h>
 #include <phidget21.h>
 #include "homeport.h"
-#include "../hpdaemon/utlist.h"
+#include "utlist.h"
 
 int phidget_init(struct ev_loop *loop);
 void phidget_deinit();

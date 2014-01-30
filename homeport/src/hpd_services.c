@@ -116,7 +116,20 @@ create_service_struct(
 	{
 		service->device = device;
 	}
-   
+
+	if( get_function == NULL )
+	{
+		printf("Service's get_function cannot be NULL\n");
+		free(service->ID);
+		free(service->type);
+		free(service);
+		return NULL;
+	}
+	else
+	{
+		service->get_function = get_function;
+	}
+
 	if(parameter == NULL)
 	{
 		printf("Service's parameter cannot be NULL\n");
@@ -150,9 +163,23 @@ create_service_struct(
 		strcpy(service->unit, unit);
 	}
 
-	service->user_data_pointer = user_data_pointer;
-   service->get_function = get_function;
-   service->put_function = put_function;
+	if( put_function == NULL )
+	{
+		service->put_function = NULL;
+	}
+	else
+	{
+		service->put_function = put_function;
+	}
+
+	if( user_data_pointer == NULL )
+	{
+		service->user_data_pointer = NULL;
+	}
+	else
+	{
+		service->user_data_pointer = user_data_pointer;
+	}
 
 	/*Creation of the URL*/
 	service->value_url = malloc(sizeof(char)*( strlen("/") + strlen(service->device->type) + strlen("/") 

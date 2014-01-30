@@ -153,7 +153,7 @@ enum HPD_OPTION
 
 };
 
-int HPD_easy( int (*init)(struct ev_loop *loop), void (*deinit)(), unsigned int option, char *hostname, ... );
+int HPD_easy( int (*init)(struct ev_loop *loop, void *data), void (*deinit)(struct ev_loop *loop, void *data), void *data, unsigned int option, char *hostname, ... );
 int HPD_start( unsigned int option, struct ev_loop *loop, char *hostname, ... );
 int HPD_stop();
 int HPD_register_service( Service *service_to_register );

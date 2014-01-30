@@ -199,11 +199,6 @@ DetachHandler( CPhidgetHandle IFK, void *userptr )
    struct ev_loop *loop = userptr;
    struct ll_iter *tail;
 
-   // TODO DEBUG MESSAGE
-#ifdef DEBUG
-   fprintf(stderr, "Phidget device detached\n");
-#endif
-
    // Add handle to queue
    pthread_mutex_lock(&queue_m);
    tail = ll_tail(detach_queue);

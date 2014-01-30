@@ -28,25 +28,11 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Main library
-add_library(hpd SHARED
-      homeport.c
-#TODO what about the avahi library ?
-#      hpd_avahi_publish.c
-#      hpd_avahi_publish_client.c
-#      hpd_avahi_publish_core.c
-      hpd_configure.c
-      hpd_device_configuration.c
-#      hpd_events.c
-      hpd_log.c
-      hpd_server_sent_events.c
-      hpd_services.c
-#      hpd_web_server_core.c
-      hpd_web_server_interface.c
-      hpd_xml.c
-      )
-#TODO microhttpd should be removed here when the time is right :)
-target_link_libraries(hpd config pthread uuid libREST mxml microhttpd)
-install (TARGETS hpd DESTINATION lib)
-set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
+install (FILES homeport.h DESTINATION include/hpdaemon)
+install (FILES hpd_services.h DESTINATION include/hpdaemon)
+install (FILES hpd_configure.h DESTINATION include/hpdaemon)
+install (FILES ../../libREST/include/libREST.h DESTINATION include/hpdaemon)
+install (FILES ../../http-webserver/include/http_types.h DESTINATION include/hpdaemon)
+install (FILES ../../webserver/include/ws_types.h DESTINATION include/hpdaemon)
+install (FILES ../../misc/include/linkedmap.h DESTINATION include/hpdaemon)
 
