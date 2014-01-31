@@ -341,7 +341,7 @@ sig_cb ( struct ev_loop *loop, struct ev_signal *w, int revents )
 
    // Stop server and loop
    HPD_stop();
-   ev_unloop(loop, EVUNLOOP_ALL);
+   ev_break(loop, EVBREAK_ALL);
 
    // TODO Isn't it bad that we down stop watcher here?
    free(w->data);
