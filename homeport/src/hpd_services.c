@@ -117,18 +117,7 @@ create_service_struct(
 		service->device = device;
 	}
 
-	if( get_function == NULL )
-	{
-		printf("Service's get_function cannot be NULL\n");
-		free(service->ID);
-		free(service->type);
-		free(service);
-		return NULL;
-	}
-	else
-	{
-		service->get_function = get_function;
-	}
+	service->get_function = get_function;
 
 	if(parameter == NULL)
 	{
