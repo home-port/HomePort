@@ -234,7 +234,10 @@ static int answer_put(void *srv_data, void **req_data,
       new_put[new_len-1] = '\0';
       service->put_value = new_put;
    } else {
-      // Get value from XML TODO Returns NULL if no value in message !!!
+      if (service->put_value == NULL) {
+         lr_sendf(req, WS_HTTP_400, NULL, "400 Bad Request");
+         return 1;
+      }
       char *value = get_value_from_xml_value(service->put_value);
       free(service->put_value);
       service->put_value = NULL;
