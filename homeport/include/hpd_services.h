@@ -148,15 +148,15 @@ ServiceElement* create_service_element_struct( Service *service );
 int destroy_service_element_struct( ServiceElement *service_element_to_destroy );
 
 Device* create_device_struct(
-                             char *description,
-                             char *ID,
-                             char *vendorID,
-                             char *productID,
-                             char *version,
-                             char *IP,
-                             char *port,
-                             char *location,
-                             char *type,
+                             const char *description,
+                             const char *ID,
+                             const char *vendorID,
+                             const char *productID,
+                             const char *version,
+                             const char *IP,
+                             const char *port,
+                             const char *location,
+                             const char *type,
                              int secure_device);
 
 int destroy_device_struct( Device *device ); 
