@@ -214,7 +214,7 @@ static int answer_put(void *srv_data, void **req_data,
    size_t new_len;
 
    // Check if allowed
-   if (!service->get_function) {
+   if (!service->put_function) {
       lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
       return 1;
    }
