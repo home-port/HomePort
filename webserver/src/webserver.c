@@ -280,7 +280,7 @@ static void conn_timeout_cb(struct ev_loop *loop,
                             int revents)
 {
    struct ws_conn *conn = watcher->data;
-   printf("timeout on %s [%d]\n", conn->ip, (int)conn);
+   printf("timeout on %s [%ld]\n", conn->ip, (long)conn);
    ws_conn_kill(conn);
 }
 
