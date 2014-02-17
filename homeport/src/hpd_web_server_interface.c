@@ -160,12 +160,6 @@ static int answer_get(void *srv_data, void **req_data,
    enum http_method method;
    int buf_len;
 
-   // Check if allowed
-   if (!service->get_function) {
-      lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
-      return 1;
-   }
-
    // Check arguments
    arg = lr_request_get_argument(req, "x");
    if (arg) arg = "x=1";
@@ -182,10 +176,19 @@ static int answer_get(void *srv_data, void **req_data,
 
    // Argument "x=1"
    if (arg && strcmp(arg, "x=1") == 0) {
+      struct lm *headers = lm_create();
+      lm_insert(headers, "Content-Type", "text/xml");
       xmlbuff = extract_service_xml(service);
-      lr_sendf(req, WS_HTTP_200, NULL, xmlbuff);
+      lr_sendf(req, WS_HTTP_200, headers, xmlbuff);
+      lm_destroy(headers);
       free(xmlbuff);
       return 0;
+   }
+
+   // Check if allowed
+   if (!service->get_function) {
+      lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
+      return 1;
    }
 
    // Call callback and send response
