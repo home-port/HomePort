@@ -145,24 +145,24 @@ static int init(struct ev_loop *loop, void *data)
 	* 8th parameter : The service's PUT function (optional)
 	* 9th parameter : The service's parameter structure
 	*/
-	service_lamp0 = create_service_struct ("Lamp0", "0", "Lamp", "ON/OFF", device, 
+	service_lamp0 = create_service_struct ("Lamp0", "0", 1, "Lamp", "ON/OFF", device, 
 	                                                 get_lamp, put_lamp, 
 	                                                 create_parameter_struct ("0", NULL, NULL,
 	                                                                          NULL, NULL, NULL,
 	                                                                          NULL, NULL)
 							,NULL);
-	service_lamp1 = create_service_struct ("Lamp1", "1", "Lamp", "ON/OFF", device,
+	service_lamp1 = create_service_struct ("Lamp1", "1", 1, "Lamp", "ON/OFF", device,
 	                                                 get_lamp, put_lamp, 
 	                                                 create_parameter_struct ("0", NULL, NULL,
 	                                                                          NULL, NULL, NULL,
 	                                                                          NULL, NULL),NULL);
-	service_switch0 = create_service_struct ("Switch0", "0", "Switch", "ON/OFF", device,
+	service_switch0 = create_service_struct ("Switch0", "0", 0, "Switch", "ON/OFF", device,
 	                                                   get_switch, NULL, 
 	                                                   create_parameter_struct ("0", NULL, NULL,
 	                                                                            NULL, NULL, NULL,
 	                                                                            NULL, NULL),NULL);
 
-	service_switch1 = create_service_struct ("Switch1", "1", "Switch", "ON/OFF", device,
+	service_switch1 = create_service_struct ("Switch1", "1", 0, "Switch", "ON/OFF", device,
 	                                                   get_switch, NULL, 
 	                                                   create_parameter_struct ("0", NULL, NULL,
 	                                                                            NULL, NULL, NULL,
@@ -202,23 +202,23 @@ static int init(struct ev_loop *loop, void *data)
 	* 8th parameter : The service's PUT function (optional)
 	* 9th parameter : The service's parameter structure
 	*/
-	Service *secure_service_lamp0 = create_service_struct ("Lamp0", "0", "Lamp", "ON/OFF", secure_device, 
+	Service *secure_service_lamp0 = create_service_struct ("Lamp0", "0", 1, "Lamp", "ON/OFF", secure_device, 
 	                                                 get_lamp, put_lamp, 
 	                                                 create_parameter_struct ("0", NULL, NULL,
 	                                                                          NULL, NULL, NULL,
 	                                                                          NULL, NULL), NULL);
-	Service *secure_service_lamp1 = create_service_struct ("Lamp1", "1", "Lamp", "ON/OFF", secure_device,
+	Service *secure_service_lamp1 = create_service_struct ("Lamp1", "1", 1, "Lamp", "ON/OFF", secure_device,
 	                                                 get_lamp, put_lamp, 
 	                                                 create_parameter_struct ("0", NULL, NULL,
 	                                                                          NULL, NULL, NULL,
 	                                                                          NULL, NULL), NULL);
-	Service *secure_service_switch0 = create_service_struct ("Switch0", "0", "Switch", "ON/OFF", secure_device,
+	Service *secure_service_switch0 = create_service_struct ("Switch0", "0", 0, "Switch", "ON/OFF", secure_device,
 	                                                   get_switch, NULL, 
 	                                                   create_parameter_struct ("0", NULL, NULL,
 	                                                                            NULL, NULL, NULL,
 	                                                                            NULL, NULL), NULL);
 
-	Service *secure_service_switch1 = create_service_struct ("Switch1", "1", "Switch", "ON/OFF", secure_device,
+	Service *secure_service_switch1 = create_service_struct ("Switch1", "1", 0, "Switch", "ON/OFF", secure_device,
 	                                                   get_switch, NULL, 
 	                                                   create_parameter_struct ("0", NULL, NULL,
 	                                                                            NULL, NULL, NULL,
