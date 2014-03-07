@@ -170,6 +170,7 @@ static int answer_get(void *srv_data, void **req_data,
    const char *arg, *url, *ip;
    enum http_method method;
    int buf_len;
+   struct lm *headers = lm_create();
 
    // Check if allowed
    if (!service->get_function) {
@@ -194,7 +195,8 @@ static int answer_get(void *srv_data, void **req_data,
    // Argument "x=1"
    if (arg && strcmp(arg, "x=1") == 0) {
       xmlbuff = extract_service_xml(service);
-      lr_sendf(req, WS_HTTP_200, NULL, xmlbuff);
+      lm_insert(headers, "Content-Type", "application/xml");
+      lr_sendf(req, WS_HTTP_200, headers, xmlbuff);
       free(xmlbuff);
       return 0;
    }
@@ -205,7 +207,8 @@ static int answer_get(void *srv_data, void **req_data,
    if (buf_len) {
       buffer[buf_len] = '\0';
       xmlbuff = get_xml_value(buffer);
-      lr_sendf(req, WS_HTTP_200, NULL, xmlbuff);
+      lm_insert(headers, "Content-Type", "application/xml");
+      lr_sendf(req, WS_HTTP_200, headers, xmlbuff);
       free(xmlbuff);
    } else {
       lr_sendf(req, WS_HTTP_500, NULL, "Internal Server Error");

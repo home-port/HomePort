@@ -67,6 +67,7 @@ Service*
 create_service_struct(
                       char *description,
                       char *ID,
+		      int isActuator,
                       char *type,
                       char *unit,
                       Device *device,
