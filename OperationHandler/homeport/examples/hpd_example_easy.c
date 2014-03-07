@@ -74,8 +74,7 @@ get_switch ( Service* service, char *buffer, size_t max_buffer_size )
 	return strlen(buffer);
 }
 
-static void
-exit_handler ( int sig )
+static void deinit()
 {
 	/** Unregistering services is not necessary, calling HPD_stop unregisters and 
 	    deallocates the services and devices that are still register in HPD		   */
@@ -106,33 +105,10 @@ exit_handler ( int sig )
 	/** Deallocate the memory of the device, and all the services linked to this device */
 	destroy_device_struct(secure_device);
 #endif
-
-	/** Stops the HPD daemon */
-	HPD_stop ();
-
-   exit(sig);
 }
 
-int 
-main()
-{	
-	int rc;
-
-   /** Create the event loop */
-   struct ev_loop *loop = EV_DEFAULT;
-   
-   // Register signals for correctly exiting
-   signal(SIGINT, exit_handler);
-   signal(SIGTERM, exit_handler);
-
-	/** Starts the hpdaemon. If using avahi-core pass a host name for the server, otherwise pass NULL */
-	if( (rc = HPD_start( HPD_USE_CFG_FILE, loop, "Homeport",
-               HPD_OPTION_CFG_PATH, "./hpd.cfg" )) )
-	{
-		printf("Failed to start HPD %d\n", rc);
-		return 1;
-	}
-
+static int init()
+{
 #if HPD_HTTP 
 	/** Creation and registration of non secure services */
 	/** Create a device that will contain the services 
@@ -168,24 +144,24 @@ main()
 	* 8th parameter : The service's PUT function (optional)
 	* 9th parameter : The service's parameter structure
 	*/
-	service_lamp0 = create_service_struct ("Lamp0", "0", "Lamp", "ON/OFF", device, 
+	service_lamp0 = create_service_struct ("Lamp0", "0", 1, "Lamp", "ON/OFF", device, 
 	                                                 get_lamp, put_lamp, 
 	                                                 create_parameter_struct ("0", NULL, NULL,
 	                                                                          NULL, NULL, NULL,
 	                                                                          NULL, NULL)
 							,NULL);
-	service_lamp1 = create_service_struct ("Lamp1", "1", "Lamp", "ON/OFF", device,
+	service_lamp1 = create_service_struct ("Lamp1", "1", 1, "Lamp", "ON/OFF", device,
 	                                                 get_lamp, put_lamp, 
 	                                                 create_parameter_struct ("0", NULL, NULL,
 	                                                                          NULL, NULL, NULL,
 	                                                                          NULL, NULL),NULL);
-	service_switch0 = create_service_struct ("Switch0", "0", "Switch", "ON/OFF", device,
+	service_switch0 = create_service_struct ("Switch0", "0", 0, "Switch", "ON/OFF", device,
 	                                                   get_switch, NULL, 
 	                                                   create_parameter_struct ("0", NULL, NULL,
 	                                                                            NULL, NULL, NULL,
 	                                                                            NULL, NULL),NULL);
 
-	service_switch1 = create_service_struct ("Switch1", "1", "Switch", "ON/OFF", device,
+	service_switch1 = create_service_struct ("Switch1", "1", 0, "Switch", "ON/OFF", device,
 	                                                   get_switch, NULL, 
 	                                                   create_parameter_struct ("0", NULL, NULL,
 	                                                                            NULL, NULL, NULL,
@@ -225,36 +201,39 @@ main()
 	* 8th parameter : The service's PUT function (optional)
 	* 9th parameter : The service's parameter structure
 	*/
-	Service *secure_service_lamp0 = create_service_struct ("Lamp0", "0", "Lamp", "ON/OFF", secure_device, 
+	Service *secure_service_lamp0 = create_service_struct ("Lamp0", "0", 1, "Lamp", "ON/OFF", secure_device, 
 	                                                 get_lamp, put_lamp, 
 	                                                 create_parameter_struct ("0", NULL, NULL,
 	                                                                          NULL, NULL, NULL,
 	                                                                          NULL, NULL), NULL);
-	Service *secure_service_lamp1 = create_service_struct ("Lamp1", "1", "Lamp", "ON/OFF", secure_device,
+	Service *secure_service_lamp1 = create_service_struct ("Lamp1", "1", 1, "Lamp", "ON/OFF", secure_device,
 	                                                 get_lamp, put_lamp, 
 	                                                 create_parameter_struct ("0", NULL, NULL,
 	                                                                          NULL, NULL, NULL,
 	                                                                          NULL, NULL), NULL);
-	Service *secure_service_switch0 = create_service_struct ("Switch0", "0", "Switch", "ON/OFF", secure_device,
+	Service *secure_service_switch0 = create_service_struct ("Switch0", "0", 0, "Switch", "ON/OFF", secure_device,
 	                                                   get_switch, NULL, 
 	                                                   create_parameter_struct ("0", NULL, NULL,
 	                                                                            NULL, NULL, NULL,
 	                                                                            NULL, NULL), NULL);
 
-	Service *secure_service_switch1 = create_service_struct ("Switch1", "1", "Switch", "ON/OFF", secure_device,
+	Service *secure_service_switch1 = create_service_struct ("Switch1", "1", 0, "Switch", "ON/OFF", secure_device,
 	                                                   get_switch, NULL, 
 	                                                   create_parameter_struct ("0", NULL, NULL,
 	                                                                            NULL, NULL, NULL,
 	                                                                            NULL, NULL), NULL);
 	/** Register all the device's services into the HPD web server */	
 	HPD_register_device_services(secure_device);
-
-
 #endif
 
-   ev_run(loop, 0);
+   return 0;
+}
 
-   exit_handler(0);
-	return (0);
+int 
+main()
+{	
+	/** Starts the hpdaemon. If using avahi-core pass a host name for the server, otherwise pass NULL */
+   return HPD_easy(init, deinit, HPD_USE_CFG_FILE, "Homeport",
+               HPD_OPTION_CFG_PATH, "./hpd.cfg" );
 }
 

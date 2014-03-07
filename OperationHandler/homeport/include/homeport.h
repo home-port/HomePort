@@ -126,6 +126,9 @@ To use the HomePort Daemon library with your own application, make sure that the
 #include "hpd_services.h"
 #include "hpd_configure.h"
 
+
+typedef struct HomePort HomePort;
+
 enum HPD_FLAG
 {
 	HPD_NO_FLAG = 0,

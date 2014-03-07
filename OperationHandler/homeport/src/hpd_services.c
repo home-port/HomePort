@@ -67,6 +67,7 @@ Service*
 create_service_struct(
                       char *description,
                       char *ID,
+		      int isActuator,
                       char *type,
                       char *unit,
                       Device *device,
@@ -117,7 +118,18 @@ create_service_struct(
 		service->device = device;
 	}
 
-	service->get_function = get_function;
+	if( get_function == NULL )
+	{
+		printf("Service's get_function cannot be NULL\n");
+		free(service->ID);
+		free(service->type);
+		free(service);
+		return NULL;
+	}
+	else
+	{
+		service->get_function = get_function;
+	}
 
 	if(parameter == NULL)
 	{
@@ -343,15 +355,15 @@ destroy_service_element_struct( ServiceElement *service_element_to_destroy )
  */
 Device* 
 create_device_struct(
-                     const char *description,
-                     const char *ID,
-                     const char *vendorID,
-                     const char *productID,
-                     const char *version,
-                     const char *IP,
-                     const char *port,
-                     const char *location,
-                     const char *type,
+                     char *description,
+                     char *ID,
+                     char *vendorID,
+                     char *productID,
+                     char *version,
+                     char *IP,
+                     char *port,
+                     char *location,
+                     char *type,
                      int secure_device)
 {
 	Device *device = (Device*)malloc(sizeof(Device));

@@ -87,13 +87,13 @@ handle_events(struct ev_loop *loop, struct ev_async *w, int revents)
 	   {
 	   	char *num = (char*)malloc(2*sizeof(char));
 	   	sprintf(num, "%d", i);
-	   	Service *_service_input = create_service_struct ("input", num, "input", "0/1", _device, 
+	   	Service *_service_input = create_service_struct ("input", num, 1, "input", "0/1", _device, 
 	                                                    get_input_value, NULL, 
 	                                                    create_parameter_struct ("0", NULL, NULL,
 	                                                                             NULL, NULL, NULL,
 	                                                                             NULL, NULL), IFK);
 	   	assert( !(rc = HPD_register_service (_service_input)) );
-	   	Service *_service_output = create_service_struct ("output", num, "output", "0/1", _device, 
+	   	Service *_service_output = create_service_struct ("output", num, 0, "output", "0/1", _device, 
 	                                                    get_output_value, put_output_value, 
 	                                                    create_parameter_struct ("0", NULL, NULL,
 	                                                                             NULL, NULL, NULL,
@@ -198,6 +198,11 @@ DetachHandler( CPhidgetHandle IFK, void *userptr )
 {
    struct ev_loop *loop = userptr;
    struct ll_iter *tail;
+
+   // TODO DEBUG MESSAGE
+#ifdef DEBUG
+   fprintf(stderr, "Phidget device detached\n");
+#endif
 
    // Add handle to queue
    pthread_mutex_lock(&queue_m);
