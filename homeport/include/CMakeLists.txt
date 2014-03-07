@@ -28,34 +28,11 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-cmake_minimum_required(VERSION 2.6)
-project(HOMEPORT C)
-
-# -fPIC is for compiling on 64bit
-set(CMAKE_C_FLAGS_DEBUG "-fPIC -g -DDEBUG -DHPD_HTTP -DLR_ORIGIN -Wall")
-
-set(CTEST_MEMORYCHECK_COMMAND "/usr/bin/valgrind")
-include(CTest)
-
-enable_testing()
-
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-add_custom_target(example)
-
-# add a target to generate API documentation with Doxygen
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
-   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.conf ${CMAKE_CURRENT_BINARY_DIR}/doxygen.conf @ONLY)
-   add_custom_target(doc
-      ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/doxygen.conf
-      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-      COMMENT "Generating API documentation with Doxygen" VERBATIM
-   )
-endif(DOXYGEN_FOUND)
-
-add_subdirectory(misc)
-add_subdirectory(webserver)
-add_subdirectory(http-webserver)
-add_subdirectory(libREST)
-add_subdirectory(homeport)
+install (FILES homeport.h DESTINATION include/hpdaemon)
+install (FILES hpd_services.h DESTINATION include/hpdaemon)
+install (FILES hpd_configure.h DESTINATION include/hpdaemon)
+install (FILES ../../libREST/include/libREST.h DESTINATION include/hpdaemon)
+install (FILES ../../http-webserver/include/http_types.h DESTINATION include/hpdaemon)
+install (FILES ../../webserver/include/ws_types.h DESTINATION include/hpdaemon)
+install (FILES ../../misc/include/linkedmap.h DESTINATION include/hpdaemon)
 
