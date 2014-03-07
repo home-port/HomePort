@@ -68,7 +68,7 @@ static int answer_get_devices(void *srv_data, void **req_data,
    char *xmlbuff = get_xml_device_list();
    struct lm *headers = lm_create();
 
-   lm_insert(headers, "Content-Type", "text/xml");
+   lm_insert(headers, "Content-Type", "application/xml");
    lr_sendf(req, WS_HTTP_200, headers, xmlbuff);
 
    lm_destroy(headers);
