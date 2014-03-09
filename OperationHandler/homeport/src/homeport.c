@@ -200,51 +200,10 @@ HPD_stop()
 	return stop_server();
 }
 
-/**
- * Registers a given Service in the HomePort Daemon
- *
- * @param service_to_register The service to register
- *
- * @return A HPD error code
- */
 int 
-HPD_register_service( Service *service_to_register )
+HPD_attach_device( Device *device )
 {
-	if( service_to_register == NULL )
-		return HPD_E_NULL_POINTER;
-
-	return register_service( service_to_register );
-}
-
-/**
- * Unregisters a given Service in the HomePort Daemon
- *
- * @param service_to_unregister The service to unregister
- *
- * @return A HPD error code
- */
-int 
-HPD_unregister_service( Service *service_to_unregister )
-{
-	if( service_to_unregister == NULL )
-		return HPD_E_NULL_POINTER;
-
-	return unregister_service( service_to_unregister );
-}
-
-/**
- * Registers all the Services contained in a given
- *  Device in the HomePort Daemon
- *
- * @param device_to_register The device that contains the services
- *  to register
- *
- * @return A HPD error code
- */
-int 
-HPD_register_device_services( Device *device_to_register )
-{
-	if( device_to_register == NULL )
+	if( device == NULL )
 	{
 		return HPD_E_NULL_POINTER;
 	}
@@ -257,15 +216,14 @@ HPD_register_device_services( Device *device_to_register )
  * Unregisters all the Services contained in a given
  *  Device in the HomePort Daemon
  *
- * @param device_to_unregister The device that contains the services
- *  to unregister
+ * @param device The device to detach 
  *
  * @return A HPD error code
  */
 int 
-HPD_unregister_device_services( Device *device_to_unregister )
+HPD_detach_device( Device *device )
 {
-	if( device_to_unregister == NULL )
+	if( device == NULL )
 		return HPD_E_NULL_POINTER;
 
 	return unregister_device_services( device_to_unregister );
@@ -273,27 +231,152 @@ HPD_unregister_device_services( Device *device_to_unregister )
 
 
 /**
- * Gets a service given its uniqueness identifiers
- *
- * @param device_type The type of the device that contains the service
- *
- * @param device_ID The ID of the device that contains the service
- *
- * @param service_type The type of the wanted service
- *
- * @param service_ID The ID of the wanted service
- *
- * @return The desired Service or NULL if failed
- */
-Service * 
-HPD_get_service( char *device_type, char *device_ID, char *service_type, char *service_ID )
+ *  * Simple timestamp function
+ *   *
+ *    * @return Returns the timestamp
+ *     */
+  char *
+timestamp ( void )
 {
+  time_t ltime;
+  ltime = time(NULL);
+  const struct tm *timeptr = localtime(&ltime);
 
-	if( device_type == NULL || device_ID == NULL || service_type == NULL || service_ID == NULL )
-		return NULL;
+  static char wday_name[7][3] = {
+    "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+  };
+  static char mon_name[12][3] = {
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  };
+  static char result[25];
 
-	return get_service( device_type, device_ID, service_type, service_ID );
+  sprintf(result, "%.3s %.3s%3d %.2d:%.2d:%.2d %d",
+      wday_name[timeptr->tm_wday],
+      mon_name[timeptr->tm_mon],
+      timeptr->tm_mday, timeptr->tm_hour,
+      timeptr->tm_min, timeptr->tm_sec,
+      1900 + timeptr->tm_year);
+  return result;
 }
+
+char*
+stateToXml(char *state)
+{
+  mxml_node_t *xml;
+  mxml_node_t *stateXml;
+
+  xml = mxmlNewXML("1.0");
+  xml_value = mxmlNewElement(xml, "value");
+  mxmlElementSetAttr(xml_value, "timestamp", timestamp());
+  mxmlNewText(xml_value, 0, state);
+
+  char* return_value = mxmlSaveAllocString(xml, MXML_NO_CALLBACK);
+  mxmlDelete(xml);
+  
+  return return_value;
+}
+
+int
+HPD_get_state(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
+{
+  Service *service = (Service*) srv_data;
+  char *buffer, state;
+
+  if(service->getfunction == NULL)
+  {
+    lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
+    return 1;
+  }
+  // Call callback and send response
+  buffer = malloc((MHD_MAX_BUFFER_SIZE+1) * sizeof(char));
+  buf_len = service->get_function(service, buffer, MHD_MAX_BUFFER_SIZE);
+  if (buf_len) {
+    buffer[buf_len] = '\0';
+    /*TODO Check header for XML or jSON*/
+    state = stateToXml(buffer);
+    lm_insert(headers, "Content-Type", "application/xml");
+    lr_sendf(req, WS_HTTP_200, headers, xmlbuff);
+    free(xmlbuff);
+  } else {
+    lr_sendf(req, WS_HTTP_500, NULL, "Internal Server Error");
+  }
+  free(buffer);
+
+  return 0;
+}
+
+int 
+HPD_set_state(void *srv_data, void **req_data,
+                      struct lr_request *req,
+                      const char *body, size_t len)
+{
+   Service *service = srv_data;
+   char *new_put;
+   size_t new_len;
+
+   // Check if allowed
+   if (service->put_function == NULL) {
+      lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
+      return 1;
+   }
+
+/*TODO What is this crap with put value???*/
+   if (body) {
+      new_len = len+1;
+      if (service->put_value) new_len += strlen(service->put_value);
+      new_put = realloc(service->put_value, new_len*sizeof(char));
+      if (!new_put) {
+         free(service->put_value);
+         service->put_value = NULL;
+         lr_sendf(req, WS_HTTP_500, NULL, "500 Internal Server Error");
+         return 1;
+      }
+
+      strncpy(new_put, body, len);
+      new_put[new_len-1] = '\0';
+      service->put_value = new_put;
+   } else {
+      if (service->put_value == NULL) {
+         lr_sendf(req, WS_HTTP_400, NULL, "400 Bad Request");
+         return 1;
+      }
+      char *value = get_value_from_xml_value(service->put_value);
+      free(service->put_value);
+      service->put_value = NULL;
+      if (!value) {
+         lr_sendf(req, WS_HTTP_400, NULL, "400 Bad Request");
+         return 1;
+      }
+
+      // Call callback
+      char *buffer = malloc((MHD_MAX_BUFFER_SIZE+1) * sizeof(char));
+      int buf_len = service->put_function(service,
+                                          buffer, MHD_MAX_BUFFER_SIZE,
+                                          value);
+      free(value);
+
+      // Send response
+      if (buf_len == 0) {
+         lr_sendf(req, WS_HTTP_500, NULL, "500 Internal Server Error");
+         free(buffer);
+         return 1;
+      } else {
+         // Send value change event
+         const char *IP = lr_request_get_ip(req);
+         buffer[buf_len] = '\0';
+         send_event_of_value_change(service, buffer, IP);
+         
+         // Reply to request
+         const char *xmlbuff = get_xml_value(buffer);
+         lr_sendf(req, WS_HTTP_200, NULL, xmlbuff);
+      }
+      free(buffer);
+   }
+
+   return 0;
+}
+
 
 /**
  * Gets a device given its uniqueness identifiers
