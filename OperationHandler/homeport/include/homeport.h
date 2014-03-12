@@ -159,11 +159,6 @@ enum HPD_OPTION
 int HPD_easy( int (*init)(struct ev_loop *loop, void *data), void (*deinit)(struct ev_loop *loop, void *data), void *data, unsigned int option, char *hostname, ... );
 int HPD_start( unsigned int option, struct ev_loop *loop, char *hostname, ... );
 int HPD_stop();
-int HPD_register_service( Service *service_to_register );
-int HPD_unregister_service( Service *service_to_unregister );
-int HPD_register_device_services( Device *device_to_register );
-int HPD_unregister_device_services( Device *device_to_unregister );
-int HPD_send_event_of_value_change ( Service *service_changed, char *updated_value );
 
 int HPD_add_adapter( Adapter *adapter );
 int HPD_remove_adapter( Adpater *adapter );
@@ -171,7 +166,7 @@ int HPD_remove_adapter( Adpater *adapter );
 int HPD_attach_device( char *aId, Device *device );
 int HPD_detach_device( char *aId, Device *device );
 
-HPD_get_state(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
-HPD_set_state(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
+int HPD_get_state(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
+int HPD_set_state(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
 
 #endif
