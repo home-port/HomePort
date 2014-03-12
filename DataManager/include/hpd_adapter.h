@@ -43,6 +43,7 @@ struct Adapter
 {
   char *id;
   char *network;
+  void *data;
   DeviceElement *device_head;
 }
 
@@ -57,7 +58,7 @@ Adapter *creat_adapter_struct(
     char *id,
     char *network);
 
-Adapter *create_adapter_struct( char *id, char *network );
+Adapter *create_adapter_struct( char *id, char *network, void *data );
 
 int destroy_adapter_struct( Adapter adapter );
 

@@ -66,16 +66,11 @@ struct Service
   char *value_url;/**<The URL used to retrieve or set the Value of the Service*/
   char *type;/**<The Service type*/
   char *unit;/**<The unit provided by the Service*/
-  char *DNS_SD_type;/**<*/
-  char* zeroConfName;/**<The name used to advertise the service using ZeroConf*/
-  char* get_function_buffer;
-  char *put_value;
   Device *device;/**<The Device that contains the Service*/
   HPD_GetFunction get_function;/**<A pointer to the GET function of the Service*/
   HPD_PutFunction put_function;/**<A pointer to the PUT function of the Service*/
   void* user_data_pointer;/**<Pointer used for the used to store its data*/
   Parameter *parameter;/**<The first Parameter of the Parameter List*/
-  pthread_mutex_t *mutex; /**<A mutex used to access a Service in the list*/
 };
 
 struct ServiceElement
@@ -85,6 +80,19 @@ struct ServiceElement
   ServiceElement *prev;
 };
 
+Service* create_service_struct(
+    char *description,
+    char *ID,
+    int isActuator,
+    char *type,
+    char *unit,
+    Device *device,
+    HPD_GetFunction get_function,
+    HPD_PutFunction put_function,
+    Parameter *parameter,
+    void* user_data_pointer);
+
+int destroy_service_struct( Service *service ); 
 
 struct Parameter
 {
@@ -110,28 +118,9 @@ Parameter* create_parameter_struct(
 
 void free_parameter_struct( Parameter *parameter );
 
-int cmp_Parameter( Parameter *a, Parameter *b );
-
-Service* create_service_struct(
-    char *description,
-    char *ID,
-    int isActuator,
-    char *type,
-    char *unit,
-    Device *device,
-    HPD_GetFunction get_function,
-    HPD_PutFunction put_function,
-    Parameter *parameter,
-    void* user_data_pointer);
-
-int destroy_service_struct( Service *service ); 
 
 ServiceElement* create_service_element_struct( Service *service );
 
 int destroy_service_element_struct( ServiceElement *service_element_to_destroy );
-
-int cmp_ServiceElement( ServiceElement *a, ServiceElement *b );
-
-Service* matching_service( ServiceElement *service_head, const char *url );
 
 #endif
