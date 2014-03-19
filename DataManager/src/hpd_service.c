@@ -1,27 +1,27 @@
 /*Copyright 2011 Aalborg University. All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification, are
-permitted provided that the following conditions are met:
+  Redistribution and use in source and binary forms, with or without modification, are
+  permitted provided that the following conditions are met:
 
-   1. Redistributions of source code must retain the above copyright notice, this list of
-      conditions and the following disclaimer.
+  1. Redistributions of source code must retain the above copyright notice, this list of
+  conditions and the following disclaimer.
 
-   2. Redistributions in binary form must reproduce the above copyright notice, this list
-      of conditions and the following disclaimer in the documentation and/or other materials
-      provided with the distribution.
+  2. Redistributions in binary form must reproduce the above copyright notice, this list
+  of conditions and the following disclaimer in the documentation and/or other materials
+  provided with the distribution.
 
-THIS SOFTWARE IS PROVIDED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
-WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  THIS SOFTWARE IS PROVidED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
+  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+  FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
+  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCidENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+  ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-The views and conclusions contained in the software and documentation are those of the
-authors and should not be interpreted as representing official policies, either expressed*/
+  The views and conclusions contained in the software and documentation are those of the
+  authors and should not be interpreted as representing official policies, either expressed*/
 
 /**
  * @file hpd_services.c
@@ -33,15 +33,15 @@ authors and should not be interpreted as representing official policies, either 
 #include <stdio.h>
 #include "hpd_service.h"
 #include "utlist.h"
-#include "hpd_web_server_interface.h"
 #include "hpd_error.h"
+#include "hp_macros.h"
 
 /**
  * Creates the structure Service with all its parameters
  *
  * @param description The Service description
  *
- * @param ID The Service ID
+ * @param id The Service id
  *
  * @param type The Service type
  *
@@ -61,159 +61,47 @@ authors and should not be interpreted as representing official policies, either 
  * @param user_data_pointer A generic pointer used by the user to store his structures
  *
  * @return returns the Service or NULL if failed, note that
- * 		ID, type, device and get_function can not be NULL
+ * 		id, type, device and get_function can not be NULL
  */
 Service* 
-create_service_struct(
-                      char *description,
-                      char *ID,
-		      int isActuator,
-                      char *type,
-                      char *unit,
-                      Device *device,
-                      HPD_GetFunction get_function,
-                      HPD_PutFunction put_function,
-                      Parameter *parameter,
-                      void* user_data_pointer)
+serviceNew(
+    char *description,
+    int isActuator,
+    char *type,
+    char *unit,
+    serviceGetFunction getFunction,
+    servicePutFunction putFunction,
+    Parameter *parameter,
+    void* data)
 {
-	Service *service = (Service*)malloc(sizeof(Service));
-	if( !service )
-		return NULL;
+  Service *service;
 
-	if( ID == NULL )
-	{
-		printf("Service ID cannot be NULL\n");
-		free(service);
-		return NULL;
-	}
-	else
-	{
-		service->ID = malloc(sizeof(char)*(strlen(ID)+1));
-		strcpy(service->ID, ID);
-	}
+  alloc_struct(service);
 
-	if( type == NULL )
-	{
-		printf("Service type cannot be NULL\n");
-		free(service->ID);
-		free(service);
-		return NULL;
-	}
-	else
-	{
-		service->type = malloc(sizeof(char)*(strlen(type)+1));
-		strcpy(service->type, type);
-	}
+  service->id = NULL;
+  service->uri = NULL;
 
-	if( device == NULL )
-	{
-		printf("Service's device cannot be NULL\n");
-		free(service->ID);
-		free(service->type);
-		free(service);
-		return NULL;
-	}
-	else
-	{
-		service->device = device;
-	}
+  null_ok_string_copy(service->description, description);
 
-	if( get_function == NULL )
-	{
-		printf("Service's get_function cannot be NULL\n");
-		free(service->ID);
-		free(service->type);
-		free(service);
-		return NULL;
-	}
-	else
-	{
-		service->get_function = get_function;
-	}
+  service->isActuator = isActuator;
 
-	if(parameter == NULL)
-	{
-		printf("Service's parameter cannot be NULL\n");
-		free(service->ID);
-		free(service->type);
-		free(service);
-		return NULL;
-	}
-	else
-	{
-		service->parameter = parameter;
-	}
+  null_nok_string_copy(service->type, type);
 
-	if( description == NULL )
-	{
-		service->description = NULL;
-	}
-	else
-	{
-		service->description = malloc(sizeof(char)*(strlen(description)+1));
-		strcpy(service->description, description);
-	}
+  null_ok_string_copy(service->unit, unit);
 
-	if( unit == NULL )
-	{
-		service->unit = NULL;
-	}
-	else
-	{
-		service->unit = malloc(sizeof(char)*(strlen(unit)+1));
-		strcpy(service->unit, unit);
-	}
+  null_nok_pointer_ass(service->parameter, parameter);
 
-	if( put_function == NULL )
-	{
-		service->put_function = NULL;
-	}
-	else
-	{
-		service->put_function = put_function;
-	}
+  service->getFunction = getFunction;
 
-	if( user_data_pointer == NULL )
-	{
-		service->user_data_pointer = NULL;
-	}
-	else
-	{
-		service->user_data_pointer = user_data_pointer;
-	}
+  service->putFunction = putFunction;
 
-	/*Creation of the URL*/
-	service->value_url = malloc(sizeof(char)*( strlen("/") + strlen(service->device->type) + strlen("/") 
-	                                           + strlen(service->device->ID) + strlen("/") + strlen(service->type)
-	                                           + strlen("/") + strlen(service->ID) + 1 ) );
-	sprintf( service->value_url,"/%s/%s/%s/%s", service->device->type, service->device->ID, service->type,
-	         service->ID );
+  service->data = data;
 
-	/*Creation of the ZeroConf Name*/
-	service->zeroConfName = malloc(sizeof(char)*( strlen(service->device->type) + strlen(" ") 
-	                                              + strlen(service->device->ID) + strlen(" ") 
-	                                              + strlen(service->type) + strlen(" ") + strlen(service->ID) + 1) );
-	sprintf(service->zeroConfName,"%s %s %s %s", service->device->type, service->device->ID, service->type, service->ID);
+  return service;
 
-	/*Determination of the type*/
-	if( service->device->secure_device == HPD_SECURE_DEVICE ) service->DNS_SD_type = "_homeport-secure._tcp";
-	else service->DNS_SD_type = "_homeport._tcp";
-
-	service->get_function_buffer = malloc(sizeof(char)*MHD_MAX_BUFFER_SIZE);
-
-	service->mutex = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
-	pthread_mutex_init(service->mutex, NULL);
-
-	/*Adding the service to the Device's Service List*/
-	if( add_service_to_device (service,service->device) == -1 )
-	{
-		free(service);
-		return NULL;
-	}
-
-   service->put_value = NULL;
-
-	return service;
+cleanup:
+  serviceFree(service);
+  return NULL;
 }
 
 /**
@@ -228,104 +116,90 @@ create_service_struct(
  *
  * @return returns A HPD error code
  */
-int 
-destroy_service_struct( Service *service_to_destroy )
+void
+serviceFree( Service *service )
 {
 
-	if( service_to_destroy )
-	{
+  if( service != NULL )
+  {
+    free_pointer(service->description);
+    free_pointer(service->type);
+    free_pointer(service->unit);
+    free_pointer(service->id);
+    free_pointer(service->uri);
+    parameterFree(service->parameter);
+    free(service);
+  }
+}
 
-		if( is_service_registered( service_to_destroy ) )
-		{
-			printf("Cannot destroy a registered service.\n Make a call to HPD_unregister_service before destroying service\n");
-			return HPD_E_SERVICE_IN_USE;
-		}
+mxml_node_t *
+serviceToXml(Service *service, mxml_node_t *parent)
+{
+  mxml_node_t *serviceXml;
 
-		if( service_to_destroy->device )
-		{
-			if( service_to_destroy->device->service_head )
-			{
-				remove_service_from_device(service_to_destroy, service_to_destroy->device);
+  serviceXml = mxmlNewElement(parent, "service");
+  if(service->description != NULL) mxmlElementSetAttr(serviceXml, "desc", service->description);
+  if(service->id != NULL) mxmlElementSetAttr(serviceXml, "id", service->id);
+  if(service->uri != NULL) mxmlElementSetAttr(serviceXml, "uri", service->uri);
+  mxmlElementSetAttr(serviceXml, "isActuator", service->isActuator ? "1" : "0");
+  if(service->type != NULL) mxmlElementSetAttr(serviceXml, "type", service->type);
+  if(service->unit != NULL) mxmlElementSetAttr(serviceXml, "unit", service->unit);
 
-				if( service_to_destroy->device->service_head == NULL )
-				{
-					destroy_device_struct( service_to_destroy->device );
-					service_to_destroy->device = NULL;
-				}
-			}
-		}
 
-		if( service_to_destroy->description )
-			free(service_to_destroy->description);
+  if(service->parameter != NULL)
+  {
+    mxml_node_t *parameterXml = mxmlNewElement(serviceXml, "parameter");
+    if(service->parameter->max != NULL) mxmlElementSetAttr(parameterXml, "max", service->parameter->max);
+    if(service->parameter->min != NULL) mxmlElementSetAttr(parameterXml, "min", service->parameter->min);
+    if(service->parameter->scale != NULL) mxmlElementSetAttr(parameterXml, "scale", service->parameter->scale);
+    if(service->parameter->step != NULL) mxmlElementSetAttr(parameterXml, "step", service->parameter->step);
+    if(service->parameter->type != NULL) mxmlElementSetAttr(parameterXml, "type", service->parameter->type);
+    if(service->parameter->unit != NULL) mxmlElementSetAttr(parameterXml, "unit", service->parameter->unit);
+    if(service->parameter->values != NULL) mxmlElementSetAttr(parameterXml, "values", service->parameter->values);
+  }
 
-		if( service_to_destroy->ID )
-			free(service_to_destroy->ID);
 
-		if( service_to_destroy->type )
-			free(service_to_destroy->type);
+  return serviceXml;
+}
 
-		if( service_to_destroy->unit )
-			free(service_to_destroy->unit);
+void
+serviceSetId( Service *service, char *id )
+{
+  service->id = id;
+}
 
-		if( service_to_destroy->value_url )
-			free(service_to_destroy->value_url);
-
-		if( service_to_destroy->zeroConfName )
-			free(service_to_destroy->zeroConfName);
-
-		if( service_to_destroy->get_function_buffer )
-			free(service_to_destroy->get_function_buffer);
-
-		if( service_to_destroy->parameter )
-			free_parameter_struct ( service_to_destroy->parameter );
-
-		if( service_to_destroy->mutex )
-			free(service_to_destroy->mutex);
-
-      if (service_to_destroy->put_value)
-         free(service_to_destroy->put_value);
-
-		free(service_to_destroy);
-	}
-	return HPD_E_SUCCESS;
+void
+serviceSetUri( Service *service, char *uri )
+{
+  service->uri = uri;
 }
 
 ServiceElement* 
-create_service_element_struct( Service *service )
+serviceElementNew( Service *service )
 {
-	ServiceElement *to_create;
+  ServiceElement *serviceElement;
+  alloc_struct(serviceElement);
 
-	if( !service )
-		return NULL;
+  null_nok_pointer_ass(serviceElement->service, service);
 
-	to_create = (ServiceElement*)malloc(sizeof(ServiceElement));
-	if( !to_create )
-		return NULL;
+  return serviceElement;
 
-	to_create->service = service;
-
-	to_create->next = NULL;
-	to_create->prev = NULL;
-
-	return to_create;
+cleanup:
+  serviceElementFree(serviceElement);
+  return NULL;
 }
 
 
-int 
-destroy_service_element_struct( ServiceElement *service_element_to_destroy )
+void 
+serviceElementFree( ServiceElement *serviceElement )
 {
-	if( !service_element_to_destroy )
-		return HPD_E_NULL_POINTER;
-
-	free( service_element_to_destroy );
-
-	return 0;
+  free_pointer(serviceElement);
 }
 
 /**
  * Creates the structure Parameter with all its parameters
  *
- * @param ID The Parameter ID
+ * @param id The Parameter id
  *
  * @param max The maximum value of the Parameter
  *
@@ -341,81 +215,33 @@ destroy_service_element_struct( ServiceElement *service_element_to_destroy )
  *
  * @param values The possible values for the Parameter
  *
- * @return returns the Parameter or NULL if failed, note that the ID can not be NULL
+ * @return returns the Parameter or NULL if failed, note that the id can not be NULL
  */
 Parameter* 
-create_parameter_struct( char *ID,
-                         char *max,
-                         char *min,
-                         char *scale,
-                         char *step,
-                         char *type,
-                         char *unit,
-                         char *values )
+parameterNew( char *max,
+    char *min,
+    char *scale,
+    char *step,
+    char *type,
+    char *unit,
+    char *values )
 {
-	Parameter *parameter = (Parameter*)malloc(sizeof(Parameter));
-	if(!ID)
-	{
-		printf("Parameter ID cannot be NULL\n");
-		free(parameter);
-		return NULL;
-	}
-	else
-	{
-		parameter->ID = malloc(sizeof(char)*(strlen(ID)+1));
-		strcpy(parameter->ID, ID);
-	}
+  Parameter *parameter;
+  alloc_struct(parameter);
 
-	if(max)
-	{
-		parameter->max = malloc(sizeof(char)*(strlen(max)+1));
-		strcpy(parameter->max, max);
-	}
-	else parameter->max = NULL;
+  null_ok_string_copy(parameter->max, max);
+  null_ok_string_copy(parameter->min, min);
+  null_ok_string_copy(parameter->scale, scale);
+  null_ok_string_copy(parameter->step, step);
+  null_ok_string_copy(parameter->type, type);
+  null_ok_string_copy(parameter->unit, unit);
+  null_ok_string_copy(parameter->values, values);
 
-	if(min)
-	{
-		parameter->min = malloc(sizeof(char)*(strlen(min)+1));
-		strcpy(parameter->min, min);
-	}
-	else parameter->min = NULL;
+  return parameter;
 
-	if(scale)
-	{
-		parameter->scale = malloc(sizeof(char)*(strlen(scale)+1));
-		strcpy(parameter->scale, scale);
-	}
-	else parameter->scale = NULL;
-
-	if(step)
-	{
-		parameter->step = malloc(sizeof(char)*(strlen(step)+1));
-		strcpy(parameter->step, step);
-	}
-	else parameter->step = NULL;
-
-	if(type)
-	{
-		parameter->type = malloc(sizeof(char)*(strlen(type)+1));
-		strcpy(parameter->type, type);
-	}
-	else parameter->type = NULL;
-
-	if(unit)
-	{
-		parameter->unit = malloc(sizeof(char)*(strlen(unit)+1));
-		strcpy(parameter->unit, unit);
-	}
-	else parameter->unit = NULL;
-
-	if(values)
-	{
-		parameter->values = malloc(sizeof(char)*(strlen(values)+1));
-		strcpy(parameter->values, values);
-	}
-	else parameter->values = NULL;
-
-	return parameter;
+cleanup:
+  parameterFree(parameter);
+  return NULL;
 }
 
 
@@ -430,27 +256,18 @@ create_parameter_struct( char *ID,
  * @return 
  */
 void 
-free_parameter_struct(Parameter *parameter){
-
-	if( parameter )
-	{
-		if(parameter->ID)
-			free(parameter->ID);
-		if(parameter->max)
-			free(parameter->max);
-		if(parameter->min)
-			free(parameter->min);
-		if(parameter->scale)
-			free(parameter->scale);
-		if(parameter->step)
-			free(parameter->step);
-		if(parameter->type)
-			free(parameter->type);
-		if(parameter->unit)
-			free(parameter->unit);
-		if(parameter->values)
-			free(parameter->values);
-		free(parameter);
-	}
+parameterFree(Parameter *parameter)
+{
+  if( parameter != NULL )
+  {
+    free_pointer(parameter->max);
+    free_pointer(parameter->min);
+    free_pointer(parameter->scale);
+    free_pointer(parameter->step);
+    free_pointer(parameter->type);
+    free_pointer(parameter->unit);
+    free_pointer(parameter->values);
+    free(parameter);
+  }
 }
 

@@ -34,7 +34,7 @@ authors and should not be interpreted as representing official policies, either 
 #ifndef HPD_ERROR_H
 #define HPD_ERROR_H
 
-#include "hpd_log.h"
+//#include "hpd_log.h"
 #include <errno.h>
 
 /** 		HPD error codes			*/

@@ -29,8 +29,9 @@
 # as representing official policies, either expressed.
 
 include_directories(${PROJECT_SOURCE_DIR}/misc/include)
-include_directories(${PROJECT_SOURCE_DIR}/http-webserver/include)
-include_directories(${PROJECT_SOURCE_DIR}/webserver/include)
+include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/REST/trie/include)
+include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/REST/http-webserver/include)
+include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/REST/webserver/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_subdirectory(src)

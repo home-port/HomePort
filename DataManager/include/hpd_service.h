@@ -33,10 +33,14 @@
 #ifndef SERVICES_H
 #define SERVICES_H
 
-#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <mxml.h>
 
-#define HPD_SECURE_DEVICE 1 /**< Defines if the Device is a Secured Device. */  
-#define HPD_NON_SECURE_DEVICE 0 /**< Defines if the Device is a Non Secured Device. */  
+#include "hpd_error.h"
+#include "utlist.h"
+
 #define MHD_MAX_BUFFER_SIZE 10
 
 /**
@@ -50,28 +54,31 @@ typedef struct Parameter Parameter;
 /**
  * The structure serviceElement used to store Services in lists
  */
-typedef struct serviceElement serviceElement;
-
 typedef struct ServiceElement ServiceElement;
 
-typedef size_t (*HPD_GetFunction) (Service* service, char *buffer, size_t max_buffer_size);
+typedef size_t (*serviceGetFunction) (Service* service, char *buffer, size_t max_buffer_size);
 
-typedef size_t (*HPD_PutFunction) (Service* service, char *buffer, size_t max_buffer_size, char *put_value);
+typedef size_t (*servicePutFunction) (Service* service, char *buffer, size_t max_buffer_size, char *put_value);
 
 struct Service
 {
   char *description;/**<The Service description*/
-  char *ID;/**<The Service ID*/
   int isActuator; /**<Determine if the service is an actuator or a sensro */
-  char *value_url;/**<The URL used to retrieve or set the Value of the Service*/
   char *type;/**<The Service type*/
   char *unit;/**<The unit provided by the Service*/
-  Device *device;/**<The Device that contains the Service*/
-  HPD_GetFunction get_function;/**<A pointer to the GET function of the Service*/
-  HPD_PutFunction put_function;/**<A pointer to the PUT function of the Service*/
-  void* user_data_pointer;/**<Pointer used for the used to store its data*/
+  serviceGetFunction getFunction;/**<A pointer to the GET function of the Service*/
+  servicePutFunction putFunction;/**<A pointer to the PUT function of the Service*/
   Parameter *parameter;/**<The first Parameter of the Parameter List*/
+  void* data;/**<Pointer used for the used to store its data*/
+  char *id;/**<The Service ID*/
+  char *uri;/**<The Service URI*/
 };
+
+Service* 	serviceNew( char *description, int isActuator, char *type, char *unit, serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data); 
+void 		serviceFree( Service *service ); 
+void 		serviceSetId( Service *service, char *id );
+void 		serviceSetUri( Service *service, char *uri );
+mxml_node_t* 	serviceToXml(Service *service, mxml_node_t *parent);
 
 struct ServiceElement
 {
@@ -80,23 +87,11 @@ struct ServiceElement
   ServiceElement *prev;
 };
 
-Service* create_service_struct(
-    char *description,
-    char *ID,
-    int isActuator,
-    char *type,
-    char *unit,
-    Device *device,
-    HPD_GetFunction get_function,
-    HPD_PutFunction put_function,
-    Parameter *parameter,
-    void* user_data_pointer);
-
-int destroy_service_struct( Service *service ); 
+ServiceElement* serviceElementNew( Service *service );
+void 		serviceElementFree( ServiceElement *serviceElement );
 
 struct Parameter
 {
-  char *ID; /**<The Parameter ID*/
   char *max;/**<The maximum value of the Parameter*/
   char *min;/**<The minimum value of the Parameter*/
   char *scale;/**<The Scale of the Parameter*/
@@ -106,21 +101,8 @@ struct Parameter
   char *values;/**<The possible values for the Parameter*/
 };
 
-Parameter* create_parameter_struct(
-    char *ID,
-    char *max,
-    char *min,
-    char *scale,
-    char *step,
-    char *type,
-    char *unit,
-    char *values );
+Parameter* 	parameterNew( char *max, char *min, char *scale, char *step, char *type, char *unit, char *values );
+void 		parameterFree( Parameter *parameter );
 
-void free_parameter_struct( Parameter *parameter );
-
-
-ServiceElement* create_service_element_struct( Service *service );
-
-int destroy_service_element_struct( ServiceElement *service_element_to_destroy );
 
 #endif

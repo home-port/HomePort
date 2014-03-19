@@ -48,16 +48,7 @@ add_executable(linkedmap_test EXCLUDE_FROM_ALL
 add_test(linkedmap_test ${CMAKE_CURRENT_BINARY_DIR}/linkedmap_test)
 add_dependencies(check linkedmap_test)
 
-# Trie
-add_library(trie
-      trie.c
-      )
-
-# Trie Test
-add_executable(trie_test EXCLUDE_FROM_ALL
-      trie_test.c
-      trie.c
-      )
-add_test(trie_test ${CMAKE_CURRENT_BINARY_DIR}/trie_test)
-add_dependencies(check trie_test)
-
+# LinkedMap
+add_library(idgen
+	idgen.c
+		)

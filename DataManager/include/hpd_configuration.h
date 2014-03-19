@@ -34,6 +34,8 @@
 
 #include "hpd_adapter.h"
 
+#define ADAPTER_ID_SIZE 2
+
 /**
  * The structure Configuration containing all the Attributes that a Configuration possesses
  */
@@ -42,6 +44,16 @@ typedef struct Configuration Configuration;
 struct Configuration
 {
   AdapterElement *adapter_head;
-}
+};
+
+Configuration* 	configurationNew();
+void 		configurationFree(Configuration *config);
+int 		configurationAddAdapter(Configuration *config, Adapter *adapter);
+int 		configurationRemoveAdapter( Configuration *configuration, Adapter *adapter );
+Adapter* 	findAdapter(Configuration *configuration, char *adapter_id);
+mxml_node_t* 	configurationToXml(Configuration *configuration, mxml_node_t *parent);
+char* 		confGenerateDeviceId(Configuration *conf);
+
+#endif
 
 

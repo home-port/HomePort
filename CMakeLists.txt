@@ -54,8 +54,6 @@ if(DOXYGEN_FOUND)
 endif(DOXYGEN_FOUND)
 
 add_subdirectory(misc)
-add_subdirectory(webserver)
-add_subdirectory(http-webserver)
-add_subdirectory(libREST)
-add_subdirectory(homeport)
+add_subdirectory(OperationHandler)
+add_subdirectory(DataManager)
 

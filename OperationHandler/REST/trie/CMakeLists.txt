@@ -28,11 +28,7 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-#install (FILES homeport.h DESTINATION include/hpdaemon)
-#install (FILES hpd_services.h DESTINATION include/hpdaemon)
-#install (FILES hpd_configure.h DESTINATION include/hpdaemon)
-#install (FILES ../../libREST/include/libREST.h DESTINATION include/hpdaemon)
-#install (FILES ../../http-webserver/include/http_types.h DESTINATION include/hpdaemon)
-#install (FILES ../../webserver/include/ws_types.h DESTINATION include/hpdaemon)
-#install (FILES ../../misc/include/linkedmap.h DESTINATION include/hpdaemon)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+add_subdirectory(src)
 

@@ -31,6 +31,9 @@
  */
 
 #include "hpd_device.h"
+#include "hp_macros.h"
+
+char *deviceGenerateServiceId(Device *device);
 
 /**
  * Create the structure Device with all its parameters
@@ -63,123 +66,34 @@
  * 		ID and type can not be NULL
  */
 Device* 
-create_device_struct(
+deviceNew(
     char *description,
-    char *ID,
-    char *vendorID,
-    char *productID,
+    char *vendorId,
+    char *productId,
     char *version,
-    char *IP,
-    char *port,
     char *location,
-    char *type,
-    int secure_device)
+    char *type)
 {
-  Device *device = (Device*)malloc(sizeof(Device));
+  Device *device;
 
-  if( ID == NULL )
-  {
-    printf("Device ID cannot be NULL\n");
-    free(device);
-    return NULL;
-  }
-  else
-  {
-    device->ID = malloc(sizeof(char)*(strlen(ID)+1));
-    strcpy(device->ID, ID);
-  }
+  alloc_struct(device);
 
-  if( type == NULL )
-  {
-    printf("Device type cannot be NULL\n");
-    free(device->ID);
-    free(device);
-    return NULL;
-  }
-  else
-  {
-    device->type = malloc(sizeof(char)*(strlen(type)+1));
-    strcpy(device->type, type);
-  }
+  device->id = NULL;
 
-  if( description == NULL )
-  {
-    device->description = NULL;
-  }
-  else
-  {
-    device->description = malloc(sizeof(char)*(strlen(description)+1));
-    strcpy(device->description, description);
-  }
-
-  if( vendorID == NULL )
-  {
-    device->vendorID = NULL;
-  }
-  else
-  {
-    device->vendorID = malloc(sizeof(char)*(strlen(vendorID)+1));
-    strcpy(device->vendorID, vendorID);
-  }
-
-  if( productID == NULL )
-  {
-    device->productID = NULL;
-  }
-  else
-  {
-    device->productID = malloc(sizeof(char)*(strlen(productID)+1));
-    strcpy(device->productID, productID);
-  }
-
-  if( version == NULL)
-  {
-    device->version = NULL;
-  }
-  else
-  {
-    device->version = malloc(sizeof(char)*(strlen(version)+1));
-    strcpy(device->version, version);
-  }
-
-  if( IP == NULL )
-  {
-    device->IP = NULL;
-  }
-  else
-  {
-    device->IP = malloc(sizeof(char)*(strlen(IP)+1));
-    strcpy(device->IP, IP);
-  }
-
-  if( port == NULL )
-  {
-    device->port = NULL;
-  }
-  else
-  {
-    device->port = malloc(sizeof(char)*(strlen(port)+1));
-    strcpy(device->port, port);
-  }
-
-  if( location == NULL )
-  {
-    device->location = NULL;
-  }
-  else
-  {
-    device->location = malloc(sizeof(char)*(strlen(location)+1));
-    strcpy(device->location, location);
-  }
-
-  if( secure_device == HPD_SECURE_DEVICE || secure_device == HPD_NON_SECURE_DEVICE )
-    device->secure_device = secure_device;
-  else
-    device->secure_device = HPD_NON_SECURE_DEVICE;
+  null_ok_string_copy(device->description, description);
+  null_ok_string_copy(device->vendorId, vendorId);
+  null_ok_string_copy(device->productId, productId);
+  null_ok_string_copy(device->version, version);
+  null_ok_string_copy(device->location, location);
+  null_nok_string_copy(device->type, type);
 
   device->service_head = NULL;
 
   return device;
+
+cleanup:
+  deviceFree(device);
+  return NULL;
 }
 
 /**
@@ -194,61 +108,32 @@ create_device_struct(
  *
  * @return A HPD error code
  */
-int 
-destroy_device_struct( Device *device_to_destroy )
+void
+deviceFree( Device *device )
 {
 
-  if(device_to_destroy)
+  if( device != NULL)
   {
+    free_pointer(device->description);
+    free_pointer(device->id);
+    free_pointer(device->vendorId);
+    free_pointer(device->productId);
+    free_pointer(device->version);
+    free_pointer(device->location);
+    free_pointer(device->type);
 
-    ServiceElement *tmp, *iterator = NULL;
-
-    DL_FOREACH_SAFE( device_to_destroy->service_head, iterator, tmp )
+    if( device->service_head )
     {
-      if( is_service_registered( iterator->service ) )
+      ServiceElement *iterator = NULL, *tmp = NULL;
+      DL_FOREACH_SAFE( device->service_head, iterator, tmp)
       {
-	printf("Device has registered service(s). Call HPD_unregister_device before destroying\n");
-	return HPD_E_SERVICE_IN_USE;
+	DL_DELETE( device->service_head, iterator );
+	serviceElementFree(iterator);
       }
-      DL_DELETE( device_to_destroy->service_head, iterator );
-      destroy_service_struct (iterator->service);
-      destroy_service_element_struct( iterator );
-      iterator = NULL;
-    }		
+    }
 
-    if( device_to_destroy->description )
-      free(device_to_destroy->description);
-
-    if( device_to_destroy->ID )
-      free(device_to_destroy->ID);
-
-    if( device_to_destroy->vendorID )
-      free(device_to_destroy->vendorID);
-
-    if( device_to_destroy->productID )
-      free(device_to_destroy->productID);
-
-    if( device_to_destroy->version )
-      free(device_to_destroy->version);
-
-    if( device_to_destroy->IP )
-      free(device_to_destroy->IP);
-
-    if( device_to_destroy->port )
-      free(device_to_destroy->port);
-
-    if( device_to_destroy->location )
-      free(device_to_destroy->location);
-
-    if( device_to_destroy->type )
-      free(device_to_destroy->type);
-
-    free(device_to_destroy);
-
-    return HPD_E_SUCCESS;
+    free(device);
   }
-
-  return HPD_E_NULL_POINTER;
 }
 
 /**
@@ -261,24 +146,31 @@ destroy_device_struct( Device *device_to_destroy )
  * @return returns A HPD error code
  */
 int 
-add_service_to_device( Device *device, Service *service )
+deviceAddService( Device *device, Service *service )
 {
 
   if( service == NULL || device == NULL ) 
     return HPD_E_NULL_POINTER;
 
-  ServiceElement *new_se;
+  char *deviceId = NULL;
+  
+  deviceId = deviceGenerateServiceId( device );
+  if( deviceId == NULL )
+    return HPD_E_MALLOC_ERROR;
 
-  if( findService(device, service->ID) )
+  serviceSetId( service, deviceId );
+
+  ServiceElement *serviceElement;
+
+  serviceElement = serviceElementNew( service );
+  if( serviceElement == NULL )
   {
-    return HPD_E_SERVICE_ALREADY_IN_LIST;
+    serviceSetId( service, NULL );
+    free(deviceId);
+    return HPD_E_MALLOC_ERROR;
   }
 
-  new_se = create_service_element_struct( service );
-  if( !new_se )
-    return HPD_E_NULL_POINTER;
-
-  DL_APPEND( device->service_head, new_se);
+  DL_APPEND( device->service_head, serviceElement);
 
   return HPD_E_SUCCESS;
 }
@@ -294,38 +186,38 @@ add_service_to_device( Device *device, Service *service )
  * @return returns A HPD error code
  */
 int 
-remove_service_from_device( Device *device, Service *service )
+deviceRemoveService( Device *device, Service *service )
 {
 
   if( service == NULL || device == NULL ) return HPD_E_NULL_POINTER;
 
-  ServiceElement *toDelete;
+  ServiceElement *iterator, *tmp;
 
   DL_FOREACH_SAFE( device->service_head, iterator, tmp )
   {
     if( strcmp( service->type, iterator->service->type ) == 0
-	&& strcmp ( service->ID, iterator->service->ID ) == 0 )
+	&& strcmp ( service->id, iterator->service->id ) == 0 )
     {
-      DL_DELETE( service->device->service_head, iterator );
-      destroy_service_element_struct( iterator );
+      DL_DELETE( device->service_head, iterator );
+      serviceElementFree( iterator );
       iterator = NULL;
-      break;
+      return HPD_E_SUCCESS; 
     }			
   }
 
-  return HPD_E_SUCCESS;
+  return -1;
 }
 
 ServiceElement*
-findServiceElement(Device, char *service_id)
+findServiceElement(Device *device, char *service_id)
 {
-  if(device == NULL || service_id == NULL ) return HPD_E_NULL_POINTER;
+  if(device == NULL || service_id == NULL ) return NULL;
 
   ServiceElement *iterator;
 
   DL_FOREACH( device->service_head, iterator )
   {
-    if( strcmp ( service_id, iterator->service->ID ) == 0 )
+    if( strcmp ( service_id, iterator->service->id ) == 0 )
     {
       return iterator;
     }			
@@ -337,11 +229,11 @@ findServiceElement(Device, char *service_id)
 Service*
 findService(Device *device, char *service_id)
 {
-  if(device == NULL || service_id == NULL ) return HPD_E_NULL_POINTER;
+  if(device == NULL || service_id == NULL ) return NULL;
 
   ServiceElement *serviceElement;
 
-  if( serviceElement = findServiceElement(device, service_id) )
+  if( ( serviceElement = findServiceElement(device, service_id) ) )
   {
     return serviceElement->service;
   }
@@ -351,22 +243,70 @@ findService(Device *device, char *service_id)
 }
 
 mxml_node_t*
-deviceToXml(Device *device)
+deviceToXml(Device *device, mxml_node_t *parent)
 {
-  if(device == NULL) return HPD_E_NULL_POINTER;
+  if(device == NULL) return NULL;
 
   mxml_node_t *deviceXml;
 
-  deviceXml = mxmlNewElement(MXML_NO_PARENT, "device");
+  deviceXml = mxmlNewElement(parent, "device");
   if(device->description != NULL) mxmlElementSetAttr(deviceXml, "desc", device->description);
-  if(device->ID != NULL) mxmlElementSetAttr(deviceXml, "id", device->ID);
-  if(device->vendorID != NULL) mxmlElementSetAttr(deviceXml, "vendorID", device->vendorID);
-  if(device->productID != NULL) mxmlElementSetAttr(deviceXml, "productID", device->productID);
+  if(device->id != NULL) mxmlElementSetAttr(deviceXml, "id", device->id);
+  if(device->vendorId != NULL) mxmlElementSetAttr(deviceXml, "vendorId", device->vendorId);
+  if(device->productId != NULL) mxmlElementSetAttr(deviceXml, "productId", device->productId);
   if(device->version != NULL) mxmlElementSetAttr(deviceXml, "version", device->version);
-  if(device->IP != NULL) mxmlElementSetAttr(deviceXml, "ip", device->IP);
-  if(device->port != NULL) mxmlElementSetAttr(deviceXml, "port", device->port);
   if(device->location != NULL) mxmlElementSetAttr(deviceXml, "location", device->location);
   if(device->type != NULL) mxmlElementSetAttr(deviceXml, "type", device->type);
 
+  ServiceElement *iterator;
+
+  DL_FOREACH( device->service_head, iterator )
+  {
+    serviceToXml(iterator->service, deviceXml);
+  }
+
   return deviceXml;
+}
+
+DeviceElement* 
+deviceElementNew( Device *device )
+{
+  DeviceElement *to_create;
+
+  if( !device )
+    return NULL;
+
+  to_create = (DeviceElement*)malloc(sizeof(DeviceElement));
+  if( !to_create )
+    return NULL;
+
+  to_create->device = device;
+
+  to_create->next = NULL;
+  to_create->prev = NULL;
+
+  return to_create;
+}
+
+void 
+deviceElementFree( DeviceElement *deviceElement )
+{
+  free_pointer(deviceElement);
+}
+
+char*
+deviceGenerateServiceId(Device *device)
+{
+  char *service_id = (char*)malloc((SERVICE_ID_SIZE+1)*sizeof(char));
+  do{
+    rand_str(service_id, SERVICE_ID_SIZE);
+  }while(findService(device, service_id) != NULL);
+
+  return service_id;
+}
+
+void
+deviceSetId( Device *device, char *id )
+{
+  device->id = id;
 }
