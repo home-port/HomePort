@@ -30,121 +30,102 @@
  */
 
 #include "hpd_adapter.h"
+#include "hp_macros.h"
+
+DeviceElement* findDeviceElement(Adapter *adapter, char *device_id);
 
 Adapter*
-create_adapter_struct( char *id, char *network, void *data )
+adapterNew( char *network, void *data )
 {
   Adapter * adapter;
 
-  if(id == NULL)
-    return NULL;
-  adapter = (Adapter*)malloc(sizeof(Adapter));
+  alloc_struct(adapter);
 
-  adapter->id = (char*)malloc(sizeof(char)*(strlen(id)+1));
-  if(adapter->id == NULL)
-  {
-    free(adapter);
-    return NULL;
-  }
+  adapter->id = NULL;
 
-  strcpy(adapter->id, id);
-
-  if(network != NULL)
-  {
-    adapter->network = (char*)malloc(sizeof(char)*(strlen(network)+1));
-    if(adapter->network == NULL)
-    {
-      free(adapter->id);
-      free(adapter);
-      return NULL;
-    }
-    strcpy(adapter->network, network);
-  }
+  null_ok_string_copy(adapter->network, network);
 
   adapter->data = data;
 
+  adapter->device_head = NULL;
+
   return adapter;
+
+cleanup:
+  adapterFree(adapter);
+  return NULL;
 }
 
-int
-destroy_adapter_struct(Adapter *adapter)
+void
+adapterFree(Adapter *adapter)
 {
-  if(adapter == NULL)
-    return HPD_E_NULL_POINTER;
-
-  DeviceElement *tmp, *iterator;
-
-  DL_FOREACH_SAFE( adapter->device_head, iterator, tmp )
+  if( adapter != NULL )
   {
-    DL_DELETE( adapter->device_head, iterator );
-    destroy_device_struct( iterator->device );
-    destroy_device_element_struct( iterator );
+    free_pointer(adapter->network);
+    free_pointer(adapter->id);
+
+    DeviceElement *tmp=NULL, *iterator=NULL;
+
+    DL_FOREACH_SAFE( adapter->device_head, iterator, tmp )
+    {
+      DL_DELETE( adapter->device_head, iterator );
+      deviceElementFree( iterator );
+    }
+
+    free(adapter);
   }
-
-  if(adapter->network != NULL)
-    free(adapter->network);
-
-  if(adapter->id != NULL)
-    free(adapter->id);
-
-  return HPD_E_SUCCESS;
 }
 
 
 int
-adapter_add_device(Adapter *adapter, Device *device)
+adapterAddDevice(Adapter *adapter, Device *device, char *deviceId)
 {
-  if(adapter == NULL || device == NULL) return HPD_E_NULL_POINTER;
+  if(adapter == NULL || device == NULL || deviceId == NULL) return HPD_E_NULL_POINTER;
 
-  DeviceElement *new_se;
+  deviceSetId( device, deviceId );
 
-  if( findDevice(device, device->ID) )
+  DeviceElement *deviceElement=NULL;
+
+  deviceElement = deviceElementNew( device );
+  if( deviceElement == NULL )
   {
-    return HPD_E_SERVICE_ALREADY_IN_LIST;
+    deviceSetId( device, NULL );
+    free(deviceId);
+    return HPD_E_MALLOC_ERROR;
   }
 
-  new_se = create_device_element_struct( device );
-  if( !new_se )
-    return HPD_E_NULL_POINTER;
-
-  DL_APPEND( device->device_head, new_se);
+  DL_APPEND( adapter->device_head, deviceElement);
 
   return HPD_E_SUCCESS;
 }
 
 int 
-adapter_remove_device( Adapter *adapter, Device *device )
+adapterRemoveDevice( Adapter *adapter, Device *device )
 {
 
   if( device == NULL || device == NULL ) return HPD_E_NULL_POINTER;
 
-  DeviceElement *toDelete;
-
-  DL_FOREACH_SAFE( device->device_head, iterator, tmp )
+  DeviceElement *deviceElement = findDeviceElement( adapter, device->id );
+  if( deviceElement != NULL )
   {
-    if( strcmp( device->type, iterator->device->type ) == 0
-	&& strcmp ( device->ID, iterator->device->ID ) == 0 )
-    {
-      DL_DELETE( device->device->device_head, iterator );
-      destroy_device_element_struct( iterator );
-      iterator = NULL;
-      break;
-    }			
+    DL_DELETE(adapter->device_head, deviceElement);
+    deviceElementFree(deviceElement);
+    return HPD_E_SUCCESS;
   }
 
-  return HPD_E_SUCCESS;
+  return -1;
 }
 
 DeviceElement*
-findDeviceElement(Device, char *device_id)
+findDeviceElement(Adapter *adapter, char *device_id)
 {
-  if(device == NULL || device_id == NULL ) return HPD_E_NULL_POINTER;
+  if( adapter== NULL || device_id == NULL ) return NULL;
 
-  DeviceElement *iterator;
+  DeviceElement *iterator=NULL;
 
-  DL_FOREACH( device->device_head, iterator )
+  DL_FOREACH( adapter->device_head, iterator )
   {
-    if( strcmp ( device_id, iterator->device->ID ) == 0 )
+    if( strcmp ( device_id, iterator->device->id ) == 0 )
     {
       return iterator;
     }			
@@ -154,13 +135,13 @@ findDeviceElement(Device, char *device_id)
 }
 
 Device*
-findDevice(Adapter *Adapter, char *device_id)
+findDevice(Adapter *adapter, char *device_id)
 {
-  if(adapter == NULL || device_id == NULL ) return HPD_E_NULL_POINTER;
+  if(adapter == NULL || device_id == NULL ) return NULL;
 
   DeviceElement *deviceElement;
 
-  if( deviceElement = findDeviceElement(device, device_id) )
+  if( ( deviceElement = findDeviceElement(adapter, device_id) ) )
   {
     return deviceElement->device;
   }
@@ -170,15 +151,55 @@ findDevice(Adapter *Adapter, char *device_id)
 }
 
 mxml_node_t*
-adapterToXml(Adapter *adapter)
+adapterToXml(Adapter *adapter, mxml_node_t *parent)
 {
-  if(adapter == NULL) return HPD_E_NULL_POINTER;
+  if(adapter == NULL) return NULL;
 
   mxml_node_t *adapterXml;
 
-  adapterXml = mxmlNewElement(MXML_NO_PARENT, "adapter");
+  adapterXml = mxmlNewElement(parent, "adapter");
   if(adapter->id != NULL) mxmlElementSetAttr(adapterXml, "id", adapter->id);
   if(adapter->network != NULL) mxmlElementSetAttr(adapterXml, "network", adapter->network);
 
+  DeviceElement *iterator;
+
+  DL_FOREACH( adapter->device_head, iterator)
+  {
+    deviceToXml(iterator->device, adapterXml);
+  }
+
   return adapterXml;
 }
+
+AdapterElement* 
+adapterElementNew( Adapter *adapter )
+{
+  AdapterElement *adapterElement;
+
+  if( adapter == NULL )
+    return NULL;
+
+  adapterElement = (AdapterElement*)malloc(sizeof(AdapterElement));
+  if( !adapterElement )
+    return NULL;
+
+  adapterElement->adapter = adapter;
+
+  adapterElement->next = NULL;
+  adapterElement->prev = NULL;
+
+  return adapterElement;
+}
+
+void 
+adapterElementFree( AdapterElement *adapterElement )
+{
+  free_pointer(adapterElement);
+}
+
+void
+adapterSetId( Adapter *adapter, char *id )
+{
+  adapter->id = id;
+}
+

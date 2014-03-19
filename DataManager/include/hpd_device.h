@@ -34,6 +34,9 @@
 #define DEVICE_H
 
 #include "hpd_service.h"
+#include "idgen.h"
+
+#define SERVICE_ID_SIZE 4
 
 /**
  * The structure Device containing all the Attributes that a Device possess
@@ -44,29 +47,22 @@ typedef struct DeviceElement DeviceElement;
 struct Device
 {
   char *description;/**<The Device description*/
-  char *ID;/**<The Device ID*/
-  char *vendorID;/**<The ID of the vendor*/
-  char *productID;/**<The ID of the product*/
+  char *id;/**<The Device ID*/
+  char *vendorId;/**<The ID of the vendor*/
+  char *productId;/**<The ID of the product*/
   char *version;/**<The Device version*/
-  char *IP;/**<The IP address of the Device*/
-  char *port;/**<The port that the Device uses*/
   char *location;/**<The location of the Device*/
   char *type;/**<The Device type*/
-  int secure_device;/**<A variable that states if the Device is Secure or not (HPD_SECURE_DEVICE or HPD_NON_SECURE_DEVICE)*/
   ServiceElement *service_head;/**<The first Service of the Service List*/
 };
 
-Device* create_device_struct(
-    char *description,
-    char *ID,
-    char *vendorID,
-    char *productID,
-    char *version,
-    char *IP,
-    char *port,
-    char *location,
-    char *type,
-    int secure_device);
+Device* 	deviceNew( char *description, char *vendorId, char *productId, char *version, char *location, char *type);
+void 		deviceFree( Device *device ); 
+int 		deviceAddService( Device *device, Service *service );
+int 		deviceRemoveService( Device *device, Service *service );
+Service* 	findService(Device *device, char *service_id);
+mxml_node_t* 	deviceToXml(Device *device, mxml_node_t *parent);
+void 		deviceSetId( Device *device, char *id );
 
 struct DeviceElement
 {
@@ -75,14 +71,8 @@ struct DeviceElement
   DeviceElement *prev;
 };
 
-int destroy_device_struct( Device *device ); 
+DeviceElement* 	deviceElementNew( Device *device );
+void 		deviceElementFree( DeviceElement *device_element_to_destroy );
 
-int add_service_to_device( Service *service, Device *device );
-
-int remove_service_from_device( Service *service, Device *device );
-
-Service *findService(Device *device, char *service_id);
-
-mxml_node_t *deviceToXml(Device device);
 
 #endif

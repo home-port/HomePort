@@ -121,13 +121,21 @@ To use the HomePort Daemon library with your own application, make sure that the
 
 #include <stdarg.h>
 
-#include "libREST.h"
+#include <ev.h>
 
-#include "hpd_services.h"
-#include "hpd_configure.h"
+#include "libREST.h"
+#include "utlist.h"
+
+#include "hpd_configuration.h"
 
 
 typedef struct HomePort HomePort;
+
+struct HomePort
+{
+  struct lr *rest_interface;
+  Configuration *configuration;
+};
 
 enum HPD_FLAG
 {
@@ -156,17 +164,16 @@ enum HPD_OPTION
 
 };
 
-int HPD_easy( int (*init)(struct ev_loop *loop, void *data), void (*deinit)(struct ev_loop *loop, void *data), void *data, unsigned int option, char *hostname, ... );
-int HPD_start( unsigned int option, struct ev_loop *loop, char *hostname, ... );
-int HPD_stop();
+HomePort* 	homePortNew( struct ev_loop *loop, int port );
+void		homePortFree(HomePort *homeport);
+int 		homePortStart(HomePort *homeport);
+void 		homePortStop(HomePort *homeport);
+int 		homePortEasy( int (*init)(HomePort *homeport, void *data), void (*deinit)(HomePort *homeport, void *data), void *data, int port );
 
-int HPD_add_adapter( Adapter *adapter );
-int HPD_remove_adapter( Adpater *adapter );
-
-int HPD_attach_device( char *aId, Device *device );
-int HPD_detach_device( char *aId, Device *device );
-
-int HPD_get_state(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
-int HPD_set_state(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
+/** Configurator Interface **/
+int 		homePortAddAdapter( HomePort *homeport, Adapter *adapter );
+int 		homePortRemoveAdapter( HomePort *homeport, Adapter *adapter );
+int 		homePortAttachDevice( HomePort *homeport, Adapter *adapter, Device *device );
+int 		homePortDetachDevice( HomePort *homeport, Adapter *adapter, Device *device );
 
 #endif

@@ -31,22 +31,14 @@
 # Main library
 add_library(hpd SHARED
       homeport.c
-#TODO what about the avahi library ?
-#      hpd_avahi_publish.c
-#      hpd_avahi_publish_client.c
-#      hpd_avahi_publish_core.c
-      hpd_configure.c
-      hpd_device_configuration.c
-#      hpd_events.c
-      hpd_log.c
-      hpd_server_sent_events.c
-      hpd_services.c
-#      hpd_web_server_core.c
-      hpd_web_server_interface.c
-      hpd_xml.c
+      ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_adapter.c
+      ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_configuration.c
+      ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_device.c
+      ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_service.c
+      
       )
 #TODO microhttpd should be removed here when the time is right :)
-target_link_libraries(hpd config pthread uuid libREST mxml microhttpd)
+target_link_libraries(hpd config pthread uuid libREST mxml idgen )
 install (TARGETS hpd DESTINATION lib)
 set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
 

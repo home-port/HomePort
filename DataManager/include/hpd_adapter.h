@@ -34,10 +34,13 @@
 
 #include "hpd_device.h"
 
+#define DEVICE_ID_SIZE 4
+
 /**
  * The structure Adapter containing all the Attributes that an Adapter possesses
  */
 typedef struct Adapter Adapter;
+typedef struct AdapterElement AdapterElement;
 
 struct Adapter
 {
@@ -45,7 +48,15 @@ struct Adapter
   char *network;
   void *data;
   DeviceElement *device_head;
-}
+};
+
+Adapter* 	adapterNew( char *network, void *data );
+void 		adapterFree( Adapter *adapter );
+int 		adapterAddDevice(Adapter *adapter, Device *device, char *deviceId);
+int 		adapterRemoveDevice(Adapter *adapter, Device *device);
+Device* 	findDevice(Adapter *adapter, char *device_id);
+mxml_node_t* 	adapterToXml(Adapter *adapter, mxml_node_t *parent);
+void 		adapterSetId( Adapter *adapter, char *id );
 
 struct AdapterElement
 {
@@ -54,18 +65,8 @@ struct AdapterElement
   AdapterElement *prev;
 };
 
-Adapter *creat_adapter_struct(
-    char *id,
-    char *network);
+AdapterElement*	adapterElementNew(Adapter *adapter);
+void 		adapterElementFree(AdapterElement *adapterElement);
 
-Adapter *create_adapter_struct( char *id, char *network, void *data );
 
-int destroy_adapter_struct( Adapter adapter );
-
-int adapter_add_device(Adapter *adapter, Device *device);
-
-int adapter_remove_device(Adapter *adapter, Device *device);
-
-Device *findDevice(Adapter *adapter, char *device_id);
-
-mxml_node_t adapterToXml(Adapter *adapter);
+#endif

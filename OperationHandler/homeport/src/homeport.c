@@ -30,144 +30,28 @@
  * @author Regis Louge
  */
 
+#include <time.h>
 
 #include "homeport.h"
 #include "hpd_error.h"
-#include "hpd_web_server_interface.h"
+#include "hp_macros.h"
 
+/** Client Interface */
+int homePortGetState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
+int homePortSetState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
+int homePortGetConfiguration(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
 
-/**
- * Parse the user's specified options
- *
- * @param ap va_list of options
- *
- * @return A HPD error code
- */
-  static int
-parse_option_va( va_list ap )
-{
-  enum HPD_OPTION opt;
-  int log_level, max_log_size;
-
-  while( HPD_OPTION_END != ( opt = va_arg( ap, enum HPD_OPTION ) ) )
-  {
-    switch (opt)
-    {
-
-      case HPD_OPTION_HTTP :
-#if HPD_HTTP
-	hpd_daemon->http_port = va_arg( ap, int );
-	break;
-#else
-	printf("Received HPD_OPTION_HTTP without HTTP feature enabled\n");
-	return HPD_E_NO_HTTP;
-#endif		
-      case HPD_OPTION_HTTPS :
-#if HPD_HTTPS
-	hpd_daemon->https_port = va_arg( ap, int );
-	hpd_daemon->server_cert_path = va_arg( ap, const char*);
-	hpd_daemon->server_key_path = va_arg( ap, const char*);
-	hpd_daemon->root_ca_path = va_arg( ap, const char*);
-	break;
-#else
-	printf("Received HPD_OPTION_HTTPS without HTTPS feature enabled\n");
-	return HPD_E_NO_HTTPS;
-#endif		
-      case HPD_OPTION_LOG :
-	log_level = va_arg( ap, int );
-	if( log_level < 0 || log_level > 2 )
-	{
-	  printf("Bad value for log level\n");
-	  return HPD_E_BAD_PARAMETER;
-	}
-	max_log_size = va_arg( ap, int );
-	if( max_log_size < 0 )
-	{
-	  printf("Bad value for max log size\n");
-	  return HPD_E_BAD_PARAMETER;
-	}
-	break;
-
-      default :
-	printf("Unrecognized option\n");	
-	return HPD_E_BAD_PARAMETER;
-
-    }
-
-  }
-
-  return HPD_E_SUCCESS;
-
-}
-
-  static int
-HPD_vstart(unsigned int option, struct ev_loop *loop, char *hostname,
-    va_list ap)
-{
-  int rc;
-
-  if( (rc = HPD_init_daemon()) )
-  {
-    printf("Error initializing HPD_Daemon struct\n");
-    return rc;
-  }
-#if USE_AVAHI
-#if !AVAHI_CLIENT
-  if( hostname == NULL )
-    return HPD_E_NULL_POINTER;
-
-  hpd_daemon->hostname = hostname;
-#endif
-#endif
-
-
-  if( option & HPD_USE_CFG_FILE )
-  {
-    printf("Using config file\n");
-
-    if( va_arg(ap, enum HPD_OPTION) != HPD_OPTION_CFG_PATH )
-    {
-      printf("Only HPD_OPTION_CFG_PATH msut be specified when using HPD_USE_CFG_FILE\n");
-
-      return HPD_E_BAD_PARAMETER;
-    }		
-
-    if( (rc = HPD_config_file_init( va_arg( ap, const char* ) )) )
-    {
-      printf("Error loading config file %d\n", rc);
-      return rc;
-    }		
-  }
-
-  else
-  {	
-    if( (rc = parse_option_va(ap)) )
-      return rc;
-
-
-#if HPD_HTTP
-    if( hpd_daemon->http_port == 0 )
-    {
-      printf("Missing HTTP port option\n");
-    }
-#endif
-
-#if HPD_HTTPS		
-    if(  hpd_daemon->https_port == 0 || hpd_daemon->server_cert_path == NULL
-	|| hpd_daemon->server_key_path == NULL || hpd_daemon->root_ca_path == NULL ) 
-    {
-      printf("Missing options to launch HTTPS\n");
-      return HPD_E_MISSING_OPTION;
-    }
-#endif
-
-  }
-
-  return start_server(hostname, NULL, loop);
-}
+/** Private function declaration **/
+int homePortRegisterService(HomePort *homeport, Service *service, char *uri);
+int homePortUnregisterService( HomePort *homeport, char *uri );
+char *timestamp ( void );
+char* stateToXml(char *state);
+char* xmlToState(char *xml);
+static void sig_cb ( struct ev_loop *loop, struct ev_signal *w, int revents );
+char* generateUri( Device *device, Service *service );
 
 /**
- * Starts the HomePort Daemon
+ * Creates a HomePort structure
  * 
  * @param option HPD option as specified in homeport.h
  *
@@ -177,226 +61,379 @@ HPD_vstart(unsigned int option, struct ev_loop *loop, char *hostname,
  *
  * @return A HPD error code
  */
-  int 
-HPD_start( unsigned int option, struct ev_loop *loop, char *hostname, ... )
+HomePort*
+homePortNew( struct ev_loop *loop, int port )
 {
-  int rc;
-  va_list ap;
-  va_start( ap, hostname);
-  rc = HPD_vstart(option, loop, hostname, ap);
-  va_end(ap);	
-  return rc;
+  HomePort *homeport;
+  alloc_struct(homeport);
+
+  struct lr_settings settings = LR_SETTINGS_DEFAULT;
+  settings.port = port;
+
+  homeport->rest_interface = lr_create(&settings, loop);
+  if ( homeport->rest_interface == NULL )
+  {
+    goto cleanup;
+  }
+
+  homeport->configuration = configurationNew();
+  if( homeport->configuration == NULL )
+  {
+    goto cleanup;
+  }
+
+  return homeport;
+cleanup:
+  homePortFree(homeport);
+  return NULL;
 }
 
 /**
- * Stops the HomePort Daemon
- *
+ * 
+ * Destroys a HomePort struct
  * @return A HPD error code
  */
-  int 
-HPD_stop()
+void 
+homePortFree(HomePort *homeport)
 {
-  HPD_config_deinit();
-  return stop_server();
+  if(homeport != NULL)
+  {
+    lr_destroy(homeport->rest_interface);
+    configurationFree(homeport->configuration);
+    free(homeport);
+  }
 }
 
-/**
- * Start the MHD web server(s) and the AVAHI client or server
- *
- * @param hostname Hostname for the local address of the server
- *
- * @param domain_name Domain name for the local address of the server (if NULL = .local)
- *
- * @return A HPD error code
- */
-  int 
-start_server(char* hostname, char *domain_name, struct ev_loop *loop)
+int
+homePortStart(HomePort *homeport)
+{
+  if(lr_start(homeport->rest_interface))
+    return HPD_E_MHD_ERROR;
+
+  return lr_register_service(homeport->rest_interface,
+      "/devices",
+      homePortGetConfiguration, NULL, NULL, NULL,
+      NULL, homeport);
+}
+
+void
+homePortStop(HomePort *homeport)
+{
+  lr_stop(homeport->rest_interface);
+}
+
+int
+homePortEasy( int (*init)(HomePort *homeport, void *data), void (*deinit)(HomePort *homeport, void *data), void *data, int port )
 {
   int rc;
 
-  rc = init_xml_file (XML_FILE_NAME,DEVICE_LIST_ID);
-  if( rc < 0 )
-  {	
-    printf("Failed to initiate XML file\n");
+  // Create loop
+  struct ev_loop *loop = EV_DEFAULT;
+
+  HomePort *homeport = homePortNew(loop, port);
+
+  // Create signal watchers
+  struct ev_signal sigint_watcher;
+  struct ev_signal sigterm_watcher;
+  ev_signal_init(&sigint_watcher, sig_cb, SIGINT);
+  ev_signal_init(&sigterm_watcher, sig_cb, SIGTERM);
+  void **w_data = malloc(3*sizeof(void *));
+  w_data[0] = homeport;
+  w_data[1] = deinit;
+  w_data[2] = data;
+  sigint_watcher.data = w_data;
+  sigterm_watcher.data = w_data;
+  ev_signal_start(loop, &sigint_watcher);
+  ev_signal_start(loop, &sigterm_watcher);
+
+  // Call init
+  if ((rc = init(homeport, data))) return rc;
+
+  if( ( rc = homePortStart(homeport) ) ) return rc;
+
+  // Start loop
+  ev_run(loop, 0);
+
+  return 0;
+}
+
+/*******************************************************************/
+/*********************Configurator Interface************************/
+/*******************************************************************/
+int
+homePortAddAdapter(HomePort *homeport, Adapter *adapter)
+{
+  return configurationAddAdapter(homeport->configuration, adapter);
+}
+
+int
+homePortRemoveAdapter(HomePort *homeport, Adapter *adapter)
+{
+  return configurationRemoveAdapter(homeport->configuration, adapter);
+}
+
+int 
+homePortAttachDevice( HomePort *homeport, Adapter *adapter, Device *device )
+{
+  if( homeport == NULL || adapter == NULL || device == NULL )
+  {
+    return HPD_E_NULL_POINTER;
+  }
+  ServiceElement *iterator;
+  int rc;
+  char *uri;
+
+  char *deviceId = confGenerateDeviceId(homeport->configuration);
+  if( deviceId == NULL )
+  {
+    return HPD_E_MALLOC_ERROR;
+  }
+
+  if( ( rc = adapterAddDevice(adapter, device, deviceId) ) )
+  {
     return rc;
   }
 
-  struct lr_settings settings = LR_SETTINGS_DEFAULT;
-  settings.port = hpd_daemon->http_port;
+  DL_FOREACH( device->service_head, iterator )
+  {
+    uri = generateUri( device, iterator->service );
+    if( uri == NULL )
+    {
+      return HPD_E_MALLOC_ERROR;
+    }
 
-  unsecure_web_server = lr_create(&settings, loop);
-  if (!unsecure_web_server)
-    return HPD_E_MHD_ERROR;
+    serviceSetUri(iterator->service, uri);
 
-  if (lr_start(unsecure_web_server))
-    return HPD_E_MHD_ERROR;
+    rc = homePortRegisterService(homeport, iterator->service, uri );
+    if( rc < HPD_E_SUCCESS )
+    {
+      return rc;
+    }
+  }
 
-//  rc = lr_register_service(unsecure_web_server,
-//      "/devices",
-//      answer_get_devices, NULL, NULL, NULL,
-//      NULL, NULL);
-//  rc = lr_register_service(unsecure_web_server,
-//      "/events",
-//      NULL, answer_post_events, NULL, NULL,
-//      req_destroy_str, loop);
-  if (rc) {
+  return HPD_E_SUCCESS;
+}
+
+int 
+homePortDetachDevice( HomePort *homeport, Adapter *adapter, Device *device )
+{
+  if( homeport == NULL || adapter == NULL || device == NULL )
+    return HPD_E_NULL_POINTER;
+
+  ServiceElement *iterator;
+  int rc;
+
+  DL_FOREACH( device->service_head, iterator )
+  {
+    rc = homePortUnregisterService( homeport, iterator->service->uri );
+    if(rc < HPD_E_SUCCESS)
+    {
+      return rc;
+    }
+  }
+
+  adapterRemoveDevice(adapter, device);
+
+  return HPD_E_SUCCESS;
+}
+
+/*******************************************************************/
+/************************Client Interface***************************/
+/*******************************************************************/
+
+int
+homePortGetState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
+{
+  Service *service = (Service*) srv_data;
+  char *buffer, *state;
+  size_t buf_len;
+  struct lm *headers = lm_create();
+
+  if(service->getFunction == NULL)
+  {
+    lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
+    return 1;
+  }
+  // Call callback and send response
+  buffer = malloc((MHD_MAX_BUFFER_SIZE+1) * sizeof(char));
+  buf_len = service->getFunction(service, buffer, MHD_MAX_BUFFER_SIZE);
+  if (buf_len) {
+    buffer[buf_len] = '\0';
+    /*TODO Check header for XML or jSON*/
+    state = stateToXml(buffer);
+    lm_insert(headers, "Content-Type", "application/xml");
+    lr_sendf(req, WS_HTTP_200, headers, state);
+    lm_destroy(headers);
+    free(state);
+  } else {
+    lr_sendf(req, WS_HTTP_500, NULL, "Internal Server Error");
+  }
+  free(buffer);
+
+  return 0;
+}
+
+int 
+homePortSetState(void *srv_data, void **req_data,
+    struct lr_request *req,
+    const char *body, size_t len)
+{
+  Service *service = srv_data;
+  char *req_str = *req_data;
+  char *str;
+
+  // Recieve data
+  if (body) {
+    if (*req_data) len += strlen(req_str);
+    str = realloc(*req_data, (len+1)*sizeof(char));
+    if (!str) {
+      printf("Failed to allocate memory\n");
+      lr_sendf(req, WS_HTTP_500, NULL, "Internal server error");
+      return 1;
+    }
+    strncat(str, body, len);
+    str[len] = '\0';
+    *req_data = str;
+    return 0;
+  }
+  char *value = xmlToState(*req_data);
+  if (!value) {
+    lr_sendf(req, WS_HTTP_400, NULL, "400 Bad Request");
+    return 1;
+  }
+
+  // Call callback
+  char *buffer = malloc((MHD_MAX_BUFFER_SIZE+1) * sizeof(char));
+  int buf_len = service->putFunction(service,
+      buffer, MHD_MAX_BUFFER_SIZE,
+      value);
+  free(value);
+
+  // Send response
+  if (buf_len == 0) {
+    lr_sendf(req, WS_HTTP_500, NULL, "500 Internal Server Error");
+    free(buffer);
+    return 1;
+  } else {
+    //    // Send value change event
+    //    const char *IP = lr_request_get_ip(req);
+    //    buffer[buf_len] = '\0';
+    //    send_event_of_value_change(service, buffer, IP);
+
+    // Reply to request
+    const char *xmlbuff = stateToXml(buffer);
+    lr_sendf(req, WS_HTTP_200, NULL, xmlbuff);
+  }
+  free(buffer);
+  return 0;
+}
+
+int
+homePortGetConfiguration(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
+{
+  HomePort *homeport = (HomePort*) srv_data;
+
+  mxml_node_t *xml = mxmlNewXML("1.0");
+
+  configurationToXml(homeport->configuration, xml);
+
+  char *res = mxmlSaveAllocString(xml, MXML_NO_CALLBACK);
+  mxmlDelete(xml);
+
+  lr_sendf(req, WS_HTTP_200, NULL, res);
+
+  free(res);
+  return 0;
+}
+
+static void
+sig_cb ( struct ev_loop *loop, struct ev_signal *w, int revents )
+{
+  HomePort *homeport = (HomePort*)((void**)w->data)[0];
+  void (*deinit)(HomePort *, void *) = ((void **)w->data)[1];
+
+  // Call deinit
+  // TODO Might be a problem that deinit is not called on ws_stop, but
+  // only if the server is stopped by a signal. Note that this is only
+  // used in HPD_easy way of starting the server.
+  deinit(homeport, ((void **)w->data)[2]);
+
+
+  // Stop server and loop
+  homePortStop(homeport);
+  homePortFree(homeport);
+  ev_break(loop, EVBREAK_ALL);
+
+  // TODO Isn't it bad that we down stop watcher here?
+  free(w->data);
+}
+
+char *
+generateUri( Device *device, Service *service )
+{
+  char *uri = malloc((strlen(device->type)+strlen(device->id)+strlen(service->type)+strlen(service->id)+4+1)*sizeof(char));
+  if( uri == NULL )
+    return NULL;
+  uri[0] = '\0';
+  strcat(uri, "/");
+  strcat(uri, device->type);
+  strcat(uri, "/");
+  strcat(uri, device->id);
+  strcat(uri, "/");
+  strcat(uri, service->type);
+  strcat(uri, "/");
+  strcat(uri, service->id);
+
+  return uri;
+}
+
+int
+homePortRegisterService(HomePort *homeport, Service *service, char *uri)
+{
+  int rc;
+  Service *s = lr_lookup_service(homeport->rest_interface, uri);
+  if (s) {
+    printf("A similar service is already registered in the unsecure server\n");
+    return HPD_E_SERVICE_ALREADY_REGISTER;
+  }
+
+  printf("Registering service\n");
+  rc = lr_register_service(homeport->rest_interface,
+      uri,
+      homePortGetState, NULL, homePortSetState, NULL,
+      NULL, service);
+  if(rc) {
     printf("Failed to register non secure service\n");
     return HPD_E_MHD_ERROR;
   }
 
-  rc = HPD_E_SUCCESS;
-
-  return rc;
-}
-
-int
-register_service(Service *service)
-{
-  if( service->device->secure_device == HPD_NON_SECURE_DEVICE )
-  {
-    Service *s = lr_lookup_service(unsecure_web_server, service->value_url);
-    if (s) {
-      printf("A similar service is already registered in the unsecure server\n");
-      return HPD_E_SERVICE_ALREADY_REGISTER;
-    }
-
-    printf("Registering non secure service\n");
-    rc = lr_register_service(unsecure_web_server,
-	service->value_url,
-	answer_get, NULL, answer_put, NULL,
-	NULL, service);
-    if(rc) {
-      printf("Failed to register non secure service\n");
-      return HPD_E_MHD_ERROR;
-    }
-  } else
-    return HPD_E_BAD_PARAMETER;
-
-  return HPD_E_SUCCESS;
-
-}
-
-  int 
-HPD_attach_device( Device *device )
-{
-  if( device == NULL )
-  {
-    return HPD_E_NULL_POINTER;
-  }
-  ServiceElement *iterator;
-  int return_value;
-
-  DL_FOREACH( device_to_register->service_head, iterator )
-  {
-    return_value = register_service( iterator->service );
-    if( return_value < HPD_E_SUCCESS )
-    {
-      return return_value;
-    }
-  }
-
   return HPD_E_SUCCESS;
 }
 
 int
-unregister_service( Service* service )
+homePortUnregisterService( HomePort *homeport, char* uri )
 {
-  int rc;
+  Service *s = lr_lookup_service(homeport->rest_interface, uri);
+  if( s == NULL )
+    return HPD_E_SERVICE_NOT_REGISTER;
 
-  if( service->device->secure_device == HPD_NON_SECURE_DEVICE )
-  {
-    Service *s = lr_lookup_service(unsecure_web_server, service->value_url);
-    if( !s )
-      return HPD_E_SERVICE_NOT_REGISTER;
-
-    s = lr_unregister_service ( unsecure_web_server,
-	service->value_url );
-    if( !s )
-      return HPD_E_MHD_ERROR;
-  }
-  else 
-    return HPD_E_BAD_PARAMETER;
-
-//  rc = notify_service_availability( service, HPD_NO);
-//  if(  rc < HPD_E_SUCCESS )
-//  {
-//    printf("notify_service_availability failed : %d\n", rc);
-//    return rc;
-//  }
+  s = lr_unregister_service ( homeport->rest_interface, uri );
+  if( s == NULL )
+    return HPD_E_MHD_ERROR;
 
   return HPD_E_SUCCESS;
 }
 
-/**
- * Unregisters all the Services contained in a given
- *  Device in the HomePort Daemon
- *
- * @param device The device to detach 
- *
- * @return A HPD error code
- */
-  int 
-HPD_detach_device( Device *device )
-{
-  if( device == NULL )
-    return HPD_E_NULL_POINTER;
-
-  ServiceElement *iterator;
-  int return_value;
-
-  DL_FOREACH( device_to_unregister->service_head, iterator )
-  {
-    return_value = unregister_service( iterator->service );
-    if(return_value < HPD_E_SUCCESS)
-    {
-      return return_value;
-    }
-  }
-
-  return HPD_E_SUCCESS;
-}
-
-
-/**
- *  * Simple timestamp function
- *   *
- *    * @return Returns the timestamp
- *     */
-  char *
-timestamp ( void )
-{
-  time_t ltime;
-  ltime = time(NULL);
-  const struct tm *timeptr = localtime(&ltime);
-
-  static char wday_name[7][3] = {
-    "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
-  };
-  static char mon_name[12][3] = {
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-  };
-  static char result[25];
-
-  sprintf(result, "%.3s %.3s%3d %.2d:%.2d:%.2d %d",
-      wday_name[timeptr->tm_wday],
-      mon_name[timeptr->tm_mon],
-      timeptr->tm_mday, timeptr->tm_hour,
-      timeptr->tm_min, timeptr->tm_sec,
-      1900 + timeptr->tm_year);
-  return result;
-}
-
-  char*
+char*
 stateToXml(char *state)
 {
   mxml_node_t *xml;
   mxml_node_t *stateXml;
 
   xml = mxmlNewXML("1.0");
-  xml_value = mxmlNewElement(xml, "value");
-  mxmlElementSetAttr(xml_value, "timestamp", timestamp());
-  mxmlNewText(xml_value, 0, state);
+  stateXml = mxmlNewElement(xml, "value");
+  mxmlElementSetAttr(stateXml, "timestamp", timestamp());
+  mxmlNewText(stateXml, 0, state);
 
   char* return_value = mxmlSaveAllocString(xml, MXML_NO_CALLBACK);
   mxmlDelete(xml);
@@ -404,8 +441,8 @@ stateToXml(char *state)
   return return_value;
 }
 
-  char*
-xmlToState(char *xml)
+char*
+xmlToState(char *xml_value)
 {
   mxml_node_t *xml;
   mxml_node_t *node;
@@ -433,148 +470,32 @@ xmlToState(char *xml)
   return state;
 }
 
-  int
-HPD_get_state(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
+/**
+ *  * Simple timestamp function
+ *   *
+ *    * @return Returns the timestamp
+ *     */
+char *
+timestamp ( void )
 {
-  Service *service = (Service*) srv_data;
-  char *buffer, state;
+  time_t ltime;
+  ltime = time(NULL);
+  const struct tm *timeptr = localtime(&ltime);
 
-  if(service->getfunction == NULL)
-  {
-    lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
-    return 1;
-  }
-  // Call callback and send response
-  buffer = malloc((MHD_MAX_BUFFER_SIZE+1) * sizeof(char));
-  buf_len = service->get_function(service, buffer, MHD_MAX_BUFFER_SIZE);
-  if (buf_len) {
-    buffer[buf_len] = '\0';
-    /*TODO Check header for XML or jSON*/
-    state = stateToXml(buffer);
-    lm_insert(headers, "Content-Type", "application/xml");
-    lr_sendf(req, WS_HTTP_200, headers, xmlbuff);
-    free(xmlbuff);
-  } else {
-    lr_sendf(req, WS_HTTP_500, NULL, "Internal Server Error");
-  }
-  free(buffer);
+  static char wday_name[7][3] = {
+    "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+  };
+  static char mon_name[12][3] = {
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  };
+  static char result[25];
 
-  return 0;
+  sprintf(result, "%.3s %.3s%3d %.2d:%.2d:%.2d %d",
+      wday_name[timeptr->tm_wday],
+      mon_name[timeptr->tm_mon],
+      timeptr->tm_mday, timeptr->tm_hour,
+      timeptr->tm_min, timeptr->tm_sec,
+      1900 + timeptr->tm_year);
+  return result;
 }
-
-  int 
-HPD_set_state(void *srv_data, void **req_data,
-    struct lr_request *req,
-    const char *body, size_t len)
-{
-  Service *service = srv_data;
-  char *new_put;
-  size_t new_len;
-
-  // Recieve data
-  if (body) {
-    if (*req_data) len += strlen(req_str);
-    str = realloc(*req_data, (len+1)*sizeof(char));
-    if (!str) {
-      printf("Failed to allocate memory\n");
-      lr_sendf(req, WS_HTTP_500, NULL, "Internal server error");
-      return 1;
-    }
-    strncat(str, body, len);
-    str[len] = '\0';
-    *req_data = str;
-    return 0;
-  }
-  char *value = xmlToState(*req_data);
-  free(service->put_value);
-  service->put_value = NULL;
-  if (!value) {
-    lr_sendf(req, WS_HTTP_400, NULL, "400 Bad Request");
-    return 1;
-  }
-
-  // Call callback
-  char *buffer = malloc((MHD_MAX_BUFFER_SIZE+1) * sizeof(char));
-  int buf_len = service->put_function(service,
-      buffer, MHD_MAX_BUFFER_SIZE,
-      value);
-  free(value);
-
-  // Send response
-  if (buf_len == 0) {
-    lr_sendf(req, WS_HTTP_500, NULL, "500 Internal Server Error");
-    free(buffer);
-    return 1;
-  } else {
-    //    // Send value change event
-    //    const char *IP = lr_request_get_ip(req);
-    //    buffer[buf_len] = '\0';
-    //    send_event_of_value_change(service, buffer, IP);
-
-    // Reply to request
-    const char *xmlbuff = stateToXml(buffer);
-    lr_sendf(req, WS_HTTP_200, NULL, xmlbuff);
-  }
-  free(buffer);
-}
-
-return 0;
-}
-
-  static void
-sig_cb ( struct ev_loop *loop, struct ev_signal *w, int revents )
-{
-  void (*deinit)(struct ev_loop *, void *) = ((void **)w->data)[0];
-
-  // Call deinit
-  // TODO Might be a problem that deinit is not called on ws_stop, but
-  // only if the server is stopped by a signal. Note that this is only
-  // used in HPD_easy way of starting the server.
-  deinit(loop, ((void **)w->data)[1]);
-
-  // Stop server and loop
-  HPD_stop();
-  ev_break(loop, EVBREAK_ALL);
-
-  // TODO Isn't it bad that we down stop watcher here?
-  free(w->data);
-}
-
-  int
-HPD_easy ( int (*init)(struct ev_loop *loop, void *data), void (*deinit)(struct ev_loop *loop, void *data), void *data,
-    unsigned int option, char *hostname, ... )
-{
-  int rc;
-
-  // Create loop
-  struct ev_loop *loop = EV_DEFAULT;
-
-  // Create signal watchers
-  struct ev_signal sigint_watcher;
-  struct ev_signal sigterm_watcher;
-  ev_signal_init(&sigint_watcher, sig_cb, SIGINT);
-  ev_signal_init(&sigterm_watcher, sig_cb, SIGTERM);
-  void **w_data = malloc(2*sizeof(void *));
-  w_data[0] = deinit;
-  w_data[1] = data;
-  sigint_watcher.data = w_data;
-  sigterm_watcher.data = w_data;
-  ev_signal_start(loop, &sigint_watcher);
-  ev_signal_start(loop, &sigterm_watcher);
-
-  // Start homeport server
-  va_list ap;
-  va_start( ap, hostname);
-  rc = HPD_vstart(option, loop, hostname, ap);
-  va_end(ap);
-  if (rc) return rc;
-
-  // Call init
-  if ((rc = init(loop, data))) return rc;
-
-  // Start loop
-  ev_run(loop, 0);
-
-  return 0;
-}
-
