@@ -183,6 +183,12 @@ homePortAttachDevice( HomePort *homeport, Adapter *adapter, Device *device )
   int rc;
   char *uri;
 
+  if( findAdapter(homeport->configuration, adapter->id) == NULL )
+  {
+    printf("Adapter not in the systen\n");
+    return -1;
+  }
+
   char *deviceId = confGenerateDeviceId(homeport->configuration);
   if( deviceId == NULL )
   {
