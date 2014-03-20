@@ -28,14 +28,6 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Configure files to run examples
-configure_file(CA_root_cert.pem CA_root_cert.pem COPYONLY)
-configure_file(HPD-cert.pem HPD-cert.pem COPYONLY)
-configure_file(HPD-key.key HPD-key.key COPYONLY)
-configure_file(client-browser-cert.p12 client-browser-cert.p12 COPYONLY)
-configure_file(client-cert.pem client-cert.pem COPYONLY)
-configure_file(hpd.cfg hpd.cfg COPYONLY)
-
 # Example
 #add_executable(hpd_example EXCLUDE_FROM_ALL
 #      hpd_example.c

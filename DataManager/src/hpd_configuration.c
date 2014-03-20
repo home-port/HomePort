@@ -34,6 +34,7 @@
 #include "hp_macros.h"
 
 char *confGenerateAdapterId(Configuration *conf);
+AdapterElement* findAdapterElement(Configuration *configuration, char *adapter_id);
 
 Configuration*
 configurationNew()
@@ -97,18 +98,14 @@ configurationRemoveAdapter( Configuration *configuration, Adapter *adapter )
 
   if( configuration == NULL || adapter == NULL ) return HPD_E_NULL_POINTER;
 
-  AdapterElement *iterator, *tmp;
-
-  DL_FOREACH_SAFE( configuration->adapter_head, iterator, tmp )
+  AdapterElement *adapterElement = findAdapterElement(configuration, adapter->id);
+  if(adapterElement == NULL)
   {
-    if( strcmp ( adapter->id, iterator->adapter->id ) == 0 )
-    {
-      DL_DELETE( configuration->adapter_head, iterator );
-      adapterElementFree( iterator );
-      iterator = NULL;
-      break;
-    }			
+    return -1;
   }
+
+  DL_DELETE(configuration->adapter_head, adapterElement);
+  adapterElementFree(adapterElement);
 
   return HPD_E_SUCCESS;
 }
