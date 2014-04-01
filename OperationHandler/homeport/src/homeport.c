@@ -47,6 +47,8 @@ int homePortUnregisterService( HomePort *homeport, char *uri );
 char *timestamp ( void );
 char* stateToXml(char *state);
 char* xmlToState(char *xml);
+char* stateToJson(char *state);
+char* jsonToState(char *xml);
 static void sig_cb ( struct ev_loop *loop, struct ev_signal *w, int revents );
 char* generateUri( Device *device, Service *service );
 
@@ -253,7 +255,8 @@ homePortGetState(void *srv_data, void **req_data, struct lr_request *req, const 
   Service *service = (Service*) srv_data;
   char *buffer, *state;
   size_t buf_len;
-  struct lm *headers = lm_create();
+  struct lm *headers;
+  struct lm *headersIn = lr_request_get_headers(req);
 
   if(service->getFunction == NULL)
   {
@@ -266,9 +269,26 @@ homePortGetState(void *srv_data, void **req_data, struct lr_request *req, const 
   if (buf_len) {
     buffer[buf_len] = '\0';
     /*TODO Check header for XML or jSON*/
-    state = stateToXml(buffer);
-    lm_insert(headers, "Content-Type", "application/xml");
-    lr_sendf(req, WS_HTTP_200, headers, state);
+    char *accept = lm_find( headersIn, "Accept" );
+    if( ( accept == NULL ) || ( strcmp(accept, "application/xml") == 0 ) )
+    { 
+      state = stateToXml(buffer);
+      headers =  lm_create();
+      lm_insert(headers, "Content-Type", "application/xml");
+      lr_sendf(req, WS_HTTP_200, headers, state);
+    }
+    else if( strcmp(accept, "application/json") == 0 )
+    {
+      state = stateToJson(buffer);
+      headers =  lm_create();
+      lm_insert(headers, "Content-Type", "application/json");
+      lr_sendf(req, WS_HTTP_200, headers, state);
+    }
+    else
+    {
+      lr_sendf(req, WS_HTTP_406, NULL, NULL);
+      return 0;
+    }
     lm_destroy(headers);
     free(state);
   } else {
@@ -286,7 +306,13 @@ homePortSetState(void *srv_data, void **req_data,
 {
   Service *service = srv_data;
   char *req_str = *req_data;
-  char *str;
+  char *str=NULL;
+
+  if(service->putFunction == NULL)
+  {
+    lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
+    return 1;
+  }
 
   // Recieve data
   if (body) {
@@ -297,12 +323,37 @@ homePortSetState(void *srv_data, void **req_data,
       lr_sendf(req, WS_HTTP_500, NULL, "Internal server error");
       return 1;
     }
-    strncat(str, body, len);
+    strncpy(str, body, len);
     str[len] = '\0';
     *req_data = str;
     return 0;
   }
-  char *value = xmlToState(*req_data);
+  struct lm *headers;
+  struct lm *headersIn = lr_request_get_headers(req);
+  char *contentType = lm_find(headersIn, "Content-Type");
+  char *value;
+  int freeValue = 1;
+  if(*req_data == NULL)
+  {
+    lr_sendf(req, WS_HTTP_400, NULL, "400 Bad Request");
+    return 1;
+  }
+  if( ( contentType == NULL ) || ( strcmp(contentType, "application/xml") == 0 ) )
+  {
+    value = xmlToState(*req_data);
+  }
+  else if( strcmp( contentType, "application/json" ) == 0 )
+  {
+    value = jsonToState(*req_data);
+    freeValue = 0;
+  }
+  else
+  {
+    free(*req_data);
+    lr_sendf(req, WS_HTTP_415, NULL, "415 Unsupported Media Type");
+    return 0;
+  }
+  free(*req_data);
   if (!value) {
     lr_sendf(req, WS_HTTP_400, NULL, "400 Bad Request");
     return 1;
@@ -313,7 +364,7 @@ homePortSetState(void *srv_data, void **req_data,
   int buf_len = service->putFunction(service,
       buffer, MHD_MAX_BUFFER_SIZE,
       value);
-  free(value);
+  if(freeValue) free(value);
 
   // Send response
   if (buf_len == 0) {
@@ -327,8 +378,18 @@ homePortSetState(void *srv_data, void **req_data,
     //    send_event_of_value_change(service, buffer, IP);
 
     // Reply to request
-    const char *xmlbuff = stateToXml(buffer);
-    lr_sendf(req, WS_HTTP_200, NULL, xmlbuff);
+    const char *ret;
+    if( strcmp( contentType, "application/xml" ) == 0 )
+    {
+      ret = stateToXml(buffer);
+    }
+    else
+    {
+      ret = stateToJson(buffer);
+    }
+
+    lr_sendf(req, WS_HTTP_200, NULL, ret);
+    free(ret);
   }
   free(buffer);
   return 0;
@@ -338,14 +399,34 @@ int
 homePortGetConfiguration(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
 {
   HomePort *homeport = (HomePort*) srv_data;
+  struct lm *headersIn =  lr_request_get_headers( req );
+  char *accept;
+  char *res;
 
-  mxml_node_t *xml = mxmlNewXML("1.0");
+  accept = lm_find( headersIn, "Accept" );
 
-  configurationToXml(homeport->configuration, xml);
+  /** Defaults to XML */
+  if( ( accept == NULL ) || ( strcmp(accept, "application/xml") == 0 ) )
+  {
+    mxml_node_t *xml = mxmlNewXML("1.0");
 
-  char *res = mxmlSaveAllocString(xml, MXML_NO_CALLBACK);
-  mxmlDelete(xml);
+    configurationToXml(homeport->configuration, xml);
 
+    res = mxmlSaveAllocString(xml, MXML_NO_CALLBACK);
+    mxmlDelete(xml);
+
+  }
+  else if( strcmp(accept, "application/json") == 0 )
+  {
+    json_t * configurationJson = configurationToJson( homeport->configuration );
+    res = json_dumps( configurationJson, 0 );
+    json_decref(configurationJson);
+  }
+  else
+  {
+    lr_sendf(req, WS_HTTP_406, NULL, NULL);
+    return 0;
+  }
   lr_sendf(req, WS_HTTP_200, NULL, res);
 
   free(res);
@@ -474,6 +555,63 @@ xmlToState(char *xml_value)
   mxmlDelete(xml);
 
   return state;
+}
+
+char*
+stateToJson(char *state)
+{
+  json_t *json=NULL;
+  json_t *value=NULL;
+
+  if( ( json = json_object() ) == NULL )
+  {
+    goto error;
+  }
+  if( ( ( value = json_string(state) ) == NULL ) || ( json_object_set_new(json, "value", value) != 0 ) )
+  {
+    goto error;
+  }
+
+  char *ret = json_dumps( json, 0 );
+  json_decref(json);
+  return ret;
+
+error:
+  if(value) json_decref(value);
+  if(json) json_decref(json);
+  return NULL;
+}
+
+char*
+jsonToState(char *json_value)
+{
+  json_t *json = NULL;
+  json_error_t *error=NULL;
+  json_t *value = NULL;
+
+  if( ( json = json_loads(json_value, 0, error) ) == NULL )
+  {
+    goto error;
+  }
+
+  if( json_is_object(json) == 0 )
+  {
+    goto error;
+  }
+
+  if( ( value = json_object_get(json, "value") ) == NULL )
+  {
+    goto error;
+  }
+
+  char *ret = json_string_value(value);
+
+  json_decref(json);
+
+  return ret;
+
+error:
+  return NULL;
 }
 
 /**

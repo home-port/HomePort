@@ -56,6 +56,7 @@ int 		adapterAddDevice(Adapter *adapter, Device *device, char *deviceId);
 int 		adapterRemoveDevice(Adapter *adapter, Device *device);
 Device* 	findDevice(Adapter *adapter, char *device_id);
 mxml_node_t* 	adapterToXml(Adapter *adapter, mxml_node_t *parent);
+json_t* 	adapterToJson(Adapter *adapter);
 void 		adapterSetId( Adapter *adapter, char *id );
 
 struct AdapterElement

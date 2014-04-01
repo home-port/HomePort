@@ -268,6 +268,94 @@ deviceToXml(Device *device, mxml_node_t *parent)
   return deviceXml;
 }
 
+json_t*
+deviceToJson(Device *device)
+{
+  json_t *deviceJson=NULL;
+  json_t *value=NULL;
+  json_t *serviceArray=NULL;
+
+  if( ( deviceJson = json_object() ) == NULL )
+  {
+    return NULL;
+  }
+  if(device->description != NULL)
+  {
+    if( ( ( value = json_string(device->description) ) == NULL ) || ( json_object_set_new(deviceJson, "desc", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(device->id != NULL)
+  {
+    if( ( ( value = json_string(device->id) ) == NULL ) || ( json_object_set_new(deviceJson, "id", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(device->vendorId != NULL)
+  {
+    if( ( ( value = json_string(device->vendorId) ) == NULL ) || ( json_object_set_new(deviceJson, "vendorId", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(device->productId != NULL) 
+  {
+    if( ( ( value = json_string( device->productId ) ) == NULL ) || ( json_object_set_new(deviceJson, "productId", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(device->version != NULL) 
+  {
+    if( ( ( value = json_string( device->version ) ) == NULL ) || ( json_object_set_new(deviceJson, "version", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(device->productId != NULL) 
+  {
+    if( ( ( value = json_string( device->productId ) ) == NULL ) || ( json_object_set_new(deviceJson, "productId", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(device->type != NULL)
+  { 
+    if( ( ( value = json_string( device->type ) ) == NULL ) || ( json_object_set_new(deviceJson, "type", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+
+  ServiceElement *iterator;
+
+  if( ( serviceArray = json_array() ) == NULL )
+  {
+    return NULL;
+  }
+
+  DL_FOREACH( device->service_head, iterator )
+  {
+    if( json_array_append_new(serviceArray, serviceToJson(iterator->service)) != 0 )
+    {
+      return NULL;
+    }
+  }
+
+  if( json_object_set_new(deviceJson, "service", serviceArray) != 0 )
+  {
+    return NULL;
+  }
+
+  return deviceJson;
+error:
+  if(value) json_decref(value);
+  if(serviceArray) json_decref(serviceArray);
+  if(deviceJson) json_decref(deviceJson);
+}
+
 DeviceElement* 
 deviceElementNew( Device *device )
 {
