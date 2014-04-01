@@ -162,6 +162,47 @@ configurationToXml(Configuration *configuration, mxml_node_t *parent)
   return configXml;
 }
 
+json_t*
+configurationToJson(Configuration *configuration)
+{
+  json_t *configJson=NULL;
+  json_t *adapterArray=NULL;
+  json_t *adapter=NULL;
+
+  if( ( configJson = json_object() ) == NULL )
+  {
+    goto error;
+  }
+
+  AdapterElement *iterator;
+
+  if( ( adapterArray = json_array() ) == NULL )
+  {
+    goto error;
+  } 
+
+  DL_FOREACH(configuration->adapter_head, iterator)
+  {
+    adapter = adapterToJson(iterator->adapter);
+    if( ( adapter == NULL ) || ( json_array_append_new(adapterArray, adapter) != 0 ) )
+    {
+      goto error;
+    }
+  }
+
+  if( json_object_set_new(configJson, "adapter", adapterArray) != 0 )
+  {
+    goto error;
+  }
+
+  return configJson;
+error:
+  if(adapter) json_decref(adapter);
+  if(adapterArray) json_decref(adapterArray);
+  if(configJson) json_decref(configJson);
+  return NULL;
+}
+
 char *confGenerateAdapterId(Configuration *conf)
 {
   char *adapter_id = (char*)malloc((ADAPTER_ID_SIZE+1)*sizeof(char));

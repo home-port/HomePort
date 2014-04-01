@@ -62,6 +62,7 @@ int 		deviceAddService( Device *device, Service *service );
 int 		deviceRemoveService( Device *device, Service *service );
 Service* 	findService(Device *device, char *service_id);
 mxml_node_t* 	deviceToXml(Device *device, mxml_node_t *parent);
+json_t* 	deviceToJson(Device *device);
 void 		deviceSetId( Device *device, char *id );
 
 struct DeviceElement

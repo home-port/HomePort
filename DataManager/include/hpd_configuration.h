@@ -52,6 +52,7 @@ int 		configurationAddAdapter(Configuration *config, Adapter *adapter);
 int 		configurationRemoveAdapter( Configuration *configuration, Adapter *adapter );
 Adapter* 	findAdapter(Configuration *configuration, char *adapter_id);
 mxml_node_t* 	configurationToXml(Configuration *configuration, mxml_node_t *parent);
+json_t* 	configurationToJson(Configuration *configuration);
 char* 		confGenerateDeviceId(Configuration *conf);
 
 #endif

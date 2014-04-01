@@ -37,6 +37,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <mxml.h>
+#include <jansson.h>
 
 #include "hpd_error.h"
 #include "utlist.h"
@@ -79,6 +80,7 @@ void 		serviceFree( Service *service );
 void 		serviceSetId( Service *service, char *id );
 void 		serviceSetUri( Service *service, char *uri );
 mxml_node_t* 	serviceToXml(Service *service, mxml_node_t *parent);
+json_t* 	serviceToJson(Service *service);
 
 struct ServiceElement
 {

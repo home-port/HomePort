@@ -171,6 +171,61 @@ adapterToXml(Adapter *adapter, mxml_node_t *parent)
   return adapterXml;
 }
 
+json_t*
+adapterToJson(Adapter *adapter)
+{
+  json_t *adapterJson=NULL;
+  json_t *value=NULL;
+  json_t *deviceArray=NULL;
+
+  if( ( adapterJson = json_object() ) == NULL )
+  {
+    goto error;
+  }
+  if(adapter->id != NULL)
+  {
+    if( ( ( value = json_string(adapter->id) ) == NULL ) || ( json_object_set_new(adapterJson, "id", value) != 0 ) )
+    {
+      goto error;
+    }
+  }
+  if(adapter->network != NULL)
+  {
+    if( ( ( value = json_string(adapter->network) ) == NULL ) || ( json_object_set_new(adapterJson, "network", value) != 0 ) )
+    {
+      goto error;
+    }
+  }
+
+  DeviceElement *iterator;
+
+  if( ( deviceArray = json_array() ) == NULL )
+  {
+    goto error;
+  }
+
+  DL_FOREACH( adapter->device_head, iterator )
+  {
+    json_t *device;
+    if( ( ( device = deviceToJson(iterator->device) ) == NULL ) || ( json_array_append_new(deviceArray, device) != 0 ) )
+    {
+      goto error;
+    }
+  }
+
+  if( json_object_set_new(adapterJson, "device", deviceArray) != 0 )
+  {
+    goto error;
+  }
+
+  return adapterJson;
+error:
+  if(adapterJson) json_decref(adapterJson);
+  if(value) json_decref(value);
+  if(deviceArray) json_decref(deviceArray);
+  return NULL;
+}
+
 AdapterElement* 
 adapterElementNew( Adapter *adapter )
 {

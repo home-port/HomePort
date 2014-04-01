@@ -162,6 +162,119 @@ serviceToXml(Service *service, mxml_node_t *parent)
   return serviceXml;
 }
 
+json_t*
+serviceToJson(Service *service)
+{
+  json_t *serviceJson;
+  json_t *value;
+
+  if( ( serviceJson = json_object() ) == NULL )
+  {
+    return NULL;
+  }
+  if(service->description != NULL)
+  {
+    if( ( ( value = json_string(service->description) ) == NULL ) || ( json_object_set_new(serviceJson, "desc", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(service->id != NULL)
+  {
+    if( ( ( value = json_string(service->id) ) == NULL ) || ( json_object_set_new(serviceJson, "id", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(service->uri != NULL)
+  {
+    if( ( ( value = json_string(service->uri) ) == NULL ) || ( json_object_set_new(serviceJson, "uri", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if( ( ( value = json_string( service->isActuator ? "1" : "0") ) == NULL ) || (json_object_set_new(serviceJson, "isActuator", value) != 0 ) )
+  {
+    return NULL;
+  }
+  if(service->type != NULL)
+  { 
+    if( ( ( value = json_string( service->type ) ) == NULL ) || ( json_object_set_new(serviceJson, "type", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(service->unit != NULL) 
+  {
+    if( ( ( value = json_string( service->unit ) ) == NULL ) || ( json_object_set_new(serviceJson, "unit", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+
+
+  if(service->parameter != NULL)
+  {
+    json_t *parameterJson = json_object();
+    if( parameterJson == NULL )
+      return NULL;
+    if(service->parameter->max != NULL) 
+    {
+      if( ( ( value = json_string( service->parameter->max ) ) == NULL ) || ( json_object_set_new(parameterJson, "max", value) != 0 ) )
+      {
+	return NULL;
+      }
+    }
+    if(service->parameter->min != NULL)
+    {
+      if( ( ( value = json_string( service->parameter->min ) ) == NULL ) || ( json_object_set_new(parameterJson, "min", value) != 0 ) )
+      {
+	return NULL;
+      }
+    }
+    if(service->parameter->scale != NULL) 
+    {
+      if( ( ( value = json_string( service->parameter->scale ) ) == NULL ) || ( json_object_set_new(parameterJson, "scale", value) != 0 ) )
+      {
+	return NULL;
+      }
+    }
+    if(service->parameter->step != NULL) 
+    {
+      if( ( ( value = json_string( service->parameter->step ) ) == NULL ) || ( json_object_set_new(parameterJson, "step", value) != 0 ) )
+      {
+	return NULL;
+      }
+    }
+    if(service->parameter->type != NULL)
+    {
+      if( ( (value = json_string( service->parameter->type ) ) == NULL ) || ( json_object_set_new(parameterJson, "type", value) != 0 ) )
+      {
+	return NULL;
+      }
+    }
+    if(service->parameter->unit != NULL) 
+    {
+      if( ( ( value = json_string( service->parameter->unit ) ) == NULL ) || ( json_object_set_new(parameterJson, "unit", value) != 0 ) ) 
+      {
+	return NULL;
+      }
+    }
+    if(service->parameter->values != NULL) 
+    {
+      if( ( ( value = json_string( service->parameter->values ) ) == NULL ) || ( json_object_set_new(parameterJson, "values", value) != 0 ) )
+      {
+	return NULL;
+      }
+    }
+    if( json_object_set_new(serviceJson, "parameter", parameterJson) != 0 )
+    {
+      return NULL;
+    }
+  }
+  return serviceJson;
+}
+
 void
 serviceSetId( Service *service, char *id )
 {
