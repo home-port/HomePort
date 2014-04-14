@@ -175,5 +175,6 @@ int 		homePortAddAdapter( HomePort *homeport, Adapter *adapter );
 int 		homePortRemoveAdapter( HomePort *homeport, Adapter *adapter );
 int 		homePortAttachDevice( HomePort *homeport, Adapter *adapter, Device *device );
 int 		homePortDetachDevice( HomePort *homeport, Adapter *adapter, Device *device );
+void     homePortSendState(Service *service, void *req_in, const char *val, size_t len);
 
 #endif

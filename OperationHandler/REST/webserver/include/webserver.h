@@ -77,6 +77,16 @@ typedef int  (*ws_data_cb)  (struct ws *instance, struct ws_conn *conn,
  *  on_receive -> on_disconnect;
  *  }
  *  \enddot
+ *
+ *  Notes on the return values of callbacks:
+ *  - on_connect:
+ *    - zero: Accept client and start listening for data.
+ *    - non-zero: Reject client, e.g. kill connection.
+ *  - on_receive:
+ *    - zero: Data accepted, continue to listen for further data.
+ *    - non-zero: Data rejected, kill connection.
+ *  - on_disconnect:
+ *    - any: Ignored as client is to be killed anyways.
  */
 struct ws_settings {
    enum ws_port port; ///< Port number

@@ -182,7 +182,8 @@ int httpws_start(struct httpws *instance)
 
 /// Stop a http-server instance
 /**
- *  Stops an already started http-webserver instance.
+ *  Stops an already started http-webserver instance. All open connections will
+ *  be killed without notifying clients, nor sending remaining data.
  *
  *  \param  instance  Instance to stop.
  */

@@ -57,7 +57,7 @@ typedef struct Parameter Parameter;
  */
 typedef struct ServiceElement ServiceElement;
 
-typedef size_t (*serviceGetFunction) (Service* service, char *buffer, size_t max_buffer_size);
+typedef void (*serviceGetFunction) (Service* service, void *request);
 
 typedef size_t (*servicePutFunction) (Service* service, char *buffer, size_t max_buffer_size, char *put_value);
 

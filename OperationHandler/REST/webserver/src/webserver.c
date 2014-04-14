@@ -209,11 +209,13 @@ static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher,
       return;
    }
 
-   if (settings->on_receive(conn->instance, conn, 
-                            settings->ws_ctx, &conn->ctx,
-                            buffer, recieved)) {
-      ws_conn_kill(conn);
-      return;
+   if (settings->on_receive) {
+      if (settings->on_receive(conn->instance, conn, 
+                               settings->ws_ctx, &conn->ctx,
+                               buffer, recieved)) {
+         ws_conn_kill(conn);
+         return;
+      }
    }
 
    // Reset timeout
@@ -392,6 +394,9 @@ static void ws_conn_accept(
  * a format string and variable arguments. It calls ws_conn_vsendf() to
  * handle the actually sending, see this for more information.
  *
+ * Connection is kept open for further communication, use ws_conn_close
+ * to close it.
+ *
  * \param  conn  Connection to send on
  * \param  fmt   Format string
  *
@@ -416,6 +421,9 @@ int ws_conn_sendf(struct ws_conn *conn, const char *fmt, ...) {
  * Note that this function only schedules the message to be send. A send
  * watcher on the event loop will trigger the actual sending, when the
  * connection is ready for it.
+ *
+ * Connection is kept open for further communication, use ws_conn_close
+ * to close it.
  *
  * \param  conn  Connection to send on
  * \param  fmt   Format string
@@ -515,6 +523,9 @@ void ws_conn_keep_open(struct ws_conn *conn)
 /**
  *  This function stops the LibEV watchers, closes the socket, and frees
  *  the data structures used by a connection.
+ *
+ *  Note that you should use ws_conn_close for a graceful closure of the
+ *  connection, where the remaining data is sent.
  *
  *  \param conn The connection to kill.
  */
@@ -652,6 +663,9 @@ int ws_start(struct ws *instance)
  *  The webserver, started with ws_start(), may be stopped by calling
  *  this function. It will take the webserver off the event loop and
  *  clean up after it.
+ *
+ *  This includes killing all connections without waiting for
+ *  remaining data to be sent.
  *
  *  \param instance The webserver instance to stop.
  */

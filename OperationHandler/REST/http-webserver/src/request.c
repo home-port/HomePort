@@ -96,9 +96,9 @@ enum state {
  * node [fontsize=10];
  * edge [fontsize=8];
  * S_START -> S_BEGIN
- * [ label = "on_requst_begin();\non_request_method();" ];
+ * [ label = "on_requst_begin();" ];
  * S_BEGIN -> S_URL
- * [ label = "on_request_url();" ];
+ * [ label = "on_request_method();\non_request_url();" ];
  * S_URL -> S_URL
  * [ label = "on_request_url();" ];
  * S_URL -> S_HEADER_FIELD
@@ -303,7 +303,6 @@ static int parser_msg_begin(http_parser *parser)
             stat = begin_cb(req->webserver, req, settings->ws_ctx, &req->data);
          if (stat) { req->state = S_STOP; return stat; }
 
-         if (stat) { req->state = S_STOP; return stat; }
          return 0;
       default:
          req->state = S_ERROR;
@@ -341,7 +340,7 @@ static int parser_url(http_parser *parser, const char *buf, size_t len)
          printf("Method: %s\n", method);
          if(method_cb)
             stat = method_cb(req->webserver, req, settings->ws_ctx, &req->data, method, strlen(method));
-
+         if (stat) { req->state = S_STOP; return stat; }
          req->state = S_URL;
       case S_URL:
          up_add_chunk(req->url_parser, buf, len);
