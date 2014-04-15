@@ -23,7 +23,7 @@ Switch branch:
 
 Install the dependencies:
 
-`sudo apt-get install gcc make libev-dev cmake`
+`sudo apt-get install gcc make libev-dev cmake libconfig-dev libmxml-dev uuid-dev libmicrohttpd-dev`
 
 Compile:
 
@@ -56,6 +56,8 @@ Run the tests:
 `make check`
 
 # Build examples
+
+First you need to install the libphidget library: http://www.phidgets.com/docs/OS_-_Linux#Quick_Downloads
 
 Run cmake as normal:
 
