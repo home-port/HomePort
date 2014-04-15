@@ -55,6 +55,7 @@ char* generateUri( Device *device, Service *service );
 /**
  * Creates a HomePort structure
  * 
+Not Acceptable
  * @param option HPD option as specified in homeport.h
  *
  * @param hostname Name of the desired host
@@ -71,6 +72,8 @@ homePortNew( struct ev_loop *loop, int port )
 
   struct lr_settings settings = LR_SETTINGS_DEFAULT;
   settings.port = port;
+
+  homeport->loop = loop;
 
   homeport->rest_interface = lr_create(&settings, loop);
   if ( homeport->rest_interface == NULL )
@@ -268,16 +271,9 @@ homePortGetState(void *srv_data, void **req_data, struct lr_request *req, const 
   buf_len = service->getFunction(service, buffer, MHD_MAX_BUFFER_SIZE);
   if (buf_len) {
     buffer[buf_len] = '\0';
-    /*TODO Check header for XML or jSON*/
+    /*Defaults to XML*/
     char *accept = lm_find( headersIn, "Accept" );
-    if( ( accept == NULL ) || ( strcmp(accept, "application/xml") == 0 ) )
-    { 
-      state = stateToXml(buffer);
-      headers =  lm_create();
-      lm_insert(headers, "Content-Type", "application/xml");
-      lr_sendf(req, WS_HTTP_200, headers, state);
-    }
-    else if( strcmp(accept, "application/json") == 0 )
+    if( strcmp(accept, "application/json") == 0 )
     {
       state = stateToJson(buffer);
       headers =  lm_create();
@@ -285,10 +281,17 @@ homePortGetState(void *srv_data, void **req_data, struct lr_request *req, const 
       lr_sendf(req, WS_HTTP_200, headers, state);
     }
     else
-    {
-      lr_sendf(req, WS_HTTP_406, NULL, NULL);
-      return 0;
+    { 
+      state = stateToXml(buffer);
+      headers =  lm_create();
+      lm_insert(headers, "Content-Type", "application/xml");
+      lr_sendf(req, WS_HTTP_200, headers, state);
     }
+//    else
+//    {
+//      lr_sendf(req, WS_HTTP_406, NULL, NULL);
+//      return 0;
+//    }
     lm_destroy(headers);
     free(state);
   } else {
@@ -406,7 +409,13 @@ homePortGetConfiguration(void *srv_data, void **req_data, struct lr_request *req
   accept = lm_find( headersIn, "Accept" );
 
   /** Defaults to XML */
-  if( ( accept == NULL ) || ( strcmp(accept, "application/xml") == 0 ) )
+  if( strcmp(accept, "application/json") == 0 )
+  {
+    json_t * configurationJson = configurationToJson( homeport->configuration );
+    res = json_dumps( configurationJson, 0 );
+    json_decref(configurationJson);
+  }
+  else 
   {
     mxml_node_t *xml = mxmlNewXML("1.0");
 
@@ -416,17 +425,11 @@ homePortGetConfiguration(void *srv_data, void **req_data, struct lr_request *req
     mxmlDelete(xml);
 
   }
-  else if( strcmp(accept, "application/json") == 0 )
-  {
-    json_t * configurationJson = configurationToJson( homeport->configuration );
-    res = json_dumps( configurationJson, 0 );
-    json_decref(configurationJson);
-  }
-  else
-  {
-    lr_sendf(req, WS_HTTP_406, NULL, NULL);
-    return 0;
-  }
+//  else
+//  {
+//    lr_sendf(req, WS_HTTP_406, NULL, NULL);
+//    return 0;
+//  }
   lr_sendf(req, WS_HTTP_200, NULL, res);
 
   free(res);

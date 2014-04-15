@@ -135,6 +135,7 @@ struct HomePort
 {
   struct lr *rest_interface;
   Configuration *configuration;
+  struct ev_loop *loop;
 };
 
 enum HPD_FLAG
