@@ -73,7 +73,8 @@ typedef int (*httpws_nodata_cb)(
  *  't'. It is up to the implementer of these callbacks to concatenate
  *  the results if needed.
  *
- *  The callbacks are called in the following order:
+ *  The callbacks are called in the following order (on_req_destroy may be
+ *  called at any time):
  *  \dot
  *  digraph callback_order {
  *  on_req_begin -> on_req_method;
@@ -93,6 +94,13 @@ typedef int (*httpws_nodata_cb)(
  *  on_req_body -> on_req_cmpl;
  *  }
  *  \enddot
+ *
+ *  Return values should generally be interpreted as follows:
+ *  - zero: Continue parsing of message.
+ *  - non-zero: Stop any further parsing of message.
+ *  Note that the connection is kept open in both cases, thus a response can be
+ *  sent to the client without parsing it entirely. The return value of
+ *  on_req_destroy is ignored.
  */
 struct httpws_settings {
    enum ws_port port;

@@ -252,27 +252,20 @@ homePortDetachDevice( HomePort *homeport, Adapter *adapter, Device *device )
 /************************Client Interface***************************/
 /*******************************************************************/
 
-int
-homePortGetState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
+void
+homePortSendState(Service *service, void *req_in, const char *val, size_t len)
 {
-  Service *service = (Service*) srv_data;
-  char *buffer, *state;
-  size_t buf_len;
-  struct lm *headers;
-  struct lm *headersIn = lr_request_get_headers(req);
+   char *buffer, *state;
+   struct lr_request *req = req_in;
+   struct lm *headersIn = lr_request_get_headers(req);
+   struct lm *headers;
 
-  if(service->getFunction == NULL)
-  {
-    lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
-    return 1;
-  }
-  // Call callback and send response
-  buffer = malloc((MHD_MAX_BUFFER_SIZE+1) * sizeof(char));
-  buf_len = service->getFunction(service, buffer, MHD_MAX_BUFFER_SIZE);
-  if (buf_len) {
-    buffer[buf_len] = '\0';
-    /*Defaults to XML*/
-    char *accept = lm_find( headersIn, "Accept" );
+   // Call callback and send response
+   buffer = malloc((len+1) * sizeof(char));
+   if (len) {
+     buffer[len] = '\0';
+     /*TODO Check header for XML or jSON*/
+     char *accept = lm_find( headersIn, "Accept" );
     if( strcmp(accept, "application/json") == 0 )
     {
       state = stateToJson(buffer);
@@ -287,19 +280,29 @@ homePortGetState(void *srv_data, void **req_data, struct lr_request *req, const 
       lm_insert(headers, "Content-Type", "application/xml");
       lr_sendf(req, WS_HTTP_200, headers, state);
     }
-//    else
-//    {
-//      lr_sendf(req, WS_HTTP_406, NULL, NULL);
-//      return 0;
-//    }
-    lm_destroy(headers);
-    free(state);
-  } else {
-    lr_sendf(req, WS_HTTP_500, NULL, "Internal Server Error");
-  }
-  free(buffer);
+     lm_destroy(headers);
+     free(state);
+   } else {
+     lr_sendf(req, WS_HTTP_500, NULL, "Internal Server Error");
+   }
+   free(buffer);
+}
 
-  return 0;
+int
+homePortGetState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
+{
+  Service *service = (Service*) srv_data;
+
+  if(service->getFunction == NULL)
+  {
+    lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
+    return 1;
+  }
+
+  service->getFunction(service, req);
+
+  // Stop parsing request, we don't need the body anyways
+  return 1;
 }
 
 int 

@@ -304,12 +304,25 @@ int lr_start(struct lr *ins)
   return 1;
 }
 
+/// Stops the server
+/**
+ *  Stops the server and kills all connections to it. Data that have not been
+ *  sent will be lost.
+ */
 void lr_stop(struct lr *ins)
 {
   if(ins)
     httpws_stop(ins->webserver);
 }
 
+/// Creates a new service
+/**
+ *  Meaning of return values of on_get, on_post, on_put, and on_delete:
+ *  - Zero: Continue parsing the request.
+ *  - Non-zero: Stop parsing the request. Connection will not be stopped, so it
+ *    is safe to send message to client afterwards.
+ *  Return value of on_destroy is ignored.
+ */
 int lr_register_service(struct lr *ins,
                          char *url,
                          lr_data_cb on_get,
@@ -359,6 +372,15 @@ void *lr_lookup_service(struct lr *ins, char *url)
    return srv->srv_data;
 }
 
+
+/// Send response to a request
+/**
+ *  lr_sendf is basically a simple wrapper around lr_send_start,
+ *  lr_send_vchunkf, and lr_send_stop, so there is no need to call any of
+ *  these. Actually the result is undefined if you do.
+ *
+ *  After the status, headers and message have been sent it closes the connection.
+ */
 void lr_sendf(struct lr_request *req,
               enum httpws_http_status_code status,
               struct lm *headers, const char *fmt, ...)
@@ -382,6 +404,14 @@ static void add_header(void *data,
    http_response_add_header(res, key, value);
 }
 
+/// Creates the response to a request.
+/**
+ *  For sending chunks only, is not needed for lr_sendf.
+ *
+ *  Sends the status and headers. Keeps connection open for chunks. The
+ *  connection should be closed with lr_send_stop after all chunks have been
+ *  sent.
+ */
 void lr_send_start(struct lr_request *req,
                    enum httpws_http_status_code status,
                    struct lm *headers)
@@ -416,6 +446,10 @@ int lr_send_add_cookie_simple(struct lr_request *req,
                              NULL, NULL, NULL, NULL, 0,0, NULL);
 }
 
+/// Send message in chunks as response to the request
+/**
+ *  See lr_send_vchunkf for more details.
+ */
 void lr_send_chunkf(struct lr_request *req, const char *fmt, ...)
 {
    //NOTE THAT POINTER SIZES ARE DIFFERENT ON 64BIT
@@ -426,6 +460,14 @@ void lr_send_chunkf(struct lr_request *req, const char *fmt, ...)
    va_end(arg);
 }
 
+/// Send message in chunks as response to the request
+/**
+ *  Note that you should call lr_send_start before calling this function and
+ *  call lr_send_stop after this function. To send a simple non-chunked
+ *  message, have a look at lr_sendf instead.
+ *
+ *  Keeps the connection open for additional chunks afterwards.
+ */
 void lr_send_vchunkf(struct lr_request *req, const char *fmt, va_list arg)
 {
    //NOTE THAT POINTER SIZES ARE DIFFERENT ON 64BIT
@@ -433,6 +475,14 @@ void lr_send_vchunkf(struct lr_request *req, const char *fmt, va_list arg)
    http_response_vsendf(req->res, fmt, arg);
 }
 
+/// Ends the reponse initiated with lr_send_start and closes connection
+/**
+ *  Only for use with lr_send_start and sending chunks. Users of lr_sendf does
+ *  not need to call this.
+ *
+ *  Does a graceful closure of the connection. That is, the connection will be
+ *  close after the remaining data has been sent on it.
+ */
 void lr_send_stop(struct lr_request *req)
 {
    //NOTE THAT POINTER SIZES ARE DIFFERENT ON 64BIT
@@ -486,6 +536,11 @@ const char *lr_request_get_ip(struct lr_request *req)
    return http_request_get_ip(req->req);
 }
 
+/// Keep the connection open
+/**
+ *  Normally each connection is closed after a timeout. This prevents that from
+ *  happening by deactivating the timeout.
+ */
 void lr_request_keep_open(struct lr_request *req)
 {
    http_request_keep_open(req->req);

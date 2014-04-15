@@ -340,7 +340,8 @@ void http_response_sendf(struct http_response *res, const char *fmt, ...)
  *
  *  If NULL is given as format no body is sent.
  *
- *  The response is sent delayed, when the connection is ready for it.
+ *  The response is sent delayed, when the connection is ready for it. Likewise
+ *  the connection is kept open afterwards for further messages.
  *
  *  \param  res  The http response to send.
  *  \param  fmt  The format string for the body
