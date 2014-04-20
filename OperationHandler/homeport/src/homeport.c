@@ -262,6 +262,7 @@ homePortSendState(Service *service, void *req_in, const char *val, size_t len)
 
    // Call callback and send response
    buffer = malloc((len+1) * sizeof(char));
+   strncpy(buffer, val, len);
    if (len) {
      buffer[len] = '\0';
      /*TODO Check header for XML or jSON*/
