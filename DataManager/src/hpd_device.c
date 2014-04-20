@@ -67,12 +67,12 @@ char *deviceGenerateServiceId(Device *device);
  */
 Device* 
 deviceNew(
-    char *description,
-    char *vendorId,
-    char *productId,
-    char *version,
-    char *location,
-    char *type)
+    const char *description,
+    const char *vendorId,
+    const char *productId,
+    const char *version,
+    const char *location,
+    const char *type)
 {
   Device *device;
 

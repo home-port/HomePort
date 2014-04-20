@@ -65,10 +65,10 @@
  */
 Service* 
 serviceNew(
-    char *description,
+    const char *description,
     int isActuator,
-    char *type,
-    char *unit,
+    const char *type,
+    const char *unit,
     serviceGetFunction getFunction,
     servicePutFunction putFunction,
     Parameter *parameter,
@@ -331,13 +331,13 @@ serviceElementFree( ServiceElement *serviceElement )
  * @return returns the Parameter or NULL if failed, note that the id can not be NULL
  */
 Parameter* 
-parameterNew( char *max,
-    char *min,
-    char *scale,
-    char *step,
-    char *type,
-    char *unit,
-    char *values )
+parameterNew( const char *max,
+    const char *min,
+    const char *scale,
+    const char *step,
+    const char *type,
+    const char *unit,
+    const char *values )
 {
   Parameter *parameter;
   alloc_struct(parameter);
