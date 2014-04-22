@@ -92,6 +92,8 @@ create_service_struct(
 		strcpy(service->ID, ID);
 	}
 
+	service->isActuator = isActuator;
+
 	if( type == NULL )
 	{
 		printf("Service type cannot be NULL\n");
