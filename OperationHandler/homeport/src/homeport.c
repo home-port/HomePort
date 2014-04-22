@@ -48,7 +48,7 @@ char *timestamp ( void );
 char* stateToXml(char *state);
 char* xmlToState(char *xml);
 char* stateToJson(char *state);
-char* jsonToState(char *xml);
+const char* jsonToState(char *xml);
 static void sig_cb ( struct ev_loop *loop, struct ev_signal *w, int revents );
 char* generateUri( Device *device, Service *service );
 
@@ -267,26 +267,26 @@ homePortSendState(Service *service, void *req_in, const char *val, size_t len)
      buffer[len] = '\0';
      /*TODO Check header for XML or jSON*/
      char *accept = lm_find( headersIn, "Accept" );
-    if( strcmp(accept, "application/json") == 0 )
-    {
-      state = stateToJson(buffer);
-      headers =  lm_create();
-      lm_insert(headers, "Content-Type", "application/json");
-      lr_sendf(req, WS_HTTP_200, headers, state);
-    }
-    else
-    { 
-      state = stateToXml(buffer);
-      headers =  lm_create();
-      lm_insert(headers, "Content-Type", "application/xml");
-      lr_sendf(req, WS_HTTP_200, headers, state);
-    }
+     if( strcmp(accept, "application/json") == 0 )
+     {
+       state = stateToJson(buffer);
+       headers =  lm_create();
+       lm_insert(headers, "Content-Type", "application/json");
+       lr_sendf(req, WS_HTTP_200, headers, state);
+     }
+     else
+     { 
+       state = stateToXml(buffer);
+       headers =  lm_create();
+       lm_insert(headers, "Content-Type", "application/xml");
+       lr_sendf(req, WS_HTTP_200, headers, state);
+     }
      lm_destroy(headers);
      free(state);
+     free(buffer);
    } else {
      lr_sendf(req, WS_HTTP_500, NULL, "Internal Server Error");
    }
-   free(buffer);
 }
 
 int
@@ -337,7 +337,6 @@ homePortSetState(void *srv_data, void **req_data,
     *req_data = str;
     return 0;
   }
-  struct lm *headers;
   struct lm *headersIn = lr_request_get_headers(req);
   char *contentType = lm_find(headersIn, "Content-Type");
   char *value;
@@ -373,6 +372,7 @@ homePortSetState(void *srv_data, void **req_data,
   int buf_len = service->putFunction(service,
       buffer, MHD_MAX_BUFFER_SIZE,
       value);
+
   if(freeValue) free(value);
 
   // Send response
@@ -387,7 +387,7 @@ homePortSetState(void *srv_data, void **req_data,
     //    send_event_of_value_change(service, buffer, IP);
 
     // Reply to request
-    const char *ret;
+    char *ret;
     if( strcmp( contentType, "application/xml" ) == 0 )
     {
       ret = stateToXml(buffer);
