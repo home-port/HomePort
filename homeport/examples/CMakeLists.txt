@@ -43,6 +43,12 @@ add_executable(hpd_example EXCLUDE_FROM_ALL
 target_link_libraries(hpd_example hpd ev)
 add_dependencies(example hpd_example)
 
+add_executable(hpd_example_timer EXCLUDE_FROM_ALL
+      hpd_example_timer.c
+      )
+target_link_libraries(hpd_example_timer hpd ev)
+add_dependencies(example hpd_example_timer)
+
 add_executable(hpd_example_easy EXCLUDE_FROM_ALL
       hpd_example_easy.c
       )
