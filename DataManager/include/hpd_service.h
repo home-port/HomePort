@@ -75,7 +75,7 @@ struct Service
   char *uri;/**<The Service URI*/
 };
 
-Service* 	serviceNew( char *description, int isActuator, char *type, char *unit, serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data); 
+Service* 	serviceNew( const char *description, int isActuator, const char *type, const char *unit, serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data); 
 void 		serviceFree( Service *service ); 
 void 		serviceSetId( Service *service, char *id );
 void 		serviceSetUri( Service *service, char *uri );
@@ -103,7 +103,7 @@ struct Parameter
   char *values;/**<The possible values for the Parameter*/
 };
 
-Parameter* 	parameterNew( char *max, char *min, char *scale, char *step, char *type, char *unit, char *values );
+Parameter* 	parameterNew( const char *max, const char *min, const char *scale, const char *step, const char *type, const char *unit, const char *values );
 void 		parameterFree( Parameter *parameter );
 
 

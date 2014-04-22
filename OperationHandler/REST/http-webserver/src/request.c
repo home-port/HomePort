@@ -165,6 +165,18 @@ static http_parser_settings parser_settings =
    .on_message_complete = parser_msg_cmpl
 };
 
+void http_request_print(struct http_request *req)
+{
+   printf("----- HTTP Request -----\n");
+   if (!req) {
+      printf("   (null)\n");
+   } else {
+      printf("   URL: %s\n", req->url);
+      printf("   State: %i\n", req->state);
+      ws_conn_print(req->conn);
+   }
+}
+
 /// Callback for URL parser
 /**
  *  Called when the full path has been parsed and stores the full path

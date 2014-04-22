@@ -66,6 +66,17 @@ struct http_response
    char *msg;            ///< Status/headers to send
 };
 
+void http_response_print(struct http_response *res)
+{
+   printf("----- HTTP Response -----\n");
+   if (!res) {
+      printf("   (null)\n");
+   } else {
+      printf("   Message: '%s'\n", res->msg);
+      ws_conn_print(res->conn);
+   }
+}
+
 #ifdef DEBUG
 // TODO: Code from libc manual - can probably be removed when bug has been fixed
 void print_trace (void) {

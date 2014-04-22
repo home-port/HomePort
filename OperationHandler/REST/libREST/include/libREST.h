@@ -93,6 +93,7 @@ struct lm *lr_request_get_cookies(struct lr_request *req);
 const char *lr_request_get_cookie(struct lr_request *req, const char* key);
 const char *lr_request_get_ip(struct lr_request *req);
 void lr_request_keep_open(struct lr_request *req);
+void lr_request_print(struct lr_request *req);
 
 // Send response functions
 void lr_sendf(struct lr_request *req,

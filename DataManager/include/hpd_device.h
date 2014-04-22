@@ -56,7 +56,7 @@ struct Device
   ServiceElement *service_head;/**<The first Service of the Service List*/
 };
 
-Device* 	deviceNew( char *description, char *vendorId, char *productId, char *version, char *location, char *type);
+Device* 	deviceNew( const char *description, const char *vendorId, const char *productId, const char *version, const char *location, const char *type);
 void 		deviceFree( Device *device ); 
 int 		deviceAddService( Device *device, Service *service );
 int 		deviceRemoveService( Device *device, Service *service );

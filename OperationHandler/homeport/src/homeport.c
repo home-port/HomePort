@@ -261,9 +261,9 @@ homePortSendState(Service *service, void *req_in, const char *val, size_t len)
    struct lm *headers;
 
    // Call callback and send response
+   buffer = malloc((len+1) * sizeof(char));
+   strncpy(buffer, val, len);
    if (len) {
-     buffer = malloc((len+1) * sizeof(char));
-     strncpy(buffer, val, len);
      buffer[len] = '\0';
      /*TODO Check header for XML or jSON*/
      char *accept = lm_find( headersIn, "Accept" );
@@ -300,6 +300,8 @@ homePortGetState(void *srv_data, void **req_data, struct lr_request *req, const 
     return 1;
   }
 
+  // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
+  lr_request_keep_open(req);
   service->getFunction(service, req);
 
   // Stop parsing request, we don't need the body anyways
@@ -589,7 +591,7 @@ error:
   return NULL;
 }
 
-const char*
+char*
 jsonToState(char *json_value)
 {
   json_t *json = NULL;
@@ -611,7 +613,7 @@ jsonToState(char *json_value)
     goto error;
   }
 
-  const char *ret = json_string_value(value);
+  char *ret = json_string_value(value);
 
   json_decref(json);
 
