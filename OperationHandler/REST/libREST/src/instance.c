@@ -59,6 +59,34 @@ struct lr_request {
    void *data;
 };
 
+static void lr_service_print(struct lr_service *srv)
+{
+   printf("----- libRest Service -----\n");
+   if (!srv) {
+      printf("   (null)\n");
+   } else {
+      printf("   Callbacks:");
+      if (srv->on_get) printf (" GET");
+      if (srv->on_post) printf (" POST");
+      if (srv->on_put) printf (" PUT");
+      if (srv->on_delete) printf (" DELETE");
+      if (srv->on_destroy) printf (" DESTROY");
+      printf("\n");
+   }
+}
+
+void lr_request_print(struct lr_request *req)
+{
+   printf("----- libRest Request -----\n");
+   if (!req) {
+      printf("   (null)\n");
+   } else {
+      lr_service_print(req->service);
+      http_request_print(req->req);
+      http_response_print(req->res);
+   }
+}
+
 static void lr_request_destroy(struct lr_request *req)
 {
    free(req);

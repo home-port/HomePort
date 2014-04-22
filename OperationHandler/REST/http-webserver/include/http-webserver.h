@@ -161,6 +161,7 @@ const char *      http_request_get_cookie    (struct http_request *req,
                                               const char* key);
 const char *      http_request_get_ip        (struct http_request *req);
 void              http_request_keep_open     (struct http_request *req);
+void              http_request_print         (struct http_request *req);
 
 // Response functions
 void  http_response_destroy    (struct http_response *res);
@@ -179,6 +180,7 @@ int   http_response_add_cookie (struct http_response *res,
                                 const char *domain, const char *path,
                                 int secure, int http_only,
                                 const char *extension);
+void  http_response_print      (struct http_response *res);
 
 
 #endif

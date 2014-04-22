@@ -45,6 +45,7 @@
 #include <errno.h>
 #include <ev.h>
 #include <fcntl.h>
+#include <ctype.h>
 
 /// Instance of a webserver
 struct ws {
@@ -69,6 +70,54 @@ struct ws_conn {
    int send_close;                  ///< Close socket after send ?
    void *ctx;                       ///< Connection context
 };
+
+void ws_print(struct ws *ws)
+{
+   struct ll_iter *iter;
+   size_t conns;
+
+   printf("----- Webserver -----\n");
+   if (!ws) {
+      printf("   (null)\n");
+   } else {
+      printf("   Port: %i\n", ws->settings.port);
+      printf("   Connection timeout: %i\n", ws->settings.timeout);
+      printf("   Chunk size: %lu\n", ws->settings.maxdatasize);
+      printf("   Callbacks set:");
+      if (ws->settings.on_connect) printf(" connect");
+      if (ws->settings.on_receive) printf(" receive");
+      if (ws->settings.on_disconnect) printf(" disconnect");
+      printf("\n");
+      ll_count(iter, ws->conns, conns);
+      printf("   Connections: %lu\n", conns);
+      printf("   Socket descriptor: %i\n", ws->sockfd);
+   }
+}
+
+void ws_conn_print(struct ws_conn *conn)
+{
+   size_t i;
+
+   printf("----- Connection -----\n");
+   if (!conn) {
+      printf("   (null)\n");
+   } else {
+      printf("   Client: %s\n", conn->ip);
+      printf("   Timeout: ");
+      if (conn->timeout) printf("Active\n");
+      else printf("Deactive\n");
+      printf("   Data waiting (%lu chars): '", conn->send_len);
+      for (i = 0; i < conn->send_len; i++) {
+         if (conn->send_msg[i] == '\\') printf("\\\\");
+         else if (isprint(conn->send_msg[i])) printf("%c", conn->send_msg[i]);
+         else printf("\\%i", conn->send_msg[i]);
+      }
+      printf("'\n");
+      printf("   After send: ");
+      if (conn->send_close) printf("Close connection\n");
+      else printf("Keep open\n");
+   }
+}
 
 /// Get the socket file descriptor for a port number.
 /**

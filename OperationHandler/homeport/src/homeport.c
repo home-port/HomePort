@@ -300,6 +300,8 @@ homePortGetState(void *srv_data, void **req_data, struct lr_request *req, const 
     return 1;
   }
 
+  // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
+  lr_request_keep_open(req);
   service->getFunction(service, req);
 
   // Stop parsing request, we don't need the body anyways

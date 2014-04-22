@@ -122,6 +122,14 @@ struct ll {
            ITER = ll_next(ITER) ); \
    }
 
+#define ll_count(ITER, LIST, COUNTER) \
+   { \
+      COUNTER = 0; \
+      for (ITER = ll_head(LIST); \
+           ITER != NULL; \
+           ITER = ll_next(ITER) ) COUNTER++; \
+   }
+
 #endif
 
 
