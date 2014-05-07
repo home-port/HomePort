@@ -48,7 +48,7 @@ char *timestamp ( void );
 char* stateToXml(char *state);
 char* xmlToState(char *xml);
 char* stateToJson(char *state);
-const char* jsonToState(char *xml);
+char* jsonToState(char *xml);
 static void sig_cb ( struct ev_loop *loop, struct ev_signal *w, int revents );
 char* generateUri( Device *device, Service *service );
 
