@@ -165,9 +165,11 @@ char* lm_find_n(struct lm *map, const char* key, size_t key_len)
 
 	if(map){
 		for(it = ll_head(map->pairs); it != NULL; it = ll_next(it)) {
+		  if(strlen(((struct pair*)ll_data(it))->key) == key_len){
 			if(strncmp(((struct pair*)ll_data(it))->key, key, key_len) == 0) {
 				return ((struct pair*)ll_data(it))->value;
 			}
+		  }
 		}
 	}
 	return NULL;
