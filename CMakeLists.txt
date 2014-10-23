@@ -31,8 +31,14 @@
 cmake_minimum_required(VERSION 2.6)
 project(HOMEPORT C)
 
+set(CMAKE_C_FLAGS "-DHPD_HTTP -DLR_ORIGIN")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -g -DDEBUG -Wall")
+
 # -fPIC is for compiling on 64bit
-set(CMAKE_C_FLAGS_DEBUG "-fPIC -g -DDEBUG -DHPD_HTTP -DLR_ORIGIN -Wall")
+if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+  set(CMAKE_C_FLAGS "-fPIC" ${CMAKE_C_FLAGS})
+  set(CMAKE_C_FLAGS_DEBUG "-fPIC" ${CMAKE_C_FLAGS_DEBUG})
+endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 
 set(CTEST_MEMORYCHECK_COMMAND "/usr/bin/valgrind")
 include(CTest)
