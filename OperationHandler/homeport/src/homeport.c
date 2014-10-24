@@ -152,7 +152,8 @@ homePortEasy( int (*init)(HomePort *homeport, void *data), void (*deinit)(HomePo
   ev_signal_start(loop, &sigterm_watcher);
 
   // Call init
-  if ((rc = init(homeport, data))) return rc;
+  if (init)
+     if ((rc = init(homeport, data))) return rc;
 
   if( ( rc = homePortStart(homeport) ) ) return rc;
 
@@ -452,7 +453,8 @@ sig_cb ( struct ev_loop *loop, struct ev_signal *w, int revents )
   // TODO Might be a problem that deinit is not called on ws_stop, but
   // only if the server is stopped by a signal. Note that this is only
   // used in HPD_easy way of starting the server.
-  deinit(homeport, ((void **)w->data)[2]);
+  if (deinit)
+     deinit(homeport, ((void **)w->data)[2]);
 
 
   // Stop server and loop
