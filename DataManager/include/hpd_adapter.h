@@ -50,7 +50,7 @@ struct Adapter
   DeviceElement *device_head;
 };
 
-Adapter* 	adapterNew( char *network, void *data );
+Adapter* 	adapterNew( const char *network, void *data );
 void 		adapterFree( Adapter *adapter );
 int 		adapterAddDevice(Adapter *adapter, Device *device, char *deviceId);
 int 		adapterRemoveDevice(Adapter *adapter, Device *device);

@@ -35,7 +35,7 @@
 DeviceElement* findDeviceElement(Adapter *adapter, char *device_id);
 
 Adapter*
-adapterNew( char *network, void *data )
+adapterNew( const char *network, void *data )
 {
   Adapter * adapter;
 
