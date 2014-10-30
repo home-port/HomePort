@@ -59,7 +59,9 @@ struct Device
 Device* 	deviceNew( const char *description, const char *vendorId, const char *productId, const char *version, const char *location, const char *type);
 void 		deviceFree( Device *device ); 
 int 		deviceAddService( Device *device, Service *service );
-int 		deviceRemoveService( Device *device, Service *service );
+__attribute__((deprecated))
+   int 		deviceRemoveService( Device *device, Service *service );
+int 		deviceRemoveService2( Service *service );
 Service* 	findService(Device *device, char *service_id);
 mxml_node_t* 	deviceToXml(Device *device, mxml_node_t *parent);
 json_t* 	deviceToJson(Device *device);

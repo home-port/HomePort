@@ -171,27 +171,18 @@ deviceAddService( Device *device, Service *service )
   }
 
   DL_APPEND( device->service_head, serviceElement);
+  service->device = device;
 
   return HPD_E_SUCCESS;
 }
 
-
-/**
- * Removes a Service from the Device
- *
- * @param service The Service to remove
- *
- * @param device The Device 
- *
- * @return returns A HPD error code
- */
-int 
-deviceRemoveService( Device *device, Service *service )
+static int removeService(Device *device, Service *service)
 {
-
   if( service == NULL || device == NULL ) return HPD_E_NULL_POINTER;
 
   ServiceElement *iterator, *tmp;
+
+  service->device = NULL;
 
   DL_FOREACH_SAFE( device->service_head, iterator, tmp )
   {
@@ -206,6 +197,28 @@ deviceRemoveService( Device *device, Service *service )
   }
 
   return -1;
+}
+
+/**
+ * Removes a Service from the Device
+ *
+ * @param service The Service to remove
+ *
+ * @param device The Device 
+ *
+ * @return returns A HPD error code
+ */
+int 
+deviceRemoveService( Device *device, Service *service )
+{
+   return removeService(device, service);
+}
+
+int 
+deviceRemoveService2( Service *service )
+{
+   Device *device = service->device;
+   return removeService(device, service);
 }
 
 ServiceElement*

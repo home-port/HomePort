@@ -78,6 +78,7 @@ serviceNew(
 
   alloc_struct(service);
 
+  service->device = NULL;
   service->id = NULL;
   service->uri = NULL;
 

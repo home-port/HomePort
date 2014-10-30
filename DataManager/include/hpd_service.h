@@ -44,6 +44,8 @@
 
 #define MHD_MAX_BUFFER_SIZE 10
 
+typedef struct Device Device;
+
 /**
  * The structure Service containing all the Attributes that a Service possess
  */
@@ -63,6 +65,7 @@ typedef size_t (*servicePutFunction) (Service* service, char *buffer, size_t max
 
 struct Service
 {
+   Device *device;
   char *description;/**<The Service description*/
   int isActuator; /**<Determine if the service is an actuator or a sensro */
   char *type;/**<The Service type*/
