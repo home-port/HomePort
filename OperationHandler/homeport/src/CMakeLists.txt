@@ -38,7 +38,8 @@ add_library(hpd SHARED
       
       )
 #TODO microhttpd should be removed here when the time is right :)
-target_link_libraries(hpd config pthread uuid libREST mxml idgen jansson )
+#target_link_libraries(hpd config pthread uuid libREST mxml idgen jansson )
+target_link_libraries(hpd libREST idgen jansson)
 install (TARGETS hpd DESTINATION lib)
 set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
 
