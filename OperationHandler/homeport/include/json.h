@@ -23,46 +23,9 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-/**
- * @file hpd_adapter.h
- * @brief  Methods for managing the Service structure
- * @author Thibaut Le Guilly
- */
+#include "homeport.h"
+   
+char *jsonGetConfiguration(HomePort *homeport);
+char *jsonGetState(char *state);
 
-#ifndef ADAPTER_H
-#define ADAPTER_H
-
-#include <mxml.h>
-#include <jansson.h>
-
-typedef struct Configuration Configuration;
-typedef struct Adapter       Adapter;
-typedef struct Device        Device;
-
-/**
- * The structure Adapter containing all the Attributes that an Adapter possesses
- */
-struct Adapter
-{
-   // Navigational members
-   Configuration *configuration;
-   Device        *device_head;
-   Adapter       *next;
-   Adapter       *prev;
-   // Data members
-   char          *id;
-   char          *network;
-   // User data
-   void          *data;
-};
-
-Adapter     *adapterNew          (const char *network, void *data);
-void         adapterFree         (Adapter *adapter);
-int          adapterAddDevice    (Adapter *adapter, Device *device);
-int          adapterRemoveDevice (Device *device);
-Device      *adapterFindDevice   (Adapter *adapter, char *device_id);
-mxml_node_t *adapterToXml        (Adapter *adapter, mxml_node_t *parent);
-json_t      *adapterToJson       (Adapter *adapter);
-int          adapterGenerateId   (Adapter *adapter);
-
-#endif
+const char *jsonParseState(char *json_value);

@@ -33,81 +33,67 @@
 #ifndef SERVICES_H
 #define SERVICES_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <mxml.h>
 #include <jansson.h>
 
-#include "hpd_error.h"
-#include "utlist.h"
+typedef struct Device         Device;
+typedef struct Service        Service;
+typedef struct Parameter      Parameter;
+typedef struct ServiceElement ServiceElement;
 
-#define MHD_MAX_BUFFER_SIZE 10
-
-typedef struct Device Device;
+typedef void   (*serviceGetFunction) (Service* service, void *request);
+typedef size_t (*servicePutFunction) (Service* service, char *buffer, size_t max_buffer_size, char *put_value);
 
 /**
  * The structure Service containing all the Attributes that a Service possess
  */
-typedef struct Service Service;
+struct Service
+{
+   // Navigational members
+   Device             *device;
+   Parameter          *parameter;   /**<The first Parameter of the Parameter List*/
+   Service            *next;
+   Service            *prev;
+   // Data members
+   char               *description; /**<The Service description*/
+   int                 isActuator;  /**<Determine if the service is an actuator or a sensro */
+   char               *type;        /**<The Service type*/
+   char               *unit;        /**<The unit provided by the Service*/
+   serviceGetFunction  getFunction; /**<A pointer to the GET function of the Service*/
+   servicePutFunction  putFunction; /**<A pointer to the PUT function of the Service*/
+   char               *id;          /**<The Service ID*/
+   char               *uri;         /**<The Service URI*/
+   // User data
+   void               *data;        /**<Pointer used for the used to store its data*/
+};
+
+/*
+ *  Function to handle services
+ */
+Service*     serviceNew       (const char *description, int isActuator, const char *type, const char *unit,
+                               serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data); 
+void         serviceFree      (Service *service);
+mxml_node_t* serviceToXml     (Service *service, mxml_node_t *parent);
+json_t*      serviceToJson    (Service *service);
+int          serviceGenerateId(Service *service);
+int          serviceGenerateUri( Service *service );
+
 /**
  * The structure Service containing all the Attributes that a Parameter possess
  */
-typedef struct Parameter Parameter;
-/**
- * The structure serviceElement used to store Services in lists
- */
-typedef struct ServiceElement ServiceElement;
-
-typedef void (*serviceGetFunction) (Service* service, void *request);
-
-typedef size_t (*servicePutFunction) (Service* service, char *buffer, size_t max_buffer_size, char *put_value);
-
-struct Service
-{
-   Device *device;
-  char *description;/**<The Service description*/
-  int isActuator; /**<Determine if the service is an actuator or a sensro */
-  char *type;/**<The Service type*/
-  char *unit;/**<The unit provided by the Service*/
-  serviceGetFunction getFunction;/**<A pointer to the GET function of the Service*/
-  servicePutFunction putFunction;/**<A pointer to the PUT function of the Service*/
-  Parameter *parameter;/**<The first Parameter of the Parameter List*/
-  void* data;/**<Pointer used for the used to store its data*/
-  char *id;/**<The Service ID*/
-  char *uri;/**<The Service URI*/
-};
-
-Service* 	serviceNew( const char *description, int isActuator, const char *type, const char *unit, serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data); 
-void 		serviceFree( Service *service ); 
-void 		serviceSetId( Service *service, char *id );
-void 		serviceSetUri( Service *service, char *uri );
-mxml_node_t* 	serviceToXml(Service *service, mxml_node_t *parent);
-json_t* 	serviceToJson(Service *service);
-
-struct ServiceElement
-{
-  Service *service;
-  ServiceElement *next;
-  ServiceElement *prev;
-};
-
-ServiceElement* serviceElementNew( Service *service );
-void 		serviceElementFree( ServiceElement *serviceElement );
-
 struct Parameter
 {
-  char *max;/**<The maximum value of the Parameter*/
-  char *min;/**<The minimum value of the Parameter*/
-  char *scale;/**<The Scale of the Parameter*/
-  char *step;/**<The Step of the values of the Parameter*/
-  char *type;/**<The Type of values for the Parameter*/
-  char *unit;/**<The Unit of the values of the Parameter*/
-  char *values;/**<The possible values for the Parameter*/
+  char *max;    /**<The maximum value of the Parameter*/
+  char *min;    /**<The minimum value of the Parameter*/
+  char *scale;  /**<The Scale of the Parameter*/
+  char *step;   /**<The Step of the values of the Parameter*/
+  char *type;   /**<The Type of values for the Parameter*/
+  char *unit;   /**<The Unit of the values of the Parameter*/
+  char *values; /**<The possible values for the Parameter*/
 };
 
-Parameter* 	parameterNew( const char *max, const char *min, const char *scale, const char *step, const char *type, const char *unit, const char *values );
-void 		parameterFree( Parameter *parameter );
-
+Parameter* parameterNew  (const char *max, const char *min, const char *scale, const char *step,
+                          const char *type, const char *unit, const char *values);
+void       parameterFree (Parameter *parameter);
 
 #endif

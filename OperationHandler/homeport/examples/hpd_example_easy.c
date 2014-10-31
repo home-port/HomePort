@@ -80,7 +80,7 @@ static void deinit(HomePort *homeport, void *data)
   /** Also note that attempting to free a service that is still registered will fail */
   Adapter *adapter = (Adapter*) data;
 
-  homePortDetachDevice(homeport, adapter, device);
+  homePortDetachDevice(homeport, device);
 
   /** Deallocate the memory of the services. When deallocating the last service of a device, 
     the device is deallocated too, so there is no need to call destroy_device_struct       */
@@ -122,7 +122,7 @@ static int init(HomePort *homeport, void *data)
       "0x01", 
       "V1", 
       "LivingRoom", 
-      "Example");
+      "Example", NULL);
   /** Create a service
    * 1st parameter : The service's description (optional)
    * 2nd parameter : The service's id

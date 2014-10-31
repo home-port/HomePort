@@ -30,7 +30,12 @@
 
 # Main library
 add_library(hpd SHARED
-      homeport.c
+      service.c
+      comm.c
+      config.c
+      xml.c
+      json.c
+      lr_callbacks.c
       ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_adapter.c
       ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_configuration.c
       ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_device.c

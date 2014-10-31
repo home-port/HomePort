@@ -23,46 +23,48 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The views and conclusions contained in the software and documentation are those of the
 authors and should not be interpreted as representing official policies, either expressed*/
 
-#ifndef HOMEPORT_H
-#define HOMEPORT_H
+#include "homeport.h"
+#include "json.h"
+#include "xml.h"
+#include "libREST.h"
+#include <stdlib.h>
+#include <string.h>
 
-#include <stddef.h>
-
-typedef struct HomePort HomePort;
-typedef struct Adapter Adapter;
-typedef struct Device Device;
-typedef struct Service Service;
-typedef struct Configuration Configuration;
-
-typedef int (*init_f)(HomePort *homeport, void *data);
-typedef void (*deinit_f)(HomePort *homeport, void *data);
-typedef void   (*serviceGetFunction) (Service* service, void *request);
-typedef size_t (*servicePutFunction) (Service* service, char *buffer, size_t max_buffer_size, char *put_value);
-
-struct ev_loop;
-struct lr;
-
-struct HomePort
+void
+homePortSendState(Service *service, void *req_in, const char *val, size_t len)
 {
-  struct lr *rest_interface;
-  Configuration *configuration;
-  struct ev_loop *loop;
-};
+   char *buffer, *state;
+   struct lr_request *req = req_in;
+   struct lm *headersIn = lr_request_get_headers(req);
+   struct lm *headers;
 
-// Homeport Service Control
-HomePort *homePortNew( struct ev_loop *loop, int port );
-void      homePortFree(HomePort *homeport);
-int       homePortStart(HomePort *homeport);
-void      homePortStop(HomePort *homeport);
-int       homePortEasy(init_f init, deinit_f deinit, void *data, int port );
+   // Call callback and send response
+   buffer = malloc((len+1) * sizeof(char));
+   strncpy(buffer, val, len);
+   if (len) {
+     buffer[len] = '\0';
+     /*TODO Check header for XML or jSON*/
+     char *accept = lm_find( headersIn, "Accept" );
+     if( strcmp(accept, "application/json") == 0 )
+     {
+       state = jsonGetState(buffer);
+       headers =  lm_create();
+       lm_insert(headers, "Content-Type", "application/json");
+       lr_sendf(req, WS_HTTP_200, headers, state);
+     }
+     else
+     { 
+       state = xmlGetState(buffer);
+       headers =  lm_create();
+       lm_insert(headers, "Content-Type", "application/xml");
+       lr_sendf(req, WS_HTTP_200, headers, state);
+     }
+     lm_destroy(headers);
+     free(state);
+     free(buffer);
+   } else {
+     lr_sendf(req, WS_HTTP_500, NULL, "Internal Server Error");
+   }
+}
 
-// Configurator Interface
-int  homePortAddAdapter( HomePort *homeport, Adapter *adapter );
-int  homePortRemoveAdapter( HomePort *homeport, Adapter *adapter );
-int  homePortAttachDevice( HomePort *homeport, Adapter *adapter, Device *device );
-int  homePortDetachDevice( HomePort *homeport, Device *device );
 
-// Communication interface
-void homePortSendState(Service *service, void *req_in, const char *val, size_t len);
-
-#endif

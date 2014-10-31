@@ -23,46 +23,15 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-/**
- * @file hpd_adapter.h
- * @brief  Methods for managing the Service structure
- * @author Thibaut Le Guilly
- */
+#ifndef LR_CB_H
+#define LR_CB_H
 
-#ifndef ADAPTER_H
-#define ADAPTER_H
+#include <stddef.h>
 
-#include <mxml.h>
-#include <jansson.h>
+struct lr_request;
 
-typedef struct Configuration Configuration;
-typedef struct Adapter       Adapter;
-typedef struct Device        Device;
-
-/**
- * The structure Adapter containing all the Attributes that an Adapter possesses
- */
-struct Adapter
-{
-   // Navigational members
-   Configuration *configuration;
-   Device        *device_head;
-   Adapter       *next;
-   Adapter       *prev;
-   // Data members
-   char          *id;
-   char          *network;
-   // User data
-   void          *data;
-};
-
-Adapter     *adapterNew          (const char *network, void *data);
-void         adapterFree         (Adapter *adapter);
-int          adapterAddDevice    (Adapter *adapter, Device *device);
-int          adapterRemoveDevice (Device *device);
-Device      *adapterFindDevice   (Adapter *adapter, char *device_id);
-mxml_node_t *adapterToXml        (Adapter *adapter, mxml_node_t *parent);
-json_t      *adapterToJson       (Adapter *adapter);
-int          adapterGenerateId   (Adapter *adapter);
+int lrcb_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
+int lrcb_getState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
+int lrcb_setState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
 
 #endif

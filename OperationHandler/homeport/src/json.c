@@ -23,46 +23,75 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-/**
- * @file hpd_adapter.h
- * @brief  Methods for managing the Service structure
- * @author Thibaut Le Guilly
- */
-
-#ifndef ADAPTER_H
-#define ADAPTER_H
-
-#include <mxml.h>
+#include "json.h"
+#include "hpd_configuration.h"
 #include <jansson.h>
 
-typedef struct Configuration Configuration;
-typedef struct Adapter       Adapter;
-typedef struct Device        Device;
-
-/**
- * The structure Adapter containing all the Attributes that an Adapter possesses
- */
-struct Adapter
+char *
+jsonGetConfiguration(HomePort *homeport)
 {
-   // Navigational members
-   Configuration *configuration;
-   Device        *device_head;
-   Adapter       *next;
-   Adapter       *prev;
-   // Data members
-   char          *id;
-   char          *network;
-   // User data
-   void          *data;
-};
+   char *res;
+   json_t * configurationJson = configurationToJson( homeport->configuration );
+   res = json_dumps( configurationJson, 0 );
+   json_decref(configurationJson);
+   return res;
+}
 
-Adapter     *adapterNew          (const char *network, void *data);
-void         adapterFree         (Adapter *adapter);
-int          adapterAddDevice    (Adapter *adapter, Device *device);
-int          adapterRemoveDevice (Device *device);
-Device      *adapterFindDevice   (Adapter *adapter, char *device_id);
-mxml_node_t *adapterToXml        (Adapter *adapter, mxml_node_t *parent);
-json_t      *adapterToJson       (Adapter *adapter);
-int          adapterGenerateId   (Adapter *adapter);
+char*
+jsonGetState(char *state)
+{
+  json_t *json=NULL;
+  json_t *value=NULL;
 
-#endif
+  if( ( json = json_object() ) == NULL )
+  {
+    goto error;
+  }
+  if( ( ( value = json_string(state) ) == NULL ) || ( json_object_set_new(json, "value", value) != 0 ) )
+  {
+    goto error;
+  }
+
+  char *ret = json_dumps( json, 0 );
+  json_decref(json);
+  return ret;
+
+error:
+  if(value) json_decref(value);
+  if(json) json_decref(json);
+  return NULL;
+}
+
+const char*
+jsonParseState(char *json_value)
+{
+  json_t *json = NULL;
+  json_error_t *error=NULL;
+  json_t *value = NULL;
+
+  if( ( json = json_loads(json_value, 0, error) ) == NULL )
+  {
+    goto error;
+  }
+
+  if( json_is_object(json) == 0 )
+  {
+    goto error;
+  }
+
+  if( ( value = json_object_get(json, "value") ) == NULL )
+  {
+    goto error;
+  }
+
+  const char *ret = json_string_value(value);
+
+  json_decref(json);
+
+  return ret;
+
+error:
+  return NULL;
+}
+
+

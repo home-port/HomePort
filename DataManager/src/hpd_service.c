@@ -30,11 +30,13 @@
  * @author Regis Louge
  */
 
-#include <stdio.h>
+#include "hpd_device.h"
 #include "hpd_service.h"
-#include "utlist.h"
-#include "hpd_error.h"
 #include "hp_macros.h"
+#include "idgen.h"
+#include "hpd_error.h"
+
+#define SERVICE_ID_SIZE 4
 
 /**
  * Creates the structure Service with all its parameters
@@ -276,38 +278,39 @@ serviceToJson(Service *service)
   return serviceJson;
 }
 
-void
-serviceSetId( Service *service, char *id )
+int
+serviceGenerateId(Service *service)
 {
-  service->id = id;
+   Device *device = service->device;
+   char *service_id = (char*)malloc((SERVICE_ID_SIZE+1)*sizeof(char));
+   if (!service_id) return HPD_E_MALLOC_ERROR;
+   do{
+     rand_str(service_id, SERVICE_ID_SIZE);
+   }while(deviceFindService(device, service_id) != NULL);
+
+   service->id = service_id;
+  return HPD_E_SUCCESS;
 }
 
-void
-serviceSetUri( Service *service, char *uri )
+int
+serviceGenerateUri( Service *service )
 {
+   Device *device = service->device;
+  char *uri = malloc((strlen(device->type)+strlen(device->id)+strlen(service->type)+strlen(service->id)+4+1)*sizeof(char));
+  if( uri == NULL )
+    return HPD_E_MALLOC_ERROR;
+  uri[0] = '\0';
+  strcat(uri, "/");
+  strcat(uri, device->type);
+  strcat(uri, "/");
+  strcat(uri, device->id);
+  strcat(uri, "/");
+  strcat(uri, service->type);
+  strcat(uri, "/");
+  strcat(uri, service->id);
+
   service->uri = uri;
-}
-
-ServiceElement* 
-serviceElementNew( Service *service )
-{
-  ServiceElement *serviceElement;
-  alloc_struct(serviceElement);
-
-  null_nok_pointer_ass(serviceElement->service, service);
-
-  return serviceElement;
-
-cleanup:
-  serviceElementFree(serviceElement);
-  return NULL;
-}
-
-
-void 
-serviceElementFree( ServiceElement *serviceElement )
-{
-  free_pointer(serviceElement);
+  return HPD_E_SUCCESS;
 }
 
 /**

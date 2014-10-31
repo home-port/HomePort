@@ -30,9 +30,14 @@
  */
 
 #include "hpd_adapter.h"
+#include "hpd_configuration.h"
+#include "hpd_device.h"
 #include "hp_macros.h"
+#include "hpd_error.h"
+#include "utlist.h"
+#include "idgen.h"
 
-DeviceElement* findDeviceElement(Adapter *adapter, char *device_id);
+#define ADAPTER_ID_SIZE 2
 
 Adapter*
 adapterNew( const char *network, void *data )
@@ -48,6 +53,7 @@ adapterNew( const char *network, void *data )
   adapter->data = data;
 
   adapter->device_head = NULL;
+  adapter->configuration = NULL;
 
   return adapter;
 
@@ -64,12 +70,12 @@ adapterFree(Adapter *adapter)
     free_pointer(adapter->network);
     free_pointer(adapter->id);
 
-    DeviceElement *tmp=NULL, *iterator=NULL;
+    Device *tmp=NULL, *iterator=NULL;
 
     DL_FOREACH_SAFE( adapter->device_head, iterator, tmp )
     {
       DL_DELETE( adapter->device_head, iterator );
-      deviceElementFree( iterator );
+      iterator->adapter = NULL;
     }
 
     free(adapter);
@@ -78,74 +84,50 @@ adapterFree(Adapter *adapter)
 
 
 int
-adapterAddDevice(Adapter *adapter, Device *device, char *deviceId)
+adapterAddDevice(Adapter *adapter, Device *device)
 {
-  if(adapter == NULL || device == NULL || deviceId == NULL) return HPD_E_NULL_POINTER;
+  if(adapter == NULL || device == NULL) return HPD_E_NULL_POINTER;
 
-  deviceSetId( device, deviceId );
-
-  DeviceElement *deviceElement=NULL;
-
-  deviceElement = deviceElementNew( device );
-  if( deviceElement == NULL )
-  {
-    deviceSetId( device, NULL );
-    free(deviceId);
-    return HPD_E_MALLOC_ERROR;
+  device->adapter = adapter;
+  int stat = deviceGenerateId(device);
+  if (stat) {
+     device->adapter = NULL;
+     return stat;
   }
 
-  DL_APPEND( adapter->device_head, deviceElement);
+  DL_APPEND( adapter->device_head, device);
 
   return HPD_E_SUCCESS;
 }
 
 int 
-adapterRemoveDevice( Adapter *adapter, Device *device )
+adapterRemoveDevice(Device *device)
 {
+   Adapter *adapter = device->adapter;
 
-  if( device == NULL || device == NULL ) return HPD_E_NULL_POINTER;
+  if( adapter == NULL || device == NULL ) return HPD_E_NULL_POINTER;
 
-  DeviceElement *deviceElement = findDeviceElement( adapter, device->id );
-  if( deviceElement != NULL )
-  {
-    DL_DELETE(adapter->device_head, deviceElement);
-    deviceElementFree(deviceElement);
-    return HPD_E_SUCCESS;
-  }
+  DL_DELETE(adapter->device_head, device);
+  device->adapter = NULL;
 
-  return -1;
+  return HPD_E_SUCCESS;
 }
 
-DeviceElement*
-findDeviceElement(Adapter *adapter, char *device_id)
+Device*
+adapterFindDevice(Adapter *adapter, char *device_id)
 {
   if( adapter== NULL || device_id == NULL ) return NULL;
 
-  DeviceElement *iterator=NULL;
+  Device *iterator=NULL;
 
   DL_FOREACH( adapter->device_head, iterator )
   {
-    if( strcmp ( device_id, iterator->device->id ) == 0 )
+    if( strcmp ( device_id, iterator->id ) == 0 )
     {
       return iterator;
     }			
   }
   
-  return NULL;
-}
-
-Device*
-findDevice(Adapter *adapter, char *device_id)
-{
-  if(adapter == NULL || device_id == NULL ) return NULL;
-
-  DeviceElement *deviceElement;
-
-  if( ( deviceElement = findDeviceElement(adapter, device_id) ) )
-  {
-    return deviceElement->device;
-  }
-
   return NULL;
 
 }
@@ -161,11 +143,11 @@ adapterToXml(Adapter *adapter, mxml_node_t *parent)
   if(adapter->id != NULL) mxmlElementSetAttr(adapterXml, "id", adapter->id);
   if(adapter->network != NULL) mxmlElementSetAttr(adapterXml, "network", adapter->network);
 
-  DeviceElement *iterator;
+  Device *iterator;
 
   DL_FOREACH( adapter->device_head, iterator)
   {
-    deviceToXml(iterator->device, adapterXml);
+    deviceToXml(iterator, adapterXml);
   }
 
   return adapterXml;
@@ -197,7 +179,7 @@ adapterToJson(Adapter *adapter)
     }
   }
 
-  DeviceElement *iterator;
+  Device *iterator;
 
   if( ( deviceArray = json_array() ) == NULL )
   {
@@ -207,7 +189,7 @@ adapterToJson(Adapter *adapter)
   DL_FOREACH( adapter->device_head, iterator )
   {
     json_t *device;
-    if( ( ( device = deviceToJson(iterator->device) ) == NULL ) || ( json_array_append_new(deviceArray, device) != 0 ) )
+    if( ( ( device = deviceToJson(iterator) ) == NULL ) || ( json_array_append_new(deviceArray, device) != 0 ) )
     {
       goto error;
     }
@@ -226,35 +208,16 @@ error:
   return NULL;
 }
 
-AdapterElement* 
-adapterElementNew( Adapter *adapter )
+int adapterGenerateId(Adapter *adapter)
 {
-  AdapterElement *adapterElement;
+   Configuration *conf = adapter->configuration;
+  char *adapter_id = (char*)malloc((ADAPTER_ID_SIZE+1)*sizeof(char));
+   if (!adapter_id) return HPD_E_MALLOC_ERROR;
+  do{
+    rand_str(adapter_id, ADAPTER_ID_SIZE);
+  }while(configurationFindAdapter(conf, adapter_id) != NULL);
 
-  if( adapter == NULL )
-    return NULL;
-
-  adapterElement = (AdapterElement*)malloc(sizeof(AdapterElement));
-  if( !adapterElement )
-    return NULL;
-
-  adapterElement->adapter = adapter;
-
-  adapterElement->next = NULL;
-  adapterElement->prev = NULL;
-
-  return adapterElement;
-}
-
-void 
-adapterElementFree( AdapterElement *adapterElement )
-{
-  free_pointer(adapterElement);
-}
-
-void
-adapterSetId( Adapter *adapter, char *id )
-{
-  adapter->id = id;
+  adapter->id = adapter_id;
+  return HPD_E_SUCCESS;
 }
 

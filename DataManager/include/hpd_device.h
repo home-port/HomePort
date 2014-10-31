@@ -23,59 +23,46 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-/**
- * @file hpd_device.h
- * @brief  Methods for managing the Service structure
- * @author Thibaut Le Guilly
- * @author Regis Louge
- */
-
 #ifndef DEVICE_H
 #define DEVICE_H
 
-#include "hpd_service.h"
-#include "idgen.h"
+#include <mxml.h>
+#include <jansson.h>
 
-#define SERVICE_ID_SIZE 4
+typedef struct Adapter Adapter;
+typedef struct Service Service;
+typedef struct Device  Device;
 
 /**
  * The structure Device containing all the Attributes that a Device possess
  */
-typedef struct Device Device;
-typedef struct DeviceElement DeviceElement;
-
 struct Device
 {
-  char *description;/**<The Device description*/
-  char *id;/**<The Device ID*/
-  char *vendorId;/**<The ID of the vendor*/
-  char *productId;/**<The ID of the product*/
-  char *version;/**<The Device version*/
-  char *location;/**<The location of the Device*/
-  char *type;/**<The Device type*/
-  ServiceElement *service_head;/**<The first Service of the Service List*/
+   // Navigational members
+   Adapter *adapter;
+   Service *service_head; /**<The first Service of the Service List*/
+   Device  *next;
+   Device  *prev;
+   // Data members
+   char    *description;  /**<The Device description*/
+   char    *id;           /**<The Device ID*/
+   char    *vendorId;     /**<The ID of the vendor*/
+   char    *productId;    /**<The ID of the product*/
+   char    *version;      /**<The Device version*/
+   char    *location;     /**<The location of the Device*/
+   char    *type;         /**<The Device type*/
+   // User data
+   void    *data;
 };
 
-Device* 	deviceNew( const char *description, const char *vendorId, const char *productId, const char *version, const char *location, const char *type);
-void 		deviceFree( Device *device ); 
-int 		deviceAddService( Device *device, Service *service );
-__attribute__((deprecated))
-   int 		deviceRemoveService( Device *device, Service *service );
-int 		deviceRemoveService2( Service *service );
-Service* 	findService(Device *device, char *service_id);
-mxml_node_t* 	deviceToXml(Device *device, mxml_node_t *parent);
-json_t* 	deviceToJson(Device *device);
-void 		deviceSetId( Device *device, char *id );
-
-struct DeviceElement
-{
-  Device *device;
-  DeviceElement *next;
-  DeviceElement *prev;
-};
-
-DeviceElement* 	deviceElementNew( Device *device );
-void 		deviceElementFree( DeviceElement *device_element_to_destroy );
-
+Device*      deviceNew           (const char *description, const char *vendorId, const char *productId,
+                                  const char *version, const char *location, const char *type, void *data);
+void         deviceFree          (Device *device); 
+int          deviceAddService    (Device *device, Service *service);
+int          deviceRemoveService (Service *service);
+Service     *deviceFindService   (Device *device, char *service_id);
+mxml_node_t *deviceToXml         (Device *device, mxml_node_t *parent);
+json_t      *deviceToJson        (Device *device);
+int          deviceGenerateId    (Device *device);
 
 #endif
