@@ -26,7 +26,7 @@
 #include "homeport.h"
 #include "hpd_error.h"
 #include "hp_macros.h"
-#include "lr_callbacks.h"
+#include "lr_interface.h"
 #include "libREST.h"
 #include "hpd_configuration.h"
 #include "json.h"
@@ -98,7 +98,7 @@ homePortStart(HomePort *homeport)
 
   return lr_register_service(homeport->rest_interface,
       "/devices",
-      lrcb_getConfiguration, NULL, NULL, NULL,
+      lri_getConfiguration, NULL, NULL, NULL,
       NULL, homeport);
 }
 

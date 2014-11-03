@@ -24,53 +24,13 @@
   authors and should not be interpreted as representing official policies, either expressed*/
 
 #include "homeport.h"
-#include "lr_callbacks.h"
+#include "lr_interface.h"
 #include "hpd_error.h"
 #include "hpd_configuration.h"
 #include "hpd_adapter.h"
 #include "hpd_device.h"
 #include "hpd_service.h"
-#include "libREST.h"
 #include "utlist.h"
-
-static int
-registerService(HomePort *homeport, Service *service)
-{
-   char *uri = service->uri;
-  int rc;
-  Service *s = lr_lookup_service(homeport->rest_interface, uri);
-  if (s) {
-    printf("A similar service is already registered in the unsecure server\n");
-    return HPD_E_SERVICE_ALREADY_REGISTER;
-  }
-
-  printf("Registering service\n");
-  rc = lr_register_service(homeport->rest_interface,
-      uri,
-      lrcb_getState, NULL, lrcb_setState, NULL,
-      NULL, service);
-  if(rc) {
-    printf("Failed to register non secure service\n");
-    return HPD_E_MHD_ERROR;
-  }
-
-  return HPD_E_SUCCESS;
-}
-
-static int
-unregisterService( HomePort *homeport, char* uri )
-{
-  Service *s = lr_lookup_service(homeport->rest_interface, uri);
-  if( s == NULL )
-    return HPD_E_SERVICE_NOT_REGISTER;
-
-  s = lr_unregister_service ( homeport->rest_interface, uri );
-  if( s == NULL )
-    return HPD_E_MHD_ERROR;
-
-  return HPD_E_SUCCESS;
-}
-
 
 int
 homePortAddAdapter(HomePort *homeport, Adapter *adapter)
@@ -110,7 +70,7 @@ homePortAttachDevice( HomePort *homeport, Adapter *adapter, Device *device )
     int stat = serviceGenerateUri(iterator);
     if (stat != HPD_E_SUCCESS) return stat;
 
-    rc = registerService(homeport, iterator );
+    rc = lri_registerService(homeport, iterator );
     if( rc < HPD_E_SUCCESS )
     {
       return rc;
@@ -131,7 +91,7 @@ homePortDetachDevice( HomePort *homeport, Device *device )
 
   DL_FOREACH( device->service_head, iterator )
   {
-    rc = unregisterService( homeport, iterator->uri );
+    rc = lri_unregisterService( homeport, iterator->uri );
     if(rc < HPD_E_SUCCESS)
     {
       return rc;

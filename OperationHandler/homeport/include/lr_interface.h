@@ -23,15 +23,16 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-#ifndef LR_CB_H
-#define LR_CB_H
+#ifndef LR_INTERFACE_H
+#define LR_INTERFACE_H
 
+#include "homeport.h"
 #include <stddef.h>
 
 struct lr_request;
 
-int lrcb_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
-int lrcb_getState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
-int lrcb_setState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
+int lri_registerService(HomePort *homeport, Service *service);
+int lri_unregisterService( HomePort *homeport, char* uri );
+int lri_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
 
 #endif

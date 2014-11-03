@@ -31,10 +31,9 @@ authors and should not be interpreted as representing official policies, either 
 #include <string.h>
 
 void
-homePortSendState(Service *service, void *req_in, const char *val, size_t len)
+homePortSendState(Service *service, void *req, const char *val, size_t len)
 {
    char *buffer, *state;
-   struct lr_request *req = req_in;
    struct lm *headersIn = lr_request_get_headers(req);
    struct lm *headers;
 

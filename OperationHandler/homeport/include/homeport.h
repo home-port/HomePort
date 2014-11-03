@@ -28,19 +28,19 @@ authors and should not be interpreted as representing official policies, either 
 
 #include <stddef.h>
 
+struct ev_loop;
+struct lr;
+
 typedef struct HomePort HomePort;
 typedef struct Adapter Adapter;
 typedef struct Device Device;
 typedef struct Service Service;
 typedef struct Configuration Configuration;
 
-typedef int (*init_f)(HomePort *homeport, void *data);
-typedef void (*deinit_f)(HomePort *homeport, void *data);
+typedef int    (*init_f)             (HomePort *homeport, void *data);
+typedef void   (*deinit_f)           (HomePort *homeport, void *data);
 typedef void   (*serviceGetFunction) (Service* service, void *request);
 typedef size_t (*servicePutFunction) (Service* service, char *buffer, size_t max_buffer_size, char *put_value);
-
-struct ev_loop;
-struct lr;
 
 struct HomePort
 {
@@ -50,19 +50,19 @@ struct HomePort
 };
 
 // Homeport Service Control
-HomePort *homePortNew( struct ev_loop *loop, int port );
-void      homePortFree(HomePort *homeport);
-int       homePortStart(HomePort *homeport);
-void      homePortStop(HomePort *homeport);
-int       homePortEasy(init_f init, deinit_f deinit, void *data, int port );
+HomePort *homePortNew   (struct ev_loop *loop, int port);
+void      homePortFree  (HomePort *homeport);
+int       homePortStart (HomePort *homeport);
+void      homePortStop  (HomePort *homeport);
+int       homePortEasy  (init_f init, deinit_f deinit, void *data, int port);
 
 // Configurator Interface
-int  homePortAddAdapter( HomePort *homeport, Adapter *adapter );
-int  homePortRemoveAdapter( HomePort *homeport, Adapter *adapter );
-int  homePortAttachDevice( HomePort *homeport, Adapter *adapter, Device *device );
-int  homePortDetachDevice( HomePort *homeport, Device *device );
+int  homePortAddAdapter    (HomePort *homeport, Adapter *adapter);
+int  homePortRemoveAdapter (HomePort *homeport, Adapter *adapter);
+int  homePortAttachDevice  (HomePort *homeport, Adapter *adapter, Device *device);
+int  homePortDetachDevice  (HomePort *homeport, Device *device);
 
 // Communication interface
-void homePortSendState(Service *service, void *req_in, const char *val, size_t len);
+void homePortSendState (Service *service, void *req_in, const char *val, size_t len);
 
 #endif

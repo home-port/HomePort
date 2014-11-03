@@ -35,7 +35,7 @@ add_library(hpd SHARED
       config.c
       xml.c
       json.c
-      lr_callbacks.c
+      lr_interface.c
       ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_adapter.c
       ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_configuration.c
       ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_device.c

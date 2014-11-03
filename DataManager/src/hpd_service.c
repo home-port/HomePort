@@ -285,32 +285,32 @@ serviceGenerateId(Service *service)
    char *service_id = (char*)malloc((SERVICE_ID_SIZE+1)*sizeof(char));
    if (!service_id) return HPD_E_MALLOC_ERROR;
    do{
-     rand_str(service_id, SERVICE_ID_SIZE);
+      rand_str(service_id, SERVICE_ID_SIZE);
    }while(deviceFindService(device, service_id) != NULL);
 
    service->id = service_id;
-  return HPD_E_SUCCESS;
+   return HPD_E_SUCCESS;
 }
 
 int
 serviceGenerateUri( Service *service )
 {
    Device *device = service->device;
-  char *uri = malloc((strlen(device->type)+strlen(device->id)+strlen(service->type)+strlen(service->id)+4+1)*sizeof(char));
-  if( uri == NULL )
-    return HPD_E_MALLOC_ERROR;
-  uri[0] = '\0';
-  strcat(uri, "/");
-  strcat(uri, device->type);
-  strcat(uri, "/");
-  strcat(uri, device->id);
-  strcat(uri, "/");
-  strcat(uri, service->type);
-  strcat(uri, "/");
-  strcat(uri, service->id);
+   char *uri = malloc((strlen(device->type)+strlen(device->id)+strlen(service->type)+strlen(service->id)+4+1)*sizeof(char));
+   if( uri == NULL )
+      return HPD_E_MALLOC_ERROR;
+   uri[0] = '\0';
+   strcat(uri, "/");
+   strcat(uri, device->type);
+   strcat(uri, "/");
+   strcat(uri, device->id);
+   strcat(uri, "/");
+   strcat(uri, service->type);
+   strcat(uri, "/");
+   strcat(uri, service->id);
 
-  service->uri = uri;
-  return HPD_E_SUCCESS;
+   service->uri = uri;
+   return HPD_E_SUCCESS;
 }
 
 /**

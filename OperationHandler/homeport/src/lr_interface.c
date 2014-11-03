@@ -23,8 +23,9 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-#include "lr_callbacks.h"
+#include "lr_interface.h"
 #include "homeport.h"
+#include "hpd_error.h"
 #include "json.h"
 #include "xml.h"
 #include "hpd_service.h"
@@ -33,38 +34,8 @@
 
 #define MHD_MAX_BUFFER_SIZE 10
 
-int
-lrcb_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
-{
-  HomePort *homeport = (HomePort*) srv_data;
-  struct lm *headersIn =  lr_request_get_headers( req );
-  char *accept;
-  char *res;
-
-  accept = lm_find( headersIn, "Accept" );
-
-  /** Defaults to XML */
-  if( strcmp(accept, "application/json") == 0 )
-  {
-     res = jsonGetConfiguration(homeport);
-  }
-  else 
-  {
-     res = xmlGetConfiguration(homeport);
-  }
-//  else
-//  {
-//    lr_sendf(req, WS_HTTP_406, NULL, NULL);
-//    return 0;
-//  }
-  lr_sendf(req, WS_HTTP_200, NULL, res);
-
-  free(res);
-  return 0;
-}
-
-int
-lrcb_getState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
+static int
+getState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
 {
   Service *service = (Service*) srv_data;
 
@@ -82,8 +53,8 @@ lrcb_getState(void *srv_data, void **req_data, struct lr_request *req, const cha
   return 1;
 }
 
-int 
-lrcb_setState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
+static int 
+setState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
 {
   Service *service = srv_data;
   char *req_str = *req_data;
@@ -173,6 +144,74 @@ lrcb_setState(void *srv_data, void **req_data, struct lr_request *req, const cha
     free(ret);
   }
   free(buffer);
+  return 0;
+}
+
+int
+lri_registerService(HomePort *homeport, Service *service)
+{
+   char *uri = service->uri;
+   int rc;
+   Service *s = lr_lookup_service(homeport->rest_interface, uri);
+   if (s) {
+     printf("A similar service is already registered in the unsecure server\n");
+     return HPD_E_SERVICE_ALREADY_REGISTER;
+   }
+
+   printf("Registering service\n");
+   rc = lr_register_service(homeport->rest_interface,
+       uri,
+       getState, NULL, setState, NULL,
+       NULL, service);
+   if(rc) {
+     printf("Failed to register non secure service\n");
+     return HPD_E_MHD_ERROR;
+   }
+
+   return HPD_E_SUCCESS;
+}
+
+int
+lri_unregisterService( HomePort *homeport, char* uri )
+{
+  Service *s = lr_lookup_service(homeport->rest_interface, uri);
+  if( s == NULL )
+    return HPD_E_SERVICE_NOT_REGISTER;
+
+  s = lr_unregister_service ( homeport->rest_interface, uri );
+  if( s == NULL )
+    return HPD_E_MHD_ERROR;
+
+  return HPD_E_SUCCESS;
+}
+
+int
+lri_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
+{
+  HomePort *homeport = (HomePort*) srv_data;
+  struct lm *headersIn =  lr_request_get_headers( req );
+  char *accept;
+  char *res;
+
+  accept = lm_find( headersIn, "Accept" );
+
+  /** Defaults to XML */
+  if( strcmp(accept, "application/json") == 0 )
+  {
+     res = jsonGetConfiguration(homeport);
+  }
+  else 
+  {
+     res = xmlGetConfiguration(homeport);
+  }
+//  else
+//  {
+//    lr_sendf(req, WS_HTTP_406, NULL, NULL);
+//    return 0;
+//  }
+  lr_sendf(req, WS_HTTP_200, NULL, res);
+
+  free(res);
   return 0;
 }
 
