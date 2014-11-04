@@ -1,0 +1,155 @@
+/*Copyright 2011 Aalborg University. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are
+permitted provided that the following conditions are met:
+
+   1. Redistributions of source code must retain the above copyright notice, this list of
+      conditions and the following disclaimer.
+
+   2. Redistributions in binary form must reproduce the above copyright notice, this list
+      of conditions and the following disclaimer in the documentation and/or other materials
+      provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+The views and conclusions contained in the software and documentation are those of the
+authors and should not be interpreted as representing official policies, either expressed*/
+
+#ifndef HOMEPORT_H
+#define HOMEPORT_H
+
+#include <stddef.h>
+
+struct ev_loop;
+struct lr;
+
+typedef struct HomePort HomePort;
+typedef struct Configuration Configuration;
+typedef struct Adapter Adapter;
+typedef struct Device Device;
+typedef struct Service Service;
+typedef struct Parameter Parameter;
+
+typedef int    (*init_f)             (const HomePort *homeport, void *data);
+typedef void   (*deinit_f)           (const HomePort *homeport, void *data);
+typedef void   (*serviceGetFunction) (const Service* service, void *request);
+typedef size_t (*servicePutFunction) (const Service* service, char *buffer, size_t max_buffer_size, const char *put_value);
+
+struct HomePort
+{
+   ${C} struct lr *rest_interface;
+   ${C} Configuration *configuration;
+   ${C} struct ev_loop *loop;
+};
+
+struct Configuration
+{
+   // Navigational members
+   ${C} Adapter *adapter_head;
+};
+
+struct Adapter
+{
+   // Navigational members
+   ${C} Configuration *configuration;
+   ${C} Device        *device_head;
+   ${C} Adapter       *next;
+   ${C} Adapter       *prev;
+   // Data members
+   ${C} char          *id;
+   ${C} char          *network;
+   // User data
+   ${C} void          *data;
+};
+
+struct Device
+{
+   // Navigational members
+   ${C} Adapter *adapter;
+   ${C} Service *service_head; /**<The first Service of the Service List*/
+   ${C} Device  *next;
+   ${C} Device  *prev;
+   // Internal state
+   ${C} char    attached;
+   // Data members
+   ${C} char    *description;  /**<The Device description*/
+   ${C} char    *id;           /**<The Device ID*/
+   ${C} char    *vendorId;     /**<The ID of the vendor*/
+   ${C} char    *productId;    /**<The ID of the product*/
+   ${C} char    *version;      /**<The Device version*/
+   ${C} char    *location;     /**<The location of the Device*/
+   ${C} char    *type;         /**<The Device type*/
+   // User data
+   ${C} void    *data;
+};
+
+struct Service
+{
+   // Navigational members
+   ${C} Device             *device;
+   ${C} Parameter          *parameter;   /**<The first Parameter of the Parameter List*/
+   ${C} Service            *next;
+   ${C} Service            *prev;
+   // Data members
+   ${C} char               *description; /**<The Service description*/
+   ${C} int                 isActuator;  /**<Determine if the service is an actuator or a sensro */
+   ${C} char               *type;        /**<The Service type*/
+   ${C} char               *unit;        /**<The unit provided by the Service*/
+   ${C} serviceGetFunction  getFunction; /**<A pointer to the GET function of the Service*/
+   ${C} servicePutFunction  putFunction; /**<A pointer to the PUT function of the Service*/
+   ${C} char               *id;          /**<The Service ID*/
+   ${C} char               *uri;         /**<The Service URI*/
+   // User data
+   ${C} void               *data;        /**<Pointer used for the used to store its data*/
+};
+
+struct Parameter
+{
+  ${C} char *max;    /**<The maximum value of the Parameter*/
+  ${C} char *min;    /**<The minimum value of the Parameter*/
+  ${C} char *scale;  /**<The Scale of the Parameter*/
+  ${C} char *step;   /**<The Step of the values of the Parameter*/
+  ${C} char *type;   /**<The Type of values for the Parameter*/
+  ${C} char *unit;   /**<The Unit of the values of the Parameter*/
+  ${C} char *values; /**<The possible values for the Parameter*/
+};
+
+/* Note on homePort functions and const keyword on the above structs is really a hack and we DO change them inside homeport */
+
+// Homeport Service Control
+${C} HomePort  *homePortNew           (struct ev_loop *loop, int port);
+void       homePortFree          (${C} HomePort *homeport);
+int        homePortStart         (${C} HomePort *homeport);
+void       homePortStop          (${C} HomePort *homeport);
+int        homePortEasy          (init_f init, deinit_f deinit, void *data, int port);
+
+// Configurator Interface
+${C} Adapter   *homePortNewAdapter    (${C} HomePort *homeport, const char *network, void *data);
+${C} Device    *homePortNewDevice     (${C} Adapter *adapter, const char *description, const char *vendorId, const char *productId,
+                                  const char *version, const char *location, const char *type, void *data);
+${C} Service   *homePortNewService    (${C} Device *device, const char *description, int isActuator, const char *type, const char *unit,
+                                  serviceGetFunction getFunction, servicePutFunction putFunction, ${C} Parameter *parameter, void* data); 
+${C} Parameter *homePortNewParameter  (const char *max, const char *min, const char *scale, const char *step,
+                                  const char *type, const char *unit, const char *values);
+void       homePortFreeAdapter   (${C} Adapter *adapter);
+void       homePortFreeDevice    (${C} Device *device); 
+void       homePortFreeService   (${C} Service *service);
+void       homePortFreeParameter (${C} Parameter *parameter);
+int        homePortAttachDevice  (${C} HomePort *homeport, ${C} Device *device);
+int        homePortDetachDevice  (${C} HomePort *homeport, ${C} Device *device);
+${C} Adapter   *homePortFindAdapter   (${C} HomePort *homeport, char *adapter_id);
+${C} Device    *homePortFindDevice    (${C} Adapter *adapter, char *device_id);
+${C} Service   *homePortFindService   (${C} Device *device, char *service_id);
+
+// Communication interface
+void       homePortSendState     (${C} Service *service, void *req_in, const char *val, size_t len);
+
+#endif

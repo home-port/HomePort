@@ -164,17 +164,7 @@ deviceAddService( Device *device, Service *service )
   if( service == NULL || device == NULL ) 
     return HPD_E_NULL_POINTER;
 
-  char *deviceId = NULL;
-
   service->device = device;
-  int stat;
-  if ((stat = serviceGenerateId(service))) {
-     service->device = NULL;
-     return stat;
-  }
-  
-  service->id = deviceId;
-
   DL_APPEND( device->service_head, service);
 
   return HPD_E_SUCCESS;
@@ -223,7 +213,7 @@ deviceFindService(Device *device, char *service_id)
 
   DL_FOREACH( device->service_head, iterator )
   {
-    if( strcmp ( service_id, iterator->id ) == 0 )
+    if( iterator->id != NULL && strcmp ( service_id, iterator->id ) == 0 )
     {
       return iterator;
     }			

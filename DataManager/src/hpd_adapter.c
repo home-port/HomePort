@@ -90,12 +90,6 @@ adapterAddDevice(Adapter *adapter, Device *device)
   if(adapter == NULL || device == NULL) return HPD_E_NULL_POINTER;
 
   device->adapter = adapter;
-  int stat = deviceGenerateId(device);
-  if (stat) {
-     device->adapter = NULL;
-     return stat;
-  }
-
   DL_APPEND( adapter->device_head, device);
 
   return HPD_E_SUCCESS;
@@ -123,7 +117,7 @@ adapterFindDevice(Adapter *adapter, char *device_id)
 
   DL_FOREACH( adapter->device_head, iterator )
   {
-    if( strcmp ( device_id, iterator->id ) == 0 )
+    if( iterator->id != NULL && strcmp ( device_id, iterator->id ) == 0 )
     {
       return iterator;
     }			

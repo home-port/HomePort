@@ -28,80 +28,69 @@
 #include <string.h>
 #include <ev.h>
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-/** Once the library is installed, should be remplaced by <hpdaemon/homeport.h> */
-#include "homeport.h"
+// With installed homeport change this to <hpdaemon/homeport.h>
+#include "../../../homeport.h"
 
 #if HPD_HTTP 
-static Device *device = NULL;
-static Service *service_lamp0 = NULL;
-static Service *service_lamp1 = NULL;
-static Service *service_switch0 = NULL;
-static Service *service_switch1 = NULL;
+static const Adapter *adapter = NULL;
+static const Device *device = NULL;
+static const Service *service_lamp0 = NULL;
+static const Service *service_lamp1 = NULL;
+static const Service *service_switch0 = NULL;
+static const Service *service_switch1 = NULL;
 #endif
 
 /** A GET function for a service
  *	Takes a Service structure in parameter, and return a service value as a char*
  */
-size_t 
-get_lamp ( Service* service, char *buffer, size_t max_buffer_size )
+void 
+get_lamp ( const Service* service, void *request )
 {
   printf("Received GET lamp on %s %s\n", service->description, service->id);
-  sprintf(buffer,"0");
-  return strlen(buffer);
+  homePortSendState(service, request, "0", 1);
 }
 /** A PUT function for a service
  *	Takes a Service structure in parameter, and return an updated service value as a char*
  */
 size_t 
-put_lamp ( Service* service, char *buffer, size_t max_buffer_size, char *put_value )
+put_lamp ( const Service* service, char *buffer, size_t max_buffer_size, const char *put_value )
 {
   printf("Received PUT lamp on %s %s\n", service->description, service->id);
   sprintf(buffer, "0");
   return strlen(buffer);
 }
 
-size_t 
-get_switch ( Service* service, char *buffer, size_t max_buffer_size )
+void 
+get_switch ( const Service* service, void *request )
 {
   printf("Received GET switch on %s %s\n", service->description, service->id);
-  sprintf(buffer,"0");
-  return strlen(buffer);
+  homePortSendState(service, request, "0", 1);
 }
 
-static void deinit(HomePort *homeport, void *data)
+static void deinit(const HomePort *homeport, void *data)
 {
   /** Unregistering services is not necessary, calling HPD_stop unregisters and 
     deallocates the services and devices that are still register in HPD		   */
   /** However when unregistering a service note that the memory is not deallocated   */
   /** Also note that attempting to free a service that is still registered will fail */
-  Adapter *adapter = (Adapter*) data;
 
   homePortDetachDevice(homeport, device);
 
   /** Deallocate the memory of the services. When deallocating the last service of a device, 
     the device is deallocated too, so there is no need to call destroy_device_struct       */
-  serviceFree(service_lamp0);
-  serviceFree(service_lamp1);
-  serviceFree(service_switch0);
-  serviceFree(service_switch1);
+  homePortFreeService(service_lamp0);
+  homePortFreeService(service_lamp1);
+  homePortFreeService(service_switch0);
+  homePortFreeService(service_switch1);
 
-  deviceFree(device);
+  homePortFreeDevice(device);
 
-  homePortRemoveAdapter(homeport, adapter);
-
-  adapterFree(adapter);
+  homePortFreeAdapter(adapter);
 }
 
-static int init(HomePort *homeport, void *data)
+static int init(const HomePort *homeport, void *data)
 {
-  Adapter *adapter = (Adapter*) data;
-
-  homePortAddAdapter(homeport, adapter);
-
+  adapter = homePortNewAdapter(homeport, "test", NULL);
 
   /** Creation and registration of non secure services */
   /** Create a device that will contain the services 
@@ -117,7 +106,7 @@ static int init(HomePort *homeport, void *data)
    * 10th parameter : A flag indicating if the communication with the device should be secure
    * 				   HPD_SECURE_DEVICE or HPD_NON_SECURE_DEVICE
    */ 
-  device = deviceNew("Example", 
+  device = homePortNewDevice(adapter, "Example", 
       "0x01", 
       "0x01", 
       "V1", 
@@ -133,40 +122,32 @@ static int init(HomePort *homeport, void *data)
    * 8th parameter : The service's PUT function (optional)
    * 9th parameter : The service's parameter structure
    */
-  service_lamp0 = serviceNew ("Lamp0", 1, "Lamp", "ON/OFF",  
+  service_lamp0 = homePortNewService (device, "Lamp0", 1, "Lamp", "ON/OFF",  
       get_lamp, put_lamp, 
-      parameterNew (NULL, NULL,
+      homePortNewParameter (NULL, NULL,
 	NULL, NULL, NULL,
 	NULL, NULL)
       ,NULL);
 
-  deviceAddService(device, service_lamp0);
-  
-  service_lamp1 = serviceNew ("Lamp1", 1, "Lamp", "ON/OFF", 
+  service_lamp1 = homePortNewService (device, "Lamp1", 1, "Lamp", "ON/OFF", 
       get_lamp, put_lamp, 
-      parameterNew (NULL, NULL,
+      homePortNewParameter (NULL, NULL,
 	NULL, NULL, NULL,
 	NULL, NULL),NULL);
 
-  deviceAddService(device, service_lamp1);
-
-  service_switch0 = serviceNew ("Switch0", 0, "Switch", "ON/OFF",
+  service_switch0 = homePortNewService (device, "Switch0", 0, "Switch", "ON/OFF",
       get_switch, NULL, 
-      parameterNew (NULL, NULL,
+      homePortNewParameter (NULL, NULL,
 	NULL, NULL, NULL,
 	NULL, NULL),NULL);
 
-  deviceAddService(device, service_switch0);
-
-  service_switch1 = serviceNew ("Switch1", 0, "Switch", "ON/OFF",
+  service_switch1 = homePortNewService (device, "Switch1", 0, "Switch", "ON/OFF",
       get_switch, NULL, 
-      parameterNew (NULL, NULL,
+      homePortNewParameter (NULL, NULL,
 	NULL, NULL, NULL,
 	NULL, NULL),NULL);
 
-  deviceAddService(device, service_switch1);
-
-  homePortAttachDevice(homeport, adapter, device);
+  homePortAttachDevice(homeport, device);
 
   return 0;
 }
@@ -174,8 +155,7 @@ static int init(HomePort *homeport, void *data)
 int 
 main()
 {	
-  Adapter *adapter = adapterNew("test", NULL);
   /** Starts the hpdaemon. If using avahi-core pass a host name for the server, otherwise pass NULL */
-  return homePortEasy(init, deinit, adapter, 8890 );
+  return homePortEasy(init, deinit, NULL, 8890 );
 }
 

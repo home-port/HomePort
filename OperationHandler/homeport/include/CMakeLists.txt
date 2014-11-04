@@ -28,7 +28,12 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-install (FILES homeport.h DESTINATION include/hpdaemon)
+set(C "")
+configure_file (${CMAKE_CURRENT_SOURCE_DIR}/homeport.h.in ${CMAKE_CURRENT_BINARY_DIR}/homeport.h)
+set(C "const")
+configure_file (${CMAKE_CURRENT_SOURCE_DIR}/homeport.h.in ${PROJECT_BINARY_DIR}/homeport.h)
+unset(C)
+install (FILES ${PROJECT_BINARY_DIR}/homeport.h DESTINATION include/hpdaemon)
 install (FILES hpd_error.h DESTINATION include/hpdaemon)
 #install (FILES ../../../DataManager/include/hpd_configuration.h DESTINATION include/hpdaemon)
 #install (FILES ../../../DataManager/include/hpd_adapter.h DESTINATION include/hpdaemon)
