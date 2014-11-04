@@ -113,43 +113,43 @@ struct Service
 
 struct Parameter
 {
-  ${C} char *max;    /**<The maximum value of the Parameter*/
-  ${C} char *min;    /**<The minimum value of the Parameter*/
-  ${C} char *scale;  /**<The Scale of the Parameter*/
-  ${C} char *step;   /**<The Step of the values of the Parameter*/
-  ${C} char *type;   /**<The Type of values for the Parameter*/
-  ${C} char *unit;   /**<The Unit of the values of the Parameter*/
-  ${C} char *values; /**<The possible values for the Parameter*/
+   ${C} char *max;    /**<The maximum value of the Parameter*/
+   ${C} char *min;    /**<The minimum value of the Parameter*/
+   ${C} char *scale;  /**<The Scale of the Parameter*/
+   ${C} char *step;   /**<The Step of the values of the Parameter*/
+   ${C} char *type;   /**<The Type of values for the Parameter*/
+   ${C} char *unit;   /**<The Unit of the values of the Parameter*/
+   ${C} char *values; /**<The possible values for the Parameter*/
 };
 
 /* Note on homePort functions and const keyword on the above structs is really a hack and we DO change them inside homeport */
 
 // Homeport Service Control
 ${C} HomePort  *homePortNew           (struct ev_loop *loop, int port);
-void       homePortFree          (${C} HomePort *homeport);
-int        homePortStart         (${C} HomePort *homeport);
-void       homePortStop          (${C} HomePort *homeport);
-int        homePortEasy          (init_f init, deinit_f deinit, void *data, int port);
+void            homePortFree          (${C} HomePort *homeport);
+int             homePortStart         (${C} HomePort *homeport);
+void            homePortStop          (${C} HomePort *homeport);
+int             homePortEasy          (init_f init, deinit_f deinit, void *data, int port);
 
 // Configurator Interface
 ${C} Adapter   *homePortNewAdapter    (${C} HomePort *homeport, const char *network, void *data);
 ${C} Device    *homePortNewDevice     (${C} Adapter *adapter, const char *description, const char *vendorId, const char *productId,
-                                  const char *version, const char *location, const char *type, void *data);
+                                       const char *version, const char *location, const char *type, void *data);
 ${C} Service   *homePortNewService    (${C} Device *device, const char *description, int isActuator, const char *type, const char *unit,
-                                  serviceGetFunction getFunction, servicePutFunction putFunction, ${C} Parameter *parameter, void* data); 
+                                       serviceGetFunction getFunction, servicePutFunction putFunction, ${C} Parameter *parameter, void* data); 
 ${C} Parameter *homePortNewParameter  (const char *max, const char *min, const char *scale, const char *step,
-                                  const char *type, const char *unit, const char *values);
-void       homePortFreeAdapter   (${C} Adapter *adapter);
-void       homePortFreeDevice    (${C} Device *device); 
-void       homePortFreeService   (${C} Service *service);
-void       homePortFreeParameter (${C} Parameter *parameter);
-int        homePortAttachDevice  (${C} HomePort *homeport, ${C} Device *device);
-int        homePortDetachDevice  (${C} HomePort *homeport, ${C} Device *device);
+                                       const char *type, const char *unit, const char *values);
+void            homePortFreeAdapter   (${C} Adapter *adapter);
+void            homePortFreeDevice    (${C} Device *device); 
+void            homePortFreeService   (${C} Service *service);
+void            homePortFreeParameter (${C} Parameter *parameter);
+int             homePortAttachDevice  (${C} HomePort *homeport, ${C} Device *device);
+int             homePortDetachDevice  (${C} HomePort *homeport, ${C} Device *device);
 ${C} Adapter   *homePortFindAdapter   (${C} HomePort *homeport, char *adapter_id);
 ${C} Device    *homePortFindDevice    (${C} Adapter *adapter, char *device_id);
 ${C} Service   *homePortFindService   (${C} Device *device, char *service_id);
 
 // Communication interface
-void       homePortSendState     (${C} Service *service, void *req_in, const char *val, size_t len);
+void            homePortSendState     (${C} Service *service, void *req_in, const char *val, size_t len);
 
 #endif
