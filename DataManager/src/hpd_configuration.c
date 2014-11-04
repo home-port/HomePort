@@ -29,9 +29,7 @@
  * @author Thibaut Le Guilly
  */
 
-
-#include "hpd_configuration.h"
-#include "hpd_adapter.h"
+#include "dm_internal.h"
 #include "hp_macros.h"
 #include "hpd_error.h"
 #include "utlist.h"
@@ -86,10 +84,11 @@ configurationAddAdapter(Configuration *configuration, Adapter *adapter)
 }
 
 int 
-configurationRemoveAdapter( Configuration *configuration, Adapter *adapter )
+configurationRemoveAdapter(Adapter *adapter )
 {
-
-  if( configuration == NULL || adapter == NULL ) return HPD_E_NULL_POINTER;
+  if(adapter == NULL ) return HPD_E_NULL_POINTER;
+  Configuration *configuration = adapter->configuration;
+  if( configuration == NULL) return HPD_E_NULL_POINTER;
 
   DL_DELETE(configuration->adapter_head, adapter);
   adapter->configuration = NULL;

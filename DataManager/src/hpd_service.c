@@ -30,8 +30,7 @@
  * @author Regis Louge
  */
 
-#include "hpd_device.h"
-#include "hpd_service.h"
+#include "dm_internal.h"
 #include "hp_macros.h"
 #include "idgen.h"
 #include "hpd_error.h"
@@ -67,14 +66,15 @@
  */
 Service* 
 serviceNew(
-    const char *description,
-    int isActuator,
-    const char *type,
-    const char *unit,
-    serviceGetFunction getFunction,
-    servicePutFunction putFunction,
-    Parameter *parameter,
-    void* data)
+      Device *device,
+      const char *description,
+      int isActuator,
+      const char *type,
+      const char *unit,
+      serviceGetFunction getFunction,
+      servicePutFunction putFunction,
+      Parameter *parameter,
+      void* data)
 {
   Service *service;
 
@@ -99,6 +99,8 @@ serviceNew(
   service->putFunction = putFunction;
 
   service->data = data;
+
+  deviceAddService(device, service);
 
   return service;
 
@@ -125,6 +127,7 @@ serviceFree( Service *service )
 
   if( service != NULL )
   {
+     deviceRemoveService(service);
     free_pointer(service->description);
     free_pointer(service->type);
     free_pointer(service->unit);
@@ -281,6 +284,7 @@ serviceToJson(Service *service)
 int
 serviceGenerateId(Service *service)
 {
+   if (service->id) return HPD_E_ID_ALREADY_SET;
    Device *device = service->device;
    char *service_id = (char*)malloc((SERVICE_ID_SIZE+1)*sizeof(char));
    if (!service_id) return HPD_E_MALLOC_ERROR;
@@ -295,7 +299,17 @@ serviceGenerateId(Service *service)
 int
 serviceGenerateUri( Service *service )
 {
+   int rc;
    Device *device = service->device;
+
+   rc = serviceGenerateId(service);
+   if (rc != HPD_E_SUCCESS && rc != HPD_E_ID_ALREADY_SET)
+      return rc;
+
+   rc = deviceGenerateId(device);
+   if (rc != HPD_E_SUCCESS && rc != HPD_E_ID_ALREADY_SET)
+      return rc;
+
    char *uri = malloc((strlen(device->type)+strlen(device->id)+strlen(service->type)+strlen(service->id)+4+1)*sizeof(char));
    if( uri == NULL )
       return HPD_E_MALLOC_ERROR;

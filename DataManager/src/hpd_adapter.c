@@ -29,9 +29,7 @@
  * @author Thibaut Le Guilly
  */
 
-#include "hpd_adapter.h"
-#include "hpd_configuration.h"
-#include "hpd_device.h"
+#include "dm_internal.h"
 #include "hp_macros.h"
 #include "hpd_error.h"
 #include "utlist.h"
@@ -40,7 +38,7 @@
 #define ADAPTER_ID_SIZE 2
 
 Adapter*
-adapterNew( const char *network, void *data )
+adapterNew(Configuration *configuration, const char *network, void *data )
 {
   Adapter * adapter;
 
@@ -55,6 +53,8 @@ adapterNew( const char *network, void *data )
   adapter->device_head = NULL;
   adapter->configuration = NULL;
 
+  configurationAddAdapter(configuration, adapter);
+
   return adapter;
 
 cleanup:
@@ -67,6 +67,7 @@ adapterFree(Adapter *adapter)
 {
   if( adapter != NULL )
   {
+     configurationRemoveAdapter(adapter);
     free_pointer(adapter->network);
     free_pointer(adapter->id);
 
@@ -147,7 +148,8 @@ adapterToXml(Adapter *adapter, mxml_node_t *parent)
 
   DL_FOREACH( adapter->device_head, iterator)
   {
-    deviceToXml(iterator, adapterXml);
+     if (iterator->attached)
+        deviceToXml(iterator, adapterXml);
   }
 
   return adapterXml;
@@ -188,11 +190,13 @@ adapterToJson(Adapter *adapter)
 
   DL_FOREACH( adapter->device_head, iterator )
   {
-    json_t *device;
-    if( ( ( device = deviceToJson(iterator) ) == NULL ) || ( json_array_append_new(deviceArray, device) != 0 ) )
-    {
-      goto error;
-    }
+     if (iterator->attached) {
+        json_t *device;
+        if( ( ( device = deviceToJson(iterator) ) == NULL ) || ( json_array_append_new(deviceArray, device) != 0 ) )
+        {
+          goto error;
+        }
+     }
   }
 
   if( json_object_set_new(adapterJson, "device", deviceArray) != 0 )

@@ -23,46 +23,33 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-/**
- * @file hpd_adapter.h
- * @brief  Methods for managing the Service structure
- * @author Thibaut Le Guilly
- */
+#ifndef DM_INTERNAL_H
+#define DM_INTERNAL_H
 
-#ifndef ADAPTER_H
-#define ADAPTER_H
+#include "datamanager.h"
 
-#include <mxml.h>
-#include <jansson.h>
+/* Function to handle configurations */
+int            configurationAddAdapter(Configuration *config, Adapter *adapter);
+int            configurationRemoveAdapter(Adapter *adapter );
 
-typedef struct Configuration Configuration;
-typedef struct Adapter       Adapter;
-typedef struct Device        Device;
-
-/**
- * The structure Adapter containing all the Attributes that an Adapter possesses
- */
-struct Adapter
-{
-   // Navigational members
-   Configuration *configuration;
-   Device        *device_head;
-   Adapter       *next;
-   Adapter       *prev;
-   // Data members
-   char          *id;
-   char          *network;
-   // User data
-   void          *data;
-};
-
-Adapter     *adapterNew          (const char *network, void *data);
-void         adapterFree         (Adapter *adapter);
+/* Function to handle adapters */
 int          adapterAddDevice    (Adapter *adapter, Device *device);
 int          adapterRemoveDevice (Device *device);
-Device      *adapterFindDevice   (Adapter *adapter, char *device_id);
 mxml_node_t *adapterToXml        (Adapter *adapter, mxml_node_t *parent);
 json_t      *adapterToJson       (Adapter *adapter);
 int          adapterGenerateId   (Adapter *adapter);
+
+/* Function to handle devices */
+mxml_node_t *deviceToXml         (Device *device, mxml_node_t *parent);
+json_t      *deviceToJson        (Device *device);
+int          deviceAddService    (Device *device, Service *service);
+int          deviceRemoveService (Service *service);
+int          deviceGenerateId    (Device *device);
+
+/* Function to handle services */
+mxml_node_t* serviceToXml       (Service *service, mxml_node_t *parent);
+json_t*      serviceToJson      (Service *service);
+int          serviceGenerateId  (Service *service);
+
 
 #endif

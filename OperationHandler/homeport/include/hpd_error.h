@@ -162,7 +162,10 @@ authors and should not be interpreted as representing official policies, either 
 
 #define HPD_E_DEVICE_NOT_THE_SAME				-54
 
+#define HPD_E_ID_ALREADY_SET  -55
 
+#define HPD_E_DEVICE_ALREADY_ATTACHED  -56
+#define HPD_E_DEVICE_NOT_ATTACHED  -57
 
 
 

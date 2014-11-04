@@ -24,11 +24,11 @@
   authors and should not be interpreted as representing official policies, either expressed*/
 
 #include "homeport.h"
+#include "datamanager.h"
 #include "hpd_error.h"
 #include "hp_macros.h"
 #include "lr_interface.h"
 #include "libREST.h"
-#include "hpd_configuration.h"
 #include "json.h"
 #include "xml.h"
 #include <ev.h>

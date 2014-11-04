@@ -30,10 +30,7 @@
  * @author Regis Louge
  */
 
-#include "hpd_device.h"
-#include "hpd_service.h"
-#include "hpd_adapter.h"
-#include "hpd_configuration.h"
+#include "dm_internal.h"
 #include "hp_macros.h"
 #include "hpd_error.h"
 #include "utlist.h"
@@ -73,6 +70,7 @@
  */
 Device* 
 deviceNew(
+      Adapter *adapter,
     const char *description,
     const char *vendorId,
     const char *productId,
@@ -85,6 +83,7 @@ deviceNew(
 
   alloc_struct(device);
 
+  device->attached = 0;
   device->id = NULL;
 
   null_ok_string_copy(device->description, description);
@@ -98,6 +97,8 @@ deviceNew(
   device->adapter = NULL;
 
   device->data = data;
+
+  adapterAddDevice(adapter, device);
 
   return device;
 
@@ -124,6 +125,7 @@ deviceFree( Device *device )
 
   if( device != NULL)
   {
+     adapterRemoveDevice(device);
     free_pointer(device->description);
     free_pointer(device->id);
     free_pointer(device->vendorId);
@@ -361,6 +363,7 @@ idExists(Configuration *conf, char *deviceId)
 
 int deviceGenerateId(Device *device)
 {
+   if (device->id) return HPD_E_ID_ALREADY_SET;
    Configuration *conf = device->adapter->configuration;
 
    char *deviceId = malloc((DEVICE_ID_SIZE+1)*sizeof(char));

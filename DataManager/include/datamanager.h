@@ -23,26 +23,70 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-/**
- * @file hpd_services.h
- * @brief  Methods for managing the Service structure
- * @author Thibaut Le Guilly
- * @author Regis Louge
- */
-
-#ifndef SERVICES_H
-#define SERVICES_H
+#ifndef DATAMANAGER_H
+#define DATAMANAGER_H
 
 #include <mxml.h>
 #include <jansson.h>
 
-typedef struct Device         Device;
-typedef struct Service        Service;
-typedef struct Parameter      Parameter;
-typedef struct ServiceElement ServiceElement;
+typedef struct Configuration Configuration;
+typedef struct Adapter       Adapter;
+typedef struct Device        Device;
+typedef struct Service       Service;
+typedef struct Parameter     Parameter;
 
 typedef void   (*serviceGetFunction) (Service* service, void *request);
 typedef size_t (*servicePutFunction) (Service* service, char *buffer, size_t max_buffer_size, char *put_value);
+
+/**
+ * The structure Configuration containing all the Attributes that a Configuration possesses
+ */
+struct Configuration
+{
+   // Navigational members
+   Adapter *adapter_head;
+};
+
+/**
+ * The structure Adapter containing all the Attributes that an Adapter possesses
+ */
+struct Adapter
+{
+   // Navigational members
+   Configuration *configuration;
+   Device        *device_head;
+   Adapter       *next;
+   Adapter       *prev;
+   // Data members
+   char          *id;
+   char          *network;
+   // User data
+   void          *data;
+};
+
+/**
+ * The structure Device containing all the Attributes that a Device possess
+ */
+struct Device
+{
+   // Navigational members
+   Adapter *adapter;
+   Service *service_head; /**<The first Service of the Service List*/
+   Device  *next;
+   Device  *prev;
+   // Internal state
+   char    attached;
+   // Data members
+   char    *description;  /**<The Device description*/
+   char    *id;           /**<The Device ID*/
+   char    *vendorId;     /**<The ID of the vendor*/
+   char    *productId;    /**<The ID of the product*/
+   char    *version;      /**<The Device version*/
+   char    *location;     /**<The location of the Device*/
+   char    *type;         /**<The Device type*/
+   // User data
+   void    *data;
+};
 
 /**
  * The structure Service containing all the Attributes that a Service possess
@@ -67,17 +111,6 @@ struct Service
    void               *data;        /**<Pointer used for the used to store its data*/
 };
 
-/*
- *  Function to handle services
- */
-Service*     serviceNew       (const char *description, int isActuator, const char *type, const char *unit,
-                               serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data); 
-void         serviceFree      (Service *service);
-mxml_node_t* serviceToXml     (Service *service, mxml_node_t *parent);
-json_t*      serviceToJson    (Service *service);
-int          serviceGenerateId(Service *service);
-int          serviceGenerateUri( Service *service );
-
 /**
  * The structure Service containing all the Attributes that a Parameter possess
  */
@@ -92,6 +125,31 @@ struct Parameter
   char *values; /**<The possible values for the Parameter*/
 };
 
+/* Function to handle configurations */
+Configuration *configurationNew();
+void           configurationFree(Configuration *config);
+Adapter       *configurationFindAdapter(Configuration *configuration, char *adapter_id);
+mxml_node_t   *configurationToXml(Configuration *configuration, mxml_node_t *parent);
+json_t        *configurationToJson(Configuration *configuration);
+
+/* Function to handle adapters */
+Adapter     *adapterNew          (Configuration *configuration, const char *network, void *data);
+void         adapterFree         (Adapter *adapter);
+Device      *adapterFindDevice   (Adapter *adapter, char *device_id);
+
+/* Function to handle devices */
+Device*      deviceNew           (Adapter *adapter, const char *description, const char *vendorId, const char *productId,
+                                  const char *version, const char *location, const char *type, void *data);
+void         deviceFree          (Device *device); 
+Service     *deviceFindService   (Device *device, char *service_id);
+
+/* Function to handle services */
+Service*     serviceNew         (Device *device, const char *description, int isActuator, const char *type, const char *unit,
+                                 serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data); 
+void         serviceFree        (Service *service);
+int          serviceGenerateUri (Service *service);
+
+/* Function to handle parameters */
 Parameter* parameterNew  (const char *max, const char *min, const char *scale, const char *step,
                           const char *type, const char *unit, const char *values);
 void       parameterFree (Parameter *parameter);

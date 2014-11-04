@@ -24,7 +24,7 @@
   authors and should not be interpreted as representing official policies, either expressed*/
 
 #include "json.h"
-#include "hpd_configuration.h"
+#include "datamanager.h"
 #include <jansson.h>
 
 char *

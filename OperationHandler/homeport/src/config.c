@@ -24,60 +24,41 @@
   authors and should not be interpreted as representing official policies, either expressed*/
 
 #include "homeport.h"
+#include "datamanager.h"
 #include "lr_interface.h"
 #include "hpd_error.h"
-#include "hpd_configuration.h"
-#include "hpd_adapter.h"
-#include "hpd_device.h"
-#include "hpd_service.h"
 #include "utlist.h"
 
-int
-homePortAddAdapter(HomePort *homeport, Adapter *adapter)
-{
-  return configurationAddAdapter(homeport->configuration, adapter);
-}
-
-int
-homePortRemoveAdapter(HomePort *homeport, Adapter *adapter)
-{
-  return configurationRemoveAdapter(homeport->configuration, adapter);
-}
-
 int 
-homePortAttachDevice( HomePort *homeport, Adapter *adapter, Device *device )
+homePortAttachDevice( HomePort *homeport, Device *device )
 {
-  if( homeport == NULL || adapter == NULL || device == NULL )
-  {
+  if( homeport == NULL || device == NULL )
     return HPD_E_NULL_POINTER;
-  }
+
+  if (device->attached) return HPD_E_DEVICE_ALREADY_ATTACHED;
+
   Service *iterator;
   int rc;
 
-  if( configurationFindAdapter(homeport->configuration, adapter->id) == NULL )
-  {
-    printf("Adapter not in the systen\n");
-    return -1;
-  }
-
-  if( ( rc = adapterAddDevice(adapter, device) ) )
-  {
-    return rc;
-  }
-
   DL_FOREACH( device->service_head, iterator )
   {
-    int stat = serviceGenerateUri(iterator);
-    if (stat != HPD_E_SUCCESS) return stat;
+    rc = serviceGenerateUri(iterator);
+    if (rc != HPD_E_SUCCESS) goto error;
 
     rc = lri_registerService(homeport, iterator );
-    if( rc < HPD_E_SUCCESS )
-    {
-      return rc;
-    }
+    if( rc < HPD_E_SUCCESS ) goto error;
   }
 
+  device->attached = 1;
   return HPD_E_SUCCESS;
+
+error:
+  DL_FOREACH( device->service_head, iterator )
+  {
+     // TODO I skip checking return values here, cause its an error handling routine
+     lri_unregisterService( homeport, iterator->uri );
+  }
+  return rc;
 }
 
 int 
@@ -86,21 +67,91 @@ homePortDetachDevice( HomePort *homeport, Device *device )
   if( homeport == NULL || device == NULL )
     return HPD_E_NULL_POINTER;
 
+  if (!device->attached) return HPD_E_DEVICE_NOT_ATTACHED;
+  device->attached = 0;
+
   Service *iterator;
   int rc;
 
   DL_FOREACH( device->service_head, iterator )
   {
     rc = lri_unregisterService( homeport, iterator->uri );
-    if(rc < HPD_E_SUCCESS)
-    {
-      return rc;
-    }
+    // TODO Checking here is dificult, cause we really want to try removing all services, even though some may fail
+    //if(rc < HPD_E_SUCCESS && rc != HPD_E_SERVICE_NOT_REGISTER) return rc;
+    fprintf(stderr, "Unregistering service failed with error code %d\n", rc);
   }
 
-  adapterRemoveDevice(device);
-
   return HPD_E_SUCCESS;
+}
+
+Adapter   *homePortNewAdapter    (HomePort *homeport, const char *network, void *data)
+{
+   return adapterNew(homeport->configuration, network, data);
+}
+
+Device    *homePortNewDevice     (Adapter *adapter, const char *description, const char *vendorId, const char *productId,
+                                  const char *version, const char *location, const char *type, void *data)
+{
+   return deviceNew(adapter, description, vendorId, productId, version, location, type, data);
+}
+
+Service   *homePortNewService    (Device *device, const char *description, int isActuator, const char *type, const char *unit,
+                                  serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data)
+{
+   if (device->attached) {
+      fprintf(stderr, "Cannot add a service to an attached device. Please detach device first.\n");
+      return NULL;
+   }
+   return serviceNew(device, description, isActuator, type, unit, getFunction, putFunction, parameter, data);
+}
+
+Parameter *homePortNewParameter  (const char *max, const char *min, const char *scale, const char *step,
+                                  const char *type, const char *unit, const char *values)
+{
+   return parameterNew(max, min, scale, step, type, unit, values);
+}
+
+void       homePortFreeAdapter   (Adapter *adapter)
+{
+   adapterFree(adapter);
+}
+
+void       homePortFreeDevice    (Device *device)
+{
+   if (device->attached) {
+      fprintf(stderr, "Cannot free an attached device. Please detach device first.\n");
+      return;
+   }
+   deviceFree(device);
+}
+
+void       homePortFreeService   (Service *service)
+{
+   if (service->device && service->device->attached) {
+      fprintf(stderr, "Cannot free a service on an attached device. Please detach device first.\n");
+      return;
+   }
+   serviceFree(service);
+}
+
+void       homePortFreeParameter (Parameter *parameter)
+{
+   parameterFree(parameter);
+}
+
+Adapter   *homePortFindAdapter   (HomePort *homeport, char *adapter_id)
+{
+   return configurationFindAdapter(homeport->configuration, adapter_id);
+}
+
+Device    *homePortFindDevice    (Adapter *adapter, char *device_id)
+{
+   return adapterFindDevice(adapter, device_id);
+}
+
+Service   *homePortFindService   (Device *device, char *service_id)
+{
+   return deviceFindService(device, service_id);
 }
 
 
