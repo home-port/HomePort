@@ -38,7 +38,7 @@
 #define ADAPTER_ID_SIZE 2
 
 Adapter*
-adapterNew(Configuration *configuration, const char *network, void *data )
+adapterNew(Configuration *configuration, const char *network, void *data, free_f free_data )
 {
   Adapter * adapter;
 
@@ -49,6 +49,7 @@ adapterNew(Configuration *configuration, const char *network, void *data )
   null_ok_string_copy(adapter->network, network);
 
   adapter->data = data;
+  adapter->free_data = free_data;
 
   adapter->device_head = NULL;
   adapter->configuration = NULL;
@@ -79,6 +80,7 @@ adapterFree(Adapter *adapter)
       iterator->adapter = NULL;
     }
 
+    if (adapter->free_data) adapter->free_data(adapter->data);
     free(adapter);
   }
 }

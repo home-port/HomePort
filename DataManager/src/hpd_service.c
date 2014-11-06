@@ -74,7 +74,7 @@ serviceNew(
       serviceGetFunction getFunction,
       servicePutFunction putFunction,
       Parameter *parameter,
-      void* data)
+      void* data, free_f free_data)
 {
   Service *service;
 
@@ -99,6 +99,7 @@ serviceNew(
   service->putFunction = putFunction;
 
   service->data = data;
+  service->free_data = free_data;
 
   deviceAddService(device, service);
 
@@ -134,6 +135,7 @@ serviceFree( Service *service )
     free_pointer(service->id);
     free_pointer(service->uri);
     parameterFree(service->parameter);
+    if (service->free_data) service->free_data(service->data);
     free(service);
   }
 }

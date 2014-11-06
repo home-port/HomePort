@@ -39,19 +39,19 @@ mxml_node_t   *configurationToXml(Configuration *configuration, mxml_node_t *par
 json_t        *configurationToJson(Configuration *configuration);
 
 /* Function to handle adapters */
-Adapter     *adapterNew          (Configuration *configuration, const char *network, void *data);
+Adapter     *adapterNew          (Configuration *configuration, const char *network, void *data, free_f free_data);
 void         adapterFree         (Adapter *adapter);
 Device      *adapterFindDevice   (Adapter *adapter, char *device_id);
 
 /* Function to handle devices */
 Device*      deviceNew           (Adapter *adapter, const char *description, const char *vendorId, const char *productId,
-                                  const char *version, const char *location, const char *type, void *data);
+                                  const char *version, const char *location, const char *type, void *data, free_f free_data);
 void         deviceFree          (Device *device); 
 Service     *deviceFindService   (Device *device, char *service_id);
 
 /* Function to handle services */
 Service*     serviceNew         (Device *device, const char *description, int isActuator, const char *type, const char *unit,
-                                 serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data); 
+                                 serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data, free_f free_data); 
 void         serviceFree        (Service *service);
 int          serviceGenerateUri (Service *service);
 

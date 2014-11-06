@@ -77,7 +77,7 @@ deviceNew(
     const char *version,
     const char *location,
     const char *type,
-    void * data)
+    void * data, free_f free_data)
 {
   Device *device;
 
@@ -97,6 +97,7 @@ deviceNew(
   device->adapter = NULL;
 
   device->data = data;
+  device->free_data = free_data;
 
   adapterAddDevice(adapter, device);
 
@@ -144,6 +145,7 @@ deviceFree( Device *device )
       }
     }
 
+    if (device->free_data) device->free_data(device->data);
     free(device);
   }
 }
