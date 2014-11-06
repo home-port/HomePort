@@ -78,7 +78,8 @@ homePortDetachDevice( HomePort *homeport, Device *device )
     rc = lri_unregisterService( homeport, iterator->uri );
     // TODO Checking here is dificult, cause we really want to try removing all services, even though some may fail
     //if(rc < HPD_E_SUCCESS && rc != HPD_E_SERVICE_NOT_REGISTER) return rc;
-    fprintf(stderr, "Unregistering service failed with error code %d\n", rc);
+    if (rc != HPD_E_SUCCESS)
+      fprintf(stderr, "Unregistering service failed with error code %d\n", rc);
   }
 
   return HPD_E_SUCCESS;
