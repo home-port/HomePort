@@ -140,8 +140,7 @@ deviceFree( Device *device )
       Service *iterator = NULL, *tmp = NULL;
       DL_FOREACH_SAFE( device->service_head, iterator, tmp)
       {
-	DL_DELETE( device->service_head, iterator );
-   iterator->device = NULL;
+         serviceFree(iterator);
       }
     }
 

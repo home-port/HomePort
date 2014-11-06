@@ -68,16 +68,17 @@ adapterFree(Adapter *adapter)
 {
   if( adapter != NULL )
   {
-     configurationRemoveAdapter(adapter);
+    configurationRemoveAdapter(adapter);
     free_pointer(adapter->network);
     free_pointer(adapter->id);
 
     Device *tmp=NULL, *iterator=NULL;
 
-    DL_FOREACH_SAFE( adapter->device_head, iterator, tmp )
-    {
-      DL_DELETE( adapter->device_head, iterator );
-      iterator->adapter = NULL;
+    if (adapter->device_head) {
+      DL_FOREACH_SAFE( adapter->device_head, iterator, tmp )
+      {
+         deviceFree(iterator);
+      }
     }
 
     if (adapter->free_data) adapter->free_data(adapter->data);
