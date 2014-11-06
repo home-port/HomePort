@@ -143,15 +143,16 @@ Service   *homePortNewService    (Device *device, const char *description, int i
                                   serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data, free_f free_data); 
 Parameter *homePortNewParameter  (const char *max, const char *min, const char *scale, const char *step,
                                        const char *type, const char *unit, const char *values);
-void       homePortFreeAdapter   (Adapter *adapter);
-void       homePortFreeDevice    (Device *device); 
-void       homePortFreeService   (Service *service);
-void       homePortFreeParameter (Parameter *parameter);
-int        homePortAttachDevice  (HomePort *homeport, Device *device);
-int        homePortDetachDevice  (HomePort *homeport, Device *device);
-Adapter   *homePortFindAdapter   (HomePort *homeport, char *adapter_id);
-Device    *homePortFindDevice    (Adapter *adapter, char *device_id);
-Service   *homePortFindService   (Device *device, char *service_id);
+void       homePortFreeAdapter      (Adapter *adapter);
+void       homePortFreeDevice       (Device *device); 
+void       homePortFreeService      (Service *service);
+void       homePortFreeParameter    (Parameter *parameter);
+int        homePortAttachDevice     (HomePort *homeport, Device *device);
+int        homePortDetachAllDevices (HomePort *homeport, Adapter *adapter);
+int        homePortDetachDevice     (HomePort *homeport, Device *device);
+Adapter   *homePortFindAdapter      (HomePort *homeport, char *adapter_id);
+Device    *homePortFindDevice       (Adapter *adapter, char *device_id);
+Service   *homePortFindService      (Device *device, char *service_id);
 
 // Communication interface
 void            homePortSendState     (${C} Service *service, void *req_in, const char *val, size_t len);

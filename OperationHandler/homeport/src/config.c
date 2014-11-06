@@ -84,6 +84,21 @@ homePortDetachDevice( HomePort *homeport, Device *device )
   return HPD_E_SUCCESS;
 }
 
+int
+homePortDetachAllDevices(HomePort *homeport, Adapter *adapter)
+{
+  if( homeport == NULL || adapter == NULL )
+    return HPD_E_NULL_POINTER;
+
+  Device *iterator=NULL;
+  DL_FOREACH( adapter->device_head, iterator )
+  {
+     homePortDetachDevice(homeport, iterator);
+  }
+ 
+  return HPD_E_SUCCESS;
+}
+
 Adapter   *homePortNewAdapter    (HomePort *homeport, const char *network, void *data, free_f free_data)
 {
    return adapterNew(homeport->configuration, network, data, free_data);
@@ -113,6 +128,16 @@ Parameter *homePortNewParameter  (const char *max, const char *min, const char *
 
 void       homePortFreeAdapter   (Adapter *adapter)
 {
+   Device *iterator=NULL;
+
+   DL_FOREACH( adapter->device_head, iterator )
+   {
+      if (iterator->attached) {
+         fprintf(stderr, "Cannot free adapter. Please detach all devices first.\n");
+         return;
+      }
+   }
+
    adapterFree(adapter);
 }
 
