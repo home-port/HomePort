@@ -50,6 +50,14 @@ homePortAttachDevice( HomePort *homeport, Device *device )
   }
 
   device->attached = 1;
+
+  // Inform
+  Listener *l;
+  DL_FOREACH(homeport->configuration->listener_head, l)
+  {
+     l->on_attach(l->data, device);
+  }
+
   return HPD_E_SUCCESS;
 
 error:
@@ -80,6 +88,13 @@ homePortDetachDevice( HomePort *homeport, Device *device )
     //if(rc < HPD_E_SUCCESS && rc != HPD_E_SERVICE_NOT_REGISTER) return rc;
     if (rc != HPD_E_SUCCESS)
       fprintf(stderr, "Unregistering service failed with error code %d\n", rc);
+  }
+
+  // Inform
+  Listener *l;
+  DL_FOREACH(homeport->configuration->listener_head, l)
+  {
+     l->on_detach(l->data, device);
   }
 
   return HPD_E_SUCCESS;

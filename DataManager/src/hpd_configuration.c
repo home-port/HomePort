@@ -174,4 +174,22 @@ error:
   return NULL;
 }
 
+int
+configurationAddListener(Configuration *configuration, Listener *l)
+{
+   if( configuration == NULL || l == NULL ) 
+      return HPD_E_NULL_POINTER;
+   
+   DL_APPEND( configuration->listener_head, l);
+   return HPD_E_SUCCESS;
+}
+
+int 
+configurationRemoveListener(Configuration *configuration, Listener *l)
+{
+   if( configuration == NULL || l == NULL ) return HPD_E_NULL_POINTER;
+   DL_DELETE( configuration->listener_head, l );
+   return HPD_E_SUCCESS; 
+}
+
 

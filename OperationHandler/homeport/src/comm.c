@@ -24,46 +24,110 @@ The views and conclusions contained in the software and documentation are those 
 authors and should not be interpreted as representing official policies, either expressed*/
 
 #include "homeport.h"
+#include "datamanager.h"
 #include "json.h"
 #include "xml.h"
 #include "libREST.h"
+#include "utlist.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
-void
-homePortSendState(Service *service, void *req, const char *val, size_t len)
+void homePortGet(Service *service, Request req)
 {
-   char *buffer, *state;
-   struct lm *headersIn = lr_request_get_headers(req);
-   struct lm *headers;
+   service->getFunction(service, req);
+}
 
-   // Call callback and send response
-   buffer = malloc((len+1) * sizeof(char));
-   strncpy(buffer, val, len);
-   if (len) {
-     buffer[len] = '\0';
-     /*TODO Check header for XML or jSON*/
-     char *accept = lm_find( headersIn, "Accept" );
-     if( strcmp(accept, "application/json") == 0 )
-     {
-       state = jsonGetState(buffer);
-       headers =  lm_create();
-       lm_insert(headers, "Content-Type", "application/json");
-       lr_sendf(req, WS_HTTP_200, headers, state);
-     }
-     else
-     { 
-       state = xmlGetState(buffer);
-       headers =  lm_create();
-       lm_insert(headers, "Content-Type", "application/xml");
-       lr_sendf(req, WS_HTTP_200, headers, state);
-     }
-     lm_destroy(headers);
-     free(state);
-     free(buffer);
-   } else {
-     lr_sendf(req, WS_HTTP_500, NULL, "Internal Server Error");
+void homePortSet(Service *service, const char *val, size_t len, Request req)
+{
+   service->putFunction(service, req, val, len);
+}
+
+void homePortRespond(Service *service, Request req, const char *val, size_t len)
+{
+   if (req.on_response)
+      req.on_response(service, req.data, val, len);
+}
+
+void homePortChanged(Service *service, const char *val, size_t len)
+{
+  Listener *l;
+
+  DL_FOREACH(service->listener_head, l)
+  {
+     l->on_change(service, l->data, val, len);
+  }
+}
+
+Listener *homePortNewServiceListener(Service *srv, val_cb on_change, void *data)
+{
+   Listener *l = malloc(sizeof(Listener));
+   l->type = SERVICE_LISTENER;
+   l->subscribed = 0;
+   l->service = srv;
+   l->on_change = on_change;
+   l->data = data;
+   l->next = NULL;
+   l->prev = NULL;
+   return l;
+}
+
+Listener *homePortNewDeviceListener(HomePort *hp, dev_cb on_attach, dev_cb on_detach, void *data)
+{
+   Listener *l = malloc(sizeof(Listener));
+   l->type = DEVICE_LISTENER;
+   l->subscribed = 0;
+   l->homeport = hp;
+   l->on_attach = on_attach;
+   l->on_detach = on_detach;
+   l->data = data;
+   l->next = NULL;
+   l->prev = NULL;
+   return l;
+}
+
+void homePortFreeListener(Listener *l)
+{
+   if (l->subscribed) {
+      fprintf(stderr, "Please unsubscribe listener before freeing it");
+      return;
    }
+   free(l);
+}
+
+void homePortSubscribe(Listener *l)
+{
+   if (l->subscribed) {
+      fprintf(stderr, "Listener already subscribed, ignoring request");
+      return;
+   }
+
+   switch (l->type) {
+      case SERVICE_LISTENER:
+         serviceAddListener(l->service, l);
+         break;
+      case DEVICE_LISTENER:
+         configurationAddListener(l->homeport->configuration, l);
+         break;
+   }
+   l->subscribed = 1;
+}
+
+void homePortUnsubscribe(Listener *l)
+{
+   if (!l->subscribed) {
+      return;
+   }
+
+   switch (l->type) {
+      case SERVICE_LISTENER:
+         serviceRemoveListener(l->service, l);
+         break;
+      case DEVICE_LISTENER:
+         configurationRemoveListener(l->homeport->configuration, l);
+         break;
+   }
+   l->subscribed = 0;
 }
 
 

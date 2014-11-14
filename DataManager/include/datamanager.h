@@ -37,6 +37,8 @@ void           configurationFree(Configuration *config);
 Adapter       *configurationFindAdapter(Configuration *configuration, char *adapter_id);
 mxml_node_t   *configurationToXml(Configuration *configuration, mxml_node_t *parent);
 json_t        *configurationToJson(Configuration *configuration);
+int            configurationAddListener(Configuration *configuration, Listener *l);
+int            configurationRemoveListener(Configuration *configuration, Listener *l);
 
 /* Function to handle adapters */
 Adapter     *adapterNew          (Configuration *configuration, const char *network, void *data, free_f free_data);
@@ -50,10 +52,12 @@ void         deviceFree          (Device *device);
 Service     *deviceFindService   (Device *device, char *service_id);
 
 /* Function to handle services */
-Service*     serviceNew         (Device *device, const char *description, int isActuator, const char *type, const char *unit,
-                                 serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data, free_f free_data); 
-void         serviceFree        (Service *service);
-int          serviceGenerateUri (Service *service);
+Service*     serviceNew            (Device *device, const char *description, int isActuator, const char *type, const char *unit,
+                                    serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data, free_f free_data); 
+void         serviceFree           (Service *service);
+int          serviceGenerateUri    (Service *service);
+int          serviceAddListener    (Service *service, Listener *l);
+int          serviceRemoveListener (Service *service, Listener *l);
 
 /* Function to handle parameters */
 Parameter* parameterNew  (const char *max, const char *min, const char *scale, const char *step,

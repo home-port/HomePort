@@ -31,18 +31,22 @@ authors and should not be interpreted as representing official policies, either 
 struct ev_loop;
 struct lr;
 
-typedef ${C} struct HomePort HomePort;
-typedef ${C} struct Configuration Configuration;
-typedef ${C} struct Adapter Adapter;
-typedef ${C} struct Device Device;
-typedef ${C} struct Service Service;
-typedef ${C} struct Parameter Parameter;
+typedef ${C}  struct HomePort HomePort;
+typedef ${C}  struct Configuration Configuration;
+typedef ${C}  struct Adapter Adapter;
+typedef ${C}  struct Device Device;
+typedef ${C}  struct Service Service;
+typedef ${C}  struct Parameter Parameter;
+typedef const struct Request Request;
+typedef ${C}  struct Listener Listener;
 
-typedef void   (*free_f)             (void *data);
-typedef int    (*init_f)             (HomePort *homeport, void *data);
-typedef void   (*deinit_f)           (HomePort *homeport, void *data);
-typedef void   (*serviceGetFunction) (Service* service, void *request);
-typedef size_t (*servicePutFunction) (Service* service, char *buffer, size_t max_buffer_size, const char *put_value);
+typedef void (*free_f)             (void *data);
+typedef int  (*init_f)             (HomePort *homeport, void *data);
+typedef void (*deinit_f)           (HomePort *homeport, void *data);
+typedef void (*val_cb)             (Service *service, void *data, const char *val, size_t len);
+typedef void (*dev_cb)             (void *data, Device *device);
+typedef void (*serviceGetFunction) (Service* service, Request req);
+typedef void (*servicePutFunction) (Service* service, Request req, const char *put_value, size_t len);
 
 struct HomePort
 {
@@ -54,7 +58,8 @@ struct HomePort
 struct Configuration
 {
    // Navigational members
-   ${C} Adapter *adapter_head;
+   ${C} Adapter  *adapter_head;
+   ${C} Listener *listener_head;
 };
 
 struct Adapter
@@ -101,6 +106,7 @@ struct Service
    ${C} Parameter          *parameter;   /**<The first Parameter of the Parameter List*/
    ${C} Service            *next;
    ${C} Service            *prev;
+   ${C} Listener           *listener_head;
    // Data members
    ${C} char               *description; /**<The Service description*/
    ${C} int                 isActuator;  /**<Determine if the service is an actuator or a sensro */
@@ -124,6 +130,36 @@ struct Parameter
    ${C} char *type;   /**<The Type of values for the Parameter*/
    ${C} char *unit;   /**<The Unit of the values of the Parameter*/
    ${C} char *values; /**<The possible values for the Parameter*/
+};
+
+struct Request {
+   val_cb on_response;
+   void *data;
+};
+
+struct Listener {
+   enum { SERVICE_LISTENER, DEVICE_LISTENER } type;
+   // Navigational members
+   union {
+      ${C} Service  *service;
+      ${C} HomePort *homeport;
+   };
+   ${C} Listener *next;
+   ${C} Listener *prev;
+   // Internal state
+   ${C} char      subscribed;
+   // Data members
+   union {
+      struct {
+         ${C} val_cb    on_change;
+      };
+      struct {
+         ${C} dev_cb    on_attach;
+         ${C} dev_cb    on_detach;
+      };
+   };
+   // User data
+   void          *data;
 };
 
 /* Note on homePort functions and const keyword on the above structs is really a hack and we DO change them inside homeport */
@@ -155,6 +191,14 @@ Device    *homePortFindDevice       (Adapter *adapter, char *device_id);
 Service   *homePortFindService      (Device *device, char *service_id);
 
 // Communication interface
-void            homePortSendState     (${C} Service *service, void *req_in, const char *val, size_t len);
+void      homePortRespond            (Service *service, Request req, const char *val, size_t len);
+void      homePortChanged            (Service *service, const char *val, size_t len);
+void      homePortGet                (Service *service, Request req);
+void      homePortSet                (Service *service, const char *val, size_t len, Request req);
+Listener *homePortNewServiceListener (Service *srv, val_cb on_change, void *data);
+Listener *homePortNewDeviceListener  (HomePort *hp, dev_cb on_attach, dev_cb on_detach, void *data);
+void      homePortFreeListener       (Listener *l);
+void      homePortSubscribe          (Listener *l);
+void      homePortUnsubscribe        (Listener *l);
 
 #endif

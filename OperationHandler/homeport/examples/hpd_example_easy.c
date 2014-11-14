@@ -44,27 +44,26 @@ static const Service *service_switch1 = NULL;
  *	Takes a Service structure in parameter, and return a service value as a char*
  */
 void 
-get_lamp ( const Service* service, void *request )
+get_lamp ( const Service* service, Request request )
 {
   printf("Received GET lamp on %s %s\n", service->description, service->id);
-  homePortSendState(service, request, "0", 1);
+  homePortRespond(service, request, "0", 1);
 }
 /** A PUT function for a service
  *	Takes a Service structure in parameter, and return an updated service value as a char*
  */
-size_t 
-put_lamp ( const Service* service, char *buffer, size_t max_buffer_size, const char *put_value )
+void 
+put_lamp ( const Service* service, Request req, const char *put_value, size_t len )
 {
   printf("Received PUT lamp on %s %s\n", service->description, service->id);
-  sprintf(buffer, "0");
-  return strlen(buffer);
+  homePortRespond(service, req, "0", 1);
 }
 
 void 
-get_switch ( const Service* service, void *request )
+get_switch ( const Service* service, Request request )
 {
   printf("Received GET switch on %s %s\n", service->description, service->id);
-  homePortSendState(service, request, "0", 1);
+  homePortRespond(service, request, "0", 1);
 }
 
 static void deinit(const HomePort *homeport, void *data)
@@ -90,7 +89,7 @@ static void deinit(const HomePort *homeport, void *data)
 
 static int init(const HomePort *homeport, void *data)
 {
-  adapter = homePortNewAdapter(homeport, "test", NULL);
+  adapter = homePortNewAdapter(homeport, "test", NULL, NULL);
 
   /** Creation and registration of non secure services */
   /** Create a device that will contain the services 
@@ -111,7 +110,7 @@ static int init(const HomePort *homeport, void *data)
       "0x01", 
       "V1", 
       "LivingRoom", 
-      "Example", NULL);
+      "Example", NULL, NULL);
   /** Create a service
    * 1st parameter : The service's description (optional)
    * 2nd parameter : The service's id
@@ -127,25 +126,28 @@ static int init(const HomePort *homeport, void *data)
       homePortNewParameter (NULL, NULL,
 	NULL, NULL, NULL,
 	NULL, NULL)
-      ,NULL);
+      ,NULL, NULL);
 
   service_lamp1 = homePortNewService (device, "Lamp1", 1, "Lamp", "ON/OFF", 
       get_lamp, put_lamp, 
       homePortNewParameter (NULL, NULL,
 	NULL, NULL, NULL,
-	NULL, NULL),NULL);
+	NULL, NULL),
+      NULL, NULL);
 
   service_switch0 = homePortNewService (device, "Switch0", 0, "Switch", "ON/OFF",
       get_switch, NULL, 
       homePortNewParameter (NULL, NULL,
 	NULL, NULL, NULL,
-	NULL, NULL),NULL);
+	NULL, NULL),
+      NULL, NULL);
 
   service_switch1 = homePortNewService (device, "Switch1", 0, "Switch", "ON/OFF",
       get_switch, NULL, 
       homePortNewParameter (NULL, NULL,
 	NULL, NULL, NULL,
-	NULL, NULL),NULL);
+	NULL, NULL),
+      NULL, NULL);
 
   homePortAttachDevice(homeport, device);
 

@@ -34,6 +34,43 @@
 
 #define MHD_MAX_BUFFER_SIZE 10
 
+static void
+sendState(Service *service, void *req, const char *val, size_t len)
+{
+   char *buffer, *state;
+   struct lm *headersIn = lr_request_get_headers(req);
+   struct lm *headers;
+
+   // Call callback and send response
+   buffer = malloc((len+1) * sizeof(char));
+   strncpy(buffer, val, len);
+   if (len) {
+     buffer[len] = '\0';
+     /*TODO Check header for XML or jSON*/
+     char *accept = lm_find( headersIn, "Accept" );
+     if( strcmp(accept, "application/json") == 0 )
+     {
+       state = jsonGetState(buffer);
+       headers =  lm_create();
+       lm_insert(headers, "Content-Type", "application/json");
+       lr_sendf(req, WS_HTTP_200, headers, state);
+     }
+     else
+     { 
+       state = xmlGetState(buffer);
+       headers =  lm_create();
+       lm_insert(headers, "Content-Type", "application/xml");
+       lr_sendf(req, WS_HTTP_200, headers, state);
+     }
+     lm_destroy(headers);
+     free(state);
+     free(buffer);
+   } else {
+     lr_sendf(req, WS_HTTP_500, NULL, "Internal Server Error");
+   }
+}
+
+
 static int
 getState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
 {
@@ -47,7 +84,7 @@ getState(void *srv_data, void **req_data, struct lr_request *req, const char *bo
 
   // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
   lr_request_keep_open(req);
-  service->getFunction(service, req);
+  homePortGet(service, (Request){sendState, req});
 
   // Stop parsing request, we don't need the body anyways
   return 1;
@@ -111,39 +148,12 @@ setState(void *srv_data, void **req_data, struct lr_request *req, const char *bo
   }
 
   // Call callback
-  char *buffer = malloc((MHD_MAX_BUFFER_SIZE+1) * sizeof(char));
-  int buf_len = service->putFunction(service,
-      buffer, MHD_MAX_BUFFER_SIZE,
-      value);
+  // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
+  lr_request_keep_open(req);
+  homePortSet(service, value, strlen(value), (Request){sendState, req});
 
   if(freeValue) free(value);
 
-  // Send response
-  if (buf_len == 0) {
-    lr_sendf(req, WS_HTTP_500, NULL, "500 Internal Server Error");
-    free(buffer);
-    return 1;
-  } else {
-    //    // Send value change event
-    //    const char *IP = lr_request_get_ip(req);
-    //    buffer[buf_len] = '\0';
-    //    send_event_of_value_change(service, buffer, IP);
-
-    // Reply to request
-    char *ret;
-    if( strcmp( contentType, "application/xml" ) == 0 )
-    {
-      ret = xmlGetState(buffer);
-    }
-    else
-    {
-      ret = jsonGetState(buffer);
-    }
-
-    lr_sendf(req, WS_HTTP_200, NULL, ret);
-    free(ret);
-  }
-  free(buffer);
   return 0;
 }
 

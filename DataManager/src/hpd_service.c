@@ -33,6 +33,7 @@
 #include "dm_internal.h"
 #include "hp_macros.h"
 #include "idgen.h"
+#include "utlist.h"
 #include "hpd_error.h"
 
 #define SERVICE_ID_SIZE 4
@@ -77,9 +78,9 @@ serviceNew(
       void* data, free_f free_data)
 {
   Service *service;
-
   alloc_struct(service);
 
+  service->listener_head = NULL;
   service->device = NULL;
   service->id = NULL;
   service->uri = NULL;
@@ -328,6 +329,25 @@ serviceGenerateUri( Service *service )
    service->uri = uri;
    return HPD_E_SUCCESS;
 }
+
+int
+serviceAddListener(Service *service, Listener *l)
+{
+   if( service == NULL || l == NULL ) 
+      return HPD_E_NULL_POINTER;
+   
+   DL_APPEND( service->listener_head, l);
+   return HPD_E_SUCCESS;
+}
+
+int 
+serviceRemoveListener(Service *service, Listener *l)
+{
+   if( service == NULL || l == NULL ) return HPD_E_NULL_POINTER;
+   DL_DELETE( service->listener_head, l );
+   return HPD_E_SUCCESS; 
+}
+
 
 /**
  * Creates the structure Parameter with all its parameters

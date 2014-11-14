@@ -161,7 +161,6 @@ deviceFree( Device *device )
 int 
 deviceAddService( Device *device, Service *service )
 {
-
   if( service == NULL || device == NULL ) 
     return HPD_E_NULL_POINTER;
 
