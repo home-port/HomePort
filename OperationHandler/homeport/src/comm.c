@@ -141,8 +141,8 @@ void homePortForAllAttachedDevices (Listener *l)
       return;
    }
 
-   if (l->on_attach) {
-      fprintf(stderr, "Listener does not have an on_attach function, skipping");
+   if (!l->on_attach) {
+      fprintf(stderr, "Listener does not have an on_attach function, skipping\n");
       return;
    }
    
