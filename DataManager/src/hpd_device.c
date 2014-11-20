@@ -205,22 +205,30 @@ deviceRemoveService( Service *service )
 }
 
 Service*
-deviceFindService(Device *device, char *service_id)
+deviceFindFirstService(Device *device,
+      const char *description,
+      const int  *isActuator,
+      const char *type,
+      const char *unit,
+      const char *id,
+      const char *uri)
 {
-  if(device == NULL || service_id == NULL ) return NULL;
+  if (device == NULL) return NULL;
 
   Service *iterator;
 
   DL_FOREACH( device->service_head, iterator )
   {
-    if( iterator->id != NULL && strcmp ( service_id, iterator->id ) == 0 )
-    {
-      return iterator;
-    }			
+    if ( description == NULL || (iterator->description != NULL && strcmp(description, iterator->description) == 0) )
+      if ( isActuator == NULL || *isActuator == iterator->isActuator )
+        if ( type == NULL || (iterator->type != NULL && strcmp(type, iterator->type) == 0) )
+          if ( unit == NULL || (iterator->unit != NULL && strcmp(unit, iterator->unit) == 0) )
+            if ( id == NULL || (iterator->id != NULL && strcmp(id, iterator->id) == 0) )
+              if ( uri == NULL || (iterator->uri != NULL && strcmp(uri, iterator->uri) == 0) )
+                return iterator;
   }
-  
-  return NULL;
 
+  return NULL;
 }
 
 mxml_node_t*

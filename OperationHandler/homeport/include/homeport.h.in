@@ -186,9 +186,16 @@ void       homePortFreeParameter    (Parameter *parameter);
 int        homePortAttachDevice     (HomePort *homeport, Device *device);
 int        homePortDetachAllDevices (HomePort *homeport, Adapter *adapter);
 int        homePortDetachDevice     (HomePort *homeport, Device *device);
-Adapter   *homePortFindAdapter      (HomePort *homeport, char *adapter_id);
-Device    *homePortFindDevice       (Adapter *adapter, char *device_id);
-Service   *homePortFindService      (Device *device, char *service_id);
+
+// Find functions -- set parameter to NULL to "skip" it
+#define homePortFindAdapter(_HP, _ID) homePortFindFirstAdapter(_HP, _ID, NULL)
+#define homePortFindDevice(_A, _ID) homePortFindFirstDevice(_A, NULL, _ID, NULL, NULL, NULL, NULL, NULL)
+#define homePortFindService(_D, _ID) homePortFindFirstAdapter(_D, NULL, NULL, NULL, NULL, _ID, NULL)
+Adapter *homePortFindFirstAdapter (HomePort *homeport, const char *id, const char *network);
+Device  *homePortFindFirstDevice  (Adapter *adapter, const char *description, const char *id, const char *vendorId,
+                                   const char *productId, const char *version, const char *location, const char *type);
+Service *homePortFindFirstService (Device *device, const char *description, const int  *isActuator, const char *type,
+                                   const char *unit, const char *id, const char *uri);
 
 // Communication interface
 void      homePortRespond            (Service *service, Request req, const char *val, size_t len);

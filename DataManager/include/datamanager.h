@@ -34,7 +34,6 @@
 /* Function to handle configurations */
 Configuration *configurationNew();
 void           configurationFree(Configuration *config);
-Adapter       *configurationFindAdapter(Configuration *configuration, char *adapter_id);
 mxml_node_t   *configurationToXml(Configuration *configuration, mxml_node_t *parent);
 json_t        *configurationToJson(Configuration *configuration);
 int            configurationAddListener(Configuration *configuration, Listener *l);
@@ -43,13 +42,11 @@ int            configurationRemoveListener(Configuration *configuration, Listene
 /* Function to handle adapters */
 Adapter     *adapterNew          (Configuration *configuration, const char *network, void *data, free_f free_data);
 void         adapterFree         (Adapter *adapter);
-Device      *adapterFindDevice   (Adapter *adapter, char *device_id);
 
 /* Function to handle devices */
 Device*      deviceNew           (Adapter *adapter, const char *description, const char *vendorId, const char *productId,
                                   const char *version, const char *location, const char *type, void *data, free_f free_data);
 void         deviceFree          (Device *device); 
-Service     *deviceFindService   (Device *device, char *service_id);
 
 /* Function to handle services */
 Service*     serviceNew            (Device *device, const char *description, int isActuator, const char *type, const char *unit,
@@ -63,5 +60,12 @@ int          serviceRemoveListener (Service *service, Listener *l);
 Parameter* parameterNew  (const char *max, const char *min, const char *scale, const char *step,
                           const char *type, const char *unit, const char *values);
 void       parameterFree (Parameter *parameter);
+
+/* Find functions - set a parameter to NULL to "skip" it */
+Adapter *configurationFindFirstAdapter(Configuration *configuration, const char *id, const char *network);
+Device  *adapterFindFirstDevice       (Adapter *adapter, const char *description, const char *id, const char *vendorId,
+                                       const char *productId, const char *version, const char *location, const char *type);
+Service *deviceFindFirstService       (Device *device, const char *description, const int  *isActuator, const char *type,
+                                       const char *unit, const char *id, const char *uri);
 
 #endif

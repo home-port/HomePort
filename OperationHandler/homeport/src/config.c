@@ -180,19 +180,21 @@ void       homePortFreeParameter (Parameter *parameter)
    parameterFree(parameter);
 }
 
-Adapter   *homePortFindAdapter   (HomePort *homeport, char *adapter_id)
+Adapter *homePortFindFirstAdapter (HomePort *homeport, const char *id, const char *network)
 {
-   return configurationFindAdapter(homeport->configuration, adapter_id);
+   return configurationFindFirstAdapter(homeport->configuration, id, network);
 }
 
-Device    *homePortFindDevice    (Adapter *adapter, char *device_id)
+Device  *homePortFindFirstDevice  (Adapter *adapter, const char *description, const char *id, const char *vendorId,
+                                   const char *productId, const char *version, const char *location, const char *type)
 {
-   return adapterFindDevice(adapter, device_id);
+   return adapterFindFirstDevice(adapter, description, id, vendorId, productId, version, location, type);
 }
 
-Service   *homePortFindService   (Device *device, char *service_id)
+Service *homePortFindFirstService (Device *device, const char *description, const int  *isActuator, const char *type,
+                                   const char *unit, const char *id, const char *uri)
 {
-   return deviceFindService(device, service_id);
+   return deviceFindFirstService(device, description, isActuator, type, unit, id, uri);
 }
 
 

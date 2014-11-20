@@ -98,22 +98,22 @@ configurationRemoveAdapter(Adapter *adapter )
 
 
 Adapter*
-configurationFindAdapter(Configuration *configuration, char *adapter_id)
+configurationFindFirstAdapter(Configuration *configuration,
+      const char *id,
+      const char *network)
 {
-  if( configuration== NULL || adapter_id == NULL ) return NULL;
+  if( configuration== NULL ) return NULL;
 
   Adapter *iterator = NULL;
 
   DL_FOREACH( configuration->adapter_head, iterator )
   {
-    if( strcmp ( adapter_id, iterator->id ) == 0 )
-    {
-      return iterator;
-    }			
+    if ( id == NULL || (iterator->id != NULL && strcmp(id, iterator->id) == 0) )
+      if ( network == NULL || (iterator->network != NULL && strcmp(network, iterator->network) == 0) )
+        return iterator;
   }
   
   return NULL;
-
 }
 
 mxml_node_t*

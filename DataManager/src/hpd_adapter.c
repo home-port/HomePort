@@ -112,22 +112,32 @@ adapterRemoveDevice(Device *device)
 }
 
 Device*
-adapterFindDevice(Adapter *adapter, char *device_id)
+adapterFindFirstDevice(Adapter *adapter,
+      const char *description,
+      const char *id,
+      const char *vendorId,
+      const char *productId,
+      const char *version,
+      const char *location,
+      const char *type)
 {
-  if( adapter== NULL || device_id == NULL ) return NULL;
+  if( adapter== NULL ) return NULL;
 
   Device *iterator=NULL;
 
   DL_FOREACH( adapter->device_head, iterator )
   {
-    if( iterator->id != NULL && strcmp ( device_id, iterator->id ) == 0 )
-    {
-      return iterator;
-    }			
+    if ( description == NULL || (iterator->description != NULL && strcmp(description, iterator->description) == 0) )
+      if ( id == NULL || (iterator->id != NULL && strcmp(id, iterator->id) == 0) )
+        if ( vendorId == NULL || (iterator->vendorId != NULL && strcmp(vendorId, iterator->vendorId) == 0) )
+          if ( productId == NULL || (iterator->productId != NULL && strcmp(productId, iterator->productId) == 0) )
+            if ( version == NULL || (iterator->version != NULL && strcmp(version, iterator->version) == 0) )
+              if ( location == NULL || (iterator->location != NULL && strcmp(location, iterator->location) == 0) )
+                if ( type == NULL || (iterator->type != NULL && strcmp(type, iterator->type) == 0) )
+                  return iterator;
   }
   
   return NULL;
-
 }
 
 mxml_node_t*
