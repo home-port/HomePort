@@ -198,14 +198,15 @@ Service *homePortFindFirstService (Device *device, const char *description, cons
                                    const char *unit, const char *id, const char *uri);
 
 // Communication interface
-void      homePortRespond            (Service *service, Request req, const char *val, size_t len);
-void      homePortChanged            (Service *service, const char *val, size_t len);
-void      homePortGet                (Service *service, Request req);
-void      homePortSet                (Service *service, const char *val, size_t len, Request req);
-Listener *homePortNewServiceListener (Service *srv, val_cb on_change, void *data);
-Listener *homePortNewDeviceListener  (HomePort *hp, dev_cb on_attach, dev_cb on_detach, void *data);
-void      homePortFreeListener       (Listener *l);
-void      homePortSubscribe          (Listener *l);
-void      homePortUnsubscribe        (Listener *l);
+void      homePortRespond               (Service *service, Request req, const char *val, size_t len);
+void      homePortChanged               (Service *service, const char *val, size_t len);
+void      homePortGet                   (Service *service, Request req);
+void      homePortSet                   (Service *service, const char *val, size_t len, Request req);
+Listener *homePortNewServiceListener    (Service *srv, val_cb on_change, void *data);
+Listener *homePortNewDeviceListener     (HomePort *hp, dev_cb on_attach, dev_cb on_detach, void *data);
+void      homePortFreeListener          (Listener *l);
+void      homePortSubscribe             (Listener *l);
+void      homePortUnsubscribe           (Listener *l);
+void      homePortForAllAttachedDevices (Listener *l);
 
 #endif

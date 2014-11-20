@@ -89,7 +89,7 @@ Listener *homePortNewDeviceListener(HomePort *hp, dev_cb on_attach, dev_cb on_de
 void homePortFreeListener(Listener *l)
 {
    if (l->subscribed) {
-      fprintf(stderr, "Please unsubscribe listener before freeing it");
+      fprintf(stderr, "Please unsubscribe listener before freeing it\n");
       return;
    }
    free(l);
@@ -98,7 +98,7 @@ void homePortFreeListener(Listener *l)
 void homePortSubscribe(Listener *l)
 {
    if (l->subscribed) {
-      fprintf(stderr, "Listener already subscribed, ignoring request");
+      fprintf(stderr, "Listener already subscribed, ignoring request\n");
       return;
    }
 
@@ -130,4 +130,26 @@ void homePortUnsubscribe(Listener *l)
    l->subscribed = 0;
 }
 
+void homePortForAllAttachedDevices (Listener *l)
+{
+   Configuration *c = l->homeport->configuration;
+   Adapter *a;
+   Device *d;
+
+   if (l->type != DEVICE_LISTENER) {
+      fprintf(stderr, "Listener must be a device listener\n");
+      return;
+   }
+
+   if (l->on_attach) {
+      fprintf(stderr, "Listener does not have an on_attach function, skipping");
+      return;
+   }
+   
+   DL_FOREACH(c->adapter_head, a) {
+      DL_FOREACH(a->device_head, d) {
+         if (d->attached) l->on_attach(l->data, d);
+      }
+   }
+}
 
