@@ -160,6 +160,7 @@ struct Listener {
    };
    // User data
    void          *data;
+   free_f         on_free;
 };
 
 /* Note on homePort functions and const keyword on the above structs is really a hack and we DO change them inside homeport */
@@ -202,8 +203,8 @@ void      homePortRespond               (Service *service, Request req, const ch
 void      homePortChanged               (Service *service, const char *val, size_t len);
 void      homePortGet                   (Service *service, Request req);
 void      homePortSet                   (Service *service, const char *val, size_t len, Request req);
-Listener *homePortNewServiceListener    (Service *srv, val_cb on_change, void *data);
-Listener *homePortNewDeviceListener     (HomePort *hp, dev_cb on_attach, dev_cb on_detach, void *data);
+Listener *homePortNewServiceListener    (Service *srv, val_cb on_change, void *data, free_f on_free);
+Listener *homePortNewDeviceListener     (HomePort *hp, dev_cb on_attach, dev_cb on_detach, void *data, free_f on_free);
 void      homePortFreeListener          (Listener *l);
 void      homePortSubscribe             (Listener *l);
 void      homePortUnsubscribe           (Listener *l);

@@ -88,6 +88,12 @@ homePortDetachDevice( HomePort *homeport, Device *device )
     //if(rc < HPD_E_SUCCESS && rc != HPD_E_SERVICE_NOT_REGISTER) return rc;
     if (rc != HPD_E_SUCCESS)
       fprintf(stderr, "Unregistering service failed with error code %d\n", rc);
+
+    // Free listeners
+    Listener *l, *tmp;
+    DL_FOREACH_SAFE(iterator->listener_head, l, tmp) {
+       homePortFreeListener(l);
+    }
   }
 
   // Inform

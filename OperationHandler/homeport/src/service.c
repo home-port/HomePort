@@ -32,6 +32,7 @@
 #include "json.h"
 #include "xml.h"
 #include <ev.h>
+#include "utlist.h"
 
 /**
  * Creates a HomePort structure
@@ -84,6 +85,11 @@ homePortFree(HomePort *homeport)
 {
   if(homeport != NULL)
   {
+    // Free listeners
+    Listener *l, *tmp;
+    DL_FOREACH_SAFE(homeport->configuration->listener_head, l, tmp) {
+       homePortFreeListener(l);
+    }
     lr_destroy(homeport->rest_interface);
     configurationFree(homeport->configuration);
     free(homeport);

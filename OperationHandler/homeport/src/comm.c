@@ -59,7 +59,7 @@ void homePortChanged(Service *service, const char *val, size_t len)
   }
 }
 
-Listener *homePortNewServiceListener(Service *srv, val_cb on_change, void *data)
+Listener *homePortNewServiceListener(Service *srv, val_cb on_change, void *data, free_f on_free)
 {
    Listener *l = malloc(sizeof(Listener));
    l->type = SERVICE_LISTENER;
@@ -67,12 +67,13 @@ Listener *homePortNewServiceListener(Service *srv, val_cb on_change, void *data)
    l->service = srv;
    l->on_change = on_change;
    l->data = data;
+   l->on_free = on_free;
    l->next = NULL;
    l->prev = NULL;
    return l;
 }
 
-Listener *homePortNewDeviceListener(HomePort *hp, dev_cb on_attach, dev_cb on_detach, void *data)
+Listener *homePortNewDeviceListener(HomePort *hp, dev_cb on_attach, dev_cb on_detach, void *data, free_f on_free)
 {
    Listener *l = malloc(sizeof(Listener));
    l->type = DEVICE_LISTENER;
@@ -81,6 +82,7 @@ Listener *homePortNewDeviceListener(HomePort *hp, dev_cb on_attach, dev_cb on_de
    l->on_attach = on_attach;
    l->on_detach = on_detach;
    l->data = data;
+   l->on_free = on_free;
    l->next = NULL;
    l->prev = NULL;
    return l;
@@ -92,6 +94,7 @@ void homePortFreeListener(Listener *l)
       fprintf(stderr, "Please unsubscribe listener before freeing it\n");
       return;
    }
+   if (l->on_free) l->on_free(l->data);
    free(l);
 }
 
