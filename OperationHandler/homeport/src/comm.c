@@ -33,13 +33,15 @@ authors and should not be interpreted as representing official policies, either 
 #include <stdio.h>
 #include <string.h>
 
-void homePortGet(Service *service, Request req)
+void homePortGet(Service *service, val_cb on_response, void *data)
 {
+   Request req = { on_response, data };
    service->getFunction(service, req);
 }
 
-void homePortSet(Service *service, const char *val, size_t len, Request req)
+void homePortSet(Service *service, const char *val, size_t len, val_cb on_response, void *data)
 {
+   Request req = { on_response, data };
    service->putFunction(service, req, val, len);
 }
 

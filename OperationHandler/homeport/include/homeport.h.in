@@ -201,8 +201,8 @@ Service *homePortFindFirstService (Device *device, const char *description, cons
 // Communication interface
 void      homePortRespond               (Service *service, Request req, const char *val, size_t len);
 void      homePortChanged               (Service *service, const char *val, size_t len);
-void      homePortGet                   (Service *service, Request req);
-void      homePortSet                   (Service *service, const char *val, size_t len, Request req);
+void      homePortGet                   (Service *service, val_cb on_response, void *data);
+void      homePortSet                   (Service *service, const char *val, size_t len, val_cb on_response, void *data);
 Listener *homePortNewServiceListener    (Service *srv, val_cb on_change, void *data, free_f on_free);
 Listener *homePortNewDeviceListener     (HomePort *hp, dev_cb on_attach, dev_cb on_detach, void *data, free_f on_free);
 void      homePortFreeListener          (Listener *l);

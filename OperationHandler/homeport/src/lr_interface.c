@@ -84,7 +84,7 @@ getState(void *srv_data, void **req_data, struct lr_request *req, const char *bo
 
   // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
   lr_request_keep_open(req);
-  homePortGet(service, (Request){sendState, req});
+  homePortGet(service, sendState, req);
 
   // Stop parsing request, we don't need the body anyways
   return 1;
@@ -150,7 +150,7 @@ setState(void *srv_data, void **req_data, struct lr_request *req, const char *bo
   // Call callback
   // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
   lr_request_keep_open(req);
-  homePortSet(service, value, strlen(value), (Request){sendState, req});
+  homePortSet(service, value, strlen(value), sendState, req);
 
   if(freeValue) free(value);
 
