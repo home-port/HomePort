@@ -52,7 +52,7 @@ struct HomePort
 {
    ${C} struct lr *rest_interface;
    ${C} Configuration *configuration;
-   ${C} struct ev_loop *loop;
+   struct ev_loop * ${C} loop;
 };
 
 struct Configuration
