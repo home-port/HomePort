@@ -92,6 +92,7 @@ homePortDetachDevice( HomePort *homeport, Device *device )
     // Free listeners
     Listener *l, *tmp;
     DL_FOREACH_SAFE(iterator->listener_head, l, tmp) {
+       homePortUnsubscribe(l);
        homePortFreeListener(l);
     }
   }
