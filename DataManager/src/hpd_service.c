@@ -30,11 +30,13 @@
  * @author Regis Louge
  */
 
-#include <stdio.h>
-#include "hpd_service.h"
+#include "dm_internal.h"
+#include "hp_macros.h"
+#include "idgen.h"
 #include "utlist.h"
 #include "hpd_error.h"
-#include "hp_macros.h"
+
+#define SERVICE_ID_SIZE 4
 
 /**
  * Creates the structure Service with all its parameters
@@ -65,19 +67,21 @@
  */
 Service* 
 serviceNew(
-    const char *description,
-    int isActuator,
-    const char *type,
-    const char *unit,
-    serviceGetFunction getFunction,
-    servicePutFunction putFunction,
-    Parameter *parameter,
-    void* data)
+      Device *device,
+      const char *description,
+      int isActuator,
+      const char *type,
+      const char *unit,
+      serviceGetFunction getFunction,
+      servicePutFunction putFunction,
+      Parameter *parameter,
+      void* data, free_f free_data)
 {
   Service *service;
-
   alloc_struct(service);
 
+  service->listener_head = NULL;
+  service->device = NULL;
   service->id = NULL;
   service->uri = NULL;
 
@@ -96,6 +100,9 @@ serviceNew(
   service->putFunction = putFunction;
 
   service->data = data;
+  service->free_data = free_data;
+
+  deviceAddService(device, service);
 
   return service;
 
@@ -122,12 +129,14 @@ serviceFree( Service *service )
 
   if( service != NULL )
   {
+     deviceRemoveService(service);
     free_pointer(service->description);
     free_pointer(service->type);
     free_pointer(service->unit);
     free_pointer(service->id);
     free_pointer(service->uri);
     parameterFree(service->parameter);
+    if (service->free_data) service->free_data(service->data);
     free(service);
   }
 }
@@ -275,39 +284,70 @@ serviceToJson(Service *service)
   return serviceJson;
 }
 
-void
-serviceSetId( Service *service, char *id )
+int
+serviceGenerateId(Service *service)
 {
-  service->id = id;
+   if (service->id) return HPD_E_ID_ALREADY_SET;
+   Device *device = service->device;
+   char *service_id = (char*)malloc((SERVICE_ID_SIZE+1)*sizeof(char));
+   if (!service_id) return HPD_E_MALLOC_ERROR;
+   do{
+      rand_str(service_id, SERVICE_ID_SIZE);
+   }while(deviceFindService(device, service_id) != NULL);
+
+   service->id = service_id;
+   return HPD_E_SUCCESS;
 }
 
-void
-serviceSetUri( Service *service, char *uri )
+int
+serviceGenerateUri( Service *service )
 {
-  service->uri = uri;
+   int rc;
+   Device *device = service->device;
+
+   rc = serviceGenerateId(service);
+   if (rc != HPD_E_SUCCESS && rc != HPD_E_ID_ALREADY_SET)
+      return rc;
+
+   rc = deviceGenerateId(device);
+   if (rc != HPD_E_SUCCESS && rc != HPD_E_ID_ALREADY_SET)
+      return rc;
+
+   char *uri = malloc((strlen(device->type)+strlen(device->id)+strlen(service->type)+strlen(service->id)+4+1)*sizeof(char));
+   if( uri == NULL )
+      return HPD_E_MALLOC_ERROR;
+   uri[0] = '\0';
+   strcat(uri, "/");
+   strcat(uri, device->type);
+   strcat(uri, "/");
+   strcat(uri, device->id);
+   strcat(uri, "/");
+   strcat(uri, service->type);
+   strcat(uri, "/");
+   strcat(uri, service->id);
+
+   service->uri = uri;
+   return HPD_E_SUCCESS;
 }
 
-ServiceElement* 
-serviceElementNew( Service *service )
+int
+serviceAddListener(Service *service, Listener *l)
 {
-  ServiceElement *serviceElement;
-  alloc_struct(serviceElement);
-
-  null_nok_pointer_ass(serviceElement->service, service);
-
-  return serviceElement;
-
-cleanup:
-  serviceElementFree(serviceElement);
-  return NULL;
+   if( service == NULL || l == NULL ) 
+      return HPD_E_NULL_POINTER;
+   
+   DL_APPEND( service->listener_head, l);
+   return HPD_E_SUCCESS;
 }
 
-
-void 
-serviceElementFree( ServiceElement *serviceElement )
+int 
+serviceRemoveListener(Service *service, Listener *l)
 {
-  free_pointer(serviceElement);
+   if( service == NULL || l == NULL ) return HPD_E_NULL_POINTER;
+   DL_DELETE( service->listener_head, l );
+   return HPD_E_SUCCESS; 
 }
+
 
 /**
  * Creates the structure Parameter with all its parameters

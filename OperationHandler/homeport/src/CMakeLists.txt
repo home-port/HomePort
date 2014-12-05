@@ -30,15 +30,20 @@
 
 # Main library
 add_library(hpd SHARED
-      homeport.c
+      service.c
+      comm.c
+      config.c
+      xml.c
+      json.c
+      lr_interface.c
       ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_adapter.c
       ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_configuration.c
       ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_device.c
       ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_service.c
       
       )
-#TODO microhttpd should be removed here when the time is right :)
-target_link_libraries(hpd config pthread uuid libREST mxml idgen jansson )
+#target_link_libraries(hpd config pthread uuid libREST mxml idgen jansson )
+target_link_libraries(hpd libREST idgen jansson mxml)
 install (TARGETS hpd DESTINATION lib)
 set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
 

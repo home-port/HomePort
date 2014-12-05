@@ -23,38 +23,9 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-/**
- * @file hpd_configuration.h
- * @brief  Methods for managing the configuration structure
- * @author Thibaut Le Guilly
- */
+#include "homeport.h"
+   
+char *jsonGetConfiguration(HomePort *homeport);
+char *jsonGetState(char *state);
 
-#ifndef CONFIGURATION_H
-#define CONFIGURATION_H
-
-#include "hpd_adapter.h"
-
-#define ADAPTER_ID_SIZE 2
-
-/**
- * The structure Configuration containing all the Attributes that a Configuration possesses
- */
-typedef struct Configuration Configuration;
-
-struct Configuration
-{
-  AdapterElement *adapter_head;
-};
-
-Configuration* 	configurationNew();
-void 		configurationFree(Configuration *config);
-int 		configurationAddAdapter(Configuration *config, Adapter *adapter);
-int 		configurationRemoveAdapter( Configuration *configuration, Adapter *adapter );
-Adapter* 	findAdapter(Configuration *configuration, char *adapter_id);
-mxml_node_t* 	configurationToXml(Configuration *configuration, mxml_node_t *parent);
-json_t* 	configurationToJson(Configuration *configuration);
-char* 		confGenerateDeviceId(Configuration *conf);
-
-#endif
-
-
+const char *jsonParseState(char *json_value);

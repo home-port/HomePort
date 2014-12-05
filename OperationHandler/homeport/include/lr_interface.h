@@ -23,51 +23,16 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-/**
- * @file hpd_adapter.h
- * @brief  Methods for managing the Service structure
- * @author Thibaut Le Guilly
- */
+#ifndef LR_INTERFACE_H
+#define LR_INTERFACE_H
 
-#ifndef ADAPTER_H
-#define ADAPTER_H
+#include "homeport.h"
+#include <stddef.h>
 
-#include "hpd_device.h"
+struct lr_request;
 
-#define DEVICE_ID_SIZE 4
-
-/**
- * The structure Adapter containing all the Attributes that an Adapter possesses
- */
-typedef struct Adapter Adapter;
-typedef struct AdapterElement AdapterElement;
-
-struct Adapter
-{
-  char *id;
-  char *network;
-  void *data;
-  DeviceElement *device_head;
-};
-
-Adapter* 	adapterNew( const char *network, void *data );
-void 		adapterFree( Adapter *adapter );
-int 		adapterAddDevice(Adapter *adapter, Device *device, char *deviceId);
-int 		adapterRemoveDevice(Adapter *adapter, Device *device);
-Device* 	findDevice(Adapter *adapter, char *device_id);
-mxml_node_t* 	adapterToXml(Adapter *adapter, mxml_node_t *parent);
-json_t* 	adapterToJson(Adapter *adapter);
-void 		adapterSetId( Adapter *adapter, char *id );
-
-struct AdapterElement
-{
-  Adapter *adapter;
-  AdapterElement *next;
-  AdapterElement *prev;
-};
-
-AdapterElement*	adapterElementNew(Adapter *adapter);
-void 		adapterElementFree(AdapterElement *adapterElement);
-
+int lri_registerService(HomePort *homeport, Service *service);
+int lri_unregisterService( HomePort *homeport, char* uri );
+int lri_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
 
 #endif

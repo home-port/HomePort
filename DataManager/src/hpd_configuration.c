@@ -29,12 +29,11 @@
  * @author Thibaut Le Guilly
  */
 
-
-#include "hpd_configuration.h"
+#include "dm_internal.h"
 #include "hp_macros.h"
-
-char *confGenerateAdapterId(Configuration *conf);
-AdapterElement* findAdapterElement(Configuration *configuration, char *adapter_id);
+#include "hpd_error.h"
+#include "utlist.h"
+#include "idgen.h"
 
 Configuration*
 configurationNew()
@@ -47,6 +46,7 @@ cleanup:
   return NULL;
 }
 
+
 void
 configurationFree(Configuration *config)
 {
@@ -54,11 +54,11 @@ configurationFree(Configuration *config)
   {
     if( config->adapter_head != NULL )
     {
-      AdapterElement *iterator, *tmp;
+      Adapter *iterator, *tmp;
       DL_FOREACH_SAFE( config->adapter_head, iterator, tmp )
       {
 	DL_DELETE(config->adapter_head, iterator);
-	adapterElementFree(iterator);
+   iterator->configuration = NULL;
       }
     }
     free_pointer(config);
@@ -71,78 +71,49 @@ configurationAddAdapter(Configuration *configuration, Adapter *adapter)
 {
   if(configuration == NULL || adapter == NULL) return HPD_E_NULL_POINTER;
 
-  char *adapterId = confGenerateAdapterId( configuration );
-  if( adapterId == NULL )
-    return HPD_E_NULL_POINTER;
-
-  adapterSetId( adapter, adapterId );
-
-  AdapterElement *adapterElement = NULL;
-
-  adapterElement = adapterElementNew( adapter );
-  if( adapterElement == NULL )
-  {
-    adapterSetId( adapter, NULL );
-    free(adapterId);
-    return HPD_E_NULL_POINTER;
+  adapter->configuration = configuration;
+  int stat = adapterGenerateId(adapter);
+  if (stat) {
+     adapter->configuration = NULL;
+     return stat;
   }
 
-  DL_APPEND( configuration->adapter_head, adapterElement);
+  DL_APPEND( configuration->adapter_head, adapter);
 
   return HPD_E_SUCCESS;
 }
 
 int 
-configurationRemoveAdapter( Configuration *configuration, Adapter *adapter )
+configurationRemoveAdapter(Adapter *adapter )
 {
+  if(adapter == NULL ) return HPD_E_NULL_POINTER;
+  Configuration *configuration = adapter->configuration;
+  if( configuration == NULL) return HPD_E_NULL_POINTER;
 
-  if( configuration == NULL || adapter == NULL ) return HPD_E_NULL_POINTER;
-
-  AdapterElement *adapterElement = findAdapterElement(configuration, adapter->id);
-  if(adapterElement == NULL)
-  {
-    return -1;
-  }
-
-  DL_DELETE(configuration->adapter_head, adapterElement);
-  adapterElementFree(adapterElement);
+  DL_DELETE(configuration->adapter_head, adapter);
+  adapter->configuration = NULL;
 
   return HPD_E_SUCCESS;
 }
 
 
-AdapterElement*
-findAdapterElement(Configuration *configuration, char *adapter_id)
+Adapter*
+configurationFindFirstAdapter(Configuration *configuration,
+      const char *id,
+      const char *network)
 {
-  if( configuration== NULL || adapter_id == NULL ) return NULL;
+  if( configuration== NULL ) return NULL;
 
-  AdapterElement *iterator = NULL;
+  Adapter *iterator = NULL;
 
   DL_FOREACH( configuration->adapter_head, iterator )
   {
-    if( strcmp ( adapter_id, iterator->adapter->id ) == 0 )
-    {
-      return iterator;
-    }			
+    if ( id == NULL || (iterator->id != NULL && strcmp(id, iterator->id) == 0) )
+      if ( network == NULL || (iterator->network != NULL && strcmp(network, iterator->network) == 0) )
+        return iterator;
   }
   
   return NULL;
-}
-
-Adapter*
-findAdapter(Configuration *configuration, char *adapter_id)
-{
-  if(configuration == NULL || adapter_id == NULL ) return NULL;
-
-  AdapterElement *adapterElement;
-
-  if( ( adapterElement = findAdapterElement(configuration, adapter_id) ) )
-  {
-    return adapterElement->adapter;
-  }
-
-  return NULL;
-
 }
 
 mxml_node_t*
@@ -152,11 +123,11 @@ configurationToXml(Configuration *configuration, mxml_node_t *parent)
 
   configXml = mxmlNewElement(parent, "configuration");
 
-  AdapterElement *iterator;
+  Adapter *iterator;
 
   DL_FOREACH(configuration->adapter_head, iterator)
   {
-    adapterToXml(iterator->adapter, configXml);
+    adapterToXml(iterator, configXml);
   }
 
   return configXml;
@@ -174,7 +145,7 @@ configurationToJson(Configuration *configuration)
     goto error;
   }
 
-  AdapterElement *iterator;
+  Adapter *iterator;
 
   if( ( adapterArray = json_array() ) == NULL )
   {
@@ -183,7 +154,7 @@ configurationToJson(Configuration *configuration)
 
   DL_FOREACH(configuration->adapter_head, iterator)
   {
-    adapter = adapterToJson(iterator->adapter);
+    adapter = adapterToJson(iterator);
     if( ( adapter == NULL ) || ( json_array_append_new(adapterArray, adapter) != 0 ) )
     {
       goto error;
@@ -203,40 +174,22 @@ error:
   return NULL;
 }
 
-char *confGenerateAdapterId(Configuration *conf)
-{
-  char *adapter_id = (char*)malloc((ADAPTER_ID_SIZE+1)*sizeof(char));
-  if( adapter_id == NULL )
-    return NULL;
-  do{
-    rand_str(adapter_id, ADAPTER_ID_SIZE);
-  }while(findAdapter(conf, adapter_id) != NULL);
-
-  return adapter_id;
-}
-
 int
-confDeviceIdExists(Configuration *conf, char *deviceId)
+configurationAddListener(Configuration *configuration, Listener *l)
 {
-  AdapterElement *iterator = NULL;
-  DL_FOREACH( conf->adapter_head, iterator )
-  {
-   if(findDevice(iterator->adapter, deviceId) != NULL)
-   {
-     return 1;
-   }
-  }
-  return 0;
+   if( configuration == NULL || l == NULL ) 
+      return HPD_E_NULL_POINTER;
+   
+   DL_APPEND( configuration->listener_head, l);
+   return HPD_E_SUCCESS;
 }
 
-char *confGenerateDeviceId(Configuration *conf)
+int 
+configurationRemoveListener(Configuration *configuration, Listener *l)
 {
-  char *deviceId = malloc((DEVICE_ID_SIZE+1)*sizeof(char));
-  if( deviceId == NULL )
-    return NULL;
-  do{
-    rand_str(deviceId, DEVICE_ID_SIZE);
-  }while(confDeviceIdExists(conf, deviceId) != 0);
-
-  return deviceId;
+   if( configuration == NULL || l == NULL ) return HPD_E_NULL_POINTER;
+   DL_DELETE( configuration->listener_head, l );
+   return HPD_E_SUCCESS; 
 }
+
+

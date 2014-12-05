@@ -30,10 +30,13 @@
  * @author Regis Louge
  */
 
-#include "hpd_device.h"
+#include "dm_internal.h"
 #include "hp_macros.h"
+#include "hpd_error.h"
+#include "utlist.h"
+#include "idgen.h"
 
-char *deviceGenerateServiceId(Device *device);
+#define DEVICE_ID_SIZE 4
 
 /**
  * Create the structure Device with all its parameters
@@ -67,17 +70,20 @@ char *deviceGenerateServiceId(Device *device);
  */
 Device* 
 deviceNew(
+      Adapter *adapter,
     const char *description,
     const char *vendorId,
     const char *productId,
     const char *version,
     const char *location,
-    const char *type)
+    const char *type,
+    void * data, free_f free_data)
 {
   Device *device;
 
   alloc_struct(device);
 
+  device->attached = 0;
   device->id = NULL;
 
   null_ok_string_copy(device->description, description);
@@ -88,6 +94,12 @@ deviceNew(
   null_nok_string_copy(device->type, type);
 
   device->service_head = NULL;
+  device->adapter = NULL;
+
+  device->data = data;
+  device->free_data = free_data;
+
+  adapterAddDevice(adapter, device);
 
   return device;
 
@@ -114,6 +126,7 @@ deviceFree( Device *device )
 
   if( device != NULL)
   {
+     adapterRemoveDevice(device);
     free_pointer(device->description);
     free_pointer(device->id);
     free_pointer(device->vendorId);
@@ -124,14 +137,14 @@ deviceFree( Device *device )
 
     if( device->service_head )
     {
-      ServiceElement *iterator = NULL, *tmp = NULL;
+      Service *iterator = NULL, *tmp = NULL;
       DL_FOREACH_SAFE( device->service_head, iterator, tmp)
       {
-	DL_DELETE( device->service_head, iterator );
-	serviceElementFree(iterator);
+         serviceFree(iterator);
       }
     }
 
+    if (device->free_data) device->free_data(device->data);
     free(device);
   }
 }
@@ -148,33 +161,14 @@ deviceFree( Device *device )
 int 
 deviceAddService( Device *device, Service *service )
 {
-
   if( service == NULL || device == NULL ) 
     return HPD_E_NULL_POINTER;
 
-  char *deviceId = NULL;
-  
-  deviceId = deviceGenerateServiceId( device );
-  if( deviceId == NULL )
-    return HPD_E_MALLOC_ERROR;
-
-  serviceSetId( service, deviceId );
-
-  ServiceElement *serviceElement;
-
-  serviceElement = serviceElementNew( service );
-  if( serviceElement == NULL )
-  {
-    serviceSetId( service, NULL );
-    free(deviceId);
-    return HPD_E_MALLOC_ERROR;
-  }
-
-  DL_APPEND( device->service_head, serviceElement);
+  service->device = device;
+  DL_APPEND( device->service_head, service);
 
   return HPD_E_SUCCESS;
 }
-
 
 /**
  * Removes a Service from the Device
@@ -186,60 +180,55 @@ deviceAddService( Device *device, Service *service )
  * @return returns A HPD error code
  */
 int 
-deviceRemoveService( Device *device, Service *service )
+deviceRemoveService( Service *service )
 {
+   Device *device = service->device;
+   if( service == NULL || device == NULL ) return HPD_E_NULL_POINTER;
 
-  if( service == NULL || device == NULL ) return HPD_E_NULL_POINTER;
+   Service *iterator, *tmp;
 
-  ServiceElement *iterator, *tmp;
+   service->device = NULL;
 
-  DL_FOREACH_SAFE( device->service_head, iterator, tmp )
-  {
-    if( strcmp( service->type, iterator->service->type ) == 0
-	&& strcmp ( service->id, iterator->service->id ) == 0 )
-    {
-      DL_DELETE( device->service_head, iterator );
-      serviceElementFree( iterator );
-      iterator = NULL;
-      return HPD_E_SUCCESS; 
-    }			
-  }
+   DL_FOREACH_SAFE( device->service_head, iterator, tmp )
+   {
+     if( strcmp( service->type, iterator->type ) == 0
+    && strcmp ( service->id, iterator->id ) == 0 )
+     {
+       DL_DELETE( device->service_head, iterator );
+       iterator->device = NULL;
+       iterator = NULL;
+       return HPD_E_SUCCESS; 
+     }			
+   }
 
-  return -1;
-}
-
-ServiceElement*
-findServiceElement(Device *device, char *service_id)
-{
-  if(device == NULL || service_id == NULL ) return NULL;
-
-  ServiceElement *iterator;
-
-  DL_FOREACH( device->service_head, iterator )
-  {
-    if( strcmp ( service_id, iterator->service->id ) == 0 )
-    {
-      return iterator;
-    }			
-  }
-  
-  return NULL;
+   return -1;
 }
 
 Service*
-findService(Device *device, char *service_id)
+deviceFindFirstService(Device *device,
+      const char *description,
+      const int  *isActuator,
+      const char *type,
+      const char *unit,
+      const char *id,
+      const char *uri)
 {
-  if(device == NULL || service_id == NULL ) return NULL;
+  if (device == NULL) return NULL;
 
-  ServiceElement *serviceElement;
+  Service *iterator;
 
-  if( ( serviceElement = findServiceElement(device, service_id) ) )
+  DL_FOREACH( device->service_head, iterator )
   {
-    return serviceElement->service;
+    if ( description == NULL || (iterator->description != NULL && strcmp(description, iterator->description) == 0) )
+      if ( isActuator == NULL || *isActuator == iterator->isActuator )
+        if ( type == NULL || (iterator->type != NULL && strcmp(type, iterator->type) == 0) )
+          if ( unit == NULL || (iterator->unit != NULL && strcmp(unit, iterator->unit) == 0) )
+            if ( id == NULL || (iterator->id != NULL && strcmp(id, iterator->id) == 0) )
+              if ( uri == NULL || (iterator->uri != NULL && strcmp(uri, iterator->uri) == 0) )
+                return iterator;
   }
 
   return NULL;
-
 }
 
 mxml_node_t*
@@ -258,11 +247,11 @@ deviceToXml(Device *device, mxml_node_t *parent)
   if(device->location != NULL) mxmlElementSetAttr(deviceXml, "location", device->location);
   if(device->type != NULL) mxmlElementSetAttr(deviceXml, "type", device->type);
 
-  ServiceElement *iterator;
+  Service *iterator;
 
   DL_FOREACH( device->service_head, iterator )
   {
-    serviceToXml(iterator->service, deviceXml);
+    serviceToXml(iterator, deviceXml);
   }
 
   return deviceXml;
@@ -329,7 +318,7 @@ deviceToJson(Device *device)
     }
   }
 
-  ServiceElement *iterator;
+  Service *iterator;
 
   if( ( serviceArray = json_array() ) == NULL )
   {
@@ -338,7 +327,7 @@ deviceToJson(Device *device)
 
   DL_FOREACH( device->service_head, iterator )
   {
-    if( json_array_append_new(serviceArray, serviceToJson(iterator->service)) != 0 )
+    if( json_array_append_new(serviceArray, serviceToJson(iterator)) != 0 )
     {
       return NULL;
     }
@@ -350,51 +339,38 @@ deviceToJson(Device *device)
   }
 
   return deviceJson;
-error:
-  if(value) json_decref(value);
-  if(serviceArray) json_decref(serviceArray);
-  if(deviceJson) json_decref(deviceJson);
+//error:
+//  if(value) json_decref(value);
+//  if(serviceArray) json_decref(serviceArray);
+//  if(deviceJson) json_decref(deviceJson);
 }
 
-DeviceElement* 
-deviceElementNew( Device *device )
+static int
+idExists(Configuration *conf, char *deviceId)
 {
-  DeviceElement *to_create;
-
-  if( !device )
-    return NULL;
-
-  to_create = (DeviceElement*)malloc(sizeof(DeviceElement));
-  if( !to_create )
-    return NULL;
-
-  to_create->device = device;
-
-  to_create->next = NULL;
-  to_create->prev = NULL;
-
-  return to_create;
+  Adapter *iterator = NULL;
+  DL_FOREACH( conf->adapter_head, iterator )
+  {
+   if(adapterFindDevice(iterator, deviceId) != NULL)
+   {
+     return 1;
+   }
+  }
+  return 0;
 }
 
-void 
-deviceElementFree( DeviceElement *deviceElement )
+int deviceGenerateId(Device *device)
 {
-  free_pointer(deviceElement);
+   if (device->id) return HPD_E_ID_ALREADY_SET;
+   Configuration *conf = device->adapter->configuration;
+
+   char *deviceId = malloc((DEVICE_ID_SIZE+1)*sizeof(char));
+   if (!deviceId) return HPD_E_MALLOC_ERROR;
+   do{
+     rand_str(deviceId, DEVICE_ID_SIZE);
+   }while(idExists(conf, deviceId) != 0);
+
+   device->id = deviceId;
+  return HPD_E_SUCCESS;
 }
 
-char*
-deviceGenerateServiceId(Device *device)
-{
-  char *service_id = (char*)malloc((SERVICE_ID_SIZE+1)*sizeof(char));
-  do{
-    rand_str(service_id, SERVICE_ID_SIZE);
-  }while(findService(device, service_id) != NULL);
-
-  return service_id;
-}
-
-void
-deviceSetId( Device *device, char *id )
-{
-  device->id = id;
-}
