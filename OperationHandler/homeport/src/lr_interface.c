@@ -66,6 +66,7 @@ sendState(Service *service, void *req, const char *val, size_t len)
      free(state);
      free(buffer);
    } else {
+     fprintf(stderr, "500 Internal Server Error: Expected non-zero length of value to send\n");
      lr_sendf(req, WS_HTTP_500, NULL, "Internal Server Error");
    }
 }
@@ -108,7 +109,7 @@ setState(void *srv_data, void **req_data, struct lr_request *req, const char *bo
     if (*req_data) len += strlen(req_str);
     str = realloc(*req_data, (len+1)*sizeof(char));
     if (!str) {
-      printf("Failed to allocate memory\n");
+      fprintf(stderr, "Failed to allocate memory\n");
       lr_sendf(req, WS_HTTP_500, NULL, "Internal server error");
       return 1;
     }
