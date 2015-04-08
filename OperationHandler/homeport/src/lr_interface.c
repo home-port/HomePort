@@ -127,11 +127,14 @@ setState(void *srv_data, void **req_data, struct lr_request *req, const char *bo
     lr_sendf(req, WS_HTTP_400, NULL, "400 Bad Request");
     return 1;
   }
-  if( ( contentType == NULL ) || ( strcmp(contentType, "application/xml") == 0 ) )
+  if( contentType == NULL || 
+        strcmp(contentType, "application/xml") == 0 || 
+        strncmp(contentType, "application/xml;", 17) == 0 )
   {
     value = xmlParseState(*req_data);
   }
-  else if( strcmp( contentType, "application/json" ) == 0 )
+  else if( strcmp( contentType, "application/json" ) == 0 ||
+        strncmp(contentType, "application/json;", 18) == 0 )
   {
     value = jsonParseState(*req_data);
     freeValue = 0;
