@@ -41,33 +41,37 @@ sendState(Service *service, void *req, const char *val, size_t len)
    struct lm *headersIn = lr_request_get_headers(req);
    struct lm *headers;
 
-   // Call callback and send response
-   buffer = malloc((len+1) * sizeof(char));
-   strncpy(buffer, val, len);
-   if (len) {
-     buffer[len] = '\0';
-     /*TODO Check header for XML or jSON*/
-     char *accept = lm_find( headersIn, "Accept" );
-     if( strcmp(accept, "application/json") == 0 )
-     {
-       state = jsonGetState(buffer);
-       headers =  lm_create();
-       lm_insert(headers, "Content-Type", "application/json");
-       lr_sendf(req, WS_HTTP_200, headers, state);
-     }
-     else
-     { 
-       state = xmlGetState(buffer);
-       headers =  lm_create();
-       lm_insert(headers, "Content-Type", "application/xml");
-       lr_sendf(req, WS_HTTP_200, headers, state);
-     }
-     lm_destroy(headers);
-     free(state);
-     free(buffer);
+   if (!val) {
+      lr_sendf(req, WS_HTTP_400, NULL, "Bad Request");
    } else {
-     fprintf(stderr, "500 Internal Server Error: Expected non-zero length of value to send\n");
-     lr_sendf(req, WS_HTTP_500, NULL, "Internal Server Error");
+      // Call callback and send response
+      buffer = malloc((len+1) * sizeof(char));
+      strncpy(buffer, val, len);
+      if (len) {
+        buffer[len] = '\0';
+        /*TODO Check header for XML or jSON*/
+        char *accept = lm_find( headersIn, "Accept" );
+        if( strcmp(accept, "application/json") == 0 )
+        {
+          state = jsonGetState(buffer);
+          headers =  lm_create();
+          lm_insert(headers, "Content-Type", "application/json");
+          lr_sendf(req, WS_HTTP_200, headers, state);
+        }
+        else
+        { 
+          state = xmlGetState(buffer);
+          headers =  lm_create();
+          lm_insert(headers, "Content-Type", "application/xml");
+          lr_sendf(req, WS_HTTP_200, headers, state);
+        }
+        lm_destroy(headers);
+        free(state);
+        free(buffer);
+      } else {
+        fprintf(stderr, "500 Internal Server Error: Expected non-zero length of value to send\n");
+        lr_sendf(req, WS_HTTP_500, NULL, "Internal Server Error");
+      }
    }
 }
 
