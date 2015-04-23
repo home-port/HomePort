@@ -39,14 +39,43 @@ typedef ${C}  struct Service Service;
 typedef ${C}  struct Parameter Parameter;
 typedef const struct Request Request;
 typedef ${C}  struct Listener Listener;
+typedef       enum error_code ErrorCode;
 
 typedef void (*free_f)             (void *data);
 typedef int  (*init_f)             (HomePort *homeport, void *data);
 typedef void (*deinit_f)           (HomePort *homeport, void *data);
+typedef void (*val_err_cb)         (Service *service, void *data, ErrorCode code, const char *val, size_t len);
 typedef void (*val_cb)             (Service *service, void *data, const char *val, size_t len);
 typedef void (*dev_cb)             (void *data, Device *device);
 typedef void (*serviceGetFunction) (Service* service, Request req);
 typedef void (*servicePutFunction) (Service* service, Request req, const char *put_value, size_t len);
+
+// HTTP status codes according to
+// http://www.w3.org/Protocols/rfc2616/rfc2616.html
+#define HTTP_STATUS_CODE_MAP(XX) \
+   XX(200,200 OK) \
+   XX(201,201 Created) \
+   XX(303,303 See Other) \
+   XX(400,400 Bad Request) \
+   XX(404,404 Not Found) \
+   XX(405,405 Method Not Allowed) \
+   XX(406,406 Not Acceptable) \
+   XX(408,408 Request Timeout) \
+   XX(415,415 Unsupported Media Type) \
+   XX(500,500 Internal Server Error) \
+   XX(504,504 Gateway Timeout)
+
+/// HTTP status codes
+/**
+ *  According to RFC 2616, see
+ *  http://www.w3.org/Protocols/rfc2616/rfc2616.html
+ */
+enum error_code
+{
+#define XX(num, str) ERR_##num = num,
+	HTTP_STATUS_CODE_MAP(XX)
+#undef XX
+};
 
 struct HomePort
 {
@@ -133,7 +162,7 @@ struct Parameter
 };
 
 struct Request {
-   val_cb on_response;
+   val_err_cb on_response;
    void *data;
 };
 
@@ -199,10 +228,10 @@ Service *homePortFindFirstService (Device *device, const char *description, cons
                                    const char *unit, const char *id, const char *uri);
 
 // Communication interface
-void      homePortRespond               (Service *service, Request req, const char *val, size_t len);
+void      homePortRespond               (Service *service, Request req, ErrorCode code, const char *val, size_t len);
 void      homePortChanged               (Service *service, const char *val, size_t len);
-void      homePortGet                   (Service *service, val_cb on_response, void *data);
-void      homePortSet                   (Service *service, const char *val, size_t len, val_cb on_response, void *data);
+void      homePortGet                   (Service *service, val_err_cb on_response, void *data);
+void      homePortSet                   (Service *service, const char *val, size_t len, val_err_cb on_response, void *data);
 Listener *homePortNewServiceListener    (Service *srv, val_cb on_change, void *data, free_f on_free);
 Listener *homePortNewDeviceListener     (HomePort *hp, dev_cb on_attach, dev_cb on_detach, void *data, free_f on_free);
 void      homePortFreeListener          (Listener *l);
