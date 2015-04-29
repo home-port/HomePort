@@ -46,6 +46,7 @@ sendState(Service *service, void *req, ErrorCode code, const char *val, size_t l
       buffer = malloc((len+1) * sizeof(char));
       strncpy(buffer, val, len);
       buffer[len] = '\0';
+      msg = buffer;
    } else {
 #define XX(num, str) case ERR_##num: buffer = #str; break;
       switch (code) {
