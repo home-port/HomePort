@@ -37,7 +37,7 @@
 static void
 sendState(Service *service, void *req, ErrorCode code, const char *val, size_t len)
 {
-   char *buffer = NULL, *state = NULL, *msg;
+   char *buffer = NULL, *state = NULL;
    struct lm *headersIn = lr_request_get_headers(req);
    struct lm *headers = NULL;
 
@@ -46,7 +46,6 @@ sendState(Service *service, void *req, ErrorCode code, const char *val, size_t l
       buffer = malloc((len+1) * sizeof(char));
       strncpy(buffer, val, len);
       buffer[len] = '\0';
-      msg = buffer;
    } else {
 #define XX(num, str) case ERR_##num: buffer = #str; break;
       switch (code) {
@@ -57,7 +56,6 @@ sendState(Service *service, void *req, ErrorCode code, const char *val, size_t l
             msg = "500 Internal Server Error: Unknown error code.";
       }
 #undef XX
-      len = strlen(msg);
    }
 
    if (code == ERR_200 && val) {
@@ -76,8 +74,8 @@ sendState(Service *service, void *req, ErrorCode code, const char *val, size_t l
       lr_sendf(req, WS_HTTP_200, headers, state);
       lm_destroy(headers);
    } else {
-      fprintf(stderr, "%s\n", msg);
-      lr_sendf(req, code, NULL, msg);
+      fprintf(stderr, "%s\n", buffer);
+      lr_sendf(req, code, NULL, buffer);
    }
 
    free(state);
@@ -149,7 +147,7 @@ setState(void *srv_data, void **req_data, struct lr_request *req, const char *bo
   else if( strcmp( contentType, "application/json" ) == 0 ||
         strncmp(contentType, "application/json;", 17) == 0 )
   {
-    value = jsonParseState(*req_data);
+    value = (char *) jsonParseState(*req_data);
     freeValue = 0;
   }
   else
