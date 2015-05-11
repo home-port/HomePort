@@ -53,7 +53,7 @@ sendState(Service *service, void *req, ErrorCode code, const char *val, size_t l
          default:
             fprintf(stderr, "[Homeport] Unknown error code\n");
             code = 500;
-            msg = "500 Internal Server Error: Unknown error code.";
+            buffer = "500 Internal Server Error: Unknown error code.";
       }
 #undef XX
    }
@@ -79,7 +79,8 @@ sendState(Service *service, void *req, ErrorCode code, const char *val, size_t l
    }
 
    free(state);
-   free(buffer);
+   if (val)
+     free(buffer);
 }
 
 
