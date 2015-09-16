@@ -1,4 +1,4 @@
-Home-Port Consolidated Release
+Home-Port Refactured Release
 =========
 
 The following describes how to checkout and compile the sources
@@ -17,7 +17,7 @@ Switch branch:
 
 `cd HomePort`
 
-`git checkout ConsolidatedRelease`
+`git checkout HomePortRefactored`
 
 # Compile
 
