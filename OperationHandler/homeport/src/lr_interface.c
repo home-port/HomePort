@@ -222,7 +222,7 @@ lri_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, co
   accept = lm_find( headersIn, "Accept" );
 
   /** Defaults to XML */
-  if( strcmp(accept, "application/json") == 0 )
+  if( accept != NULL && strcmp(accept, "application/json") == 0 )
   {
      res = jsonGetConfiguration(homeport);
   }
