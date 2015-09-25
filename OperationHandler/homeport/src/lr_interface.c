@@ -61,7 +61,7 @@ sendState(Service *service, void *req, ErrorCode code, const char *val, size_t l
    if (code == ERR_200 && val) {
       /*TODO Check header for XML or jSON*/
       char *accept = lm_find( headersIn, "Accept" );
-      if (strcmp(accept, "application/json") == 0)
+      if (accept != NULL && strcmp(accept, "application/json") == 0)
       {
          state = jsonGetState(buffer);
          headers =  lm_create();
