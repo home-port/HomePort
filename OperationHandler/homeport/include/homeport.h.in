@@ -45,7 +45,7 @@ typedef void (*free_f)             (void *data);
 typedef int  (*init_f)             (HomePort *homeport, void *data);
 typedef void (*deinit_f)           (HomePort *homeport, void *data);
 typedef void (*val_err_cb)         (Service *service, void *data, ErrorCode code, const char *val, size_t len);
-typedef void (*val_cb)             (Service *service, void *data, const char *val, size_t len);
+typedef void (*val_cb)             (Service *service, void *data, ErrorCode code, const char *val, size_t len);
 typedef void (*dev_cb)             (void *data, Device *device);
 typedef void (*serviceGetFunction) (Service* service, Request req);
 typedef void (*servicePutFunction) (Service* service, Request req, const char *put_value, size_t len);
