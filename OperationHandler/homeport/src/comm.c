@@ -57,7 +57,7 @@ void homePortChanged(Service *service, const char *val, size_t len)
 
   DL_FOREACH(service->listener_head, l)
   {
-     l->on_change(service, l->data, ERR_200, val, len);
+     l->on_change(service, l->data, val, len);
   }
 }
 
