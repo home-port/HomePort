@@ -326,6 +326,7 @@ serviceGenerateUri( Service *service )
    strcat(uri, "/");
    strcat(uri, service->id);
 
+   free_pointer(service->uri);
    service->uri = uri;
    return HPD_E_SUCCESS;
 }
