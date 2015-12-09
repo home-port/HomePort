@@ -35,39 +35,52 @@
 #define MHD_MAX_BUFFER_SIZE 10
 
 static void
-sendState(Service *service, void *req, const char *val, size_t len)
+sendState(Service *service, void *req, ErrorCode code, const char *val, size_t len)
 {
-   char *buffer, *state;
+   char *buffer = NULL, *state = NULL;
    struct lm *headersIn = lr_request_get_headers(req);
-   struct lm *headers;
+   struct lm *headers = NULL;
 
-   // Call callback and send response
-   buffer = malloc((len+1) * sizeof(char));
-   strncpy(buffer, val, len);
-   if (len) {
-     buffer[len] = '\0';
-     /*TODO Check header for XML or jSON*/
-     char *accept = lm_find( headersIn, "Accept" );
-     if( strcmp(accept, "application/json") == 0 )
-     {
-       state = jsonGetState(buffer);
-       headers =  lm_create();
-       lm_insert(headers, "Content-Type", "application/json");
-       lr_sendf(req, WS_HTTP_200, headers, state);
-     }
-     else
-     { 
-       state = xmlGetState(buffer);
-       headers =  lm_create();
-       lm_insert(headers, "Content-Type", "application/xml");
-       lr_sendf(req, WS_HTTP_200, headers, state);
-     }
-     lm_destroy(headers);
-     free(state);
-     free(buffer);
+   if (val) {
+      // Call callback and send response
+      buffer = malloc((len+1) * sizeof(char));
+      strncpy(buffer, val, len);
+      buffer[len] = '\0';
    } else {
-     lr_sendf(req, WS_HTTP_500, NULL, "Internal Server Error");
+#define XX(num, str) case ERR_##num: buffer = #str; break;
+      switch (code) {
+         HTTP_STATUS_CODE_MAP(XX)
+         default:
+            fprintf(stderr, "[Homeport] Unknown error code\n");
+            code = 500;
+            buffer = "500 Internal Server Error: Unknown error code.";
+      }
+#undef XX
    }
+
+   if (code == ERR_200 && val) {
+      /*TODO Check header for XML or jSON*/
+      char *accept = lm_find( headersIn, "Accept" );
+      if (accept != NULL && strcmp(accept, "application/json") == 0)
+      {
+         state = jsonGetState(buffer);
+         headers =  lm_create();
+         lm_insert(headers, "Content-Type", "application/json");
+      } else { 
+         state = xmlGetState(buffer);
+         headers =  lm_create();
+         lm_insert(headers, "Content-Type", "application/xml");
+      }
+      lr_sendf(req, WS_HTTP_200, headers, state);
+      lm_destroy(headers);
+   } else {
+      fprintf(stderr, "%s\n", buffer);
+      lr_sendf(req, code, NULL, buffer);
+   }
+
+   free(state);
+   if (val)
+     free(buffer);
 }
 
 
@@ -108,7 +121,7 @@ setState(void *srv_data, void **req_data, struct lr_request *req, const char *bo
     if (*req_data) len += strlen(req_str);
     str = realloc(*req_data, (len+1)*sizeof(char));
     if (!str) {
-      printf("Failed to allocate memory\n");
+      fprintf(stderr, "Failed to allocate memory\n");
       lr_sendf(req, WS_HTTP_500, NULL, "Internal server error");
       return 1;
     }
@@ -126,13 +139,16 @@ setState(void *srv_data, void **req_data, struct lr_request *req, const char *bo
     lr_sendf(req, WS_HTTP_400, NULL, "400 Bad Request");
     return 1;
   }
-  if( ( contentType == NULL ) || ( strcmp(contentType, "application/xml") == 0 ) )
+  if( contentType == NULL || 
+        strcmp(contentType, "application/xml") == 0 || 
+        strncmp(contentType, "application/xml;", 16) == 0 )
   {
     value = xmlParseState(*req_data);
   }
-  else if( strcmp( contentType, "application/json" ) == 0 )
+  else if( strcmp( contentType, "application/json" ) == 0 ||
+        strncmp(contentType, "application/json;", 17) == 0 )
   {
-    value = jsonParseState(*req_data);
+    value = (char *) jsonParseState(*req_data);
     freeValue = 0;
   }
   else
@@ -206,7 +222,7 @@ lri_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, co
   accept = lm_find( headersIn, "Accept" );
 
   /** Defaults to XML */
-  if( strcmp(accept, "application/json") == 0 )
+  if( accept != NULL && strcmp(accept, "application/json") == 0 )
   {
      res = jsonGetConfiguration(homeport);
   }

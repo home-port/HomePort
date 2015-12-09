@@ -47,7 +47,7 @@ void
 get_lamp ( const Service* service, Request request )
 {
   printf("Received GET lamp on %s %s\n", service->description, service->id);
-  homePortRespond(service, request, "0", 1);
+  homePortRespond(service, request, ERR_200, "0", 1);
 }
 /** A PUT function for a service
  *	Takes a Service structure in parameter, and return an updated service value as a char*
@@ -56,14 +56,14 @@ void
 put_lamp ( const Service* service, Request req, const char *put_value, size_t len )
 {
   printf("Received PUT lamp on %s %s\n", service->description, service->id);
-  homePortRespond(service, req, "0", 1);
+  homePortRespond(service, req, ERR_200, "0", 1);
 }
 
 void 
 get_switch ( const Service* service, Request request )
 {
   printf("Received GET switch on %s %s\n", service->description, service->id);
-  homePortRespond(service, request, "0", 1);
+  homePortRespond(service, request, ERR_200, "0", 1);
 }
 
 static void deinit(const HomePort *homeport, void *data)

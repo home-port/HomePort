@@ -46,6 +46,7 @@ include(CTest)
 enable_testing()
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/misc/include/)
 add_custom_target(example)
 
 # add a target to generate API documentation with Doxygen
