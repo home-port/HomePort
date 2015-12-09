@@ -36,14 +36,9 @@ add_library(hpd SHARED
       xml.c
       json.c
       lr_interface.c
-      ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_adapter.c
-      ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_configuration.c
-      ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_device.c
-      ${PROJECT_SOURCE_DIR}/DataManager/src/hpd_service.c
-      
       )
 #target_link_libraries(hpd config pthread uuid libREST mxml idgen jansson )
-target_link_libraries(hpd libREST idgen jansson mxml)
+target_link_libraries(hpd libREST DataManager idgen jansson mxml)
 install (TARGETS hpd DESTINATION lib)
 set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
 

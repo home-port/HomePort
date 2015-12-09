@@ -61,6 +61,6 @@ if(DOXYGEN_FOUND)
 endif(DOXYGEN_FOUND)
 
 add_subdirectory(misc)
-add_subdirectory(OperationHandler)
 add_subdirectory(DataManager)
+add_subdirectory(OperationHandler)
 

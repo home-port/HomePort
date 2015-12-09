@@ -28,18 +28,6 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/REST/libREST/include)
-include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/REST/http-webserver/include)
-include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/REST/webserver/include)
-include_directories(${PROJECT_SOURCE_DIR}/DataManager/include)
-include_directories(${PROJECT_BINARY_DIR}/DataManager/include)
-include_directories(${PROJECT_SOURCE_DIR}/misc/include)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
-
-add_subdirectory(include)
-add_subdirectory(examples)
-add_subdirectory(src)
-
+set(C "")
+configure_file (${CMAKE_CURRENT_SOURCE_DIR}/hpd_datamanager.h.in ${CMAKE_CURRENT_BINARY_DIR}/hpd_datamanager.h)
+unset(C)

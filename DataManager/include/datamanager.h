@@ -29,7 +29,7 @@
 #include <mxml.h>
 #include <jansson.h>
 
-#include "homeport.h"
+#include "hpd_datamanager.h"
 
 /* Function to handle configurations */
 Configuration *configurationNew();
