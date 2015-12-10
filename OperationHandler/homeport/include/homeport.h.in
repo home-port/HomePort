@@ -40,7 +40,6 @@ typedef void (*deinit_f)           (HomePort *homeport, void *data);
 
 struct HomePort
 {
-   ${C} struct lr *rest_interface;
    ${C} Configuration *configuration;
    struct ev_loop * ${C} loop;
 };

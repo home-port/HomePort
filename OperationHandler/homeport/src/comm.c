@@ -27,7 +27,6 @@ authors and should not be interpreted as representing official policies, either 
 #include "datamanager.h"
 #include "json.h"
 #include "xml.h"
-#include "libREST.h"
 #include "utlist.h"
 #include <stdlib.h>
 #include <stdio.h>

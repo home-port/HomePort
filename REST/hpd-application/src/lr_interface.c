@@ -29,7 +29,6 @@
 #include "hpd_error.h"
 #include "json.h"
 #include "xml.h"
-#include "libREST.h"
 #include <stdlib.h>
 
 #define MHD_MAX_BUFFER_SIZE 10

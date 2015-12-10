@@ -28,6 +28,5 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_subdirectory(REST)
 add_subdirectory(homeport)
 

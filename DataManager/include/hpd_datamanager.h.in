@@ -132,6 +132,7 @@ struct Service
     ${C} serviceGetFunction  getFunction; /**<A pointer to the GET function of the Service*/
     ${C} servicePutFunction  putFunction; /**<A pointer to the PUT function of the Service*/
     ${C} char               *id;          /**<The Service ID*/
+    // TODO Does it make sense to store uris here when libREST is no longer included?
     ${C} char               *uri;         /**<The Service URI*/
     // User data
     ${C} free_f              free_data;

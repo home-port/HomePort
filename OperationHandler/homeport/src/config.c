@@ -25,183 +25,164 @@
 
 #include "homeport.h"
 #include "datamanager.h"
-#include "lr_interface.h"
 #include "hpd_error.h"
 #include "utlist.h"
 
-int 
+int
 homePortAttachDevice( HomePort *homeport, Device *device )
 {
-  if( homeport == NULL || device == NULL )
-    return HPD_E_NULL_POINTER;
+    // Pre-checks
+    if( homeport == NULL || device == NULL )
+        return HPD_E_NULL_POINTER;
+    if (device->attached) return HPD_E_DEVICE_ALREADY_ATTACHED;
 
-  if (device->attached) return HPD_E_DEVICE_ALREADY_ATTACHED;
+    Service *iterator;
+    int rc;
 
-  Service *iterator;
-  int rc;
+    DL_FOREACH( device->service_head, iterator )
+    {
+        rc = serviceGenerateUri(iterator);
+        if (rc != HPD_E_SUCCESS) return rc;
+    }
 
-  DL_FOREACH( device->service_head, iterator )
-  {
-    rc = serviceGenerateUri(iterator);
-    if (rc != HPD_E_SUCCESS) goto error;
+    device->attached = 1;
 
-    rc = lri_registerService(homeport, iterator );
-    if( rc < HPD_E_SUCCESS ) goto error;
-  }
+    // Inform
+    Listener *l;
+    DL_FOREACH(homeport->configuration->listener_head, l)
+    {
+        l->on_attach(l->data, device);
+    }
 
-  device->attached = 1;
-
-  // Inform
-  Listener *l;
-  DL_FOREACH(homeport->configuration->listener_head, l)
-  {
-     l->on_attach(l->data, device);
-  }
-
-  return HPD_E_SUCCESS;
-
-error:
-  DL_FOREACH( device->service_head, iterator )
-  {
-     // TODO I skip checking return values here, cause its an error handling routine
-     lri_unregisterService( homeport, iterator->uri );
-  }
-  return rc;
+    return HPD_E_SUCCESS;
 }
 
-int 
+int
 homePortDetachDevice( HomePort *homeport, Device *device )
 {
-  if( homeport == NULL || device == NULL )
-    return HPD_E_NULL_POINTER;
+    if( homeport == NULL || device == NULL )
+        return HPD_E_NULL_POINTER;
 
-  if (!device->attached) return HPD_E_DEVICE_NOT_ATTACHED;
-  device->attached = 0;
+    if (!device->attached) return HPD_E_DEVICE_NOT_ATTACHED;
+    device->attached = 0;
 
-  Service *iterator;
-  int rc;
+    Service *iterator;
 
-  DL_FOREACH( device->service_head, iterator )
-  {
-    rc = lri_unregisterService( homeport, iterator->uri );
-    // TODO Checking here is dificult, cause we really want to try removing all services, even though some may fail
-    //if(rc < HPD_E_SUCCESS && rc != HPD_E_SERVICE_NOT_REGISTER) return rc;
-    if (rc != HPD_E_SUCCESS)
-      fprintf(stderr, "Unregistering service failed with error code %d\n", rc);
-
-    // Free listeners
-    Listener *l, *tmp;
-    DL_FOREACH_SAFE(iterator->listener_head, l, tmp) {
-       homePortUnsubscribe(l);
-       homePortFreeListener(l);
+    DL_FOREACH( device->service_head, iterator )
+    {
+        // Free listeners
+        Listener *l, *tmp;
+        DL_FOREACH_SAFE(iterator->listener_head, l, tmp) {
+            homePortUnsubscribe(l);
+            homePortFreeListener(l);
+        }
     }
-  }
 
-  // Inform
-  Listener *l;
-  DL_FOREACH(homeport->configuration->listener_head, l)
-  {
-     l->on_detach(l->data, device);
-  }
+    // Inform
+    Listener *l;
+    DL_FOREACH(homeport->configuration->listener_head, l)
+    {
+        l->on_detach(l->data, device);
+    }
 
-  return HPD_E_SUCCESS;
+    return HPD_E_SUCCESS;
 }
 
 int
 homePortDetachAllDevices(HomePort *homeport, Adapter *adapter)
 {
-  if( homeport == NULL || adapter == NULL )
-    return HPD_E_NULL_POINTER;
+    if( homeport == NULL || adapter == NULL )
+        return HPD_E_NULL_POINTER;
 
-  Device *iterator=NULL;
-  DL_FOREACH( adapter->device_head, iterator )
-  {
-     homePortDetachDevice(homeport, iterator);
-  }
- 
-  return HPD_E_SUCCESS;
+    Device *iterator=NULL;
+    DL_FOREACH( adapter->device_head, iterator )
+    {
+        homePortDetachDevice(homeport, iterator);
+    }
+
+    return HPD_E_SUCCESS;
 }
 
 Adapter   *homePortNewAdapter    (HomePort *homeport, const char *network, void *data, free_f free_data)
 {
-   return adapterNew(homeport->configuration, network, data, free_data);
+    return adapterNew(homeport->configuration, network, data, free_data);
 }
 
 Device    *homePortNewDevice     (Adapter *adapter, const char *description, const char *vendorId, const char *productId,
                                   const char *version, const char *location, const char *type, void *data, free_f free_data)
 {
-   return deviceNew(adapter, description, vendorId, productId, version, location, type, data, free_data);
+    return deviceNew(adapter, description, vendorId, productId, version, location, type, data, free_data);
 }
 
 Service   *homePortNewService    (Device *device, const char *description, int isActuator, const char *type, const char *unit,
                                   serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data, free_f free_data)
 {
-   if (device->attached) {
-      fprintf(stderr, "Cannot add a service to an attached device. Please detach device first.\n");
-      return NULL;
-   }
-   return serviceNew(device, description, isActuator, type, unit, getFunction, putFunction, parameter, data, free_data);
+    if (device->attached) {
+        fprintf(stderr, "Cannot add a service to an attached device. Please detach device first.\n");
+        return NULL;
+    }
+    return serviceNew(device, description, isActuator, type, unit, getFunction, putFunction, parameter, data, free_data);
 }
 
 Parameter *homePortNewParameter  (const char *max, const char *min, const char *scale, const char *step,
                                   const char *type, const char *unit, const char *values)
 {
-   return parameterNew(max, min, scale, step, type, unit, values);
+    return parameterNew(max, min, scale, step, type, unit, values);
 }
 
 void       homePortFreeAdapter   (Adapter *adapter)
 {
-   Device *iterator=NULL;
+    Device *iterator=NULL;
 
-   DL_FOREACH( adapter->device_head, iterator )
-   {
-      if (iterator->attached) {
-         fprintf(stderr, "Cannot free adapter. Please detach all devices first.\n");
-         return;
-      }
-   }
+    DL_FOREACH( adapter->device_head, iterator )
+    {
+        if (iterator->attached) {
+            fprintf(stderr, "Cannot free adapter. Please detach all devices first.\n");
+            return;
+        }
+    }
 
-   adapterFree(adapter);
+    adapterFree(adapter);
 }
 
 void       homePortFreeDevice    (Device *device)
 {
-   if (device->attached) {
-      fprintf(stderr, "Cannot free an attached device. Please detach device first.\n");
-      return;
-   }
-   deviceFree(device);
+    if (device->attached) {
+        fprintf(stderr, "Cannot free an attached device. Please detach device first.\n");
+        return;
+    }
+    deviceFree(device);
 }
 
 void       homePortFreeService   (Service *service)
 {
-   if (service->device && service->device->attached) {
-      fprintf(stderr, "Cannot free a service on an attached device. Please detach device first.\n");
-      return;
-   }
-   serviceFree(service);
+    if (service->device && service->device->attached) {
+        fprintf(stderr, "Cannot free a service on an attached device. Please detach device first.\n");
+        return;
+    }
+    serviceFree(service);
 }
 
 void       homePortFreeParameter (Parameter *parameter)
 {
-   parameterFree(parameter);
+    parameterFree(parameter);
 }
 
 Adapter *homePortFindFirstAdapter (HomePort *homeport, const char *id, const char *network)
 {
-   return configurationFindFirstAdapter(homeport->configuration, id, network);
+    return configurationFindFirstAdapter(homeport->configuration, id, network);
 }
 
 Device  *homePortFindFirstDevice  (Adapter *adapter, const char *description, const char *id, const char *vendorId,
                                    const char *productId, const char *version, const char *location, const char *type)
 {
-   return adapterFindFirstDevice(adapter, description, id, vendorId, productId, version, location, type);
+    return adapterFindFirstDevice(adapter, description, id, vendorId, productId, version, location, type);
 }
 
 Service *homePortFindFirstService (Device *device, const char *description, const int  *isActuator, const char *type,
                                    const char *unit, const char *id, const char *uri)
 {
-   return deviceFindFirstService(device, description, isActuator, type, unit, id, uri);
+    return deviceFindFirstService(device, description, isActuator, type, unit, id, uri);
 }
 
 
