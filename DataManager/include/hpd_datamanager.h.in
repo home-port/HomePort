@@ -26,8 +26,6 @@ authors and should not be interpreted as representing official policies, either 
 #ifndef HOMEPORT_HPD_DATAMANAGER_H
 #define HOMEPORT_HPD_DATAMANAGER_H
 
-// TODO Refering HomePort in here doesn't seem so right...
-typedef ${C}  struct HomePort HomePort;
 typedef ${C}  struct Configuration Configuration;
 typedef ${C}  struct Adapter Adapter;
 typedef ${C}  struct Device Device;
@@ -161,7 +159,7 @@ struct Listener {
     // Navigational members
     union {
         ${C} Service  *service;
-        ${C} HomePort *homeport;
+        ${C} Configuration *configuration;
     };
     ${C} Listener *next;
     ${C} Listener *prev;

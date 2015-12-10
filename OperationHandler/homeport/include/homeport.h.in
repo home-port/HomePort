@@ -33,6 +33,8 @@ authors and should not be interpreted as representing official policies, either 
 struct ev_loop;
 struct lr;
 
+typedef ${C}  struct HomePort HomePort;
+
 typedef int  (*init_f)             (HomePort *homeport, void *data);
 typedef void (*deinit_f)           (HomePort *homeport, void *data);
 
