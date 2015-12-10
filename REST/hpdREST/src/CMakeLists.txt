@@ -28,15 +28,11 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Example
-#add_executable(hpd_example EXCLUDE_FROM_ALL
-#      hpd_example.c
-#      )
-#target_link_libraries(hpd_example hpd ev)
-#add_dependencies(example hpd_example)
-
-add_executable(hpd_example_easy EXCLUDE_FROM_ALL
-      hpd_example_easy.c
+# Main library
+add_library(hpdREST
+      lr_interface.c
+      hpd_rest.c
+      json.c
+      xml.c
       )
-target_link_libraries(hpd_example_easy hpd ev)
-add_dependencies(example hpd_example_easy)
+target_link_libraries(hpdREST libREST)

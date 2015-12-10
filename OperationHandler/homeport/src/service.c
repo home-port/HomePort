@@ -27,8 +27,6 @@
 #include "datamanager.h"
 #include "hpd_error.h"
 #include "hp_macros.h"
-#include "json.h"
-#include "xml.h"
 #include <ev.h>
 #include "utlist.h"
 
@@ -45,7 +43,7 @@ Not Acceptable
  * @return A HPD error code
  */
 HomePort*
-homePortNew( struct ev_loop *loop, int port )
+homePortNew( struct ev_loop *loop )
 {
     HomePort *homeport;
     alloc_struct(homeport);
@@ -122,14 +120,14 @@ sig_cb ( struct ev_loop *loop, struct ev_signal *w, int revents )
 }
 
 int
-homePortEasy(init_f init, deinit_f deinit, void *data, int port )
+homePortEasy(init_f init, deinit_f deinit, void *data)
 {
     int rc;
 
     // Create loop
     struct ev_loop *loop = EV_DEFAULT;
 
-    HomePort *homeport = homePortNew(loop, port);
+    HomePort *homeport = homePortNew(loop);
 
     // Create signal watchers
     struct ev_signal sigint_watcher;

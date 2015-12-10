@@ -33,8 +33,6 @@ add_library(hpd SHARED
       service.c
       comm.c
       config.c
-      xml.c
-      json.c
       )
 #target_link_libraries(hpd config pthread uuid libREST mxml idgen jansson )
 target_link_libraries(hpd DataManager idgen jansson mxml)

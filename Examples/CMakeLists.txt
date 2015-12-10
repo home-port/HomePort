@@ -28,40 +28,22 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-cmake_minimum_required(VERSION 2.6)
-project(HOMEPORT C)
+# Example
+#add_executable(hpd_example EXCLUDE_FROM_ALL
+#      hpd_example.c
+#      )
+#target_link_libraries(hpd_example hpd ev)
+#add_dependencies(example hpd_example)
 
-set(CMAKE_C_FLAGS "-DHPD_HTTP -DLR_ORIGIN")
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -g -DDEBUG -Wall")
+#include_directories(${PROJECT_SOURCE_DIR}/misc/include)
+include_directories(${PROJECT_SOURCE_DIR}/DataManager/include)
+include_directories(${PROJECT_BINARY_DIR}/DataManager/include)
+include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/homeport/include)
+include_directories(${PROJECT_BINARY_DIR}/OperationHandler/homeport/include)
+include_directories(${PROJECT_SOURCE_DIR}/REST/hpdREST/include)
 
-# -fPIC is for compiling on 64bit
-if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-  set(CMAKE_C_FLAGS "-fPIC ${CMAKE_C_FLAGS}")
-  set(CMAKE_C_FLAGS_DEBUG "-fPIC ${CMAKE_C_FLAGS_DEBUG}")
-endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-
-set(CTEST_MEMORYCHECK_COMMAND "/usr/bin/valgrind")
-include(CTest)
-
-enable_testing()
-
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/misc/include/)
-add_custom_target(example)
-
-# add a target to generate API documentation with Doxygen
-find_package(Doxygen)
-if(DOXYGEN_FOUND)
-   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.conf ${CMAKE_CURRENT_BINARY_DIR}/doxygen.conf @ONLY)
-   add_custom_target(doc
-      ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/doxygen.conf
-      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-      COMMENT "Generating API documentation with Doxygen" VERBATIM
-   )
-endif(DOXYGEN_FOUND)
-
-add_subdirectory(misc)
-add_subdirectory(DataManager)
-add_subdirectory(OperationHandler)
-add_subdirectory(REST)
-add_subdirectory(Examples)
+add_executable(hpd_example_easy EXCLUDE_FROM_ALL
+      hpd_example_easy.c
+      )
+target_link_libraries(hpd_example_easy hpd ev hpdREST)
+add_dependencies(example hpd_example_easy)

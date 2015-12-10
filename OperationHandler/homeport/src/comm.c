@@ -25,8 +25,6 @@ authors and should not be interpreted as representing official policies, either 
 
 #include "homeport.h"
 #include "datamanager.h"
-#include "json.h"
-#include "xml.h"
 #include "utlist.h"
 #include <stdlib.h>
 #include <stdio.h>

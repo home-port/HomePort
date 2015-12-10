@@ -33,6 +33,8 @@ authors and should not be interpreted as representing official policies, either 
 struct ev_loop;
 struct lr;
 
+// TODO Get rid of all this const weirdness !
+
 typedef ${C}  struct HomePort HomePort;
 
 typedef int  (*init_f)             (HomePort *homeport, void *data);
@@ -45,11 +47,11 @@ struct HomePort
 };
 
 // Homeport Service Control
-HomePort  *homePortNew           (struct ev_loop *loop, int port);
+HomePort  *homePortNew           (struct ev_loop *loop);
 void       homePortFree          (HomePort *homeport);
 int        homePortStart         (HomePort *homeport);
 void       homePortStop          (HomePort *homeport);
-int        homePortEasy          (init_f init, deinit_f deinit, void *data, int port);
+int        homePortEasy          (init_f init, deinit_f deinit, void *data);
 
 // Configurator Interface
 Adapter   *homePortNewAdapter    (HomePort *homeport, const char *network, void *data, free_f free_data);

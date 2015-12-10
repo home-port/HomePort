@@ -26,6 +26,8 @@ authors and should not be interpreted as representing official policies, either 
 #ifndef HOMEPORT_HPD_DATAMANAGER_H
 #define HOMEPORT_HPD_DATAMANAGER_H
 
+// TODO Get rid of all this const weirdness !
+
 typedef ${C}  struct Configuration Configuration;
 typedef ${C}  struct Adapter Adapter;
 typedef ${C}  struct Device Device;

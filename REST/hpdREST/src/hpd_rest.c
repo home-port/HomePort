@@ -23,33 +23,64 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-int rest_init(struct sl_ert *sh, HomePort *hp)
+#include "hpd_rest.h"
+#include "homeport.h"
+#include "libREST.h"
+#include "hpd_error.h"
+#include "lr_interface.h"
+#include "utlist.h"
+
+static void on_dev_attach(void *data, Device *device) {
+    Service *service;
+    DL_FOREACH(device->service_head, service)
+    {
+        lri_registerService(data, service);
+    }
+}
+
+static void on_dev_detach(void *data, Device *device) {
+    Service *service;
+    DL_FOREACH(device->service_head, service)
+    {
+        lri_unregisterService(data, service->uri);
+    }
+}
+
+int hpd_rest_init(struct hpd_lr *data, HomePort *hp, int port)
 {
+    // Create settings
     struct lr_settings settings = LR_SETTINGS_DEFAULT;
     settings.port = port;
 
-    homeport->rest_interface = lr_create(&settings, loop);
-    if ( homeport->rest_interface == NULL )
+    // Create and start libREST
+    data->lr = lr_create(&settings, hp->loop);
+    if ( data->lr == NULL )
     {
-        goto cleanup;
+        // TODO Fix error code
+        return 1;
     }
-
-    if(lr_start(homeport->rest_interface))
+    if(lr_start(data->lr))
         return HPD_E_MHD_ERROR;
 
-    return lr_register_service(homeport->rest_interface,
+    // Listen on new devices
+    data->dev_listener = homePortNewDeviceListener(hp, on_dev_attach, on_dev_detach, data->lr, NULL);
+    homePortSubscribe(data->dev_listener);
+    homePortForAllAttachedDevices(data->dev_listener);
+
+    // Register devices uri
+    return lr_register_service(data->lr,
                                "/devices",
                                lri_getConfiguration, NULL, NULL, NULL,
-                               NULL, homeport);
+                               NULL, hp);
 
     return 0;
 }
 
-int rest_deinit(struct sl_ert *sh, HomePort *hp)
+int hpd_rest_deinit(struct hpd_lr *data, HomePort *hp)
 {
-    lr_stop(homeport->rest_interface);
+    lr_stop(data->lr);
 
-    lr_destroy(homeport->rest_interface);
+    lr_destroy(data->lr);
 
     return 0;
 }
