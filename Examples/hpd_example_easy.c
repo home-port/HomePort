@@ -25,21 +25,17 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <ev.h>
 
-// With installed homeport change this to <hpdaemon/homeport.h>
+// With installed homeport change these to <hpdaemon/*>
 #include "homeport.h"
 #include "hpd_rest.h"
 
-#if HPD_HTTP
 static Adapter *adapter = NULL;
 static Device *device = NULL;
 static Service *service_lamp0 = NULL;
 static Service *service_lamp1 = NULL;
 static Service *service_switch0 = NULL;
 static Service *service_switch1 = NULL;
-#endif
 
 /** A GET function for a service
  *	Takes a Service structure in parameter, and return a service value as a char*

@@ -31,7 +31,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(HOMEPORT C)
 
-set(CMAKE_C_FLAGS "-DHPD_HTTP -DLR_ORIGIN")
+set(CMAKE_C_FLAGS "-DLR_ORIGIN")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -g -DDEBUG -Wall")
 
 # -fPIC is for compiling on 64bit
