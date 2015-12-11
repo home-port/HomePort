@@ -28,7 +28,11 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_subdirectory(webserver)
-add_subdirectory(http-webserver)
-add_subdirectory(libREST)
-add_subdirectory(trie)
+# Main library
+add_library(hpdREST
+      lr_interface.c
+      hpd_rest.c
+      json.c
+      xml.c
+      )
+target_link_libraries(hpdREST libREST)

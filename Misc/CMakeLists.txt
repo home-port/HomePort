@@ -28,18 +28,7 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Example
-#add_executable(hpd_example EXCLUDE_FROM_ALL
-#      hpd_example.c
-#      )
-#target_link_libraries(hpd_example hpd ev)
-#add_dependencies(example hpd_example)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_executable(hpd_example_easy EXCLUDE_FROM_ALL
-      hpd_example_easy.c
-      )
-target_link_libraries(hpd_example_easy hpd ev)
-add_dependencies(example hpd_example_easy)
-
-add_dependencies(example hpd_phidget)
-
+add_subdirectory(include)
+add_subdirectory(src)

@@ -29,8 +29,8 @@
 #include "hpd_error.h"
 #include "json.h"
 #include "xml.h"
-#include "libREST.h"
 #include <stdlib.h>
+#include "libREST.h"
 
 #define MHD_MAX_BUFFER_SIZE 10
 
@@ -174,18 +174,18 @@ setState(void *srv_data, void **req_data, struct lr_request *req, const char *bo
 }
 
 int
-lri_registerService(HomePort *homeport, Service *service)
+lri_registerService(struct lr *lr, Service *service)
 {
    char *uri = service->uri;
    int rc;
-   Service *s = lr_lookup_service(homeport->rest_interface, uri);
+   Service *s = lr_lookup_service(lr, uri);
    if (s) {
      printf("A similar service is already registered in the unsecure server\n");
      return HPD_E_SERVICE_ALREADY_REGISTER;
    }
 
    printf("Registering service\n");
-   rc = lr_register_service(homeport->rest_interface,
+   rc = lr_register_service(lr,
        uri,
        getState, NULL, setState, NULL,
        NULL, service);
@@ -198,13 +198,13 @@ lri_registerService(HomePort *homeport, Service *service)
 }
 
 int
-lri_unregisterService( HomePort *homeport, char* uri )
+lri_unregisterService(struct lr *lr, char* uri)
 {
-  Service *s = lr_lookup_service(homeport->rest_interface, uri);
+  Service *s = lr_lookup_service(lr, uri);
   if( s == NULL )
     return HPD_E_SERVICE_NOT_REGISTER;
 
-  s = lr_unregister_service ( homeport->rest_interface, uri );
+  s = lr_unregister_service(lr, uri);
   if( s == NULL )
     return HPD_E_MHD_ERROR;
 

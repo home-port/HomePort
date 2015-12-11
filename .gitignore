@@ -30,5 +30,5 @@
 /libWebserver/src/request_test
 /libWebserver/src/response_test
 /wstest
-/misc/src/a.out.dSYM/
 /Figures/pkgs.graffle
+/.idea/

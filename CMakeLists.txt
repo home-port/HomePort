@@ -31,7 +31,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(HOMEPORT C)
 
-set(CMAKE_C_FLAGS "-DHPD_HTTP -DLR_ORIGIN")
+set(CMAKE_C_FLAGS "-DLR_ORIGIN")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -g -DDEBUG -Wall")
 
 # -fPIC is for compiling on 64bit
@@ -46,7 +46,7 @@ include(CTest)
 enable_testing()
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/misc/include/)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Misc/include/)
 add_custom_target(example)
 
 # add a target to generate API documentation with Doxygen
@@ -60,7 +60,8 @@ if(DOXYGEN_FOUND)
    )
 endif(DOXYGEN_FOUND)
 
-add_subdirectory(misc)
-add_subdirectory(OperationHandler)
+add_subdirectory(Misc)
 add_subdirectory(DataManager)
-
+add_subdirectory(OperationHandler)
+add_subdirectory(REST)
+add_subdirectory(Examples)

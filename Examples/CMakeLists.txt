@@ -28,11 +28,12 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(${PROJECT_SOURCE_DIR}/misc/include)
-include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/REST/trie/include)
-include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/REST/http-webserver/include)
-include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/REST/webserver/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/DataManager/include)
+include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/homeport/include)
+include_directories(${PROJECT_SOURCE_DIR}/REST/hpdREST/include)
 
-add_subdirectory(src)
-add_subdirectory(example)
+add_executable(hpd_example_easy EXCLUDE_FROM_ALL
+      hpd_example_easy.c
+      )
+target_link_libraries(hpd_example_easy hpd ev hpdREST)
+add_dependencies(example hpd_example_easy)

@@ -28,10 +28,9 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(${PROJECT_SOURCE_DIR}/DataManager/include)
-include_directories(${PROJECT_SOURCE_DIR}/Misc/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-add_subdirectory(include)
-add_subdirectory(src)
-
+add_library(DataManager
+        hpd_adapter.c
+        hpd_configuration.c
+        hpd_device.c
+        hpd_service.c
+)

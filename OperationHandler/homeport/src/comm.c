@@ -25,9 +25,6 @@ authors and should not be interpreted as representing official policies, either 
 
 #include "homeport.h"
 #include "datamanager.h"
-#include "json.h"
-#include "xml.h"
-#include "libREST.h"
 #include "utlist.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -80,7 +77,7 @@ Listener *homePortNewDeviceListener(HomePort *hp, dev_cb on_attach, dev_cb on_de
    Listener *l = malloc(sizeof(Listener));
    l->type = DEVICE_LISTENER;
    l->subscribed = 0;
-   l->homeport = hp;
+   l->configuration = hp->configuration;
    l->on_attach = on_attach;
    l->on_detach = on_detach;
    l->data = data;
@@ -112,7 +109,7 @@ void homePortSubscribe(Listener *l)
          serviceAddListener(l->service, l);
          break;
       case DEVICE_LISTENER:
-         configurationAddListener(l->homeport->configuration, l);
+         configurationAddListener(l->configuration, l);
          break;
    }
    l->subscribed = 1;
@@ -129,7 +126,7 @@ void homePortUnsubscribe(Listener *l)
          serviceRemoveListener(l->service, l);
          break;
       case DEVICE_LISTENER:
-         configurationRemoveListener(l->homeport->configuration, l);
+         configurationRemoveListener(l->configuration, l);
          break;
    }
    l->subscribed = 0;
@@ -137,7 +134,7 @@ void homePortUnsubscribe(Listener *l)
 
 void homePortForAllAttachedDevices (Listener *l)
 {
-   Configuration *c = l->homeport->configuration;
+   Configuration *c = l->configuration;
    Adapter *a;
    Device *d;
 
