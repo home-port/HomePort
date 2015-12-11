@@ -30,9 +30,7 @@
 
 include_directories(${PROJECT_SOURCE_DIR}/Misc/include)
 include_directories(${PROJECT_SOURCE_DIR}/DataManager/include)
-include_directories(${PROJECT_BINARY_DIR}/DataManager/include)
 include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/homeport/include)
-include_directories(${PROJECT_BINARY_DIR}/OperationHandler/homeport/include)
 include_directories(${PROJECT_SOURCE_DIR}/REST/webserver/include)
 include_directories(${PROJECT_SOURCE_DIR}/REST/http-webserver/include)
 include_directories(${PROJECT_SOURCE_DIR}/REST/libREST/include)

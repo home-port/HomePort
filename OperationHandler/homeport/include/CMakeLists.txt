@@ -28,12 +28,6 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-set(C "")
-configure_file (${CMAKE_CURRENT_SOURCE_DIR}/homeport.h.in ${CMAKE_CURRENT_BINARY_DIR}/homeport.h)
-set(C "const")
-configure_file (${CMAKE_CURRENT_SOURCE_DIR}/homeport.h.in ${PROJECT_BINARY_DIR}/homeport.h)
-configure_file (${PROJECT_SOURCE_DIR}/DataManager/include/hpd_datamanager.h.in ${PROJECT_BINARY_DIR}/hpd_datamanager.h)
-unset(C)
-install (FILES ${PROJECT_BINARY_DIR}/homeport.h DESTINATION include/hpdaemon)
-install (FILES ${PROJECT_BINARY_DIR}/hpd_datamanager.h DESTINATION include/hpdaemon)
+install (FILES homeport.h DESTINATION include/hpdaemon)
+install (FILES ${PROJECT_SOURCE_DIR}/DataManager/include/hpd_datamanager.h DESTINATION include/hpdaemon)
 install (FILES hpd_error.h DESTINATION include/hpdaemon)

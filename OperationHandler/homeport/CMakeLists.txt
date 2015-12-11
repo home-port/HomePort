@@ -29,11 +29,9 @@
 # as representing official policies, either expressed.
 
 include_directories(${PROJECT_SOURCE_DIR}/DataManager/include)
-include_directories(${PROJECT_BINARY_DIR}/DataManager/include)
 include_directories(${PROJECT_SOURCE_DIR}/Misc/include)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 add_subdirectory(include)

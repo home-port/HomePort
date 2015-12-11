@@ -28,18 +28,8 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Example
-#add_executable(hpd_example EXCLUDE_FROM_ALL
-#      hpd_example.c
-#      )
-#target_link_libraries(hpd_example hpd ev)
-#add_dependencies(example hpd_example)
-
-#include_directories(${PROJECT_SOURCE_DIR}/Misc/include)
 include_directories(${PROJECT_SOURCE_DIR}/DataManager/include)
-include_directories(${PROJECT_BINARY_DIR}/DataManager/include)
 include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/homeport/include)
-include_directories(${PROJECT_BINARY_DIR}/OperationHandler/homeport/include)
 include_directories(${PROJECT_SOURCE_DIR}/REST/hpdREST/include)
 
 add_executable(hpd_example_easy EXCLUDE_FROM_ALL

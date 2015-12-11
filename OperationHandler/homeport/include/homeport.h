@@ -35,15 +35,15 @@ struct lr;
 
 // TODO Get rid of all this const weirdness !
 
-typedef ${C}  struct HomePort HomePort;
+typedef struct HomePort HomePort;
 
 typedef int  (*init_f)             (HomePort *homeport, void *data);
 typedef void (*deinit_f)           (HomePort *homeport, void *data);
 
 struct HomePort
 {
-   ${C} Configuration *configuration;
-   struct ev_loop * ${C} loop;
+   Configuration *configuration;
+   struct ev_loop *loop;
 };
 
 // Homeport Service Control

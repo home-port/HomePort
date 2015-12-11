@@ -28,6 +28,4 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-set(C "")
-configure_file (${CMAKE_CURRENT_SOURCE_DIR}/hpd_datamanager.h.in ${CMAKE_CURRENT_BINARY_DIR}/hpd_datamanager.h)
-unset(C)
+install (FILES hpd_datamanager.h DESTINATION include/hpdaemon)

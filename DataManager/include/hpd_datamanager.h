@@ -26,15 +26,13 @@ authors and should not be interpreted as representing official policies, either 
 #ifndef HOMEPORT_HPD_DATAMANAGER_H
 #define HOMEPORT_HPD_DATAMANAGER_H
 
-// TODO Get rid of all this const weirdness !
-
-typedef ${C}  struct Configuration Configuration;
-typedef ${C}  struct Adapter Adapter;
-typedef ${C}  struct Device Device;
-typedef ${C}  struct Service Service;
-typedef ${C}  struct Parameter Parameter;
+typedef       struct Configuration Configuration;
+typedef       struct Adapter Adapter;
+typedef       struct Device Device;
+typedef       struct Service Service;
+typedef       struct Parameter Parameter;
 typedef const struct Request Request;
-typedef ${C}  struct Listener Listener;
+typedef       struct Listener Listener;
 
 typedef       enum error_code ErrorCode;
 
@@ -77,79 +75,79 @@ enum error_code
 struct Configuration
 {
     // Navigational members
-    ${C} Adapter  *adapter_head;
-    ${C} Listener *listener_head;
+    Adapter  *adapter_head;
+    Listener *listener_head;
 };
 
 struct Adapter
 {
     // Navigational members
-    ${C} Configuration *configuration;
-    ${C} Device        *device_head;
-    ${C} Adapter       *next;
-    ${C} Adapter       *prev;
+    Configuration *configuration;
+    Device        *device_head;
+    Adapter       *next;
+    Adapter       *prev;
     // Data members
-    ${C} char          *id;
-    ${C} char          *network;
+    char          *id;
+    char          *network;
     // User data
-    ${C} free_f         free_data;
-    ${C} void          *data;
+    free_f         free_data;
+    void          *data;
 };
 
 struct Device
 {
     // Navigational members
-    ${C} Adapter *adapter;
-    ${C} Service *service_head; /**<The first Service of the Service List*/
-    ${C} Device  *next;
-    ${C} Device  *prev;
+    Adapter *adapter;
+    Service *service_head; /**<The first Service of the Service List*/
+    Device  *next;
+    Device  *prev;
     // Internal state
-    ${C} char    attached;
+    char    attached;
     // Data members
-    ${C} char    *description;  /**<The Device description*/
-    ${C} char    *id;           /**<The Device ID*/
-    ${C} char    *vendorId;     /**<The ID of the vendor*/
-    ${C} char    *productId;    /**<The ID of the product*/
-    ${C} char    *version;      /**<The Device version*/
-    ${C} char    *location;     /**<The location of the Device*/
-    ${C} char    *type;         /**<The Device type*/
+    char    *description;  /**<The Device description*/
+    char    *id;           /**<The Device ID*/
+    char    *vendorId;     /**<The ID of the vendor*/
+    char    *productId;    /**<The ID of the product*/
+    char    *version;      /**<The Device version*/
+    char    *location;     /**<The location of the Device*/
+    char    *type;         /**<The Device type*/
     // User data
-    ${C} free_f   free_data;
-    ${C} void    *data;
+    free_f   free_data;
+    void    *data;
 };
 
 struct Service
 {
     // Navigational members
-    ${C} Device             *device;
-    ${C} Parameter          *parameter;   /**<The first Parameter of the Parameter List*/
-    ${C} Service            *next;
-    ${C} Service            *prev;
-    ${C} Listener           *listener_head;
+    Device             *device;
+    Parameter          *parameter;   /**<The first Parameter of the Parameter List*/
+    Service            *next;
+    Service            *prev;
+    Listener           *listener_head;
     // Data members
-    ${C} char               *description; /**<The Service description*/
-    ${C} int                 isActuator;  /**<Determine if the service is an actuator or a sensro */
-    ${C} char               *type;        /**<The Service type*/
-    ${C} char               *unit;        /**<The unit provided by the Service*/
-    ${C} serviceGetFunction  getFunction; /**<A pointer to the GET function of the Service*/
-    ${C} servicePutFunction  putFunction; /**<A pointer to the PUT function of the Service*/
-    ${C} char               *id;          /**<The Service ID*/
+    char               *description; /**<The Service description*/
+    int                 isActuator;  /**<Determine if the service is an actuator or a sensro */
+    char               *type;        /**<The Service type*/
+    char               *unit;        /**<The unit provided by the Service*/
+    serviceGetFunction  getFunction; /**<A pointer to the GET function of the Service*/
+    servicePutFunction  putFunction; /**<A pointer to the PUT function of the Service*/
+    char               *id;          /**<The Service ID*/
     // TODO Does it make sense to store uris here when libREST is no longer included?
-    ${C} char               *uri;         /**<The Service URI*/
+    char               *uri;         /**<The Service URI*/
     // User data
-    ${C} free_f              free_data;
-    ${C} void               *data;        /**<Pointer used for the used to store its data*/
+    free_f              free_data;
+    void               *data;        /**<Pointer used for the used to store its data*/
 };
 
 struct Parameter
 {
-    ${C} char *max;    /**<The maximum value of the Parameter*/
-    ${C} char *min;    /**<The minimum value of the Parameter*/
-    ${C} char *scale;  /**<The Scale of the Parameter*/
-    ${C} char *step;   /**<The Step of the values of the Parameter*/
-    ${C} char *type;   /**<The Type of values for the Parameter*/
-    ${C} char *unit;   /**<The Unit of the values of the Parameter*/
-    ${C} char *values; /**<The possible values for the Parameter*/
+    char *max;    /**<The maximum value of the Parameter*/
+    char *min;    /**<The minimum value of the Parameter*/
+    char *scale;  /**<The Scale of the Parameter*/
+    char *step;   /**<The Step of the values of the Parameter*/
+    char *type;   /**<The Type of values for the Parameter*/
+    char *unit;   /**<The Unit of the values of the Parameter*/
+    char *values; /**<The possible values for the Parameter*/
 };
 
 struct Request {
@@ -161,21 +159,21 @@ struct Listener {
     enum { SERVICE_LISTENER, DEVICE_LISTENER } type;
     // Navigational members
     union {
-        ${C} Service  *service;
-        ${C} Configuration *configuration;
+        Service  *service;
+        Configuration *configuration;
     };
-    ${C} Listener *next;
-    ${C} Listener *prev;
+    Listener *next;
+    Listener *prev;
     // Internal state
-    ${C} char      subscribed;
+    char      subscribed;
     // Data members
     union {
         struct {
-            ${C} val_cb    on_change;
+            val_cb    on_change;
         };
         struct {
-            ${C} dev_cb    on_attach;
-            ${C} dev_cb    on_detach;
+            dev_cb    on_attach;
+            dev_cb    on_detach;
         };
     };
     // User data
