@@ -29,5 +29,3 @@
 # as representing official policies, either expressed.
 
 install (FILES homeport.h DESTINATION include/hpdaemon)
-install (FILES ${PROJECT_SOURCE_DIR}/DataManager/include/hpd_datamanager.h DESTINATION include/hpdaemon)
-install (FILES hpd_error.h DESTINATION include/hpdaemon)

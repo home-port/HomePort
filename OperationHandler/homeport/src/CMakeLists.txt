@@ -34,7 +34,6 @@ add_library(hpd SHARED
       comm.c
       config.c
       )
-#target_link_libraries(hpd config pthread uuid libREST mxml idgen jansson )
 target_link_libraries(hpd DataManager idgen jansson mxml)
 install (TARGETS hpd DESTINATION lib)
 set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
