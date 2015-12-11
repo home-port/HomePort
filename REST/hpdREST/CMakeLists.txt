@@ -28,7 +28,7 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(${PROJECT_SOURCE_DIR}/misc/include)
+include_directories(${PROJECT_SOURCE_DIR}/Misc/include)
 include_directories(${PROJECT_SOURCE_DIR}/DataManager/include)
 include_directories(${PROJECT_BINARY_DIR}/DataManager/include)
 include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/homeport/include)

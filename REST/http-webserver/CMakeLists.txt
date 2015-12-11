@@ -30,7 +30,7 @@
 
 add_subdirectory(lib)
 
-include_directories(${PROJECT_SOURCE_DIR}/misc/include)
+include_directories(${PROJECT_SOURCE_DIR}/Misc/include)
 include_directories(${PROJECT_SOURCE_DIR}/REST/webserver/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/http-parser)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)

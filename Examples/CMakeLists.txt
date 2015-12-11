@@ -35,7 +35,7 @@
 #target_link_libraries(hpd_example hpd ev)
 #add_dependencies(example hpd_example)
 
-#include_directories(${PROJECT_SOURCE_DIR}/misc/include)
+#include_directories(${PROJECT_SOURCE_DIR}/Misc/include)
 include_directories(${PROJECT_SOURCE_DIR}/DataManager/include)
 include_directories(${PROJECT_BINARY_DIR}/DataManager/include)
 include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/homeport/include)
