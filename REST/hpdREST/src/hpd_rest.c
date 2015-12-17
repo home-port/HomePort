@@ -46,7 +46,7 @@ static void on_dev_detach(void *data, Device *device) {
     }
 }
 
-int hpd_rest_init(struct hpd_lr *data, HomePort *hp, int port)
+int hpd_rest_init(struct hpd_rest *data, HomePort *hp, int port)
 {
     // Create settings
     struct lr_settings settings = LR_SETTINGS_DEFAULT;
@@ -76,7 +76,7 @@ int hpd_rest_init(struct hpd_lr *data, HomePort *hp, int port)
     return 0;
 }
 
-int hpd_rest_deinit(struct hpd_lr *data, HomePort *hp)
+int hpd_rest_deinit(struct hpd_rest *data, HomePort *hp)
 {
     lr_stop(data->lr);
 

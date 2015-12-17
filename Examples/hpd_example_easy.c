@@ -158,7 +158,7 @@ static int init(HomePort *homeport, void *data)
 int
 main()
 {
-    struct hpd_lr data;
+    struct hpd_rest data;
 
     /** Starts the hpdaemon. If using avahi-core pass a host name for the server, otherwise pass NULL */
     return homePortEasy(init, deinit, &data);
