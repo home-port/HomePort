@@ -35,5 +35,5 @@ include_directories(${PROJECT_SOURCE_DIR}/REST/hpdREST/include)
 add_executable(hpd_example_easy EXCLUDE_FROM_ALL
       hpd_example_easy.c
       )
-target_link_libraries(hpd_example_easy hpd ev hpdREST)
+target_link_libraries(hpd_example_easy hpd ev hpd_rest)
 add_dependencies(example hpd_example_easy)

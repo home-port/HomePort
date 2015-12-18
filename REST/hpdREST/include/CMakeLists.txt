@@ -28,13 +28,4 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Main library
-add_library(hpd_rest SHARED
-      lr_interface.c
-      hpd_rest.c
-      json.c
-      xml.c
-      )
-target_link_libraries(hpd_rest libREST)
-install (TARGETS hpd_rest DESTINATION lib)
-set_target_properties(hpd_rest PROPERTIES VERSION 0.0.0 SOVERSION 0)
+install (FILES hpd_rest.h DESTINATION include/hpdaemon)
