@@ -72,14 +72,20 @@ int hpd_rest_init(struct hpd_rest *data, HomePort *hp, int port)
                                "/devices",
                                lri_getConfiguration, NULL, NULL, NULL,
                                NULL, hp);
-
-    return 0;
 }
 
 int hpd_rest_deinit(struct hpd_rest *data, HomePort *hp)
 {
+    Adapter *adapter;
+    Device *device;
+    DL_FOREACH(hp->configuration->adapter_head, adapter) {
+        DL_FOREACH(adapter->device_head, device) {
+            on_dev_detach(data, device);
+        }
+    }
+    homePortUnsubscribe(data->dev_listener);
+    homePortFreeListener(data->dev_listener);
     lr_stop(data->lr);
-
     lr_destroy(data->lr);
 
     return 0;
