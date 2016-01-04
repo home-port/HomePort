@@ -26,13 +26,13 @@ authors and should not be interpreted as representing official policies, either 
 #ifndef HOMEPORT_HPD_DATAMANAGER_H
 #define HOMEPORT_HPD_DATAMANAGER_H
 
-typedef       struct Configuration Configuration;
-typedef       struct Adapter Adapter;
-typedef       struct Device Device;
-typedef       struct Service Service;
-typedef       struct Parameter Parameter;
-typedef const struct Request Request;
-typedef       struct Listener Listener;
+typedef struct Configuration Configuration;
+typedef struct Adapter Adapter;
+typedef struct Device Device;
+typedef struct Service Service;
+typedef struct Parameter Parameter;
+typedef struct Request Request;
+typedef struct Listener Listener;
 
 typedef       enum error_code ErrorCode;
 
