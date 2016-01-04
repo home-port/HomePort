@@ -184,7 +184,8 @@ lri_registerService(struct lr *lr, Service *service)
      return HPD_E_SERVICE_ALREADY_REGISTER;
    }
 
-   printf("Registering service\n");
+    // TODO Prefix printf statements and print to stderr on errors !! (Entire hpdREST module)
+   printf("[rest] Registering service %s...\n", uri);
    rc = lr_register_service(lr,
        uri,
        getState, NULL, setState, NULL,
