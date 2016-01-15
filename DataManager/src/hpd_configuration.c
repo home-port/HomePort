@@ -116,6 +116,22 @@ configurationFindFirstAdapter(Configuration *configuration,
   return NULL;
 }
 
+Service *configurationServiceLookup(Configuration *configuration, const char *dtype, const char *did, const char *stype, const char *sid)
+{
+    if( configuration== NULL ) return NULL;
+
+    Adapter *adapter = NULL;
+    Service *service = NULL;
+
+    DL_FOREACH(configuration->adapter_head, adapter)
+    {
+        service = adapterServiceLookup(adapter, dtype, did, stype, sid);
+        if (service) return service;
+    }
+
+    return NULL;
+}
+
 mxml_node_t*
 configurationToXml(Configuration *configuration, mxml_node_t *parent)
 {

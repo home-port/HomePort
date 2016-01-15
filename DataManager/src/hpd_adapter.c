@@ -140,6 +140,24 @@ adapterFindFirstDevice(Adapter *adapter,
   return NULL;
 }
 
+Service *adapterServiceLookup(Adapter *adapter, const char *dtype, const char *did, const char *stype, const char *sid)
+{
+  if( adapter == NULL ) return NULL;
+
+  Device *device = NULL;
+  Service *service = NULL;
+
+  DL_FOREACH(adapter->device_head, device)
+  {
+    if (strcmp(device->type, dtype) == 0 && strcmp(device->id, did) == 0) {
+      service = deviceFindFirstService(device, NULL, NULL, stype, NULL, sid, NULL);
+      if (service) return service;
+    }
+  }
+
+  return NULL;
+}
+
 mxml_node_t*
 adapterToXml(Adapter *adapter, mxml_node_t *parent)
 {

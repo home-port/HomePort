@@ -185,4 +185,7 @@ Service *homePortFindFirstService (Device *device, const char *description, cons
     return deviceFindFirstService(device, description, isActuator, type, unit, id, uri);
 }
 
-
+Service *homePortServiceLookup(HomePort *homePort, const char *dtype, const char *did, const char *stype, const char *sid)
+{
+    return configurationServiceLookup(homePort->configuration, dtype, did, stype, sid);
+}

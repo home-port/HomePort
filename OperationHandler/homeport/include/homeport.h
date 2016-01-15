@@ -78,6 +78,7 @@ Device  *homePortFindFirstDevice  (Adapter *adapter, const char *description, co
                                    const char *productId, const char *version, const char *location, const char *type);
 Service *homePortFindFirstService (Device *device, const char *description, const int  *isActuator, const char *type,
                                    const char *unit, const char *id, const char *uri);
+Service *homePortServiceLookup(HomePort *homePort, const char *dtype, const char *did, const char *stype, const char *sid);
 
 // Communication interface
 void      homePortRespond               (Service *service, Request req, ErrorCode code, const char *val, size_t len);
