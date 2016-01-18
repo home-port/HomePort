@@ -36,7 +36,6 @@
 
 int on_req_destroy(void *srv_data, void **req_data, struct lr_request *req)
 {
-    free(*req_data);
     (*req_data) = NULL;
     return 0;
 }
@@ -104,14 +103,11 @@ getState(void *srv_data, void **req_data, struct lr_request *req, const char *bo
     return 1;
   }
 
-    // TODO Find a nicer solution to check if connection have been closed
-    // TODO This can be a memory leak ?
-    (*req_data) = malloc(sizeof(struct lr_request *));
     (*req_data) = req;
 
   // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
   lr_request_keep_open(req);
-  homePortGet(service, sendState, (*req_data));
+  homePortGet(service, sendState, req_data);
 
   // Stop parsing request, we don't need the body anyways
   return 1;
