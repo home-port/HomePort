@@ -34,19 +34,24 @@
 
 #define MHD_MAX_BUFFER_SIZE 10
 
+struct lri_req {
+    struct lr_request *req;
+};
+
 int on_req_destroy(void *srv_data, void **req_data, struct lr_request *req)
 {
-    (*req_data) = NULL;
+    ((struct lri_req *)(*req_data))->req = NULL;
     return 0;
 }
 
 static void
-sendState(Service *service, void *req, ErrorCode code, const char *val, size_t len)
+sendState(Service *service, void *in, ErrorCode code, const char *val, size_t len)
 {
-    if (req == NULL) return;
+    struct lri_req *lri = in;
+    if (lri == NULL) return;
 
    char *buffer = NULL, *state = NULL;
-   struct lm *headersIn = lr_request_get_headers(req);
+   struct lm *headersIn = lr_request_get_headers(lri->req);
    struct lm *headers = NULL;
 
    if (val) {
@@ -79,11 +84,11 @@ sendState(Service *service, void *req, ErrorCode code, const char *val, size_t l
          headers =  lm_create();
          lm_insert(headers, "Content-Type", "application/xml");
       }
-      lr_sendf(req, WS_HTTP_200, headers, state);
+      lr_sendf(lri->req, WS_HTTP_200, headers, state);
       lm_destroy(headers);
    } else {
       fprintf(stderr, "%s\n", buffer);
-      lr_sendf(req, code, NULL, buffer);
+      lr_sendf(lri->req, code, NULL, buffer);
    }
 
    free(state);
@@ -103,11 +108,12 @@ getState(void *srv_data, void **req_data, struct lr_request *req, const char *bo
     return 1;
   }
 
-    (*req_data) = req;
+    (*req_data) = malloc(sizeof(struct lri_req));
+    ((struct lri_req *)(*req_data))->req = req;
 
   // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
   lr_request_keep_open(req);
-  homePortGet(service, sendState, req_data);
+  homePortGet(service, sendState, (*req_data));
 
   // Stop parsing request, we don't need the body anyways
   return 1;
