@@ -49,6 +49,7 @@ sendState(Service *service, void *in, ErrorCode code, const char *val, size_t le
 {
     struct lri_req *lri = in;
     if (lri == NULL) return;
+    if (lri->req == NULL) return;
 
    char *buffer = NULL, *state = NULL;
    struct lm *headersIn = lr_request_get_headers(lri->req);
