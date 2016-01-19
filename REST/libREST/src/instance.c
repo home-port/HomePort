@@ -106,7 +106,7 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req,
   struct lr *lr_ins = ws_ctx;
   const char *url = http_request_get_url(req);
 
-  printf("Got request for '%s'\n", url);
+  printf("[librest] Got request for '%s'\n", url);
 
   if (url == NULL) {
     struct http_response *res = http_response_create(req, WS_HTTP_400);
@@ -119,7 +119,7 @@ static int on_url_cmpl(struct httpws *ins, struct http_request *req,
   struct trie_iter *iter = trie_lookup(lr_ins->trie, url);
 
   if (iter == NULL) { // URL not registered
-     fprintf(stderr, "Service on '%s' not found\n", url);
+     fprintf(stderr, "[librest] Service on '%s' not found\n", url);
      struct http_response *res = http_response_create(req, WS_HTTP_404);
      // TODO: Find out if we need to add headers
      http_response_sendf(res, "Resource not found"); // TODO: Decide on appropriate body
