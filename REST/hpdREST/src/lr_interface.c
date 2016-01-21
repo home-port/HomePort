@@ -32,27 +32,36 @@
 #include <stdlib.h>
 #include "libREST.h"
 
-#define MHD_MAX_BUFFER_SIZE 10
-
 struct lri_req {
-    char destroy;
     struct lr_request *req;
-    char *req_str;
+    char in_hpd;    ///< Bool to check whether a pointer to this struct is present in hpd somewhere
+    char *req_str;  ///< String used to store bodies for PUT
 };
 
-int on_req_destroy(void *srv_data, void **req_data, struct lr_request *req)
+static void req_free(struct lri_req *req)
+{
+    if (req != NULL) {
+        if (req->req_str) {
+            free(req->req_str);
+        }
+        free(req);
+    }
+}
+
+static struct lri_req *req_new(struct lr_request *req)
+{
+    struct lri_req *lri_req = malloc(sizeof(struct lri_req));
+    lri_req->req = req;
+    lri_req->req_str = NULL;
+    lri_req->in_hpd = 0;
+}
+
+static int on_req_destroy(void *srv_data, void **req_data, struct lr_request *req)
 {
     struct lri_req *lri_req = (struct lri_req *)(*req_data);
     if (lri_req != NULL) {
         lri_req->req = NULL;
-        if (lri_req->req_str) {
-            free(lri_req->req_str);
-            lri_req->req_str = NULL;
-        }
-        if (lri_req->destroy) {
-            free(lri_req);
-            (*req_data) = NULL;
-        }
+        if (!lri_req->in_hpd) req_free(lri_req);
     }
     return 0;
 }
@@ -60,22 +69,22 @@ int on_req_destroy(void *srv_data, void **req_data, struct lr_request *req)
 static void
 sendState(Service *service, void *in, ErrorCode code, const char *val, size_t len)
 {
-    struct lr_request *req;
-    {
-        struct lri_req *lri = in;
-        if (lri == NULL) return;
-        if (lri->req == NULL) return;
-        req = lri->req;
-        if (lri->req_str) free(lri->req_str);
-        free(lri);
+    struct lri_req *lri = in;
+
+    if (lri == NULL) {
+        fprintf(stderr, "[LRI] Unexpected state (lri is null)\n");
+        return;
     }
 
+    /* Connection is closed downstairs, so don't send anything */
+    if (lri->req == NULL)
+        return req_free(lri);
+
     char *buffer = NULL, *state = NULL;
-    struct lm *headersIn = lr_request_get_headers(req);
+    struct lm *headersIn = lr_request_get_headers(lri->req);
     struct lm *headers = NULL;
 
     if (val) {
-        // Call callback and send response
         buffer = malloc((len+1) * sizeof(char));
         strncpy(buffer, val, len);
         buffer[len] = '\0';
@@ -85,7 +94,7 @@ sendState(Service *service, void *in, ErrorCode code, const char *val, size_t le
             HTTP_STATUS_CODE_MAP(XX)
             default:
                 fprintf(stderr, "[Homeport] Unknown error code\n");
-                code = 500;
+                code = ERR_500;
                 buffer = "500 Internal Server Error: Unknown error code.";
         }
 #undef XX
@@ -104,39 +113,34 @@ sendState(Service *service, void *in, ErrorCode code, const char *val, size_t le
             headers =  lm_create();
             lm_insert(headers, "Content-Type", "application/xml");
         }
-        lr_sendf(req, WS_HTTP_200, headers, state);
+        lr_sendf(lri->req, WS_HTTP_200, headers, state);
         lm_destroy(headers);
     } else {
         fprintf(stderr, "%s\n", buffer);
-        lr_sendf(req, code, NULL, buffer);
+        lr_sendf(lri->req, code, NULL, buffer);
     }
 
     free(state);
-    if (val)
-        free(buffer);
+    free(buffer);
 }
-
 
 static int
 getState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
 {
     Service *service = (Service*) srv_data;
 
-    if(service->getFunction == NULL)
-    {
+    if(service->getFunction == NULL) {
         lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
         return 1;
     }
 
-    (*req_data) = malloc(sizeof(struct lri_req));
-    struct lri_req *lri_req = (struct lri_req *)(*req_data);
-    lri_req->req = req;
-    lri_req->req_str = NULL;
-    lri_req->destroy = 0;
+    struct lri_req *lri_req = req_new(req);
+    (*req_data) = lri_req;
 
     // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
     lr_request_keep_open(req);
-    homePortGet(service, sendState, (*req_data));
+    lri_req->in_hpd = 1;
+    homePortGet(service, sendState, lri_req);
 
     // Stop parsing request, we don't need the body anyways
     return 1;
@@ -148,8 +152,7 @@ setState(void *srv_data, void **req_data_in, struct lr_request *req, const char 
     Service *service = srv_data;
     struct lri_req *lri_req = *req_data_in;
 
-    if(service->putFunction == NULL)
-    {
+    if(service->putFunction == NULL) {
         lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
         return 1;
     }
@@ -157,12 +160,9 @@ setState(void *srv_data, void **req_data_in, struct lr_request *req, const char 
     // Receive data
     if (body) {
         if (!lri_req) {
-            (*req_data_in) = malloc(sizeof(struct lri_req));
-            lri_req = (struct lri_req *)(*req_data_in);
-            lri_req->req = req;
-            lri_req->req_str = NULL;
-            lri_req->destroy = 1;
-        };
+            lri_req = req_new(req);
+            (*req_data_in) = lri_req;
+        }
         if (lri_req->req_str) len += strlen(lri_req->req_str);
         lri_req->req_str = realloc(lri_req->req_str, (len+1)*sizeof(char));
         if (!lri_req->req_str) {
@@ -210,7 +210,7 @@ setState(void *srv_data, void **req_data_in, struct lr_request *req, const char 
     // Call callback
     // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
     lr_request_keep_open(req);
-    lri_req->destroy = 0;
+    lri_req->in_hpd = 1;
     homePortSet(service, value, strlen(value), sendState, req);
 
     if(freeValue) free(value);
