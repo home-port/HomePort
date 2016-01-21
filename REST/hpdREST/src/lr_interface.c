@@ -60,12 +60,18 @@ int on_req_destroy(void *srv_data, void **req_data, struct lr_request *req)
 static void
 sendState(Service *service, void *in, ErrorCode code, const char *val, size_t len)
 {
-    struct lri_req *lri = in;
-    if (lri == NULL) return;
-    if (lri->req == NULL) return;
+    struct lr_request *req;
+    {
+        struct lri_req *lri = in;
+        if (lri == NULL) return;
+        if (lri->req == NULL) return;
+        req = lri->req;
+        if (lri->req_str) free(lri->req_str);
+        free(lri);
+    }
 
     char *buffer = NULL, *state = NULL;
-    struct lm *headersIn = lr_request_get_headers(lri->req);
+    struct lm *headersIn = lr_request_get_headers(req);
     struct lm *headers = NULL;
 
     if (val) {
@@ -98,11 +104,11 @@ sendState(Service *service, void *in, ErrorCode code, const char *val, size_t le
             headers =  lm_create();
             lm_insert(headers, "Content-Type", "application/xml");
         }
-        lr_sendf(lri->req, WS_HTTP_200, headers, state);
+        lr_sendf(req, WS_HTTP_200, headers, state);
         lm_destroy(headers);
     } else {
         fprintf(stderr, "%s\n", buffer);
-        lr_sendf(lri->req, code, NULL, buffer);
+        lr_sendf(req, code, NULL, buffer);
     }
 
     free(state);
