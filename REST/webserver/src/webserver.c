@@ -216,10 +216,10 @@ static void *get_in_addr(struct sockaddr *sa)
 {
    if (sa->sa_family == AF_INET) {
       // IPv4
-      return &(((struct sockaddr_in*)sa)->sin_addr);
+      return &(((struct sockaddr_in*)sa)->sin_addr.s_addr);
    } else {
       // IPv6
-      return &(((struct sockaddr_in6*)sa)->sin6_addr);
+      return &(((struct sockaddr_in6*)sa)->sin6_addr.s6_addr);
    }
 }
 
@@ -384,7 +384,7 @@ static void ws_conn_accept(
    struct ws_settings *settings = &((struct ws *)watcher->data)->settings;
    
    // Accept connection
-   in_size = sizeof in_addr;
+   in_size = sizeof *in_addr;
    if ((in_fd = accept(watcher->fd, in_addr, &in_size)) < 0) {
       perror("accept");
       return;
