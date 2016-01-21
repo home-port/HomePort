@@ -54,6 +54,7 @@ static struct lri_req *req_new(struct lr_request *req)
     lri_req->req = req;
     lri_req->req_str = NULL;
     lri_req->in_hpd = 0;
+    return lri_req;
 }
 
 static int on_req_destroy(void *srv_data, void **req_data, struct lr_request *req)
