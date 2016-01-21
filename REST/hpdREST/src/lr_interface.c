@@ -43,14 +43,16 @@ struct lri_req {
 int on_req_destroy(void *srv_data, void **req_data, struct lr_request *req)
 {
     struct lri_req *lri_req = (struct lri_req *)(*req_data);
-    lri_req->req = NULL;
-    if (lri_req->req_str) {
-        free(lri_req->req_str);
-        lri_req->req_str = NULL;
-    }
-    if (lri_req->destroy) {
-        free(lri_req);
-        (*req_data) = NULL;
+    if (lri_req != NULL) {
+        lri_req->req = NULL;
+        if (lri_req->req_str) {
+            free(lri_req->req_str);
+            lri_req->req_str = NULL;
+        }
+        if (lri_req->destroy) {
+            free(lri_req);
+            (*req_data) = NULL;
+        }
     }
     return 0;
 }
