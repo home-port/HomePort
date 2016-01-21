@@ -164,8 +164,15 @@ setState(void *srv_data, void **req_data_in, struct lr_request *req, const char 
             lri_req = req_new(req);
             (*req_data_in) = lri_req;
         }
-        if (lri_req->req_str) len += strlen(lri_req->req_str);
-        lri_req->req_str = realloc(lri_req->req_str, (len+1)*sizeof(char));
+
+        if (!lri_req->req_str) {
+            lri_req->req_str = malloc((len+1)*sizeof(char));
+            lri_req->req_str[0] = '\0';
+        } else {
+            len += strlen(lri_req->req_str);
+            lri_req->req_str = realloc(lri_req->req_str, (len+1)*sizeof(char));
+        }
+
         if (!lri_req->req_str) {
             fprintf(stderr, "Failed to allocate memory\n");
             lr_sendf(req, WS_HTTP_500, NULL, "Internal server error");
