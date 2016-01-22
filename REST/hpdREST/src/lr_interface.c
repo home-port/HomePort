@@ -217,7 +217,7 @@ setState(void *srv_data, void **req_data_in, struct lr_request *req, const char 
     // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
     lr_request_keep_open(req);
     lri_req->in_hpd = 1;
-    homePortSet(service, value, strlen(value), sendState, req);
+    homePortSet(service, value, strlen(value), sendState, lri_req);
 
     free(value);
 
