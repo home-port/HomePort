@@ -186,7 +186,6 @@ setState(void *srv_data, void **req_data_in, struct lr_request *req, const char 
     struct lm *headersIn = lr_request_get_headers(req);
     char *contentType = lm_find(headersIn, "Content-Type");
     char *value;
-    int freeValue = 1;
     if(lri_req == NULL || lri_req->req_str == NULL)
     {
         lr_sendf(req, WS_HTTP_400, NULL, "400 Bad Request");
@@ -202,7 +201,6 @@ setState(void *srv_data, void **req_data_in, struct lr_request *req, const char 
              strncmp(contentType, "application/json;", 17) == 0 )
     {
         value = (char *) jsonParseState(lri_req->req_str);
-        freeValue = 0;
     }
     else
     {
@@ -221,7 +219,7 @@ setState(void *srv_data, void **req_data_in, struct lr_request *req, const char 
     lri_req->in_hpd = 1;
     homePortSet(service, value, strlen(value), sendState, req);
 
-    if(freeValue) free(value);
+    free(value);
 
     return 0;
 }

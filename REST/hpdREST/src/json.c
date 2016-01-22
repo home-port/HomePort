@@ -85,10 +85,12 @@ jsonParseState(char *json_value)
   }
 
   const char *ret = json_string_value(value);
+  char *ret_alloc = malloc((strlen(ret)+1)*sizeof(char));
+  strcpy(ret_alloc, ret);
 
   json_decref(json);
 
-  return ret;
+  return ret_alloc;
 
 error:
   return NULL;
