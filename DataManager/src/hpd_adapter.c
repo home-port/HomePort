@@ -150,90 +150,11 @@ Service *adapterServiceLookup(Adapter *adapter, const char *dtype, const char *d
   DL_FOREACH(adapter->device_head, device)
   {
     if (strcmp(device->type, dtype) == 0 && strcmp(device->id, did) == 0) {
-      service = deviceFindFirstService(device, NULL, NULL, stype, NULL, sid, NULL);
+      service = deviceFindFirstService(device, NULL, NULL, stype, NULL, sid);
       if (service) return service;
     }
   }
 
-  return NULL;
-}
-
-mxml_node_t*
-adapterToXml(Adapter *adapter, mxml_node_t *parent)
-{
-  if(adapter == NULL) return NULL;
-
-  mxml_node_t *adapterXml;
-
-  adapterXml = mxmlNewElement(parent, "adapter");
-  if(adapter->id != NULL) mxmlElementSetAttr(adapterXml, "id", adapter->id);
-  if(adapter->network != NULL) mxmlElementSetAttr(adapterXml, "network", adapter->network);
-
-  Device *iterator;
-
-  DL_FOREACH( adapter->device_head, iterator)
-  {
-     if (iterator->attached)
-        deviceToXml(iterator, adapterXml);
-  }
-
-  return adapterXml;
-}
-
-json_t*
-adapterToJson(Adapter *adapter)
-{
-  json_t *adapterJson=NULL;
-  json_t *value=NULL;
-  json_t *deviceArray=NULL;
-
-  if( ( adapterJson = json_object() ) == NULL )
-  {
-    goto error;
-  }
-  if(adapter->id != NULL)
-  {
-    if( ( ( value = json_string(adapter->id) ) == NULL ) || ( json_object_set_new(adapterJson, "id", value) != 0 ) )
-    {
-      goto error;
-    }
-  }
-  if(adapter->network != NULL)
-  {
-    if( ( ( value = json_string(adapter->network) ) == NULL ) || ( json_object_set_new(adapterJson, "network", value) != 0 ) )
-    {
-      goto error;
-    }
-  }
-
-  Device *iterator;
-
-  if( ( deviceArray = json_array() ) == NULL )
-  {
-    goto error;
-  }
-
-  DL_FOREACH( adapter->device_head, iterator )
-  {
-     if (iterator->attached) {
-        json_t *device;
-        if( ( ( device = deviceToJson(iterator) ) == NULL ) || ( json_array_append_new(deviceArray, device) != 0 ) )
-        {
-          goto error;
-        }
-     }
-  }
-
-  if( json_object_set_new(adapterJson, "device", deviceArray) != 0 )
-  {
-    goto error;
-  }
-
-  return adapterJson;
-error:
-  if(adapterJson) json_decref(adapterJson);
-  if(value) json_decref(value);
-  if(deviceArray) json_decref(deviceArray);
   return NULL;
 }
 

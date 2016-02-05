@@ -224,14 +224,32 @@ setState(void *srv_data, void **req_data_in, struct lr_request *req, const char 
     return 0;
 }
 
+char *lri_alloc_uri(Service *service)
+{
+    Device *device = service->device;
+    char *uri = malloc((strlen(device->type)+strlen(device->id)+strlen(service->type)+strlen(service->id)+4+1)*sizeof(char));
+    if( uri == NULL ) return NULL;
+    uri[0] = '\0';
+    strcat(uri, "/");
+    strcat(uri, device->type);
+    strcat(uri, "/");
+    strcat(uri, device->id);
+    strcat(uri, "/");
+    strcat(uri, service->type);
+    strcat(uri, "/");
+    strcat(uri, service->id);
+    return uri;
+}
+
 int
 lri_registerService(struct lr *lr, Service *service)
 {
-    char *uri = service->uri;
+    char *uri = lri_alloc_uri(service);
     int rc;
     Service *s = lr_lookup_service(lr, uri);
     if (s) {
         printf("A similar service is already registered in the unsecure server\n");
+        free(uri);
         return HPD_E_SERVICE_ALREADY_REGISTER;
     }
 
@@ -241,6 +259,7 @@ lri_registerService(struct lr *lr, Service *service)
                              uri,
                              getState, NULL, setState, NULL,
                              on_req_destroy, service);
+    free(uri);
     if(rc) {
         printf("Failed to register non secure service\n");
         return HPD_E_MHD_ERROR;

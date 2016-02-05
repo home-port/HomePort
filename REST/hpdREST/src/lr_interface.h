@@ -31,6 +31,8 @@
 
 struct lr_request;
 
+char *lri_alloc_uri(Service *service);
+
 int lri_registerService(struct lr *lr, Service *service);
 int lri_unregisterService(struct lr *lr, char* uri);
 int lri_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);

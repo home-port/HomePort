@@ -27,6 +27,8 @@
 #include "datamanager.h"
 #include <time.h>
 #include <mxml.h>
+#include "utlist.h"
+#include "lr_interface.h"
 
 /**
  *  * Simple timestamp function
@@ -56,6 +58,105 @@ timestamp ( void )
       timeptr->tm_min, timeptr->tm_sec,
       1900 + timeptr->tm_year);
   return result;
+}
+
+static mxml_node_t *
+serviceToXml(Service *service, mxml_node_t *parent)
+{
+  mxml_node_t *serviceXml;
+
+  serviceXml = mxmlNewElement(parent, "service");
+  if(service->description != NULL) mxmlElementSetAttr(serviceXml, "desc", service->description);
+  if(service->id != NULL) mxmlElementSetAttr(serviceXml, "id", service->id);
+  char *uri = lri_alloc_uri(service);
+  if(uri != NULL) {
+    mxmlElementSetAttr(serviceXml, "uri", uri);
+    free(uri);
+  }
+  mxmlElementSetAttr(serviceXml, "isActuator", service->isActuator ? "1" : "0");
+  if(service->type != NULL) mxmlElementSetAttr(serviceXml, "type", service->type);
+  if(service->unit != NULL) mxmlElementSetAttr(serviceXml, "unit", service->unit);
+
+
+  if(service->parameter != NULL)
+  {
+    mxml_node_t *parameterXml = mxmlNewElement(serviceXml, "parameter");
+    if(service->parameter->max != NULL) mxmlElementSetAttr(parameterXml, "max", service->parameter->max);
+    if(service->parameter->min != NULL) mxmlElementSetAttr(parameterXml, "min", service->parameter->min);
+    if(service->parameter->scale != NULL) mxmlElementSetAttr(parameterXml, "scale", service->parameter->scale);
+    if(service->parameter->step != NULL) mxmlElementSetAttr(parameterXml, "step", service->parameter->step);
+    if(service->parameter->type != NULL) mxmlElementSetAttr(parameterXml, "type", service->parameter->type);
+    if(service->parameter->unit != NULL) mxmlElementSetAttr(parameterXml, "unit", service->parameter->unit);
+    if(service->parameter->values != NULL) mxmlElementSetAttr(parameterXml, "values", service->parameter->values);
+  }
+
+
+  return serviceXml;
+}
+
+static mxml_node_t*
+deviceToXml(Device *device, mxml_node_t *parent)
+{
+  if(device == NULL) return NULL;
+
+  mxml_node_t *deviceXml;
+
+  deviceXml = mxmlNewElement(parent, "device");
+  if(device->description != NULL) mxmlElementSetAttr(deviceXml, "desc", device->description);
+  if(device->id != NULL) mxmlElementSetAttr(deviceXml, "id", device->id);
+  if(device->vendorId != NULL) mxmlElementSetAttr(deviceXml, "vendorId", device->vendorId);
+  if(device->productId != NULL) mxmlElementSetAttr(deviceXml, "productId", device->productId);
+  if(device->version != NULL) mxmlElementSetAttr(deviceXml, "version", device->version);
+  if(device->location != NULL) mxmlElementSetAttr(deviceXml, "location", device->location);
+  if(device->type != NULL) mxmlElementSetAttr(deviceXml, "type", device->type);
+
+  Service *iterator;
+
+  DL_FOREACH( device->service_head, iterator )
+  {
+    serviceToXml(iterator, deviceXml);
+  }
+
+  return deviceXml;
+}
+
+static mxml_node_t*
+adapterToXml(Adapter *adapter, mxml_node_t *parent)
+{
+  if(adapter == NULL) return NULL;
+
+  mxml_node_t *adapterXml;
+
+  adapterXml = mxmlNewElement(parent, "adapter");
+  if(adapter->id != NULL) mxmlElementSetAttr(adapterXml, "id", adapter->id);
+  if(adapter->network != NULL) mxmlElementSetAttr(adapterXml, "network", adapter->network);
+
+  Device *iterator;
+
+  DL_FOREACH( adapter->device_head, iterator)
+  {
+    if (iterator->attached)
+      deviceToXml(iterator, adapterXml);
+  }
+
+  return adapterXml;
+}
+
+static mxml_node_t*
+configurationToXml(Configuration *configuration, mxml_node_t *parent)
+{
+  mxml_node_t *configXml;
+
+  configXml = mxmlNewElement(parent, "configuration");
+
+  Adapter *iterator;
+
+  DL_FOREACH(configuration->adapter_head, iterator)
+  {
+    adapterToXml(iterator, configXml);
+  }
+
+  return configXml;
 }
 
 char *

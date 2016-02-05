@@ -26,6 +26,310 @@
 #include "json.h"
 #include "datamanager.h"
 #include <jansson.h>
+#include "utlist.h"
+#include "lr_interface.h"
+
+static json_t*
+serviceToJson(Service *service)
+{
+  json_t *serviceJson;
+  json_t *value;
+
+  if( ( serviceJson = json_object() ) == NULL )
+  {
+    return NULL;
+  }
+  if(service->description != NULL)
+  {
+    if( ( ( value = json_string(service->description) ) == NULL ) || ( json_object_set_new(serviceJson, "desc", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(service->id != NULL)
+  {
+    if( ( ( value = json_string(service->id) ) == NULL ) || ( json_object_set_new(serviceJson, "id", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  char *uri = lri_alloc_uri(service);
+  if(uri != NULL)
+  {
+    if( ( ( value = json_string(uri) ) == NULL ) || ( json_object_set_new(serviceJson, "uri", value) != 0 ) )
+    {
+      free(uri);
+      return NULL;
+    }
+    free(uri);
+  }
+  if( ( ( value = json_string( service->isActuator ? "1" : "0") ) == NULL ) || (json_object_set_new(serviceJson, "isActuator", value) != 0 ) )
+  {
+    return NULL;
+  }
+  if(service->type != NULL)
+  {
+    if( ( ( value = json_string( service->type ) ) == NULL ) || ( json_object_set_new(serviceJson, "type", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(service->unit != NULL)
+  {
+    if( ( ( value = json_string( service->unit ) ) == NULL ) || ( json_object_set_new(serviceJson, "unit", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+
+
+  if(service->parameter != NULL)
+  {
+    json_t *parameterJson = json_object();
+    if( parameterJson == NULL )
+      return NULL;
+    if(service->parameter->max != NULL)
+    {
+      if( ( ( value = json_string( service->parameter->max ) ) == NULL ) || ( json_object_set_new(parameterJson, "max", value) != 0 ) )
+      {
+        return NULL;
+      }
+    }
+    if(service->parameter->min != NULL)
+    {
+      if( ( ( value = json_string( service->parameter->min ) ) == NULL ) || ( json_object_set_new(parameterJson, "min", value) != 0 ) )
+      {
+        return NULL;
+      }
+    }
+    if(service->parameter->scale != NULL)
+    {
+      if( ( ( value = json_string( service->parameter->scale ) ) == NULL ) || ( json_object_set_new(parameterJson, "scale", value) != 0 ) )
+      {
+        return NULL;
+      }
+    }
+    if(service->parameter->step != NULL)
+    {
+      if( ( ( value = json_string( service->parameter->step ) ) == NULL ) || ( json_object_set_new(parameterJson, "step", value) != 0 ) )
+      {
+        return NULL;
+      }
+    }
+    if(service->parameter->type != NULL)
+    {
+      if( ( (value = json_string( service->parameter->type ) ) == NULL ) || ( json_object_set_new(parameterJson, "type", value) != 0 ) )
+      {
+        return NULL;
+      }
+    }
+    if(service->parameter->unit != NULL)
+    {
+      if( ( ( value = json_string( service->parameter->unit ) ) == NULL ) || ( json_object_set_new(parameterJson, "unit", value) != 0 ) )
+      {
+        return NULL;
+      }
+    }
+    if(service->parameter->values != NULL)
+    {
+      if( ( ( value = json_string( service->parameter->values ) ) == NULL ) || ( json_object_set_new(parameterJson, "values", value) != 0 ) )
+      {
+        return NULL;
+      }
+    }
+    if( json_object_set_new(serviceJson, "parameter", parameterJson) != 0 )
+    {
+      return NULL;
+    }
+  }
+  return serviceJson;
+}
+
+static json_t*
+deviceToJson(Device *device)
+{
+  json_t *deviceJson=NULL;
+  json_t *value=NULL;
+  json_t *serviceArray=NULL;
+
+  if( ( deviceJson = json_object() ) == NULL )
+  {
+    return NULL;
+  }
+  if(device->description != NULL)
+  {
+    if( ( ( value = json_string(device->description) ) == NULL ) || ( json_object_set_new(deviceJson, "desc", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(device->id != NULL)
+  {
+    if( ( ( value = json_string(device->id) ) == NULL ) || ( json_object_set_new(deviceJson, "id", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(device->vendorId != NULL)
+  {
+    if( ( ( value = json_string(device->vendorId) ) == NULL ) || ( json_object_set_new(deviceJson, "vendorId", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(device->productId != NULL)
+  {
+    if( ( ( value = json_string( device->productId ) ) == NULL ) || ( json_object_set_new(deviceJson, "productId", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(device->version != NULL)
+  {
+    if( ( ( value = json_string( device->version ) ) == NULL ) || ( json_object_set_new(deviceJson, "version", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(device->productId != NULL)
+  {
+    if( ( ( value = json_string( device->productId ) ) == NULL ) || ( json_object_set_new(deviceJson, "productId", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+  if(device->type != NULL)
+  {
+    if( ( ( value = json_string( device->type ) ) == NULL ) || ( json_object_set_new(deviceJson, "type", value) != 0 ) )
+    {
+      return NULL;
+    }
+  }
+
+  Service *iterator;
+
+  if( ( serviceArray = json_array() ) == NULL )
+  {
+    return NULL;
+  }
+
+  DL_FOREACH( device->service_head, iterator )
+  {
+    if( json_array_append_new(serviceArray, serviceToJson(iterator)) != 0 )
+    {
+      return NULL;
+    }
+  }
+
+  if( json_object_set_new(deviceJson, "service", serviceArray) != 0 )
+  {
+    return NULL;
+  }
+
+  return deviceJson;
+//error:
+//  if(value) json_decref(value);
+//  if(serviceArray) json_decref(serviceArray);
+//  if(deviceJson) json_decref(deviceJson);
+}
+
+static json_t*
+adapterToJson(Adapter *adapter)
+{
+  json_t *adapterJson=NULL;
+  json_t *value=NULL;
+  json_t *deviceArray=NULL;
+
+  if( ( adapterJson = json_object() ) == NULL )
+  {
+    goto error;
+  }
+  if(adapter->id != NULL)
+  {
+    if( ( ( value = json_string(adapter->id) ) == NULL ) || ( json_object_set_new(adapterJson, "id", value) != 0 ) )
+    {
+      goto error;
+    }
+  }
+  if(adapter->network != NULL)
+  {
+    if( ( ( value = json_string(adapter->network) ) == NULL ) || ( json_object_set_new(adapterJson, "network", value) != 0 ) )
+    {
+      goto error;
+    }
+  }
+
+  Device *iterator;
+
+  if( ( deviceArray = json_array() ) == NULL )
+  {
+    goto error;
+  }
+
+  DL_FOREACH( adapter->device_head, iterator )
+  {
+    if (iterator->attached) {
+      json_t *device;
+      if( ( ( device = deviceToJson(iterator) ) == NULL ) || ( json_array_append_new(deviceArray, device) != 0 ) )
+      {
+        goto error;
+      }
+    }
+  }
+
+  if( json_object_set_new(adapterJson, "device", deviceArray) != 0 )
+  {
+    goto error;
+  }
+
+  return adapterJson;
+  error:
+  if(adapterJson) json_decref(adapterJson);
+  if(value) json_decref(value);
+  if(deviceArray) json_decref(deviceArray);
+  return NULL;
+}
+
+static json_t*
+configurationToJson(Configuration *configuration)
+{
+  json_t *configJson=NULL;
+  json_t *adapterArray=NULL;
+  json_t *adapter=NULL;
+
+  if( ( configJson = json_object() ) == NULL )
+  {
+    goto error;
+  }
+
+  Adapter *iterator;
+
+  if( ( adapterArray = json_array() ) == NULL )
+  {
+    goto error;
+  }
+
+  DL_FOREACH(configuration->adapter_head, iterator)
+  {
+    adapter = adapterToJson(iterator);
+    if( ( adapter == NULL ) || ( json_array_append_new(adapterArray, adapter) != 0 ) )
+    {
+      goto error;
+    }
+  }
+
+  if( json_object_set_new(configJson, "adapter", adapterArray) != 0 )
+  {
+    goto error;
+  }
+
+  return configJson;
+  error:
+  if(adapter) json_decref(adapter);
+  if(adapterArray) json_decref(adapterArray);
+  if(configJson) json_decref(configJson);
+  return NULL;
+}
 
 char *
 jsonGetConfiguration(HomePort *homeport)

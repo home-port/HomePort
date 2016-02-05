@@ -41,7 +41,7 @@ homePortAttachDevice( HomePort *homeport, Device *device )
 
     DL_FOREACH( device->service_head, iterator )
     {
-        rc = serviceGenerateUri(iterator);
+        rc = serviceGenerateIds(iterator);
         if (rc != HPD_E_SUCCESS) return rc;
     }
 
@@ -179,10 +179,10 @@ Device  *homePortFindFirstDevice  (Adapter *adapter, const char *description, co
     return adapterFindFirstDevice(adapter, description, id, vendorId, productId, version, location, type);
 }
 
-Service *homePortFindFirstService (Device *device, const char *description, const int  *isActuator, const char *type,
-                                   const char *unit, const char *id, const char *uri)
+Service *homePortFindFirstService(Device *device, const char *description, const int *isActuator, const char *type,
+                                  const char *unit, const char *id)
 {
-    return deviceFindFirstService(device, description, isActuator, type, unit, id, uri);
+    return deviceFindFirstService(device, description, isActuator, type, unit, id);
 }
 
 Service *homePortServiceLookup(HomePort *homePort, const char *dtype, const char *did, const char *stype, const char *sid)

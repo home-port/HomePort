@@ -132,64 +132,6 @@ Service *configurationServiceLookup(Configuration *configuration, const char *dt
     return NULL;
 }
 
-mxml_node_t*
-configurationToXml(Configuration *configuration, mxml_node_t *parent)
-{
-  mxml_node_t *configXml;
-
-  configXml = mxmlNewElement(parent, "configuration");
-
-  Adapter *iterator;
-
-  DL_FOREACH(configuration->adapter_head, iterator)
-  {
-    adapterToXml(iterator, configXml);
-  }
-
-  return configXml;
-}
-
-json_t*
-configurationToJson(Configuration *configuration)
-{
-  json_t *configJson=NULL;
-  json_t *adapterArray=NULL;
-  json_t *adapter=NULL;
-
-  if( ( configJson = json_object() ) == NULL )
-  {
-    goto error;
-  }
-
-  Adapter *iterator;
-
-  if( ( adapterArray = json_array() ) == NULL )
-  {
-    goto error;
-  } 
-
-  DL_FOREACH(configuration->adapter_head, iterator)
-  {
-    adapter = adapterToJson(iterator);
-    if( ( adapter == NULL ) || ( json_array_append_new(adapterArray, adapter) != 0 ) )
-    {
-      goto error;
-    }
-  }
-
-  if( json_object_set_new(configJson, "adapter", adapterArray) != 0 )
-  {
-    goto error;
-  }
-
-  return configJson;
-error:
-  if(adapter) json_decref(adapter);
-  if(adapterArray) json_decref(adapterArray);
-  if(configJson) json_decref(configJson);
-  return NULL;
-}
-
 int
 configurationAddListener(Configuration *configuration, Listener *l)
 {

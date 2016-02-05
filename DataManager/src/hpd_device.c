@@ -204,14 +204,9 @@ deviceRemoveService( Service *service )
    return -1;
 }
 
-Service*
-deviceFindFirstService(Device *device,
-      const char *description,
-      const int  *isActuator,
-      const char *type,
-      const char *unit,
-      const char *id,
-      const char *uri)
+Service *
+deviceFindFirstService(Device *device, const char *description, const int *isActuator, const char *type,
+                       const char *unit, const char *id)
 {
   if (device == NULL) return NULL;
 
@@ -224,125 +219,10 @@ deviceFindFirstService(Device *device,
         if ( type == NULL || (iterator->type != NULL && strcmp(type, iterator->type) == 0) )
           if ( unit == NULL || (iterator->unit != NULL && strcmp(unit, iterator->unit) == 0) )
             if ( id == NULL || (iterator->id != NULL && strcmp(id, iterator->id) == 0) )
-              if ( uri == NULL || (iterator->uri != NULL && strcmp(uri, iterator->uri) == 0) )
                 return iterator;
   }
 
   return NULL;
-}
-
-mxml_node_t*
-deviceToXml(Device *device, mxml_node_t *parent)
-{
-  if(device == NULL) return NULL;
-
-  mxml_node_t *deviceXml;
-
-  deviceXml = mxmlNewElement(parent, "device");
-  if(device->description != NULL) mxmlElementSetAttr(deviceXml, "desc", device->description);
-  if(device->id != NULL) mxmlElementSetAttr(deviceXml, "id", device->id);
-  if(device->vendorId != NULL) mxmlElementSetAttr(deviceXml, "vendorId", device->vendorId);
-  if(device->productId != NULL) mxmlElementSetAttr(deviceXml, "productId", device->productId);
-  if(device->version != NULL) mxmlElementSetAttr(deviceXml, "version", device->version);
-  if(device->location != NULL) mxmlElementSetAttr(deviceXml, "location", device->location);
-  if(device->type != NULL) mxmlElementSetAttr(deviceXml, "type", device->type);
-
-  Service *iterator;
-
-  DL_FOREACH( device->service_head, iterator )
-  {
-    serviceToXml(iterator, deviceXml);
-  }
-
-  return deviceXml;
-}
-
-json_t*
-deviceToJson(Device *device)
-{
-  json_t *deviceJson=NULL;
-  json_t *value=NULL;
-  json_t *serviceArray=NULL;
-
-  if( ( deviceJson = json_object() ) == NULL )
-  {
-    return NULL;
-  }
-  if(device->description != NULL)
-  {
-    if( ( ( value = json_string(device->description) ) == NULL ) || ( json_object_set_new(deviceJson, "desc", value) != 0 ) )
-    {
-      return NULL;
-    }
-  }
-  if(device->id != NULL)
-  {
-    if( ( ( value = json_string(device->id) ) == NULL ) || ( json_object_set_new(deviceJson, "id", value) != 0 ) )
-    {
-      return NULL;
-    }
-  }
-  if(device->vendorId != NULL)
-  {
-    if( ( ( value = json_string(device->vendorId) ) == NULL ) || ( json_object_set_new(deviceJson, "vendorId", value) != 0 ) )
-    {
-      return NULL;
-    }
-  }
-  if(device->productId != NULL) 
-  {
-    if( ( ( value = json_string( device->productId ) ) == NULL ) || ( json_object_set_new(deviceJson, "productId", value) != 0 ) )
-    {
-      return NULL;
-    }
-  }
-  if(device->version != NULL) 
-  {
-    if( ( ( value = json_string( device->version ) ) == NULL ) || ( json_object_set_new(deviceJson, "version", value) != 0 ) )
-    {
-      return NULL;
-    }
-  }
-  if(device->productId != NULL) 
-  {
-    if( ( ( value = json_string( device->productId ) ) == NULL ) || ( json_object_set_new(deviceJson, "productId", value) != 0 ) )
-    {
-      return NULL;
-    }
-  }
-  if(device->type != NULL)
-  { 
-    if( ( ( value = json_string( device->type ) ) == NULL ) || ( json_object_set_new(deviceJson, "type", value) != 0 ) )
-    {
-      return NULL;
-    }
-  }
-
-  Service *iterator;
-
-  if( ( serviceArray = json_array() ) == NULL )
-  {
-    return NULL;
-  }
-
-  DL_FOREACH( device->service_head, iterator )
-  {
-    if( json_array_append_new(serviceArray, serviceToJson(iterator)) != 0 )
-    {
-      return NULL;
-    }
-  }
-
-  if( json_object_set_new(deviceJson, "service", serviceArray) != 0 )
-  {
-    return NULL;
-  }
-
-  return deviceJson;
-//error:
-//  if(value) json_decref(value);
-//  if(serviceArray) json_decref(serviceArray);
-//  if(deviceJson) json_decref(deviceJson);
 }
 
 static int

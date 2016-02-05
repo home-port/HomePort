@@ -34,8 +34,6 @@
 /* Function to handle configurations */
 Configuration *configurationNew();
 void           configurationFree(Configuration *config);
-mxml_node_t   *configurationToXml(Configuration *configuration, mxml_node_t *parent);
-json_t        *configurationToJson(Configuration *configuration);
 int            configurationAddListener(Configuration *configuration, Listener *l);
 int            configurationRemoveListener(Configuration *configuration, Listener *l);
 
@@ -52,7 +50,7 @@ void         deviceFree          (Device *device);
 Service*     serviceNew            (Device *device, const char *description, int isActuator, const char *type, const char *unit,
                                     serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data, free_f free_data); 
 void         serviceFree           (Service *service);
-int          serviceGenerateUri    (Service *service);
+int          serviceGenerateIds    (Service *service);
 int          serviceAddListener    (Service *service, Listener *l);
 int          serviceRemoveListener (Service *service, Listener *l);
 
@@ -65,8 +63,8 @@ void       parameterFree (Parameter *parameter);
 Adapter *configurationFindFirstAdapter(Configuration *configuration, const char *id, const char *network);
 Device  *adapterFindFirstDevice       (Adapter *adapter, const char *description, const char *id, const char *vendorId,
                                        const char *productId, const char *version, const char *location, const char *type);
-Service *deviceFindFirstService       (Device *device, const char *description, const int  *isActuator, const char *type,
-                                       const char *unit, const char *id, const char *uri);
+Service *deviceFindFirstService(Device *device, const char *description, const int *isActuator, const char *type,
+                                const char *unit, const char *id);
 Service *configurationServiceLookup(Configuration *configuration, const char *dtype, const char *did, const char *stype, const char *sid);
 Service *adapterServiceLookup(Adapter *adapter, const char *dtype, const char *did, const char *stype, const char *sid);
 
