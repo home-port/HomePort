@@ -64,7 +64,7 @@ Device  *adapterFindFirstDevice       (Adapter *adapter, const char *description
                                        const char *productId, const char *version, const char *location, const char *type);
 Service *deviceFindFirstService(Device *device, const char *description, const int *isActuator, const char *type,
                                 const char *unit, const char *id);
-Service *configurationServiceLookup(Configuration *configuration, const char *dtype, const char *did, const char *stype, const char *sid);
-Service *adapterServiceLookup(Adapter *adapter, const char *dtype, const char *did, const char *stype, const char *sid);
+Service *configurationServiceLookup(Configuration *configuration, const char *aid, const char *did, const char *sid);
+Service *adapterServiceLookup(Adapter *adapter, const char *did, const char *sid);
 
 #endif

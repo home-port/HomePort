@@ -33,7 +33,6 @@
 #include "hp_macros.h"
 #include "hpd_error.h"
 #include "utlist.h"
-#include "idgen.h"
 
 Configuration*
 configurationNew()
@@ -114,20 +113,15 @@ configurationFindFirstAdapter(Configuration *configuration,
   return NULL;
 }
 
-Service *configurationServiceLookup(Configuration *configuration, const char *dtype, const char *did, const char *stype, const char *sid)
+Service *configurationServiceLookup(Configuration *configuration, const char *aid, const char *did, const char *sid)
 {
     if( configuration== NULL ) return NULL;
 
-    Adapter *adapter = NULL;
-    Service *service = NULL;
+    Adapter *adapter = configurationFindAdapter(configuration, aid);
+    if (adapter == NULL)
+        return NULL;
 
-    DL_FOREACH(configuration->adapter_head, adapter)
-    {
-        service = adapterServiceLookup(adapter, dtype, did, stype, sid);
-        if (service) return service;
-    }
-
-    return NULL;
+    return adapterServiceLookup(adapter, did, sid);
 }
 
 int

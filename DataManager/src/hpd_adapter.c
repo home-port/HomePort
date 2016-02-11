@@ -142,21 +142,14 @@ adapterFindFirstDevice(Adapter *adapter,
   return NULL;
 }
 
-Service *adapterServiceLookup(Adapter *adapter, const char *dtype, const char *did, const char *stype, const char *sid)
+Service *adapterServiceLookup(Adapter *adapter, const char *did, const char *sid)
 {
   if( adapter == NULL ) return NULL;
 
-  Device *device = NULL;
-  Service *service = NULL;
+  Device *device = adapterFindDevice(adapter, did);
+  if (device == NULL)
+    return NULL;
 
-  DL_FOREACH(adapter->device_head, device)
-  {
-    if (strcmp(device->type, dtype) == 0 && strcmp(device->id, did) == 0) {
-      service = deviceFindFirstService(device, NULL, NULL, stype, NULL, sid);
-      if (service) return service;
-    }
-  }
-
-  return NULL;
+  return deviceFindService(device, sid);
 }
 
