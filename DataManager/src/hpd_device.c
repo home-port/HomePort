@@ -159,6 +159,9 @@ deviceAddService( Device *device, Service *service )
   if( service == NULL || device == NULL ) 
     return HPD_E_NULL_POINTER;
 
+    if (deviceFindService(device, service->id))
+        return HPD_E_ID_NOT_UNIQUE;
+
   service->device = device;
   DL_APPEND( device->service_head, service);
 

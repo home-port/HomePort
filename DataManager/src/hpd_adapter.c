@@ -91,6 +91,9 @@ adapterAddDevice(Adapter *adapter, Device *device)
 {
   if(adapter == NULL || device == NULL) return HPD_E_NULL_POINTER;
 
+  if (adapterFindDevice(adapter, device->id))
+    return HPD_E_ID_NOT_UNIQUE;
+
   device->adapter = adapter;
   DL_APPEND( adapter->device_head, device);
 

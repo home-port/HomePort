@@ -71,6 +71,9 @@ configurationAddAdapter(Configuration *configuration, Adapter *adapter)
 {
   if(configuration == NULL || adapter == NULL) return HPD_E_NULL_POINTER;
 
+    if (configurationFindAdapter(configuration, adapter->id))
+        return HPD_E_ID_NOT_UNIQUE;
+
   adapter->configuration = configuration;
 
   DL_APPEND( configuration->adapter_head, adapter);
