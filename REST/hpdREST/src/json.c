@@ -46,13 +46,16 @@ serviceToJson(Service *service)
       return NULL;
     }
   }
-  if(service->id != NULL)
+  char *sid = lri_url_encode(service->id);
+  if(sid != NULL)
   {
-    if( ( ( value = json_string(service->id) ) == NULL ) || ( json_object_set_new(serviceJson, "id", value) != 0 ) )
+    if((( value = json_string(sid) ) == NULL ) || (json_object_set_new(serviceJson, "id", value) != 0 ) )
     {
+      free(sid);
       return NULL;
     }
   }
+  free(sid);
   char *uri = lri_alloc_uri(service);
   if(uri != NULL)
   {
@@ -67,13 +70,16 @@ serviceToJson(Service *service)
   {
     return NULL;
   }
-  if(service->type != NULL)
+  char *stype = lri_url_encode(service->type);
+  if(stype != NULL)
   {
-    if( ( ( value = json_string( service->type ) ) == NULL ) || ( json_object_set_new(serviceJson, "type", value) != 0 ) )
+    if((( value = json_string(stype) ) == NULL ) || (json_object_set_new(serviceJson, "type", value) != 0 ) )
     {
+      free(stype);
       return NULL;
     }
   }
+  free(stype);
   if(service->unit != NULL)
   {
     if( ( ( value = json_string( service->unit ) ) == NULL ) || ( json_object_set_new(serviceJson, "unit", value) != 0 ) )
@@ -163,13 +169,16 @@ deviceToJson(Device *device)
       return NULL;
     }
   }
-  if(device->id != NULL)
+  char *did = lri_url_encode(device->id);
+  if(did != NULL)
   {
-    if( ( ( value = json_string(device->id) ) == NULL ) || ( json_object_set_new(deviceJson, "id", value) != 0 ) )
+    if((( value = json_string(did) ) == NULL ) || (json_object_set_new(deviceJson, "id", value) != 0 ) )
     {
+      free(did);
       return NULL;
     }
   }
+  free(did);
   if(device->vendorId != NULL)
   {
     if( ( ( value = json_string(device->vendorId) ) == NULL ) || ( json_object_set_new(deviceJson, "vendorId", value) != 0 ) )
@@ -198,13 +207,16 @@ deviceToJson(Device *device)
       return NULL;
     }
   }
-  if(device->type != NULL)
+  char *dtype = lri_url_encode(device->type);
+  if(dtype != NULL)
   {
-    if( ( ( value = json_string( device->type ) ) == NULL ) || ( json_object_set_new(deviceJson, "type", value) != 0 ) )
+    if((( value = json_string(dtype) ) == NULL ) || (json_object_set_new(deviceJson, "type", value) != 0 ) )
     {
+      free(dtype);
       return NULL;
     }
   }
+  free(dtype);
 
   Service *iterator;
 
@@ -244,13 +256,16 @@ adapterToJson(Adapter *adapter)
   {
     goto error;
   }
-  if(adapter->id != NULL)
+  char *aid = lri_url_encode(adapter->id);
+  if(aid != NULL)
   {
-    if( ( ( value = json_string(adapter->id) ) == NULL ) || ( json_object_set_new(adapterJson, "id", value) != 0 ) )
+    if(((value = json_string(aid) ) == NULL ) || (json_object_set_new(adapterJson, "id", value) != 0 ) )
     {
+      free(aid);
       goto error;
     }
   }
+  free(aid);
   if(adapter->network != NULL)
   {
     if( ( ( value = json_string(adapter->network) ) == NULL ) || ( json_object_set_new(adapterJson, "network", value) != 0 ) )

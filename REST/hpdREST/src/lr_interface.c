@@ -30,6 +30,7 @@
 #include "json.h"
 #include "xml.h"
 #include <stdlib.h>
+#include <curl/curl.h>
 #include "libREST.h"
 
 struct lri_req {
@@ -224,25 +225,58 @@ setState(void *srv_data, void **req_data_in, struct lr_request *req, const char 
     return 0;
 }
 
+char *lri_url_encode(const char *id)
+{
+    CURL *curl = curl_easy_init();
+    if(curl)
+        return curl_easy_escape(curl, id, 0);
+    else
+        return NULL;
+}
+
+char *lri_url_decode(const char *id)
+{
+    CURL *curl = curl_easy_init();
+    if(curl)
+        return curl_easy_unescape(curl, id, 0, NULL);
+    else
+        return NULL;
+}
+
 char *lri_alloc_uri(Service *service)
 {
     Device *device = service->device;
     Adapter *adapter = device->adapter;
 
-    char *uri = malloc((strlen(adapter->id)+strlen(device->type)+strlen(device->id)+strlen(service->type)+strlen(service->id)+5+1)*sizeof(char));
+    char *aid = lri_url_encode(adapter->id);
+    char *dtype = lri_url_encode(device->type);
+    char *did = lri_url_encode(device->id);
+    char *stype = lri_url_encode(service->type);
+    char *sid = lri_url_encode(service->id);
+
+    if (!(aid && dtype && did && stype && sid))
+        return NULL;
+
+    char *uri = malloc((strlen(aid)+strlen(dtype)+strlen(did)+strlen(stype)+strlen(sid)+5+1)*sizeof(char));
     if( uri == NULL ) return NULL;
     uri[0] = '\0';
 
     strcat(uri, "/");
-    strcat(uri, adapter->id);
+    strcat(uri, aid);
     strcat(uri, "/");
-    strcat(uri, device->type);
+    strcat(uri, dtype);
     strcat(uri, "/");
-    strcat(uri, device->id);
+    strcat(uri, did);
     strcat(uri, "/");
-    strcat(uri, service->type);
+    strcat(uri, stype);
     strcat(uri, "/");
-    strcat(uri, service->id);
+    strcat(uri, sid);
+
+    free(aid);
+    free(dtype);
+    free(did);
+    free(stype);
+    free(sid);
 
     return uri;
 }
@@ -312,7 +346,7 @@ lri_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, co
 //    lr_sendf(req, WS_HTTP_406, NULL, NULL);
 //    return 0;
 //  }
-    lr_sendf(req, WS_HTTP_200, NULL, res);
+    lr_sendf(req, WS_HTTP_200, NULL, "%s", res);
 
     free(res);
     return 0;

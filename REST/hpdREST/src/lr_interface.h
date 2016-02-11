@@ -32,6 +32,8 @@
 struct lr_request;
 
 char *lri_alloc_uri(Service *service);
+char *lri_url_encode(const char *id);
+char *lri_url_decode(const char *id);
 
 int lri_registerService(struct lr *lr, Service *service);
 int lri_unregisterService(struct lr *lr, char* uri);
