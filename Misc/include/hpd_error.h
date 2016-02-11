@@ -62,7 +62,7 @@ authors and should not be interpreted as representing official policies, either 
 	
 #define HPD_E_CFG_FILE_ERROR				-4	/**< Error when trying to load the configuration from file */
 
-#define HPD_E_MALLOC_ERROR 				-5	/**< A malloc failed */
+#define HPD_E_ALLOC_ERROR 				-5	/**< A malloc failed */
 
 #define HPD_E_BAD_PARAMETER				-6	/**< A bad paramter has been given to HPD */
 
@@ -164,8 +164,9 @@ authors and should not be interpreted as representing official policies, either 
 
 #define HPD_E_ID_ALREADY_SET  -55
 
-#define HPD_E_DEVICE_ALREADY_ATTACHED  -56
+#define HPD_E_DEVICE_ATTACHED  -56
 #define HPD_E_DEVICE_NOT_ATTACHED  -57
+#define HPD_E_ID_NOT_UNIQUE -58
 
 
 

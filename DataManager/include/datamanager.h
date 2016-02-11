@@ -38,19 +38,18 @@ int            configurationAddListener(Configuration *configuration, Listener *
 int            configurationRemoveListener(Configuration *configuration, Listener *l);
 
 /* Function to handle adapters */
-Adapter     *adapterNew          (Configuration *configuration, const char *network, void *data, free_f free_data);
+int          adapterNew          (Adapter **adapter, Configuration *configuration, const char *id, const char *network, void *data, free_f free_data);
 void         adapterFree         (Adapter *adapter);
 
 /* Function to handle devices */
-Device*      deviceNew           (Adapter *adapter, const char *description, const char *vendorId, const char *productId,
+int          deviceNew           (Device** device, Adapter *adapter, const char *id, const char *description, const char *vendorId, const char *productId,
                                   const char *version, const char *location, const char *type, void *data, free_f free_data);
 void         deviceFree          (Device *device); 
 
 /* Function to handle services */
-Service*     serviceNew            (Device *device, const char *description, int isActuator, const char *type, const char *unit,
+int          serviceNew            (Service **service, Device *device, const char *id, const char *description, int isActuator, const char *type, const char *unit,
                                     serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data, free_f free_data); 
 void         serviceFree           (Service *service);
-int          serviceGenerateIds    (Service *service);
 int          serviceAddListener    (Service *service, Listener *l);
 int          serviceRemoveListener (Service *service, Listener *l);
 

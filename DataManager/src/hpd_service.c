@@ -36,8 +36,6 @@
 #include "utlist.h"
 #include "hpd_error.h"
 
-#define SERVICE_ID_SIZE 4
-
 /**
  * Creates the structure Service with all its parameters
  *
@@ -65,49 +63,44 @@
  * @return returns the Service or NULL if failed, note that
  * 		id, type, device and get_function can not be NULL
  */
-Service* 
-serviceNew(
-      Device *device,
-      const char *description,
-      int isActuator,
-      const char *type,
-      const char *unit,
-      serviceGetFunction getFunction,
-      servicePutFunction putFunction,
-      Parameter *parameter,
-      void* data, free_f free_data)
+int serviceNew(Service **service, Device *device,
+               const char *id, const char *description, int isActuator, const char *type, const char *unit,
+               serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter,
+               void* data, free_f free_data)
 {
-  Service *service;
-  alloc_struct(service);
+    if (deviceFindService(device, id) != NULL)
+        return HPD_E_ID_NOT_UNIQUE;
 
-  service->listener_head = NULL;
-  service->device = NULL;
-  service->id = NULL;
+    alloc_struct(*service);
 
-  null_ok_string_copy(service->description, description);
+    (*service)->listener_head = NULL;
+    (*service)->device = NULL;
 
-  service->isActuator = isActuator;
+    null_nok_string_copy((*service)->id, id);
+    null_ok_string_copy((*service)->description, description);
 
-  null_nok_string_copy(service->type, type);
+    (*service)->isActuator = isActuator;
 
-  null_ok_string_copy(service->unit, unit);
+    null_nok_string_copy((*service)->type, type);
 
-  null_nok_pointer_ass(service->parameter, parameter);
+    null_ok_string_copy((*service)->unit, unit);
 
-  service->getFunction = getFunction;
+    null_nok_pointer_ass((*service)->parameter, parameter);
 
-  service->putFunction = putFunction;
+    (*service)->getFunction = getFunction;
 
-  service->data = data;
-  service->free_data = free_data;
+    (*service)->putFunction = putFunction;
 
-  deviceAddService(device, service);
+    (*service)->data = data;
+    (*service)->free_data = free_data;
 
-  return service;
+    deviceAddService(device, *service);
 
-cleanup:
-  serviceFree(service);
-  return NULL;
+    return HPD_E_SUCCESS;
+
+    cleanup:
+    serviceFree(*service);
+    return HPD_E_ALLOC_ERROR;
 }
 
 /**
@@ -137,38 +130,6 @@ serviceFree( Service *service )
     if (service->free_data) service->free_data(service->data);
     free(service);
   }
-}
-
-int
-serviceGenerateId(Service *service)
-{
-   if (service->id) return HPD_E_ID_ALREADY_SET;
-   Device *device = service->device;
-   char *service_id = (char*)malloc((SERVICE_ID_SIZE+1)*sizeof(char));
-   if (!service_id) return HPD_E_MALLOC_ERROR;
-   do{
-      rand_str(service_id, SERVICE_ID_SIZE);
-   }while(deviceFindService(device, service_id) != NULL);
-
-   service->id = service_id;
-   return HPD_E_SUCCESS;
-}
-
-int
-serviceGenerateIds(Service *service)
-{
-   int rc;
-   Device *device = service->device;
-
-   rc = serviceGenerateId(service);
-   if (rc != HPD_E_SUCCESS && rc != HPD_E_ID_ALREADY_SET)
-      return rc;
-
-   rc = deviceGenerateId(device);
-   if (rc != HPD_E_SUCCESS && rc != HPD_E_ID_ALREADY_SET)
-      return rc;
-
-   return HPD_E_SUCCESS;
 }
 
 int

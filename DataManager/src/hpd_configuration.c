@@ -72,11 +72,6 @@ configurationAddAdapter(Configuration *configuration, Adapter *adapter)
   if(configuration == NULL || adapter == NULL) return HPD_E_NULL_POINTER;
 
   adapter->configuration = configuration;
-  int stat = adapterGenerateId(adapter);
-  if (stat) {
-     adapter->configuration = NULL;
-     return stat;
-  }
 
   DL_APPEND( configuration->adapter_head, adapter);
 

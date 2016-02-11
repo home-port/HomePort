@@ -34,16 +34,7 @@ homePortAttachDevice( HomePort *homeport, Device *device )
     // Pre-checks
     if( homeport == NULL || device == NULL )
         return HPD_E_NULL_POINTER;
-    if (device->attached) return HPD_E_DEVICE_ALREADY_ATTACHED;
-
-    Service *iterator;
-    int rc;
-
-    DL_FOREACH( device->service_head, iterator )
-    {
-        rc = serviceGenerateIds(iterator);
-        if (rc != HPD_E_SUCCESS) return rc;
-    }
+    if (device->attached) return HPD_E_DEVICE_ATTACHED;
 
     device->attached = 1;
 
@@ -103,25 +94,25 @@ homePortDetachAllDevices(HomePort *homeport, Adapter *adapter)
     return HPD_E_SUCCESS;
 }
 
-Adapter   *homePortNewAdapter    (HomePort *homeport, const char *network, void *data, free_f free_data)
+int        homePortNewAdapter    (Adapter **adapter, HomePort *homeport, const char *id, const char *network, void *data, free_f free_data)
 {
-    return adapterNew(homeport->configuration, network, data, free_data);
+    return adapterNew(adapter, homeport->configuration, id, network, data, free_data);
 }
 
-Device    *homePortNewDevice     (Adapter *adapter, const char *description, const char *vendorId, const char *productId,
+int        homePortNewDevice     (Device **device, Adapter *adapter, const char *id, const char *description, const char *vendorId, const char *productId,
                                   const char *version, const char *location, const char *type, void *data, free_f free_data)
 {
-    return deviceNew(adapter, description, vendorId, productId, version, location, type, data, free_data);
+    return deviceNew(device, adapter, id, description, vendorId, productId, version, location, type, data, free_data);
 }
 
-Service   *homePortNewService    (Device *device, const char *description, int isActuator, const char *type, const char *unit,
-                                  serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data, free_f free_data)
+int        homePortNewService    (Service **service, Device *device, const char *id, const char *description, int isActuator, const char *type, const char *unit,
+        serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data, free_f free_data)
 {
     if (device->attached) {
         fprintf(stderr, "Cannot add a service to an attached device. Please detach device first.\n");
-        return NULL;
+        return HPD_E_DEVICE_ATTACHED;
     }
-    return serviceNew(device, description, isActuator, type, unit, getFunction, putFunction, parameter, data, free_data);
+    return serviceNew(service, device, id, description, isActuator, type, unit, getFunction, putFunction, parameter, data, free_data);
 }
 
 Parameter *homePortNewParameter  (const char *max, const char *min, const char *scale, const char *step,

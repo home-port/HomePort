@@ -35,32 +35,31 @@
 #include "utlist.h"
 #include "idgen.h"
 
-#define ADAPTER_ID_SIZE 2
-
-Adapter*
-adapterNew(Configuration *configuration, const char *network, void *data, free_f free_data )
+int adapterNew(Adapter **adapter, Configuration *configuration, const char *id, const char *network, void *data, free_f free_data)
 {
-  Adapter * adapter;
+  if (configurationFindAdapter(configuration, id) != NULL)
+    return HPD_E_ID_NOT_UNIQUE;
 
-  alloc_struct(adapter);
+  alloc_struct(*adapter);
 
-  adapter->id = NULL;
+  (*adapter)->id = NULL;
 
-  null_ok_string_copy(adapter->network, network);
+  null_nok_string_copy((*adapter)->id, id);
+  null_ok_string_copy((*adapter)->network, network);
 
-  adapter->data = data;
-  adapter->free_data = free_data;
+  (*adapter)->data = data;
+  (*adapter)->free_data = free_data;
 
-  adapter->device_head = NULL;
-  adapter->configuration = NULL;
+  (*adapter)->device_head = NULL;
+  (*adapter)->configuration = NULL;
 
-  configurationAddAdapter(configuration, adapter);
+  configurationAddAdapter(configuration, *adapter);
 
-  return adapter;
+  return HPD_E_SUCCESS;
 
 cleanup:
-  adapterFree(adapter);
-  return NULL;
+  adapterFree(*adapter);
+  return HPD_E_ALLOC_ERROR;
 }
 
 void
@@ -156,18 +155,5 @@ Service *adapterServiceLookup(Adapter *adapter, const char *dtype, const char *d
   }
 
   return NULL;
-}
-
-int adapterGenerateId(Adapter *adapter)
-{
-   Configuration *conf = adapter->configuration;
-  char *adapter_id = (char*)malloc((ADAPTER_ID_SIZE+1)*sizeof(char));
-   if (!adapter_id) return HPD_E_MALLOC_ERROR;
-  do{
-    rand_str(adapter_id, ADAPTER_ID_SIZE);
-  }while(configurationFindAdapter(conf, adapter_id) != NULL);
-
-  adapter->id = adapter_id;
-  return HPD_E_SUCCESS;
 }
 

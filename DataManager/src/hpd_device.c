@@ -36,7 +36,6 @@
 #include "utlist.h"
 #include "idgen.h"
 
-#define DEVICE_ID_SIZE 4
 
 /**
  * Create the structure Device with all its parameters
@@ -68,44 +67,40 @@
  * @return returns the Device or NULL if failed, note that
  * 		ID and type can not be NULL
  */
-Device* 
-deviceNew(
-      Adapter *adapter,
-    const char *description,
-    const char *vendorId,
-    const char *productId,
-    const char *version,
-    const char *location,
-    const char *type,
-    void * data, free_f free_data)
+int deviceNew(Device** device, Adapter *adapter,
+              const char *id, const char *description, const char *vendorId, const char *productId,
+              const char *version, const char *location, const char *type,
+              void *data, free_f free_data)
 {
-  Device *device;
+    if (adapterFindDevice(adapter, id) != NULL)
+        return HPD_E_ID_NOT_UNIQUE;
 
-  alloc_struct(device);
+    alloc_struct(*device);
 
-  device->attached = 0;
-  device->id = NULL;
+    (*device)->attached = 0;
+    (*device)->id = NULL;
 
-  null_ok_string_copy(device->description, description);
-  null_ok_string_copy(device->vendorId, vendorId);
-  null_ok_string_copy(device->productId, productId);
-  null_ok_string_copy(device->version, version);
-  null_ok_string_copy(device->location, location);
-  null_nok_string_copy(device->type, type);
+    null_nok_string_copy((*device)->id, id);
+    null_ok_string_copy((*device)->description, description);
+    null_ok_string_copy((*device)->vendorId, vendorId);
+    null_ok_string_copy((*device)->productId, productId);
+    null_ok_string_copy((*device)->version, version);
+    null_ok_string_copy((*device)->location, location);
+    null_nok_string_copy((*device)->type, type);
 
-  device->service_head = NULL;
-  device->adapter = NULL;
+    (*device)->service_head = NULL;
+    (*device)->adapter = NULL;
 
-  device->data = data;
-  device->free_data = free_data;
+    (*device)->data = data;
+    (*device)->free_data = free_data;
 
-  adapterAddDevice(adapter, device);
+    adapterAddDevice(adapter, *device);
 
-  return device;
+    return HPD_E_SUCCESS;
 
-cleanup:
-  deviceFree(device);
-  return NULL;
+    cleanup:
+    deviceFree(*device);
+    return HPD_E_ALLOC_ERROR;
 }
 
 /**
@@ -223,34 +218,5 @@ deviceFindFirstService(Device *device, const char *description, const int *isAct
   }
 
   return NULL;
-}
-
-static int
-idExists(Configuration *conf, char *deviceId)
-{
-  Adapter *iterator = NULL;
-  DL_FOREACH( conf->adapter_head, iterator )
-  {
-   if(adapterFindDevice(iterator, deviceId) != NULL)
-   {
-     return 1;
-   }
-  }
-  return 0;
-}
-
-int deviceGenerateId(Device *device)
-{
-   if (device->id) return HPD_E_ID_ALREADY_SET;
-   Configuration *conf = device->adapter->configuration;
-
-   char *deviceId = malloc((DEVICE_ID_SIZE+1)*sizeof(char));
-   if (!deviceId) return HPD_E_MALLOC_ERROR;
-   do{
-     rand_str(deviceId, DEVICE_ID_SIZE);
-   }while(idExists(conf, deviceId) != 0);
-
-   device->id = deviceId;
-  return HPD_E_SUCCESS;
 }
 

@@ -227,9 +227,14 @@ setState(void *srv_data, void **req_data_in, struct lr_request *req, const char 
 char *lri_alloc_uri(Service *service)
 {
     Device *device = service->device;
-    char *uri = malloc((strlen(device->type)+strlen(device->id)+strlen(service->type)+strlen(service->id)+4+1)*sizeof(char));
+    Adapter *adapter = device->adapter;
+
+    char *uri = malloc((strlen(adapter->id)+strlen(device->type)+strlen(device->id)+strlen(service->type)+strlen(service->id)+5+1)*sizeof(char));
     if( uri == NULL ) return NULL;
     uri[0] = '\0';
+
+    strcat(uri, "/");
+    strcat(uri, adapter->id);
     strcat(uri, "/");
     strcat(uri, device->type);
     strcat(uri, "/");
@@ -238,6 +243,7 @@ char *lri_alloc_uri(Service *service)
     strcat(uri, service->type);
     strcat(uri, "/");
     strcat(uri, service->id);
+
     return uri;
 }
 
