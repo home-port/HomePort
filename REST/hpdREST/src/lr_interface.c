@@ -227,20 +227,29 @@ setState(void *srv_data, void **req_data_in, struct lr_request *req, const char 
 
 char *lri_url_encode(const char *id)
 {
+    char *res;
     CURL *curl = curl_easy_init();
+
     if(curl)
-        return curl_easy_escape(curl, id, 0);
+        res = curl_easy_escape(curl, id, 0);
     else
-        return NULL;
+        res = NULL;
+
+    curl_easy_cleanup(curl);
+    return res;
 }
 
 char *lri_url_decode(const char *id)
 {
+    char *res;
     CURL *curl = curl_easy_init();
     if(curl)
-        return curl_easy_unescape(curl, id, 0, NULL);
+        res = curl_easy_unescape(curl, id, 0, NULL);
     else
-        return NULL;
+        res = NULL;
+
+    curl_easy_cleanup(curl);
+    return res;
 }
 
 char *lri_alloc_uri(Service *service)
