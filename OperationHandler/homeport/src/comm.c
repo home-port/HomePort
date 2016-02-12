@@ -26,132 +26,175 @@ authors and should not be interpreted as representing official policies, either 
 #include "homeport.h"
 #include "datamanager.h"
 #include "utlist.h"
+#include "hpd_datamanager.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
 void homePortGet(Service *service, val_err_cb on_response, void *data)
 {
-   Request req = { on_response, data };
-   service->getFunction(service, req);
+    Request req = { on_response, data };
+    service->getFunction(service, req);
 }
 
 void homePortSet(Service *service, const char *val, size_t len, val_err_cb on_response, void *data)
 {
-   Request req = { on_response, data };
-   service->putFunction(service, req, val, len);
+    Request req = { on_response, data };
+    service->putFunction(service, req, val, len);
 }
 
 void homePortRespond(Service *service, Request req, ErrorCode code, const char *val, size_t len)
 {
-   if (req.on_response)
-      req.on_response(service, req.data, code, val, len);
+    if (req.on_response)
+        req.on_response(service, req.data, code, val, len);
 }
 
 void homePortChanged(Service *service, const char *val, size_t len)
 {
-  Listener *l;
+    Listener *l;
 
-  DL_FOREACH(service->listener_head, l)
-  {
-     l->on_change(service, l->data, val, len);
-  }
+    DL_FOREACH(service->listener_head, l)
+    {
+        l->on_change(service, l->data, val, len);
+    }
 }
 
 Listener *homePortNewServiceListener(Service *srv, val_cb on_change, void *data, free_f on_free)
 {
-   Listener *l = malloc(sizeof(Listener));
-   l->type = SERVICE_LISTENER;
-   l->subscribed = 0;
-   l->service = srv;
-   l->on_change = on_change;
-   l->data = data;
-   l->on_free = on_free;
-   l->next = NULL;
-   l->prev = NULL;
-   return l;
+    Listener *l = malloc(sizeof(Listener));
+    l->type = SERVICE_LISTENER;
+    l->subscribed = 0;
+    l->service = srv;
+    l->on_change = on_change;
+    l->data = data;
+    l->on_free = on_free;
+    l->next = NULL;
+    l->prev = NULL;
+    return l;
 }
 
 Listener *homePortNewDeviceListener(HomePort *hp, dev_cb on_attach, dev_cb on_detach, void *data, free_f on_free)
 {
-   Listener *l = malloc(sizeof(Listener));
-   l->type = DEVICE_LISTENER;
-   l->subscribed = 0;
-   l->configuration = hp->configuration;
-   l->on_attach = on_attach;
-   l->on_detach = on_detach;
-   l->data = data;
-   l->on_free = on_free;
-   l->next = NULL;
-   l->prev = NULL;
-   return l;
+    Listener *l = malloc(sizeof(Listener));
+    l->type = CONFIGURATION_LISTENER;
+    l->subscribed = 0;
+    l->configuration = hp->configuration;
+    l->on_attach = on_attach;
+    l->on_detach = on_detach;
+    l->data = data;
+    l->on_free = on_free;
+    l->next = NULL;
+    l->prev = NULL;
+    return l;
 }
+
+Listener *homePortAdapterNewDeviceListener (Adapter *adapter, dev_cb on_attach, dev_cb on_detach, void *data, free_f on_free)
+{
+    Listener *l = malloc(sizeof(Listener));
+    l->type = ADAPTER_LISTENER;
+    l->subscribed = 0;
+    l->adapter = adapter;
+    l->on_attach = on_attach;
+    l->on_detach = on_detach;
+    l->data = data;
+    l->on_free = on_free;
+    l->next = NULL;
+    l->prev = NULL;
+    return l;
+}
+
 
 void homePortFreeListener(Listener *l)
 {
-   if (l->subscribed) {
-      fprintf(stderr, "Please unsubscribe listener before freeing it\n");
-      return;
-   }
-   if (l->on_free) l->on_free(l->data);
-   free(l);
+    if (l->subscribed) {
+        fprintf(stderr, "Please unsubscribe listener before freeing it\n");
+        return;
+    }
+    if (l->on_free) l->on_free(l->data);
+    free(l);
 }
 
 void homePortSubscribe(Listener *l)
 {
-   if (l->subscribed) {
-      fprintf(stderr, "Listener already subscribed, ignoring request\n");
-      return;
-   }
+    if (l->subscribed) {
+        fprintf(stderr, "Listener already subscribed, ignoring request\n");
+        return;
+    }
 
-   switch (l->type) {
-      case SERVICE_LISTENER:
-         serviceAddListener(l->service, l);
-         break;
-      case DEVICE_LISTENER:
-         configurationAddListener(l->configuration, l);
-         break;
-   }
-   l->subscribed = 1;
+    switch (l->type) {
+        case SERVICE_LISTENER:
+            serviceAddListener(l->service, l);
+            break;
+        case CONFIGURATION_LISTENER:
+            configurationAddListener(l->configuration, l);
+            break;
+        case ADAPTER_LISTENER:
+            adapterAddListener(l->adapter, l);
+            break;
+    }
+    l->subscribed = 1;
 }
 
 void homePortUnsubscribe(Listener *l)
 {
-   if (!l->subscribed) {
-      return;
-   }
+    if (!l->subscribed) {
+        return;
+    }
 
-   switch (l->type) {
-      case SERVICE_LISTENER:
-         serviceRemoveListener(l->service, l);
-         break;
-      case DEVICE_LISTENER:
-         configurationRemoveListener(l->configuration, l);
-         break;
-   }
-   l->subscribed = 0;
+    switch (l->type) {
+        case SERVICE_LISTENER:
+            serviceRemoveListener(l->service, l);
+            break;
+        case CONFIGURATION_LISTENER:
+            configurationRemoveListener(l->configuration, l);
+            break;
+        case ADAPTER_LISTENER:
+            adapterRemoveListener(l->adapter, l);
+            break;
+    }
+    l->subscribed = 0;
 }
 
 void homePortForAllAttachedDevices (Listener *l)
 {
-   Configuration *c = l->configuration;
-   Adapter *a;
-   Device *d;
+    Configuration *c = l->configuration;
+    Adapter *a;
+    Device *d;
 
-   if (l->type != DEVICE_LISTENER) {
-      fprintf(stderr, "Listener must be a device listener\n");
-      return;
-   }
+    if (l->type != CONFIGURATION_LISTENER) {
+        fprintf(stderr, "Listener must be a device listener\n");
+        return;
+    }
 
-   if (!l->on_attach) {
-      fprintf(stderr, "Listener does not have an on_attach function, skipping\n");
-      return;
-   }
-   
-   DL_FOREACH(c->adapter_head, a) {
-      DL_FOREACH(a->device_head, d) {
-         if (d->attached) l->on_attach(l->data, d);
-      }
-   }
+    if (!l->on_attach) {
+        fprintf(stderr, "Listener does not have an on_attach function, skipping\n");
+        return;
+    }
+
+    DL_FOREACH(c->adapter_head, a) {
+        DL_FOREACH(a->device_head, d) {
+            if (d->attached) l->on_attach(l->data, d);
+        }
+    }
+}
+
+void homePortAdapterForAllAttachedDevices (Listener *l)
+{
+    Adapter *a = l->adapter;
+    Device *d;
+
+    if (l->type != ADAPTER_LISTENER) {
+        fprintf(stderr, "Listener must be a device listener\n");
+        return;
+    }
+
+    if (!l->on_attach) {
+        fprintf(stderr, "Listener does not have an on_attach function, skipping\n");
+        return;
+    }
+
+    DL_FOREACH(a->device_head, d) {
+        if (d->attached) l->on_attach(l->data, d);
+    }
 }
 

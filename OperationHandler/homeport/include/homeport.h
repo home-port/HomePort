@@ -81,15 +81,17 @@ Service *homePortFindFirstService(Device *device, const char *description, const
 Service *homePortServiceLookup(HomePort *homePort, const char *aid, const char *did, const char *sid);
 
 // Communication interface
-void      homePortRespond               (Service *service, Request req, ErrorCode code, const char *val, size_t len);
-void      homePortChanged               (Service *service, const char *val, size_t len);
-void      homePortGet                   (Service *service, val_err_cb on_response, void *data);
-void      homePortSet                   (Service *service, const char *val, size_t len, val_err_cb on_response, void *data);
-Listener *homePortNewServiceListener    (Service *srv, val_cb on_change, void *data, free_f on_free);
-Listener *homePortNewDeviceListener     (HomePort *hp, dev_cb on_attach, dev_cb on_detach, void *data, free_f on_free);
-void      homePortFreeListener          (Listener *l);
-void      homePortSubscribe             (Listener *l);
-void      homePortUnsubscribe           (Listener *l);
-void      homePortForAllAttachedDevices (Listener *l);
+void      homePortRespond                      (Service *service, Request req, ErrorCode code, const char *val, size_t len);
+void      homePortChanged                      (Service *service, const char *val, size_t len);
+void      homePortGet                          (Service *service, val_err_cb on_response, void *data);
+void      homePortSet                          (Service *service, const char *val, size_t len, val_err_cb on_response, void *data);
+Listener *homePortNewServiceListener           (Service *srv, val_cb on_change, void *data, free_f on_free);
+Listener *homePortNewDeviceListener            (HomePort *hp, dev_cb on_attach, dev_cb on_detach, void *data, free_f on_free);
+Listener *homePortAdapterNewDeviceListener     (Adapter *adapter, dev_cb on_attach, dev_cb on_detach, void *data, free_f on_free);
+void      homePortFreeListener                 (Listener *l);
+void      homePortSubscribe                    (Listener *l);
+void      homePortUnsubscribe                  (Listener *l);
+void      homePortForAllAttachedDevices        (Listener *l);
+void      homePortAdapterForAllAttachedDevices (Listener *l);
 
 #endif

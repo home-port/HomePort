@@ -38,8 +38,10 @@ int            configurationAddListener(Configuration *configuration, Listener *
 int            configurationRemoveListener(Configuration *configuration, Listener *l);
 
 /* Function to handle adapters */
-int          adapterNew          (Adapter **adapter, Configuration *configuration, const char *id, const char *network, void *data, free_f free_data);
-void         adapterFree         (Adapter *adapter);
+int          adapterNew            (Adapter **adapter, Configuration *configuration, const char *id, const char *network, void *data, free_f free_data);
+void         adapterFree           (Adapter *adapter);
+int          adapterAddListener    (Adapter *adapter, Listener *l);
+int          adapterRemoveListener (Adapter *adapter, Listener *l);
 
 /* Function to handle devices */
 int          deviceNew           (Device** device, Adapter *adapter, const char *id, const char *description, const char *vendorId, const char *productId,

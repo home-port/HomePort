@@ -52,6 +52,7 @@ int adapterNew(Adapter **adapter, Configuration *configuration, const char *id, 
 
   (*adapter)->device_head = NULL;
   (*adapter)->configuration = NULL;
+  (*adapter)->listener_head = NULL;
 
   configurationAddAdapter(configuration, *adapter);
 
@@ -151,5 +152,23 @@ Service *adapterServiceLookup(Adapter *adapter, const char *did, const char *sid
     return NULL;
 
   return deviceFindService(device, sid);
+}
+
+int
+adapterAddListener(Adapter *adapter, Listener *l)
+{
+  if(adapter == NULL || l == NULL )
+    return HPD_E_NULL_POINTER;
+
+  DL_APPEND(adapter->listener_head, l);
+  return HPD_E_SUCCESS;
+}
+
+int
+adapterRemoveListener(Adapter *adapter, Listener *l)
+{
+  if(adapter == NULL || l == NULL ) return HPD_E_NULL_POINTER;
+  DL_DELETE(adapter->listener_head, l );
+  return HPD_E_SUCCESS;
 }
 

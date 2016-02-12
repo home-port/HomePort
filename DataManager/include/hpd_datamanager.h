@@ -86,6 +86,7 @@ struct Adapter
     Device        *device_head;
     Adapter       *next;
     Adapter       *prev;
+    Listener      *listener_head;
     // Data members
     char          *id;
     char          *network;
@@ -154,11 +155,12 @@ struct Request {
 };
 
 struct Listener {
-    enum { SERVICE_LISTENER, DEVICE_LISTENER } type;
+    enum { SERVICE_LISTENER, CONFIGURATION_LISTENER, ADAPTER_LISTENER } type;
     // Navigational members
     union {
         Service  *service;
         Configuration *configuration;
+        Adapter *adapter;
     };
     Listener *next;
     Listener *prev;

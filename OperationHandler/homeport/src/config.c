@@ -44,6 +44,10 @@ homePortAttachDevice( HomePort *homeport, Device *device )
     {
         l->on_attach(l->data, device);
     }
+    DL_FOREACH(device->adapter->listener_head, l)
+    {
+        l->on_attach(l->data, device);
+    }
 
     return HPD_E_SUCCESS;
 }
@@ -72,6 +76,10 @@ homePortDetachDevice( HomePort *homeport, Device *device )
     // Inform
     Listener *l;
     DL_FOREACH(homeport->configuration->listener_head, l)
+    {
+        l->on_detach(l->data, device);
+    }
+    DL_FOREACH(device->adapter->listener_head, l)
     {
         l->on_detach(l->data, device);
     }
@@ -124,13 +132,18 @@ Parameter *homePortNewParameter  (const char *max, const char *min, const char *
 void       homePortFreeAdapter   (Adapter *adapter)
 {
     Device *iterator=NULL;
-
     DL_FOREACH( adapter->device_head, iterator )
     {
         if (iterator->attached) {
             fprintf(stderr, "Cannot free adapter. Please detach all devices first.\n");
             return;
         }
+    }
+
+    Listener *l, *tmp;
+    DL_FOREACH_SAFE(adapter->listener_head, l, tmp) {
+        homePortUnsubscribe(l);
+        homePortFreeListener(l);
     }
 
     adapterFree(adapter);
