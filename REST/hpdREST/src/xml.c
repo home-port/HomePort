@@ -68,18 +68,14 @@ serviceToXml(Service *service, mxml_node_t *parent)
 
   serviceXml = mxmlNewElement(parent, "service");
   if(service->description != NULL) mxmlElementSetAttr(serviceXml, "desc", service->description);
-  char *sid = lri_url_encode(service->id);
-  if(sid != NULL) mxmlElementSetAttr(serviceXml, "id", sid);
-  free(sid);
+  if(service->id != NULL) mxmlElementSetAttr(serviceXml, "id", service->id);
   char *uri = lri_alloc_uri(service);
   if(uri != NULL) {
     mxmlElementSetAttr(serviceXml, "uri", uri);
     free(uri);
   }
   mxmlElementSetAttr(serviceXml, "isActuator", service->isActuator ? "1" : "0");
-  char *stype = lri_url_encode(service->type);
-  if(stype != NULL) mxmlElementSetAttr(serviceXml, "type", stype);
-  free(stype);
+  if(service->type != NULL) mxmlElementSetAttr(serviceXml, "type", service->type);
   if(service->unit != NULL) mxmlElementSetAttr(serviceXml, "unit", service->unit);
 
 
@@ -108,16 +104,12 @@ deviceToXml(Device *device, mxml_node_t *parent)
 
   deviceXml = mxmlNewElement(parent, "device");
   if(device->description != NULL) mxmlElementSetAttr(deviceXml, "desc", device->description);
-  char *did = lri_url_encode(device->id);
-  if(did != NULL) mxmlElementSetAttr(deviceXml, "id", did);
-  free(did);
+  if(device->id != NULL) mxmlElementSetAttr(deviceXml, "id", device->id);
   if(device->vendorId != NULL) mxmlElementSetAttr(deviceXml, "vendorId", device->vendorId);
   if(device->productId != NULL) mxmlElementSetAttr(deviceXml, "productId", device->productId);
   if(device->version != NULL) mxmlElementSetAttr(deviceXml, "version", device->version);
   if(device->location != NULL) mxmlElementSetAttr(deviceXml, "location", device->location);
-  char *dtype = lri_url_encode(device->type);
-  if(dtype != NULL) mxmlElementSetAttr(deviceXml, "type", dtype);
-  free(dtype);
+  if(device->type != NULL) mxmlElementSetAttr(deviceXml, "type", device->type);
 
   Service *iterator;
 
@@ -137,9 +129,7 @@ adapterToXml(Adapter *adapter, mxml_node_t *parent)
   mxml_node_t *adapterXml;
 
   adapterXml = mxmlNewElement(parent, "adapter");
-  char *aid = lri_url_encode(adapter->id);
-  if(aid != NULL) mxmlElementSetAttr(adapterXml, "id", aid);
-  free(aid);
+  if(adapter->id != NULL) mxmlElementSetAttr(adapterXml, "id", adapter->id);
   if(adapter->network != NULL) mxmlElementSetAttr(adapterXml, "network", adapter->network);
 
   Device *iterator;
