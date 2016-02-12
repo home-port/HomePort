@@ -26,6 +26,7 @@
 #include "json.h"
 #include "datamanager.h"
 #include <jansson.h>
+#include <curl/curl.h>
 #include "utlist.h"
 #include "lr_interface.h"
 
@@ -311,11 +312,22 @@ configurationToJson(Configuration *configuration)
   json_t *configJson=NULL;
   json_t *adapterArray=NULL;
   json_t *adapter=NULL;
+  json_t *value=NULL;
 
   if( ( configJson = json_object() ) == NULL )
   {
     goto error;
   }
+
+#ifdef CURL_ICONV_CODESET_OF_HOST
+  curl_version_info_data *curl_ver = curl_version_info(CURLVERSION_NOW);
+  if (curl_ver->features & CURL_VERSION_CONV && curl_ver->iconv_ver_num != 0)
+    if(((value = json_string(CURL_ICONV_CODESET_OF_HOST)) == NULL) || (json_object_set_new(configJson, "urlEncodedCharset", value) != 0)) goto error;
+  else
+    if(((value = json_string("ASCII")) == NULL) || (json_object_set_new(configJson, "urlEncodedCharset", value) != 0)) goto error;
+#else
+  if(((value = json_string("ASCII")) == NULL) || (json_object_set_new(configJson, "urlEncodedCharset", value) != 0)) goto error;
+#endif
 
   Adapter *iterator;
 

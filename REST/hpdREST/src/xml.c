@@ -27,6 +27,7 @@
 #include "datamanager.h"
 #include <time.h>
 #include <mxml.h>
+#include <curl/curl.h>
 #include "utlist.h"
 #include "lr_interface.h"
 
@@ -158,6 +159,16 @@ configurationToXml(Configuration *configuration, mxml_node_t *parent)
   mxml_node_t *configXml;
 
   configXml = mxmlNewElement(parent, "configuration");
+
+#ifdef CURL_ICONV_CODESET_OF_HOST
+  curl_version_info_data *curl_ver = curl_version_info(CURLVERSION_NOW);
+  if (curl_ver->features & CURL_VERSION_CONV && curl_ver->iconv_ver_num != 0)
+    mxmlElementSetAttr(configXml, "urlEncodedCharset", CURL_ICONV_CODESET_OF_HOST);
+  else
+    mxmlElementSetAttr(configXml, "urlEncodedCharset", "ASCII");
+#else
+  mxmlElementSetAttr(configXml, "urlEncodedCharset", "ASCII");
+#endif
 
   Adapter *iterator;
 
