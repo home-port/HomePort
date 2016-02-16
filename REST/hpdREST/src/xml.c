@@ -74,7 +74,7 @@ serviceToXml(Service *service, mxml_node_t *parent)
     mxmlElementSetAttr(serviceXml, "uri", uri);
     free(uri);
   }
-  mxmlElementSetAttr(serviceXml, "isActuator", service->isActuator ? "1" : "0");
+  mxmlElementSetAttr(serviceXml, "isActuator", (service->putFunction != NULL) ? "1" : "0");
   if(service->type != NULL) mxmlElementSetAttr(serviceXml, "type", service->type);
   if(service->unit != NULL) mxmlElementSetAttr(serviceXml, "unit", service->unit);
 

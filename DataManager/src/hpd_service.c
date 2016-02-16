@@ -64,7 +64,7 @@
  * 		id, type, device and get_function can not be NULL
  */
 int serviceNew(Service **service, Device *device,
-               const char *id, const char *description, int isActuator, const char *type, const char *unit,
+               const char *id, const char *description, const char *type, const char *unit,
                serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter,
                void* data, free_f free_data)
 {
@@ -78,8 +78,6 @@ int serviceNew(Service **service, Device *device,
 
     null_nok_string_copy((*service)->id, id);
     null_ok_string_copy((*service)->description, description);
-
-    (*service)->isActuator = isActuator;
 
     null_nok_string_copy((*service)->type, type);
 

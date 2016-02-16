@@ -64,7 +64,7 @@ serviceToJson(Service *service)
     }
     free(uri);
   }
-  if( ( ( value = json_string( service->isActuator ? "1" : "0") ) == NULL ) || (json_object_set_new(serviceJson, "isActuator", value) != 0 ) )
+  if( ( ( value = json_string( (service->putFunction != NULL) ? "1" : "0") ) == NULL ) || (json_object_set_new(serviceJson, "isActuator", value) != 0 ) )
   {
     return NULL;
   }

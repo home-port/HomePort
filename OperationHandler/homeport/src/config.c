@@ -113,14 +113,14 @@ int        homePortNewDevice     (Device **device, Adapter *adapter, const char 
     return deviceNew(device, adapter, id, description, vendorId, productId, version, location, type, data, free_data);
 }
 
-int        homePortNewService    (Service **service, Device *device, const char *id, const char *description, int isActuator, const char *type, const char *unit,
+int        homePortNewService    (Service **service, Device *device, const char *id, const char *description, const char *type, const char *unit,
         serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data, free_f free_data)
 {
     if (device->attached) {
         fprintf(stderr, "Cannot add a service to an attached device. Please detach device first.\n");
         return HPD_E_DEVICE_ATTACHED;
     }
-    return serviceNew(service, device, id, description, isActuator, type, unit, getFunction, putFunction, parameter, data, free_data);
+    return serviceNew(service, device, id, description, type, unit, getFunction, putFunction, parameter, data, free_data);
 }
 
 Parameter *homePortNewParameter  (const char *max, const char *min, const char *scale, const char *step,
@@ -183,10 +183,10 @@ Device  *homePortFindFirstDevice  (Adapter *adapter, const char *description, co
     return adapterFindFirstDevice(adapter, description, id, vendorId, productId, version, location, type);
 }
 
-Service *homePortFindFirstService(Device *device, const char *description, const int *isActuator, const char *type,
+Service *homePortFindFirstService(Device *device, const char *description, const char *type,
                                   const char *unit, const char *id)
 {
-    return deviceFindFirstService(device, description, isActuator, type, unit, id);
+    return deviceFindFirstService(device, description, type, unit, id);
 }
 
 Service *homePortServiceLookup(HomePort *homePort, const char *aid, const char *did, const char *sid)

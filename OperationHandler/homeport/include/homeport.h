@@ -57,7 +57,7 @@ int        homePortEasy          (init_f init, deinit_f deinit, void *data);
 int        homePortNewAdapter    (Adapter **adapter, HomePort *homeport, const char *id, const char *network, void *data, free_f free_data);
 int        homePortNewDevice     (Device **device, Adapter *adapter, const char *id, const char *description, const char *vendorId, const char *productId,
                                   const char *version, const char *location, const char *type, void *data, free_f free_data);
-int        homePortNewService    (Service **service, Device *device, const char *id, const char *description, int isActuator, const char *type, const char *unit,
+int        homePortNewService    (Service **service, Device *device, const char *id, const char *description, const char *type, const char *unit,
                                   serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data, free_f free_data);
 Parameter *homePortNewParameter  (const char *max, const char *min, const char *scale, const char *step,
                                        const char *type, const char *unit, const char *values);
@@ -76,7 +76,7 @@ int        homePortDetachDevice     (HomePort *homeport, Device *device);
 Adapter *homePortFindFirstAdapter (HomePort *homeport, const char *id, const char *network);
 Device  *homePortFindFirstDevice  (Adapter *adapter, const char *description, const char *id, const char *vendorId,
                                    const char *productId, const char *version, const char *location, const char *type);
-Service *homePortFindFirstService(Device *device, const char *description, const int *isActuator, const char *type,
+Service *homePortFindFirstService(Device *device, const char *description, const char *type,
                                   const char *unit, const char *id);
 Service *homePortServiceLookup(HomePort *homePort, const char *aid, const char *did, const char *sid);
 

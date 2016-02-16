@@ -124,7 +124,7 @@ static int init(HomePort *homeport, void *data)
      * 8th parameter : The service's PUT function (optional)
      * 9th parameter : The service's parameter structure
      */
-     if (homePortNewService (&service_lamp0, device, "1", "Lamp0", 1, "Lamp", "ON/OFF",
+     if (homePortNewService (&service_lamp0, device, "1", "Lamp0", "Lamp", "ON/OFF",
                                         get_lamp, put_lamp,
                                         homePortNewParameter (NULL, NULL,
                                                               NULL, NULL, NULL,
@@ -132,7 +132,7 @@ static int init(HomePort *homeport, void *data)
             ,NULL, NULL))
          return 1;
 
-     if (homePortNewService (&service_lamp1, device, "2", "Lamp1", 1, "Lamp", "ON/OFF",
+     if (homePortNewService (&service_lamp1, device, "2", "Lamp1", "Lamp", "ON/OFF",
                                         get_lamp, put_lamp,
                                         homePortNewParameter (NULL, NULL,
                                                               NULL, NULL, NULL,
@@ -140,7 +140,7 @@ static int init(HomePort *homeport, void *data)
                                         NULL, NULL))
          return 1;
 
-     if (homePortNewService (&service_switch0, device, "3", "Switch0", 0, "Switch", "ON/OFF",
+     if (homePortNewService (&service_switch0, device, "3", "Switch0", "Switch", "ON/OFF",
                                           get_switch, NULL,
                                           homePortNewParameter (NULL, NULL,
                                                                 NULL, NULL, NULL,
@@ -148,7 +148,7 @@ static int init(HomePort *homeport, void *data)
                                           NULL, NULL))
          return 1;
 
-     if (homePortNewService (&service_switch1, device, "4", "Switch1", 0, "Switch", "ON/OFF",
+     if (homePortNewService (&service_switch1, device, "4", "Switch1", "Switch", "ON/OFF",
                                           get_switch, NULL,
                                           homePortNewParameter (NULL, NULL,
                                                                 NULL, NULL, NULL,

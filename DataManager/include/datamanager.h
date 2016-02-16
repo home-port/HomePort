@@ -49,7 +49,7 @@ int          deviceNew           (Device** device, Adapter *adapter, const char 
 void         deviceFree          (Device *device); 
 
 /* Function to handle services */
-int          serviceNew            (Service **service, Device *device, const char *id, const char *description, int isActuator, const char *type, const char *unit,
+int          serviceNew            (Service **service, Device *device, const char *id, const char *description, const char *type, const char *unit,
                                     serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data, free_f free_data); 
 void         serviceFree           (Service *service);
 int          serviceAddListener    (Service *service, Listener *l);
@@ -64,7 +64,7 @@ void       parameterFree (Parameter *parameter);
 Adapter *configurationFindFirstAdapter(Configuration *configuration, const char *id, const char *network);
 Device  *adapterFindFirstDevice       (Adapter *adapter, const char *description, const char *id, const char *vendorId,
                                        const char *productId, const char *version, const char *location, const char *type);
-Service *deviceFindFirstService(Device *device, const char *description, const int *isActuator, const char *type,
+Service *deviceFindFirstService(Device *device, const char *description, const char *type,
                                 const char *unit, const char *id);
 Service *configurationServiceLookup(Configuration *configuration, const char *aid, const char *did, const char *sid);
 Service *adapterServiceLookup(Adapter *adapter, const char *did, const char *sid);

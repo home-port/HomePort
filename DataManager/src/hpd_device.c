@@ -203,7 +203,7 @@ deviceRemoveService( Service *service )
 }
 
 Service *
-deviceFindFirstService(Device *device, const char *description, const int *isActuator, const char *type,
+deviceFindFirstService(Device *device, const char *description, const char *type,
                        const char *unit, const char *id)
 {
   if (device == NULL) return NULL;
@@ -213,11 +213,10 @@ deviceFindFirstService(Device *device, const char *description, const int *isAct
   DL_FOREACH( device->service_head, iterator )
   {
     if ( description == NULL || (iterator->description != NULL && strcmp(description, iterator->description) == 0) )
-      if ( isActuator == NULL || *isActuator == iterator->isActuator )
-        if ( type == NULL || (iterator->type != NULL && strcmp(type, iterator->type) == 0) )
-          if ( unit == NULL || (iterator->unit != NULL && strcmp(unit, iterator->unit) == 0) )
-            if ( id == NULL || (iterator->id != NULL && strcmp(id, iterator->id) == 0) )
-                return iterator;
+      if ( type == NULL || (iterator->type != NULL && strcmp(type, iterator->type) == 0) )
+        if ( unit == NULL || (iterator->unit != NULL && strcmp(unit, iterator->unit) == 0) )
+          if ( id == NULL || (iterator->id != NULL && strcmp(id, iterator->id) == 0) )
+              return iterator;
   }
 
   return NULL;

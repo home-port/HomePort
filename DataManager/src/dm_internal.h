@@ -45,6 +45,6 @@ int          deviceRemoveService (Service *service);
 // Find functions shortcuts
 #define configurationFindAdapter(_HP, _ID) configurationFindFirstAdapter(_HP, _ID, NULL)
 #define adapterFindDevice(_A, _ID) adapterFindFirstDevice(_A, NULL, _ID, NULL, NULL, NULL, NULL, NULL)
-#define deviceFindService(_D, _ID) deviceFindFirstService(_D, NULL, NULL, NULL, NULL, _ID)
+#define deviceFindService(_D, _ID) deviceFindFirstService(_D, NULL, NULL, NULL, _ID)
 
 #endif

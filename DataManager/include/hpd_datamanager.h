@@ -127,7 +127,6 @@ struct Service
     Listener           *listener_head;
     // Data members
     char               *description; /**<The Service description*/
-    int                 isActuator;  /**<Determine if the service is an actuator or a sensro */
     char               *type;        /**<The Service type*/
     char               *unit;        /**<The unit provided by the Service*/
     serviceGetFunction  getFunction; /**<A pointer to the GET function of the Service*/
