@@ -37,10 +37,8 @@
 
 #define alloc_struct(p) 		\
   do {                                	\
-    typeof(*p) aszero_ ## p = {0};  	\
-    p = malloc(sizeof *p);          	\
+    p = calloc(1, sizeof *p);          	\
     if(p==NULL) goto cleanup; 		\
-    *p = aszero_ ## p;              	\
   } while (0)
 
 #define string_copy(copy, original) 			\

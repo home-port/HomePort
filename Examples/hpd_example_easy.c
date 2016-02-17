@@ -90,7 +90,8 @@ static int init(HomePort *homeport, void *data)
 {
     hpd_rest_init(data, homeport, 8890);
 
-    adapter = homePortNewAdapter(homeport, "test", NULL, NULL);
+    if (homePortNewAdapter(&adapter, homeport, "0", "test", NULL, NULL))
+        return 1;
 
     /** Creation and registration of non secure services */
     /** Create a device that will contain the services
@@ -106,12 +107,13 @@ static int init(HomePort *homeport, void *data)
      * 10th parameter : A flag indicating if the communication with the device should be secure
      * 				   HPD_SECURE_DEVICE or HPD_NON_SECURE_DEVICE
      */
-    device = homePortNewDevice(adapter, "Example",
+    if(homePortNewDevice(&device, adapter, "0", "Example",
                                "0x01",
                                "0x01",
                                "V1",
                                "LivingRoom",
-                               "Example", NULL, NULL);
+                               "Example", NULL, NULL))
+        return 1;
     /** Create a service
      * 1st parameter : The service's description (optional)
      * 2nd parameter : The service's id
@@ -122,33 +124,37 @@ static int init(HomePort *homeport, void *data)
      * 8th parameter : The service's PUT function (optional)
      * 9th parameter : The service's parameter structure
      */
-    service_lamp0 = homePortNewService (device, "Lamp0", 1, "Lamp", "ON/OFF",
+     if (homePortNewService (&service_lamp0, device, "1", "Lamp0", "Lamp", "ON/OFF",
                                         get_lamp, put_lamp,
                                         homePortNewParameter (NULL, NULL,
                                                               NULL, NULL, NULL,
                                                               NULL, NULL)
-            ,NULL, NULL);
+            ,NULL, NULL))
+         return 1;
 
-    service_lamp1 = homePortNewService (device, "Lamp1", 1, "Lamp", "ON/OFF",
+     if (homePortNewService (&service_lamp1, device, "2", "Lamp1", "Lamp", "ON/OFF",
                                         get_lamp, put_lamp,
                                         homePortNewParameter (NULL, NULL,
                                                               NULL, NULL, NULL,
                                                               NULL, NULL),
-                                        NULL, NULL);
+                                        NULL, NULL))
+         return 1;
 
-    service_switch0 = homePortNewService (device, "Switch0", 0, "Switch", "ON/OFF",
+     if (homePortNewService (&service_switch0, device, "3", "Switch0", "Switch", "ON/OFF",
                                           get_switch, NULL,
                                           homePortNewParameter (NULL, NULL,
                                                                 NULL, NULL, NULL,
                                                                 NULL, NULL),
-                                          NULL, NULL);
+                                          NULL, NULL))
+         return 1;
 
-    service_switch1 = homePortNewService (device, "Switch1", 0, "Switch", "ON/OFF",
+     if (homePortNewService (&service_switch1, device, "4", "Switch1", "Switch", "ON/OFF",
                                           get_switch, NULL,
                                           homePortNewParameter (NULL, NULL,
                                                                 NULL, NULL, NULL,
                                                                 NULL, NULL),
-                                          NULL, NULL);
+                                          NULL, NULL))
+         return 1;
 
     homePortAttachDevice(homeport, device);
 

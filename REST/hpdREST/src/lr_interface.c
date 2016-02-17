@@ -30,215 +30,335 @@
 #include "json.h"
 #include "xml.h"
 #include <stdlib.h>
+#include <curl/curl.h>
 #include "libREST.h"
 
-#define MHD_MAX_BUFFER_SIZE 10
+struct lri_req {
+    struct lr_request *req;
+    char in_hpd;    ///< Bool to check whether a pointer to this struct is present in hpd somewhere
+    char *req_str;  ///< String used to store bodies for PUT
+};
 
-static void
-sendState(Service *service, void *req, ErrorCode code, const char *val, size_t len)
+static void req_free(struct lri_req *req)
 {
-   char *buffer = NULL, *state = NULL;
-   struct lm *headersIn = lr_request_get_headers(req);
-   struct lm *headers = NULL;
-
-   if (val) {
-      // Call callback and send response
-      buffer = malloc((len+1) * sizeof(char));
-      strncpy(buffer, val, len);
-      buffer[len] = '\0';
-   } else {
-#define XX(num, str) case ERR_##num: buffer = #str; break;
-      switch (code) {
-         HTTP_STATUS_CODE_MAP(XX)
-         default:
-            fprintf(stderr, "[Homeport] Unknown error code\n");
-            code = 500;
-            buffer = "500 Internal Server Error: Unknown error code.";
-      }
-#undef XX
-   }
-
-   if (code == ERR_200 && val) {
-      /*TODO Check header for XML or jSON*/
-      char *accept = lm_find( headersIn, "Accept" );
-      if (accept != NULL && strcmp(accept, "application/json") == 0)
-      {
-         state = jsonGetState(buffer);
-         headers =  lm_create();
-         lm_insert(headers, "Content-Type", "application/json");
-      } else { 
-         state = xmlGetState(buffer);
-         headers =  lm_create();
-         lm_insert(headers, "Content-Type", "application/xml");
-      }
-      lr_sendf(req, WS_HTTP_200, headers, state);
-      lm_destroy(headers);
-   } else {
-      fprintf(stderr, "%s\n", buffer);
-      lr_sendf(req, code, NULL, buffer);
-   }
-
-   free(state);
-   if (val)
-     free(buffer);
+    if (req != NULL) {
+        if (req->req_str) {
+            free(req->req_str);
+        }
+        free(req);
+    }
 }
 
+static struct lri_req *req_new(struct lr_request *req)
+{
+    struct lri_req *lri_req = malloc(sizeof(struct lri_req));
+    lri_req->req = req;
+    lri_req->req_str = NULL;
+    lri_req->in_hpd = 0;
+    return lri_req;
+}
+
+static int on_req_destroy(void *srv_data, void **req_data, struct lr_request *req)
+{
+    struct lri_req *lri_req = (struct lri_req *)(*req_data);
+    if (lri_req != NULL) {
+        lri_req->req = NULL;
+        if (!lri_req->in_hpd) req_free(lri_req);
+    }
+    return 0;
+}
+
+static void
+sendState(Service *service, void *in, ErrorCode code, const char *val, size_t len)
+{
+    struct lri_req *lri = in;
+
+    if (lri == NULL) {
+        fprintf(stderr, "[LRI] Unexpected state (lri is null)\n");
+        return;
+    }
+
+    /* Connection is closed downstairs, so don't send anything */
+    if (lri->req == NULL)
+        return req_free(lri);
+
+    char *buffer = NULL, *state = NULL;
+    struct lm *headersIn = lr_request_get_headers(lri->req);
+    struct lm *headers = NULL;
+
+    if (val) {
+        buffer = malloc((len+1) * sizeof(char));
+        strncpy(buffer, val, len);
+        buffer[len] = '\0';
+    } else {
+#define XX(num, str) case ERR_##num: buffer = #str; break;
+        switch (code) {
+            HTTP_STATUS_CODE_MAP(XX)
+            default:
+                fprintf(stderr, "[Homeport] Unknown error code\n");
+                code = ERR_500;
+                buffer = "500 Internal Server Error: Unknown error code.";
+        }
+#undef XX
+    }
+
+    if (code == ERR_200 && val) {
+        /*TODO Check header for XML or jSON*/
+        char *accept = lm_find( headersIn, "Accept" );
+        if (accept != NULL && strcmp(accept, "application/json") == 0)
+        {
+            state = jsonGetState(buffer);
+            headers =  lm_create();
+            lm_insert(headers, "Content-Type", "application/json");
+        } else {
+            state = xmlGetState(buffer);
+            headers =  lm_create();
+            lm_insert(headers, "Content-Type", "application/xml");
+        }
+        lr_sendf(lri->req, WS_HTTP_200, headers, state);
+        lm_destroy(headers);
+    } else {
+        fprintf(stderr, "%s\n", buffer);
+        lr_sendf(lri->req, code, NULL, buffer);
+    }
+
+    free(state);
+    free(buffer);
+}
 
 static int
 getState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
 {
-  Service *service = (Service*) srv_data;
+    Service *service = (Service*) srv_data;
 
-  if(service->getFunction == NULL)
-  {
-    lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
+    if(service->getFunction == NULL) {
+        lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
+        return 1;
+    }
+
+    struct lri_req *lri_req = req_new(req);
+    (*req_data) = lri_req;
+
+    // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
+    lr_request_keep_open(req);
+    lri_req->in_hpd = 1;
+    homePortGet(service, sendState, lri_req);
+
+    // Stop parsing request, we don't need the body anyways
     return 1;
-  }
-
-  // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
-  lr_request_keep_open(req);
-  homePortGet(service, sendState, req);
-
-  // Stop parsing request, we don't need the body anyways
-  return 1;
 }
 
-static int 
-setState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
+static int
+setState(void *srv_data, void **req_data_in, struct lr_request *req, const char *body, size_t len)
 {
-  Service *service = srv_data;
-  char *req_str = *req_data;
-  char *str=NULL;
+    Service *service = srv_data;
+    struct lri_req *lri_req = *req_data_in;
 
-  if(service->putFunction == NULL)
-  {
-    lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
-    return 1;
-  }
-
-  // Recieve data
-  if (body) {
-    if (*req_data) len += strlen(req_str);
-    str = realloc(*req_data, (len+1)*sizeof(char));
-    if (!str) {
-      fprintf(stderr, "Failed to allocate memory\n");
-      lr_sendf(req, WS_HTTP_500, NULL, "Internal server error");
-      return 1;
+    if(service->putFunction == NULL) {
+        lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
+        return 1;
     }
-    strncpy(str, body, len);
-    str[len] = '\0';
-    *req_data = str;
-    return 0;
-  }
-  struct lm *headersIn = lr_request_get_headers(req);
-  char *contentType = lm_find(headersIn, "Content-Type");
-  char *value;
-  int freeValue = 1;
-  if(*req_data == NULL)
-  {
-    lr_sendf(req, WS_HTTP_400, NULL, "400 Bad Request");
-    return 1;
-  }
-  if( contentType == NULL || 
-        strcmp(contentType, "application/xml") == 0 || 
+
+    // Receive data
+    if (body) {
+        if (!lri_req) {
+            lri_req = req_new(req);
+            (*req_data_in) = lri_req;
+        }
+
+        if (!lri_req->req_str) {
+            lri_req->req_str = malloc((len+1)*sizeof(char));
+            lri_req->req_str[0] = '\0';
+        } else {
+            len += strlen(lri_req->req_str);
+            lri_req->req_str = realloc(lri_req->req_str, (len+1)*sizeof(char));
+        }
+
+        if (!lri_req->req_str) {
+            fprintf(stderr, "Failed to allocate memory\n");
+            lr_sendf(req, WS_HTTP_500, NULL, "Internal server error");
+            return 1;
+        }
+        strncat(lri_req->req_str, body, len);
+        lri_req->req_str[len] = '\0';
+        return 0;
+    }
+
+    struct lm *headersIn = lr_request_get_headers(req);
+    char *contentType = lm_find(headersIn, "Content-Type");
+    char *value;
+    if(lri_req == NULL || lri_req->req_str == NULL)
+    {
+        lr_sendf(req, WS_HTTP_400, NULL, "400 Bad Request");
+        return 1;
+    }
+    if( contentType == NULL ||
+        strcmp(contentType, "application/xml") == 0 ||
         strncmp(contentType, "application/xml;", 16) == 0 )
-  {
-    value = xmlParseState(*req_data);
-  }
-  else if( strcmp( contentType, "application/json" ) == 0 ||
-        strncmp(contentType, "application/json;", 17) == 0 )
-  {
-    value = (char *) jsonParseState(*req_data);
-    freeValue = 0;
-  }
-  else
-  {
-    free(*req_data);
-    lr_sendf(req, WS_HTTP_415, NULL, "415 Unsupported Media Type");
+    {
+        value = xmlParseState(lri_req->req_str);
+    }
+    else if( strcmp( contentType, "application/json" ) == 0 ||
+             strncmp(contentType, "application/json;", 17) == 0 )
+    {
+        value = (char *) jsonParseState(lri_req->req_str);
+    }
+    else
+    {
+        lr_sendf(req, WS_HTTP_415, NULL, "415 Unsupported Media Type");
+        return 0;
+    }
+
+    if (!value) {
+        lr_sendf(req, WS_HTTP_400, NULL, "400 Bad Request");
+        return 1;
+    }
+
+    // Call callback
+    // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
+    lr_request_keep_open(req);
+    lri_req->in_hpd = 1;
+    homePortSet(service, value, strlen(value), sendState, lri_req);
+
+    free(value);
+
     return 0;
-  }
-  free(*req_data);
-  if (!value) {
-    lr_sendf(req, WS_HTTP_400, NULL, "400 Bad Request");
-    return 1;
-  }
+}
 
-  // Call callback
-  // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
-  lr_request_keep_open(req);
-  homePortSet(service, value, strlen(value), sendState, req);
+char *lri_url_encode(const char *id)
+{
+    char *res;
+    CURL *curl = curl_easy_init();
 
-  if(freeValue) free(value);
+    if(curl)
+        res = curl_easy_escape(curl, id, 0);
+    else
+        res = NULL;
 
-  return 0;
+    curl_easy_cleanup(curl);
+    return res;
+}
+
+char *lri_url_decode(const char *id)
+{
+    char *res;
+    CURL *curl = curl_easy_init();
+    if(curl)
+        res = curl_easy_unescape(curl, id, 0, NULL);
+    else
+        res = NULL;
+
+    curl_easy_cleanup(curl);
+    return res;
+}
+
+char *lri_alloc_uri(Service *service)
+{
+    Device *device = service->device;
+    Adapter *adapter = device->adapter;
+
+    char *aid = lri_url_encode(adapter->id);
+    char *dtype = lri_url_encode(device->type);
+    char *did = lri_url_encode(device->id);
+    char *stype = lri_url_encode(service->type);
+    char *sid = lri_url_encode(service->id);
+
+    if (!(aid && dtype && did && stype && sid))
+        return NULL;
+
+    char *uri = malloc((strlen(aid)+strlen(dtype)+strlen(did)+strlen(stype)+strlen(sid)+5+1)*sizeof(char));
+    if( uri == NULL ) return NULL;
+    uri[0] = '\0';
+
+    strcat(uri, "/");
+    strcat(uri, aid);
+    strcat(uri, "/");
+    strcat(uri, dtype);
+    strcat(uri, "/");
+    strcat(uri, did);
+    strcat(uri, "/");
+    strcat(uri, stype);
+    strcat(uri, "/");
+    strcat(uri, sid);
+
+    free(aid);
+    free(dtype);
+    free(did);
+    free(stype);
+    free(sid);
+
+    return uri;
 }
 
 int
 lri_registerService(struct lr *lr, Service *service)
 {
-   char *uri = service->uri;
-   int rc;
-   Service *s = lr_lookup_service(lr, uri);
-   if (s) {
-     printf("A similar service is already registered in the unsecure server\n");
-     return HPD_E_SERVICE_ALREADY_REGISTER;
-   }
+    char *uri = lri_alloc_uri(service);
+    int rc;
+    Service *s = lr_lookup_service(lr, uri);
+    if (s) {
+        printf("A similar service is already registered in the unsecure server\n");
+        free(uri);
+        return HPD_E_SERVICE_ALREADY_REGISTER;
+    }
 
-   printf("Registering service\n");
-   rc = lr_register_service(lr,
-       uri,
-       getState, NULL, setState, NULL,
-       NULL, service);
-   if(rc) {
-     printf("Failed to register non secure service\n");
-     return HPD_E_MHD_ERROR;
-   }
+    // TODO Prefix printf statements and print to stderr on errors !! (Entire hpdREST module)
+    printf("[rest] Registering service %s...\n", uri);
+    rc = lr_register_service(lr,
+                             uri,
+                             getState, NULL, setState, NULL,
+                             on_req_destroy, service);
+    free(uri);
+    if(rc) {
+        printf("Failed to register non secure service\n");
+        return HPD_E_MHD_ERROR;
+    }
 
-   return HPD_E_SUCCESS;
+    return HPD_E_SUCCESS;
 }
 
 int
 lri_unregisterService(struct lr *lr, char* uri)
 {
-  Service *s = lr_lookup_service(lr, uri);
-  if( s == NULL )
-    return HPD_E_SERVICE_NOT_REGISTER;
+    Service *s = lr_lookup_service(lr, uri);
+    if( s == NULL )
+        return HPD_E_SERVICE_NOT_REGISTER;
 
-  s = lr_unregister_service(lr, uri);
-  if( s == NULL )
-    return HPD_E_MHD_ERROR;
+    s = lr_unregister_service(lr, uri);
+    if( s == NULL )
+        return HPD_E_MHD_ERROR;
 
-  return HPD_E_SUCCESS;
+    return HPD_E_SUCCESS;
 }
 
 int
 lri_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
 {
-  HomePort *homeport = (HomePort*) srv_data;
-  struct lm *headersIn =  lr_request_get_headers( req );
-  char *accept;
-  char *res;
+    HomePort *homeport = (HomePort*) srv_data;
+    struct lm *headersIn =  lr_request_get_headers( req );
+    char *accept;
+    char *res;
 
-  accept = lm_find( headersIn, "Accept" );
+    accept = lm_find( headersIn, "Accept" );
 
-  /** Defaults to XML */
-  if( accept != NULL && strcmp(accept, "application/json") == 0 )
-  {
-     res = jsonGetConfiguration(homeport);
-  }
-  else 
-  {
-     res = xmlGetConfiguration(homeport);
-  }
+    /** Defaults to XML */
+    if( accept != NULL && strcmp(accept, "application/json") == 0 )
+    {
+        res = jsonGetConfiguration(homeport);
+    }
+    else
+    {
+        res = xmlGetConfiguration(homeport);
+    }
 //  else
 //  {
 //    lr_sendf(req, WS_HTTP_406, NULL, NULL);
 //    return 0;
 //  }
-  lr_sendf(req, WS_HTTP_200, NULL, res);
+    lr_sendf(req, WS_HTTP_200, NULL, "%s", res);
 
-  free(res);
-  return 0;
+    free(res);
+    return 0;
 }
 
 

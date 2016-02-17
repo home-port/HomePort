@@ -26,13 +26,13 @@ authors and should not be interpreted as representing official policies, either 
 #ifndef HOMEPORT_HPD_DATAMANAGER_H
 #define HOMEPORT_HPD_DATAMANAGER_H
 
-typedef       struct Configuration Configuration;
-typedef       struct Adapter Adapter;
-typedef       struct Device Device;
-typedef       struct Service Service;
-typedef       struct Parameter Parameter;
-typedef const struct Request Request;
-typedef       struct Listener Listener;
+typedef struct Configuration Configuration;
+typedef struct Adapter Adapter;
+typedef struct Device Device;
+typedef struct Service Service;
+typedef struct Parameter Parameter;
+typedef struct Request Request;
+typedef struct Listener Listener;
 
 typedef       enum error_code ErrorCode;
 
@@ -86,6 +86,7 @@ struct Adapter
     Device        *device_head;
     Adapter       *next;
     Adapter       *prev;
+    Listener      *listener_head;
     // Data members
     char          *id;
     char          *network;
@@ -126,14 +127,11 @@ struct Service
     Listener           *listener_head;
     // Data members
     char               *description; /**<The Service description*/
-    int                 isActuator;  /**<Determine if the service is an actuator or a sensro */
     char               *type;        /**<The Service type*/
     char               *unit;        /**<The unit provided by the Service*/
     serviceGetFunction  getFunction; /**<A pointer to the GET function of the Service*/
     servicePutFunction  putFunction; /**<A pointer to the PUT function of the Service*/
     char               *id;          /**<The Service ID*/
-    // TODO Does it make sense to store uris here when libREST is no longer included?
-    char               *uri;         /**<The Service URI*/
     // User data
     free_f              free_data;
     void               *data;        /**<Pointer used for the used to store its data*/
@@ -156,11 +154,12 @@ struct Request {
 };
 
 struct Listener {
-    enum { SERVICE_LISTENER, DEVICE_LISTENER } type;
+    enum { SERVICE_LISTENER, CONFIGURATION_LISTENER, ADAPTER_LISTENER } type;
     // Navigational members
     union {
         Service  *service;
         Configuration *configuration;
+        Adapter *adapter;
     };
     Listener *next;
     Listener *prev;

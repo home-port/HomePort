@@ -35,32 +35,32 @@
 #include "utlist.h"
 #include "idgen.h"
 
-#define ADAPTER_ID_SIZE 2
-
-Adapter*
-adapterNew(Configuration *configuration, const char *network, void *data, free_f free_data )
+int adapterNew(Adapter **adapter, Configuration *configuration, const char *id, const char *network, void *data, free_f free_data)
 {
-  Adapter * adapter;
+  if (configurationFindAdapter(configuration, id) != NULL)
+    return HPD_E_ID_NOT_UNIQUE;
 
-  alloc_struct(adapter);
+  alloc_struct(*adapter);
 
-  adapter->id = NULL;
+  (*adapter)->id = NULL;
 
-  null_ok_string_copy(adapter->network, network);
+  null_nok_string_copy((*adapter)->id, id);
+  null_ok_string_copy((*adapter)->network, network);
 
-  adapter->data = data;
-  adapter->free_data = free_data;
+  (*adapter)->data = data;
+  (*adapter)->free_data = free_data;
 
-  adapter->device_head = NULL;
-  adapter->configuration = NULL;
+  (*adapter)->device_head = NULL;
+  (*adapter)->configuration = NULL;
+  (*adapter)->listener_head = NULL;
 
-  configurationAddAdapter(configuration, adapter);
+  configurationAddAdapter(configuration, *adapter);
 
-  return adapter;
+  return HPD_E_SUCCESS;
 
 cleanup:
-  adapterFree(adapter);
-  return NULL;
+  adapterFree(*adapter);
+  return HPD_E_ALLOC_ERROR;
 }
 
 void
@@ -91,6 +91,9 @@ int
 adapterAddDevice(Adapter *adapter, Device *device)
 {
   if(adapter == NULL || device == NULL) return HPD_E_NULL_POINTER;
+
+  if (adapterFindDevice(adapter, device->id))
+    return HPD_E_ID_NOT_UNIQUE;
 
   device->adapter = adapter;
   DL_APPEND( adapter->device_head, device);
@@ -140,95 +143,32 @@ adapterFindFirstDevice(Adapter *adapter,
   return NULL;
 }
 
-mxml_node_t*
-adapterToXml(Adapter *adapter, mxml_node_t *parent)
+Service *adapterServiceLookup(Adapter *adapter, const char *did, const char *sid)
 {
-  if(adapter == NULL) return NULL;
+  if( adapter == NULL ) return NULL;
 
-  mxml_node_t *adapterXml;
+  Device *device = adapterFindDevice(adapter, did);
+  if (device == NULL)
+    return NULL;
 
-  adapterXml = mxmlNewElement(parent, "adapter");
-  if(adapter->id != NULL) mxmlElementSetAttr(adapterXml, "id", adapter->id);
-  if(adapter->network != NULL) mxmlElementSetAttr(adapterXml, "network", adapter->network);
-
-  Device *iterator;
-
-  DL_FOREACH( adapter->device_head, iterator)
-  {
-     if (iterator->attached)
-        deviceToXml(iterator, adapterXml);
-  }
-
-  return adapterXml;
+  return deviceFindService(device, sid);
 }
 
-json_t*
-adapterToJson(Adapter *adapter)
+int
+adapterAddListener(Adapter *adapter, Listener *l)
 {
-  json_t *adapterJson=NULL;
-  json_t *value=NULL;
-  json_t *deviceArray=NULL;
+  if(adapter == NULL || l == NULL )
+    return HPD_E_NULL_POINTER;
 
-  if( ( adapterJson = json_object() ) == NULL )
-  {
-    goto error;
-  }
-  if(adapter->id != NULL)
-  {
-    if( ( ( value = json_string(adapter->id) ) == NULL ) || ( json_object_set_new(adapterJson, "id", value) != 0 ) )
-    {
-      goto error;
-    }
-  }
-  if(adapter->network != NULL)
-  {
-    if( ( ( value = json_string(adapter->network) ) == NULL ) || ( json_object_set_new(adapterJson, "network", value) != 0 ) )
-    {
-      goto error;
-    }
-  }
-
-  Device *iterator;
-
-  if( ( deviceArray = json_array() ) == NULL )
-  {
-    goto error;
-  }
-
-  DL_FOREACH( adapter->device_head, iterator )
-  {
-     if (iterator->attached) {
-        json_t *device;
-        if( ( ( device = deviceToJson(iterator) ) == NULL ) || ( json_array_append_new(deviceArray, device) != 0 ) )
-        {
-          goto error;
-        }
-     }
-  }
-
-  if( json_object_set_new(adapterJson, "device", deviceArray) != 0 )
-  {
-    goto error;
-  }
-
-  return adapterJson;
-error:
-  if(adapterJson) json_decref(adapterJson);
-  if(value) json_decref(value);
-  if(deviceArray) json_decref(deviceArray);
-  return NULL;
+  DL_APPEND(adapter->listener_head, l);
+  return HPD_E_SUCCESS;
 }
 
-int adapterGenerateId(Adapter *adapter)
+int
+adapterRemoveListener(Adapter *adapter, Listener *l)
 {
-   Configuration *conf = adapter->configuration;
-  char *adapter_id = (char*)malloc((ADAPTER_ID_SIZE+1)*sizeof(char));
-   if (!adapter_id) return HPD_E_MALLOC_ERROR;
-  do{
-    rand_str(adapter_id, ADAPTER_ID_SIZE);
-  }while(configurationFindAdapter(conf, adapter_id) != NULL);
-
-  adapter->id = adapter_id;
+  if(adapter == NULL || l == NULL ) return HPD_E_NULL_POINTER;
+  DL_DELETE(adapter->listener_head, l );
   return HPD_E_SUCCESS;
 }
 

@@ -33,7 +33,6 @@
 #include "hp_macros.h"
 #include "hpd_error.h"
 #include "utlist.h"
-#include "idgen.h"
 
 Configuration*
 configurationNew()
@@ -71,12 +70,10 @@ configurationAddAdapter(Configuration *configuration, Adapter *adapter)
 {
   if(configuration == NULL || adapter == NULL) return HPD_E_NULL_POINTER;
 
+    if (configurationFindAdapter(configuration, adapter->id))
+        return HPD_E_ID_NOT_UNIQUE;
+
   adapter->configuration = configuration;
-  int stat = adapterGenerateId(adapter);
-  if (stat) {
-     adapter->configuration = NULL;
-     return stat;
-  }
 
   DL_APPEND( configuration->adapter_head, adapter);
 
@@ -116,62 +113,15 @@ configurationFindFirstAdapter(Configuration *configuration,
   return NULL;
 }
 
-mxml_node_t*
-configurationToXml(Configuration *configuration, mxml_node_t *parent)
+Service *configurationServiceLookup(Configuration *configuration, const char *aid, const char *did, const char *sid)
 {
-  mxml_node_t *configXml;
+    if( configuration== NULL ) return NULL;
 
-  configXml = mxmlNewElement(parent, "configuration");
+    Adapter *adapter = configurationFindAdapter(configuration, aid);
+    if (adapter == NULL)
+        return NULL;
 
-  Adapter *iterator;
-
-  DL_FOREACH(configuration->adapter_head, iterator)
-  {
-    adapterToXml(iterator, configXml);
-  }
-
-  return configXml;
-}
-
-json_t*
-configurationToJson(Configuration *configuration)
-{
-  json_t *configJson=NULL;
-  json_t *adapterArray=NULL;
-  json_t *adapter=NULL;
-
-  if( ( configJson = json_object() ) == NULL )
-  {
-    goto error;
-  }
-
-  Adapter *iterator;
-
-  if( ( adapterArray = json_array() ) == NULL )
-  {
-    goto error;
-  } 
-
-  DL_FOREACH(configuration->adapter_head, iterator)
-  {
-    adapter = adapterToJson(iterator);
-    if( ( adapter == NULL ) || ( json_array_append_new(adapterArray, adapter) != 0 ) )
-    {
-      goto error;
-    }
-  }
-
-  if( json_object_set_new(configJson, "adapter", adapterArray) != 0 )
-  {
-    goto error;
-  }
-
-  return configJson;
-error:
-  if(adapter) json_decref(adapter);
-  if(adapterArray) json_decref(adapterArray);
-  if(configJson) json_decref(configJson);
-  return NULL;
+    return adapterServiceLookup(adapter, did, sid);
 }
 
 int

@@ -216,10 +216,10 @@ static void *get_in_addr(struct sockaddr *sa)
 {
    if (sa->sa_family == AF_INET) {
       // IPv4
-      return &(((struct sockaddr_in*)sa)->sin_addr);
+      return &(((struct sockaddr_in*)sa)->sin_addr.s_addr);
    } else {
       // IPv6
-      return &(((struct sockaddr_in6*)sa)->sin6_addr);
+      return &(((struct sockaddr_in6*)sa)->sin6_addr.s6_addr);
    }
 }
 
@@ -242,18 +242,18 @@ static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher,
    size_t maxdatasize = settings->maxdatasize;
    char buffer[maxdatasize];
 
-   printf("recieving data from %s\n", conn->ip);
+   printf("[ws] Receiving data from %s\n", conn->ip);
    if ((recieved = recv(watcher->fd, buffer, maxdatasize-1, 0)) < 0) {
       if (recieved == -1 && errno == EWOULDBLOCK) {
          fprintf(stderr, "libev callbacked called without data to " \
-                         "recieve (conn: %s)", conn->ip);
+                         "receive (conn: %s)", conn->ip);
          return;
       }
       perror("recv");
       ws_conn_kill(conn);
       return;
    } else if (recieved == 0) {
-      printf("ws: Connection closed by %s\n", conn->ip);
+      printf("[ws] Connection closed by %s\n", conn->ip);
       ws_conn_kill(conn);
       return;
    }
@@ -384,7 +384,7 @@ static void ws_conn_accept(
    struct ws_settings *settings = &((struct ws *)watcher->data)->settings;
    
    // Accept connection
-   in_size = sizeof in_addr;
+   in_size = sizeof *in_addr;
    if ((in_fd = accept(watcher->fd, in_addr, &in_size)) < 0) {
       perror("accept");
       return;
@@ -395,7 +395,7 @@ static void ws_conn_accept(
          get_in_addr(in_addr),
          ip_string,
          sizeof ip_string);
-   printf("ws: Got connection from %s\n", ip_string);
+   printf("[ws] Got connection from %s\n", ip_string);
 
    // Create conn and parser
    conn = malloc(sizeof(struct ws_conn));
@@ -583,7 +583,7 @@ void ws_conn_kill(struct ws_conn *conn)
    struct ws_settings *settings = &conn->instance->settings;
 
    // Print messange
-   printf("ws: Killing connection %s\n", conn->ip);
+   printf("[ws] Killing connection %s\n", conn->ip);
 
    int sockfd = conn->recv_watcher.fd;
 
@@ -688,7 +688,7 @@ int ws_start(struct ws *instance)
    }
 
    // Print message
-   printf("ws: Starting server on port '%s'\n", instance->port_str);
+   printf("[ws] Starting server on port '%s'\n", instance->port_str);
 
    // Bind to socket
    instance->sockfd = bind_listen(instance->port_str);

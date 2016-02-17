@@ -54,11 +54,11 @@ void       homePortStop          (HomePort *homeport);
 int        homePortEasy          (init_f init, deinit_f deinit, void *data);
 
 // Configurator Interface
-Adapter   *homePortNewAdapter    (HomePort *homeport, const char *network, void *data, free_f free_data);
-Device    *homePortNewDevice     (Adapter *adapter, const char *description, const char *vendorId, const char *productId,
+int        homePortNewAdapter    (Adapter **adapter, HomePort *homeport, const char *id, const char *network, void *data, free_f free_data);
+int        homePortNewDevice     (Device **device, Adapter *adapter, const char *id, const char *description, const char *vendorId, const char *productId,
                                   const char *version, const char *location, const char *type, void *data, free_f free_data);
-Service   *homePortNewService    (Device *device, const char *description, int isActuator, const char *type, const char *unit,
-                                  serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data, free_f free_data); 
+int        homePortNewService    (Service **service, Device *device, const char *id, const char *description, const char *type, const char *unit,
+                                  serviceGetFunction getFunction, servicePutFunction putFunction, Parameter *parameter, void* data, free_f free_data);
 Parameter *homePortNewParameter  (const char *max, const char *min, const char *scale, const char *step,
                                        const char *type, const char *unit, const char *values);
 void       homePortFreeAdapter      (Adapter *adapter);
@@ -76,19 +76,22 @@ int        homePortDetachDevice     (HomePort *homeport, Device *device);
 Adapter *homePortFindFirstAdapter (HomePort *homeport, const char *id, const char *network);
 Device  *homePortFindFirstDevice  (Adapter *adapter, const char *description, const char *id, const char *vendorId,
                                    const char *productId, const char *version, const char *location, const char *type);
-Service *homePortFindFirstService (Device *device, const char *description, const int  *isActuator, const char *type,
-                                   const char *unit, const char *id, const char *uri);
+Service *homePortFindFirstService(Device *device, const char *description, const char *type,
+                                  const char *unit, const char *id);
+Service *homePortServiceLookup(HomePort *homePort, const char *aid, const char *did, const char *sid);
 
 // Communication interface
-void      homePortRespond               (Service *service, Request req, ErrorCode code, const char *val, size_t len);
-void      homePortChanged               (Service *service, const char *val, size_t len);
-void      homePortGet                   (Service *service, val_err_cb on_response, void *data);
-void      homePortSet                   (Service *service, const char *val, size_t len, val_err_cb on_response, void *data);
-Listener *homePortNewServiceListener    (Service *srv, val_cb on_change, void *data, free_f on_free);
-Listener *homePortNewDeviceListener     (HomePort *hp, dev_cb on_attach, dev_cb on_detach, void *data, free_f on_free);
-void      homePortFreeListener          (Listener *l);
-void      homePortSubscribe             (Listener *l);
-void      homePortUnsubscribe           (Listener *l);
-void      homePortForAllAttachedDevices (Listener *l);
+void      homePortRespond                      (Service *service, Request req, ErrorCode code, const char *val, size_t len);
+void      homePortChanged                      (Service *service, const char *val, size_t len);
+void      homePortGet                          (Service *service, val_err_cb on_response, void *data);
+void      homePortSet                          (Service *service, const char *val, size_t len, val_err_cb on_response, void *data);
+Listener *homePortNewServiceListener           (Service *srv, val_cb on_change, void *data, free_f on_free);
+Listener *homePortNewDeviceListener            (HomePort *hp, dev_cb on_attach, dev_cb on_detach, void *data, free_f on_free);
+Listener *homePortAdapterNewDeviceListener     (Adapter *adapter, dev_cb on_attach, dev_cb on_detach, void *data, free_f on_free);
+void      homePortFreeListener                 (Listener *l);
+void      homePortSubscribe                    (Listener *l);
+void      homePortUnsubscribe                  (Listener *l);
+void      homePortForAllAttachedDevices        (Listener *l);
+void      homePortAdapterForAllAttachedDevices (Listener *l);
 
 #endif

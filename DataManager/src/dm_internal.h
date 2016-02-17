@@ -35,25 +35,16 @@ int            configurationRemoveAdapter(Adapter *adapter );
 /* Function to handle adapters */
 int          adapterAddDevice    (Adapter *adapter, Device *device);
 int          adapterRemoveDevice (Device *device);
-mxml_node_t *adapterToXml        (Adapter *adapter, mxml_node_t *parent);
-json_t      *adapterToJson       (Adapter *adapter);
-int          adapterGenerateId   (Adapter *adapter);
 
 /* Function to handle devices */
-mxml_node_t *deviceToXml         (Device *device, mxml_node_t *parent);
-json_t      *deviceToJson        (Device *device);
 int          deviceAddService    (Device *device, Service *service);
 int          deviceRemoveService (Service *service);
-int          deviceGenerateId    (Device *device);
 
 /* Function to handle services */
-mxml_node_t* serviceToXml       (Service *service, mxml_node_t *parent);
-json_t*      serviceToJson      (Service *service);
-int          serviceGenerateId  (Service *service);
 
 // Find functions shortcuts
 #define configurationFindAdapter(_HP, _ID) configurationFindFirstAdapter(_HP, _ID, NULL)
 #define adapterFindDevice(_A, _ID) adapterFindFirstDevice(_A, NULL, _ID, NULL, NULL, NULL, NULL, NULL)
-#define deviceFindService(_D, _ID) deviceFindFirstService(_D, NULL, NULL, NULL, NULL, _ID, NULL)
+#define deviceFindService(_D, _ID) deviceFindFirstService(_D, NULL, NULL, NULL, _ID)
 
 #endif

@@ -23,6 +23,7 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
+#include <stdlib.h>
 #include "hpd_rest.h"
 #include "homeport.h"
 #include "libREST.h"
@@ -42,7 +43,9 @@ static void on_dev_detach(void *data, Device *device) {
     Service *service;
     DL_FOREACH(device->service_head, service)
     {
-        lri_unregisterService(data, service->uri);
+        char *uri = lri_alloc_uri(service);
+        lri_unregisterService(data, uri);
+        free(uri);
     }
 }
 

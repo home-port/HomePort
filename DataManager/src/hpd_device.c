@@ -36,7 +36,6 @@
 #include "utlist.h"
 #include "idgen.h"
 
-#define DEVICE_ID_SIZE 4
 
 /**
  * Create the structure Device with all its parameters
@@ -68,44 +67,40 @@
  * @return returns the Device or NULL if failed, note that
  * 		ID and type can not be NULL
  */
-Device* 
-deviceNew(
-      Adapter *adapter,
-    const char *description,
-    const char *vendorId,
-    const char *productId,
-    const char *version,
-    const char *location,
-    const char *type,
-    void * data, free_f free_data)
+int deviceNew(Device** device, Adapter *adapter,
+              const char *id, const char *description, const char *vendorId, const char *productId,
+              const char *version, const char *location, const char *type,
+              void *data, free_f free_data)
 {
-  Device *device;
+    if (adapterFindDevice(adapter, id) != NULL)
+        return HPD_E_ID_NOT_UNIQUE;
 
-  alloc_struct(device);
+    alloc_struct(*device);
 
-  device->attached = 0;
-  device->id = NULL;
+    (*device)->attached = 0;
+    (*device)->id = NULL;
 
-  null_ok_string_copy(device->description, description);
-  null_ok_string_copy(device->vendorId, vendorId);
-  null_ok_string_copy(device->productId, productId);
-  null_ok_string_copy(device->version, version);
-  null_ok_string_copy(device->location, location);
-  null_nok_string_copy(device->type, type);
+    null_nok_string_copy((*device)->id, id);
+    null_ok_string_copy((*device)->description, description);
+    null_ok_string_copy((*device)->vendorId, vendorId);
+    null_ok_string_copy((*device)->productId, productId);
+    null_ok_string_copy((*device)->version, version);
+    null_ok_string_copy((*device)->location, location);
+    null_nok_string_copy((*device)->type, type);
 
-  device->service_head = NULL;
-  device->adapter = NULL;
+    (*device)->service_head = NULL;
+    (*device)->adapter = NULL;
 
-  device->data = data;
-  device->free_data = free_data;
+    (*device)->data = data;
+    (*device)->free_data = free_data;
 
-  adapterAddDevice(adapter, device);
+    adapterAddDevice(adapter, *device);
 
-  return device;
+    return HPD_E_SUCCESS;
 
-cleanup:
-  deviceFree(device);
-  return NULL;
+    cleanup:
+    deviceFree(*device);
+    return HPD_E_ALLOC_ERROR;
 }
 
 /**
@@ -164,6 +159,9 @@ deviceAddService( Device *device, Service *service )
   if( service == NULL || device == NULL ) 
     return HPD_E_NULL_POINTER;
 
+    if (deviceFindService(device, service->id))
+        return HPD_E_ID_NOT_UNIQUE;
+
   service->device = device;
   DL_APPEND( device->service_head, service);
 
@@ -204,14 +202,9 @@ deviceRemoveService( Service *service )
    return -1;
 }
 
-Service*
-deviceFindFirstService(Device *device,
-      const char *description,
-      const int  *isActuator,
-      const char *type,
-      const char *unit,
-      const char *id,
-      const char *uri)
+Service *
+deviceFindFirstService(Device *device, const char *description, const char *type,
+                       const char *unit, const char *id)
 {
   if (device == NULL) return NULL;
 
@@ -220,157 +213,12 @@ deviceFindFirstService(Device *device,
   DL_FOREACH( device->service_head, iterator )
   {
     if ( description == NULL || (iterator->description != NULL && strcmp(description, iterator->description) == 0) )
-      if ( isActuator == NULL || *isActuator == iterator->isActuator )
-        if ( type == NULL || (iterator->type != NULL && strcmp(type, iterator->type) == 0) )
-          if ( unit == NULL || (iterator->unit != NULL && strcmp(unit, iterator->unit) == 0) )
-            if ( id == NULL || (iterator->id != NULL && strcmp(id, iterator->id) == 0) )
-              if ( uri == NULL || (iterator->uri != NULL && strcmp(uri, iterator->uri) == 0) )
-                return iterator;
+      if ( type == NULL || (iterator->type != NULL && strcmp(type, iterator->type) == 0) )
+        if ( unit == NULL || (iterator->unit != NULL && strcmp(unit, iterator->unit) == 0) )
+          if ( id == NULL || (iterator->id != NULL && strcmp(id, iterator->id) == 0) )
+              return iterator;
   }
 
   return NULL;
-}
-
-mxml_node_t*
-deviceToXml(Device *device, mxml_node_t *parent)
-{
-  if(device == NULL) return NULL;
-
-  mxml_node_t *deviceXml;
-
-  deviceXml = mxmlNewElement(parent, "device");
-  if(device->description != NULL) mxmlElementSetAttr(deviceXml, "desc", device->description);
-  if(device->id != NULL) mxmlElementSetAttr(deviceXml, "id", device->id);
-  if(device->vendorId != NULL) mxmlElementSetAttr(deviceXml, "vendorId", device->vendorId);
-  if(device->productId != NULL) mxmlElementSetAttr(deviceXml, "productId", device->productId);
-  if(device->version != NULL) mxmlElementSetAttr(deviceXml, "version", device->version);
-  if(device->location != NULL) mxmlElementSetAttr(deviceXml, "location", device->location);
-  if(device->type != NULL) mxmlElementSetAttr(deviceXml, "type", device->type);
-
-  Service *iterator;
-
-  DL_FOREACH( device->service_head, iterator )
-  {
-    serviceToXml(iterator, deviceXml);
-  }
-
-  return deviceXml;
-}
-
-json_t*
-deviceToJson(Device *device)
-{
-  json_t *deviceJson=NULL;
-  json_t *value=NULL;
-  json_t *serviceArray=NULL;
-
-  if( ( deviceJson = json_object() ) == NULL )
-  {
-    return NULL;
-  }
-  if(device->description != NULL)
-  {
-    if( ( ( value = json_string(device->description) ) == NULL ) || ( json_object_set_new(deviceJson, "desc", value) != 0 ) )
-    {
-      return NULL;
-    }
-  }
-  if(device->id != NULL)
-  {
-    if( ( ( value = json_string(device->id) ) == NULL ) || ( json_object_set_new(deviceJson, "id", value) != 0 ) )
-    {
-      return NULL;
-    }
-  }
-  if(device->vendorId != NULL)
-  {
-    if( ( ( value = json_string(device->vendorId) ) == NULL ) || ( json_object_set_new(deviceJson, "vendorId", value) != 0 ) )
-    {
-      return NULL;
-    }
-  }
-  if(device->productId != NULL) 
-  {
-    if( ( ( value = json_string( device->productId ) ) == NULL ) || ( json_object_set_new(deviceJson, "productId", value) != 0 ) )
-    {
-      return NULL;
-    }
-  }
-  if(device->version != NULL) 
-  {
-    if( ( ( value = json_string( device->version ) ) == NULL ) || ( json_object_set_new(deviceJson, "version", value) != 0 ) )
-    {
-      return NULL;
-    }
-  }
-  if(device->productId != NULL) 
-  {
-    if( ( ( value = json_string( device->productId ) ) == NULL ) || ( json_object_set_new(deviceJson, "productId", value) != 0 ) )
-    {
-      return NULL;
-    }
-  }
-  if(device->type != NULL)
-  { 
-    if( ( ( value = json_string( device->type ) ) == NULL ) || ( json_object_set_new(deviceJson, "type", value) != 0 ) )
-    {
-      return NULL;
-    }
-  }
-
-  Service *iterator;
-
-  if( ( serviceArray = json_array() ) == NULL )
-  {
-    return NULL;
-  }
-
-  DL_FOREACH( device->service_head, iterator )
-  {
-    if( json_array_append_new(serviceArray, serviceToJson(iterator)) != 0 )
-    {
-      return NULL;
-    }
-  }
-
-  if( json_object_set_new(deviceJson, "service", serviceArray) != 0 )
-  {
-    return NULL;
-  }
-
-  return deviceJson;
-//error:
-//  if(value) json_decref(value);
-//  if(serviceArray) json_decref(serviceArray);
-//  if(deviceJson) json_decref(deviceJson);
-}
-
-static int
-idExists(Configuration *conf, char *deviceId)
-{
-  Adapter *iterator = NULL;
-  DL_FOREACH( conf->adapter_head, iterator )
-  {
-   if(adapterFindDevice(iterator, deviceId) != NULL)
-   {
-     return 1;
-   }
-  }
-  return 0;
-}
-
-int deviceGenerateId(Device *device)
-{
-   if (device->id) return HPD_E_ID_ALREADY_SET;
-   Configuration *conf = device->adapter->configuration;
-
-   char *deviceId = malloc((DEVICE_ID_SIZE+1)*sizeof(char));
-   if (!deviceId) return HPD_E_MALLOC_ERROR;
-   do{
-     rand_str(deviceId, DEVICE_ID_SIZE);
-   }while(idExists(conf, deviceId) != 0);
-
-   device->id = deviceId;
-  return HPD_E_SUCCESS;
 }
 
