@@ -28,12 +28,12 @@
 
 #include "homeport.h"
 
-struct hpd_rest {
-    struct lr *lr;
-    Listener *dev_listener;
-};
+struct hpd_rest;
 
-int hpd_rest_init(struct hpd_rest *data, HomePort *hp, int port);
+struct hpd_rest *hpd_rest_create();
+void hpd_rest_destroy(struct hpd_rest *data);
+int hpd_rest_init(struct hpd_rest *data, HomePort *hp);
 int hpd_rest_deinit(struct hpd_rest *data, HomePort *hp);
+void hpd_rest_set_port(struct hpd_rest *data, int port);
 
 #endif //HOMEPORT_HPD_REST_H

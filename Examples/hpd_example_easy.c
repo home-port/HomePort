@@ -25,17 +25,41 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <getopt.h>
 
 // With installed homeport change these to <hpdaemon/*>
 #include "homeport.h"
 #include "hpd_rest.h"
 
-static Adapter *adapter = NULL;
-static Device *device = NULL;
-static Service *service_lamp0 = NULL;
-static Service *service_lamp1 = NULL;
-static Service *service_switch0 = NULL;
-static Service *service_switch1 = NULL;
+struct data {
+    struct hpd_rest *rest;
+    Adapter *adapter;
+    Device *device;
+    Service *service_lamp0;
+    Service *service_lamp1;
+    Service *service_switch0;
+    Service *service_switch1;
+};
+
+enum option_code {
+    OPT_DONE = -1,
+    OPT_FLAGGED = 0,
+    OPT_HELP = 'h',
+    OPT_REST = 0xff + 1,
+};
+
+static struct option options[] = {
+        { "rest", optional_argument, 0, OPT_REST },
+        { "help", no_argument, 0, OPT_HELP },
+        { 0 }
+};
+
+static const char *short_opt = "d:h";
+
+static const char *help_msg = ""
+        "      --rest [PORT]   Start rest server on PORT (defaults to 80). if argument is\n"
+        "                      not given, Rest server is not started.\n"
+        "  -h, --help          This help message.\n";
 
 /** A GET function for a service
  *	Takes a Service structure in parameter, and return a service value as a char*
@@ -63,34 +87,40 @@ get_switch ( Service* service, Request request )
     homePortRespond(service, request, ERR_200, "0", 1);
 }
 
-static void deinit(HomePort *homeport, void *data)
+static void deinit(HomePort *homeport, void *in)
 {
+    struct data *data = in;
+
     /** Unregistering services is not necessary, calling HPD_stop unregisters and
       deallocates the services and devices that are still register in HPD		   */
     /** However when unregistering a service note that the memory is not deallocated   */
     /** Also note that attempting to free a service that is still registered will fail */
 
-    homePortDetachDevice(homeport, device);
+    homePortDetachDevice(homeport, data->device);
 
     /** Deallocate the memory of the services. When deallocating the last service of a device,
       the device is deallocated too, so there is no need to call destroy_device_struct       */
-    homePortFreeService(service_lamp0);
-    homePortFreeService(service_lamp1);
-    homePortFreeService(service_switch0);
-    homePortFreeService(service_switch1);
+    homePortFreeService(data->service_lamp0);
+    homePortFreeService(data->service_lamp1);
+    homePortFreeService(data->service_switch0);
+    homePortFreeService(data->service_switch1);
 
-    homePortFreeDevice(device);
+    homePortFreeDevice(data->device);
 
-    homePortFreeAdapter(adapter);
+    homePortFreeAdapter(data->adapter);
 
-    hpd_rest_deinit(data, homeport);
+    if (data->rest != NULL)
+        hpd_rest_deinit(data->rest, homeport);
 }
 
-static int init(HomePort *homeport, void *data)
+static int init(HomePort *homeport, void *in)
 {
-    hpd_rest_init(data, homeport, 8890);
+    struct data *data = in;
 
-    if (homePortNewAdapter(&adapter, homeport, "0", "test", NULL, NULL))
+    if (data->rest != NULL)
+        hpd_rest_init(data->rest, homeport);
+
+    if (homePortNewAdapter(&data->adapter, homeport, "0", "test", NULL, NULL))
         return 1;
 
     /** Creation and registration of non secure services */
@@ -107,7 +137,7 @@ static int init(HomePort *homeport, void *data)
      * 10th parameter : A flag indicating if the communication with the device should be secure
      * 				   HPD_SECURE_DEVICE or HPD_NON_SECURE_DEVICE
      */
-    if(homePortNewDevice(&device, adapter, "0", "Example",
+    if(homePortNewDevice(&data->device, data->adapter, "0", "Example",
                                "0x01",
                                "0x01",
                                "V1",
@@ -124,7 +154,7 @@ static int init(HomePort *homeport, void *data)
      * 8th parameter : The service's PUT function (optional)
      * 9th parameter : The service's parameter structure
      */
-     if (homePortNewService (&service_lamp0, device, "1", "Lamp0", "Lamp", "ON/OFF",
+     if (homePortNewService (&data->service_lamp0, data->device, "1", "Lamp0", "Lamp", "ON/OFF",
                                         get_lamp, put_lamp,
                                         homePortNewParameter (NULL, NULL,
                                                               NULL, NULL, NULL,
@@ -132,7 +162,7 @@ static int init(HomePort *homeport, void *data)
             ,NULL, NULL))
          return 1;
 
-     if (homePortNewService (&service_lamp1, device, "2", "Lamp1", "Lamp", "ON/OFF",
+     if (homePortNewService (&data->service_lamp1, data->device, "2", "Lamp1", "Lamp", "ON/OFF",
                                         get_lamp, put_lamp,
                                         homePortNewParameter (NULL, NULL,
                                                               NULL, NULL, NULL,
@@ -140,7 +170,7 @@ static int init(HomePort *homeport, void *data)
                                         NULL, NULL))
          return 1;
 
-     if (homePortNewService (&service_switch0, device, "3", "Switch0", "Switch", "ON/OFF",
+     if (homePortNewService (&data->service_switch0, data->device, "3", "Switch0", "Switch", "ON/OFF",
                                           get_switch, NULL,
                                           homePortNewParameter (NULL, NULL,
                                                                 NULL, NULL, NULL,
@@ -148,7 +178,7 @@ static int init(HomePort *homeport, void *data)
                                           NULL, NULL))
          return 1;
 
-     if (homePortNewService (&service_switch1, device, "4", "Switch1", "Switch", "ON/OFF",
+     if (homePortNewService (&data->service_switch1, data->device, "4", "Switch1", "Switch", "ON/OFF",
                                           get_switch, NULL,
                                           homePortNewParameter (NULL, NULL,
                                                                 NULL, NULL, NULL,
@@ -156,17 +186,42 @@ static int init(HomePort *homeport, void *data)
                                           NULL, NULL))
          return 1;
 
-    homePortAttachDevice(homeport, device);
+    homePortAttachDevice(homeport, data->device);
 
     return 0;
 }
 
-int
-main()
+int main(int argc, char **argv)
 {
-    struct hpd_rest data;
+    enum option_code c;
+    int i;
+    int stat;
+    struct data data;
 
-    /** Starts the hpdaemon. If using avahi-core pass a host name for the server, otherwise pass NULL */
-    return homePortEasy(init, deinit, &data);
+    data.rest = NULL;
+
+    do {
+        c = (enum option_code) getopt_long(argc, argv, short_opt, options, &i);
+        switch (c) {
+            case OPT_DONE:
+            case OPT_FLAGGED:
+                break;
+            case OPT_REST:
+                hpd_rest_destroy(data.rest);
+                data.rest = hpd_rest_create();
+                if (optarg)
+                    hpd_rest_set_port(data.rest, atoi(optarg));
+                break;
+            case OPT_HELP:
+                printf("%s", help_msg);
+                return 1;
+        }
+    } while (c != OPT_DONE);
+
+    stat = homePortEasy(init, deinit, &data);
+
+    hpd_rest_destroy(data.rest);
+
+    return stat;
 }
 

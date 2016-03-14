@@ -31,6 +31,14 @@
 #include "lr_interface.h"
 #include "utlist.h"
 
+#define DEFAULT_PORT 8890
+
+struct hpd_rest {
+    struct lr_settings settings;
+    struct lr *lr;
+    Listener *dev_listener;
+};
+
 static void on_dev_attach(void *data, Device *device) {
     Service *service;
     DL_FOREACH(device->service_head, service)
@@ -49,16 +57,29 @@ static void on_dev_detach(void *data, Device *device) {
     }
 }
 
-int hpd_rest_init(struct hpd_rest *data, HomePort *hp, int port)
+struct hpd_rest *hpd_rest_create()
 {
-    // Create settings
+    struct hpd_rest *data = malloc(sizeof(*data));
     struct lr_settings settings = LR_SETTINGS_DEFAULT;
-    settings.port = port;
+    data->settings = settings;
+    return data;
+}
 
+void hpd_rest_destroy(struct hpd_rest *data)
+{
+    free(data);
+}
+
+void hpd_rest_set_port(struct hpd_rest *data, int port)
+{
+    data->settings.port = port;
+}
+
+int hpd_rest_init(struct hpd_rest *data, HomePort *hp)
+{
     // Create and start libREST
-    data->lr = lr_create(&settings, hp->loop);
-    if ( data->lr == NULL )
-    {
+    data->lr = lr_create(&data->settings, hp->loop);
+    if ( data->lr == NULL ) {
         // TODO Fix error code
         return 1;
     }
