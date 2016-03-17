@@ -38,16 +38,18 @@
 
 // HTTP status codes according to
 // http://www.w3.org/Protocols/rfc2616/rfc2616.html
-#define HTTPWS_HTTP_STATUS_CODE_MAP(XX) \
-	XX(200,200 OK) \
-	XX(201,201 Created) \
-	XX(303,303 See Other) \
-   	XX(400,400 Bad Request) \
-	XX(404,404 Not Found) \
-   	XX(405,405 Method Not Allowed) \
-   	XX(406,406 Not Acceptable) \
-   	XX(415,415 Unsupported Media Type) \
-   	XX(500,500 Internal Server Error)
+#define HTTP_STATUS_CODE_MAP(XX) \
+   XX(200,200 OK) \
+   XX(201,201 Created) \
+   XX(303,303 See Other) \
+   XX(400,400 Bad Request) \
+   XX(404,404 Not Found) \
+   XX(405,405 Method Not Allowed) \
+   XX(406,406 Not Acceptable) \
+   XX(408,408 Request Timeout) \
+   XX(415,415 Unsupported Media Type) \
+   XX(500,500 Internal Server Error) \
+   XX(504,504 Gateway Timeout)
 
 /// HTTP status codes
 /**

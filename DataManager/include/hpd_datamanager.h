@@ -45,6 +45,7 @@ typedef void (*servicePutFunction) (Service* service, Request req, const char *p
 
 // TODO Usage of HTTP error codes in here, but HomePort may no longer use HTTP at all...
 
+// TODO Codes are copied from http_types.h FIX !!!
 // HTTP status codes according to
 // http://www.w3.org/Protocols/rfc2616/rfc2616.html
 #define HTTP_STATUS_CODE_MAP(XX) \
