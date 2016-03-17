@@ -31,6 +31,7 @@
 #include "xml.h"
 #include <stdlib.h>
 #include <curl/curl.h>
+#include <hp_macros.h>
 #include "libREST.h"
 
 struct lri_req {
@@ -91,13 +92,13 @@ sendState(Service *service, void *in, ErrorCode code, const char *val, size_t le
         strncpy(buffer, val, len);
         buffer[len] = '\0';
     } else {
-#define XX(num, str) case ERR_##num: buffer = #str; break;
+#define XX(num, str) case ERR_##num: string_copy(buffer, #str); break;
         switch (code) {
             HTTP_STATUS_CODE_MAP(XX)
             default:
                 fprintf(stderr, "[Homeport] Unknown error code\n");
                 code = ERR_500;
-                buffer = "500 Internal Server Error: Unknown error code.";
+                string_copy(buffer, "500 Internal Server Error: Unknown error code.");
         }
 #undef XX
     }
@@ -124,6 +125,9 @@ sendState(Service *service, void *in, ErrorCode code, const char *val, size_t le
 
     free(state);
     free(buffer);
+
+    cleanup: // TODO Fixme
+        return;
 }
 
 static int
