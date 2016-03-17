@@ -38,7 +38,7 @@
 
 // HTTP status codes according to
 // http://www.w3.org/Protocols/rfc2616/rfc2616.html
-#define HTTP_STATUS_CODE_MAP(XX) \
+#define HTTPWS_HTTP_STATUS_CODE_MAP(XX) \
    XX(200,200 OK) \
    XX(201,201 Created) \
    XX(303,303 See Other) \
