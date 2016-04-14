@@ -26,7 +26,6 @@
 #ifndef LR_INTERFACE_H
 #define LR_INTERFACE_H
 
-#include "homeport.h"
 #include <stddef.h>
 
 struct lr_request;

@@ -25,62 +25,25 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-/**
- * @file hpd_services.c
- * @brief  Methods for managing the service_t structure
- * @author Thibaut Le Guilly
- * @author Regis Louge
- */
+#ifndef HOMEPORT_HPD_DAEMON_API_H
+#define HOMEPORT_HPD_DAEMON_API_H
 
-#include "datamanager.h"
-#include "hp_macros.h"
-#include "utlist.h"
-#include "hpd_error.h"
+#include "hpd_types.h"
 
-/**
- * Frees all the memory allocated for the service_t. Note
- * that it only frees the memory used by the API, if the
- * user allocates memory for service_ts attributes, he needs
- * to free it before/after calling this function. Also note
- * that the user can't destroy a service_t that is
- * registered on the server.
- *
- * @param service_to_destroy The service to destroy
- *
- * @return returns A HPD error code
- */
-void
-serviceFree( service_t *service )
-{
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-  if( service != NULL )
-  {
-     deviceRemoveService(service);
-    free_pointer(service->description);
-    free_pointer(service->type);
-    free_pointer(service->unit);
-    free_pointer(service->id);
-    parameterFree(service->parameter);
-    if (service->free_data) service->free_data(service->data);
-    free(service);
-  }
+/// [hpd_t functions]
+hpd_error_t hpd_alloc(hpd_t **hpd);
+hpd_error_t hpd_free(hpd_t *hpd);
+hpd_error_t hpd_module(hpd_t *hpd, const char *id, hpd_module_def_t *module_def);
+hpd_error_t hpd_start(hpd_t *hpd, int argc, char *argv[]);
+hpd_error_t hpd_stop(hpd_t *hpd);
+/// [hpd_t functions]
+
+#ifdef __cplusplus
 }
+#endif
 
-int
-serviceAddListener(service_t *service, listener_t *l)
-{
-   if( service == NULL || l == NULL ) 
-      return HPD_E_NULL_POINTER;
-   
-   DL_APPEND( service->listener_head, l);
-   return HPD_E_SUCCESS;
-}
-
-int 
-serviceRemoveListener(service_t *service, listener_t *l)
-{
-   if( service == NULL || l == NULL ) return HPD_E_NULL_POINTER;
-   DL_DELETE( service->listener_head, l );
-   return HPD_E_SUCCESS; 
-}
-
+#endif //HOMEPORT_HPD_DAEMON_API_H

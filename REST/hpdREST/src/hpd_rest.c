@@ -25,7 +25,6 @@
 
 #include <stdlib.h>
 #include "hpd_rest.h"
-#include "homeport.h"
 #include "libREST.h"
 #include "hpd_error.h"
 #include "lr_interface.h"

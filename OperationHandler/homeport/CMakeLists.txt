@@ -32,6 +32,5 @@ include_directories(${PROJECT_SOURCE_DIR}/DataManager/include)
 include_directories(${PROJECT_SOURCE_DIR}/Misc/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_subdirectory(include)
 add_subdirectory(src)
 

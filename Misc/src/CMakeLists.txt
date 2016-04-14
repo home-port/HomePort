@@ -29,11 +29,12 @@
 # as representing official policies, either expressed.
 
 # linked_list.h test
-add_executable(linked_list_test EXCLUDE_FROM_ALL
-      linked_list_test.c
-      )
-add_test(linked_list_test ${CMAKE_CURRENT_BINARY_DIR}/linked_list_test)
-add_dependencies(check linked_list_test)
+# TODO OLD test deactivated, changing to googletest
+#add_executable(linked_list_test EXCLUDE_FROM_ALL
+#      linked_list_test.c
+#      )
+#add_test(linked_list_test ${CMAKE_CURRENT_BINARY_DIR}/linked_list_test)
+#add_dependencies(check linked_list_test)
 
 # LinkedMap
 add_library(linkedmap
@@ -41,12 +42,13 @@ add_library(linkedmap
 		)
 
 # LinkedMap Test
-add_executable(linkedmap_test EXCLUDE_FROM_ALL
-      linkedmap_test.c
-      linkedmap.c
-      )
-add_test(linkedmap_test ${CMAKE_CURRENT_BINARY_DIR}/linkedmap_test)
-add_dependencies(check linkedmap_test)
+# TODO OLD test deactivated, changing to googletest
+#add_executable(linkedmap_test EXCLUDE_FROM_ALL
+#      linkedmap_test.c
+#      linkedmap.c
+#      )
+#add_test(linkedmap_test ${CMAKE_CURRENT_BINARY_DIR}/linkedmap_test)
+#add_dependencies(check linkedmap_test)
 
 # LinkedMap
 add_library(idgen

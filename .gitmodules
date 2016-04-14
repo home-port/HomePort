@@ -7,3 +7,6 @@
 [submodule "parser"]
 	path = parser
 	url = git://github.com/joyent/http-parser.git
+[submodule "lib/googletest"]
+	path = lib/googletest
+	url = ../../google/googletest.git

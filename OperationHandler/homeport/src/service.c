@@ -1,29 +1,78 @@
-/*Copyright 2011 Aalborg University. All rights reserved.
+/*
+ * Copyright 2011 Aalborg University. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are
+ * permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this list of
+ * conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this list
+ * of conditions and the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVidED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The views and conclusions contained in the software and documentation are those of the
+ * authors and should not be interpreted as representing official policies, either expressed
+ */
 
-  Redistribution and use in source and binary forms, with or without modification, are
-  permitted provided that the following conditions are met:
+/**
+ * Allocate new HomePort instance
+ *
+ * @param hpd   Pointer will be set to the newly allocated HomePort structure on success.
+ * @param loop  The event loop that will be stored in hpd and used by adapters.
+ *
+ * @return HPD_E_SUCCESS  on success.
+ */
+error_t hpd_alloc(hpd_t **hpd, ev_loop_t *loop)
+{
+    // TODO Implement this
+    return HPD_E_SUCCESS;
+}
 
-  1. Redistributions of source code must retain the above copyright notice, this list of
-  conditions and the following disclaimer.
+/**
+ * Free a HomePort instance
+ *
+ * @param hpd   HomePort instance to free.
+ *
+ * @return HPD_E_SUCCESS  on success.
+ */
+error_t hpd_free(hpd_t *hpd)
+{
+    // TODO Implement this
+    return HPD_E_SUCCESS;
+}
 
-  2. Redistributions in binary form must reproduce the above copyright notice, this list
-  of conditions and the following disclaimer in the documentation and/or other materials
-  provided with the distribution.
+/**
+ * Helper function to easily start an event loop with HomePort and adapters. Function will automatically call hpd_alloc
+ * and hpd_free for you. Use the two function-pointers to start and stop any required adapters. Note that this function
+ * will only return on SIGINT/SIGTERM or calls to ev_break.
+ *
+ * @param init    Init function that will be called before starting the loop. Will have valid pointers to HomePort and
+ *                the event loop.
+ * @param deinit  Deinit function that will be called before returning.
+ * @param data    Custom data that will be parsed on to the init and deinit function.
+ *
+ * @return HPD_E_SUCCESS  on success.
+ */
+error_t hpd_easy(init_f init, deinit_f deinit, void *data)
+{
+    // TODO Implement this
+    return HPD_E_SUCCESS;
+}
 
-  THIS SOFTWARE IS PROVIDED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
-  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-  FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
-  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-  ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-  The views and conclusions contained in the software and documentation are those of the
-  authors and should not be interpreted as representing official policies, either expressed*/
 
-#include "homeport.h"
+
 #include "datamanager.h"
 #include "hpd_error.h"
 #include "hp_macros.h"
@@ -81,78 +130,6 @@ homePortFree(HomePort *homeport)
         configurationFree(homeport->configuration);
         free(homeport);
     }
-}
-
-// TODO Can be removed
-int
-homePortStart(HomePort *homeport)
-{
-    return HPD_E_SUCCESS;
-}
-
-// TODO Can be removed
-void
-homePortStop(HomePort *homeport)
-{
-}
-
-static void
-sig_cb ( struct ev_loop *loop, struct ev_signal *w, int revents )
-{
-    HomePort *homeport = (HomePort*)((void**)w->data)[0];
-    void (*deinit)(HomePort *, void *) = ((void **)w->data)[1];
-
-    // Call deinit
-    // TODO Might be a problem that deinit is not called on ws_stop, but
-    // only if the server is stopped by a signal. Note that this is only
-    // used in HPD_easy way of starting the server.
-    if (deinit)
-        deinit(homeport, ((void **)w->data)[2]);
-
-
-    // Stop server and loop
-    homePortStop(homeport);
-    homePortFree(homeport);
-    ev_break(loop, EVBREAK_ALL);
-
-    // TODO Isn't it bad that we down stop watcher here?
-    free(w->data);
-}
-
-int
-homePortEasy(init_f init, deinit_f deinit, void *data)
-{
-    int rc;
-
-    // Create loop
-    struct ev_loop *loop = EV_DEFAULT;
-
-    HomePort *homeport = homePortNew(loop);
-
-    // Create signal watchers
-    struct ev_signal sigint_watcher;
-    struct ev_signal sigterm_watcher;
-    ev_signal_init(&sigint_watcher, sig_cb, SIGINT);
-    ev_signal_init(&sigterm_watcher, sig_cb, SIGTERM);
-    void **w_data = malloc(3*sizeof(void *));
-    w_data[0] = homeport;
-    w_data[1] = deinit;
-    w_data[2] = data;
-    sigint_watcher.data = w_data;
-    sigterm_watcher.data = w_data;
-    ev_signal_start(loop, &sigint_watcher);
-    ev_signal_start(loop, &sigterm_watcher);
-
-    // Call init
-    if (init)
-    if ((rc = init(homeport, data))) return rc;
-
-    if( ( rc = homePortStart(homeport) ) ) return rc;
-
-    // Start loop
-    ev_run(loop, 0);
-
-    return 0;
 }
 
 

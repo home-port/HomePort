@@ -28,12 +28,5 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(${PROJECT_SOURCE_DIR}/DataManager/include)
-include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/homeport/include)
-include_directories(${PROJECT_SOURCE_DIR}/REST/hpdREST/include)
-
-add_executable(hpd_example_easy EXCLUDE_FROM_ALL
-      hpd_example_easy.c
-      )
-target_link_libraries(hpd_example_easy hpd ev hpd_rest)
-add_dependencies(example hpd_example_easy)
+add_subdirectory(easy)
+add_subdirectory(simple)

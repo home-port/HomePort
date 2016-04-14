@@ -25,62 +25,59 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-/**
- * @file hpd_services.c
- * @brief  Methods for managing the service_t structure
- * @author Thibaut Le Guilly
- * @author Regis Louge
- */
+#include "daemon_api.h"
+#include "daemon.h"
+#include "old_model.h"
+#include <string.h>
+// Not the same as other queue.h
+#include <bsd/sys/queue.h>
 
-#include "datamanager.h"
-#include "hp_macros.h"
-#include "utlist.h"
-#include "hpd_error.h"
-
-/**
- * Frees all the memory allocated for the service_t. Note
- * that it only frees the memory used by the API, if the
- * user allocates memory for service_ts attributes, he needs
- * to free it before/after calling this function. Also note
- * that the user can't destroy a service_t that is
- * registered on the server.
- *
- * @param service_to_destroy The service to destroy
- *
- * @return returns A HPD error code
- */
-void
-serviceFree( service_t *service )
-{
-
-  if( service != NULL )
-  {
-     deviceRemoveService(service);
-    free_pointer(service->description);
-    free_pointer(service->type);
-    free_pointer(service->unit);
-    free_pointer(service->id);
-    parameterFree(service->parameter);
-    if (service->free_data) service->free_data(service->data);
-    free(service);
-  }
+hpd_error_t hpd_alloc(hpd_t **hpd) {
+    if (!hpd) return HPD_E_NULL;
+    return daemon_alloc(hpd);
 }
 
-int
-serviceAddListener(service_t *service, listener_t *l)
+hpd_error_t hpd_free(hpd_t *hpd)
 {
-   if( service == NULL || l == NULL ) 
-      return HPD_E_NULL_POINTER;
-   
-   DL_APPEND( service->listener_head, l);
-   return HPD_E_SUCCESS;
+    if (!hpd) return HPD_E_NULL;
+    return daemon_free(hpd);
 }
 
-int 
-serviceRemoveListener(service_t *service, listener_t *l)
+hpd_error_t hpd_module(hpd_t *hpd, const char *id, hpd_module_def_t *module_def)
 {
-   if( service == NULL || l == NULL ) return HPD_E_NULL_POINTER;
-   DL_DELETE( service->listener_head, l );
-   return HPD_E_SUCCESS; 
+    hpd_module_t *module;
+    if (!hpd || !id || !module_def) return HPD_E_NULL;
+    if (hpd->configuration) return HPD_E_RUNNING;
+    if (strchr(id, '-')) return HPD_E_ARGUMENT;
+    HPD_TAILQ_FOREACH(module, &hpd->modules)
+        if (strcmp(module->id, id) == 0) return HPD_E_NOT_UNIQUE;
+    return daemon_add_module(hpd, id, module_def);
 }
 
+hpd_error_t hpd_add_option(hpd_module_t *context, const char *name, const char *arg, int flags, const char *doc)
+{
+    if (!context || !name) return HPD_E_NULL;
+    hpd_t *hpd = context->hpd;
+    if (!hpd->options) return HPD_E_RUNNING;
+    // TODO Doesn't check whether name exist already
+    return daemon_add_option(context, name, arg, flags, doc);
+}
+
+hpd_error_t hpd_start(hpd_t *hpd, int argc, char *argv[])
+{
+    if (!hpd) return HPD_E_NULL;
+    return daemon_start(hpd, argc, argv);
+}
+
+hpd_error_t hpd_stop(hpd_t *hpd)
+{
+    if (!hpd) return HPD_E_NULL;
+    if (!hpd->loop) return HPD_E_STOPPED;
+    return daemon_stop(hpd);
+}
+
+hpd_error_t hpd_get_loop(hpd_t *hpd, hpd_ev_loop_t **loop)
+{
+    if (!hpd || !loop) return HPD_E_NULL;
+    return daemon_get_loop(hpd, loop);
+}

@@ -28,4 +28,13 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-install (FILES homeport.h DESTINATION include/hpdaemon)
+include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/homeport/include)
+include_directories(${PROJECT_SOURCE_DIR}/REST/hpdREST/include)
+
+add_executable(hpd_example_simple EXCLUDE_FROM_ALL
+        my_adapter.c
+        my_application.c
+        main.c
+        )
+target_link_libraries(hpd_example_simple hpd ev)
+add_dependencies(example hpd_example_simple)

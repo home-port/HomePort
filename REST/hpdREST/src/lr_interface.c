@@ -25,7 +25,6 @@
 
 #include "lr_interface.h"
 #include "datamanager.h"
-#include "homeport.h"
 #include "hpd_error.h"
 #include "json.h"
 #include "xml.h"

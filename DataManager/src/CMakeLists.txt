@@ -29,6 +29,7 @@
 # as representing official policies, either expressed.
 
 add_library(DataManager
+        ../include/datamanager.h
         hpd_adapter.c
         hpd_configuration.c
         hpd_device.c

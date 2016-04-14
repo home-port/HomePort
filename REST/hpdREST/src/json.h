@@ -23,8 +23,6 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-#include "homeport.h"
-   
 char *jsonGetConfiguration(HomePort *homeport);
 char *jsonGetState(char *state);
 

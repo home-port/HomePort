@@ -28,4 +28,25 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-install (FILES hpd_datamanager.h DESTINATION include/hpdaemon)
+add_library(daemon
+        ../include/daemon.h
+        daemon.c
+        )
+
+add_library(hpd SHARED
+        ../include/hpd_adapter_api.h
+        ../include/hpd_api.h
+        ../include/hpd_application_api.h
+        ../include/hpd_daemon_api.h
+        ../include/hpd_shared_api.h
+        ../include/hpd_types.h
+        ../include/common.h
+        ../include/map.h
+        ../include/old_model.h
+        ../include/daemon_api.h
+        api.c
+        daemon_api.c
+)
+target_link_libraries(hpd daemon ev)
+install (TARGETS hpd DESTINATION lib)
+set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)

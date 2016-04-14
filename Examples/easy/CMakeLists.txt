@@ -28,18 +28,12 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Trie
-add_library(trie
-      trie.c
+include_directories(${PROJECT_SOURCE_DIR}/DataManager/include)
+include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/homeport/include)
+include_directories(${PROJECT_SOURCE_DIR}/REST/hpdREST/include)
+
+add_executable(hpd_example_easy EXCLUDE_FROM_ALL
+      hpd_example_easy.c
       )
-
-# Trie Test
-# TODO OLD test deactivated, changing to googletest
-#add_executable(trie_test EXCLUDE_FROM_ALL
-#      trie_test.c
-#      trie.c
-#      )
-#add_test(trie_test ${CMAKE_CURRENT_BINARY_DIR}/trie_test)
-#add_dependencies(check trie_test)
-
-
+target_link_libraries(hpd_example_easy hpd ev hpd_rest)
+add_dependencies(example hpd_example_easy)

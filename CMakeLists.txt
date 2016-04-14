@@ -29,10 +29,12 @@
 # as representing official policies, either expressed.
 
 cmake_minimum_required(VERSION 2.6)
-project(HOMEPORT C)
+project(HOMEPORT C CXX)
 
 set(CMAKE_C_FLAGS "-DLR_ORIGIN")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -g -DDEBUG -Wall")
+set(CMAKE_CXX_FLAGS "-std=gnu++0x -DLR_ORIGIN")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -DDEBUG -Wall")
 
 # -fPIC is for compiling on 64bit
 if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
@@ -40,14 +42,18 @@ if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
   set(CMAKE_C_FLAGS_DEBUG "-fPIC ${CMAKE_C_FLAGS_DEBUG}")
 endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 
-set(CTEST_MEMORYCHECK_COMMAND "/usr/bin/valgrind")
-include(CTest)
+# TODO OLD test deactivated, changing to googletest
+#set(CTEST_MEMORYCHECK_COMMAND "/usr/bin/valgrind")
+#include(CTest)
+#enable_testing()
 
-enable_testing()
+add_subdirectory(lib/googletest)
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Misc/include/)
-add_custom_target(example)
+# TODO Clean up in old stuff
+#add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Misc/include/)
+#add_custom_target(example)
 
 # add a target to generate API documentation with Doxygen
 find_package(Doxygen)
@@ -60,8 +66,6 @@ if(DOXYGEN_FOUND)
    )
 endif(DOXYGEN_FOUND)
 
-add_subdirectory(Misc)
-add_subdirectory(DataManager)
-add_subdirectory(OperationHandler)
-add_subdirectory(REST)
-add_subdirectory(Examples)
+include_directories(OperationHandler/homeport/include)
+
+add_subdirectory(api)

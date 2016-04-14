@@ -28,18 +28,8 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Trie
-add_library(trie
-      trie.c
-      )
-
-# Trie Test
-# TODO OLD test deactivated, changing to googletest
-#add_executable(trie_test EXCLUDE_FROM_ALL
-#      trie_test.c
-#      trie.c
-#      )
-#add_test(trie_test ${CMAKE_CURRENT_BINARY_DIR}/trie_test)
-#add_dependencies(check trie_test)
-
+add_executable(runDataManagerTests
+        datamanager_check.cpp
+)
+target_link_libraries(runDataManagerTests gtest gtest_main)
 

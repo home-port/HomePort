@@ -33,6 +33,7 @@
 #define HP_MACROS_H
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #define alloc_struct(p) 		\

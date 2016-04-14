@@ -1,27 +1,29 @@
-/*Copyright 2011 Aalborg University. All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without modification, are
-  permitted provided that the following conditions are met:
-
-  1. Redistributions of source code must retain the above copyright notice, this list of
-  conditions and the following disclaimer.
-
-  2. Redistributions in binary form must reproduce the above copyright notice, this list
-  of conditions and the following disclaimer in the documentation and/or other materials
-  provided with the distribution.
-
-  THIS SOFTWARE IS PROVIDED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
-  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-  FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
-  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-  ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-  The views and conclusions contained in the software and documentation are those of the
-  authors and should not be interpreted as representing official policies, either expressed*/
+/*
+ * Copyright 2011 Aalborg University. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are
+ * permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this list of
+ * conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this list
+ * of conditions and the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVidED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The views and conclusions contained in the software and documentation are those of the
+ * authors and should not be interpreted as representing official policies, either expressed
+ */
 
 /**
  * @file hpd_configuration.h
@@ -29,15 +31,15 @@
  * @author Thibaut Le Guilly
  */
 
-#include "dm_internal.h"
+#include "datamanager.h"
 #include "hp_macros.h"
 #include "hpd_error.h"
 #include "utlist.h"
 
-Configuration*
+configuration_t*
 configurationNew()
 {
-  Configuration *config;
+  configuration_t *config;
   alloc_struct(config);
 
   return config; 
@@ -47,13 +49,13 @@ cleanup:
 
 
 void
-configurationFree(Configuration *config)
+configurationFree(configuration_t *config)
 {
   if( config != NULL )
   {
     if( config->adapter_head != NULL )
     {
-      Adapter *iterator, *tmp;
+      adapter_t *iterator, *tmp;
       DL_FOREACH_SAFE( config->adapter_head, iterator, tmp )
       {
 	DL_DELETE(config->adapter_head, iterator);
@@ -66,7 +68,7 @@ configurationFree(Configuration *config)
 }
 
 int
-configurationAddAdapter(Configuration *configuration, Adapter *adapter)
+configurationAddadapter_t(configuration_t *configuration, adapter_t *adapter)
 {
   if(configuration == NULL || adapter == NULL) return HPD_E_NULL_POINTER;
 
@@ -81,10 +83,10 @@ configurationAddAdapter(Configuration *configuration, Adapter *adapter)
 }
 
 int 
-configurationRemoveAdapter(Adapter *adapter )
+configurationRemoveadapter_t(adapter_t *adapter )
 {
   if(adapter == NULL ) return HPD_E_NULL_POINTER;
-  Configuration *configuration = adapter->configuration;
+  configuration_t *configuration = adapter->configuration;
   if( configuration == NULL) return HPD_E_NULL_POINTER;
 
   DL_DELETE(configuration->adapter_head, adapter);
@@ -94,14 +96,14 @@ configurationRemoveAdapter(Adapter *adapter )
 }
 
 
-Adapter*
-configurationFindFirstAdapter(Configuration *configuration,
+adapter_t*
+configurationFindFirstadapter_t(configuration_t *configuration,
       const char *id,
       const char *network)
 {
   if( configuration== NULL ) return NULL;
 
-  Adapter *iterator = NULL;
+  adapter_t *iterator = NULL;
 
   DL_FOREACH( configuration->adapter_head, iterator )
   {
@@ -113,11 +115,11 @@ configurationFindFirstAdapter(Configuration *configuration,
   return NULL;
 }
 
-Service *configurationServiceLookup(Configuration *configuration, const char *aid, const char *did, const char *sid)
+service_t *configurationServiceLookup(configuration_t *configuration, const char *aid, const char *did, const char *sid)
 {
     if( configuration== NULL ) return NULL;
 
-    Adapter *adapter = configurationFindAdapter(configuration, aid);
+    adapter_t *adapter = configurationFindAdapter(configuration, aid);
     if (adapter == NULL)
         return NULL;
 
@@ -125,7 +127,7 @@ Service *configurationServiceLookup(Configuration *configuration, const char *ai
 }
 
 int
-configurationAddListener(Configuration *configuration, Listener *l)
+configurationAddListener(configuration_t *configuration, listener_t *l)
 {
    if( configuration == NULL || l == NULL ) 
       return HPD_E_NULL_POINTER;
@@ -135,7 +137,7 @@ configurationAddListener(Configuration *configuration, Listener *l)
 }
 
 int 
-configurationRemoveListener(Configuration *configuration, Listener *l)
+configurationRemoveListener(configuration_t *configuration, listener_t *l)
 {
    if( configuration == NULL || l == NULL ) return HPD_E_NULL_POINTER;
    DL_DELETE( configuration->listener_head, l );

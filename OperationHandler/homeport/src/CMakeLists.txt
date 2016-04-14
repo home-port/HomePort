@@ -29,12 +29,12 @@
 # as representing official policies, either expressed.
 
 # Main library
-add_library(hpd SHARED
-      service.c
-      comm.c
-      config.c
-      )
-target_link_libraries(hpd DataManager idgen)
-install (TARGETS hpd DESTINATION lib)
-set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
+#add_library(hpd SHARED
+#      service.c
+#      comm.c
+#      config.c
+#      )
+#target_link_libraries(hpd DataManager idgen)
+#install (TARGETS hpd DESTINATION lib)
+#set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
 

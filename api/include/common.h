@@ -25,62 +25,40 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-/**
- * @file hpd_services.c
- * @brief  Methods for managing the service_t structure
- * @author Thibaut Le Guilly
- * @author Regis Louge
- */
+#ifndef HOMEPORT_COMMON_H
+#define HOMEPORT_COMMON_H
 
-#include "datamanager.h"
-#include "hp_macros.h"
-#include "utlist.h"
-#include "hpd_error.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define HPD_TAILQ_FIELD tailq
 
 /**
- * Frees all the memory allocated for the service_t. Note
- * that it only frees the memory used by the API, if the
- * user allocates memory for service_ts attributes, he needs
- * to free it before/after calling this function. Also note
- * that the user can't destroy a service_t that is
- * registered on the server.
+ * Allocates and zeros a structure.
  *
- * @param service_to_destroy The service to destroy
- *
- * @return returns A HPD error code
+ * CAST is for c++ compatibility (tests).
  */
-void
-serviceFree( service_t *service )
-{
+#define CALLOC(PTR, NUM, CAST) do { \
+    PTR = (CAST *) calloc((NUM), sizeof(CAST)); \
+    if(!PTR) goto alloc_error; \
+} while(0)
 
-  if( service != NULL )
-  {
-     deviceRemoveService(service);
-    free_pointer(service->description);
-    free_pointer(service->type);
-    free_pointer(service->unit);
-    free_pointer(service->id);
-    parameterFree(service->parameter);
-    if (service->free_data) service->free_data(service->data);
-    free(service);
-  }
+/**
+ * CAST is for c++ compatibility (tests).
+ */
+#define REALLOC(PTR, NUM, CAST) do { \
+    PTR = (CAST *) realloc(PTR, (NUM)*sizeof(CAST)); \
+    if(!PTR) goto alloc_error; \
+} while(0)
+
+#define STR_CPY(DST, SRC) do { \
+    REALLOC(DST, (strlen(SRC)+1), char); \
+    strcpy(DST, SRC); \
+} while(0)
+
+#ifdef __cplusplus
 }
+#endif
 
-int
-serviceAddListener(service_t *service, listener_t *l)
-{
-   if( service == NULL || l == NULL ) 
-      return HPD_E_NULL_POINTER;
-   
-   DL_APPEND( service->listener_head, l);
-   return HPD_E_SUCCESS;
-}
-
-int 
-serviceRemoveListener(service_t *service, listener_t *l)
-{
-   if( service == NULL || l == NULL ) return HPD_E_NULL_POINTER;
-   DL_DELETE( service->listener_head, l );
-   return HPD_E_SUCCESS; 
-}
-
+#endif //HOMEPORT_COMMON_H

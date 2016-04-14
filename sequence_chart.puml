@@ -1,0 +1,152 @@
+@startuml
+
+control EventLoop
+participant Adapter
+participant HomePort
+entity dev
+participant Application
+activate EventLoop
+
+group An instance of Problem A
+    EventLoop -> Adapter: callback()
+    activate Adapter #Gold
+    Adapter -> HomePort: add_device()
+    activate HomePort
+    create dev
+    HomePort -> dev: create()
+    Adapter <-- HomePort
+    deactivate HomePort
+    EventLoop <-- Adapter
+    deactivate Adapter
+
+    EventLoop -> Application: callback()
+    activate Application #DarkSalmon
+    Application -> HomePort: get_device()
+    activate HomePort
+    Application <-- HomePort: dev
+    note right: Application has pointer to dev
+    deactivate HomePort
+    Application -> HomePort: request()
+    activate HomePort
+    HomePort -> Adapter: request()
+    activate Adapter #Gold
+    Adapter -> HomePort: remove_device()
+    activate HomePort
+    HomePort -> dev: destroy()
+    destroy dev
+    Adapter <-- HomePort
+    deactivate HomePort
+    HomePort <-- Adapter
+    deactivate Adapter
+    Application <-- HomePort
+    note right: Pointer is no longer valid
+    deactivate HomePort
+    EventLoop <-- Application
+    deactivate Application
+
+    deactivate dev
+end group
+
+newpage
+group A more complicated instance of Problem A
+    EventLoop -> Application: callback()
+    activate Application #DarkSalmon
+    Application -> HomePort: request()
+    activate HomePort
+    HomePort -> Adapter: request()
+    activate Adapter #DarkSalmon
+    Adapter -> HomePort: respond()
+    activate HomePort
+    HomePort -> Application: on_response()
+    activate Application #Gold
+    HomePort <-- Application
+    deactivate Application
+    Adapter <-- HomePort
+    deactivate HomePort
+    HomePort <-- Adapter
+    deactivate Adapter
+    Application <-- HomePort
+    deactivate HomePort
+    EventLoop <-- Application
+    deactivate Application
+end
+
+newpage
+'    create dev
+'    EventLoop -> dev
+'    activate dev
+group A solution to problem A
+    EventLoop -> Application: callback()
+    activate Application #Gold
+    Application -> HomePort: get_device()
+    activate HomePort
+    Application <-- HomePort: dev
+    note right: Application has pointer to dev
+    deactivate HomePort
+    Application -> HomePort: request()
+    activate HomePort
+    HomePort -> EventLoop: Add a watcher
+    Application <-- HomePort
+    note right: Pointer is still valid
+    deactivate HomePort
+    EventLoop <-- Application
+    deactivate Application
+
+    EventLoop -> HomePort: Watcher triggers
+    activate HomePort
+    HomePort -> Adapter: request()
+    activate Adapter #Gold
+    Adapter -> HomePort: remove_device()
+    activate HomePort
+    HomePort -> dev: destroy()
+    destroy dev
+    Adapter <-- HomePort
+    deactivate HomePort
+    HomePort <-- Adapter
+    deactivate Adapter
+    EventLoop <-- HomePort
+    deactivate HomePort
+end
+
+newpage
+group An instance of problem B
+    EventLoop -> Application: callback()
+    activate Application #Gold
+    Application -> HomePort: get_device()
+    activate HomePort
+    Application <-- HomePort: dev
+    note right: Application has pointer to dev
+    deactivate HomePort
+    Application -> HomePort: request()
+    activate HomePort
+    HomePort -> EventLoop: Add a watcher
+    Application <-- HomePort
+    note right: Pointer is still valid
+    deactivate HomePort
+    EventLoop <-- Application
+    deactivate Application
+
+    EventLoop -> Adapter: callback()
+    activate Adapter #Gold
+    Adapter -> HomePort: remove_device()
+    activate HomePort
+    HomePort -> dev
+    destroy dev
+    Adapter <-- HomePort
+    deactivate HomePort
+    EventLoop <-- Adapter
+    deactivate Adapter
+
+    EventLoop -> HomePort: Watcher triggers
+    activate HomePort
+    HomePort -> Adapter: request()
+    activate Adapter #Gold
+    HomePort <-- Adapter
+    deactivate Adapter
+    EventLoop <-- HomePort
+    deactivate HomePort
+end
+
+deactivate EventLoop
+
+@enduml

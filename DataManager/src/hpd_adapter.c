@@ -1,41 +1,43 @@
-/*Copyright 2011 Aalborg University. All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without modification, are
-  permitted provided that the following conditions are met:
-
-  1. Redistributions of source code must retain the above copyright notice, this list of
-  conditions and the following disclaimer.
-
-  2. Redistributions in binary form must reproduce the above copyright notice, this list
-  of conditions and the following disclaimer in the documentation and/or other materials
-  provided with the distribution.
-
-  THIS SOFTWARE IS PROVIDED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
-  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-  FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
-  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-  ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-  The views and conclusions contained in the software and documentation are those of the
-  authors and should not be interpreted as representing official policies, either expressed*/
+/*
+ * Copyright 2011 Aalborg University. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are
+ * permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this list of
+ * conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this list
+ * of conditions and the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVidED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The views and conclusions contained in the software and documentation are those of the
+ * authors and should not be interpreted as representing official policies, either expressed
+ */
 
 /**
  * @file hpd_adapter.h
- * @brief  Methods for managing the Service structure
+ * @brief  Methods for managing the service_t structure
  * @author Thibaut Le Guilly
  */
 
-#include "dm_internal.h"
+#include "datamanager.h"
 #include "hp_macros.h"
 #include "hpd_error.h"
 #include "utlist.h"
 #include "idgen.h"
 
-int adapterNew(Adapter **adapter, Configuration *configuration, const char *id, const char *network, void *data, free_f free_data)
+int adapterNew(adapter_t **adapter, configuration_t *configuration, const char *id, const char *network, void *data, free_f free_data)
 {
   if (configurationFindAdapter(configuration, id) != NULL)
     return HPD_E_ID_NOT_UNIQUE;
@@ -64,7 +66,7 @@ cleanup:
 }
 
 void
-adapterFree(Adapter *adapter)
+adapterFree(adapter_t *adapter)
 {
   if( adapter != NULL )
   {
@@ -72,7 +74,7 @@ adapterFree(Adapter *adapter)
     free_pointer(adapter->network);
     free_pointer(adapter->id);
 
-    Device *tmp=NULL, *iterator=NULL;
+    device_t *tmp=NULL, *iterator=NULL;
 
     if (adapter->device_head) {
       DL_FOREACH_SAFE( adapter->device_head, iterator, tmp )
@@ -88,7 +90,7 @@ adapterFree(Adapter *adapter)
 
 
 int
-adapterAddDevice(Adapter *adapter, Device *device)
+adapterAddDevice(adapter_t *adapter, device_t *device)
 {
   if(adapter == NULL || device == NULL) return HPD_E_NULL_POINTER;
 
@@ -102,9 +104,9 @@ adapterAddDevice(Adapter *adapter, Device *device)
 }
 
 int 
-adapterRemoveDevice(Device *device)
+adapterRemoveDevice(device_t *device)
 {
-   Adapter *adapter = device->adapter;
+   adapter_t *adapter = device->adapter;
 
   if( adapter == NULL || device == NULL ) return HPD_E_NULL_POINTER;
 
@@ -114,8 +116,8 @@ adapterRemoveDevice(Device *device)
   return HPD_E_SUCCESS;
 }
 
-Device*
-adapterFindFirstDevice(Adapter *adapter,
+device_t*
+adapterFindFirstDevice(adapter_t *adapter,
       const char *description,
       const char *id,
       const char *vendorId,
@@ -126,7 +128,7 @@ adapterFindFirstDevice(Adapter *adapter,
 {
   if( adapter== NULL ) return NULL;
 
-  Device *iterator=NULL;
+  device_t *iterator=NULL;
 
   DL_FOREACH( adapter->device_head, iterator )
   {
@@ -143,11 +145,11 @@ adapterFindFirstDevice(Adapter *adapter,
   return NULL;
 }
 
-Service *adapterServiceLookup(Adapter *adapter, const char *did, const char *sid)
+service_t *adapterServiceLookup(adapter_t *adapter, const char *did, const char *sid)
 {
   if( adapter == NULL ) return NULL;
 
-  Device *device = adapterFindDevice(adapter, did);
+  device_t *device = adapterFindDevice(adapter, did);
   if (device == NULL)
     return NULL;
 
@@ -155,7 +157,7 @@ Service *adapterServiceLookup(Adapter *adapter, const char *did, const char *sid
 }
 
 int
-adapterAddListener(Adapter *adapter, Listener *l)
+adapterAddListener(adapter_t *adapter, listener_t *l)
 {
   if(adapter == NULL || l == NULL )
     return HPD_E_NULL_POINTER;
@@ -165,7 +167,7 @@ adapterAddListener(Adapter *adapter, Listener *l)
 }
 
 int
-adapterRemoveListener(Adapter *adapter, Listener *l)
+adapterRemoveListener(adapter_t *adapter, listener_t *l)
 {
   if(adapter == NULL || l == NULL ) return HPD_E_NULL_POINTER;
   DL_DELETE(adapter->listener_head, l );

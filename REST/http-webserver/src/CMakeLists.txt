@@ -39,24 +39,27 @@ add_library(http-webserver
 target_link_libraries(http-webserver webserver http-parser linkedmap)
 
 # URL Parser Test
-add_executable(url_parser_test EXCLUDE_FROM_ALL
-      url_parser_test.c
-      )
-add_test(url_parser_test ${CMAKE_CURRENT_BINARY_DIR}/url_parser_test)
-add_dependencies(check url_parser_test)
+# TODO OLD test deactivated, changing to googletest
+# add_executable(url_parser_test EXCLUDE_FROM_ALL
+#       url_parser_test.c
+#       )
+# add_test(url_parser_test ${CMAKE_CURRENT_BINARY_DIR}/url_parser_test)
+# add_dependencies(check url_parser_test)
 
 # Header Parser Test
-add_executable(header_parser_test EXCLUDE_FROM_ALL
-      header_parser_test.c
-      )
-add_test(header_parser_test ${CMAKE_CURRENT_BINARY_DIR}/header_parser_test)
-add_dependencies(check header_parser_test)
+# TODO OLD test deactivated, changing to googletest
+# add_executable(header_parser_test EXCLUDE_FROM_ALL
+#       header_parser_test.c
+#       )
+# add_test(header_parser_test ${CMAKE_CURRENT_BINARY_DIR}/header_parser_test)
+# add_dependencies(check header_parser_test)
 
 # Http-Webserver Test
-add_executable(http-webserver_test EXCLUDE_FROM_ALL
-      http-webserver_test.c
-      )
-target_link_libraries(http-webserver_test curl pthread http-webserver)
-add_test(http-webserver_test ${CMAKE_CURRENT_BINARY_DIR}/http-webserver_test)
-add_dependencies(check http-webserver_test)
+# TODO OLD test deactivated, changing to googletest
+# add_executable(http-webserver_test EXCLUDE_FROM_ALL
+#       http-webserver_test.c
+#       )
+# target_link_libraries(http-webserver_test curl pthread http-webserver)
+# add_test(http-webserver_test ${CMAKE_CURRENT_BINARY_DIR}/http-webserver_test)
+# add_dependencies(check http-webserver_test)
 

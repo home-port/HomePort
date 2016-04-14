@@ -25,62 +25,68 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-/**
- * @file hpd_services.c
- * @brief  Methods for managing the service_t structure
- * @author Thibaut Le Guilly
- * @author Regis Louge
- */
+#include "my_adapter.h"
+#include "my_application.h"
 
-#include "datamanager.h"
-#include "hp_macros.h"
-#include "utlist.h"
-#include "hpd_error.h"
+// With HomePort installed, these should be changed to <hpd/...>
+#include "hpd_daemon_api.h"
 
-/**
- * Frees all the memory allocated for the service_t. Note
- * that it only frees the memory used by the API, if the
- * user allocates memory for service_ts attributes, he needs
- * to free it before/after calling this function. Also note
- * that the user can't destroy a service_t that is
- * registered on the server.
- *
- * @param service_to_destroy The service to destroy
- *
- * @return returns A HPD error code
- */
-void
-serviceFree( service_t *service )
+struct simple {
+    struct adp *my_adapter;
+    struct app *my_app;
+};
+
+static error_t init(hpd_t *hpd, void *data)
 {
+    struct simple *simple = data;
+    error_t rc;
 
-  if( service != NULL )
-  {
-     deviceRemoveService(service);
-    free_pointer(service->description);
-    free_pointer(service->type);
-    free_pointer(service->unit);
-    free_pointer(service->id);
-    parameterFree(service->parameter);
-    if (service->free_data) service->free_data(service->data);
-    free(service);
-  }
+    if ((rc = adp_init(simple->my_adapter, hpd)) != HPD_E_SUCCESS)
+        return rc;
+
+    if ((rc = app_init(simple->my_app, hpd)) != HPD_E_SUCCESS)
+        return rc;
+
+    return HPD_E_SUCCESS;
 }
 
-int
-serviceAddListener(service_t *service, listener_t *l)
+static error_t deinit(hpd_t *hpd, void *data)
 {
-   if( service == NULL || l == NULL ) 
-      return HPD_E_NULL_POINTER;
-   
-   DL_APPEND( service->listener_head, l);
-   return HPD_E_SUCCESS;
+    struct simple *simple = data;
+    error_t rc;
+
+    if ((rc = adp_deinit(simple->my_adapter)) != HPD_E_SUCCESS)
+        return rc;
+
+    if ((rc = app_deinit(simple->my_app)) != HPD_E_SUCCESS)
+        return rc;
+
+    return HPD_E_SUCCESS;
 }
 
-int 
-serviceRemoveListener(service_t *service, listener_t *l)
+int main(int argc, char **argv)
 {
-   if( service == NULL || l == NULL ) return HPD_E_NULL_POINTER;
-   DL_DELETE( service->listener_head, l );
-   return HPD_E_SUCCESS; 
-}
+    struct simple simple;
+    error_t rc;
 
+    if ((rc = adp_alloc(&simple.my_adapter)) != HPD_E_SUCCESS)
+        return rc;
+
+    if ((rc = app_alloc(&simple.my_app)) != HPD_E_SUCCESS)
+        return rc;
+
+    rc = hpd_easy(init, deinit, &simple);
+
+    if (rc == HPD_E_SUCCESS) {
+        if ((rc = adp_free(simple.my_adapter)) != HPD_E_SUCCESS)
+            return rc;
+
+        if ((rc = app_free(simple.my_app)) != HPD_E_SUCCESS)
+            return rc;
+    } else {
+        adp_free(simple.my_adapter);
+        app_free(simple.my_app);
+    }
+
+    return rc;
+}

@@ -25,62 +25,58 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-/**
- * @file hpd_services.c
- * @brief  Methods for managing the service_t structure
- * @author Thibaut Le Guilly
- * @author Regis Louge
- */
+#include "my_adapter.h"
 
-#include "datamanager.h"
-#include "hp_macros.h"
-#include "utlist.h"
-#include "hpd_error.h"
+#include <stdlib.h>
 
-/**
- * Frees all the memory allocated for the service_t. Note
- * that it only frees the memory used by the API, if the
- * user allocates memory for service_ts attributes, he needs
- * to free it before/after calling this function. Also note
- * that the user can't destroy a service_t that is
- * registered on the server.
- *
- * @param service_to_destroy The service to destroy
- *
- * @return returns A HPD error code
- */
-void
-serviceFree( service_t *service )
+// With HomePort installed, these should be changed to <hpd/...>
+#include "hpd_adapter_api.h"
+
+struct adp {
+    adapter_t *adapter;
+    device_t *device;
+    service_t *service1;
+    service_t *service2;
+    parameter_t *param1;
+    parameter_t *param2;
+};
+
+error_t adp_alloc(struct adp **my)
 {
-
-  if( service != NULL )
-  {
-     deviceRemoveService(service);
-    free_pointer(service->description);
-    free_pointer(service->type);
-    free_pointer(service->unit);
-    free_pointer(service->id);
-    parameterFree(service->parameter);
-    if (service->free_data) service->free_data(service->data);
-    free(service);
-  }
+    if (!my) return HPD_E_NULL;
+    *my = malloc(sizeof(struct adp));
+    if (!my) return HPD_E_ALLOC;
+    return HPD_E_SUCCESS;
 }
 
-int
-serviceAddListener(service_t *service, listener_t *l)
+error_t adp_free(struct adp *my)
 {
-   if( service == NULL || l == NULL ) 
-      return HPD_E_NULL_POINTER;
-   
-   DL_APPEND( service->listener_head, l);
-   return HPD_E_SUCCESS;
+    free(my);
+    return HPD_E_SUCCESS;
 }
 
-int 
-serviceRemoveListener(service_t *service, listener_t *l)
+error_t adp_init(struct adp *my, hpd_t *hpd)
 {
-   if( service == NULL || l == NULL ) return HPD_E_NULL_POINTER;
-   DL_DELETE( service->listener_head, l );
-   return HPD_E_SUCCESS; 
+    error_t rc;
+
+    if ((rc = hpd_adapter_alloc(&my->adapter)) != HPD_E_SUCCESS)
+        return rc;
+
+    if ((rc = hpd_adapter_set_attrs(my->adapter,
+                                    HPD_ATTR_TYPE, "example",
+                                    HPD_ATTR_DESC, "Simple example adapter")) != HPD_E_SUCCESS)
+        return rc;
+
+    if ((rc = hpd_device_alloc(&my->device)) != HPD_E_SUCCESS)
+        return rc;
+
+    if ((rc = hpd_service_alloc(&my->service1)) != HPD_E_SUCCESS)
+        return rc;
+
+    return HPD_E_SUCCESS;
 }
 
+error_t adp_deinit(struct adp *my)
+{
+    return HPD_E_SUCCESS;
+}

@@ -23,7 +23,6 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-#include "homeport.h"
 #include "datamanager.h"
 #include "hpd_error.h"
 #include "utlist.h"

@@ -35,10 +35,11 @@ add_library(libREST
 target_link_libraries(libREST trie http-webserver)
 
 # libREST Test
-add_executable(libREST_test EXCLUDE_FROM_ALL
-      libREST_test.c
-      )
-target_link_libraries(libREST_test curl pthread libREST)
-add_test(libREST_test ${CMAKE_CURRENT_BINARY_DIR}/libREST_test)
-add_dependencies(check libREST_test)
+# TODO OLD test deactivated, changing to googletest
+# add_executable(libREST_test EXCLUDE_FROM_ALL
+#       libREST_test.c
+#       )
+# target_link_libraries(libREST_test curl pthread libREST)
+# add_test(libREST_test ${CMAKE_CURRENT_BINARY_DIR}/libREST_test)
+# add_dependencies(check libREST_test)
 

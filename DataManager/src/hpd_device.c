@@ -1,27 +1,29 @@
-/*Copyright 2011 Aalborg University. All rights reserved.
-
-  Redistribution and use in source and binary forms, with or without modification, are
-  permitted provided that the following conditions are met:
-
-  1. Redistributions of source code must retain the above copyright notice, this list of
-  conditions and the following disclaimer.
-
-  2. Redistributions in binary form must reproduce the above copyright notice, this list
-  of conditions and the following disclaimer in the documentation and/or other materials
-  provided with the distribution.
-
-  THIS SOFTWARE IS PROVIDED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
-  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-  FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
-  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-  ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-  The views and conclusions contained in the software and documentation are those of the
-  authors and should not be interpreted as representing official policies, either expressed*/
+/*
+ * Copyright 2011 Aalborg University. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are
+ * permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this list of
+ * conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this list
+ * of conditions and the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVidED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The views and conclusions contained in the software and documentation are those of the
+ * authors and should not be interpreted as representing official policies, either expressed
+ */
 
 /**
  * @file hpd_services.c
@@ -30,7 +32,7 @@
  * @author Regis Louge
  */
 
-#include "dm_internal.h"
+#include "datamanager.h"
 #include "hp_macros.h"
 #include "hpd_error.h"
 #include "utlist.h"
@@ -67,7 +69,7 @@
  * @return returns the Device or NULL if failed, note that
  * 		ID and type can not be NULL
  */
-int deviceNew(Device** device, Adapter *adapter,
+int deviceNew(device_t** device, adapter_t *adapter,
               const char *id, const char *description, const char *vendorId, const char *productId,
               const char *version, const char *location, const char *type,
               void *data, free_f free_data)
@@ -116,7 +118,7 @@ int deviceNew(Device** device, Adapter *adapter,
  * @return A HPD error code
  */
 void
-deviceFree( Device *device )
+deviceFree( device_t *device )
 {
 
   if( device != NULL)
@@ -132,7 +134,7 @@ deviceFree( Device *device )
 
     if( device->service_head )
     {
-      Service *iterator = NULL, *tmp = NULL;
+      service_t *iterator = NULL, *tmp = NULL;
       DL_FOREACH_SAFE( device->service_head, iterator, tmp)
       {
          serviceFree(iterator);
@@ -154,7 +156,7 @@ deviceFree( Device *device )
  * @return returns A HPD error code
  */
 int 
-deviceAddService( Device *device, Service *service )
+deviceAddService( device_t *device, service_t *service )
 {
   if( service == NULL || device == NULL ) 
     return HPD_E_NULL_POINTER;
@@ -178,12 +180,12 @@ deviceAddService( Device *device, Service *service )
  * @return returns A HPD error code
  */
 int 
-deviceRemoveService( Service *service )
+deviceRemoveService( service_t *service )
 {
-   Device *device = service->device;
+   device_t *device = service->device;
    if( service == NULL || device == NULL ) return HPD_E_NULL_POINTER;
 
-   Service *iterator, *tmp;
+   service_t *iterator, *tmp;
 
    service->device = NULL;
 
@@ -202,13 +204,13 @@ deviceRemoveService( Service *service )
    return -1;
 }
 
-Service *
-deviceFindFirstService(Device *device, const char *description, const char *type,
+service_t *
+deviceFindFirstService(device_t *device, const char *description, const char *type,
                        const char *unit, const char *id)
 {
   if (device == NULL) return NULL;
 
-  Service *iterator;
+  service_t *iterator;
 
   DL_FOREACH( device->service_head, iterator )
   {

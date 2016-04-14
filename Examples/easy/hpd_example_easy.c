@@ -28,7 +28,6 @@
 #include <getopt.h>
 
 // With installed homeport change these to <hpdaemon/*>
-#include "homeport.h"
 #include "hpd_rest.h"
 
 struct data {

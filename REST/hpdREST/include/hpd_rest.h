@@ -26,8 +26,6 @@
 #ifndef HOMEPORT_HPD_REST_H
 #define HOMEPORT_HPD_REST_H
 
-#include "homeport.h"
-
 struct hpd_rest;
 
 struct hpd_rest *hpd_rest_create();
