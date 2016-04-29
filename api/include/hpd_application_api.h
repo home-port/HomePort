@@ -34,42 +34,8 @@
 extern "C" {
 #endif
 
-/// [hpd_adapter_t functions]
-hpd_error_t hpd_adapter_get_attr(hpd_adapter_t *adapter, const char *key, const char **val);
-hpd_error_t hpd_adapter_get_attrs(hpd_adapter_t *adapter, ...);
-/// [hpd_adapter_t functions]
-
-/// [hpd_device_t functions]
-hpd_error_t hpd_device_get_attr(hpd_device_t *device, const char *key, const char **val);
-hpd_error_t hpd_device_get_attrs(hpd_device_t *device, ...);
-/// [hpd_device_t functions]
-
-/// [hpd_service_t functions]
-hpd_error_t hpd_service_get_attr(hpd_service_t *service, const char *key, const char **val);
-hpd_error_t hpd_service_get_attrs(hpd_service_t *service, ...);
-hpd_error_t hpd_service_has_action(hpd_service_t *service, const hpd_method_t method, char *boolean);
-hpd_error_t hpd_service_first_action(hpd_service_t *service, hpd_action_t **action);
-hpd_error_t hpd_service_next_action(hpd_action_t **action);
-/// [hpd_service_t functions]
-
-/// [hpd_service_t foreach loops]
-#define hpd_service_foreach_action(RC, ACTION, SERVICE) for ( \
-    (RC) = hpd_service_first_action((SERVICE), (ACTION)); \
-    !(RC) && (ACTION); \
-    (RC) = hpd_service_next_action((ACTION)))
-/// [hpd_service_t foreach loops]
-
-/// [hpd_parameter_t functions]
-hpd_error_t hpd_parameter_get_attr(hpd_parameter_t *parameter, const char *key, const char **val);
-hpd_error_t hpd_parameter_get_attrs(hpd_parameter_t *parameter, ...);
-/// [hpd_parameter_t functions]
-
-/// [hpd_action_t functions]
-hpd_error_t hpd_action_get_method(hpd_action_t *action, hpd_method_t *method);
-/// [hpd_action_t functions]
-
 /// [hpd_request_t functions]
-hpd_error_t hpd_request_alloc(hpd_request_t **request, hpd_service_t *service, hpd_method_t method, hpd_response_f on_response);
+hpd_error_t hpd_request_alloc(hpd_request_t **request, hpd_service_id_t *id, hpd_method_t method, hpd_response_f on_response);
 hpd_error_t hpd_request_free(hpd_request_t *request);
 hpd_error_t hpd_request_set_value(hpd_request_t *request, hpd_value_t *value);
 hpd_error_t hpd_request_set_data(hpd_request_t *request, void *data, hpd_free_f on_free);
@@ -80,16 +46,16 @@ hpd_error_t hpd_request(hpd_request_t *request);
 hpd_error_t hpd_response_get_status(hpd_response_t *response, hpd_value_t *value);
 hpd_error_t hpd_response_get_value(hpd_response_t *response, hpd_value_t *value);
 hpd_error_t hpd_response_get_request_data(const hpd_response_t *response, void **data);
-hpd_error_t hpd_response_get_request_service(const hpd_response_t *response, hpd_service_t **service);
+hpd_error_t hpd_response_get_request_service(const hpd_response_t *response, hpd_service_id_t *service);
 hpd_error_t hpd_response_get_request_method(const hpd_response_t *response, hpd_method_t *method);
 hpd_error_t hpd_response_get_request_value(const hpd_response_t *response, hpd_value_t **value);
 /// [hpd_response_t functions]
 
 /// [hpd_listener_t functions]
 hpd_error_t hpd_listener_alloc_hpd(hpd_listener_t **listener, hpd_t *hpd);
-hpd_error_t hpd_listener_alloc_adapter(hpd_listener_t **listener, hpd_adapter_t *adapter);
-hpd_error_t hpd_listener_alloc_device(hpd_listener_t **listener, hpd_device_t *device);
-hpd_error_t hpd_listener_alloc_service(hpd_listener_t **listener, hpd_service_t *service);
+hpd_error_t hpd_listener_alloc_adapter(hpd_listener_t **listener, hpd_adapter_id_t *id);
+hpd_error_t hpd_listener_alloc_device(hpd_listener_t **listener, hpd_device_id_t *id);
+hpd_error_t hpd_listener_alloc_service(hpd_listener_t **listener, hpd_service_id_t *id);
 hpd_error_t hpd_listener_free(hpd_listener_t *listener);
 hpd_error_t hpd_listener_set_data(hpd_listener_t *listener, void *data, hpd_free_f on_free);
 hpd_error_t hpd_listener_set_value_callback(hpd_listener_t *listener, hpd_value_f on_change);

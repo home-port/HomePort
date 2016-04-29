@@ -33,9 +33,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-// Not the same as other queue.h
-// TODO Include this as source instead?
-#include <bsd/sys/queue.h>
+#include "hpd_internal_api.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,7 +41,6 @@ extern "C" {
 
 typedef enum hpd_status hpd_status_t;
 
-typedef struct configuration configuration_t;
 typedef struct adapters adapters_t;
 typedef struct devices devices_t;
 typedef struct services services_t;
@@ -85,52 +82,56 @@ struct hpd_response {
 
 struct hpd_parameter
 {
-    hpd_service_t              *service;
-    TAILQ_ENTRY(hpd_parameter)  HPD_TAILQ_FIELD;
-    map_t                   attributes;
+    hpd_service_t *service;
+    TAILQ_ENTRY(hpd_parameter) HPD_TAILQ_FIELD;
+    char *id;
+    map_t *attributes;
 };
 
 struct hpd_service
 {
     // Navigational members
-    hpd_device_t             *device;
-    TAILQ_ENTRY(hpd_service)  HPD_TAILQ_FIELD;       //< Tailq members
-    parameters_t          parameters;
-    listeners_t           listeners;
+    hpd_device_t *device;
+    TAILQ_ENTRY(hpd_service) HPD_TAILQ_FIELD;
+    parameters_t *parameters;
+    listeners_t *listeners;
     // Data members
-    map_t                 attributes;
-    hpd_action_t              actions[HPD_M_COUNT];
+    char *id;
+    map_t *attributes;
+    hpd_action_t actions[HPD_M_COUNT];
     // User data
-    hpd_free_f                on_free;
-    void                 *data;
+    hpd_free_f on_free;
+    void *data;
 };
 
 struct hpd_device
 {
     // Navigational members
-    hpd_adapter_t           *adapter;
-    TAILQ_ENTRY(hpd_device)  HPD_TAILQ_FIELD;
-    services_t           services;
-    listeners_t          listeners;
+    hpd_adapter_t *adapter;
+    TAILQ_ENTRY(hpd_device) HPD_TAILQ_FIELD;
+    services_t *services;
+    listeners_t *listeners;
     // Data members
-    map_t                attributes;
+    char *id;
+    map_t *attributes;
     // User data
-    hpd_free_f               on_free;
-    void                *data;
+    hpd_free_f on_free;
+    void *data;
 };
 
 struct hpd_adapter
 {
     // Navigational members
-    configuration_t      *configuration;
-    TAILQ_ENTRY(hpd_adapter)  HPD_TAILQ_FIELD;
-    devices_t             devices;
-    listeners_t           listeners;
+    configuration_t *configuration;
+    TAILQ_ENTRY(hpd_adapter) HPD_TAILQ_FIELD;
+    devices_t *devices;
+    listeners_t *listeners;
     // Data members
-    map_t                 attributes;
+    char *id;
+    map_t *attributes;
     // User data
-    hpd_free_f                on_free;
-    void                 *data;
+    hpd_free_f on_free;
+    void *data;
 };
 
 struct configuration
@@ -141,8 +142,10 @@ struct configuration
     void *data;
 };
 
+typedef enum { CONFIGURATION_LISTENER, ADAPTER_LISTENER, DEVICE_LISTENER, SERVICE_LISTENER } hpd_listener_type_t;
+
 struct hpd_listener {
-    enum { CONFIGURATION_LISTENER, ADAPTER_LISTENER, DEVICE_LISTENER, SERVICE_LISTENER } type;
+    hpd_listener_type_t type;
     // Navigational members
     TAILQ_ENTRY(hpd_listener) HPD_TAILQ_FIELD;
     union {
@@ -160,28 +163,12 @@ struct hpd_listener {
     hpd_free_f on_free;
 };
 
-#define HPD_TAILQ_FOREACH(VAR, HEAD) \
-    TAILQ_FOREACH(VAR, HEAD, HPD_TAILQ_FIELD)
-
-#define HPD_TAILQ_FOREACH_SAFE(VAR, HEAD, TMP) \
-    TAILQ_FOREACH_SAFE(VAR, HEAD, HPD_TAILQ_FIELD, TMP)
-
 #define OBJ_GET_CONF_DATA(OBJ, DATA) do {\
     (DATA) = (OBJ)->configuration->data; \
 } while (0)
 
 #define OBJ_GET_ADAPTER(OBJ, ADAPTER) do { \
     (ADAPTER) = (OBJ)->adapter; \
-} while(0)
-
-#define OBJ_GET_DATA(OBJ, DATA) do { \
-    (DATA) = (OBJ)->data; \
-} while(0)
-
-#define OBJ_SET_DATA(OBJ, DATA, FREE) do { \
-    if ((OBJ)->data && (OBJ)->on_free) (OBJ)->on_free((OBJ)->data); \
-    (OBJ)->data = (DATA); \
-    (OBJ)->on_free = (FREE); \
 } while(0)
 
 #define OBJ_GET_DEVICE(OBJ, DEVICE) do { \
@@ -200,24 +187,6 @@ struct hpd_listener {
     (VALUE) = (OBJ)->value; \
 } while(0)
 
-#define ADAPTERS_FREE(ADAPTERS) do { \
-    hpd_adapter_t *adapter, *adapter_tmp; \
-    HPD_TAILQ_FOREACH_SAFE(adapter, (ADAPTERS), adapter_tmp) \
-        ADAPTER_FREE(adapter); \
-} while(0)
-
-#define DEVICES_FREE(DEVICES) do { \
-    hpd_device_t *device, *device_tmp; \
-    HPD_TAILQ_FOREACH_SAFE(device, (DEVICES), device_tmp) \
-        DEVICE_FREE(device); \
-} while(0)
-
-#define SERVICES_FREE(SERVICES) do { \
-    /* TODO service_t *service, *service_tmp; \
-    HPD_TAILQ_FOREACH_SAFE(service, (SERVICES), service_tmp) \
-        SERVICE_FREE(service); */ \
-} while(0)
-
 #define LISTENERS_REMOVE_IF_EXIST(LISTENERS, LISTENER) do { \
     hpd_listener_t *_iter; \
     HPD_TAILQ_FOREACH(_iter, (LISTENERS)) { \
@@ -228,29 +197,11 @@ struct hpd_listener {
     } \
 } while (0)
 
-#define LISTENERS_FREE(LISTENERS) do { \
-    hpd_listener_t *listener, *tmp; \
-    HPD_TAILQ_FOREACH_SAFE(listener, (LISTENERS), tmp) { \
-        TAILQ_REMOVE((LISTENERS), listener, HPD_TAILQ_FIELD); \
-        if (listener->on_free) listener->on_free(listener->data); \
-        free(listener); \
-    } \
-} while(0)
-
 #define LISTENERS_INFORM(LISTENERS, FUNC, ...) do { \
     hpd_listener_t *listener; \
     HPD_TAILQ_FOREACH(listener, &(LISTENERS)) { \
         if (listener->FUNC) listener->FUNC(listener, ##__VA_ARGS__); \
     } \
-} while(0)
-
-#define ADAPTER_FREE(ADAPTER) do { \
-    if (ADAPTER_ATTACHED((ADAPTER))) ADAPTER_DETACH((ADAPTER)); \
-    if ((ADAPTER)->on_free) (ADAPTER)->on_free((ADAPTER)->data); \
-    DEVICES_FREE(&(ADAPTER)->devices); \
-    LISTENERS_FREE(&(ADAPTER)->listeners); \
-    MAP_FREE(&(ADAPTER)->attributes); \
-    free((ADAPTER)); \
 } while(0)
 
 #define ADAPTER_INFORM(ADAPTER, FUNC) do { \
@@ -261,14 +212,6 @@ struct hpd_listener {
         LISTENERS_INFORM((ADAPTER)->configuration->listeners, FUNC, device); \
     } \
 } while(0)
-
-#define ADAPTER_DETACH(ADAPTER) do { \
-    ADAPTER_INFORM((ADAPTER), on_detach); \
-    TAILQ_REMOVE(&(ADAPTER)->configuration->adapters, (ADAPTER), HPD_TAILQ_FIELD); \
-    (ADAPTER)->configuration = NULL; \
-} while(0)
-
-#define ADAPTER_ATTACHED(ADAPTER) ((ADAPTER)->configuration)
 
 #define ADAPTER_FIRST_DEVICE(ADAPTER, DEVICE) do { \
     (DEVICE) = TAILQ_FIRST(&(ADAPTER)->devices); \
@@ -295,18 +238,7 @@ struct hpd_listener {
     } \
 } while(0)
 
-#define CONF_ALLOC(CONF, DATA) do { \
-    CALLOC(CONF, 1, configuration_t); \
-    TAILQ_INIT(&(CONF)->adapters); \
-    TAILQ_INIT(&(CONF)->listeners); \
-    (CONF)->data = (DATA); \
-} while(0)
 
-#define CONF_FREE(CONF) do { \
-    ADAPTERS_FREE(&(CONF)->adapters); \
-    LISTENERS_FREE(&(CONF)->listeners); \
-    free((CONF)); \
-} while(0)
 
 #define CONF_FIRST_ADAPTER(CONF, ADAPTER) do { \
     (ADAPTER) = TAILQ_FIRST(&(CONF)->adapters); \
@@ -375,22 +307,6 @@ struct hpd_listener {
     } \
 } while(0)
 
-#define DEVICE_ALLOC(DEVICE) do { \
-    CALLOC((DEVICE), 1, hpd_device_t); \
-    TAILQ_INIT(&(DEVICE)->services); \
-    TAILQ_INIT(&(DEVICE)->listeners); \
-    TAILQ_INIT(&(DEVICE)->attributes); \
-} while(0)
-
-#define DEVICE_FREE(DEVICE) do { \
-    if (DEVICE_ATTACHED((DEVICE))) DEVICE_DETACH((DEVICE)); \
-    if ((DEVICE)->on_free) (DEVICE)->on_free((DEVICE)->data); \
-    SERVICES_FREE(&(DEVICE)->services); \
-    LISTENERS_FREE(&(DEVICE)->listeners); \
-    MAP_FREE(&(DEVICE)->attributes); \
-    free((DEVICE)); \
-} while(0)
-
 #define DEVICE_INFORM(DEVICE, FUNC) do { \
     LISTENERS_INFORM((DEVICE)->listeners, FUNC, (DEVICE)); \
     LISTENERS_INFORM((DEVICE)->adapter->listeners, FUNC, (DEVICE)); \
@@ -420,25 +336,25 @@ struct hpd_listener {
 } while(0)
 
 #define LISTENER_ALLOC_ADAPTER(LISTENER, ADAPTER) do { \
-    CALLOC((LISTENER), 1, hpd_listener_t); \
+    HPD_CALLOC((LISTENER), 1, hpd_listener_t); \
     (LISTENER)->type = ADAPTER_LISTENER; \
     (LISTENER)->adapter = ADAPTER; \
 } while (0)
 
 #define LISTENER_ALLOC_DEVICE(LISTENER, DEVICE) do { \
-    CALLOC((LISTENER), 1, hpd_listener_t); \
+    HPD_CALLOC((LISTENER), 1, hpd_listener_t); \
     (LISTENER)->type = DEVICE_LISTENER; \
     (LISTENER)->device = DEVICE; \
 } while (0)
 
 #define LISTENER_ALLOC_CONF(LISTENER, CONF) do { \
-    CALLOC((LISTENER), 1, hpd_listener_t); \
+    HPD_CALLOC((LISTENER), 1, hpd_listener_t); \
     (LISTENER)->type = CONFIGURATION_LISTENER; \
     (LISTENER)->configuration = CONF; \
 } while (0)
 
 #define LISTENER_ALLOC_SERVICE(LISTENER, SERVICE) do { \
-    CALLOC((LISTENER), 1, hpd_listener_t); \
+    HPD_CALLOC((LISTENER), 1, hpd_listener_t); \
     (LISTENER)->type = SERVICE_LISTENER; \
     (LISTENER)->service = SERVICE; \
 } while (0)
@@ -471,17 +387,6 @@ struct hpd_listener {
     (LISTENER)->on_change = (ON_CHANGE); \
 } while (0)
 
-#define PARAMETER_ALLOC(PARAM) do { \
-    CALLOC((PARAM), 1, hpd_parameter_t); \
-    TAILQ_INIT(&(PARAM)->attributes); \
-} while (0)
-
-#define PARAMETER_FREE(PARAM) do { \
-    if (PARAMETER_ATTACHED((PARAM))) PARAMETER_DETACH((PARAM)); \
-    MAP_FREE(&(PARAM)->attributes); \
-    free((PARAM)); \
-} while (0)
-
 #define PARAMETER_ATTACH(SERVICE, PARAM) do { \
     TAILQ_INSERT_TAIL(&(SERVICE)->parameters, (PARAM), HPD_TAILQ_FIELD); \
     (PARAM)->service = (SERVICE); \
@@ -495,7 +400,7 @@ struct hpd_listener {
 #define PARAMETER_ATTACHED(PARAM) ((PARAM)->service)
 
 #define REQUEST_ALLOC(REQUEST, SERVICE, METHOD, ON_RESPONSE) do { \
-    CALLOC((REQUEST), 1, hpd_request_t); \
+    HPD_CALLOC((REQUEST), 1, hpd_request_t); \
     (REQUEST)->service = (SERVICE); \
     (REQUEST)->method = (METHOD); \
     (REQUEST)->on_response = (ON_RESPONSE); \

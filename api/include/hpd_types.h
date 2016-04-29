@@ -45,6 +45,17 @@ typedef struct hpd_response hpd_response_t;
 typedef struct hpd_value hpd_value_t;
 typedef struct hpd_pair hpd_pair_t;
 typedef struct ev_loop hpd_ev_loop_t;
+typedef struct hpd_adapter_id hpd_adapter_id_t;
+typedef struct hpd_device_id hpd_device_id_t;
+typedef struct hpd_service_id hpd_service_id_t;
+typedef struct hpd_parameter_id hpd_parameter_id_t;
+
+/**
+ * Value to be used in len parameters on \0 terminated strings
+ */
+/// [HPD_NULL_TERMINATED]
+#define HPD_NULL_TERMINATED -1
+/// [HPD_NULL_TERMINATED]
 
 /**
  * Errors that can be returned from functions.
@@ -52,15 +63,18 @@ typedef struct ev_loop hpd_ev_loop_t;
 /// [hpd_error_t]
 typedef enum hpd_error {
     HPD_E_SUCCESS = 0,  //< The operation was successful.
+    HPD_E_UNKNOWN,      //< An unknown error with no further details.
     HPD_E_NULL,         //< Null pointer error.
     HPD_E_ALLOC,        //< Memory allocation error.
     HPD_E_RUNNING,      //< Cannot perform the operation because the object is already running.
     HPD_E_STOPPED,      //< Cannot perform the operation because the object is already stopped.
+    HPD_E_STATE,        //< Cannot perform the operation because the object is in an invalid state.
     HPD_E_ATTACHED,     //< Cannot perform the operation because the object is attached.
     HPD_E_DETACHED,     //< Cannot perform the operation because the object is detached.
     HPD_E_UNSUBSCRIBED, //< Cannot perform the operation because the object is not subscribed.
     HPD_E_ARGUMENT,     //< An argument is invalid.
     HPD_E_NOT_UNIQUE,   //< An argument is not unique.
+    HPD_E_NOT_FOUND,    //< The object could not be found.
 } hpd_error_t;
 /// [hpd_error_t]
 
@@ -87,9 +101,9 @@ typedef hpd_error_t (*hpd_free_f) (void *data); //< Free function, used to free 
 /// [Application API Callbacks]
 typedef hpd_error_t (*hpd_response_f) (hpd_response_t *res);
 /// Value callback for listeners
-typedef hpd_error_t (*hpd_value_f) (hpd_listener_t *listener, hpd_service_t *service, hpd_value_t *val);
+typedef hpd_error_t (*hpd_value_f) (hpd_listener_t *listener, hpd_service_id_t *service, hpd_value_t *val);
 /// Device callback for listeners
-typedef hpd_error_t (*hpd_device_f) (hpd_listener_t *listener, hpd_device_t *device);
+typedef hpd_error_t (*hpd_device_f) (hpd_listener_t *listener, hpd_device_id_t *device);
 /// [Application API Callbacks]
 
 /// [hpd_module_def_t]
@@ -108,7 +122,7 @@ typedef struct hpd_module_def {
  */
 /// [hpd_method_t]
 typedef enum hpd_method {
-    HPD_M_NONE = -1, //< Method that does not exist
+    HPD_M_NONE = -1, //< Method that does not exist, must be first below valid methods
     HPD_M_GET = 0,   //< HTTP GET like method
     HPD_M_PUT,       //< HTTP PUT like method
     HPD_M_COUNT      //< Last
@@ -178,22 +192,11 @@ typedef enum hpd_status {
 /// [hpd_status_t]
 
 /**
- * Default attribute key for identifiers.
- *
- * Uniqueness is defined locally in the containing object, thus:
- * - Adapters have to globally unique within HPD.
- * - Devices have to to be unique within their adapter.
- * - Services have to be unique within their device.
- * - Currently a service may only contain one parameter. They therefore do not require an ID.
- */
-/// [Default keys]
-static const char * const HPD_ATTR_ID       = "id";
-
-/**
  * Default attribute key.
  *
  * Used in adapters to describe the network that they are connected to.
  */
+/// [Default keys]
 static const char * const HPD_ATTR_NETWORK  = "network";
 
 /**

@@ -67,9 +67,9 @@ static hpd_error_t on_create_add_options(void **data, hpd_module_t *context)
     if ((rc = on_create(data, context)) != HPD_E_SUCCESS) return rc;
 
     module_data_t *module_data = (module_data_t *) *data;
-    if ((module_data->add_option1 = hpd_add_option(context, "opt1", NULL, 0, "Option 1")) != HPD_E_SUCCESS)
+    if ((module_data->add_option1 = hpd_module_add_option(context, "opt1", NULL, 0, "Option 1")) != HPD_E_SUCCESS)
         return module_data->add_option1;
-    if ((module_data->add_option2 = hpd_add_option(context, "opt2", NULL, 0, "Option 2")) != HPD_E_SUCCESS)
+    if ((module_data->add_option2 = hpd_module_add_option(context, "opt2", NULL, 0, "Option 2")) != HPD_E_SUCCESS)
         return module_data->add_option2;
 
     if (hpd->options_count != 2) module_data->option_errors[0] = 1;

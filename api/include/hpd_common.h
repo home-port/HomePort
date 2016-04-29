@@ -25,55 +25,54 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_DAEMON_H
-#define HOMEPORT_DAEMON_H
+#ifndef HOMEPORT_HPD_COMMON_H
+#define HOMEPORT_HPD_COMMON_H
 
-#include "hpd_types.h"
-#include "hpd_common.h"
-#include "hpd_queue.h"
-#include <ev.h>
-#include <argp.h>
-#include "hpd_internal_api.h"
+#include "stdlib.h"
+#include "string.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct modules modules_t;
-typedef struct argp_option argp_option_t;
+/**
+ * Allocates and zeros a structure.
+ *
+ * CAST is for c++ compatibility (tests).
+ */
+#define HPD_CALLOC(PTR, NUM, CAST) do { \
+    (PTR) = (CAST *) calloc((NUM), sizeof(CAST)); \
+    if(!(PTR)) goto alloc_error; \
+} while(0)
 
-TAILQ_HEAD(modules, hpd_module);
+/**
+ * CAST is for c++ compatibility (tests).
+ */
+#define HPD_REALLOC(PTR, NUM, CAST) do { \
+    (PTR) = (CAST *) realloc((PTR), (NUM)*sizeof(CAST)); \
+    if(!(PTR)) goto alloc_error; \
+} while(0)
 
-struct hpd {
-    hpd_ev_loop_t *loop;
-    configuration_t *configuration;
-    ev_signal sigint_watcher;
-    ev_signal sigterm_watcher;
-    modules_t modules;
-    int options_count;
-    argp_option_t *options;
-    hpd_module_t **option2module;
-};
+#define HPD_CPY_ALLOC(DST, SRC, CAST) do { \
+    (DST) = (CAST *) malloc(sizeof(CAST)); \
+    if(!(DST)) goto alloc_error; \
+    memcpy((DST), (SRC), sizeof(CAST)); \
+} while(0)
 
-typedef struct hpd_module {
-    hpd_t *hpd;
-    TAILQ_ENTRY(hpd_module) HPD_TAILQ_FIELD;
-    hpd_module_def_t def;
-    char *id;
-    void *data;
-} hpd_module_t;
+#define HPD_STR_CPY(DST, SRC) do { \
+    HPD_REALLOC(DST, (strlen(SRC)+1), char); \
+    strcpy(DST, SRC); \
+} while(0)
 
-hpd_error_t daemon_alloc(hpd_t **hpd);
-hpd_error_t daemon_free(hpd_t *hpd);
-hpd_error_t daemon_add_module(hpd_t *hpd, const char *id, hpd_module_def_t *module_def);
-hpd_error_t daemon_add_option(hpd_module_t *context, const char *name, const char *arg, int flags, const char *doc);
-hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[]);
-hpd_error_t daemon_stop(const hpd_t *hpd);
-hpd_error_t daemon_get_id(hpd_module_t *context, const char **id);
-hpd_error_t daemon_get_loop(const hpd_t *hpd, hpd_ev_loop_t **loop);
+#define HPD_SPRINTF_ALLOC(DST, FMT, ...) do { \
+    size_t len; \
+    if ((len = snprintf(NULL, 0, (FMT), ##__VA_ARGS__)) < 0) goto nsprintf_error; \
+    if (!((DST) = calloc(len+1, sizeof(char)))) goto alloc_error; \
+    if (snprintf((DST), len+1, (FMT), ##__VA_ARGS__) < 0) { free((DST)); goto nsprintf_error; } \
+} while (0)
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //HOMEPORT_DAEMON_H
+#endif //HOMEPORT_HPD_COMMON_H

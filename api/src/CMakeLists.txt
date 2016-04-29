@@ -31,22 +31,37 @@
 add_library(daemon
         ../include/daemon.h
         daemon.c
+        daemon_api.c
+        )
+
+add_library(discovery
+        ../include/discovery.h
+        discovery.c
+        discovery_id.c
+        discovery_api.c
+        )
+
+add_library(event
+        ../include/event.h
+        event.c
+        event_api.c
         )
 
 add_library(hpd SHARED
+        ../include/hpd_internal_api.h
         ../include/hpd_adapter_api.h
         ../include/hpd_api.h
         ../include/hpd_application_api.h
         ../include/hpd_daemon_api.h
         ../include/hpd_shared_api.h
         ../include/hpd_types.h
-        ../include/common.h
+        ../include/hpd_common.h
+        ../include/hpd_queue.h
         ../include/map.h
         ../include/old_model.h
-        ../include/daemon_api.h
+        ../api.dox
         api.c
-        daemon_api.c
 )
-target_link_libraries(hpd daemon ev)
+target_link_libraries(hpd daemon discovery event ev)
 install (TARGETS hpd DESTINATION lib)
 set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)

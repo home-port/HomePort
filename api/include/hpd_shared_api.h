@@ -37,14 +37,75 @@ extern "C" {
 #endif
 
 /// [hpd_t functions]
-hpd_error_t hpd_add_option(hpd_module_t *context, const char *name, const char *arg, int flags, const char *doc);
+hpd_error_t hpd_module_add_option(hpd_module_t *context, const char *name, const char *arg, int flags, const char *doc);
+hpd_error_t hpd_module_get_id(hpd_module_t *context, const char **id);
 hpd_error_t hpd_get_loop(hpd_t *hpd, hpd_ev_loop_t **loop);
 /// [hpd_t functions]
 
+/// [id_t functions]
+hpd_error_t hpd_adapter_id_alloc(hpd_adapter_id_t **id, hpd_t *hpd, const char *aid);
+hpd_error_t hpd_adapter_id_free(hpd_adapter_id_t *id);
+
+hpd_error_t hpd_device_id_alloc(hpd_device_id_t **id, hpd_t *hpd, const char *aid, const char *did);
+hpd_error_t hpd_device_id_free(hpd_device_id_t *id);
+
+hpd_error_t hpd_service_id_alloc(hpd_service_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid);
+hpd_error_t hpd_service_id_free(hpd_service_id_t *id);
+
+hpd_error_t hpd_parameter_id_alloc(hpd_parameter_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid, const char *pid);
+hpd_error_t hpd_parameter_id_free(hpd_parameter_id_t *id);
+/// [id_t functions]
+
+/// [hpd_adapter_t functions]
+hpd_error_t hpd_adapter_get_id(hpd_adapter_id_t *aid, const char **id);
+hpd_error_t hpd_adapter_get_attr(hpd_adapter_id_t *id, const char *key, const char **val);
+hpd_error_t hpd_adapter_get_attrs(hpd_adapter_id_t *id, ...);
+/// [hpd_adapter_t functions]
+
+/// [hpd_device_t functions]
+hpd_error_t hpd_device_get_id(hpd_device_id_t *did, const char **id);
+hpd_error_t hpd_device_get_attr(hpd_device_id_t *id, const char *key, const char **val);
+hpd_error_t hpd_device_get_attrs(hpd_device_id_t *id, ...);
+/// [hpd_device_t functions]
+
+/// [hpd_service_t functions]
+hpd_error_t hpd_service_get_id(hpd_service_id_t *sid, const char **id);
+hpd_error_t hpd_service_get_attr(hpd_service_id_t *id, const char *key, const char **val);
+hpd_error_t hpd_service_get_attrs(hpd_service_id_t *id, ...);
+hpd_error_t hpd_service_has_action(hpd_service_id_t *id, const hpd_method_t method, char *boolean);
+hpd_error_t hpd_service_first_action(hpd_service_id_t *id, hpd_action_t **action);
+hpd_error_t hpd_service_next_action(hpd_action_t **action);
+/// [hpd_service_t functions]
+
+/// [hpd_service_t foreach loops]
+#define hpd_service_foreach_action(RC, ACTION, ID) for ( \
+    (RC) = hpd_service_first_action((ID), (ACTION)); \
+    !(RC) && (ACTION); \
+    (RC) = hpd_service_next_action((ACTION)))
+/// [hpd_service_t foreach loops]
+
+/// [hpd_parameter_t functions]
+hpd_error_t hpd_parameter_get_id(hpd_parameter_id_t *pid, const char **id);
+hpd_error_t hpd_parameter_get_attr(hpd_parameter_id_t *id, const char *key, const char **val);
+hpd_error_t hpd_parameter_get_attrs(hpd_parameter_id_t *id, ...);
+/// [hpd_parameter_t functions]
+
+/// [hpd_action_t functions]
+hpd_error_t hpd_action_get_method(hpd_action_t *action, hpd_method_t *method);
+/// [hpd_action_t functions]
+
 /// [Browsing functions]
-hpd_error_t hpd_adapter_get_hpd            (hpd_adapter_t *adapter,      hpd_t **hpd);
-hpd_error_t hpd_device_get_adapter         (hpd_device_t *device,        hpd_adapter_t **adapter);
-hpd_error_t hpd_service_get_device         (hpd_service_t *service,      hpd_device_t **device);
+hpd_error_t hpd_adapter_get_hpd(hpd_adapter_id_t *aid, hpd_t **hpd);
+hpd_error_t hpd_device_get_hpd(hpd_device_id_t *did, hpd_t **hpd);
+hpd_error_t hpd_device_get_adapter(hpd_device_id_t *did, hpd_adapter_id_t **aid);
+hpd_error_t hpd_service_get_hpd(hpd_service_id_t *sid, hpd_t **hpd);
+hpd_error_t hpd_service_get_adapter(hpd_service_id_t *sid, hpd_adapter_id_t **aid);
+hpd_error_t hpd_service_get_device(hpd_service_id_t *sid, hpd_device_id_t **did);
+hpd_error_t hpd_parameter_get_hpd(hpd_parameter_id_t *pid, hpd_t **hpd);
+hpd_error_t hpd_parameter_get_adapter(hpd_parameter_id_t *pid, hpd_adapter_id_t **aid);
+hpd_error_t hpd_parameter_get_device(hpd_parameter_id_t *pid, hpd_device_id_t **did);
+hpd_error_t hpd_parameter_get_service(hpd_parameter_id_t *pid, hpd_service_id_t **sid);
+
 hpd_error_t hpd_first_adapter              (hpd_t *hpd,              hpd_adapter_t **adapter);
 hpd_error_t hpd_first_device               (hpd_t *hpd,              hpd_device_t **device  );
 hpd_error_t hpd_first_service              (hpd_t *hpd,              hpd_service_t **service);
@@ -52,6 +113,7 @@ hpd_error_t hpd_adapter_first_device       (hpd_adapter_t *adapter,      hpd_dev
 hpd_error_t hpd_adapter_first_service      (hpd_adapter_t *adapter,      hpd_service_t **service);
 hpd_error_t hpd_device_first_service       (hpd_device_t *device,        hpd_service_t **service);
 hpd_error_t hpd_service_first_parameter    (hpd_service_t *service,      hpd_parameter_t **parameter);
+
 hpd_error_t hpd_next_adapter               (hpd_adapter_t **adapter);
 hpd_error_t hpd_next_device                (hpd_device_t **device  );
 hpd_error_t hpd_next_service               (hpd_service_t **service);
@@ -59,6 +121,7 @@ hpd_error_t hpd_adapter_next_device        (hpd_device_t **device  );
 hpd_error_t hpd_adapter_next_service       (hpd_service_t **service);
 hpd_error_t hpd_device_next_service        (hpd_service_t **service);
 hpd_error_t hpd_service_next_parameter     (hpd_parameter_t **parameter);
+
 hpd_error_t hpd_find_adapter               (hpd_t *hpd,              hpd_adapter_t **adapter,     ...);
 hpd_error_t hpd_find_device                (hpd_t *hpd,              hpd_device_t **device,       ...);
 hpd_error_t hpd_find_service               (hpd_t *hpd,              hpd_service_t **service,     ...);
@@ -66,6 +129,7 @@ hpd_error_t hpd_adapter_find_device        (hpd_adapter_t *adapter,      hpd_dev
 hpd_error_t hpd_adapter_find_service       (hpd_adapter_t *adapter,      hpd_service_t **service,     ...);
 hpd_error_t hpd_device_find_service        (hpd_device_t *device,        hpd_service_t **service,     ...);
 hpd_error_t hpd_service_find_parameter     (hpd_service_t *service,      hpd_parameter_t **parameter, ...);
+
 hpd_error_t hpd_find_next_adapter          (hpd_adapter_t **adapter,     ...);
 hpd_error_t hpd_find_next_device           (hpd_device_t **device,       ...);
 hpd_error_t hpd_find_next_service          (hpd_service_t **service,     ...);
@@ -135,7 +199,8 @@ hpd_error_t hpd_service_find_next_parameter(hpd_parameter_t **parameter, ...);
 /// [Browsing foreach loops]
 
 /// [hpd_value_t functions]
-hpd_error_t hpd_value_alloc(hpd_value_t **value, const char *body, size_t len);
+// TODO Remember to check for HPD_NULL_TERMINATED
+hpd_error_t hpd_value_alloc(hpd_value_t **value, const char *body, int len);
 hpd_error_t hpd_value_free(hpd_value_t *value);
 hpd_error_t hpd_value_set_header(hpd_value_t *value, const char *key, const char *val);
 hpd_error_t hpd_value_set_headers(hpd_value_t *value, ...);
@@ -153,7 +218,6 @@ hpd_error_t hpd_pair_get(hpd_pair_t *pair, const char **key, const char **value)
     !(RC) && (PAIR); \
     (RC) = hpd_value_next_header((PAIR)))
 /// [hpd_value_t foreach loops]
-
 
 #ifdef __cplusplus
 }

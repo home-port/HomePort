@@ -30,8 +30,9 @@
 #include <ev.h>
 #include "hpd_api.h"
 #include "old_model.h"
-#include "daemon_api.h"
 #include "daemon.h"
+
+#ifdef NOT
 
 /**
  * alloc_error can mean that HPD is only partially allocated
@@ -41,47 +42,6 @@ hpd_error_t hpd_action_get_method(hpd_action_t *action, hpd_method_t *method)
 {
     if (!action || !method) return HPD_E_NULL;
     (*method) = (action)->method;
-    return HPD_E_SUCCESS;
-}
-
-hpd_error_t adapter_alloc(hpd_adapter_t **adapter)
-{
-    CALLOC((*adapter), 1, hpd_adapter_t);
-    TAILQ_INIT(&(*adapter)->devices);
-    TAILQ_INIT(&(*adapter)->listeners);
-    TAILQ_INIT(&(*adapter)->attributes);
-    return HPD_E_SUCCESS;
-
-    alloc_error:
-        return HPD_E_ALLOC;
-}
-
-hpd_error_t hpd_adapter_alloc(hpd_adapter_t **adapter)
-{
-    if (!adapter) return HPD_E_NULL;
-    return adapter_alloc(adapter);
-}
-
-hpd_error_t adapter_attach(configuration_t *configuration, hpd_adapter_t *adapter) {
-    TAILQ_INSERT_TAIL(&(configuration)->adapters, (adapter), HPD_TAILQ_FIELD);
-    (adapter)->configuration = (configuration);
-    ADAPTER_INFORM((adapter), on_attach);
-    return HPD_E_SUCCESS;
-}
-
-hpd_error_t hpd_adapter_attach(hpd_t *hpd, hpd_adapter_t *adapter)
-{
-    if (!hpd || !adapter) return HPD_E_NULL;
-    if (ADAPTER_ATTACHED(adapter)) return HPD_E_ATTACHED;
-    return adapter_attach(hpd->configuration, adapter);
-}
-
-hpd_error_t hpd_adapter_detach(hpd_adapter_t *adapter)
-{
-    if (!adapter) return HPD_E_NULL;
-    if (!ADAPTER_ATTACHED(adapter)) return HPD_E_DETACHED;
-
-    ADAPTER_DETACH(adapter);
     return HPD_E_SUCCESS;
 }
 
@@ -189,14 +149,6 @@ hpd_error_t hpd_adapter_first_service(hpd_adapter_t *adapter, hpd_service_t **se
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t hpd_adapter_free(hpd_adapter_t *adapter)
-{
-    if (!adapter) return HPD_E_NULL;
-
-    ADAPTER_FREE(adapter);
-    return HPD_E_SUCCESS;
-}
-
 hpd_error_t hpd_adapter_get_attr(hpd_adapter_t *adapter, const char *key, const char **val)
 {
     if (!adapter || !key || !val) return HPD_E_NULL;
@@ -227,13 +179,6 @@ hpd_error_t hpd_adapter_get_attrs(hpd_adapter_t *adapter, ...)
         return HPD_E_NULL;
 }
 
-hpd_error_t hpd_adapter_get_data(const hpd_adapter_t *adapter, void **data) {
-    if (!adapter || !data) return HPD_E_NULL;
-
-    OBJ_GET_DATA(adapter, *data);
-    return HPD_E_SUCCESS;
-}
-
 hpd_error_t hpd_adapter_get_hpd(hpd_adapter_t *adapter, hpd_t **hpd) {
     if (!adapter || !hpd) return HPD_E_NULL;
 
@@ -257,51 +202,6 @@ hpd_error_t hpd_adapter_next_service(hpd_service_t **service)
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t hpd_adapter_set_attr(hpd_adapter_t *adapter, const char *key, const char *val)
-{
-    if (!adapter || !key) return HPD_E_NULL;
-
-    MAP_SET(&adapter->attributes, key, val);
-    return HPD_E_SUCCESS;
-
-    alloc_error:
-        return HPD_E_ALLOC;
-}
-
-hpd_error_t hpd_adapter_set_attrs(hpd_adapter_t *adapter, ...)
-{
-    if (!adapter) return HPD_E_NULL;
-
-    va_list vp;
-    const char *key, *val;
-    va_start(vp, adapter);
-
-    while ((key = va_arg(vp, const char *))) {
-        val = va_arg(vp, const char *);
-        if (!val) goto null_error;
-        MAP_SET((&adapter->attributes), key, val);
-    }
-
-    va_end(vp);
-    return HPD_E_SUCCESS;
-
-    null_error:
-    va_end(vp);
-    return HPD_E_NULL;
-
-    alloc_error:
-    va_end(vp);
-    return HPD_E_ALLOC;
-}
-
-hpd_error_t hpd_adapter_set_data(hpd_adapter_t *adapter, void *data, hpd_free_f on_free)
-{
-    if (!adapter) return HPD_E_NULL;
-
-    OBJ_SET_DATA(adapter, data, on_free);
-    return HPD_E_SUCCESS;
-}
-
 hpd_error_t hpd_changed(hpd_service_t *service, hpd_value_t *val)
 {
     if (!service || !val) return HPD_E_NULL;
@@ -310,27 +210,11 @@ hpd_error_t hpd_changed(hpd_service_t *service, hpd_value_t *val)
     return HPD_E_SUCCESS;
 }
 
-/**
- * A note on reusing IDs: An other module or remote client may have outstanding references to the old ID, thus IDs
- * should only be reused in cases when the new device is either the old device, or a directly replacement, with the
- * same functionality.
- */
-hpd_error_t hpd_device_alloc(hpd_device_t **device)
-{
-    if (!device) return HPD_E_NULL;
-
-    DEVICE_ALLOC(*device);
-    return HPD_E_SUCCESS;
-
-    alloc_error:
-        return HPD_E_ALLOC;
-}
-
 hpd_error_t hpd_device_attach(hpd_adapter_t *adapter, hpd_device_t *device)
 {
     if (!adapter || !device) return HPD_E_NULL;
     if (DEVICE_ATTACHED(device)) return HPD_E_ATTACHED;
-
+    // TODO Check ID Uniqueness
     DEVICE_ATTACH(adapter, device);
     return HPD_E_SUCCESS;
 }
@@ -392,14 +276,6 @@ hpd_error_t hpd_device_first_service(hpd_device_t *device, hpd_service_t **servi
     if (!device || !service) return HPD_E_NULL;
 
     DEVICE_FIRST_SERVICE(device, *service);
-    return HPD_E_SUCCESS;
-}
-
-hpd_error_t hpd_device_free(hpd_device_t *device)
-{
-    if (!device) return HPD_E_NULL;
-
-    DEVICE_FREE(device);
     return HPD_E_SUCCESS;
 }
 
@@ -798,23 +674,11 @@ hpd_error_t hpd_pair_get(hpd_pair_t *pair, const char **key, const char **value)
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t hpd_parameter_alloc(hpd_parameter_t **parameter)
-{
-    if (!parameter) return HPD_E_NULL;
-
-
-    PARAMETER_ALLOC(*parameter);
-    return HPD_E_SUCCESS;
-
-    alloc_error:
-    return HPD_E_ALLOC;
-}
-
 hpd_error_t hpd_parameter_attach(hpd_service_t *service, hpd_parameter_t *parameter)
 {
     if (!service || !parameter) return HPD_E_NULL;
     if (PARAMETER_ATTACHED(parameter)) return HPD_E_ATTACHED;
-
+    // TODO Check ID Uniqueness
     PARAMETER_ATTACH(service, parameter);
     return HPD_E_SUCCESS;
 }
@@ -965,7 +829,7 @@ hpd_error_t hpd_request(hpd_request_t *request)
     } else {
         // TODO THIS !!!
         hpd_response_t *RESPONSE;
-        CALLOC((RESPONSE), 1, hpd_response_t); \
+        HPD_CALLOC((RESPONSE), 1, hpd_response_t); \
         (RESPONSE)->request = (REQUEST); \
         (RESPONSE)->status = HPD_S_405; \
         (RESPONSE)->value = NULL; \
@@ -1003,8 +867,6 @@ hpd_error_t hpd_response_get_status(hpd_response_t *response, hpd_value_t *value
 hpd_error_t hpd_response_get_value(hpd_response_t *response, hpd_value_t *value) { return HPD_E_SUCCESS; }
 
 hpd_error_t hpd_response_set_value(hpd_response_t *response, hpd_value_t *value) { return HPD_E_SUCCESS; }
-
-hpd_error_t hpd_service_alloc(hpd_service_t **service) { return HPD_E_SUCCESS; }
 
 hpd_error_t hpd_service_attach(hpd_device_t *device, hpd_service_t *service) { return HPD_E_SUCCESS; }
 
@@ -1065,3 +927,5 @@ hpd_error_t hpd_value_next_header(hpd_pair_t **pair) { return HPD_E_SUCCESS; }
 hpd_error_t hpd_value_set_headers(hpd_value_t *value, ...) { return HPD_E_SUCCESS; }
 
 hpd_error_t hpd_value_set_header(hpd_value_t *value, const char *key, const char *val) { return HPD_E_SUCCESS; }
+
+#endif

@@ -25,7 +25,8 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "daemon_api.h"
+#include "hpd_api.h"
+#include "hpd_internal_api.h"
 #include "daemon.h"
 #include "old_model.h"
 #include <string.h>
@@ -43,6 +44,12 @@ hpd_error_t hpd_free(hpd_t *hpd)
     return daemon_free(hpd);
 }
 
+hpd_error_t hpd_get_loop(hpd_t *hpd, hpd_ev_loop_t **loop)
+{
+    if (!hpd || !loop) return HPD_E_NULL;
+    return daemon_get_loop(hpd, loop);
+}
+
 hpd_error_t hpd_module(hpd_t *hpd, const char *id, hpd_module_def_t *module_def)
 {
     hpd_module_t *module;
@@ -54,13 +61,23 @@ hpd_error_t hpd_module(hpd_t *hpd, const char *id, hpd_module_def_t *module_def)
     return daemon_add_module(hpd, id, module_def);
 }
 
-hpd_error_t hpd_add_option(hpd_module_t *context, const char *name, const char *arg, int flags, const char *doc)
+hpd_error_t hpd_module_add_option(hpd_module_t *context, const char *name, const char *arg, int flags, const char *doc)
 {
     if (!context || !name) return HPD_E_NULL;
     hpd_t *hpd = context->hpd;
-    if (!hpd->options) return HPD_E_RUNNING;
-    // TODO Doesn't check whether name exist already
+    if (!hpd->options) return HPD_E_STATE;
+    size_t name_index = strlen(context->id)+1;
+    for (int i = 0; i < hpd->options_count; i++) {
+        if (strcmp(&hpd->options[i].name[name_index], name) == 0)
+            return HPD_E_NOT_UNIQUE;
+    }
     return daemon_add_option(context, name, arg, flags, doc);
+}
+
+hpd_error_t hpd_module_get_id(hpd_module_t *context, const char **id)
+{
+    if (!context || !id) return HPD_E_NULL;
+    return daemon_get_id(context, id);
 }
 
 hpd_error_t hpd_start(hpd_t *hpd, int argc, char *argv[])
@@ -74,10 +91,4 @@ hpd_error_t hpd_stop(hpd_t *hpd)
     if (!hpd) return HPD_E_NULL;
     if (!hpd->loop) return HPD_E_STOPPED;
     return daemon_stop(hpd);
-}
-
-hpd_error_t hpd_get_loop(hpd_t *hpd, hpd_ev_loop_t **loop)
-{
-    if (!hpd || !loop) return HPD_E_NULL;
-    return daemon_get_loop(hpd, loop);
 }

@@ -28,7 +28,7 @@
 #ifndef HOMEPORT_MAP_H
 #define HOMEPORT_MAP_H
 
-#include "common.h"
+#include "hpd_common.h"
 // Not the same as other queue.h
 // TODO Include this as source instead?
 #include <bsd/sys/queue.h>
@@ -79,12 +79,12 @@ struct hpd_pair {
     if ((V) == NULL) { \
         if (attr) MAP_REMOVE((MAP), attr); \
     } else if (!attr) { \
-        CALLOC(attr, 1, hpd_pair_t); \
-        STR_CPY(attr->k, (K)); \
-        STR_CPY(attr->v, (V)); \
+        HPD_CALLOC(attr, 1, hpd_pair_t); \
+        HPD_STR_CPY(attr->k, (K)); \
+        HPD_STR_CPY(attr->v, (V)); \
         TAILQ_INSERT_TAIL((MAP), attr, tailq); \
     } else { \
-        STR_CPY(attr->v, (V)); \
+        HPD_STR_CPY(attr->v, (V)); \
     } \
 } while(0)
 

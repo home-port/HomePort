@@ -25,40 +25,25 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_COMMON_H
-#define HOMEPORT_COMMON_H
+#ifndef HOMEPORT_EVENT_H
+#define HOMEPORT_EVENT_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define HPD_TAILQ_FIELD tailq
+#include "hpd_types.h"
 
-/**
- * Allocates and zeros a structure.
- *
- * CAST is for c++ compatibility (tests).
- */
-#define CALLOC(PTR, NUM, CAST) do { \
-    PTR = (CAST *) calloc((NUM), sizeof(CAST)); \
-    if(!PTR) goto alloc_error; \
-} while(0)
+hpd_error_t event_free_listener(hpd_listener_t *listener);
 
-/**
- * CAST is for c++ compatibility (tests).
- */
-#define REALLOC(PTR, NUM, CAST) do { \
-    PTR = (CAST *) realloc(PTR, (NUM)*sizeof(CAST)); \
-    if(!PTR) goto alloc_error; \
-} while(0)
+hpd_error_t event_inform_adapter_attached(hpd_adapter_t *adapter);
+hpd_error_t event_inform_adapter_detached(hpd_adapter_t *adapter);
 
-#define STR_CPY(DST, SRC) do { \
-    REALLOC(DST, (strlen(SRC)+1), char); \
-    strcpy(DST, SRC); \
-} while(0)
+hpd_error_t event_inform_device_attached(hpd_device_t *device);
+hpd_error_t event_inform_device_detached(hpd_device_t *device);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //HOMEPORT_COMMON_H
+#endif //HOMEPORT_EVENT_H

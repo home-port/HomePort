@@ -25,15 +25,40 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_DAEMON_API_H
-#define HOMEPORT_DAEMON_API_H
+#include "demo_application.h"
+#include "hpd_application_api.h"
+#include <stdio.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef __cplusplus
+static hpd_error_t hpd_demo_app_create(void **data, hpd_module_t *context)
+{
+    return HPD_E_SUCCESS;
 }
-#endif
 
-#endif //HOMEPORT_DAEMON_API_H
+static hpd_error_t hpd_demo_app_destroy(void *data)
+{
+    return HPD_E_SUCCESS;
+}
+
+static hpd_error_t hpd_demo_app_start(void *data, hpd_t *hpd)
+{
+    return HPD_E_SUCCESS;
+}
+
+static hpd_error_t hpd_demo_app_stop(void *data, hpd_t *hpd)
+{
+    return HPD_E_SUCCESS;
+}
+
+static hpd_error_t hpd_demo_app_parse_opt(void *data, const char *name, const char *arg)
+{
+    printf("Got <%s, %s>\n", name, arg);
+    return HPD_E_SUCCESS;
+}
+
+struct hpd_module_def hpd_demo_app_def = {
+        hpd_demo_app_create,
+        hpd_demo_app_destroy,
+        hpd_demo_app_start,
+        hpd_demo_app_stop,
+        hpd_demo_app_parse_opt,
+};

@@ -1,3 +1,5 @@
+#include "../../api/include/hpd_types.h"
+
 /*
  * Copyright 2011 Aalborg University. All rights reserved.
  *
@@ -25,55 +27,33 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_DAEMON_H
-#define HOMEPORT_DAEMON_H
+#include "hpd_daemon_api.h"
+#include "demo_adapter.h"
+#include "demo_application.h"
 
-#include "hpd_types.h"
-#include "hpd_common.h"
-#include "hpd_queue.h"
-#include <ev.h>
-#include <argp.h>
-#include "hpd_internal_api.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct modules modules_t;
-typedef struct argp_option argp_option_t;
-
-TAILQ_HEAD(modules, hpd_module);
-
-struct hpd {
-    hpd_ev_loop_t *loop;
-    configuration_t *configuration;
-    ev_signal sigint_watcher;
-    ev_signal sigterm_watcher;
-    modules_t modules;
-    int options_count;
-    argp_option_t *options;
-    hpd_module_t **option2module;
-};
-
-typedef struct hpd_module {
+// TODO Using simple error handling (Switches would be better, when documentation is written)
+int main(int argc, char *argv[])
+{
+    hpd_error_t rc;
     hpd_t *hpd;
-    TAILQ_ENTRY(hpd_module) HPD_TAILQ_FIELD;
-    hpd_module_def_t def;
-    char *id;
-    void *data;
-} hpd_module_t;
 
-hpd_error_t daemon_alloc(hpd_t **hpd);
-hpd_error_t daemon_free(hpd_t *hpd);
-hpd_error_t daemon_add_module(hpd_t *hpd, const char *id, hpd_module_def_t *module_def);
-hpd_error_t daemon_add_option(hpd_module_t *context, const char *name, const char *arg, int flags, const char *doc);
-hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[]);
-hpd_error_t daemon_stop(const hpd_t *hpd);
-hpd_error_t daemon_get_id(hpd_module_t *context, const char **id);
-hpd_error_t daemon_get_loop(const hpd_t *hpd, hpd_ev_loop_t **loop);
+    // Allocate hpd memory
+    if ((rc = hpd_alloc(&hpd))) goto error_return;
 
-#ifdef __cplusplus
+    // Add modules
+    if ((rc = hpd_module(hpd, "demo_adapter", &hpd_demo_adapter_def))) goto error_free;
+    if ((rc = hpd_module(hpd, "demo_application", &hpd_demo_app_def))) goto error_free;
+
+    // Start hpd
+    if ((rc = hpd_start(hpd, argc, argv))) goto error_free;
+
+    // Clean up
+    if ((rc = hpd_free(hpd))) goto error_return;
+
+    return rc;
+
+    error_free:
+        hpd_free(hpd);
+    error_return:
+        return rc;
 }
-#endif
-
-#endif //HOMEPORT_DAEMON_H
