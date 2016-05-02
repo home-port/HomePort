@@ -41,6 +41,12 @@ add_library(discovery
         discovery_api.c
         )
 
+add_library(value
+        ../include/value.h
+        value.c
+        value_api.c
+        )
+
 add_library(event
         ../include/event.h
         event.c

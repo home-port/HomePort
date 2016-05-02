@@ -54,12 +54,13 @@ TAILQ_HEAD(parameters, hpd_parameter);
 TAILQ_HEAD(listeners, hpd_listener);
 
 struct hpd_action {
+    hpd_service_t *service;
     hpd_method_t method;           //< Method
     hpd_action_f action;           //< Action
 };
 
 struct hpd_value {
-    map_t       headers;
+    map_t       *headers;
     char       *body;
     size_t      len;
 };

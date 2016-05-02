@@ -199,12 +199,11 @@ hpd_error_t hpd_service_find_next_parameter(hpd_parameter_t **parameter, ...);
 /// [Browsing foreach loops]
 
 /// [hpd_value_t functions]
-// TODO Remember to check for HPD_NULL_TERMINATED
 hpd_error_t hpd_value_alloc(hpd_value_t **value, const char *body, int len);
 hpd_error_t hpd_value_free(hpd_value_t *value);
 hpd_error_t hpd_value_set_header(hpd_value_t *value, const char *key, const char *val);
 hpd_error_t hpd_value_set_headers(hpd_value_t *value, ...);
-hpd_error_t hpd_value_get_body(hpd_value_t **value, const char **body, size_t *len);
+hpd_error_t hpd_value_get_body(hpd_value_t *value, const char **body, size_t *len);
 hpd_error_t hpd_value_get_header(hpd_value_t *value, const char *key, const char **val);
 hpd_error_t hpd_value_get_headers(hpd_value_t *value, ...);
 hpd_error_t hpd_value_first_header(hpd_value_t *value, hpd_pair_t **pair);

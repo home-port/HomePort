@@ -63,7 +63,7 @@ typedef struct hpd_parameter_id hpd_parameter_id_t;
 /// [hpd_error_t]
 typedef enum hpd_error {
     HPD_E_SUCCESS = 0,  //< The operation was successful.
-    HPD_E_UNKNOWN,      //< An unknown error with no further details.
+    HPD_E_UNKNOWN = 1,  //< An unknown error with no further details.
     HPD_E_NULL,         //< Null pointer error.
     HPD_E_ALLOC,        //< Memory allocation error.
     HPD_E_RUNNING,      //< Cannot perform the operation because the object is already running.

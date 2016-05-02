@@ -46,6 +46,7 @@ hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const char *id)
 
     alloc_error:
     if (*adapter) discovery_free_adapter(*adapter);
+    (*adapter) = NULL;
     return HPD_E_ALLOC;
 }
 
@@ -63,6 +64,7 @@ hpd_error_t discovery_alloc_device(hpd_device_t **device, const char *id)
 
     alloc_error:
     if (*device) discovery_free_device(*device);
+    (*device) = NULL;
     return HPD_E_ALLOC;
 }
 
@@ -80,6 +82,7 @@ hpd_error_t discovery_alloc_service(hpd_service_t **service, const char *id)
 
     alloc_error:
     if (*service) discovery_free_service(*service);
+    (*service) = NULL;
     return HPD_E_ALLOC;
 }
 
@@ -93,6 +96,7 @@ hpd_error_t discovery_alloc_parameter(hpd_parameter_t **parameter, const char *i
 
     alloc_error:
     if (*parameter) discovery_free_parameter(*parameter);
+    (*parameter) = NULL;
     return HPD_E_ALLOC;
 }
 
@@ -301,25 +305,131 @@ hpd_error_t discovery_detach_parameter(hpd_parameter_t *parameter)
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discover_get_adapter_data(hpd_adapter_t *adapter, void **data)
+hpd_error_t discovery_get_adapter_data(hpd_adapter_t *adapter, void **data)
 {
     (*data) = adapter->data;
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discover_get_device_data(hpd_device_t *device, void **data)
+hpd_error_t discovery_get_device_data(hpd_device_t *device, void **data)
 {
     (*data) = device->data;
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discover_get_service_data(hpd_service_t *service, void **data)
+hpd_error_t discovery_get_service_data(hpd_service_t *service, void **data)
 {
     (*data) = service->data;
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discover_set_adapter_data(hpd_adapter_t *adapter, void *data, hpd_free_f on_free)
+hpd_error_t discovery_get_adapter_id(hpd_adapter_t *adapter, const char **id)
+{
+    (*id) = adapter->id;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_device_id(hpd_device_t *device, const char **id)
+{
+    (*id) = device->id;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_service_id(hpd_service_t *service, const char **id)
+{
+    (*id) = service->id;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_parameter_id(hpd_parameter_t *parameter, const char **id)
+{
+    (*id) = parameter->id;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_adapter_attr(hpd_adapter_t *adapter, const char *key, const char **val)
+{
+    MAP_GET(adapter->attributes, key, *val);
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_device_attr(hpd_device_t *device, const char *key, const char **val)
+{
+    MAP_GET(device->attributes, key, *val);
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_service_attr(hpd_service_t *service, const char *key, const char **val)
+{
+    MAP_GET(service->attributes, key, *val);
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_parameter_attr(hpd_parameter_t *parameter, const char *key, const char **val)
+{
+    MAP_GET(parameter->attributes, key, *val);
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_adapter_attrs_v(hpd_adapter_t *adapter, va_list vp)
+{
+    hpd_error_t rc;
+    const char *key, **val;
+
+    while ((key = va_arg(vp, const char *))) {
+        val = va_arg(vp, const char **);
+        if (!val) return HPD_E_NULL;
+        if ((rc = discovery_get_adapter_attr(adapter, key, val))) return rc;
+    }
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_device_attrs_v(hpd_device_t *device, va_list vp)
+{
+    hpd_error_t rc;
+    const char *key, **val;
+
+    while ((key = va_arg(vp, const char *))) {
+        val = va_arg(vp, const char **);
+        if (!val) return HPD_E_NULL;
+        if ((rc = discovery_get_device_attr(device, key, val))) return rc;
+    }
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_service_attrs_v(hpd_service_t *service, va_list vp)
+{
+    hpd_error_t rc;
+    const char *key, **val;
+
+    while ((key = va_arg(vp, const char *))) {
+        val = va_arg(vp, const char **);
+        if (!val) return HPD_E_NULL;
+        if ((rc = discovery_get_service_attr(service, key, val))) return rc;
+    }
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_parameter_attrs_v(hpd_parameter_t *parameter, va_list vp)
+{
+    hpd_error_t rc;
+    const char *key, **val;
+
+    while ((key = va_arg(vp, const char *))) {
+        val = va_arg(vp, const char **);
+        if (!val) return HPD_E_NULL;
+        if ((rc = discovery_get_parameter_attr(parameter, key, val))) return rc;
+    }
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_action_method(hpd_action_t *action, hpd_method_t *method)
+{
+    (*method) = action->method;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_set_adapter_data(hpd_adapter_t *adapter, void *data, hpd_free_f on_free)
 {
     hpd_error_t rc;
     if (adapter->on_free && (rc = adapter->on_free(adapter->data))) return rc;
@@ -328,7 +438,7 @@ hpd_error_t discover_set_adapter_data(hpd_adapter_t *adapter, void *data, hpd_fr
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discover_set_device_data(hpd_device_t *device, void *data, hpd_free_f on_free)
+hpd_error_t discovery_set_device_data(hpd_device_t *device, void *data, hpd_free_f on_free)
 {
     hpd_error_t rc;
     if (device->on_free && (rc = device->on_free(device->data))) return rc;
@@ -337,7 +447,7 @@ hpd_error_t discover_set_device_data(hpd_device_t *device, void *data, hpd_free_
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discover_set_service_data(hpd_service_t *service, void *data, hpd_free_f on_free)
+hpd_error_t discovery_set_service_data(hpd_service_t *service, void *data, hpd_free_f on_free)
 {
     hpd_error_t rc;
     if (service->on_free && (rc = service->on_free(service->data))) return rc;
@@ -346,7 +456,7 @@ hpd_error_t discover_set_service_data(hpd_service_t *service, void *data, hpd_fr
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discover_set_adapter_attr(hpd_adapter_t *adapter, const char *key, const char *val)
+hpd_error_t discovery_set_adapter_attr(hpd_adapter_t *adapter, const char *key, const char *val)
 {
     MAP_SET(adapter->attributes, key, val);
     return HPD_E_SUCCESS;
@@ -355,7 +465,7 @@ hpd_error_t discover_set_adapter_attr(hpd_adapter_t *adapter, const char *key, c
     return HPD_E_ALLOC;
 }
 
-hpd_error_t discover_set_device_attr(hpd_device_t *device, const char *key, const char *val)
+hpd_error_t discovery_set_device_attr(hpd_device_t *device, const char *key, const char *val)
 {
     MAP_SET(device->attributes, key, val);
     return HPD_E_SUCCESS;
@@ -364,7 +474,7 @@ hpd_error_t discover_set_device_attr(hpd_device_t *device, const char *key, cons
     return HPD_E_ALLOC;
 }
 
-hpd_error_t discover_set_service_attr(hpd_service_t *service, const char *key, const char *val)
+hpd_error_t discovery_set_service_attr(hpd_service_t *service, const char *key, const char *val)
 {
     MAP_SET(service->attributes, key, val);
     return HPD_E_SUCCESS;
@@ -373,7 +483,7 @@ hpd_error_t discover_set_service_attr(hpd_service_t *service, const char *key, c
     return HPD_E_ALLOC;
 }
 
-hpd_error_t discover_set_parameter_attr(hpd_parameter_t *parameter, const char *key, const char *val)
+hpd_error_t discovery_set_parameter_attr(hpd_parameter_t *parameter, const char *key, const char *val)
 {
     MAP_SET(parameter->attributes, key, val);
     return HPD_E_SUCCESS;
@@ -382,27 +492,16 @@ hpd_error_t discover_set_parameter_attr(hpd_parameter_t *parameter, const char *
     return HPD_E_ALLOC;
 }
 
-hpd_error_t discover_set_service_action(hpd_service_t *service, const hpd_method_t method, hpd_action_f action)
+hpd_error_t discovery_set_service_action(hpd_service_t *service, const hpd_method_t method, hpd_action_f action)
 {
-    service->actions[method].method = method;
-    service->actions[method].action = action;
+    hpd_action_t *action_p = &service->actions[method];
+    action_p->service = service;
+    action_p->method = method;
+    action_p->action = action;
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discover_set_adapter_attrs_v(hpd_adapter_t *adapter, va_list vp)
-{
-    hpd_error_t rc;
-    const char *key, *val;
-
-    while ((key = va_arg(vp, const char *))) {
-        val = va_arg(vp, const char *);
-        if (!val) return HPD_E_NULL;
-        if ((rc = discover_set_adapter_attr(adapter, key, val))) return rc;
-    }
-    return HPD_E_SUCCESS;
-}
-
-hpd_error_t discover_set_device_attrs_v(hpd_device_t *device, va_list vp)
+hpd_error_t discovery_set_adapter_attrs_v(hpd_adapter_t *adapter, va_list vp)
 {
     hpd_error_t rc;
     const char *key, *val;
@@ -410,12 +509,12 @@ hpd_error_t discover_set_device_attrs_v(hpd_device_t *device, va_list vp)
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char *);
         if (!val) return HPD_E_NULL;
-        if ((rc = discover_set_device_attr(device, key, val))) return rc;
+        if ((rc = discovery_set_adapter_attr(adapter, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discover_set_service_attrs_v(hpd_service_t *service, va_list vp)
+hpd_error_t discovery_set_device_attrs_v(hpd_device_t *device, va_list vp)
 {
     hpd_error_t rc;
     const char *key, *val;
@@ -423,12 +522,12 @@ hpd_error_t discover_set_service_attrs_v(hpd_service_t *service, va_list vp)
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char *);
         if (!val) return HPD_E_NULL;
-        if ((rc = discover_set_service_attr(service, key, val))) return rc;
+        if ((rc = discovery_set_device_attr(device, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discover_set_parameter_attrs_v(hpd_parameter_t *parameter, va_list vp)
+hpd_error_t discovery_set_service_attrs_v(hpd_service_t *service, va_list vp)
 {
     hpd_error_t rc;
     const char *key, *val;
@@ -436,12 +535,25 @@ hpd_error_t discover_set_parameter_attrs_v(hpd_parameter_t *parameter, va_list v
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char *);
         if (!val) return HPD_E_NULL;
-        if ((rc = discover_set_parameter_attr(parameter, key, val))) return rc;
+        if ((rc = discovery_set_service_attr(service, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discover_set_service_actions_v(hpd_service_t *service, va_list vp)
+hpd_error_t discovery_set_parameter_attrs_v(hpd_parameter_t *parameter, va_list vp)
+{
+    hpd_error_t rc;
+    const char *key, *val;
+
+    while ((key = va_arg(vp, const char *))) {
+        val = va_arg(vp, const char *);
+        if (!val) return HPD_E_NULL;
+        if ((rc = discovery_set_parameter_attr(parameter, key, val))) return rc;
+    }
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_set_service_actions_v(hpd_service_t *service, va_list vp)
 {
     hpd_error_t rc;
     hpd_method_t method;
@@ -451,9 +563,29 @@ hpd_error_t discover_set_service_actions_v(hpd_service_t *service, va_list vp)
         if (method <= HPD_M_NONE || method >= HPD_M_COUNT) return HPD_E_ARGUMENT;
         action = va_arg(vp, hpd_action_f);
         if (!action) return HPD_E_NULL;
-        if ((rc = discover_set_service_action(service, method, action))) return rc;
+        if ((rc = discovery_set_service_action(service, method, action))) return rc;
     }
     return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_first_action_in_service(hpd_service_t *service, hpd_action_t **action)
+{
+    (*action) = &service->actions[HPD_M_NONE+1];
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_next_action_in_service(hpd_action_t **action)
+{
+    hpd_service_t *service = (*action)->service;
+    hpd_method_t method = (*action)->method + 1;
+    if (method < HPD_M_COUNT) (*action) = &service->actions[method];
+    else (*action) = NULL;
+    return HPD_E_SUCCESS;
+}
+
+hpd_bool_t discovery_has_service_action(hpd_service_t *service, const hpd_method_t method)
+{
+    return (service->actions[method].action != NULL);
 }
 
 hpd_bool_t discovery_is_adapter_id_unique(hpd_t *hpd, hpd_adapter_t *adapter)

@@ -114,13 +114,13 @@ hpd_error_t hpd_adapter_detach(hpd_adapter_id_t *id, hpd_adapter_t **adapter)
 hpd_error_t hpd_adapter_set_data(hpd_adapter_t *adapter, void *data, hpd_free_f on_free)
 {
     if (!adapter) return HPD_E_NULL;
-    return discover_set_adapter_data(adapter, data, on_free);
+    return discovery_set_adapter_data(adapter, data, on_free);
 }
 
 hpd_error_t hpd_adapter_set_attr(hpd_adapter_t *adapter, const char *key, const char *val)
 {
     if (!adapter || !key) return HPD_E_NULL;
-    return discover_set_adapter_attr(adapter, key, val);
+    return discovery_set_adapter_attr(adapter, key, val);
 }
 
 hpd_error_t hpd_adapter_set_attrs(hpd_adapter_t *adapter, ...)
@@ -129,7 +129,7 @@ hpd_error_t hpd_adapter_set_attrs(hpd_adapter_t *adapter, ...)
 
     va_list vp;
     va_start(vp, adapter);
-    hpd_error_t rc = discover_set_adapter_attrs_v(adapter, vp);
+    hpd_error_t rc = discovery_set_adapter_attrs_v(adapter, vp);
     va_end(vp);
 
     return rc;
@@ -141,7 +141,40 @@ hpd_error_t hpd_adapter_get_data(hpd_adapter_id_t *id, void **data)
     hpd_error_t rc;
     hpd_adapter_t *adapter;
     if ((rc = discovery_find_adapter(id, &adapter))) return rc;
-    return discover_get_adapter_data(adapter, data);
+    return discovery_get_adapter_data(adapter, data);
+}
+
+hpd_error_t hpd_adapter_get_id(hpd_adapter_id_t *aid, const char **id)
+{
+    if (!aid || !id) return HPD_E_NULL;
+    hpd_error_t rc;
+    hpd_adapter_t *adapter;
+    if ((rc = discovery_find_adapter(aid, &adapter))) return rc;
+    return discovery_get_adapter_id(adapter, id);
+}
+
+hpd_error_t hpd_adapter_get_attr(hpd_adapter_id_t *id, const char *key, const char **val)
+{
+    if (!id || !key || !val) return HPD_E_NULL;
+    hpd_error_t rc;
+    hpd_adapter_t *adapter;
+    if ((rc = discovery_find_adapter(id, &adapter))) return rc;
+    return discovery_get_adapter_attr(adapter, key, val);
+}
+
+hpd_error_t hpd_adapter_get_attrs(hpd_adapter_id_t *id, ...)
+{
+    if (!id) return HPD_E_NULL;
+    hpd_error_t rc;
+    hpd_adapter_t *adapter;
+    if ((rc = discovery_find_adapter(id, &adapter))) return rc;
+
+    va_list vp;
+    va_start(vp, id);
+    rc = discovery_get_adapter_attrs_v(adapter, vp);
+    va_end(vp);
+
+    return rc;
 }
 
 /**
@@ -186,13 +219,13 @@ hpd_error_t hpd_device_detach(hpd_device_id_t *id, hpd_device_t **device)
 hpd_error_t hpd_device_set_data(hpd_device_t *device, void *data, hpd_free_f on_free)
 {
     if (!device) return HPD_E_NULL;
-    return discover_set_device_data(device, data, on_free);
+    return discovery_set_device_data(device, data, on_free);
 }
 
 hpd_error_t hpd_device_set_attr(hpd_device_t *device, const char *key, const char *val)
 {
     if (!device || !key) return HPD_E_NULL;
-    return discover_set_device_attr(device, key, val);
+    return discovery_set_device_attr(device, key, val);
 }
 
 hpd_error_t hpd_device_set_attrs(hpd_device_t *device, ...)
@@ -201,7 +234,7 @@ hpd_error_t hpd_device_set_attrs(hpd_device_t *device, ...)
 
     va_list vp;
     va_start(vp, device);
-    hpd_error_t rc = discover_set_device_attrs_v(device, vp);
+    hpd_error_t rc = discovery_set_device_attrs_v(device, vp);
     va_end(vp);
 
     return rc;
@@ -213,7 +246,40 @@ hpd_error_t hpd_device_get_data(hpd_device_id_t *id, void **data)
     hpd_error_t rc;
     hpd_device_t *device;
     if ((rc = discovery_find_device(id, &device))) return rc;
-    return discover_get_device_data(device, data);
+    return discovery_get_device_data(device, data);
+}
+
+hpd_error_t hpd_device_get_id(hpd_device_id_t *did, const char **id)
+{
+    if (!did || !id) return HPD_E_NULL;
+    hpd_error_t rc;
+    hpd_device_t *device;
+    if ((rc = discovery_find_device(did, &device))) return rc;
+    return discovery_get_device_id(device, id);
+}
+
+hpd_error_t hpd_device_get_attr(hpd_device_id_t *id, const char *key, const char **val)
+{
+    if (!id || !key || !val) return HPD_E_NULL;
+    hpd_error_t rc;
+    hpd_device_t *device;
+    if ((rc = discovery_find_device(id, &device))) return rc;
+    return discovery_get_device_attr(device, key, val);
+}
+
+hpd_error_t hpd_device_get_attrs(hpd_device_id_t *id, ...)
+{
+    if (!id) return HPD_E_NULL;
+    hpd_error_t rc;
+    hpd_device_t *device;
+    if ((rc = discovery_find_device(id, &device))) return rc;
+
+    va_list vp;
+    va_start(vp, id);
+    rc = discovery_get_device_attrs_v(device, vp);
+    va_end(vp);
+
+    return rc;
 }
 
 hpd_error_t hpd_service_alloc(hpd_service_t **service, const char *id)
@@ -250,13 +316,13 @@ hpd_error_t hpd_service_detach(hpd_service_id_t *id, hpd_service_t **service)
 hpd_error_t hpd_service_set_data(hpd_service_t *service, void *data, hpd_free_f on_free)
 {
     if (!service) return HPD_E_NULL;
-    return discover_set_service_data(service, data, on_free);
+    return discovery_set_service_data(service, data, on_free);
 }
 
 hpd_error_t hpd_service_set_attr(hpd_service_t *service, const char *key, const char *val)
 {
     if (!service || !key) return HPD_E_NULL;
-    return discover_set_service_attr(service, key, val);
+    return discovery_set_service_attr(service, key, val);
 }
 
 hpd_error_t hpd_service_set_attrs(hpd_service_t *service, ...)
@@ -265,7 +331,7 @@ hpd_error_t hpd_service_set_attrs(hpd_service_t *service, ...)
 
     va_list vp;
     va_start(vp, service);
-    hpd_error_t rc = discover_set_service_attrs_v(service, vp);
+    hpd_error_t rc = discovery_set_service_attrs_v(service, vp);
     va_end(vp);
 
     return rc;
@@ -275,7 +341,7 @@ hpd_error_t hpd_service_set_action(hpd_service_t *service, const hpd_method_t me
 {
     if (!service || !action) return HPD_E_NULL;
     if (method <= HPD_M_NONE || method >= HPD_M_COUNT) return HPD_E_ARGUMENT;
-    return discover_set_service_action(service, method, action);
+    return discovery_set_service_action(service, method, action);
 }
 
 hpd_error_t hpd_service_set_actions(hpd_service_t *service, ...)
@@ -284,7 +350,7 @@ hpd_error_t hpd_service_set_actions(hpd_service_t *service, ...)
 
     va_list vp;
     va_start(vp, service);
-    hpd_error_t rc = discover_set_service_actions_v(service, vp);
+    hpd_error_t rc = discovery_set_service_actions_v(service, vp);
     va_end(vp);
 
     return rc;
@@ -296,7 +362,66 @@ hpd_error_t hpd_service_get_data(hpd_service_id_t *id, void **data)
     hpd_error_t rc;
     hpd_service_t *service;
     if ((rc = discovery_find_service(id, &service))) return rc;
-    return discover_get_service_data(service, data);
+    return discovery_get_service_data(service, data);
+}
+
+hpd_error_t hpd_service_get_id(hpd_service_id_t *sid, const char **id)
+{
+    if (!sid || !id) return HPD_E_NULL;
+    hpd_error_t rc;
+    hpd_service_t *service;
+    if ((rc = discovery_find_service(sid, &service))) return rc;
+    return discovery_get_service_id(service, id);
+}
+
+hpd_error_t hpd_service_get_attr(hpd_service_id_t *id, const char *key, const char **val)
+{
+    if (!id || !key || !val) return HPD_E_NULL;
+    hpd_error_t rc;
+    hpd_service_t *service;
+    if ((rc = discovery_find_service(id, &service))) return rc;
+    return discovery_get_service_attr(service, key, val);
+}
+
+hpd_error_t hpd_service_get_attrs(hpd_service_id_t *id, ...)
+{
+    if (!id) return HPD_E_NULL;
+    hpd_error_t rc;
+    hpd_service_t *service;
+    if ((rc = discovery_find_service(id, &service))) return rc;
+
+    va_list vp;
+    va_start(vp, id);
+    rc = discovery_get_service_attrs_v(service, vp);
+    va_end(vp);
+
+    return rc;
+}
+
+hpd_error_t hpd_service_has_action(hpd_service_id_t *id, const hpd_method_t method, char *boolean)
+{
+    if (!id || !boolean) return HPD_E_NULL;
+    if (method <= HPD_M_NONE || method >= HPD_M_COUNT) return HPD_E_ARGUMENT;
+    hpd_error_t rc;
+    hpd_service_t *service;
+    if ((rc = discovery_find_service(id, &service))) return rc;
+    (*boolean) = discovery_has_service_action(service, method);
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t hpd_service_first_action(hpd_service_id_t *id, hpd_action_t **action)
+{
+    if (!id || !action) return HPD_E_NULL;
+    hpd_error_t rc;
+    hpd_service_t *service;
+    if ((rc = discovery_find_service(id, &service))) return rc;
+    return discovery_first_action_in_service(service, action);
+}
+
+hpd_error_t hpd_service_next_action(hpd_action_t **action)
+{
+    if (!action || !(*action)) return HPD_E_NULL;
+    return discovery_next_action_in_service(action);
 }
 
 hpd_error_t hpd_parameter_alloc(hpd_parameter_t **parameter, const char *id)
@@ -333,7 +458,7 @@ hpd_error_t hpd_parameter_detach(hpd_parameter_id_t *id, hpd_parameter_t **param
 hpd_error_t hpd_parameter_set_attr(hpd_parameter_t *parameter, const char *key, const char *val)
 {
     if (!parameter || !key) return HPD_E_NULL;
-    return discover_set_parameter_attr(parameter, key, val);
+    return discovery_set_parameter_attr(parameter, key, val);
 }
 
 hpd_error_t hpd_parameter_set_attrs(hpd_parameter_t *parameter, ...)
@@ -342,8 +467,47 @@ hpd_error_t hpd_parameter_set_attrs(hpd_parameter_t *parameter, ...)
 
     va_list vp;
     va_start(vp, parameter);
-    hpd_error_t rc = discover_set_parameter_attrs_v(parameter, vp);
+    hpd_error_t rc = discovery_set_parameter_attrs_v(parameter, vp);
     va_end(vp);
 
     return rc;
+}
+
+hpd_error_t hpd_parameter_get_id(hpd_parameter_id_t *pid, const char **id)
+{
+    if (!pid || !id) return HPD_E_NULL;
+    hpd_error_t rc;
+    hpd_parameter_t *parameter;
+    if ((rc = discovery_find_parameter(pid, &parameter))) return rc;
+    return discovery_get_parameter_id(parameter, id);
+}
+
+hpd_error_t hpd_parameter_get_attr(hpd_parameter_id_t *id, const char *key, const char **val)
+{
+    if (!id || !key || !val) return HPD_E_NULL;
+    hpd_error_t rc;
+    hpd_parameter_t *parameter;
+    if ((rc = discovery_find_parameter(id, &parameter))) return rc;
+    return discovery_get_parameter_attr(parameter, key, val);
+}
+
+hpd_error_t hpd_parameter_get_attrs(hpd_parameter_id_t *id, ...)
+{
+    if (!id) return HPD_E_NULL;
+    hpd_error_t rc;
+    hpd_parameter_t *parameter;
+    if ((rc = discovery_find_parameter(id, &parameter))) return rc;
+
+    va_list vp;
+    va_start(vp, id);
+    rc = discovery_get_parameter_attrs_v(parameter, vp);
+    va_end(vp);
+
+    return rc;
+}
+
+hpd_error_t hpd_action_get_method(hpd_action_t *action, hpd_method_t *method)
+{
+    if (!action || !method) return HPD_E_NULL;
+    return discovery_get_action_method(action, method);
 }

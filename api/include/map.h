@@ -29,6 +29,7 @@
 #define HOMEPORT_MAP_H
 
 #include "hpd_common.h"
+#include "hpd_queue.h"
 // Not the same as other queue.h
 // TODO Include this as source instead?
 #include <bsd/sys/queue.h>
@@ -71,6 +72,7 @@ struct hpd_pair {
         } \
 } while(0)
 
+// TODO Memory left in a inconsistent state if this fails with HPD_E_ALLOC
 #define MAP_SET(MAP, K, V) do { \
     hpd_pair_t *attr = NULL; \
     HPD_TAILQ_FOREACH(attr, (MAP)) \

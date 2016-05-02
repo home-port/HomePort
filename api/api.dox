@@ -486,17 +486,6 @@
  * Finally, functions to manage parameters:
  * \snippet include/hpd_adapter_api.h hpd_parameter_t functions
  *
- * \subsection sec_adapter_comm Adapter communication
- *
- * Action functions will need functions related to requests/responses to manage these (functions to manage values are
- * shared with applications and will be shown later):
- * \snippet include/hpd_adapter_api.h hpd_request_t functions
- * \snippet include/hpd_adapter_api.h hpd_response_t functions
- *
- * And when, we are considering communication, an adapter should call the following function, whenever a service has
- * changed value:
- * \snippet include/hpd_adapter_api.h hpd_changed
- *
  * \section sec_shared_api_cont Shared API (Adapters and Applications) - Part II
  *
  * \subsection sec_data_model_get Data model getters
@@ -528,7 +517,9 @@
  * foreach loops (based on the same principle from libev):
  * \snippet include/hpd_shared_api.h Browsing foreach loops
  *
- * \subsection sec_value Value structure
+ * \section sec_comm Communication
+ *
+ * \subsection sec_value Shared API - Value structure
  *
  * The value structure is used in both get and put requests and thus is available for both adapters and applications:
  * \snippet include/hpd_shared_api.h hpd_value_t functions
@@ -543,7 +534,114 @@
  *
  * \snippet include/hpd_types.h HPD_NULL_TERMINATED
  *
- * \section sec_application_api Application API
+ * \subsection sec_adapter_comm Adapter API - Communication
+ *
+ * Action functions will need functions related to requests/responses to manage these (functions to manage values are
+ * shared with applications and will be shown later):
+ * \snippet include/hpd_adapter_api.h hpd_request_t functions
+ * \snippet include/hpd_adapter_api.h hpd_response_t functions
+ *
+ * And when, we are considering communication, an adapter should call the following function, whenever a service has
+ * changed value:
+ * \snippet include/hpd_adapter_api.h hpd_changed
+ *
+ * @startuml "Lifetime of request/response structures"
+ *
+ * participant Adapter as adp
+ * participant "Request\nDispatch" as req
+ * participant "Value" as val
+ * entity "Request\nhpd_value_t" as req_val
+ * entity "hpd_request_t" as req_t
+ * entity "Response\nhpd_value_t" as res_val
+ * entity "hpd_response_t" as res_t
+ *
+ * [-> req
+ * activate req_val
+ * activate req_t
+ * activate req
+ *
+ * req -> adp: on_action()
+ * activate adp
+ *
+ * adp -> req: hpd_request_get_service()
+ * activate req
+ * adp <-- req
+ * deactivate req
+ *
+ * adp -> req: hpd_request_get_method()
+ * activate req
+ * adp <-- req
+ * deactivate req
+ *
+ * adp -> req: hpd_request_get_value()
+ * activate req
+ * adp <-- req
+ * deactivate req
+ *
+ * adp -> val: hpd_value_get_body()
+ * activate val
+ * adp <-- val
+ * deactivate val
+ *
+ * adp -> val: hpd_value_get_header()
+ * activate val
+ * adp <-- val
+ * deactivate val
+ *
+ * req <-- adp
+ * deactivate adp
+ *
+ * [<-- req
+ * deactivate req
+ *
+ * ... Later ...
+ *
+ * [-> adp
+ * activate adp
+ *
+ * adp -> val: hpd_value_alloc()
+ * activate val
+ * val -> res_val: alloc()
+ * activate res_val
+ * adp <-- val
+ * deactivate val
+ *
+ * adp -> val: hpd_value_set_header()
+ * activate val
+ * adp <-- val
+ * deactivate val
+ *
+ * adp -> req: hpd_response_alloc()
+ * activate req
+ * req -> res_t: alloc()
+ * activate res_t
+ * req -> req_val: move()
+ * destroy req_val
+ * req -> req_t: move()
+ * destroy req_t
+ * adp <-- req
+ * deactivate req
+ *
+ * adp -> req: hpd_response_set_value()
+ * activate req
+ * req -> res_val: move()
+ * destroy res_val
+ * adp <-- req
+ * deactivate req
+ *
+ * adp -> req: hpd_respond()
+ * activate req
+ * req -> res_t: move()
+ * destroy res_t
+ * adp <-- req
+ * deactivate req
+ *
+ * [<-- adp
+ * deactivate adp
+ *
+ * @enduml
+ *
+ * \subsection sec_application_api Application API - Communication
  *
  * The functions in the Application API are only available for applications.
  *
@@ -563,4 +661,129 @@
  *
  * The foreach function will cause the given listener to be called for each device that is already attached.
  *
+ * @startuml "Lifetime of request/response structures"
+ *
+ * participant Application as app
+ * participant "Request\nDispatch" as req
+ * participant "Value" as val
+ * entity "Request\nhpd_value_t" as req_val
+ * entity "hpd_request_t" as req_t
+ * entity "Response\nhpd_value_t" as res_val
+ * entity "hpd_response_t" as res_t
+ *
+ * [-> app
+ * activate app
+ *
+ * app -> val: hpd_value_alloc()
+ * activate val
+ * val -> req_val: alloc()
+ * activate req_val
+ * app <-- val
+ * deactivate val
+ *
+ * app -> val: hpd_value_set_header()
+ * activate val
+ * app <-- val
+ * deactivate val
+ *
+ * app -> req: hpd_request_alloc()
+ * activate req
+ * req -> req_t: alloc()
+ * activate req_t
+ * app <-- req
+ * deactivate req
+ *
+ * app -> req: hpd_request_set_value()
+ * activate req
+ * req -> req_val: move()
+ * destroy req_val
+ * app <-- req
+ * deactivate req
+ *
+ * app -> req: hpd_request_set_data()
+ * activate req
+ * app <-- req
+ * deactivate req
+ *
+ * app -> req: hpd_request()
+ * activate req
+ * req -> req_t: move()
+ * destroy req_t
+ * app <-- req
+ * deactivate req
+ *
+ * [<-- app
+ * deactivate app
+ *
+ * ... Later ...
+ *
+ * [-> req
+ * activate req_val
+ * activate req_t
+ * activate res_val
+ * activate res_t
+ * activate req
+ *
+ * req -> app: on_response()
+ * activate app
+ *
+ * app -> req: hpd_response_get_status()
+ * activate req
+ * app <-- req
+ * deactivate req
+ *
+ * app -> req: hpd_response_get_request_data()
+ * activate req
+ * app <-- req
+ * deactivate req
+ *
+ * app -> req: hpd_response_get_request_service()
+ * activate req
+ * app <-- req
+ * deactivate req
+ *
+ * app -> req: hpd_response_get_request_method()
+ * activate req
+ * app <-- req
+ * deactivate req
+ *
+ * app -> req: hpd_response_get_request_value()
+ * activate req
+ * app <-- req
+ * deactivate req
+ *
+ * app -> req: hpd_response_get_value()
+ * activate req
+ * app <-- req
+ * deactivate req
+ *
+ * app -> val: hpd_value_get_body()
+ * activate val
+ * app <-- val
+ * deactivate val
+ *
+ * app -> val: hpd_value_get_header()
+ * activate val
+ * app <-- val
+ * deactivate val
+ *
+ * req <-- app
+ * deactivate app
+ *
+ * req -> req_val: free()
+ * destroy req_val
+ * req -> req_t: free()
+ * destroy req_t
+ * req -> res_val: free()
+ * destroy res_val
+ * req -> res_t: free()
+ * destroy res_t
+ *
+ * [<-- req
+ * deactivate req
+ *
+ * @enduml
+ *
  */
+
+// Module -> Discovery: hpd_adapter_alloc()
