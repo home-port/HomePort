@@ -25,6 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
+#include <request.h>
 #include "discovery.h"
 #include "daemon.h"
 #include "event.h"
@@ -85,6 +86,8 @@ hpd_error_t daemon_alloc(hpd_t **hpd)
 {
     HPD_CALLOC(*hpd, 1, hpd_t);
     TAILQ_INIT(&(*hpd)->modules);
+    TAILQ_INIT(&(*hpd)->request_watchers);
+    TAILQ_INIT(&(*hpd)->respond_watchers);
     ev_signal_init(&(*hpd)->sigint_watcher, sig_cb, SIGINT);
     ev_signal_init(&(*hpd)->sigterm_watcher, sig_cb, SIGTERM);
     (*hpd)->sigint_watcher.data = hpd;
@@ -101,11 +104,24 @@ hpd_error_t daemon_alloc(hpd_t **hpd)
 
 hpd_error_t daemon_free(hpd_t *hpd)
 {
-    hpd_module_t *module, *tmp;
-    HPD_TAILQ_FOREACH_SAFE(module, &hpd->modules, tmp) {
+    hpd_module_t *module, *module_tmp;
+    HPD_TAILQ_FOREACH_SAFE(module, &hpd->modules, module_tmp) {
         TAILQ_REMOVE(&hpd->modules, module, HPD_TAILQ_FIELD);
         free(module->id);
         free(module);
+    }
+    hpd_ev_async_t *async, *async_tmp;
+    HPD_TAILQ_FOREACH_SAFE(async, &hpd->request_watchers, async_tmp) {
+        TAILQ_REMOVE(&hpd->request_watchers, async, HPD_TAILQ_FIELD);
+        ev_async_stop(hpd->loop, &async->watcher);
+        request_free_request(async->request);
+        free(async);
+    }
+    HPD_TAILQ_FOREACH_SAFE(async, &hpd->respond_watchers, async_tmp) {
+        TAILQ_REMOVE(&hpd->respond_watchers, async, HPD_TAILQ_FIELD);
+        ev_async_stop(hpd->loop, &async->watcher);
+        request_free_response(async->response);
+        free(async);
     }
     free(hpd);
     return HPD_E_SUCCESS;

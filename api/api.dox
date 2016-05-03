@@ -408,7 +408,7 @@
  *
  * Module -> Discovery: hpd_adapter_attach()
  * activate Discovery
- * Discovery -> hpd_adapter_t: free()
+ * Discovery -> hpd_adapter_t: move()
  * destroy hpd_adapter_t
  * Module <-- Discovery
  * deactivate Discovery
@@ -664,8 +664,10 @@
  * @startuml "Lifetime of request/response structures"
  *
  * participant Application as app
+ * participant Discovery as dis
  * participant "Request\nDispatch" as req
  * participant "Value" as val
+ * entity "hpd_service_id_t" as sid
  * entity "Request\nhpd_value_t" as req_val
  * entity "hpd_request_t" as req_t
  * entity "Response\nhpd_value_t" as res_val
@@ -673,6 +675,28 @@
  *
  * [-> app
  * activate app
+ *
+ * app -> dis: hpd_service_id_alloc()
+ * activate dis
+ * dis -> sid: alloc()
+ * activate sid
+ * app <-- dis
+ * deactivate dis
+ *
+ * app -> req: hpd_request_alloc()
+ * activate req
+ * req -> req_t: alloc()
+ * activate req_t
+ * req -> sid: copy()
+ * app <-- req
+ * deactivate req
+ *
+ * app -> dis: hpd_service_id_free()
+ * activate dis
+ * dis -> sid: free()
+ * destroy sid
+ * app <-- dis
+ * deactivate dis
  *
  * app -> val: hpd_value_alloc()
  * activate val
@@ -685,13 +709,6 @@
  * activate val
  * app <-- val
  * deactivate val
- *
- * app -> req: hpd_request_alloc()
- * activate req
- * req -> req_t: alloc()
- * activate req_t
- * app <-- req
- * deactivate req
  *
  * app -> req: hpd_request_set_value()
  * activate req

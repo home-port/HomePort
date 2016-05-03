@@ -66,11 +66,11 @@ struct hpd_value {
 };
 
 struct hpd_request {
-    hpd_service_t  *service;
+    hpd_service_id_t  *service;
     hpd_method_t    method;
     hpd_value_t    *value;
     // Callback and data for returning the response to sender
-    hpd_response_f  on_response;
+    hpd_response_f  on_response; // Nullable
     hpd_free_f      on_free;
     void       *data;
 };

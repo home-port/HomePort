@@ -71,6 +71,11 @@ hpd_error_t discovery_alloc_did(hpd_device_id_t **id, hpd_t *hpd, const char *ai
 hpd_error_t discovery_alloc_sid(hpd_service_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid);
 hpd_error_t discovery_alloc_pid(hpd_parameter_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid, const char *pid);
 
+hpd_error_t discovery_copy_aid(hpd_adapter_id_t **dst, hpd_adapter_id_t *src);
+hpd_error_t discovery_copy_did(hpd_device_id_t **dst, hpd_device_id_t *src);
+hpd_error_t discovery_copy_sid(hpd_service_id_t **dst, hpd_service_id_t *src);
+hpd_error_t discovery_copy_pid(hpd_parameter_id_t **dst, hpd_parameter_id_t *src);
+
 hpd_error_t discovery_free_aid(hpd_adapter_id_t *id);
 hpd_error_t discovery_free_did(hpd_device_id_t *id);
 hpd_error_t discovery_free_sid(hpd_service_id_t *id);

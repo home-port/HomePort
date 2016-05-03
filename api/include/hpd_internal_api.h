@@ -36,8 +36,6 @@ extern "C" {
 
 typedef struct configuration configuration_t;
 
-hpd_error_t hpd_adapter_inform_detached(hpd_adapter_t *adapter);
-
 #ifdef __cplusplus
 }
 #endif

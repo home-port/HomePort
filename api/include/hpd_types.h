@@ -66,6 +66,7 @@ typedef enum hpd_error {
     HPD_E_UNKNOWN = 1,  //< An unknown error with no further details.
     HPD_E_NULL,         //< Null pointer error.
     HPD_E_ALLOC,        //< Memory allocation error.
+    // TODO Combine RUNNING and STOPPED in STATE ?
     HPD_E_RUNNING,      //< Cannot perform the operation because the object is already running.
     HPD_E_STOPPED,      //< Cannot perform the operation because the object is already stopped.
     HPD_E_STATE,        //< Cannot perform the operation because the object is in an invalid state.

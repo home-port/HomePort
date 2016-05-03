@@ -47,6 +47,12 @@ add_library(value
         value_api.c
         )
 
+add_library(request
+        ../include/request.h
+        request.c
+        request_api.c
+        )
+
 add_library(event
         ../include/event.h
         event.c

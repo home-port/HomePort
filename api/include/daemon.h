@@ -41,8 +41,11 @@ extern "C" {
 
 typedef struct modules modules_t;
 typedef struct argp_option argp_option_t;
+typedef struct hpd_ev_async hpd_ev_async_t;
+typedef struct hpd_ev_asyncs hpd_ev_asyncs_t;
 
 TAILQ_HEAD(modules, hpd_module);
+TAILQ_HEAD(hpd_ev_asyncs, hpd_ev_async);
 
 struct hpd {
     hpd_ev_loop_t *loop;
@@ -53,6 +56,17 @@ struct hpd {
     int options_count;
     argp_option_t *options;
     hpd_module_t **option2module;
+    hpd_ev_asyncs_t request_watchers;
+    hpd_ev_asyncs_t respond_watchers;
+};
+
+struct hpd_ev_async {
+    TAILQ_ENTRY(hpd_module) HPD_TAILQ_FIELD;
+    ev_async watcher;
+    union {
+        hpd_request_t *request;
+        hpd_response_t *response;
+    };
 };
 
 typedef struct hpd_module {

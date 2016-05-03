@@ -43,8 +43,8 @@ hpd_error_t hpd_request(hpd_request_t *request);
 /// [hpd_request_t functions]
 
 /// [hpd_response_t functions]
-hpd_error_t hpd_response_get_status(hpd_response_t *response, hpd_value_t *value);
-hpd_error_t hpd_response_get_value(hpd_response_t *response, hpd_value_t *value);
+hpd_error_t hpd_response_get_status(hpd_response_t *response, hpd_status_t *status);
+hpd_error_t hpd_response_get_value(hpd_response_t *response, hpd_value_t **value);
 hpd_error_t hpd_response_get_request_data(const hpd_response_t *response, void **data);
 hpd_error_t hpd_response_get_request_service(const hpd_response_t *response, hpd_service_id_t *service);
 hpd_error_t hpd_response_get_request_method(const hpd_response_t *response, hpd_method_t *method);
