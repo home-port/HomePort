@@ -36,6 +36,7 @@ typedef struct hpd hpd_t;
 typedef struct hpd_module hpd_module_t;
 typedef struct hpd_action hpd_action_t;
 typedef struct hpd_listener hpd_listener_t;
+typedef struct hpd_listener_ref hpd_listener_ref_t;
 typedef struct hpd_adapter hpd_adapter_t;
 typedef struct hpd_device hpd_device_t;
 typedef struct hpd_service hpd_service_t;
@@ -102,9 +103,9 @@ typedef hpd_error_t (*hpd_free_f) (void *data); //< Free function, used to free 
 /// [Application API Callbacks]
 typedef hpd_error_t (*hpd_response_f) (hpd_response_t *res);
 /// Value callback for listeners
-typedef hpd_error_t (*hpd_value_f) (hpd_listener_t *listener, hpd_service_id_t *service, hpd_value_t *val);
+typedef hpd_error_t (*hpd_value_f) (void *data, hpd_service_id_t *service, hpd_value_t *val);
 /// Device callback for listeners
-typedef hpd_error_t (*hpd_device_f) (hpd_listener_t *listener, hpd_device_id_t *device);
+typedef hpd_error_t (*hpd_device_f) (void *data, hpd_device_id_t *device);
 /// [Application API Callbacks]
 
 /// [hpd_module_def_t]

@@ -641,6 +641,57 @@
  *
  * @enduml
  *
+ * @startuml "Lifetime of request/response structures"
+ *
+ * participant Adapter as adp
+ * participant Discovery as dis
+ * participant "Event\nDispatch" as ev
+ * participant "Value" as val
+ * entity "hpd_service_id_t" as sid
+ * entity "hpd_value_t" as val_t
+ *
+ * [-> adp
+ * activate adp
+ *
+ * adp -> dis: hpd_service_id_alloc()
+ * activate dis
+ * dis -> sid: alloc()
+ * activate sid
+ * adp <-- dis
+ * deactivate dis
+ *
+ * adp -> val: hpd_value_alloc()
+ * activate val
+ * val -> val_t: alloc()
+ * activate val_t
+ * adp <-- val
+ * deactivate val
+ *
+ * adp -> val: hpd_value_set_header()
+ * activate val
+ * adp <-- val
+ * deactivate val
+ *
+ * adp -> ev: hpd_changed()
+ * activate ev
+ * ev -> sid: copy()
+ * ev -> val_t: move()
+ * destroy val_t
+ * adp <-- ev
+ * deactivate ev
+ *
+ * adp -> dis: hpd_service_id_free()
+ * activate dis
+ * dis -> sid: free()
+ * destroy sid
+ * adp <-- dis
+ * deactivate dis
+ *
+ * [<-- adp
+ * deactivate adp
+ *
+ * @enduml
+ *
  * \subsection sec_application_api Application API - Communication
  *
  * The functions in the Application API are only available for applications.
@@ -801,6 +852,114 @@
  *
  * @enduml
  *
+ * \todo Finish listener sequence chart
+ *
+ * @startuml "Lifetime of listener structures"
+ *
+ * participant Application as app
+ * participant "Event Dispatch" as ev
+ * entity hpd_listener_t as lt
+ *
+ * [-> app
+ * activate app
+ *
+ * app -> ev: hpd_listener_alloc_hpd()
+ * activate ev
+ * ev -> lt: alloc()
+ * activate lt
+ * app <-- ev
+ * deactivate ev
+ *
+ * app -> ev: hpd_listener_set_data()
+ * activate ev
+ * app <-- ev
+ * deactivate ev
+ *
+ * app -> ev: hpd_listener_set_value_callback()
+ * activate ev
+ * app <-- ev
+ * deactivate ev
+ *
+ * app -> ev: hpd_listener_set_device_callback()
+ * activate ev
+ * app <-- ev
+ * deactivate ev
+ *
+ * app -> ev: hpd_subscribe()
+ * activate ev
+ * app <-- ev
+ * deactivate ev
+ *
+ * app -> ev: hpd_foreach_attached()
+ * activate ev
+ * ev -> app: on_attach()
+ * activate app
+ * ev <-- app
+ * deactivate app
+ * ev -> app: on_attach()
+ * activate app
+ * ev <-- app
+ * deactivate app
+ * app <-- ev
+ * deactivate ev
+ *
+ * [<-- app
+ * deactivate app
+ *
+ * ... Later ...
+ *
+ * [-> ev
+ * activate ev
+ *
+ * ev -> app: on_attach()
+ * activate app
+ * ev <-- app
+ * deactivate app
+ *
+ * [<-- ev
+ * deactivate ev
+ *
+ * ... Later ...
+ *
+ * [-> ev
+ * activate ev
+ *
+ * ev -> app: on_detach()
+ * activate app
+ * ev <-- app
+ * deactivate app
+ *
+ * [<-- ev
+ * deactivate ev
+ *
+ * ... Later ...
+ *
+ * [-> ev
+ * activate ev
+ *
+ * ev -> app: on_change()
+ * activate app
+ * ev <-- app
+ * deactivate app
+ *
+ * [<-- ev
+ * deactivate ev
+ *
+ * ... Later ...
+ *
+ * [-> app
+ * activate app
+ *
+ * app -> ev: hpd_listener_free()
+ * activate ev
+ * ev -> lt: free()
+ * destroy lt
+ * app <-- ev
+ * deactivate ev
+ *
+ * [<-- app
+ * deactivate app
+ *
+ * @enduml
+ *
  */
-
-// Module -> Discovery: hpd_adapter_alloc()

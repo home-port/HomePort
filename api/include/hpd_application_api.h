@@ -29,6 +29,7 @@
 #define HOMEPORT_HPD_APPLICATION_API_H
 
 #include "hpd_shared_api.h"
+#include "old_model.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,14 +57,13 @@ hpd_error_t hpd_listener_alloc_hpd(hpd_listener_t **listener, hpd_t *hpd);
 hpd_error_t hpd_listener_alloc_adapter(hpd_listener_t **listener, hpd_adapter_id_t *id);
 hpd_error_t hpd_listener_alloc_device(hpd_listener_t **listener, hpd_device_id_t *id);
 hpd_error_t hpd_listener_alloc_service(hpd_listener_t **listener, hpd_service_id_t *id);
-hpd_error_t hpd_listener_free(hpd_listener_t *listener);
 hpd_error_t hpd_listener_set_data(hpd_listener_t *listener, void *data, hpd_free_f on_free);
 hpd_error_t hpd_listener_set_value_callback(hpd_listener_t *listener, hpd_value_f on_change);
 hpd_error_t hpd_listener_set_device_callback(hpd_listener_t *listener, hpd_device_f on_attach, hpd_device_f on_detach);
-hpd_error_t hpd_listener_get_data(hpd_listener_t *listener, void **data);
-hpd_error_t hpd_subscribe(hpd_listener_t *listener);
-hpd_error_t hpd_unsubscribe(hpd_listener_t *listener);
-hpd_error_t hpd_foreach_attached(hpd_listener_t *listener);
+hpd_error_t hpd_subscribe(hpd_listener_t *listener, hpd_listener_ref_t **ref);
+hpd_error_t hpd_listener_free(hpd_listener_ref_t *listener);
+hpd_error_t hpd_listener_get_data(hpd_listener_ref_t *listener, void **data);
+hpd_error_t hpd_foreach_attached(hpd_listener_ref_t *listener);
 /// [hpd_listener_t functions]
 
 #ifdef __cplusplus

@@ -140,7 +140,7 @@ struct configuration
     // Navigational members
     adapters_t  adapters;
     listeners_t listeners;
-    void *data;
+    hpd_t *data; // TODO Rename to hpd
 };
 
 typedef enum { CONFIGURATION_LISTENER, ADAPTER_LISTENER, DEVICE_LISTENER, SERVICE_LISTENER } hpd_listener_type_t;
@@ -150,11 +150,18 @@ struct hpd_listener {
     // Navigational members
     TAILQ_ENTRY(hpd_listener) HPD_TAILQ_FIELD;
     union {
-        hpd_service_t  *service;
+        hpd_t *hpd;
+        hpd_adapter_id_t *aid;
+        hpd_device_id_t *did;
+        hpd_service_id_t  *sid;
+    };
+    union {
         configuration_t *configuration;
         hpd_adapter_t *adapter;
         hpd_device_t *device;
+        hpd_service_t  *service;
     };
+    hpd_listener_ref_t *ref;
     // Data members
     hpd_value_f on_change;
     hpd_device_f on_attach;
@@ -162,6 +169,10 @@ struct hpd_listener {
     // User data
     void *data;
     hpd_free_f on_free;
+};
+
+struct hpd_listener_ref {
+    hpd_listener_t *listener;
 };
 
 #define OBJ_GET_CONF_DATA(OBJ, DATA) do {\
