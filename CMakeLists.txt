@@ -49,11 +49,37 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 # Generate API documentation with Doxygen
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.conf ${CMAKE_CURRENT_BINARY_DIR}/doxygen.conf @ONLY)
-    add_custom_target(doc
-            COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/doxygen.conf
+    set(GENERATE_HTML "NO")
+    set(GENERATE_LATEX "YES")
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.conf ${CMAKE_CURRENT_BINARY_DIR}/doxygen-latex.conf @ONLY)
+    set(GENERATE_LATEX "NO")
+    set(GENERATE_HTML "YES")
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.conf ${CMAKE_CURRENT_BINARY_DIR}/doxygen-html.conf @ONLY)
+    set(GENERATE_LATEX "YES")
+    set(GENERATE_HTML "YES")
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.conf ${CMAKE_CURRENT_BINARY_DIR}/doxygen-all.conf @ONLY)
+    set(GENERATE_HTML "NO")
+    set(GENERATE_LATEX "NO")
+    add_custom_target(doc-html
+            COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/doxygen-html.conf
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-            COMMENT "Generating API documentation with Doxygen" VERBATIM
+            COMMENT "Generating API documentation (HTML)" VERBATIM
+            )
+    add_custom_target(doc-latex
+            COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/doxygen-latex.conf
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+            COMMENT "Generating API documentation (LaTeX)" VERBATIM
+            )
+    add_custom_target(doc-pdf
+            COMMAND make pdf
+            DEPENDS doc-latex
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/latex
+            COMMENT "Generating API documentation (PDF)" VERBATIM
+            )
+    add_custom_target(doc-all ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/doxygen-all.conf
+            COMMAND make --directory=${CMAKE_CURRENT_BINARY_DIR}/doc/latex pdf
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+            COMMENT "Generating API documentation (HTML, LaTeX, PDF)" VERBATIM
             )
 else(DOXYGEN_FOUND)
     message(WARNING "Please install doxygen to generate documentation")
