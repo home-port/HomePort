@@ -33,7 +33,7 @@
 #include "hpd_queue.h"
 #include <ev.h>
 #include <argp.h>
-#include "hpd_internal_api.h"
+#include "model.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -58,6 +58,9 @@ struct hpd {
     hpd_module_t **option2module;
     hpd_ev_asyncs_t request_watchers;
     hpd_ev_asyncs_t respond_watchers;
+    hpd_ev_asyncs_t changed_watchers;
+    hpd_ev_asyncs_t attached_watchers;
+    hpd_ev_asyncs_t detached_watchers;
 };
 
 struct hpd_ev_async {
@@ -66,6 +69,16 @@ struct hpd_ev_async {
     union {
         hpd_request_t *request;
         hpd_response_t *response;
+        struct {
+            hpd_t *hpd;
+            union {
+                struct {
+                    hpd_service_id_t *service;
+                    hpd_value_t *value;
+                };
+                hpd_device_id_t *device;
+            };
+        };
     };
 };
 

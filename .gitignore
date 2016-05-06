@@ -23,11 +23,4 @@
 
 # Folders
 /build/
-
-
-/libHTTP/src/url_parser_test
-/libWebserver/src/request_test
-/libWebserver/src/response_test
-/wstest
-/Figures/pkgs.graffle
 /.idea/

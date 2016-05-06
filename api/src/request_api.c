@@ -28,8 +28,6 @@
 #include <discovery.h>
 #include <daemon.h>
 #include "hpd_api.h"
-#include "hpd_internal_api.h"
-#include "old_model.h"
 #include "request.h"
 
 hpd_error_t hpd_request_alloc(hpd_request_t **request, hpd_service_id_t *id, hpd_method_t method, hpd_response_f on_response)

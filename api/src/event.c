@@ -27,9 +27,9 @@
 
 #include "daemon.h"
 #include "event.h"
-#include "old_model.h"
 #include "hpd_common.h"
 #include "discovery.h"
+#include "value.h"
 
 hpd_error_t event_alloc_listener(hpd_listener_t **listener, hpd_t *hpd)
 {
@@ -109,36 +109,158 @@ hpd_error_t event_foreach_attached(hpd_listener_t *listener)
     return HPD_E_SUCCESS;
 }
 
+static void on_changed(hpd_ev_loop_t *loop, ev_async *w, int revents)
+{
+    hpd_error_t rc;
+    hpd_ev_async_t *async = w->data;
+    hpd_t *hpd = async->hpd;
+    hpd_service_id_t *id = async->service;
+    hpd_value_t *value = async->value;
+
+    TAILQ_REMOVE(&hpd->changed_watchers, async, HPD_TAILQ_FIELD);
+    free(async);
+
+    hpd_listener_t *listener;
+    HPD_TAILQ_FOREACH(listener, &hpd->configuration->listeners) {
+        if (listener->on_change && (rc = listener->on_change(listener->data, id, value))) {
+            // TODO How to handle this ???
+        }
+    }
+
+    if ((rc = discovery_free_sid(id))) {
+        // TODO How to handle this ???
+    }
+
+    if ((rc = value_free(value))) {
+        // TODO How to handle this ???
+    }
+}
+
+static void on_attached(hpd_ev_loop_t *loop, ev_async *w, int revents)
+{
+    hpd_error_t rc;
+    hpd_ev_async_t *async = w->data;
+    hpd_t *hpd = async->hpd;
+    hpd_device_id_t *id = async->device;
+
+    TAILQ_REMOVE(&hpd->attached_watchers, async, HPD_TAILQ_FIELD);
+    free(async);
+
+    hpd_listener_t *listener;
+    HPD_TAILQ_FOREACH(listener, &hpd->configuration->listeners) {
+        if (listener->on_attach && (rc = listener->on_attach(listener->data, id))) {
+            // TODO How to handle this ???
+        }
+    }
+
+    if ((rc = discovery_free_did(id))) {
+        // TODO How to handle this ???
+    }
+}
+
+static void on_detached(hpd_ev_loop_t *loop, ev_async *w, int revents)
+{
+    hpd_error_t rc;
+    hpd_ev_async_t *async = w->data;
+    hpd_t *hpd = async->hpd;
+    hpd_device_id_t *id = async->device;
+
+    TAILQ_REMOVE(&hpd->detached_watchers, async, HPD_TAILQ_FIELD);
+    free(async);
+
+    hpd_listener_t *listener;
+    HPD_TAILQ_FOREACH(listener, &hpd->configuration->listeners) {
+        if (listener->on_attach && (rc = listener->on_attach(listener->data, id))) {
+            // TODO How to handle this ???
+        }
+    }
+
+    if ((rc = discovery_free_did(id))) {
+        // TODO How to handle this ???
+    }
+}
+
 hpd_error_t event_changed(hpd_service_id_t *id, hpd_value_t *val)
 {
-    // TODO Send it over the event loop
-    // TODO Remember service may die after this function !!!
+    hpd_error_t rc = HPD_E_ALLOC;
+    hpd_ev_async_t *async;
+    HPD_CALLOC(async, 1, hpd_ev_async_t);
+    HPD_CPY_ALLOC(async->value, val, hpd_value_t);
+    if ((rc = discovery_copy_sid(&async->service, id))) goto copy_sid_error;
+    hpd_t *hpd = id->hpd;
+    async->hpd = hpd;
+    ev_async_init(&async->watcher, on_changed);
+    async->watcher.data = async;
+    ev_async_start(hpd->loop, &async->watcher);
+    TAILQ_INSERT_TAIL(&hpd->changed_watchers, async, HPD_TAILQ_FIELD);
+    free(val);
+    return HPD_E_SUCCESS;
+
+    copy_sid_error:
+    free(async->value);
+    alloc_error:
+    free(async);
+    return rc;
 }
 
 hpd_error_t event_inform_adapter_attached(hpd_adapter_t *adapter)
 {
-    // TODO Send it over the event loop
-    // TODO Remember adapter may die after this function !!!
-//    ADAPTER_INFORM(adapter, on_attach);
+    hpd_error_t rc;
+    hpd_device_t *device;
+    HPD_TAILQ_FOREACH(device, adapter->devices) {
+        if ((rc = event_inform_device_attached(device))) return rc; // TODO Half done on errors
+    }
+    return HPD_E_SUCCESS;
 }
 
 hpd_error_t event_inform_adapter_detached(hpd_adapter_t *adapter)
 {
-    // TODO Send it over the event loop
-    // TODO Remember adapter may die after this function !!!
-//    ADAPTER_INFORM(adapter, on_detach);
+    hpd_error_t rc;
+    hpd_device_t *device;
+    HPD_TAILQ_FOREACH(device, adapter->devices) {
+        if ((rc = event_inform_device_detached(device))) return rc; // TODO Half done on errors
+    }
+    return HPD_E_SUCCESS;
 }
 
 hpd_error_t event_inform_device_attached(hpd_device_t *device)
 {
-    // TODO Send it over the event loop
-    // TODO Remember device may die after this function !!!
-//    DEVICE_INFORM(device, on_attach);
+    hpd_error_t rc = HPD_E_ALLOC;
+    hpd_ev_async_t *async;
+    HPD_CALLOC(async, 1, hpd_ev_async_t);
+    hpd_adapter_t *adapter = device->adapter;
+    hpd_t *hpd = adapter->configuration->data;
+    if ((rc = discovery_alloc_did(&async->device, hpd, adapter->id, device->id))) goto did_error;
+    async->hpd = hpd;
+    ev_async_init(&async->watcher, on_attached);
+    async->watcher.data = async;
+    ev_async_start(hpd->loop, &async->watcher);
+    TAILQ_INSERT_TAIL(&hpd->attached_watchers, async, HPD_TAILQ_FIELD);
+    return HPD_E_SUCCESS;
+
+    did_error:
+    free(async);
+    alloc_error:
+    return rc;
 }
 
 hpd_error_t event_inform_device_detached(hpd_device_t *device)
 {
-    // TODO Send it over the event loop
-    // TODO Remember device may die after this function !!!
-//    DEVICE_INFORM(device, on_detach);
+    hpd_error_t rc = HPD_E_ALLOC;
+    hpd_ev_async_t *async;
+    HPD_CALLOC(async, 1, hpd_ev_async_t);
+    hpd_adapter_t *adapter = device->adapter;
+    hpd_t *hpd = adapter->configuration->data;
+    if ((rc = discovery_alloc_did(&async->device, hpd, adapter->id, device->id))) goto did_error;
+    async->hpd = hpd;
+    ev_async_init(&async->watcher, on_detached);
+    async->watcher.data = async;
+    ev_async_start(hpd->loop, &async->watcher);
+    TAILQ_INSERT_TAIL(&hpd->detached_watchers, async, HPD_TAILQ_FIELD);
+    return HPD_E_SUCCESS;
+
+    did_error:
+    free(async);
+    alloc_error:
+    return rc;
 }

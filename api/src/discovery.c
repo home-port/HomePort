@@ -25,12 +25,11 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include <event.h>
+#include "event.h"
+#include "model.h"
 #include "discovery.h"
 #include "daemon.h"
 #include "hpd_common.h"
-#include "old_model.h"
-#include "hpd_internal_api.h"
 
 hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const char *id)
 {

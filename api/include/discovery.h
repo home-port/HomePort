@@ -33,7 +33,6 @@ extern "C" {
 #endif
 
 #include "hpd_types.h"
-#include "hpd_internal_api.h"
 #include <stdarg.h>
 
 typedef char hpd_bool_t;
@@ -85,6 +84,17 @@ hpd_error_t discovery_find_adapter(hpd_adapter_id_t *id, hpd_adapter_t **adapter
 hpd_error_t discovery_find_device(hpd_device_id_t *id, hpd_device_t **device);
 hpd_error_t discovery_find_service(hpd_service_id_t *id, hpd_service_t **service);
 hpd_error_t discovery_find_parameter(hpd_parameter_id_t *id, hpd_parameter_t **parameter);
+
+hpd_error_t discovery_get_adapter_hpd(hpd_adapter_id_t *aid, hpd_t **hpd);
+hpd_error_t discovery_get_device_hpd(hpd_device_id_t *did, hpd_t **hpd);
+hpd_error_t discovery_get_device_adapter(hpd_device_id_t *did, hpd_adapter_id_t **aid);
+hpd_error_t discovery_get_service_hpd(hpd_service_id_t *sid, hpd_t **hpd);
+hpd_error_t discovery_get_service_adapter(hpd_service_id_t *sid, hpd_adapter_id_t **aid);
+hpd_error_t discovery_get_service_device(hpd_service_id_t *sid, hpd_device_id_t **did);
+hpd_error_t discovery_get_parameter_hpd(hpd_parameter_id_t *pid, hpd_t **hpd);
+hpd_error_t discovery_get_parameter_adapter(hpd_parameter_id_t *pid, hpd_adapter_id_t **aid);
+hpd_error_t discovery_get_parameter_device(hpd_parameter_id_t *pid, hpd_device_id_t **did);
+hpd_error_t discovery_get_parameter_service(hpd_parameter_id_t *pid, hpd_service_id_t **sid);
 
 hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const char *id);
 hpd_error_t discovery_alloc_device(hpd_device_t **device, const char *id);

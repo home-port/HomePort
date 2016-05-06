@@ -42,20 +42,11 @@ if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
   set(CMAKE_C_FLAGS_DEBUG "-fPIC ${CMAKE_C_FLAGS_DEBUG}")
 endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 
-# TODO OLD test deactivated, changing to googletest
-#set(CTEST_MEMORYCHECK_COMMAND "/usr/bin/valgrind")
-#include(CTest)
-#enable_testing()
-
+# GoogleTest
 add_subdirectory(lib/googletest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
-# TODO Clean up in old stuff
-#add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Misc/include/)
-#add_custom_target(example)
-
-# add a target to generate API documentation with Doxygen
+# Generate API documentation with Doxygen
 find_package(Doxygen)
 if(DOXYGEN_FOUND)
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxygen.conf ${CMAKE_CURRENT_BINARY_DIR}/doxygen.conf @ONLY)
@@ -67,8 +58,6 @@ if(DOXYGEN_FOUND)
 else(DOXYGEN_FOUND)
     message(WARNING "Please install doxygen to generate documentation")
 endif(DOXYGEN_FOUND)
-
-include_directories(OperationHandler/homeport/include)
 
 add_subdirectory(api)
 add_subdirectory(example)

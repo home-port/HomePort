@@ -29,7 +29,6 @@
 #include "discovery.h"
 #include "daemon.h"
 #include "event.h"
-#include "old_model.h"
 
 static void sig_cb(hpd_ev_loop_t *loop, ev_signal *w, int revents)
 {
@@ -88,6 +87,9 @@ hpd_error_t daemon_alloc(hpd_t **hpd)
     TAILQ_INIT(&(*hpd)->modules);
     TAILQ_INIT(&(*hpd)->request_watchers);
     TAILQ_INIT(&(*hpd)->respond_watchers);
+    TAILQ_INIT(&(*hpd)->changed_watchers);
+    TAILQ_INIT(&(*hpd)->attached_watchers);
+    TAILQ_INIT(&(*hpd)->detached_watchers);
     ev_signal_init(&(*hpd)->sigint_watcher, sig_cb, SIGINT);
     ev_signal_init(&(*hpd)->sigterm_watcher, sig_cb, SIGTERM);
     (*hpd)->sigint_watcher.data = hpd;
@@ -121,6 +123,25 @@ hpd_error_t daemon_free(hpd_t *hpd)
         TAILQ_REMOVE(&hpd->respond_watchers, async, HPD_TAILQ_FIELD);
         ev_async_stop(hpd->loop, &async->watcher);
         request_free_response(async->response);
+        free(async);
+    }
+    HPD_TAILQ_FOREACH_SAFE(async, &hpd->changed_watchers, async_tmp) {
+        TAILQ_REMOVE(&hpd->changed_watchers, async, HPD_TAILQ_FIELD);
+        ev_async_stop(hpd->loop, &async->watcher);
+        discovery_free_sid(async->service);
+        hpd_value_free(async->value);
+        free(async);
+    }
+    HPD_TAILQ_FOREACH_SAFE(async, &hpd->attached_watchers, async_tmp) {
+        TAILQ_REMOVE(&hpd->attached_watchers, async, HPD_TAILQ_FIELD);
+        ev_async_stop(hpd->loop, &async->watcher);
+        discovery_free_did(async->device);
+        free(async);
+    }
+    HPD_TAILQ_FOREACH_SAFE(async, &hpd->detached_watchers, async_tmp) {
+        TAILQ_REMOVE(&hpd->detached_watchers, async, HPD_TAILQ_FIELD);
+        ev_async_stop(hpd->loop, &async->watcher);
+        discovery_free_did(async->device);
         free(async);
     }
     free(hpd);

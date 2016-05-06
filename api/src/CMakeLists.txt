@@ -60,7 +60,8 @@ add_library(event
         )
 
 add_library(hpd SHARED
-        ../include/hpd_internal_api.h
+        ../include/model.h
+        ../include/comm.h
         ../include/hpd_adapter_api.h
         ../include/hpd_api.h
         ../include/hpd_application_api.h
@@ -70,10 +71,9 @@ add_library(hpd SHARED
         ../include/hpd_common.h
         ../include/hpd_queue.h
         ../include/map.h
-        ../include/old_model.h
         ../api.dox
-        api.c
 )
-target_link_libraries(hpd daemon discovery event ev)
+set_target_properties(hpd PROPERTIES LINKER_LANGUAGE C)
+target_link_libraries(hpd daemon discovery value request event ev)
 install (TARGETS hpd DESTINATION lib)
 set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)

@@ -25,19 +25,54 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_HPD_INTERNAL_API_H
-#define HOMEPORT_HPD_INTERNAL_API_H
-
-#include "hpd_types.h"
+#ifndef HOMEPORT_COMM_H
+#define HOMEPORT_COMM_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct configuration configuration_t;
+typedef struct listeners listeners_t;
+
+TAILQ_HEAD(listeners, hpd_listener);
+
+struct hpd_listener {
+    // Navigational members
+    TAILQ_ENTRY(hpd_listener) HPD_TAILQ_FIELD;
+    hpd_t *hpd;
+    // Data members
+    hpd_value_f on_change;
+    hpd_device_f on_attach;
+    hpd_device_f on_detach;
+    // User data
+    void *data;
+    hpd_free_f on_free;
+};
+
+struct hpd_request {
+    hpd_service_id_t  *service;
+    hpd_method_t    method;
+    hpd_value_t    *value;
+    // Callback and data for returning the response to sender
+    hpd_response_f  on_response; // Nullable
+    hpd_free_f      on_free;
+    void       *data;
+};
+
+struct hpd_response {
+    hpd_request_t  *request;
+    hpd_status_t    status;
+    hpd_value_t    *value;
+};
+
+struct hpd_value {
+    map_t       *headers;
+    char       *body;
+    size_t      len;
+};
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //HOMEPORT_HPD_INTERNAL_API_H
+#endif //HOMEPORT_COMM_H

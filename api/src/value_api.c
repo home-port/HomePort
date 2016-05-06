@@ -35,6 +35,12 @@ hpd_error_t hpd_value_alloc(hpd_value_t **value, const char *body, int len)
     return value_alloc(value, body, len);
 }
 
+hpd_error_t hpd_value_copy(hpd_value_t **dst, const hpd_value_t *src)
+{
+    if (!dst || ! src) return HPD_E_NULL;
+    return value_copy(dst, src);
+}
+
 hpd_error_t hpd_value_free(hpd_value_t *value)
 {
     if (!value) return HPD_E_NULL;
@@ -52,7 +58,7 @@ hpd_error_t hpd_value_set_headers(hpd_value_t *value, ...)
     if (!value) return HPD_E_NULL;
 
     va_list vp;
-    va_start(vp, adapter);
+    va_start(vp, value);
     hpd_error_t rc = value_set_headers_v(value, vp);
     va_end(vp);
 
@@ -76,7 +82,7 @@ hpd_error_t hpd_value_get_headers(hpd_value_t *value, ...)
     if (!value) return HPD_E_NULL;
 
     va_list vp;
-    va_start(vp, adapter);
+    va_start(vp, value);
     hpd_error_t rc = value_get_headers_v(value, vp);
     va_end(vp);
 

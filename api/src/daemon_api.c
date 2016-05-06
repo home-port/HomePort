@@ -26,9 +26,7 @@
  */
 
 #include "hpd_api.h"
-#include "hpd_internal_api.h"
 #include "daemon.h"
-#include "old_model.h"
 #include <string.h>
 // Not the same as other queue.h
 #include <bsd/sys/queue.h>

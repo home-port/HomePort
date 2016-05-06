@@ -28,8 +28,6 @@
 #include "discovery.h"
 #include "daemon.h"
 #include "hpd_api.h"
-#include "hpd_internal_api.h"
-#include "old_model.h"
 #include "event.h"
 
 hpd_error_t hpd_changed(hpd_service_id_t *id, hpd_value_t *val)

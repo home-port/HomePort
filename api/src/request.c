@@ -29,7 +29,6 @@
 #include "discovery.h"
 #include "request.h"
 #include "hpd_common.h"
-#include "old_model.h"
 #include <ev.h>
 #include <daemon.h>
 

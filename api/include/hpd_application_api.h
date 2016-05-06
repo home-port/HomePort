@@ -29,7 +29,6 @@
 #define HOMEPORT_HPD_APPLICATION_API_H
 
 #include "hpd_shared_api.h"
-#include "old_model.h"
 
 #ifdef __cplusplus
 extern "C" {

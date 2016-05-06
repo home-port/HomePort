@@ -28,7 +28,6 @@
 #include "discovery.h"
 #include "hpd_common.h"
 #include "daemon.h"
-#include "old_model.h"
 
 hpd_error_t discovery_alloc_aid(hpd_adapter_id_t **id, hpd_t *hpd, const char *aid)
 {
@@ -198,5 +197,59 @@ hpd_error_t discovery_find_parameter(hpd_parameter_id_t *id, hpd_parameter_t **p
 {
     FIND_PARAMETER(id, *parameter);
     return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_adapter_hpd(hpd_adapter_id_t *aid, hpd_t **hpd)
+{
+    (*hpd) = aid->hpd;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_device_hpd(hpd_device_id_t *did, hpd_t **hpd)
+{
+    (*hpd) = did->hpd;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_device_adapter(hpd_device_id_t *did, hpd_adapter_id_t **aid)
+{
+    return discovery_alloc_aid(aid, did->hpd, did->aid);
+}
+
+hpd_error_t discovery_get_service_hpd(hpd_service_id_t *sid, hpd_t **hpd)
+{
+    (*hpd) = sid->hpd;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_service_adapter(hpd_service_id_t *sid, hpd_adapter_id_t **aid)
+{
+    return discovery_alloc_aid(aid, sid->hpd, sid->aid);
+}
+
+hpd_error_t discovery_get_service_device(hpd_service_id_t *sid, hpd_device_id_t **did)
+{
+    return discovery_alloc_did(did, sid->hpd, sid->aid, sid->did);
+}
+
+hpd_error_t discovery_get_parameter_hpd(hpd_parameter_id_t *pid, hpd_t **hpd)
+{
+    (*hpd) = pid->hpd;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_parameter_adapter(hpd_parameter_id_t *pid, hpd_adapter_id_t **aid)
+{
+    return discovery_alloc_aid(aid, pid->hpd, pid->aid);
+}
+
+hpd_error_t discovery_get_parameter_device(hpd_parameter_id_t *pid, hpd_device_id_t **did)
+{
+    return discovery_alloc_did(did, pid->hpd, pid->aid, pid->did);
+}
+
+hpd_error_t discovery_get_parameter_service(hpd_parameter_id_t *pid, hpd_service_id_t **sid)
+{
+    return discovery_alloc_sid(sid, pid->hpd, pid->aid, pid->did, pid->sid);
 }
 
