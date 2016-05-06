@@ -28,6 +28,7 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
+# TODO Refer to lib/http-parser submodule instead (might be a problem with ifdefs around enum)
 add_subdirectory(lib)
 
 include_directories(${PROJECT_SOURCE_DIR}/Misc/include)

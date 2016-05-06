@@ -25,10 +25,11 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include <request.h>
+#include "request.h"
 #include "discovery.h"
 #include "daemon.h"
 #include "event.h"
+#include "value.h"
 
 static void sig_cb(hpd_ev_loop_t *loop, ev_signal *w, int revents)
 {
@@ -129,7 +130,7 @@ hpd_error_t daemon_free(hpd_t *hpd)
         TAILQ_REMOVE(&hpd->changed_watchers, async, HPD_TAILQ_FIELD);
         ev_async_stop(hpd->loop, &async->watcher);
         discovery_free_sid(async->service);
-        hpd_value_free(async->value);
+        value_free(async->value);
         free(async);
     }
     HPD_TAILQ_FOREACH_SAFE(async, &hpd->attached_watchers, async_tmp) {

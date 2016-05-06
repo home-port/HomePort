@@ -71,7 +71,6 @@ hpd_error_t event_set_device_callback(hpd_listener_t *listener, hpd_device_f on_
 
 hpd_error_t event_subscribe(hpd_listener_t *listener)
 {
-    hpd_error_t rc = HPD_E_ALLOC;
     TAILQ_INSERT_TAIL(&listener->hpd->configuration->listeners, listener, HPD_TAILQ_FIELD);
     return HPD_E_SUCCESS;
 }

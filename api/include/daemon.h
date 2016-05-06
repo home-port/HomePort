@@ -64,7 +64,7 @@ struct hpd {
 };
 
 struct hpd_ev_async {
-    TAILQ_ENTRY(hpd_module) HPD_TAILQ_FIELD;
+    TAILQ_ENTRY(hpd_ev_async) HPD_TAILQ_FIELD;
     ev_async watcher;
     union {
         hpd_request_t *request;
