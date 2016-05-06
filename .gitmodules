@@ -1,12 +1,6 @@
-[submodule "http-parser"]
-	path = http-parser
-	url = git://github.com/joyent/http-parser.git
-[submodule "test"]
-	path = test
-	url = git://github.com/joyent/http-parser.git
-[submodule "parser"]
-	path = parser
-	url = git://github.com/joyent/http-parser.git
 [submodule "lib/googletest"]
 	path = lib/googletest
 	url = ../../google/googletest.git
+[submodule "lib/http-parser"]
+	path = lib/http-parser
+	url = git://github.com/joyent/http-parser.git
