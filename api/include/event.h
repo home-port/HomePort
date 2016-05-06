@@ -34,22 +34,19 @@ extern "C" {
 
 #include "hpd_types.h"
 
-hpd_error_t event_alloc_listener_hpd(hpd_listener_t **listener, hpd_t *hpd);
-hpd_error_t event_alloc_listener_adapter(hpd_listener_t **listener, hpd_adapter_id_t *id);
-hpd_error_t event_alloc_listener_device(hpd_listener_t **listener, hpd_device_id_t *id);
-hpd_error_t event_alloc_listener_service(hpd_listener_t **listener, hpd_service_id_t *id);
+hpd_error_t event_alloc_listener(hpd_listener_t **listener, hpd_t *hpd);
 hpd_error_t event_free_listener(hpd_listener_t *listener);
 
 hpd_error_t event_set_listener_data(hpd_listener_t *listener, void *data, hpd_free_f on_free);
 hpd_error_t event_set_value_callback(hpd_listener_t *listener, hpd_value_f on_change);
 hpd_error_t event_set_device_callback(hpd_listener_t *listener, hpd_device_f on_attach, hpd_device_f on_detach);
 
-hpd_error_t event_subscribe(hpd_listener_t *listener, hpd_listener_ref_t **ref);
-hpd_error_t event_unsubscribe(hpd_listener_ref_t *ref);
+hpd_error_t event_subscribe(hpd_listener_t *listener);
+hpd_error_t event_unsubscribe(hpd_listener_t *listener);
 
-hpd_error_t event_get_listener_ref_data(hpd_listener_ref_t *ref, void **data);
+hpd_error_t event_get_listener_data(hpd_listener_t *listener, void **data);
 
-hpd_error_t event_foreach_attached(hpd_listener_ref_t *ref);
+hpd_error_t event_foreach_attached(hpd_listener_t *listener);
 
 hpd_error_t event_changed(hpd_service_id_t *id, hpd_value_t *val);
 

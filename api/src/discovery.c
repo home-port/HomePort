@@ -37,8 +37,6 @@ hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const char *id)
     HPD_CALLOC((*adapter), 1, hpd_adapter_t);
     HPD_CALLOC((*adapter)->devices, 1, devices_t);
     TAILQ_INIT((*adapter)->devices);
-    HPD_CALLOC((*adapter)->listeners, 1, listeners_t);
-    TAILQ_INIT((*adapter)->listeners);
     HPD_CALLOC((*adapter)->attributes, 1, map_t);
     TAILQ_INIT((*adapter)->attributes);
     HPD_STR_CPY((*adapter)->id, id);
@@ -55,8 +53,6 @@ hpd_error_t discovery_alloc_device(hpd_device_t **device, const char *id)
     HPD_CALLOC((*device), 1, hpd_device_t);
     HPD_CALLOC((*device)->services, 1, services_t);
     TAILQ_INIT((*device)->services);
-    HPD_CALLOC((*device)->listeners, 1, listeners_t);
-    TAILQ_INIT((*device)->listeners);
     HPD_CALLOC((*device)->attributes, 1, map_t);
     TAILQ_INIT((*device)->attributes);
     HPD_STR_CPY((*device)->id, id);
@@ -73,8 +69,6 @@ hpd_error_t discovery_alloc_service(hpd_service_t **service, const char *id)
     HPD_CALLOC((*service), 1, hpd_service_t);
     HPD_CALLOC((*service)->parameters, 1, parameters_t);
     TAILQ_INIT((*service)->parameters);
-    HPD_CALLOC((*service)->listeners, 1, listeners_t);
-    TAILQ_INIT((*service)->listeners);
     HPD_CALLOC((*service)->attributes, 1, map_t);
     TAILQ_INIT((*service)->attributes);
     HPD_STR_CPY((*service)->id, id);
@@ -108,10 +102,6 @@ hpd_error_t discovery_free_adapter(hpd_adapter_t *adapter)
         HPD_TAILQ_MAP_REMOVE(adapter->devices, discovery_free_device, hpd_device_t, rc);
         free(adapter->devices);
     }
-    if (adapter->listeners) {
-        HPD_TAILQ_MAP_REMOVE(adapter->listeners, event_free_listener, hpd_listener_t, rc);
-        free(adapter->listeners);
-    }
     if (adapter->attributes) {
         MAP_FREE(adapter->attributes);
         free(adapter->attributes);
@@ -133,10 +123,6 @@ hpd_error_t discovery_free_device(hpd_device_t *device)
         HPD_TAILQ_MAP_REMOVE(device->services, discovery_free_service, hpd_service_t, rc);
         free(device->services);
     }
-    if (device->listeners) {
-        HPD_TAILQ_MAP_REMOVE(device->listeners, event_free_listener, hpd_listener_t, rc);
-        free(device->listeners);
-    }
     if (device->attributes) {
         MAP_FREE(device->attributes);
         free(device->attributes);
@@ -157,10 +143,6 @@ hpd_error_t discovery_free_service(hpd_service_t *service)
     if (service->parameters) {
         HPD_TAILQ_MAP_REMOVE(service->parameters, discovery_free_parameter, hpd_parameter_t, rc);
         free(service->parameters);
-    }
-    if (service->listeners) {
-        HPD_TAILQ_MAP_REMOVE(service->listeners, event_free_listener, hpd_listener_t, rc);
-        free(service->listeners);
     }
     if (service->attributes) {
         MAP_FREE(service->attributes);

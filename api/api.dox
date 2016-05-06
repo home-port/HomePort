@@ -863,7 +863,7 @@
  * [-> app
  * activate app
  *
- * app -> ev: hpd_listener_alloc_hpd()
+ * app -> ev: hpd_listener_alloc()
  * activate ev
  * ev -> lt: alloc()
  * activate lt

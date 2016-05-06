@@ -170,7 +170,7 @@ hpd_error_t hpd_response_get_request_data(const hpd_response_t *response, void *
     return request_get_response_request_data(response, data);
 }
 
-hpd_error_t hpd_response_get_request_service(const hpd_response_t *response, hpd_service_id_t *service)
+hpd_error_t hpd_response_get_request_service(const hpd_response_t *response, hpd_service_id_t **service)
 {
     if (!response || !service) return HPD_E_NULL;
     return request_get_response_request_service(response, service);

@@ -36,7 +36,6 @@ typedef struct hpd hpd_t;
 typedef struct hpd_module hpd_module_t;
 typedef struct hpd_action hpd_action_t;
 typedef struct hpd_listener hpd_listener_t;
-typedef struct hpd_listener_ref hpd_listener_ref_t;
 typedef struct hpd_adapter hpd_adapter_t;
 typedef struct hpd_device hpd_device_t;
 typedef struct hpd_service hpd_service_t;
