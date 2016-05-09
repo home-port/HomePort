@@ -409,7 +409,7 @@ hpd_error_t hpd_service_get_attrs(hpd_service_id_t *id, ...)
     return rc;
 }
 
-hpd_error_t hpd_service_has_action(hpd_service_id_t *id, const hpd_method_t method, char *boolean)
+hpd_error_t hpd_service_has_action(hpd_service_id_t *id, const hpd_method_t method, hpd_bool_t *boolean)
 {
     if (!id || !boolean) return HPD_E_NULL;
     if (method <= HPD_M_NONE || method >= HPD_M_COUNT) return HPD_E_ARGUMENT;

@@ -28,10 +28,8 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Hi librest
-add_executable(hirest EXCLUDE_FROM_ALL
-      hirest.c
+# Echo webserver
+add_executable(echo-server EXCLUDE_FROM_ALL
+      echo.c
       )
-target_link_libraries(hirest libREST)
-add_dependencies(example hirest)
-
+target_link_libraries(echo-server webserver)

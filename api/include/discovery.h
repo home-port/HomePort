@@ -35,10 +35,6 @@ extern "C" {
 #include "hpd_types.h"
 #include <stdarg.h>
 
-typedef char hpd_bool_t;
-#define TRUE 1
-#define FALSE 0
-
 typedef struct hpd_adapter_id {
     hpd_t *hpd;
     char *aid;

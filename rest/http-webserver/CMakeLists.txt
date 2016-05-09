@@ -28,10 +28,14 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Echo webserver
-add_executable(echo-server EXCLUDE_FROM_ALL
-      echo.c
-      )
-target_link_libraries(echo-server webserver)
-add_dependencies(example echo-server)
+# TODO Refer to lib/http-parser submodule instead (might be a problem with ifdefs around enum)
+add_subdirectory(lib)
+
+include_directories(${PROJECT_SOURCE_DIR}/Misc/include)
+include_directories(${PROJECT_SOURCE_DIR}/rest/webserver/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/http-parser)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+add_subdirectory(src)
+add_subdirectory(example)
 

@@ -29,11 +29,10 @@
 # as representing official policies, either expressed.
 
 include_directories(${PROJECT_SOURCE_DIR}/Misc/include)
-include_directories(${PROJECT_SOURCE_DIR}/DataManager/include)
-include_directories(${PROJECT_SOURCE_DIR}/OperationHandler/homeport/include)
-include_directories(${PROJECT_SOURCE_DIR}/REST/webserver/include)
-include_directories(${PROJECT_SOURCE_DIR}/REST/http-webserver/include)
-include_directories(${PROJECT_SOURCE_DIR}/REST/libREST/include)
+include_directories(${PROJECT_SOURCE_DIR}/api/include)
+include_directories(${PROJECT_SOURCE_DIR}/rest/webserver/include)
+include_directories(${PROJECT_SOURCE_DIR}/rest/http-webserver/include)
+include_directories(${PROJECT_SOURCE_DIR}/rest/libREST/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_subdirectory(include)

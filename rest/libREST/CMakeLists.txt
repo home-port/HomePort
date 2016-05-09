@@ -28,10 +28,11 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Greetings http-webserver
-add_executable(greeting-server EXCLUDE_FROM_ALL
-      greeting.c
-      )
-target_link_libraries(greeting-server http-webserver)
-add_dependencies(example greeting-server)
+include_directories(${PROJECT_SOURCE_DIR}/Misc/include)
+include_directories(${PROJECT_SOURCE_DIR}/rest/trie/include)
+include_directories(${PROJECT_SOURCE_DIR}/rest/http-webserver/include)
+include_directories(${PROJECT_SOURCE_DIR}/rest/webserver/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+add_subdirectory(src)
+add_subdirectory(example)

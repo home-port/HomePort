@@ -32,6 +32,10 @@
 extern "C" {
 #endif
 
+typedef char hpd_bool_t;
+#define HPD_TRUE 1
+#define HPD_FALSE 0
+
 typedef struct hpd hpd_t;
 typedef struct hpd_module hpd_module_t;
 typedef struct hpd_action hpd_action_t;
@@ -70,6 +74,7 @@ typedef enum hpd_error {
     HPD_E_RUNNING,      //< Cannot perform the operation because the object is already running.
     HPD_E_STOPPED,      //< Cannot perform the operation because the object is already stopped.
     HPD_E_STATE,        //< Cannot perform the operation because the object is in an invalid state.
+    // TODO Are these not used ?
     HPD_E_ATTACHED,     //< Cannot perform the operation because the object is attached.
     HPD_E_DETACHED,     //< Cannot perform the operation because the object is detached.
     HPD_E_UNSUBSCRIBED, //< Cannot perform the operation because the object is not subscribed.
@@ -87,6 +92,7 @@ typedef hpd_error_t (*hpd_create_f)    (void **data, hpd_module_t *context);
 typedef hpd_error_t (*hpd_destroy_f)   (void *data);
 typedef hpd_error_t (*hpd_start_f)     (void *data, hpd_t *hpd);
 typedef hpd_error_t (*hpd_stop_f)      (void *data, hpd_t *hpd);
+// TODO Document that this should return HPD_E_ARGUMENT if name is now known....
 typedef hpd_error_t (*hpd_parse_opt_f) (void *data, const char *name, const char *arg);
 /// [hpd_module_def_t functions]
 

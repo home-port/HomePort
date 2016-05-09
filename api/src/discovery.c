@@ -573,30 +573,30 @@ hpd_bool_t discovery_is_adapter_id_unique(hpd_t *hpd, hpd_adapter_t *adapter)
 {
     hpd_adapter_t *a;
     HPD_TAILQ_FOREACH(a, &hpd->configuration->adapters)
-        if (strcmp(a->id, adapter->id) == 0) return FALSE;
-    return TRUE;
+        if (strcmp(a->id, adapter->id) == 0) return HPD_FALSE;
+    return HPD_TRUE;
 }
 
 hpd_bool_t discovery_is_device_id_unique(hpd_adapter_t *adapter, hpd_device_t *device)
 {
     hpd_device_t *d;
     HPD_TAILQ_FOREACH(d, adapter->devices)
-        if (strcmp(d->id, device->id) == 0) return FALSE;
-    return TRUE;
+        if (strcmp(d->id, device->id) == 0) return HPD_FALSE;
+    return HPD_TRUE;
 }
 
 hpd_bool_t discovery_is_service_id_unique(hpd_device_t *device, hpd_service_t *service)
 {
     hpd_service_t *s;
     HPD_TAILQ_FOREACH(s, device->services)
-        if (strcmp(s->id, service->id) == 0) return FALSE;
-    return TRUE;
+        if (strcmp(s->id, service->id) == 0) return HPD_FALSE;
+    return HPD_TRUE;
 }
 
 hpd_bool_t discovery_is_parameter_id_unique(hpd_service_t *service, hpd_parameter_t *parameter)
 {
     hpd_parameter_t *p;
     HPD_TAILQ_FOREACH(p, service->parameters)
-        if (strcmp(p->id, parameter->id) == 0) return FALSE;
-    return TRUE;
+        if (strcmp(p->id, parameter->id) == 0) return HPD_FALSE;
+    return HPD_TRUE;
 }

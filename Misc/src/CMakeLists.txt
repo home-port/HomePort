@@ -49,8 +49,3 @@ add_library(linkedmap
 #      )
 #add_test(linkedmap_test ${CMAKE_CURRENT_BINARY_DIR}/linkedmap_test)
 #add_dependencies(check linkedmap_test)
-
-# LinkedMap
-add_library(idgen
-	idgen.c
-		)

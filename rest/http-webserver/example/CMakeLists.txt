@@ -28,14 +28,8 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# TODO Refer to lib/http-parser submodule instead (might be a problem with ifdefs around enum)
-add_subdirectory(lib)
-
-include_directories(${PROJECT_SOURCE_DIR}/Misc/include)
-include_directories(${PROJECT_SOURCE_DIR}/REST/webserver/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/http-parser)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-add_subdirectory(src)
-add_subdirectory(example)
-
+# Greetings http-webserver
+add_executable(greeting-server EXCLUDE_FROM_ALL
+      greeting.c
+      )
+target_link_libraries(greeting-server http-webserver)

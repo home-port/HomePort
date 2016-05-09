@@ -23,19 +23,11 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-#ifndef LR_INTERFACE_H
-#define LR_INTERFACE_H
+#ifndef HOMEPORT_HPD_REST_H
+#define HOMEPORT_HPD_REST_H
 
-#include <stddef.h>
+#include "hpd_types.h"
 
-struct lr_request;
+extern hpd_module_def_t hpd_rest;
 
-char *lri_alloc_uri(Service *service);
-char *lri_url_encode(const char *id);
-char *lri_url_decode(const char *id);
-
-int lri_registerService(struct lr *lr, Service *service);
-int lri_unregisterService(struct lr *lr, char* uri);
-int lri_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
-
-#endif
+#endif //HOMEPORT_HPD_REST_H

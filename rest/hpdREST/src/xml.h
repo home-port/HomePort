@@ -23,7 +23,9 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-char *xmlGetConfiguration(HomePort *homeport);
+#include "hpd_types.h"
+
+char *xmlGetConfiguration(hpd_t *homeport);
 char *xmlGetState(char *state);
 
 char *xmlParseState(char *xml_value);

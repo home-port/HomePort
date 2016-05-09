@@ -494,11 +494,12 @@
  * \snippet include/hpd_shared_api.h hpd_adapter_t functions
  * \snippet include/hpd_shared_api.h hpd_device_t functions
  * \snippet include/hpd_shared_api.h hpd_service_t functions
- * \snippet include/hpd_shared_api.h hpd_action_t functions
  * \snippet include/hpd_shared_api.h hpd_parameter_t functions
+ * \snippet include/hpd_shared_api.h hpd_action_t functions
+ * \snippet include/hpd_shared_api.h hpd_pair_t functions
  *
- * Again, we have a define to ease foreach loops:
- * \snippet include/hpd_shared_api.h hpd_service_t foreach loops
+ * Again, we have defines to ease foreach loops:
+ * \snippet include/hpd_shared_api.h model foreach loops
  *
  * \subsection sec_data_model_nav Data model navigation
  *

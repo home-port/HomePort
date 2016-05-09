@@ -23,7 +23,21 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-char *jsonGetConfiguration(HomePort *homeport);
-char *jsonGetState(char *state);
+#ifndef LR_INTERFACE_H
+#define LR_INTERFACE_H
 
-const char *jsonParseState(char *json_value);
+#include <stddef.h>
+#include "hpd_types.h"
+
+struct lr;
+struct lr_request;
+
+char *lri_alloc_uri(hpd_service_id_t *service);
+char *lri_url_encode(const char *id);
+char *lri_url_decode(const char *id);
+
+int lri_registerService(struct lr *lr, hpd_service_id_t *service);
+int lri_unregisterService(struct lr *lr, char* uri);
+int lri_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len);
+
+#endif

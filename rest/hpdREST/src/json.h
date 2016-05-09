@@ -23,15 +23,9 @@
   The views and conclusions contained in the software and documentation are those of the
   authors and should not be interpreted as representing official policies, either expressed*/
 
-#ifndef HOMEPORT_HPD_REST_H
-#define HOMEPORT_HPD_REST_H
+#include "hpd_types.h"
 
-struct hpd_rest;
+char *jsonGetConfiguration(hpd_t *homeport);
+char *jsonGetState(char *state);
 
-struct hpd_rest *hpd_rest_create();
-void hpd_rest_destroy(struct hpd_rest *data);
-int hpd_rest_init(struct hpd_rest *data, HomePort *hp);
-int hpd_rest_deinit(struct hpd_rest *data, HomePort *hp);
-void hpd_rest_set_port(struct hpd_rest *data, int port);
-
-#endif //HOMEPORT_HPD_REST_H
+const char *jsonParseState(char *json_value);

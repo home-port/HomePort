@@ -24,14 +24,24 @@
   authors and should not be interpreted as representing official policies, either expressed*/
 
 #include "lr_interface.h"
-#include "datamanager.h"
-#include "hpd_error.h"
 #include "json.h"
 #include "xml.h"
 #include <stdlib.h>
+#include <string.h>
 #include <curl/curl.h>
-#include <hp_macros.h>
 #include "libREST.h"
+#include "linkedmap.h"
+#include "hpd_application_api.h"
+
+#define string_copy(copy, original) 			\
+  do { 							\
+    copy = malloc(sizeof(char)*(strlen(original)+1)); 	\
+    if(copy == NULL) 					\
+    { 							\
+      goto cleanup; 					\
+    } 							\
+    strcpy(copy, original); 				\
+  }while(0)
 
 struct lri_req {
     struct lr_request *req;
@@ -47,6 +57,12 @@ static void req_free(struct lri_req *req)
         }
         free(req);
     }
+}
+
+static hpd_error_t on_req_free(void *req)
+{
+    req_free(req);
+    return HPD_E_SUCCESS;
 }
 
 static struct lri_req *req_new(struct lr_request *req)
@@ -68,19 +84,30 @@ static int on_req_destroy(void *srv_data, void **req_data, struct lr_request *re
     return 0;
 }
 
-static void
-sendState(Service *service, void *in, ErrorCode code, const char *val, size_t len)
+static hpd_error_t sendState(hpd_response_t *res)
 {
-    struct lri_req *lri = in;
+    hpd_error_t rc;
+    struct lri_req *lri;
+    if ((rc = hpd_response_get_request_data(res, (void **) &lri))) return rc;
 
     if (lri == NULL) {
         fprintf(stderr, "[LRI] Unexpected state (lri is null)\n");
-        return;
+        return HPD_E_UNKNOWN;
     }
 
     /* Connection is closed downstairs, so don't send anything */
-    if (lri->req == NULL)
-        return req_free(lri);
+    if (lri->req == NULL) {
+        req_free(lri);
+        return HPD_E_SUCCESS;
+    }
+
+    hpd_value_t *value;
+    if ((rc = hpd_response_get_value(res, &value))) return rc;
+    const char *val;
+    size_t len;
+    if ((rc = hpd_value_get_body(value, &val, &len))) return rc;
+    hpd_status_t code;
+    if ((rc = hpd_response_get_status(res, &code))) return rc;
 
     char *buffer = NULL, *state = NULL;
     struct lm *headersIn = lr_request_get_headers(lri->req);
@@ -91,18 +118,18 @@ sendState(Service *service, void *in, ErrorCode code, const char *val, size_t le
         strncpy(buffer, val, len);
         buffer[len] = '\0';
     } else {
-#define XX(num, str) case ERR_##num: string_copy(buffer, #str); break;
+#define XX(num, str) case HPD_S_##num: string_copy(buffer, #str); break;
         switch (code) {
-            HTTP_STATUS_CODE_MAP(XX)
+            HPD_HTTP_STATUS_CODE_MAP(XX)
             default:
                 fprintf(stderr, "[Homeport] Unknown error code\n");
-                code = ERR_500;
+                code = HPD_S_500;
                 string_copy(buffer, "500 Internal Server Error: Unknown error code.");
         }
 #undef XX
     }
 
-    if (code == ERR_200 && val) {
+    if (code == HPD_S_200 && val) {
         /*TODO Check header for XML or jSON*/
         char *accept = lm_find( headersIn, "Accept" );
         if (accept != NULL && strcmp(accept, "application/json") == 0)
@@ -126,15 +153,18 @@ sendState(Service *service, void *in, ErrorCode code, const char *val, size_t le
     free(buffer);
 
     cleanup: // TODO Fixme
-        return;
+        return HPD_E_SUCCESS;
 }
 
 static int
 getState(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
 {
-    Service *service = (Service*) srv_data;
+    hpd_service_id_t *service = (hpd_service_id_t*) srv_data;
 
-    if(service->getFunction == NULL) {
+    // TODO Error handling?
+    hpd_bool_t bool;
+    if (hpd_service_has_action(service, HPD_M_GET, &bool)) return 1;
+    if (!bool) {
         lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
         return 1;
     }
@@ -145,7 +175,12 @@ getState(void *srv_data, void **req_data, struct lr_request *req, const char *bo
     // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
     lr_request_keep_open(req);
     lri_req->in_hpd = 1;
-    homePortGet(service, sendState, lri_req);
+
+    // TODO Error handling
+    hpd_request_t *request;
+    hpd_request_alloc(&request, service, HPD_M_GET, sendState);
+    hpd_request_set_data(request, lri_req, on_req_free);
+    hpd_request(request);
 
     // Stop parsing request, we don't need the body anyways
     return 1;
@@ -154,10 +189,13 @@ getState(void *srv_data, void **req_data, struct lr_request *req, const char *bo
 static int
 setState(void *srv_data, void **req_data_in, struct lr_request *req, const char *body, size_t len)
 {
-    Service *service = srv_data;
+    hpd_service_id_t *service = srv_data;
     struct lri_req *lri_req = *req_data_in;
 
-    if(service->putFunction == NULL) {
+    // TODO Error handling?
+    hpd_bool_t bool;
+    if (hpd_service_has_action(service, HPD_M_PUT, &bool)) return 1;
+    if (!bool) {
         lr_sendf(req, WS_HTTP_405, NULL, "405 Method Not Allowed");
         return 1;
     }
@@ -221,7 +259,15 @@ setState(void *srv_data, void **req_data_in, struct lr_request *req, const char 
     // Keep open: As the adapter may keep a pointer to request, we better insure that it is not close due to a timeout
     lr_request_keep_open(req);
     lri_req->in_hpd = 1;
-    homePortSet(service, value, strlen(value), sendState, lri_req);
+
+    // TODO Error handling
+    hpd_request_t *request;
+    hpd_request_alloc(&request, service, HPD_M_PUT, sendState);
+    hpd_request_set_data(request, lri_req, on_req_free);
+    hpd_value_t *val;
+    hpd_value_alloc(&val, value, HPD_NULL_TERMINATED);
+    hpd_request_set_value(request, val);
+    hpd_request(request);
 
     free(value);
 
@@ -255,54 +301,55 @@ char *lri_url_decode(const char *id)
     return res;
 }
 
-char *lri_alloc_uri(Service *service)
+char *lri_alloc_uri(hpd_service_id_t *service)
 {
-    Device *device = service->device;
-    Adapter *adapter = device->adapter;
+    // TODO Better error handling
+    hpd_device_id_t *device;
+    hpd_adapter_id_t *adapter;
+    if (hpd_service_get_device(service, &device)) return NULL;
+    if (hpd_service_get_adapter(service, &adapter)) return NULL;
 
-    char *aid = lri_url_encode(adapter->id);
-    char *dtype = lri_url_encode(device->type);
-    char *did = lri_url_encode(device->id);
-    char *stype = lri_url_encode(service->type);
-    char *sid = lri_url_encode(service->id);
+    // TODO Better error handling
+    const char *srv_id, *dev_id, *adp_id;
+    if (hpd_service_get_id(service, &srv_id)) return NULL;
+    if (hpd_device_get_id(device, &dev_id)) return NULL;
+    if (hpd_adapter_get_id(adapter, &adp_id)) return NULL;
 
-    if (!(aid && dtype && did && stype && sid))
+    char *aid = lri_url_encode(adp_id);
+    char *did = lri_url_encode(dev_id);
+    char *sid = lri_url_encode(srv_id);
+
+    if (!(aid && did && sid))
         return NULL;
 
-    char *uri = malloc((strlen(aid)+strlen(dtype)+strlen(did)+strlen(stype)+strlen(sid)+5+1)*sizeof(char));
+    char *uri = malloc((strlen(aid)+strlen(did)+strlen(sid)+3+1)*sizeof(char));
     if( uri == NULL ) return NULL;
     uri[0] = '\0';
 
     strcat(uri, "/");
     strcat(uri, aid);
     strcat(uri, "/");
-    strcat(uri, dtype);
-    strcat(uri, "/");
     strcat(uri, did);
-    strcat(uri, "/");
-    strcat(uri, stype);
     strcat(uri, "/");
     strcat(uri, sid);
 
     free(aid);
-    free(dtype);
     free(did);
-    free(stype);
     free(sid);
 
     return uri;
 }
 
 int
-lri_registerService(struct lr *lr, Service *service)
+lri_registerService(struct lr *lr, hpd_service_id_t *service)
 {
     char *uri = lri_alloc_uri(service);
     int rc;
-    Service *s = lr_lookup_service(lr, uri);
+    hpd_service_id_t *s = lr_lookup_service(lr, uri);
     if (s) {
         printf("A similar service is already registered in the unsecure server\n");
         free(uri);
-        return HPD_E_SERVICE_ALREADY_REGISTER;
+        return HPD_E_UNKNOWN;
     }
 
     // TODO Prefix printf statements and print to stderr on errors !! (Entire hpdREST module)
@@ -314,7 +361,7 @@ lri_registerService(struct lr *lr, Service *service)
     free(uri);
     if(rc) {
         printf("Failed to register non secure service\n");
-        return HPD_E_MHD_ERROR;
+        return HPD_E_UNKNOWN;
     }
 
     return HPD_E_SUCCESS;
@@ -323,13 +370,13 @@ lri_registerService(struct lr *lr, Service *service)
 int
 lri_unregisterService(struct lr *lr, char* uri)
 {
-    Service *s = lr_lookup_service(lr, uri);
+    hpd_service_id_t *s = lr_lookup_service(lr, uri);
     if( s == NULL )
-        return HPD_E_SERVICE_NOT_REGISTER;
+        return HPD_E_UNKNOWN;
 
     s = lr_unregister_service(lr, uri);
     if( s == NULL )
-        return HPD_E_MHD_ERROR;
+        return HPD_E_UNKNOWN;
 
     return HPD_E_SUCCESS;
 }
@@ -337,7 +384,7 @@ lri_unregisterService(struct lr *lr, char* uri)
 int
 lri_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
 {
-    HomePort *homeport = (HomePort*) srv_data;
+    hpd_t *homeport = srv_data;
     struct lm *headersIn =  lr_request_get_headers( req );
     char *accept;
     char *res;
