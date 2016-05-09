@@ -103,11 +103,6 @@ struct hpd_pair {
     goto match; \
 } while(0)
 
-#define PAIR_GET(PAIR, KEY, VALUE) do { \
-    if ((KEY)) (KEY) = (PAIR)->k; \
-    if ((VALUE)) (VALUE) = (PAIR)->v; \
-} while (0)
-
 #ifdef __cplusplus
 }
 #endif
