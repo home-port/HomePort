@@ -35,9 +35,9 @@
 #define LIBREST_H
 
 #include "http_types.h"
-#include "linkedmap.h"
 #include <stddef.h>
 #include <stdarg.h>
+#include "map.h"
 
 // Structs
 struct lr;
@@ -85,11 +85,11 @@ void *lr_lookup_service(struct lr *ins, char *url);
 // Request functions
 enum http_method lr_request_get_method(struct lr_request *req);
 const char *lr_request_get_url(struct lr_request *req);
-struct lm *lr_request_get_headers(struct lr_request *req);
+map_t *lr_request_get_headers(struct lr_request *req);
 const char *lr_request_get_header(struct lr_request *req, const char* key);
-struct lm *lr_request_get_arguments(struct lr_request *req);
+map_t *lr_request_get_arguments(struct lr_request *req);
 const char *lr_request_get_argument(struct lr_request *req, const char* key);
-struct lm *lr_request_get_cookies(struct lr_request *req);
+map_t *lr_request_get_cookies(struct lr_request *req);
 const char *lr_request_get_cookie(struct lr_request *req, const char* key);
 const char *lr_request_get_ip(struct lr_request *req);
 void lr_request_keep_open(struct lr_request *req);
@@ -98,10 +98,10 @@ void lr_request_print(struct lr_request *req);
 // Send response functions
 void lr_sendf(struct lr_request *req,
               enum httpws_http_status_code status,
-              struct lm *headers, const char *fmt, ...);
+              map_t *headers, const char *fmt, ...);
 void lr_send_start(struct lr_request *req,
-                   enum httpws_http_status_code status,
-                   struct lm *headers);
+				   enum httpws_http_status_code status,
+				   map_t *headers);
 int lr_send_add_cookie_simple(struct lr_request *req,
                               const char *field, const char *value);
 int lr_send_add_cookie(struct lr_request *req,

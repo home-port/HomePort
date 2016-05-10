@@ -60,8 +60,13 @@ extern "C" {
 } while(0)
 
 #define HPD_STR_CPY(DST, SRC) do { \
-    HPD_REALLOC(DST, (strlen(SRC)+1), char); \
-    strcpy(DST, SRC); \
+    HPD_REALLOC((DST), (strlen((SRC))+1), char); \
+    strcpy((DST), (SRC)); \
+} while(0)
+
+#define HPD_STR_N_CPY(DST, SRC, LEN) do { \
+    HPD_REALLOC((DST), ((LEN)+1), char); \
+    strncpy((DST), (SRC), (LEN)); \
 } while(0)
 
 #define HPD_SPRINTF_ALLOC(DST, FMT, ...) do { \

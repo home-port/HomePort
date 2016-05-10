@@ -31,7 +31,7 @@
 # TODO Refer to lib/http-parser submodule instead (might be a problem with ifdefs around enum)
 add_subdirectory(lib)
 
-include_directories(${PROJECT_SOURCE_DIR}/Misc/include)
+include_directories(${PROJECT_SOURCE_DIR}/api/include)
 include_directories(${PROJECT_SOURCE_DIR}/rest/webserver/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/http-parser)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)

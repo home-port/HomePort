@@ -34,7 +34,7 @@ hpd_error_t value_alloc(hpd_value_t **value, const char *body, int len)
 {
     HPD_CALLOC((*value), 1, hpd_value_t);
     HPD_CALLOC((*value)->headers, 1, map_t);
-    TAILQ_INIT((*value)->headers);
+    MAP_INIT((*value)->headers);
     if (body) {
         HPD_STR_CPY((*value)->body, body);
         if (len == HPD_NULL_TERMINATED) (*value)->len = strlen(body);

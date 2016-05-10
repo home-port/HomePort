@@ -85,9 +85,6 @@ else(DOXYGEN_FOUND)
     message(WARNING "Please install doxygen to generate documentation")
 endif(DOXYGEN_FOUND)
 
-#TODO Remove
-add_subdirectory(Misc)
-
 add_subdirectory(api)
 add_subdirectory(example)
 add_subdirectory(rest)

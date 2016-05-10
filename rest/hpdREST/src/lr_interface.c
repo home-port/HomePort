@@ -30,7 +30,7 @@
 #include <string.h>
 #include <curl/curl.h>
 #include "libREST.h"
-#include "linkedmap.h"
+#include "map.h"
 #include "hpd_application_api.h"
 
 #define string_copy(copy, original) 			\
@@ -110,8 +110,7 @@ static hpd_error_t sendState(hpd_response_t *res)
     if ((rc = hpd_response_get_status(res, &code))) return rc;
 
     char *buffer = NULL, *state = NULL;
-    struct lm *headersIn = lr_request_get_headers(lri->req);
-    struct lm *headers = NULL;
+    map_t *headersIn = lr_request_get_headers(lri->req);
 
     if (val) {
         buffer = malloc((len+1) * sizeof(char));
@@ -131,19 +130,20 @@ static hpd_error_t sendState(hpd_response_t *res)
 
     if (code == HPD_S_200 && val) {
         /*TODO Check header for XML or jSON*/
-        char *accept = lm_find( headersIn, "Accept" );
+        char *accept;
+        MAP_GET(headersIn, "Accept", accept);
+        map_t headers;
+        MAP_INIT(&headers);
         if (accept != NULL && strcmp(accept, "application/json") == 0)
         {
             state = jsonGetState(buffer);
-            headers =  lm_create();
-            lm_insert(headers, "Content-Type", "application/json");
+            MAP_SET(&headers, "Content-Type", "application/json");
         } else {
             state = xmlGetState(buffer);
-            headers =  lm_create();
-            lm_insert(headers, "Content-Type", "application/xml");
+            MAP_SET(&headers, "Content-Type", "application/xml");
         }
-        lr_sendf(lri->req, WS_HTTP_200, headers, state);
-        lm_destroy(headers);
+        lr_sendf(lri->req, WS_HTTP_200, &headers, state);
+        MAP_FREE(&headers);
     } else {
         fprintf(stderr, "%s\n", buffer);
         lr_sendf(lri->req, code, NULL, buffer);
@@ -154,6 +154,9 @@ static hpd_error_t sendState(hpd_response_t *res)
 
     cleanup: // TODO Fixme
         return HPD_E_SUCCESS;
+
+    alloc_error: // TODO Fixme: Ensure we are in a good state memory wise
+        return HPD_E_ALLOC;
 }
 
 static int
@@ -225,8 +228,9 @@ setState(void *srv_data, void **req_data_in, struct lr_request *req, const char 
         return 0;
     }
 
-    struct lm *headersIn = lr_request_get_headers(req);
-    char *contentType = lm_find(headersIn, "Content-Type");
+    map_t *headersIn = lr_request_get_headers(req);
+    char *contentType;
+    MAP_GET(headersIn, "Content-Type", contentType);
     char *value;
     if(lri_req == NULL || lri_req->req_str == NULL)
     {
@@ -385,11 +389,11 @@ int
 lri_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, const char *body, size_t len)
 {
     hpd_t *homeport = srv_data;
-    struct lm *headersIn =  lr_request_get_headers( req );
+    map_t *headersIn =  lr_request_get_headers( req );
     char *accept;
     char *res;
 
-    accept = lm_find( headersIn, "Accept" );
+    MAP_GET(headersIn, "Accept", accept);
 
     /** Defaults to XML */
     if( accept != NULL && strcmp(accept, "application/json") == 0 )

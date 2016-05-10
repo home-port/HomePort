@@ -27,7 +27,6 @@
 #include <time.h>
 #include <mxml.h>
 #include <curl/curl.h>
-#include "utlist.h"
 #include "lr_interface.h"
 #include "hpd_application_api.h"
 

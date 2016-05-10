@@ -35,7 +35,7 @@
 #define HTTP_WEBSERVER_H
 
 #include "http_types.h"
-#include "linkedmap.h"
+#include "map.h"
 #include <stddef.h>
 #include <stdarg.h>
 
@@ -150,13 +150,13 @@ void             httpws_stop    (struct httpws *instance);
 // Request functions
 enum http_method  http_request_get_method    (struct http_request *req);
 const char *      http_request_get_url       (struct http_request *req);
-struct lm *       http_request_get_headers   (struct http_request *req);
+map_t * http_request_get_headers(struct http_request *req);
 const char *      http_request_get_header    (struct http_request *req,
                                               const char* key);
-struct lm *       http_request_get_arguments (struct http_request *req);
+map_t * http_request_get_arguments(struct http_request *req);
 const char *      http_request_get_argument  (struct http_request *req,
                                               const char* key);
-struct lm *       http_request_get_cookies   (struct http_request *req);
+map_t * http_request_get_cookies(struct http_request *req);
 const char *      http_request_get_cookie    (struct http_request *req,
                                               const char* key);
 const char *      http_request_get_ip        (struct http_request *req);

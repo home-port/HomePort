@@ -411,7 +411,7 @@ void *lr_lookup_service(struct lr *ins, char *url)
  */
 void lr_sendf(struct lr_request *req,
               enum httpws_http_status_code status,
-              struct lm *headers, const char *fmt, ...)
+              map_t *headers, const char *fmt, ...)
 {
    //NOTE THAT POINTER SIZES ARE DIFFERENT ON 64BIT
    //printf("%d  %s\n", (int)(req), __func__);
@@ -442,7 +442,7 @@ static void add_header(void *data,
  */
 void lr_send_start(struct lr_request *req,
                    enum httpws_http_status_code status,
-                   struct lm *headers)
+                   map_t *headers)
 {
    //NOTE THAT POINTER SIZES ARE DIFFERENT ON 64BIT
    //printf("%d  %s\n", (int)(req), __func__);
@@ -453,7 +453,11 @@ void lr_send_start(struct lr_request *req,
               "Access-Control-Allow-Origin",
               "*");
 #endif
-   lm_map(headers, add_header, req->res);
+
+    hpd_pair_t *pair;
+    MAP_FOREACH(pair, headers) {
+        add_header(req->res, pair->k, pair->v);
+    }
 }
 
 int lr_send_add_cookie(struct lr_request *req,
@@ -529,7 +533,7 @@ const char *lr_request_get_url(struct lr_request *req)
    return http_request_get_url(req->req);
 }
 
-struct lm *lr_request_get_headers(struct lr_request *req)
+map_t *lr_request_get_headers(struct lr_request *req)
 {
    return http_request_get_headers(req->req);
 }
@@ -539,7 +543,7 @@ const char *lr_request_get_header(struct lr_request *req, const char* key)
    return http_request_get_header(req->req, key);
 }
 
-struct lm *lr_request_get_arguments(struct lr_request *req)
+map_t *lr_request_get_arguments(struct lr_request *req)
 {
    return http_request_get_arguments(req->req);
 }
@@ -549,7 +553,7 @@ const char *lr_request_get_argument(struct lr_request *req, const char* key)
    return http_request_get_argument(req->req, key);
 }
 
-struct lm *lr_request_get_cookies(struct lr_request *req)
+map_t *lr_request_get_cookies(struct lr_request *req)
 {
    return http_request_get_cookies(req->req);
 }
