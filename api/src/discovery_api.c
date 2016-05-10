@@ -180,6 +180,25 @@ hpd_error_t hpd_adapter_get_attrs(hpd_adapter_id_t *id, ...)
     return rc;
 }
 
+hpd_error_t hpd_adapter_first_attr(hpd_adapter_id_t *id, hpd_pair_t **pair)
+{
+    if (!id || !pair) return HPD_E_NULL;
+    if (!id->hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_adapter_t *adapter;
+    if ((rc = discovery_find_adapter(id, &adapter))) return rc;
+
+    return discovery_first_adapter_attr(adapter, pair);
+}
+
+hpd_error_t hpd_adapter_next_attr(hpd_pair_t **pair)
+{
+    if (!pair || !(*pair)) return HPD_E_NULL;
+
+    return discovery_next_adapter_attr(pair);
+}
+
 /**
  * A note on reusing IDs: An other module or remote client may have outstanding references to the old ID, thus IDs
  * should only be reused in cases when the new device is either the old device, or a directly replacement, with the
@@ -287,6 +306,25 @@ hpd_error_t hpd_device_get_attrs(hpd_device_id_t *id, ...)
     va_end(vp);
 
     return rc;
+}
+
+hpd_error_t hpd_device_first_attr(hpd_device_id_t *id, hpd_pair_t **pair)
+{
+    if (!id || !pair) return HPD_E_NULL;
+    if (!id->hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_device_t *device;
+    if ((rc = discovery_find_device(id, &device))) return rc;
+
+    return discovery_first_device_attr(device, pair);
+}
+
+hpd_error_t hpd_device_next_attr(hpd_pair_t **pair)
+{
+    if (!pair || !(*pair)) return HPD_E_NULL;
+
+    return discovery_next_device_attr(pair);
 }
 
 hpd_error_t hpd_service_alloc(hpd_service_t **service, const char *id)
@@ -437,6 +475,25 @@ hpd_error_t hpd_service_next_action(hpd_action_t **action)
     return discovery_next_action_in_service(action);
 }
 
+hpd_error_t hpd_service_first_attr(hpd_service_id_t *id, hpd_pair_t **pair)
+{
+    if (!id || !pair) return HPD_E_NULL;
+    if (!id->hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_service_t *service;
+    if ((rc = discovery_find_service(id, &service))) return rc;
+
+    return discovery_first_service_attr(service, pair);
+}
+
+hpd_error_t hpd_service_next_attr(hpd_pair_t **pair)
+{
+    if (!pair || !(*pair)) return HPD_E_NULL;
+
+    return discovery_next_service_attr(pair);
+}
+
 hpd_error_t hpd_parameter_alloc(hpd_parameter_t **parameter, const char *id)
 {
     if (!parameter || !id) return HPD_E_NULL;
@@ -522,6 +579,25 @@ hpd_error_t hpd_parameter_get_attrs(hpd_parameter_id_t *id, ...)
     return rc;
 }
 
+hpd_error_t hpd_parameter_first_attr(hpd_parameter_id_t *id, hpd_pair_t **pair)
+{
+    if (!id || !pair) return HPD_E_NULL;
+    if (!id->hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_parameter_t *parameter;
+    if ((rc = discovery_find_parameter(id, &parameter))) return rc;
+
+    return discovery_first_parameter_attr(parameter, pair);
+}
+
+hpd_error_t hpd_parameter_next_attr(hpd_pair_t **pair)
+{
+    if (!pair || !(*pair)) return HPD_E_NULL;
+
+    return discovery_next_parameter_attr(pair);
+}
+
 hpd_error_t hpd_action_get_method(hpd_action_t *action, hpd_method_t *method)
 {
     if (!action || !method) return HPD_E_NULL;
@@ -588,6 +664,229 @@ hpd_error_t hpd_parameter_get_service(hpd_parameter_id_t *pid, hpd_service_id_t 
     return discovery_get_parameter_service(pid, sid);
 }
 
+hpd_error_t hpd_first_adapter(hpd_t *hpd, hpd_adapter_id_t **adapter_id)
+{
+    if (!hpd || !adapter_id) return HPD_E_NULL;
+    if (!hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_adapter_t *adapter;
+    if ((rc = discovery_first_hpd_adapter(hpd, &adapter))) return rc;
+
+    return discovery_alloc_aid(adapter_id, hpd, adapter->id);
+}
+
+hpd_error_t hpd_first_device(hpd_t *hpd, hpd_device_id_t **device_id)
+{
+    if (!hpd || !device_id) return HPD_E_NULL;
+    if (!hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_device_t *device;
+    if ((rc = discovery_first_hpd_device(hpd, &device))) return rc;
+
+    hpd_adapter_t *adapter = device->adapter;
+    return discovery_alloc_did(device_id, hpd, adapter->id, device->id);
+}
+
+hpd_error_t hpd_first_service(hpd_t *hpd, hpd_service_id_t **service_id)
+{
+    if (!hpd || !service_id) return HPD_E_NULL;
+    if (!hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_service_t *service;
+    if ((rc = discovery_first_hpd_service(hpd, &service))) return rc;
+
+    hpd_device_t *device = service->device;
+    hpd_adapter_t *adapter = device->adapter;
+    return discovery_alloc_sid(service_id, hpd, adapter->id, device->id, service->id);
+}
+
+hpd_error_t hpd_adapter_first_device(hpd_adapter_id_t *adapter_id, hpd_device_id_t **device_id)
+{
+    if (!adapter_id || !device_id) return HPD_E_NULL;
+    if (!adapter_id->hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_adapter_t *adapter;
+    if ((rc = discovery_find_adapter(adapter_id, &adapter))) return rc;
+
+    hpd_device_t *device;
+    if ((rc = discovery_first_adapter_device(adapter, &device))) return rc;
+
+    hpd_t *hpd = adapter->configuration->data;
+    return discovery_alloc_did(device_id, hpd, adapter->id, device->id);
+}
+
+hpd_error_t hpd_adapter_first_service(hpd_adapter_id_t *adapter_id, hpd_service_id_t **service_id)
+{
+    if (!adapter_id || !service_id) return HPD_E_NULL;
+    if (!adapter_id->hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_adapter_t *adapter;
+    if ((rc = discovery_find_adapter(adapter_id, &adapter))) return rc;
+
+    hpd_service_t *service;
+    if ((rc = discovery_first_adapter_service(adapter, &service))) return rc;
+
+    hpd_t *hpd = adapter->configuration->data;
+    hpd_device_t *device = service->device;
+    return discovery_alloc_sid(service_id, hpd, adapter->id, device->id, service->id);
+}
+
+hpd_error_t hpd_device_first_service(const hpd_device_id_t *device_id, hpd_service_id_t **service_id)
+{
+    if (!device_id || !service_id) return HPD_E_NULL;
+    if (!device_id->hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_device_t *device;
+    if ((rc = discovery_find_device(device_id, &device))) return rc;
+
+    hpd_service_t *service;
+    if ((rc = discovery_first_device_service(device, &service))) return rc;
+
+    hpd_adapter_t *adapter = device->adapter;
+    hpd_t *hpd = adapter->configuration->data;
+    return discovery_alloc_sid(service_id, hpd, adapter->id, device->id, service->id);
+}
+
+hpd_error_t hpd_service_first_parameter(hpd_service_id_t *service_id, hpd_parameter_id_t **parameter_id)
+{
+    if (!service_id || !parameter_id) return HPD_E_NULL;
+    if (!service_id->hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_service_t *service;
+    if ((rc = discovery_find_service(service_id, &service))) return rc;
+
+    hpd_parameter_t *parameter;
+    if ((rc = discovery_first_service_parameter(service, &parameter))) return rc;
+
+    hpd_device_t *device = service->device;
+    hpd_adapter_t *adapter = device->adapter;
+    hpd_t *hpd = adapter->configuration->data;
+    return discovery_alloc_pid(parameter_id, hpd, adapter->id, device->id, service->id, parameter->id);
+}
+
+
+hpd_error_t hpd_next_adapter(hpd_adapter_id_t **adapter_id)
+{
+    if (!adapter_id || !(*adapter_id)) return HPD_E_NULL;
+    if (!(*adapter_id)->hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_adapter_t *adapter;
+    if ((rc = discovery_find_adapter(*adapter_id, &adapter))) return rc;
+
+    if ((rc = discovery_next_hpd_adapter(&adapter))) return rc;
+
+    hpd_t *hpd = adapter->configuration->data;
+    return discovery_set_aid(adapter_id, hpd, adapter->id);
+}
+
+hpd_error_t hpd_next_device(hpd_device_id_t **device_id)
+{
+    if (!device_id || !(*device_id)) return HPD_E_NULL;
+    if (!(*device_id)->hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_device_t *device;
+    if ((rc = discovery_find_device(*device_id, &device))) return rc;
+
+    if ((rc = discovery_next_hpd_device(&device))) return rc;
+
+    hpd_adapter_t *adapter = device->adapter;
+    hpd_t *hpd = adapter->configuration->data;
+    return discovery_set_did(device_id, hpd, adapter->id, device->id);
+}
+
+hpd_error_t hpd_next_service(hpd_service_id_t **service_id)
+{
+    if (!service_id || !(*service_id)) return HPD_E_NULL;
+    if (!(*service_id)->hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_service_t *service;
+    if ((rc = discovery_find_service(*service_id, &service))) return rc;
+
+    if ((rc = discovery_next_hpd_service(&service))) return rc;
+
+    hpd_device_t *device = service->device;
+    hpd_adapter_t *adapter = device->adapter;
+    hpd_t *hpd = adapter->configuration->data;
+    return discovery_set_sid(service_id, hpd, adapter->id, device->id, service->id);
+}
+
+hpd_error_t hpd_adapter_next_device(hpd_device_id_t **device_id)
+{
+    if (!device_id || !(*device_id)) return HPD_E_NULL;
+    if (!(*device_id)->hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_device_t *device;
+    if ((rc = discovery_find_device(*device_id, &device))) return rc;
+
+    if ((rc = discovery_next_adapter_device(&device))) return rc;
+
+    hpd_adapter_t *adapter = device->adapter;
+    hpd_t *hpd = adapter->configuration->data;
+    return discovery_set_did(device_id, hpd, adapter->id, device->id);
+}
+
+hpd_error_t hpd_adapter_next_service(hpd_service_id_t **service_id)
+{
+    if (!service_id || !(*service_id)) return HPD_E_NULL;
+    if (!(*service_id)->hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_service_t *service;
+    if ((rc = discovery_find_service(*service_id, &service))) return rc;
+
+    if ((rc = discovery_next_adapter_service(&service))) return rc;
+
+    hpd_device_t *device = service->device;
+    hpd_adapter_t *adapter = device->adapter;
+    hpd_t *hpd = adapter->configuration->data;
+    return discovery_set_sid(service_id, hpd, adapter->id, device->id, service->id);
+}
+
+hpd_error_t hpd_device_next_service(hpd_service_id_t **service_id)
+{
+    if (!service_id || !(*service_id)) return HPD_E_NULL;
+    if (!(*service_id)->hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_service_t *service;
+    if ((rc = discovery_find_service(*service_id, &service))) return rc;
+
+    if ((rc = discovery_next_device_service(&service))) return rc;
+
+    hpd_device_t *device = service->device;
+    hpd_adapter_t *adapter = device->adapter;
+    hpd_t *hpd = adapter->configuration->data;
+    return discovery_set_sid(service_id, hpd, adapter->id, device->id, service->id);
+}
+
+hpd_error_t hpd_service_next_parameter(hpd_parameter_id_t **parameter_id)
+{
+    if (!parameter_id || !(*parameter_id)) return HPD_E_NULL;
+    if (!(*parameter_id)->hpd->configuration) return HPD_E_STOPPED;
+
+    hpd_error_t rc;
+    hpd_parameter_t *parameter;
+    if ((rc = discovery_find_parameter(*parameter_id, &parameter))) return rc;
+
+    if ((rc = discovery_next_service_parameter(&parameter))) return rc;
+
+    hpd_service_t *service = parameter->service;
+    hpd_device_t *device = service->device;
+    hpd_adapter_t *adapter = device->adapter;
+    hpd_t *hpd = adapter->configuration->data;
+    return discovery_set_pid(parameter_id, hpd, adapter->id, device->id, service->id, parameter->id);
+}
 
 
 

@@ -136,21 +136,21 @@ hpd_error_t hpd_parameter_get_adapter(hpd_parameter_id_t *pid, hpd_adapter_id_t 
 hpd_error_t hpd_parameter_get_device(hpd_parameter_id_t *pid, hpd_device_id_t **did);
 hpd_error_t hpd_parameter_get_service(hpd_parameter_id_t *pid, hpd_service_id_t **sid);
 
-hpd_error_t hpd_first_adapter(hpd_t *hpd, hpd_adapter_id_t **adapter);
-hpd_error_t hpd_first_device(hpd_t *hpd, hpd_device_id_t **device);
-hpd_error_t hpd_first_service(hpd_t *hpd, hpd_service_id_t **service);
-hpd_error_t hpd_adapter_first_device(hpd_adapter_id_t *adapter, hpd_device_id_t **device);
-hpd_error_t hpd_adapter_first_service(hpd_adapter_id_t *adapter, hpd_service_id_t **service);
-hpd_error_t hpd_device_first_service(const hpd_device_id_t *device, hpd_service_id_t **service);
-hpd_error_t hpd_service_first_parameter(hpd_service_id_t *service, hpd_parameter_id_t **parameter);
+hpd_error_t hpd_first_adapter(hpd_t *hpd, hpd_adapter_id_t **adapter_id);
+hpd_error_t hpd_first_device(hpd_t *hpd, hpd_device_id_t **device_id);
+hpd_error_t hpd_first_service(hpd_t *hpd, hpd_service_id_t **service_id);
+hpd_error_t hpd_adapter_first_device(hpd_adapter_id_t *adapter_id, hpd_device_id_t **device_id);
+hpd_error_t hpd_adapter_first_service(hpd_adapter_id_t *adapter_id, hpd_service_id_t **service_id);
+hpd_error_t hpd_device_first_service(const hpd_device_id_t *device_id, hpd_service_id_t **service_id);
+hpd_error_t hpd_service_first_parameter(hpd_service_id_t *service_id, hpd_parameter_id_t **parameter_id);
 
-hpd_error_t hpd_next_adapter(hpd_adapter_id_t **adapter);
-hpd_error_t hpd_next_device(hpd_device_id_t **device);
-hpd_error_t hpd_next_service(hpd_service_id_t **service);
-hpd_error_t hpd_adapter_next_device(hpd_device_id_t **device);
-hpd_error_t hpd_adapter_next_service(hpd_service_id_t **service);
-hpd_error_t hpd_device_next_service(hpd_service_id_t **service);
-hpd_error_t hpd_service_next_parameter(hpd_parameter_id_t **parameter);
+hpd_error_t hpd_next_adapter(hpd_adapter_id_t **adapter_id);
+hpd_error_t hpd_next_device(hpd_device_id_t **device_id);
+hpd_error_t hpd_next_service(hpd_service_id_t **service_id);
+hpd_error_t hpd_adapter_next_device(hpd_device_id_t **device_id);
+hpd_error_t hpd_adapter_next_service(hpd_service_id_t **service_id);
+hpd_error_t hpd_device_next_service(hpd_service_id_t **service_id);
+hpd_error_t hpd_service_next_parameter(hpd_parameter_id_t **parameter_id);
 
 hpd_error_t hpd_find_adapter(hpd_t *hpd, hpd_adapter_id_t **adapter, ...);
 hpd_error_t hpd_find_device(hpd_t *hpd, hpd_device_id_t **device, ...);

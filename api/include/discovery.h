@@ -76,8 +76,13 @@ hpd_error_t discovery_free_did(hpd_device_id_t *id);
 hpd_error_t discovery_free_sid(hpd_service_id_t *id);
 hpd_error_t discovery_free_pid(hpd_parameter_id_t *id);
 
+hpd_error_t discovery_set_aid(hpd_adapter_id_t **id, hpd_t *hpd, const char *aid);
+hpd_error_t discovery_set_did(hpd_device_id_t **id, hpd_t *hpd, const char *aid, const char *did);
+hpd_error_t discovery_set_sid(hpd_service_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid);
+hpd_error_t discovery_set_pid(hpd_parameter_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid, const char *pid);
+
 hpd_error_t discovery_find_adapter(hpd_adapter_id_t *id, hpd_adapter_t **adapter);
-hpd_error_t discovery_find_device(hpd_device_id_t *id, hpd_device_t **device);
+hpd_error_t discovery_find_device(const hpd_device_id_t *id, hpd_device_t **device);
 hpd_error_t discovery_find_service(hpd_service_id_t *id, hpd_service_t **service);
 hpd_error_t discovery_find_parameter(hpd_parameter_id_t *id, hpd_parameter_t **parameter);
 
@@ -144,7 +149,30 @@ hpd_error_t discovery_set_parameter_attr(hpd_parameter_t *parameter, const char 
 hpd_error_t discovery_set_parameter_attrs_v(hpd_parameter_t *parameter, va_list vp);
 
 hpd_error_t discovery_first_action_in_service(hpd_service_t *service, hpd_action_t **action);
+hpd_error_t discovery_first_adapter_attr(hpd_adapter_t *adapter, hpd_pair_t **pair);
+hpd_error_t discovery_first_device_attr(hpd_device_t *device, hpd_pair_t **pair);
+hpd_error_t discovery_first_service_attr(hpd_service_t *service, hpd_pair_t **pair);
+hpd_error_t discovery_first_parameter_attr(hpd_parameter_t *parameter, hpd_pair_t **pair);
+hpd_error_t discovery_first_hpd_adapter(hpd_t *hpd, hpd_adapter_t **adapter);
+hpd_error_t discovery_first_hpd_device(hpd_t *hpd, hpd_device_t **device);
+hpd_error_t discovery_first_hpd_service(hpd_t *hpd, hpd_service_t **service);
+hpd_error_t discovery_first_adapter_device(hpd_adapter_t *adapter, hpd_device_t **device);
+hpd_error_t discovery_first_adapter_service(hpd_adapter_t *adapter, hpd_service_t **service);
+hpd_error_t discovery_first_device_service(const hpd_device_t *device, hpd_service_t **service);
+hpd_error_t discovery_first_service_parameter(hpd_service_t *service, hpd_parameter_t **parameter);
+
 hpd_error_t discovery_next_action_in_service(hpd_action_t **action);
+hpd_error_t discovery_next_adapter_attr(hpd_pair_t **pair);
+hpd_error_t discovery_next_device_attr(hpd_pair_t **pair);
+hpd_error_t discovery_next_service_attr(hpd_pair_t **pair);
+hpd_error_t discovery_next_parameter_attr(hpd_pair_t **pair);
+hpd_error_t discovery_next_hpd_adapter(hpd_adapter_t **adapter);
+hpd_error_t discovery_next_hpd_device(hpd_device_t **device);
+hpd_error_t discovery_next_hpd_service(hpd_service_t **service);
+hpd_error_t discovery_next_adapter_device(hpd_device_t **device);
+hpd_error_t discovery_next_adapter_service(hpd_service_t **service);
+hpd_error_t discovery_next_device_service(hpd_service_t **service);
+hpd_error_t discovery_next_service_parameter(hpd_parameter_t **parameter);
 
 hpd_bool_t discovery_is_adapter_id_unique(hpd_t *hpd, hpd_adapter_t *adapter);
 hpd_bool_t discovery_is_device_id_unique(hpd_adapter_t *adapter, hpd_device_t *device);

@@ -29,49 +29,41 @@
 #include "hpd_common.h"
 #include "daemon.h"
 
-hpd_error_t discovery_alloc_aid(hpd_adapter_id_t **id, hpd_t *hpd, const char *aid)
+hpd_error_t discovery_set_aid(hpd_adapter_id_t **id, hpd_t *hpd, const char *aid)
 {
-    HPD_CALLOC(*id, 1, hpd_adapter_id_t);
     (*id)->hpd = hpd;
     HPD_STR_CPY((*id)->aid, aid);
     return HPD_E_SUCCESS;
 
-    alloc_error:
-    if (*id) discovery_free_aid(*id);
+    alloc_error: // TODO Might leave id in invalid state
     return HPD_E_ALLOC;
 }
 
-hpd_error_t discovery_alloc_did(hpd_device_id_t **id, hpd_t *hpd, const char *aid, const char *did)
+hpd_error_t discovery_set_did(hpd_device_id_t **id, hpd_t *hpd, const char *aid, const char *did)
 {
-    HPD_CALLOC(*id, 1, hpd_device_id_t);
     (*id)->hpd = hpd;
     HPD_STR_CPY((*id)->aid, aid);
     HPD_STR_CPY((*id)->did, did);
     return HPD_E_SUCCESS;
 
-    alloc_error:
-    if (*id) discovery_free_did(*id);
+    alloc_error: // TODO Might leave id in invalid state
     return HPD_E_ALLOC;
 }
 
-hpd_error_t discovery_alloc_sid(hpd_service_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid)
+hpd_error_t discovery_set_sid(hpd_service_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid)
 {
-    HPD_CALLOC(*id, 1, hpd_service_id_t);
     (*id)->hpd = hpd;
     HPD_STR_CPY((*id)->aid, aid);
     HPD_STR_CPY((*id)->did, did);
     HPD_STR_CPY((*id)->sid, sid);
     return HPD_E_SUCCESS;
 
-    alloc_error:
-    if (*id) discovery_free_sid(*id);
+    alloc_error: // TODO Might leave id in invalid state
     return HPD_E_ALLOC;
 }
 
-hpd_error_t discovery_alloc_pid(hpd_parameter_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid,
-                                const char *pid)
+hpd_error_t discovery_set_pid(hpd_parameter_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid, const char *pid)
 {
-    HPD_CALLOC(*id, 1, hpd_parameter_id_t);
     (*id)->hpd = hpd;
     HPD_STR_CPY((*id)->aid, aid);
     HPD_STR_CPY((*id)->did, did);
@@ -79,8 +71,64 @@ hpd_error_t discovery_alloc_pid(hpd_parameter_id_t **id, hpd_t *hpd, const char 
     HPD_STR_CPY((*id)->pid, pid);
     return HPD_E_SUCCESS;
 
+    alloc_error: // TODO Might leave id in invalid state
+    return HPD_E_ALLOC;
+}
+
+hpd_error_t discovery_alloc_aid(hpd_adapter_id_t **id, hpd_t *hpd, const char *aid)
+{
+    hpd_error_t rc;
+    HPD_CALLOC(*id, 1, hpd_adapter_id_t);
+    if ((rc = discovery_set_aid(id, hpd, aid))) {
+        discovery_free_aid(*id);
+        return rc;
+    }
+    return HPD_E_SUCCESS;
+
     alloc_error:
-    if (*id) discovery_free_pid(*id);
+    return HPD_E_ALLOC;
+}
+
+hpd_error_t discovery_alloc_did(hpd_device_id_t **id, hpd_t *hpd, const char *aid, const char *did)
+{
+    hpd_error_t rc;
+    HPD_CALLOC(*id, 1, hpd_device_id_t);
+    if ((rc = discovery_set_did(id, hpd, aid, did))) {
+        discovery_free_did(*id);
+        return rc;
+    }
+    return HPD_E_SUCCESS;
+
+    alloc_error:
+    return HPD_E_ALLOC;
+}
+
+hpd_error_t discovery_alloc_sid(hpd_service_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid)
+{
+    hpd_error_t rc;
+    HPD_CALLOC(*id, 1, hpd_service_id_t);
+    if ((rc = discovery_set_sid(id, hpd, aid, did, sid))) {
+        discovery_free_sid(*id);
+        return rc;
+    }
+    return HPD_E_SUCCESS;
+
+    alloc_error:
+    return HPD_E_ALLOC;
+}
+
+hpd_error_t discovery_alloc_pid(hpd_parameter_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid,
+                                const char *pid)
+{
+    hpd_error_t rc;
+    HPD_CALLOC(*id, 1, hpd_parameter_id_t);
+    if ((rc = discovery_set_pid(id, hpd, aid, did, sid, pid))) {
+        discovery_free_pid(*id);
+        return rc;
+    }
+    return HPD_E_SUCCESS;
+
+    alloc_error:
     return HPD_E_ALLOC;
 }
 
@@ -181,7 +229,7 @@ hpd_error_t discovery_find_adapter(hpd_adapter_id_t *id, hpd_adapter_t **adapter
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discovery_find_device(hpd_device_id_t *id, hpd_device_t **device)
+hpd_error_t discovery_find_device(const hpd_device_id_t *id, hpd_device_t **device)
 {
     FIND_DEVICE(id, *device);
     return HPD_E_SUCCESS;
