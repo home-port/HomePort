@@ -25,8 +25,8 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_MAP_H
-#define HOMEPORT_MAP_H
+#ifndef HOMEPORT_HPD_MAP_H
+#define HOMEPORT_HPD_MAP_H
 
 #include "hpd_common.h"
 #include "hpd_queue.h"
@@ -140,4 +140,4 @@ struct hpd_pair {
 }
 #endif
 
-#endif //HOMEPORT_MAP_H
+#endif //HOMEPORT_HPD_MAP_H

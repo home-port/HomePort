@@ -454,9 +454,11 @@ void lr_send_start(struct lr_request *req,
               "*");
 #endif
 
-    hpd_pair_t *pair;
-    MAP_FOREACH(pair, headers) {
-        add_header(req->res, pair->k, pair->v);
+    if (headers) {
+        hpd_pair_t *pair;
+        MAP_FOREACH(pair, headers) {
+            add_header(req->res, pair->k, pair->v);
+        }
     }
 }
 

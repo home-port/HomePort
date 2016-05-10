@@ -30,6 +30,7 @@
 #include "daemon.h"
 #include "event.h"
 #include "value.h"
+#include "log.h"
 
 static void sig_cb(hpd_ev_loop_t *loop, ev_signal *w, int revents)
 {
@@ -49,6 +50,7 @@ static int parse_opt(int key, char *arg, struct argp_state *state)
             case HPD_E_SUCCESS:
                 return 0;
             case HPD_E_ARGUMENT:
+                LOG_DEBUG("Module '%s' did not recognise the option '%s'.", module->id, name);
                 return ARGP_ERR_UNKNOWN;
             default:
                 return rc;
@@ -67,7 +69,7 @@ static hpd_error_t daemon_alloc_conf(configuration_t **conf, void *data)
     return HPD_E_SUCCESS;
 
     alloc_error:
-        return HPD_E_NULL;
+        LOG_RETURN_E_ALLOC();
 }
 
 static hpd_error_t daemon_free_conf(configuration_t *conf) {
@@ -102,7 +104,7 @@ hpd_error_t daemon_alloc(hpd_t **hpd)
             if ((*hpd)->options) free((*hpd)->options);
             free(*hpd);
         }
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t daemon_free(hpd_t *hpd)
@@ -161,7 +163,7 @@ hpd_error_t daemon_add_module(hpd_t *hpd, const char *id, hpd_module_def_t *modu
 
     alloc_error:
     if (module) free(module);
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t daemon_add_option(hpd_module_t *context, const char *name, const char *arg, int flags, const char *doc)
@@ -197,7 +199,7 @@ hpd_error_t daemon_add_option(hpd_module_t *context, const char *name, const cha
         if (name_alloc) free(name_alloc);
     if (arg_alloc) free(arg_alloc);
     if (doc_alloc) free(doc_alloc);
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[])
@@ -215,23 +217,23 @@ hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[])
         if ((rc = module->def.on_create(&module->data, module)) != HPD_E_SUCCESS)
             goto module_create_error;
 
-    // Parse options (Take options out to define the correct state of hpd)
-    argp_option_t *options = hpd->options;
-    hpd->options = NULL;
-    struct argp argp = {options, parse_opt };
+    // Parse options
+    struct argp argp = {hpd->options, parse_opt };
     if (argp_parse(&argp, argc, argv, 0, 0, hpd)) {
+        LOG_DEBUG("Error while parsing arguments.");
         rc = HPD_E_ARGUMENT;
         goto arg_error;
     }
 
     // Deallocate option memory
     argp_option_t empty = { 0 };
-    for (argp_option_t *option = options; memcmp(option, &empty, sizeof(argp_option_t)); option++) {
+    for (argp_option_t *option = hpd->options; memcmp(option, &empty, sizeof(argp_option_t)); option++) {
         free((void *) option->name);
         free((void *) option->arg);
         free((void *) option->doc);
     }
-    free(options);
+    free(hpd->options);
+    hpd->options = NULL;
     free(hpd->option2module);
     hpd->option2module = NULL;
 
@@ -305,7 +307,12 @@ hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[])
             hpd->options = NULL;
         }
     return_error:
-        return rc;
+        switch (rc) {
+            case HPD_E_ALLOC:
+                LOG_RETURN_E_ALLOC();
+            default:
+                return rc;
+        }
 }
 
 hpd_error_t daemon_stop(const hpd_t *hpd)

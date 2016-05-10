@@ -30,6 +30,8 @@
 #include "lr_interface.h"
 #include "hpd_application_api.h"
 
+// TODO Verify that keys do not overlap (use encoding?)
+
 /**
  *  * Simple timestamp function
  *   *
@@ -69,7 +71,7 @@ parameterToXml(hpd_parameter_id_t *parameter, mxml_node_t *parent)
 
     const char *id;
     hpd_parameter_get_id(parameter, &id);
-    mxmlElementSetAttr(parameterXml, ":id", id);
+    mxmlElementSetAttr(parameterXml, "_id", id);
 
     hpd_parameter_foreach_attr(rc, pair, parameter) {
         const char *key, *val;
@@ -89,7 +91,7 @@ serviceToXml(hpd_service_id_t *service, mxml_node_t *parent)
 
     const char *id;
     hpd_service_get_id(service, &id);
-    mxmlElementSetAttr(serviceXml, ":id", id);
+    mxmlElementSetAttr(serviceXml, "_id", id);
 
     hpd_service_foreach_attr(rc, pair, service) {
         const char *key, *val;
@@ -99,7 +101,7 @@ serviceToXml(hpd_service_id_t *service, mxml_node_t *parent)
 
     char *uri = lri_alloc_uri(service);
     if(uri != NULL) {
-        mxmlElementSetAttr(serviceXml, "uri", uri);
+        mxmlElementSetAttr(serviceXml, "_uri", uri);
         free(uri);
     }
 
@@ -110,10 +112,10 @@ serviceToXml(hpd_service_id_t *service, mxml_node_t *parent)
         switch (method) {
             case HPD_M_NONE:break;
             case HPD_M_GET:
-                mxmlElementSetAttr(serviceXml, ":get", "1");
+                mxmlElementSetAttr(serviceXml, "_get", "1");
                 break;
             case HPD_M_PUT:
-                mxmlElementSetAttr(serviceXml, ":put", "1");
+                mxmlElementSetAttr(serviceXml, "_put", "1");
                 break;
             case HPD_M_COUNT:break;
         }
@@ -137,7 +139,7 @@ deviceToXml(hpd_device_id_t *device, mxml_node_t *parent)
 
     const char *id;
     hpd_device_get_id(device, &id);
-    mxmlElementSetAttr(deviceXml, ":id", id);
+    mxmlElementSetAttr(deviceXml, "_id", id);
 
     hpd_device_foreach_attr(rc, pair, device) {
         const char *key, *val;
@@ -165,7 +167,7 @@ adapterToXml(hpd_adapter_id_t *adapter, mxml_node_t *parent)
 
     const char *id;
     hpd_adapter_get_id(adapter, &id);
-    mxmlElementSetAttr(adapterXml, ":id", id);
+    mxmlElementSetAttr(adapterXml, "_id", id);
 
     hpd_adapter_foreach_attr(rc, pair, adapter) {
         const char *key, *val;

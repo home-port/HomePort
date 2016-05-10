@@ -65,6 +65,7 @@ struct hpd {
 
 struct hpd_ev_async {
     TAILQ_ENTRY(hpd_ev_async) HPD_TAILQ_FIELD;
+    // TODO Using async watches wrongly here, one global watcher (maybe per queue) would be better
     ev_async watcher;
     union {
         hpd_request_t *request;

@@ -28,7 +28,8 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(../../api/include)
+include_directories(${CMAKE_SOURCE_DIR}/api/include)
+include_directories(${CMAKE_SOURCE_DIR}/rest/hpdREST/include)
 
 add_library(example_demo_adapter
         demo_adapter.h
@@ -45,4 +46,4 @@ target_link_libraries(example_demo_application hpd)
 add_executable(example_demo
         main.c
         )
-target_link_libraries(example_demo example_demo_adapter example_demo_application)
+target_link_libraries(example_demo example_demo_adapter example_demo_application hpd_rest)

@@ -67,6 +67,7 @@ extern "C" {
 #define HPD_STR_N_CPY(DST, SRC, LEN) do { \
     HPD_REALLOC((DST), ((LEN)+1), char); \
     strncpy((DST), (SRC), (LEN)); \
+    (DST)[LEN] = '\0'; \
 } while(0)
 
 #define HPD_SPRINTF_ALLOC(DST, FMT, ...) do { \

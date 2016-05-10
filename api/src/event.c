@@ -30,6 +30,7 @@
 #include "hpd_common.h"
 #include "discovery.h"
 #include "value.h"
+#include "log.h"
 
 hpd_error_t event_alloc_listener(hpd_listener_t **listener, hpd_t *hpd)
 {
@@ -38,7 +39,7 @@ hpd_error_t event_alloc_listener(hpd_listener_t **listener, hpd_t *hpd)
     return HPD_E_SUCCESS;
 
     alloc_error:
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t event_free_listener(hpd_listener_t *listener)
@@ -117,6 +118,7 @@ static void on_changed(hpd_ev_loop_t *loop, ev_async *w, int revents)
     hpd_value_t *value = async->value;
 
     TAILQ_REMOVE(&hpd->changed_watchers, async, HPD_TAILQ_FIELD);
+    ev_async_stop(loop, w);
     free(async);
 
     hpd_listener_t *listener;
@@ -143,6 +145,7 @@ static void on_attached(hpd_ev_loop_t *loop, ev_async *w, int revents)
     hpd_device_id_t *id = async->device;
 
     TAILQ_REMOVE(&hpd->attached_watchers, async, HPD_TAILQ_FIELD);
+    ev_async_stop(loop, w);
     free(async);
 
     hpd_listener_t *listener;
@@ -165,6 +168,7 @@ static void on_detached(hpd_ev_loop_t *loop, ev_async *w, int revents)
     hpd_device_id_t *id = async->device;
 
     TAILQ_REMOVE(&hpd->detached_watchers, async, HPD_TAILQ_FIELD);
+    ev_async_stop(loop, w);
     free(async);
 
     hpd_listener_t *listener;
@@ -191,6 +195,7 @@ hpd_error_t event_changed(hpd_service_id_t *id, hpd_value_t *val)
     ev_async_init(&async->watcher, on_changed);
     async->watcher.data = async;
     ev_async_start(hpd->loop, &async->watcher);
+    ev_async_send(hpd->loop, &async->watcher);
     TAILQ_INSERT_TAIL(&hpd->changed_watchers, async, HPD_TAILQ_FIELD);
     free(val);
     return HPD_E_SUCCESS;
@@ -199,7 +204,12 @@ hpd_error_t event_changed(hpd_service_id_t *id, hpd_value_t *val)
     free(async->value);
     alloc_error:
     free(async);
-    return rc;
+    switch (rc) {
+        case HPD_E_ALLOC:
+            LOG_RETURN_E_ALLOC();
+        default:
+            return rc;
+    }
 }
 
 hpd_error_t event_inform_adapter_attached(hpd_adapter_t *adapter)
@@ -234,13 +244,19 @@ hpd_error_t event_inform_device_attached(hpd_device_t *device)
     ev_async_init(&async->watcher, on_attached);
     async->watcher.data = async;
     ev_async_start(hpd->loop, &async->watcher);
+    ev_async_send(hpd->loop, &async->watcher);
     TAILQ_INSERT_TAIL(&hpd->attached_watchers, async, HPD_TAILQ_FIELD);
     return HPD_E_SUCCESS;
 
     did_error:
     free(async);
     alloc_error:
-    return rc;
+    switch (rc) {
+        case HPD_E_ALLOC:
+            LOG_RETURN_E_ALLOC();
+        default:
+            return rc;
+    }
 }
 
 hpd_error_t event_inform_device_detached(hpd_device_t *device)
@@ -255,11 +271,17 @@ hpd_error_t event_inform_device_detached(hpd_device_t *device)
     ev_async_init(&async->watcher, on_detached);
     async->watcher.data = async;
     ev_async_start(hpd->loop, &async->watcher);
+    ev_async_send(hpd->loop, &async->watcher);
     TAILQ_INSERT_TAIL(&hpd->detached_watchers, async, HPD_TAILQ_FIELD);
     return HPD_E_SUCCESS;
 
     did_error:
     free(async);
     alloc_error:
-    return rc;
+    switch (rc) {
+        case HPD_E_ALLOC:
+            LOG_RETURN_E_ALLOC();
+        default:
+            return rc;
+    }
 }

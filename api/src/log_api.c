@@ -1,5 +1,3 @@
-#include "../../api/include/hpd_types.h"
-
 /*
  * Copyright 2011 Aalborg University. All rights reserved.
  *
@@ -27,35 +25,22 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "hpd_daemon_api.h"
-#include "hpd_rest.h"
-#include "demo_adapter.h"
-#include "demo_application.h"
+#include "log.h"
+#include "daemon.h"
 
-// TODO Using simple error handling (Switches would be better, when documentation is written)
-int main(int argc, char *argv[])
+hpd_error_t hpd_logf(hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, ...)
 {
+    if (!context || !fmt) LOG_RETURN_E_NULL();
     hpd_error_t rc;
-    hpd_t *hpd;
-
-    // Allocate hpd memory
-    if ((rc = hpd_alloc(&hpd))) goto error_return;
-
-    // Add modules
-    if ((rc = hpd_module(hpd, "rest", &hpd_rest))) goto error_free;
-    if ((rc = hpd_module(hpd, "demo_adapter", &hpd_demo_adapter_def))) goto error_free;
-    if ((rc = hpd_module(hpd, "demo_application", &hpd_demo_app_def))) goto error_free;
-
-    // Start hpd
-    if ((rc = hpd_start(hpd, argc, argv))) goto error_free;
-
-    // Clean up
-    if ((rc = hpd_free(hpd))) goto error_return;
-
+    va_list vp;
+    va_start(vp, fmt);
+    rc = log_vlogf(context->id, level, file, line, fmt, vp);
+    va_end(vp);
     return rc;
+}
 
-    error_free:
-        hpd_free(hpd);
-    error_return:
-        return rc;
+hpd_error_t hpd_vlogf(hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp)
+{
+    if (!context || !fmt) LOG_RETURN_E_NULL();
+    return log_vlogf(context->id, level, file, line, fmt, vp);
 }

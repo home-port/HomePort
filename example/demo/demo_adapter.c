@@ -83,8 +83,6 @@ static hpd_error_t hpd_demo_on_get(hpd_request_t *req)
     if ((rc = hpd_response_set_value(res, val))) return rc;
     if ((rc = hpd_respond(res))) return rc;
 
-    if ((rc = hpd_service_id_free(sid))) return rc;
-
     return HPD_E_SUCCESS;
 }
 
@@ -122,7 +120,7 @@ static hpd_error_t hpd_demo_adapter_start(void *data, hpd_t *hpd)
         if ((rc = hpd_service_alloc(&service, "srv0"))) return rc;
         if ((rc = hpd_service_set_actions(service,
                                           HPD_M_GET, hpd_demo_on_get,
-                                          NULL))) return rc;
+                                          HPD_M_NONE))) return rc;
         hpd_parameter_t *parameter;
         if ((rc = hpd_parameter_alloc(&parameter, "param0"))) return rc;
         if ((rc = hpd_parameter_attach(service, parameter))) return rc;

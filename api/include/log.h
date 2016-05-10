@@ -1,5 +1,3 @@
-#include "../../api/include/hpd_types.h"
-
 /*
  * Copyright 2011 Aalborg University. All rights reserved.
  *
@@ -27,35 +25,35 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "hpd_daemon_api.h"
-#include "hpd_rest.h"
-#include "demo_adapter.h"
-#include "demo_application.h"
+#ifndef HOMEPORT_LOG_H
+#define HOMEPORT_LOG_H
 
-// TODO Using simple error handling (Switches would be better, when documentation is written)
-int main(int argc, char *argv[])
-{
-    hpd_error_t rc;
-    hpd_t *hpd;
+#include "hpd_types.h"
+#include <stdarg.h>
 
-    // Allocate hpd memory
-    if ((rc = hpd_alloc(&hpd))) goto error_return;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-    // Add modules
-    if ((rc = hpd_module(hpd, "rest", &hpd_rest))) goto error_free;
-    if ((rc = hpd_module(hpd, "demo_adapter", &hpd_demo_adapter_def))) goto error_free;
-    if ((rc = hpd_module(hpd, "demo_application", &hpd_demo_app_def))) goto error_free;
+#define HPD_LOG_MODULE "hpd"
 
-    // Start hpd
-    if ((rc = hpd_start(hpd, argc, argv))) goto error_free;
+hpd_error_t log_logf(const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, ...);
+hpd_error_t log_vlogf(const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp);
 
-    // Clean up
-    if ((rc = hpd_free(hpd))) goto error_return;
+#define LOG_ERROR(FMT, ...) log_logf(HPD_LOG_MODULE, HPD_L_ERROR, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
+#define LOG_WARN(FMT, ...) log_logf(HPD_LOG_MODULE, HPD_L_WARN , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
+#define LOG_INFO(FMT, ...) log_logf(HPD_LOG_MODULE, HPD_L_INFO , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
+#define LOG_DEBUG(FMT, ...) log_logf(HPD_LOG_MODULE, HPD_L_DEBUG, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
 
-    return rc;
+#define LOG_RETURN(E, FMT, ...) do { LOG_DEBUG((FMT), ##__VA_ARGS__); return (E); } while(0)
 
-    error_free:
-        hpd_free(hpd);
-    error_return:
-        return rc;
+#define LOG_RETURN_E_NULL()  LOG_RETURN(HPD_E_NULL,  "Unexpected null pointer.")
+#define LOG_RETURN_E_ALLOC() LOG_RETURN(HPD_E_ALLOC, "Unable to allocate memory.")
+
+#define LOG_RETURN_HPD_STOPPED() LOG_RETURN(HPD_E_STATE, "Cannot perform %s() while hpd is stopped.", __func__)
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif //HOMEPORT_LOG_H

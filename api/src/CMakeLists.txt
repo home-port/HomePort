@@ -59,6 +59,12 @@ add_library(event
         event_api.c
         )
 
+add_library(log
+        ../include/log.h
+        log.c
+        log_api.c
+        )
+
 add_library(hpd SHARED
         ../include/model.h
         ../include/comm.h
@@ -71,6 +77,6 @@ add_library(hpd SHARED
         ../api.dox
 )
 set_target_properties(hpd PROPERTIES LINKER_LANGUAGE C)
-target_link_libraries(hpd daemon discovery value request event ev)
+target_link_libraries(hpd daemon discovery value request event ev log)
 install (TARGETS hpd DESTINATION lib)
 set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)

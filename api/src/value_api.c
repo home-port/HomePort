@@ -27,35 +27,37 @@
 
 #include "hpd_api.h"
 #include "value.h"
+#include "log.h"
 
 hpd_error_t hpd_value_alloc(hpd_value_t **value, const char *body, int len)
 {
-    if (!value) return HPD_E_NULL;
-    if (len < 0 && len != HPD_NULL_TERMINATED) return HPD_E_ARGUMENT;
+    if (!value) LOG_RETURN_E_NULL();
+    if (len < 0 && len != HPD_NULL_TERMINATED)
+        LOG_RETURN(HPD_E_ARGUMENT, "len must be >= 0 or HPD_NULL_TERMINATED.", __func__);
     return value_alloc(value, body, len);
 }
 
 hpd_error_t hpd_value_copy(hpd_value_t **dst, const hpd_value_t *src)
 {
-    if (!dst || ! src) return HPD_E_NULL;
+    if (!dst || ! src) LOG_RETURN_E_NULL();
     return value_copy(dst, src);
 }
 
 hpd_error_t hpd_value_free(hpd_value_t *value)
 {
-    if (!value) return HPD_E_NULL;
+    if (!value) LOG_RETURN_E_NULL();
     return value_free(value);
 }
 
 hpd_error_t hpd_value_set_header(hpd_value_t *value, const char *key, const char *val)
 {
-    if (!value || !key) return HPD_E_NULL;
+    if (!value || !key) LOG_RETURN_E_NULL();
     return value_set_header(value, key, val);
 }
 
 hpd_error_t hpd_value_set_headers(hpd_value_t *value, ...)
 {
-    if (!value) return HPD_E_NULL;
+    if (!value) LOG_RETURN_E_NULL();
 
     va_list vp;
     va_start(vp, value);
@@ -67,19 +69,19 @@ hpd_error_t hpd_value_set_headers(hpd_value_t *value, ...)
 
 hpd_error_t hpd_value_get_body(hpd_value_t *value, const char **body, size_t *len)
 {
-    if (!value || (!body && !len)) return HPD_E_NULL;
+    if (!value || (!body && !len)) LOG_RETURN_E_NULL();
     return value_get_body(value, body, len);
 }
 
 hpd_error_t hpd_value_get_header(hpd_value_t *value, const char *key, const char **val)
 {
-    if (!value || !key || !val) return HPD_E_NULL;
+    if (!value || !key || !val) LOG_RETURN_E_NULL();
     return value_get_header(value, key, val);
 }
 
 hpd_error_t hpd_value_get_headers(hpd_value_t *value, ...)
 {
-    if (!value) return HPD_E_NULL;
+    if (!value) LOG_RETURN_E_NULL();
 
     va_list vp;
     va_start(vp, value);
@@ -91,18 +93,18 @@ hpd_error_t hpd_value_get_headers(hpd_value_t *value, ...)
 
 hpd_error_t hpd_value_first_header(hpd_value_t *value, hpd_pair_t **pair)
 {
-    if (!value || !pair) return HPD_E_NULL;
+    if (!value || !pair) LOG_RETURN_E_NULL();
     return value_first_header(value, pair);
 }
 
 hpd_error_t hpd_value_next_header(hpd_pair_t **pair)
 {
-    if (!pair || !*pair) return HPD_E_NULL;
+    if (!pair || !*pair) LOG_RETURN_E_NULL();
     return value_next_header(pair);
 }
 
 hpd_error_t hpd_pair_get(hpd_pair_t *pair, const char **key, const char **value)
 {
-    if (!pair || (!key && !value)) return HPD_E_NULL;
+    if (!pair || (!key && !value)) LOG_RETURN_E_NULL();
     return value_get_pair(pair, key, value);
 }

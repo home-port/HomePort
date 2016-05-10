@@ -47,7 +47,7 @@ static json_t *add_attr(json_t *json, hpd_pair_t *pair)
 static json_t *add_id(json_t *json, const char *id)
 {
     json_t *value;
-    if (!(value = json_string(id)) || json_object_set_new(json, ":id", value) != 0) return NULL;
+    if (!(value = json_string(id)) || json_object_set_new(json, "_id", value) != 0) return NULL;
     return value;
 }
 
@@ -88,7 +88,7 @@ serviceToJson(hpd_service_id_t *service)
 
     char *uri = lri_alloc_uri(service);
     if (uri) {
-        if (!(value = json_string(uri)) || json_object_set_new(serviceJson, ":uri", value) != 0) {
+        if (!(value = json_string(uri)) || json_object_set_new(serviceJson, "_uri", value) != 0) {
             free(uri);
             return NULL;
         }
@@ -102,13 +102,13 @@ serviceToJson(hpd_service_id_t *service)
         switch (method) {
             case HPD_M_NONE:break;
             case HPD_M_GET:
-                if( ( ( value = json_string("1") ) == NULL ) || (json_object_set_new(serviceJson, ":get", value) != 0 ) )
+                if( ( ( value = json_string("1") ) == NULL ) || (json_object_set_new(serviceJson, "_get", value) != 0 ) )
                 {
                     return NULL;
                 }
                 break;
             case HPD_M_PUT:
-                if( ( ( value = json_string("1") ) == NULL ) || (json_object_set_new(serviceJson, ":put", value) != 0 ) )
+                if( ( ( value = json_string("1") ) == NULL ) || (json_object_set_new(serviceJson, "_put", value) != 0 ) )
                 {
                     return NULL;
                 }

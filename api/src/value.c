@@ -29,6 +29,7 @@
 #include "hpd_common.h"
 #include "hpd_map.h"
 #include "comm.h"
+#include "log.h"
 
 hpd_error_t value_alloc(hpd_value_t **value, const char *body, int len)
 {
@@ -45,7 +46,7 @@ hpd_error_t value_alloc(hpd_value_t **value, const char *body, int len)
     alloc_error:
         value_free(*value);
         (*value) = NULL;
-        return HPD_E_ALLOC;
+        LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t value_copy(hpd_value_t **dst, const hpd_value_t *src)
@@ -81,7 +82,7 @@ hpd_error_t value_set_header(hpd_value_t *value, const char *key, const char *va
     return HPD_E_SUCCESS;
 
     alloc_error:
-        return HPD_E_ALLOC;
+        LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t value_set_headers_v(hpd_value_t *value, va_list vp)
@@ -91,7 +92,7 @@ hpd_error_t value_set_headers_v(hpd_value_t *value, va_list vp)
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char *);
-        if (!val) return HPD_E_NULL;
+        if (!val) LOG_RETURN_E_NULL();
         if ((rc = value_set_header(value, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -117,7 +118,7 @@ hpd_error_t value_get_headers_v(hpd_value_t *value, va_list vp)
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char **);
-        if (!val) return HPD_E_NULL;
+        if (!val) LOG_RETURN_E_NULL();
         if ((rc = value_get_header(value, key, val))) return rc;
     }
     return HPD_E_SUCCESS;

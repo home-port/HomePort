@@ -358,10 +358,13 @@ lri_registerService(struct lr *lr, hpd_service_id_t *service)
 
     // TODO Prefix printf statements and print to stderr on errors !! (Entire hpdREST module)
     printf("[rest] Registering service %s...\n", uri);
+    hpd_service_id_t *copy;
+    // TODO Add printf
+    if ((rc = hpd_service_id_copy(&copy, service))) return rc;
     rc = lr_register_service(lr,
                              uri,
                              getState, NULL, setState, NULL,
-                             on_req_destroy, service);
+                             on_req_destroy, copy);
     free(uri);
     if(rc) {
         printf("Failed to register non secure service\n");

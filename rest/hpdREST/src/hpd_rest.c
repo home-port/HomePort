@@ -104,6 +104,7 @@ static hpd_error_t on_start(void *data, hpd_t *hpd)
 
     // Create and start libREST
     // TODO Not the best error handling (probably goes for the entire file)...
+    // TODO Definitely needs cleanup on errors !!!
     if (!(rest->lr = lr_create(&rest->settings, loop))) return HPD_E_UNKNOWN;
     if (lr_start(rest->lr)) return HPD_E_UNKNOWN;
 
@@ -149,7 +150,7 @@ static hpd_error_t on_parse_opt(void *data, const char *name, const char *arg)
 {
     hpd_rest_t *rest = data;
 
-    if (strcmp(name, "port")) {
+    if (strcmp(name, "port") == 0) {
         // TODO Lazy error handling:
         rest->settings.port = atoi(arg);
     } else {

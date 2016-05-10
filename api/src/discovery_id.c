@@ -28,6 +28,7 @@
 #include "discovery.h"
 #include "hpd_common.h"
 #include "daemon.h"
+#include "log.h"
 
 hpd_error_t discovery_set_aid(hpd_adapter_id_t **id, hpd_t *hpd, const char *aid)
 {
@@ -36,7 +37,7 @@ hpd_error_t discovery_set_aid(hpd_adapter_id_t **id, hpd_t *hpd, const char *aid
     return HPD_E_SUCCESS;
 
     alloc_error: // TODO Might leave id in invalid state
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_set_did(hpd_device_id_t **id, hpd_t *hpd, const char *aid, const char *did)
@@ -47,7 +48,7 @@ hpd_error_t discovery_set_did(hpd_device_id_t **id, hpd_t *hpd, const char *aid,
     return HPD_E_SUCCESS;
 
     alloc_error: // TODO Might leave id in invalid state
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_set_sid(hpd_service_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid)
@@ -59,7 +60,7 @@ hpd_error_t discovery_set_sid(hpd_service_id_t **id, hpd_t *hpd, const char *aid
     return HPD_E_SUCCESS;
 
     alloc_error: // TODO Might leave id in invalid state
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_set_pid(hpd_parameter_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid, const char *pid)
@@ -72,7 +73,7 @@ hpd_error_t discovery_set_pid(hpd_parameter_id_t **id, hpd_t *hpd, const char *a
     return HPD_E_SUCCESS;
 
     alloc_error: // TODO Might leave id in invalid state
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_alloc_aid(hpd_adapter_id_t **id, hpd_t *hpd, const char *aid)
@@ -86,7 +87,7 @@ hpd_error_t discovery_alloc_aid(hpd_adapter_id_t **id, hpd_t *hpd, const char *a
     return HPD_E_SUCCESS;
 
     alloc_error:
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_alloc_did(hpd_device_id_t **id, hpd_t *hpd, const char *aid, const char *did)
@@ -100,7 +101,7 @@ hpd_error_t discovery_alloc_did(hpd_device_id_t **id, hpd_t *hpd, const char *ai
     return HPD_E_SUCCESS;
 
     alloc_error:
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_alloc_sid(hpd_service_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid)
@@ -114,7 +115,7 @@ hpd_error_t discovery_alloc_sid(hpd_service_id_t **id, hpd_t *hpd, const char *a
     return HPD_E_SUCCESS;
 
     alloc_error:
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_alloc_pid(hpd_parameter_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid,
@@ -129,7 +130,7 @@ hpd_error_t discovery_alloc_pid(hpd_parameter_id_t **id, hpd_t *hpd, const char 
     return HPD_E_SUCCESS;
 
     alloc_error:
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_copy_aid(hpd_adapter_id_t **dst, hpd_adapter_id_t *src)
@@ -186,41 +187,37 @@ hpd_error_t discovery_free_pid(hpd_parameter_id_t *id)
 }
 
 #define FIND_ADAPTER(ID, ADAPTER) do { \
-    hpd_adapter_t *a = NULL; \
-    HPD_TAILQ_FOREACH(a, &(ID)->hpd->configuration->adapters) \
-        if (strcmp(a->id, (ID)->aid) == 0) break; \
-    if (!a) return HPD_E_NOT_FOUND; \
-    (ADAPTER) = a; \
+    (ADAPTER) = NULL; \
+    HPD_TAILQ_FOREACH((ADAPTER), &(ID)->hpd->configuration->adapters) \
+        if (strcmp((ADAPTER)->id, (ID)->aid) == 0) break; \
+    if (!(ADAPTER)) return HPD_E_NOT_FOUND; \
 } while (0)
 
 #define FIND_DEVICE(ID, DEVICE) do { \
     hpd_adapter_t *a = NULL; \
     FIND_ADAPTER(id, a); \
-    hpd_device_t *d = NULL; \
-    HPD_TAILQ_FOREACH(d, a->devices) \
-        if (strcmp(d->id, (ID)->did) == 0) break; \
-    if (!d) return HPD_E_NOT_FOUND; \
-    (DEVICE) = d; \
+    (DEVICE) = NULL; \
+    HPD_TAILQ_FOREACH((DEVICE), a->devices) \
+        if (strcmp((DEVICE)->id, (ID)->did) == 0) break; \
+    if (!(DEVICE)) return HPD_E_NOT_FOUND; \
 } while (0)
 
 #define FIND_SERVICE(ID, SERVICE) do { \
     hpd_device_t *d = NULL; \
     FIND_DEVICE(id, d); \
-    hpd_service_t *s = NULL; \
-    HPD_TAILQ_FOREACH(s, d->services) \
-        if (strcmp(s->id, (ID)->sid) == 0) break; \
-    if (!s) return HPD_E_NOT_FOUND; \
-    (SERVICE) = s; \
+    (SERVICE) = NULL; \
+    HPD_TAILQ_FOREACH((SERVICE), d->services) \
+        if (strcmp((SERVICE)->id, (ID)->sid) == 0) break; \
+    if (!(SERVICE)) return HPD_E_NOT_FOUND; \
 } while (0)
 
 #define FIND_PARAMETER(ID, PARAMETER) do { \
     hpd_service_t *s = NULL; \
     FIND_SERVICE(id, s); \
-    hpd_parameter_t *p = NULL; \
-    HPD_TAILQ_FOREACH(p, s->parameters) \
-        if (strcmp(p->id, (ID)->pid) == 0) break; \
-    if (!p) return HPD_E_NOT_FOUND; \
-    (PARAMETER) = p; \
+    (PARAMETER) = NULL; \
+    HPD_TAILQ_FOREACH((PARAMETER), s->parameters) \
+        if (strcmp((PARAMETER)->id, (ID)->pid) == 0) break; \
+    if (!(PARAMETER)) return HPD_E_NOT_FOUND; \
 } while (0)
 
 hpd_error_t discovery_find_adapter(hpd_adapter_id_t *id, hpd_adapter_t **adapter)

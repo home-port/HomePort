@@ -339,6 +339,12 @@
  * valid in the same interval. The pointer to the event loop (as obtained with hpd_get_loop()) is valid between calls to
  * on_start and on_stop.
  *
+ * \subsection sec_logging Logging
+ *
+ * \snippet include/hpd_types.h hpd_log_level_t
+ *
+ * \snippet include/hpd_shared_api.h log functions
+ *
  * \subsection sec_indirect_refs Indirect references
  *
  * Through the following sections we shall utilise indirect references to objects in the data mode (adapters, devices,

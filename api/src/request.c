@@ -31,6 +31,7 @@
 #include "hpd_common.h"
 #include <ev.h>
 #include "daemon.h"
+#include "log.h"
 
 hpd_error_t request_alloc_request(hpd_request_t **request, hpd_service_id_t *id, hpd_method_t method, hpd_response_f on_response)
 {
@@ -43,7 +44,12 @@ hpd_error_t request_alloc_request(hpd_request_t **request, hpd_service_id_t *id,
 
     alloc_error:
         request_free_request(*request);
-        return rc;
+    switch (rc) {
+        case HPD_E_ALLOC:
+            LOG_RETURN_E_ALLOC();
+        default:
+            return rc;
+    }
 }
 
 hpd_error_t request_free_request(hpd_request_t *request)
@@ -69,7 +75,7 @@ hpd_error_t request_set_request_value(hpd_request_t *request, hpd_value_t *value
     return HPD_E_SUCCESS;
 
     alloc_error:
-        return HPD_E_ALLOC;
+        LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t request_set_request_data(hpd_request_t *request, void *data, hpd_free_f on_free)
@@ -107,7 +113,7 @@ hpd_error_t request_alloc_response(hpd_response_t **response, hpd_request_t *req
 
     alloc_error:
     request_free_response(*response);
-        return HPD_E_ALLOC;
+        LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t request_free_response(hpd_response_t *response)
@@ -132,7 +138,7 @@ hpd_error_t request_set_response_value(hpd_response_t *response, hpd_value_t *va
     return HPD_E_SUCCESS;
 
     alloc_error:
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t request_get_response_status(hpd_response_t *response, hpd_status_t *status)
@@ -179,6 +185,7 @@ static void on_request(hpd_ev_loop_t *loop, ev_async *w, int revents)
     hpd_service_id_t *service_id = request->service;
 
     TAILQ_REMOVE(&service_id->hpd->request_watchers, async, HPD_TAILQ_FIELD);
+    ev_async_stop(loop, w);
     free(async);
 
     hpd_service_t *service;
@@ -186,6 +193,7 @@ static void on_request(hpd_ev_loop_t *loop, ev_async *w, int revents)
     
     switch (discovery_find_service(service_id, &service)) {
         case HPD_E_NOT_FOUND: {
+            LOG_DEBUG("Did not find service %s/%s/%s.", service_id->aid, service_id->did, service_id->sid);
             if ((rc = request_alloc_response(&response, request, HPD_S_404))) goto error_free_request;
             if ((rc = request_respond(response))) goto error_free_response;
             return;
@@ -223,6 +231,7 @@ static void on_respond(hpd_ev_loop_t *loop, ev_async *w, int revents)
     hpd_service_id_t *service_id = request->service;
 
     TAILQ_REMOVE(&service_id->hpd->request_watchers, async, HPD_TAILQ_FIELD);
+    ev_async_stop(loop, w);
     free(async);
 
     if (request->on_response && (rc = request->on_response(response))) {
@@ -243,12 +252,13 @@ hpd_error_t request_request(hpd_request_t *request)
     async->watcher.data = async;
     hpd_t *hpd = request->service->hpd;
     ev_async_start(hpd->loop, &async->watcher);
+    ev_async_send(hpd->loop, &async->watcher);
     TAILQ_INSERT_TAIL(&hpd->request_watchers, async, HPD_TAILQ_FIELD);
     return HPD_E_SUCCESS;
 
     alloc_error:
     free(async);
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t request_respond(hpd_response_t *response)
@@ -260,10 +270,11 @@ hpd_error_t request_respond(hpd_response_t *response)
     async->watcher.data = async;
     hpd_t *hpd = response->request->service->hpd;
     ev_async_start(hpd->loop, &async->watcher);
+    ev_async_send(hpd->loop, &async->watcher);
     TAILQ_INSERT_TAIL(&hpd->respond_watchers, async, HPD_TAILQ_FIELD);
     return HPD_E_SUCCESS;
 
     alloc_error:
     free(async);
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }

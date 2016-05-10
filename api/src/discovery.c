@@ -30,6 +30,7 @@
 #include "discovery.h"
 #include "daemon.h"
 #include "hpd_common.h"
+#include "log.h"
 
 hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const char *id)
 {
@@ -44,7 +45,7 @@ hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const char *id)
     alloc_error:
     if (*adapter) discovery_free_adapter(*adapter);
     (*adapter) = NULL;
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_alloc_device(hpd_device_t **device, const char *id)
@@ -60,7 +61,7 @@ hpd_error_t discovery_alloc_device(hpd_device_t **device, const char *id)
     alloc_error:
     if (*device) discovery_free_device(*device);
     (*device) = NULL;
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_alloc_service(hpd_service_t **service, const char *id)
@@ -76,7 +77,7 @@ hpd_error_t discovery_alloc_service(hpd_service_t **service, const char *id)
     alloc_error:
     if (*service) discovery_free_service(*service);
     (*service) = NULL;
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_alloc_parameter(hpd_parameter_t **parameter, const char *id)
@@ -90,7 +91,7 @@ hpd_error_t discovery_alloc_parameter(hpd_parameter_t **parameter, const char *i
     alloc_error:
     if (*parameter) discovery_free_parameter(*parameter);
     (*parameter) = NULL;
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_free_adapter(hpd_adapter_t *adapter)
@@ -183,11 +184,16 @@ hpd_error_t discovery_attach_adapter(hpd_t *hpd, hpd_adapter_t *adapter)
         return rc;
     }
 
+    hpd_device_t *device;
+    HPD_TAILQ_FOREACH(device, adapter->devices) {
+        device->adapter = copy;
+    }
+
     free(adapter);
     return HPD_E_SUCCESS;
 
     alloc_error:
-        return HPD_E_ALLOC;
+        LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_attach_device(hpd_adapter_t *adapter, hpd_device_t *device)
@@ -205,11 +211,16 @@ hpd_error_t discovery_attach_device(hpd_adapter_t *adapter, hpd_device_t *device
         return rc;
     }
 
+    hpd_service_t *service;
+    HPD_TAILQ_FOREACH(service, device->services) {
+        service->device = copy;
+    }
+
     free(device);
     return HPD_E_SUCCESS;
 
     alloc_error:
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_attach_service(hpd_device_t *device, hpd_service_t *service)
@@ -220,11 +231,16 @@ hpd_error_t discovery_attach_service(hpd_device_t *device, hpd_service_t *servic
     TAILQ_INSERT_TAIL(device->services, copy, HPD_TAILQ_FIELD);
     copy->device = device;
 
+    hpd_parameter_t *parameter;
+    HPD_TAILQ_FOREACH(parameter, service->parameters) {
+        parameter->service = copy;
+    }
+
     free(service);
     return HPD_E_SUCCESS;
 
     alloc_error:
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_attach_parameter(hpd_service_t *service, hpd_parameter_t *parameter)
@@ -239,7 +255,7 @@ hpd_error_t discovery_attach_parameter(hpd_service_t *service, hpd_parameter_t *
     return HPD_E_SUCCESS;
 
     alloc_error:
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_detach_adapter(hpd_adapter_t *adapter)
@@ -359,7 +375,7 @@ hpd_error_t discovery_get_adapter_attrs_v(hpd_adapter_t *adapter, va_list vp)
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char **);
-        if (!val) return HPD_E_NULL;
+        if (!val) LOG_RETURN_E_NULL();
         if ((rc = discovery_get_adapter_attr(adapter, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -372,7 +388,7 @@ hpd_error_t discovery_get_device_attrs_v(hpd_device_t *device, va_list vp)
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char **);
-        if (!val) return HPD_E_NULL;
+        if (!val) LOG_RETURN_E_NULL();
         if ((rc = discovery_get_device_attr(device, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -385,7 +401,7 @@ hpd_error_t discovery_get_service_attrs_v(hpd_service_t *service, va_list vp)
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char **);
-        if (!val) return HPD_E_NULL;
+        if (!val) LOG_RETURN_E_NULL();
         if ((rc = discovery_get_service_attr(service, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -398,7 +414,7 @@ hpd_error_t discovery_get_parameter_attrs_v(hpd_parameter_t *parameter, va_list 
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char **);
-        if (!val) return HPD_E_NULL;
+        if (!val) LOG_RETURN_E_NULL();
         if ((rc = discovery_get_parameter_attr(parameter, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -443,7 +459,7 @@ hpd_error_t discovery_set_adapter_attr(hpd_adapter_t *adapter, const char *key, 
     return HPD_E_SUCCESS;
 
     alloc_error:
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_set_device_attr(hpd_device_t *device, const char *key, const char *val)
@@ -452,7 +468,7 @@ hpd_error_t discovery_set_device_attr(hpd_device_t *device, const char *key, con
     return HPD_E_SUCCESS;
 
     alloc_error:
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_set_service_attr(hpd_service_t *service, const char *key, const char *val)
@@ -461,7 +477,7 @@ hpd_error_t discovery_set_service_attr(hpd_service_t *service, const char *key, 
     return HPD_E_SUCCESS;
 
     alloc_error:
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_set_parameter_attr(hpd_parameter_t *parameter, const char *key, const char *val)
@@ -470,7 +486,7 @@ hpd_error_t discovery_set_parameter_attr(hpd_parameter_t *parameter, const char 
     return HPD_E_SUCCESS;
 
     alloc_error:
-    return HPD_E_ALLOC;
+    LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_set_service_action(hpd_service_t *service, const hpd_method_t method, hpd_action_f action)
@@ -489,7 +505,7 @@ hpd_error_t discovery_set_adapter_attrs_v(hpd_adapter_t *adapter, va_list vp)
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char *);
-        if (!val) return HPD_E_NULL;
+        if (!val) LOG_RETURN_E_NULL();
         if ((rc = discovery_set_adapter_attr(adapter, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -502,7 +518,7 @@ hpd_error_t discovery_set_device_attrs_v(hpd_device_t *device, va_list vp)
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char *);
-        if (!val) return HPD_E_NULL;
+        if (!val) LOG_RETURN_E_NULL();
         if ((rc = discovery_set_device_attr(device, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -515,7 +531,7 @@ hpd_error_t discovery_set_service_attrs_v(hpd_service_t *service, va_list vp)
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char *);
-        if (!val) return HPD_E_NULL;
+        if (!val) LOG_RETURN_E_NULL();
         if ((rc = discovery_set_service_attr(service, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -528,7 +544,7 @@ hpd_error_t discovery_set_parameter_attrs_v(hpd_parameter_t *parameter, va_list 
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char *);
-        if (!val) return HPD_E_NULL;
+        if (!val) LOG_RETURN_E_NULL();
         if ((rc = discovery_set_parameter_attr(parameter, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -541,9 +557,10 @@ hpd_error_t discovery_set_service_actions_v(hpd_service_t *service, va_list vp)
     hpd_action_f action;
 
     while ((method = va_arg(vp, hpd_method_t)) != HPD_M_NONE) {
-        if (method <= HPD_M_NONE || method >= HPD_M_COUNT) return HPD_E_ARGUMENT;
+        if (method <= HPD_M_NONE || method >= HPD_M_COUNT)
+            LOG_RETURN(HPD_E_ARGUMENT, "Unknown method given to %s() - did you end the list with HPD_M_NONE?", __func__);
         action = va_arg(vp, hpd_action_f);
-        if (!action) return HPD_E_NULL;
+        if (!action) LOG_RETURN_E_NULL();
         if ((rc = discovery_set_service_action(service, method, action))) return rc;
     }
     return HPD_E_SUCCESS;
