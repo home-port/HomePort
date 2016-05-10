@@ -27,7 +27,7 @@
 
 #include "value.h"
 #include "hpd_common.h"
-#include "map.h"
+#include "hpd_map.h"
 #include "comm.h"
 
 hpd_error_t value_alloc(hpd_value_t **value, const char *body, int len)
@@ -53,7 +53,7 @@ hpd_error_t value_copy(hpd_value_t **dst, const hpd_value_t *src)
     hpd_error_t rc;
     if ((rc = value_alloc(dst, src->body, (int) src->len))) return rc;
     hpd_pair_t *pair;
-    HPD_TAILQ_FOREACH(pair, src->headers) {
+    MAP_FOREACH(pair, src->headers) {
         if ((rc = value_set_header(*dst, pair->k, pair->v))) {
             value_free(*dst);
             return rc;

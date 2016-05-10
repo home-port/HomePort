@@ -30,7 +30,7 @@
 
 #include "hpd_types.h"
 #include "hpd_queue.h"
-#include "map.h"
+#include "hpd_map.h"
 #include "comm.h"
 
 #ifdef __cplusplus

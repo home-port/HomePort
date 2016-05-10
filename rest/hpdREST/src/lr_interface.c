@@ -30,7 +30,7 @@
 #include <string.h>
 #include <curl/curl.h>
 #include "libREST.h"
-#include "map.h"
+#include "hpd_map.h"
 #include "hpd_application_api.h"
 
 #define string_copy(copy, original) 			\

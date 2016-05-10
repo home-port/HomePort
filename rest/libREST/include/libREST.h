@@ -37,7 +37,7 @@
 #include "http_types.h"
 #include <stddef.h>
 #include <stdarg.h>
-#include "map.h"
+#include "hpd_map.h"
 
 // Structs
 struct lr;

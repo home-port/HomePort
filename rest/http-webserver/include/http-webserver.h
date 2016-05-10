@@ -35,7 +35,7 @@
 #define HTTP_WEBSERVER_H
 
 #include "http_types.h"
-#include "map.h"
+#include "hpd_map.h"
 #include <stddef.h>
 #include <stdarg.h>
 

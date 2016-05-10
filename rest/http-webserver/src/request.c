@@ -36,7 +36,7 @@
 #include "url_parser.h"
 #include "header_parser.h"
 #include "webserver.h"
-#include "map.h"
+#include "hpd_map.h"
 
 #include <stdio.h>
 

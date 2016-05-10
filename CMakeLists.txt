@@ -85,6 +85,8 @@ else(DOXYGEN_FOUND)
     message(WARNING "Please install doxygen to generate documentation")
 endif(DOXYGEN_FOUND)
 
+add_subdirectory(common)
+include_directories(${CMAKE_SOURCE_DIR}/common/include)
 add_subdirectory(api)
 add_subdirectory(example)
 add_subdirectory(rest)

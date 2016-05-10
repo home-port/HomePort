@@ -38,10 +38,10 @@
 extern "C" {
 #endif
 
-typedef struct map map_t;
+typedef struct hpd_map map_t;
 typedef struct hpd_pair hpd_pair_t;
 
-TAILQ_HEAD(map, hpd_pair);
+TAILQ_HEAD(hpd_map, hpd_pair);
 
 struct hpd_pair {
     TAILQ_ENTRY(hpd_pair) HPD_TAILQ_FIELD; //< Tailq members
@@ -70,7 +70,7 @@ struct hpd_pair {
 #define MAP_GET(MAP, K, V) do { \
     hpd_pair_t *attr; \
     (V) = NULL; \
-    HPD_TAILQ_FOREACH(attr, (MAP)) \
+    MAP_FOREACH(attr, (MAP)) \
         if (strcmp(attr->k, (K)) == 0) { \
             (V) = attr->v; \
             break; \
@@ -80,7 +80,7 @@ struct hpd_pair {
 #define MAP_GET_LEN(MAP, K, K_LEN, V) do { \
     hpd_pair_t *attr; \
     (V) = NULL; \
-    HPD_TAILQ_FOREACH(attr, (MAP)) \
+    MAP_FOREACH(attr, (MAP)) \
         if (strncmp(attr->k, (K), (K_LEN)) == 0) { \
             (V) = attr->v; \
             break; \
@@ -90,7 +90,7 @@ struct hpd_pair {
 // TODO Memory left in a inconsistent state if this fails with HPD_E_ALLOC
 #define MAP_SET(MAP, K, V) do { \
     hpd_pair_t *attr = NULL; \
-    HPD_TAILQ_FOREACH(attr, (MAP)) \
+    MAP_FOREACH(attr, (MAP)) \
         if (strcmp(attr->k, (K)) == 0) \
             break; \
     if ((V) == NULL) { \
@@ -108,7 +108,7 @@ struct hpd_pair {
 // TODO Memory left in a inconsistent state if this fails with HPD_E_ALLOC
 #define MAP_SET_LEN(MAP, K, K_LEN, V, V_LEN) do { \
     hpd_pair_t *attr = NULL; \
-    HPD_TAILQ_FOREACH(attr, (MAP)) \
+    MAP_FOREACH(attr, (MAP)) \
         if (strncmp(attr->k, (K), (K_LEN)) == 0) \
             break; \
     if ((V) == NULL) { \

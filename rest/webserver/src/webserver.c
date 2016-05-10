@@ -32,6 +32,7 @@
  */
 
 #include "webserver.h"
+#include "hpd_queue.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -46,76 +47,82 @@
 #include <fcntl.h>
 #include <ctype.h>
 
+TAILQ_HEAD(ws_conns, ws_conn);
+
 /// Instance of a webserver
 struct ws {
-   struct ws_settings settings;    ///< Settings
-   char port_str[6];               ///< Port number - as a string
-   struct ev_loop *loop;           ///< Event loop
-   struct ll *conns;               ///< Linked List of connections
-   int sockfd;                     ///< Socket file descriptor
-   struct ev_io watcher;           ///< New connection watcher
+    struct ws_settings settings;    ///< Settings
+    char port_str[6];               ///< Port number - as a string
+    struct ev_loop *loop;           ///< Event loop
+    struct ws_conns conns;          ///< Linked List of connections
+    int sockfd;                     ///< Socket file descriptor
+    struct ev_io watcher;           ///< New connection watcher
 };
 
 /// All data to represent a connection
 struct ws_conn {
-   struct ws *instance;             ///< Webserver instance
-   char ip[INET6_ADDRSTRLEN];       ///< IP address of client
-   struct ev_timer timeout_watcher; ///< Timeout watcher
-   int timeout;                     ///< Restart timeout watcher ?
-   struct ev_io recv_watcher;       ///< Recieve watcher
-   struct ev_io send_watcher;       ///< Send watcher
-   char *send_msg;                  ///< Data to send
-   size_t send_len;                 ///< Length of data to send
-   int send_close;                  ///< Close socket after send ?
-   void *ctx;                       ///< Connection context
+    TAILQ_ENTRY(ws_conn) HPD_TAILQ_FIELD;
+    struct ws *instance;             ///< Webserver instance
+    char ip[INET6_ADDRSTRLEN];       ///< IP address of client
+    struct ev_timer timeout_watcher; ///< Timeout watcher
+    int timeout;                     ///< Restart timeout watcher ?
+    struct ev_io recv_watcher;       ///< Recieve watcher
+    struct ev_io send_watcher;       ///< Send watcher
+    char *send_msg;                  ///< Data to send
+    size_t send_len;                 ///< Length of data to send
+    int send_close;                  ///< Close socket after send ?
+    void *ctx;                       ///< Connection context
 };
 
 void ws_print(struct ws *ws)
 {
-   struct ll_iter *iter;
-   size_t conns;
+    size_t conns;
 
-   printf("----- Webserver -----\n");
-   if (!ws) {
-      printf("   (null)\n");
-   } else {
-      printf("   Port: %i\n", ws->settings.port);
-      printf("   Connection timeout: %i\n", ws->settings.timeout);
-      printf("   Chunk size: %zu\n", ws->settings.maxdatasize);
-      printf("   Callbacks set:");
-      if (ws->settings.on_connect) printf(" connect");
-      if (ws->settings.on_receive) printf(" receive");
-      if (ws->settings.on_disconnect) printf(" disconnect");
-      printf("\n");
-      ll_count(iter, ws->conns, conns);
-      printf("   Connections: %zu\n", conns);
-      printf("   Socket descriptor: %i\n", ws->sockfd);
-   }
+    printf("----- Webserver -----\n");
+    if (!ws) {
+        printf("   (null)\n");
+    } else {
+        printf("   Port: %i\n", ws->settings.port);
+        printf("   Connection timeout: %i\n", ws->settings.timeout);
+        printf("   Chunk size: %zu\n", ws->settings.maxdatasize);
+        printf("   Callbacks set:");
+        if (ws->settings.on_connect) printf(" connect");
+        if (ws->settings.on_receive) printf(" receive");
+        if (ws->settings.on_disconnect) printf(" disconnect");
+        printf("\n");
+
+        conns = 0;
+        struct ws_conn *conn;
+        HPD_TAILQ_FOREACH(conn, &ws->conns) conns++;
+
+        printf("   Connections: %zu\n", conns);
+        printf("   Socket descriptor: %i\n", ws->sockfd);
+    }
 }
 
 void ws_conn_print(struct ws_conn *conn)
 {
-   size_t i;
+    size_t i;
 
-   printf("----- Connection -----\n");
-   if (!conn) {
-      printf("   (null)\n");
-   } else {
-      printf("   Client: %s\n", conn->ip);
-      printf("   Timeout: ");
-      if (conn->timeout) printf("Active\n");
-      else printf("Deactive\n");
-      printf("   Data waiting (%zu chars): '", conn->send_len);
-      for (i = 0; i < conn->send_len; i++) {
-         if (conn->send_msg[i] == '\\') printf("\\\\");
-         else if (isprint(conn->send_msg[i])) printf("%c", conn->send_msg[i]);
-         else printf("\\%i", conn->send_msg[i]);
-      }
-      printf("'\n");
-      printf("   After send: ");
-      if (conn->send_close) printf("Close connection\n");
-      else printf("Keep open\n");
-   }
+    printf("----- Connection -----\n");
+    if (!conn) {
+        printf("   (null)\n");
+    } else {
+        printf("   Client: %s\n", conn->ip);
+        printf("   Timeout: ");
+        if (conn->timeout) printf("Active\n");
+        else printf("Deactive\n");
+        printf("   Data waiting (%zu chars): '", conn->send_len);
+        for (i = 0; i < conn->send_len; i++) {
+            if (conn->send_msg[i] == '\\') printf("\\\\");
+            else if (isprint(conn->send_msg[i])) printf("%c", conn->send_msg[i]);
+            else printf("\\%i", conn->send_msg[i]);
+        }
+        printf("'\n");
+        printf("   After send: ");
+        if (conn->send_close) printf("Close connection\n");
+        else printf("Keep open\n");
+    }
 }
 
 /// Get the socket file descriptor for a port number.
@@ -128,76 +135,76 @@ void ws_conn_print(struct ws_conn *conn)
  *  \return The socket file descriptor, that should be used later for
  *  closing again.
  */
-static int bind_listen(char *port) 
+static int bind_listen(char *port)
 {
-   int status, sockfd;
-   struct addrinfo hints;
-   struct addrinfo *servinfo, *p;
+    int status, sockfd;
+    struct addrinfo hints;
+    struct addrinfo *servinfo, *p;
 
-   // Clear struct and set requirements for socket
-   memset(&hints, 0, sizeof hints);
-   hints.ai_family = AF_UNSPEC;     // IPv4/IPv6
-   hints.ai_socktype = SOCK_STREAM; // TCP Stream
-   hints.ai_flags = AI_PASSIVE;     // Wildcard address
+    // Clear struct and set requirements for socket
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_UNSPEC;     // IPv4/IPv6
+    hints.ai_socktype = SOCK_STREAM; // TCP Stream
+    hints.ai_flags = AI_PASSIVE;     // Wildcard address
 
-   // Get address infos we later use to open socket with
-   if ((status = getaddrinfo(NULL, port, &hints, &servinfo)) != 0) {
-      fprintf(stderr, "getaddrinfo error: %s\n", gai_strerror(status));
-      freeaddrinfo(servinfo);
-      return -1;
-   }
+    // Get address infos we later use to open socket with
+    if ((status = getaddrinfo(NULL, port, &hints, &servinfo)) != 0) {
+        fprintf(stderr, "getaddrinfo error: %s\n", gai_strerror(status));
+        freeaddrinfo(servinfo);
+        return -1;
+    }
 
-   // Loop through results and bind to first
-   for (p = servinfo; p != NULL; p=p->ai_next) {
+    // Loop through results and bind to first
+    for (p = servinfo; p != NULL; p=p->ai_next) {
 
-      // Create socket
-      if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) < 0) {
-         perror("socket");
-         continue;
-      }
+        // Create socket
+        if ((sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) < 0) {
+            perror("socket");
+            continue;
+        }
 
-      // Change to non-blocking sockets
-      fcntl(sockfd, F_SETFL, O_NONBLOCK);
+        // Change to non-blocking sockets
+        fcntl(sockfd, F_SETFL, O_NONBLOCK);
 
-      // TODO Reuse addr is on for testing purposes
+        // TODO Reuse addr is on for testing purposes
 #ifdef DEBUG
-      int yes = 1;
-      if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
-         close(sockfd);
-         perror("setsockopt");
-         continue;
-      }
+        int yes = 1;
+        if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+            close(sockfd);
+            perror("setsockopt");
+            continue;
+        }
 #endif
 
-      // Bind to socket
-      if (bind(sockfd, p->ai_addr, p->ai_addrlen) != 0) {
-         close(sockfd);
-         perror("bind");
-         continue;
-      }
+        // Bind to socket
+        if (bind(sockfd, p->ai_addr, p->ai_addrlen) != 0) {
+            close(sockfd);
+            perror("bind");
+            continue;
+        }
 
-      break;
-   }
+        break;
+    }
 
-   // Check if we binded to anything
-   if (p == NULL) {
-      close(sockfd);
-      fprintf(stderr, "failed to bind\n");
-      freeaddrinfo(servinfo);
-      return -1;
-   }
+    // Check if we binded to anything
+    if (p == NULL) {
+        close(sockfd);
+        fprintf(stderr, "failed to bind\n");
+        freeaddrinfo(servinfo);
+        return -1;
+    }
 
-   // Clean up
-   freeaddrinfo(servinfo);
+    // Clean up
+    freeaddrinfo(servinfo);
 
-   // Listen on socket
-   if (listen(sockfd, SOMAXCONN) < 0) {
-      close(sockfd);
-      perror("listen");
-      return -1;
-   }
+    // Listen on socket
+    if (listen(sockfd, SOMAXCONN) < 0) {
+        close(sockfd);
+        perror("listen");
+        return -1;
+    }
 
-   return sockfd;
+    return sockfd;
 }
 
 /// Get the in_addr from a sockaddr (IPv4 or IPv6)
@@ -213,13 +220,13 @@ static int bind_listen(char *port)
  */
 static void *get_in_addr(struct sockaddr *sa)
 {
-   if (sa->sa_family == AF_INET) {
-      // IPv4
-      return &(((struct sockaddr_in*)sa)->sin_addr.s_addr);
-   } else {
-      // IPv6
-      return &(((struct sockaddr_in6*)sa)->sin6_addr.s6_addr);
-   }
+    if (sa->sa_family == AF_INET) {
+        // IPv4
+        return &(((struct sockaddr_in*)sa)->sin_addr.s_addr);
+    } else {
+        // IPv6
+        return &(((struct sockaddr_in6*)sa)->sin6_addr.s6_addr);
+    }
 }
 
 /// Recieve callback for io-watcher
@@ -235,42 +242,42 @@ static void *get_in_addr(struct sockaddr *sa)
 static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher,
                          int revents)
 {
-   ssize_t recieved;
-   struct ws_conn *conn = watcher->data;
-   struct ws_settings *settings = &conn->instance->settings;
-   size_t maxdatasize = settings->maxdatasize;
-   char buffer[maxdatasize];
+    ssize_t recieved;
+    struct ws_conn *conn = watcher->data;
+    struct ws_settings *settings = &conn->instance->settings;
+    size_t maxdatasize = settings->maxdatasize;
+    char buffer[maxdatasize];
 
-   printf("[ws] Receiving data from %s\n", conn->ip);
-   if ((recieved = recv(watcher->fd, buffer, maxdatasize-1, 0)) < 0) {
-      if (recieved == -1 && errno == EWOULDBLOCK) {
-         fprintf(stderr, "libev callbacked called without data to " \
+    printf("[ws] Receiving data from %s\n", conn->ip);
+    if ((recieved = recv(watcher->fd, buffer, maxdatasize-1, 0)) < 0) {
+        if (recieved == -1 && errno == EWOULDBLOCK) {
+            fprintf(stderr, "libev callbacked called without data to " \
                          "receive (conn: %s)", conn->ip);
-         return;
-      }
-      perror("recv");
-      ws_conn_kill(conn);
-      return;
-   } else if (recieved == 0) {
-      printf("[ws] Connection closed by %s\n", conn->ip);
-      ws_conn_kill(conn);
-      return;
-   }
+            return;
+        }
+        perror("recv");
+        ws_conn_kill(conn);
+        return;
+    } else if (recieved == 0) {
+        printf("[ws] Connection closed by %s\n", conn->ip);
+        ws_conn_kill(conn);
+        return;
+    }
 
-   if (settings->on_receive) {
-      if (settings->on_receive(conn->instance, conn, 
-                               settings->ws_ctx, &conn->ctx,
-                               buffer, recieved)) {
-         ws_conn_kill(conn);
-         return;
-      }
-   }
+    if (settings->on_receive) {
+        if (settings->on_receive(conn->instance, conn,
+                                 settings->ws_ctx, &conn->ctx,
+                                 buffer, recieved)) {
+            ws_conn_kill(conn);
+            return;
+        }
+    }
 
-   // Reset timeout
-   if (conn->timeout) {
-      conn->timeout_watcher.repeat = conn->instance->settings.timeout;
-      ev_timer_again(loop, &conn->timeout_watcher);
-   }
+    // Reset timeout
+    if (conn->timeout) {
+        conn->timeout_watcher.repeat = conn->instance->settings.timeout;
+        ev_timer_again(loop, &conn->timeout_watcher);
+    }
 }
 
 /// Send callback for io-watcher
@@ -285,36 +292,36 @@ static void conn_recv_cb(struct ev_loop *loop, struct ev_io *watcher,
   * \param  revents  Not used
  */
 static void conn_send_cb(struct ev_loop *loop, struct ev_io *watcher,
-      int revents)
+                         int revents)
 {
-   struct ws_conn *conn = watcher->data;
-   size_t sent;
+    struct ws_conn *conn = watcher->data;
+    size_t sent;
 
-   sent = send(watcher->fd, conn->send_msg, conn->send_len, 0);
-   if (sent == -1) {
-      perror("send");
-   } else if (sent == conn->send_len) {
-      free(conn->send_msg);
-      conn->send_msg = NULL;
-      conn->send_len = 0;
-   } else {
-      conn->send_len -= sent;
-      char *s = malloc(conn->send_len*sizeof(char));
-      if (!s) {
-         fprintf(stderr, "Cannot allocate enough memory\n");
-         free(conn->send_msg);
-         conn->send_msg = NULL;
-         conn->send_len = 0;
-      } else {
-         strcpy(s, &conn->send_msg[sent]);
-         free(conn->send_msg);
-         conn->send_msg = s;
-         return;
-      }
-   }
+    sent = send(watcher->fd, conn->send_msg, conn->send_len, 0);
+    if (sent == -1) {
+        perror("send");
+    } else if (sent == conn->send_len) {
+        free(conn->send_msg);
+        conn->send_msg = NULL;
+        conn->send_len = 0;
+    } else {
+        conn->send_len -= sent;
+        char *s = malloc(conn->send_len*sizeof(char));
+        if (!s) {
+            fprintf(stderr, "Cannot allocate enough memory\n");
+            free(conn->send_msg);
+            conn->send_msg = NULL;
+            conn->send_len = 0;
+        } else {
+            strcpy(s, &conn->send_msg[sent]);
+            free(conn->send_msg);
+            conn->send_msg = s;
+            return;
+        }
+    }
 
-   ev_io_stop(conn->instance->loop, &conn->send_watcher);
-   if (conn->send_close) ws_conn_kill(conn);
+    ev_io_stop(conn->instance->loop, &conn->send_watcher);
+    if (conn->send_close) ws_conn_kill(conn);
 }
 
 /// Timeout callback for timeout watcher
@@ -329,9 +336,9 @@ static void conn_timeout_cb(struct ev_loop *loop,
                             struct ev_timer *watcher,
                             int revents)
 {
-   struct ws_conn *conn = watcher->data;
-   printf("timeout on %s [%ld]\n", conn->ip, (long)conn);
-   ws_conn_kill(conn);
+    struct ws_conn *conn = watcher->data;
+    printf("timeout on %s [%ld]\n", conn->ip, (long)conn);
+    ws_conn_kill(conn);
 }
 
 /// Add a connection to an instance
@@ -346,15 +353,8 @@ static void conn_timeout_cb(struct ev_loop *loop,
 static int ws_instance_add_conn(struct ws *instance,
                                 struct ws_conn *conn)
 {
-   struct ll_iter *it = ll_tail(instance->conns);
-   ll_insert(instance->conns, it, conn);
-   if (it) it = ll_next(it);
-   else it = ll_tail(instance->conns);
-   if (it == NULL) {
-      fprintf(stderr, "Not enough memory to add connection\n");
-      return 1;
-   }
-   return 0;
+    TAILQ_INSERT_TAIL(&instance->conns, conn, HPD_TAILQ_FIELD);
+    return 0;
 }
 
 /// Initialise and accept connection
@@ -370,70 +370,70 @@ static int ws_instance_add_conn(struct ws *instance,
  *  \param revents Not used.
  */
 static void ws_conn_accept(
-      struct ev_loop *loop,
-      struct ev_io *watcher,
-      int revents)
+        struct ev_loop *loop,
+        struct ev_io *watcher,
+        int revents)
 {
-   char ip_string[INET6_ADDRSTRLEN];
-   int in_fd;
-   socklen_t in_size;
-   struct sockaddr_storage in_addr_storage;
-   struct sockaddr *in_addr = (struct sockaddr *)&in_addr_storage;
-   struct ws_conn *conn;
-   struct ws_settings *settings = &((struct ws *)watcher->data)->settings;
-   
-   // Accept connection
-   in_size = sizeof *in_addr;
-   if ((in_fd = accept(watcher->fd, in_addr, &in_size)) < 0) {
-      perror("accept");
-      return;
-   }
+    char ip_string[INET6_ADDRSTRLEN];
+    int in_fd;
+    socklen_t in_size;
+    struct sockaddr_storage in_addr_storage;
+    struct sockaddr *in_addr = (struct sockaddr *)&in_addr_storage;
+    struct ws_conn *conn;
+    struct ws_settings *settings = &((struct ws *)watcher->data)->settings;
 
-   // Print a nice message
-   inet_ntop(in_addr_storage.ss_family,
-         get_in_addr(in_addr),
-         ip_string,
-         sizeof ip_string);
-   printf("[ws] Got connection from %s\n", ip_string);
+    // Accept connection
+    in_size = sizeof *in_addr;
+    if ((in_fd = accept(watcher->fd, in_addr, &in_size)) < 0) {
+        perror("accept");
+        return;
+    }
 
-   // Create conn and parser
-   conn = malloc(sizeof(struct ws_conn));
-   if (conn == NULL) {
-      fprintf(stderr, "Cannot allocation memory for connection\n");
-      close(in_fd);
-      return;
-   }
-   conn->instance = watcher->data;
-   strcpy(conn->ip, ip_string);
-   conn->timeout_watcher.data = conn;
-   conn->recv_watcher.data = conn;
-   conn->send_watcher.data = conn;
-   conn->ctx = NULL;
-   conn->send_msg = NULL;
-   conn->send_len = 0;
-   conn->send_close = 0;
-   conn->timeout = 1;
+    // Print a nice message
+    inet_ntop(in_addr_storage.ss_family,
+              get_in_addr(in_addr),
+              ip_string,
+              sizeof ip_string);
+    printf("[ws] Got connection from %s\n", ip_string);
 
-   // Set up list
-   ws_instance_add_conn(conn->instance, conn);
+    // Create conn and parser
+    conn = malloc(sizeof(struct ws_conn));
+    if (conn == NULL) {
+        fprintf(stderr, "Cannot allocation memory for connection\n");
+        close(in_fd);
+        return;
+    }
+    conn->instance = watcher->data;
+    strcpy(conn->ip, ip_string);
+    conn->timeout_watcher.data = conn;
+    conn->recv_watcher.data = conn;
+    conn->send_watcher.data = conn;
+    conn->ctx = NULL;
+    conn->send_msg = NULL;
+    conn->send_len = 0;
+    conn->send_close = 0;
+    conn->timeout = 1;
 
-   // Call back
-   if (settings->on_connect) {
-      if (settings->on_connect(conn->instance, conn,
-                               settings->ws_ctx, &conn->ctx)) {
-         ws_conn_kill(conn);
-         return;
-      }
-   }
+    // Set up list
+    ws_instance_add_conn(conn->instance, conn);
 
-   // Start timeout and io watcher
-   ev_io_init(&conn->recv_watcher, conn_recv_cb, in_fd, EV_READ);
-   ev_io_init(&conn->send_watcher, conn_send_cb, in_fd, EV_WRITE);
-   ev_io_start(loop, &conn->recv_watcher);
-   ev_init(&conn->timeout_watcher, conn_timeout_cb);
-   conn->timeout_watcher.repeat = settings->timeout;
-   if (conn->timeout)
-      ev_timer_again(loop, &conn->timeout_watcher);
+    // Call back
+    if (settings->on_connect) {
+        if (settings->on_connect(conn->instance, conn,
+                                 settings->ws_ctx, &conn->ctx)) {
+            ws_conn_kill(conn);
+            return;
+        }
+    }
+
+    // Start timeout and io watcher
+    ev_io_init(&conn->recv_watcher, conn_recv_cb, in_fd, EV_READ);
+    ev_io_init(&conn->send_watcher, conn_send_cb, in_fd, EV_WRITE);
+    ev_io_start(loop, &conn->recv_watcher);
+    ev_init(&conn->timeout_watcher, conn_timeout_cb);
+    conn->timeout_watcher.repeat = settings->timeout;
+    if (conn->timeout)
+        ev_timer_again(loop, &conn->timeout_watcher);
 }
 
 /// Send message on connection
@@ -451,14 +451,14 @@ static void ws_conn_accept(
  * \return The same as ws_conn_vsendf() 
  */
 int ws_conn_sendf(struct ws_conn *conn, const char *fmt, ...) {
-   int stat;
-   va_list arg;
+    int stat;
+    va_list arg;
 
-   va_start(arg, fmt);
-   stat = ws_conn_vsendf(conn, fmt, arg);
-   va_end(arg);
+    va_start(arg, fmt);
+    stat = ws_conn_vsendf(conn, fmt, arg);
+    va_end(arg);
 
-   return stat;
+    return stat;
 }
 
 /// Send message on connection
@@ -482,38 +482,38 @@ int ws_conn_sendf(struct ws_conn *conn, const char *fmt, ...) {
  */
 int ws_conn_vsendf(struct ws_conn *conn, const char *fmt, va_list arg)
 {
-   int stat;
-   char *new_msg;
-   size_t new_len;
-   va_list arg2;
+    int stat;
+    char *new_msg;
+    size_t new_len;
+    va_list arg2;
 
-   // Copy arg to avoid errors on 64bit
-   va_copy(arg2, arg);
+    // Copy arg to avoid errors on 64bit
+    va_copy(arg2, arg);
 
-   // Get the length to expand with
-   new_len = vsnprintf("", 0, fmt, arg);
+    // Get the length to expand with
+    new_len = vsnprintf("", 0, fmt, arg);
 
-   // Expand message to send
-   new_msg = realloc(conn->send_msg,
-         (conn->send_len + new_len + 1)*sizeof(char));
-   if (new_msg == NULL) {
-      fprintf(stderr, "Cannot allocate enough memory\n");
-      return -1;
-   }
-   conn->send_msg = new_msg;
+    // Expand message to send
+    new_msg = realloc(conn->send_msg,
+                      (conn->send_len + new_len + 1)*sizeof(char));
+    if (new_msg == NULL) {
+        fprintf(stderr, "Cannot allocate enough memory\n");
+        return -1;
+    }
+    conn->send_msg = new_msg;
 
-   // Concatenate strings
-   stat = vsprintf(&(conn->send_msg[conn->send_len]), fmt, arg2);
+    // Concatenate strings
+    stat = vsprintf(&(conn->send_msg[conn->send_len]), fmt, arg2);
 
-   // Start send watcher
-   if (conn->send_len == 0 && conn->instance != NULL)
-      ev_io_start(conn->instance->loop, &conn->send_watcher);
+    // Start send watcher
+    if (conn->send_len == 0 && conn->instance != NULL)
+        ev_io_start(conn->instance->loop, &conn->send_watcher);
 
-   // Update length
-   conn->send_len += new_len;
+    // Update length
+    conn->send_len += new_len;
 
-   if (stat < 0) return stat;
-   else return 0;
+    if (stat < 0) return stat;
+    else return 0;
 }
 
 /// Remove connection from instance
@@ -525,12 +525,9 @@ int ws_conn_vsendf(struct ws_conn *conn, const char *fmt, va_list arg)
  * \param  conn      The connection to remove
  */
 static void ws_instance_rm_conn(struct ws *instance, struct ws_conn
-      *conn)
+*conn)
 {
-   struct ll_iter *iter;
-
-   ll_find(iter, instance->conns, conn);
-   ll_remove(iter);
+    TAILQ_REMOVE(&instance->conns, conn, HPD_TAILQ_FIELD);
 }
 
 /// Close a connection, after the remaining data has been sent
@@ -542,12 +539,12 @@ static void ws_instance_rm_conn(struct ws *instance, struct ws_conn
  * \param  conn  The connection to close
  */
 void ws_conn_close(struct ws_conn *conn) {
-   conn->send_close = 1;
-      
-   if (conn->send_msg == NULL) {
-      ev_io_stop(conn->instance->loop, &conn->send_watcher);
-      if (conn->send_close) ws_conn_kill(conn);
-   }
+    conn->send_close = 1;
+
+    if (conn->send_msg == NULL) {
+        ev_io_stop(conn->instance->loop, &conn->send_watcher);
+        if (conn->send_close) ws_conn_kill(conn);
+    }
 }
 
 /// Disable timeout on connection
@@ -563,8 +560,8 @@ void ws_conn_close(struct ws_conn *conn) {
  */
 void ws_conn_keep_open(struct ws_conn *conn)
 {
-   conn->timeout = 0;
-   ev_timer_stop(conn->instance->loop, &conn->timeout_watcher);
+    conn->timeout = 0;
+    ev_timer_stop(conn->instance->loop, &conn->timeout_watcher);
 }
 
 /// Kill and clean up after a connection
@@ -579,38 +576,38 @@ void ws_conn_keep_open(struct ws_conn *conn)
  */
 void ws_conn_kill(struct ws_conn *conn)
 {
-   struct ws_settings *settings = &conn->instance->settings;
+    struct ws_settings *settings = &conn->instance->settings;
 
-   // Print messange
-   printf("[ws] Killing connection %s\n", conn->ip);
+    // Print messange
+    printf("[ws] Killing connection %s\n", conn->ip);
 
-   int sockfd = conn->recv_watcher.fd;
+    int sockfd = conn->recv_watcher.fd;
 
-   // Stop circular calls and only kill this connection once
-   if (sockfd < 0) return;
+    // Stop circular calls and only kill this connection once
+    if (sockfd < 0) return;
 
-   // Stop watchers
-   ev_io_stop(conn->instance->loop, &conn->recv_watcher);
-   ev_io_stop(conn->instance->loop, &conn->send_watcher);
-   ev_timer_stop(conn->instance->loop, &conn->timeout_watcher);
+    // Stop watchers
+    ev_io_stop(conn->instance->loop, &conn->recv_watcher);
+    ev_io_stop(conn->instance->loop, &conn->send_watcher);
+    ev_timer_stop(conn->instance->loop, &conn->timeout_watcher);
 
-   // Close socket
-   if (close(sockfd) != 0) {
-      perror("close");
-   }
-   conn->recv_watcher.fd = -1;
+    // Close socket
+    if (close(sockfd) != 0) {
+        perror("close");
+    }
+    conn->recv_watcher.fd = -1;
 
-   // Remove from list
-   ws_instance_rm_conn(conn->instance, conn);
+    // Remove from list
+    ws_instance_rm_conn(conn->instance, conn);
 
-   // Call back
-   if (settings->on_disconnect)
-      settings->on_disconnect(conn->instance, conn,
-                              settings->ws_ctx, &conn->ctx);
+    // Call back
+    if (settings->on_disconnect)
+        settings->on_disconnect(conn->instance, conn,
+                                settings->ws_ctx, &conn->ctx);
 
-   // Cleanup
-   free(conn->send_msg);
-   free(conn);
+    // Cleanup
+    free(conn->send_msg);
+    free(conn);
 }
 
 /// Destroy webserver and free used memory
@@ -623,8 +620,7 @@ void ws_conn_kill(struct ws_conn *conn)
  */
 void ws_destroy(struct ws *instance)
 {
-   ll_destroy(instance->conns);
-   free(instance);
+    free(instance);
 }
 
 /// Create new webserver instance
@@ -639,29 +635,23 @@ void ws_destroy(struct ws *instance)
  *  \return  The new webserver instance.
  */
 struct ws *ws_create(
-      struct ws_settings *settings,
-      struct ev_loop *loop)
+        struct ws_settings *settings,
+        struct ev_loop *loop)
 {
-   struct ws *instance = malloc(sizeof(struct ws));
-   if (instance == NULL) {
-      fprintf(stderr, "ERROR: Cannot allocate memory for a new " \
+    struct ws *instance = malloc(sizeof(struct ws));
+    if (instance == NULL) {
+        fprintf(stderr, "ERROR: Cannot allocate memory for a new " \
                       "webserver struct\n");
-      return NULL;
-   }
+        return NULL;
+    }
 
-   memcpy(&instance->settings, settings, sizeof(struct ws_settings));
-   sprintf(instance->port_str, "%i", settings->port);
+    memcpy(&instance->settings, settings, sizeof(struct ws_settings));
+    sprintf(instance->port_str, "%i", settings->port);
 
-   instance->loop = loop;
-   ll_create(instance->conns);
-   if (instance->conns == NULL) {
-      fprintf(stderr, "ERROR: Cannot allocate memory for a new " \
-                      "webserver struct\n");
-      ws_destroy(instance);
-      return NULL;
-   }
+    instance->loop = loop;
+    TAILQ_INIT(&instance->conns);
 
-   return instance;
+    return instance;
 }
 
 /// Start the webserver
@@ -679,31 +669,31 @@ struct ws *ws_create(
  */
 int ws_start(struct ws *instance)
 {
-   // Check loop
-   if (instance->loop == NULL) {
-      fprintf(stderr, "No event loop given, starting server on " \
+    // Check loop
+    if (instance->loop == NULL) {
+        fprintf(stderr, "No event loop given, starting server on " \
             "'EV_DEFAULT' loop. Loop will not be started.");
-      instance->loop = EV_DEFAULT;
-   }
+        instance->loop = EV_DEFAULT;
+    }
 
-   // Print message
-   printf("[ws] Starting server on port '%s'\n", instance->port_str);
+    // Print message
+    printf("[ws] Starting server on port '%s'\n", instance->port_str);
 
-   // Bind to socket
-   instance->sockfd = bind_listen(instance->port_str);
-   if (instance->sockfd < 0) {
-      fprintf(stderr, "Could not bind to port [%s]\n",
-            instance->port_str);
-      return 1;
-   }
+    // Bind to socket
+    instance->sockfd = bind_listen(instance->port_str);
+    if (instance->sockfd < 0) {
+        fprintf(stderr, "Could not bind to port [%s]\n",
+                instance->port_str);
+        return 1;
+    }
 
-   // Set listener on libev
-   instance->watcher.data = instance;
-   ev_io_init(&instance->watcher, ws_conn_accept, instance->sockfd,
-              EV_READ);
-   ev_io_start(instance->loop, &instance->watcher);
+    // Set listener on libev
+    instance->watcher.data = instance;
+    ev_io_init(&instance->watcher, ws_conn_accept, instance->sockfd,
+               EV_READ);
+    ev_io_start(instance->loop, &instance->watcher);
 
-   return 0;
+    return 0;
 }
 
 /// Stop an already running webserver.
@@ -719,23 +709,19 @@ int ws_start(struct ws *instance)
  */
 void ws_stop(struct ws *instance)
 {
-   struct ll_iter *it, *next;
+    struct ws_conn *it, *tmp;
 
-   // Stop accept watcher
-   ev_io_stop(instance->loop, &instance->watcher);
+    // Stop accept watcher
+    ev_io_stop(instance->loop, &instance->watcher);
 
-   // Kill all connections
-   it = ll_head(instance->conns);
-   while (it != NULL) {
-      next = ll_next(it);
-      ws_conn_kill(ll_data(it));
-      it = next;
-   }
+    // Kill all connections
+    HPD_TAILQ_FOREACH_SAFE(it, &instance->conns, tmp)
+        ws_conn_kill(it);
 
-   // Close socket
-   if (close(instance->sockfd) != 0) {
-      perror("close");
-   }
+    // Close socket
+    if (close(instance->sockfd) != 0) {
+        perror("close");
+    }
 }
 
 /// Get the IP address of the client
@@ -746,6 +732,6 @@ void ws_stop(struct ws *instance)
  */
 const char *ws_conn_get_ip(struct ws_conn *conn)
 {
-   return conn->ip;
+    return conn->ip;
 }
 
