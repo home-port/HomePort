@@ -72,12 +72,16 @@ hpd_error_t discovery_alloc_service(hpd_service_t **service, const char *id)
     HPD_CALLOC((*service)->attributes, 1, map_t);
     MAP_INIT((*service)->attributes);
     HPD_STR_CPY((*service)->id, id);
+    for (hpd_method_t method = HPD_M_NONE+1; method < HPD_M_COUNT; method++) {
+        (*service)->actions[method].method = method;
+        (*service)->actions[method].service = (*service);
+    }
     return HPD_E_SUCCESS;
 
     alloc_error:
-    if (*service) discovery_free_service(*service);
-    (*service) = NULL;
-    LOG_RETURN_E_ALLOC();
+        if (*service) discovery_free_service(*service);
+        (*service) = NULL;
+        LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t discovery_alloc_parameter(hpd_parameter_t **parameter, const char *id)
@@ -234,6 +238,10 @@ hpd_error_t discovery_attach_service(hpd_device_t *device, hpd_service_t *servic
     hpd_parameter_t *parameter;
     HPD_TAILQ_FOREACH(parameter, service->parameters) {
         parameter->service = copy;
+    }
+
+    for (hpd_method_t method = HPD_M_NONE+1; method < HPD_M_COUNT; method++) {
+        copy->actions[method].service = copy;
     }
 
     free(service);
@@ -662,9 +670,14 @@ hpd_error_t discovery_first_service_parameter(hpd_service_t *service, hpd_parame
 hpd_error_t discovery_next_action_in_service(hpd_action_t **action)
 {
     hpd_service_t *service = (*action)->service;
-    hpd_method_t method = (*action)->method + 1;
-    if (method < HPD_M_COUNT) (*action) = &service->actions[method];
-    else (*action) = NULL;
+
+    for (hpd_method_t method = (*action)->method + 1; method < HPD_M_COUNT; method++) {
+        if (service->actions[method].action) {
+            (*action) = &service->actions[method];
+            return HPD_E_SUCCESS;
+        }
+    }
+    (*action) = NULL;
     return HPD_E_SUCCESS;
 }
 

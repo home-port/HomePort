@@ -115,38 +115,6 @@ hpd_error_t daemon_free(hpd_t *hpd)
         free(module->id);
         free(module);
     }
-    hpd_ev_async_t *async, *async_tmp;
-    HPD_TAILQ_FOREACH_SAFE(async, &hpd->request_watchers, async_tmp) {
-        TAILQ_REMOVE(&hpd->request_watchers, async, HPD_TAILQ_FIELD);
-        ev_async_stop(hpd->loop, &async->watcher);
-        request_free_request(async->request);
-        free(async);
-    }
-    HPD_TAILQ_FOREACH_SAFE(async, &hpd->respond_watchers, async_tmp) {
-        TAILQ_REMOVE(&hpd->respond_watchers, async, HPD_TAILQ_FIELD);
-        ev_async_stop(hpd->loop, &async->watcher);
-        request_free_response(async->response);
-        free(async);
-    }
-    HPD_TAILQ_FOREACH_SAFE(async, &hpd->changed_watchers, async_tmp) {
-        TAILQ_REMOVE(&hpd->changed_watchers, async, HPD_TAILQ_FIELD);
-        ev_async_stop(hpd->loop, &async->watcher);
-        discovery_free_sid(async->service);
-        value_free(async->value);
-        free(async);
-    }
-    HPD_TAILQ_FOREACH_SAFE(async, &hpd->attached_watchers, async_tmp) {
-        TAILQ_REMOVE(&hpd->attached_watchers, async, HPD_TAILQ_FIELD);
-        ev_async_stop(hpd->loop, &async->watcher);
-        discovery_free_did(async->device);
-        free(async);
-    }
-    HPD_TAILQ_FOREACH_SAFE(async, &hpd->detached_watchers, async_tmp) {
-        TAILQ_REMOVE(&hpd->detached_watchers, async, HPD_TAILQ_FIELD);
-        ev_async_stop(hpd->loop, &async->watcher);
-        discovery_free_did(async->device);
-        free(async);
-    }
     free(hpd);
     return HPD_E_SUCCESS;
 }
@@ -202,6 +170,7 @@ hpd_error_t daemon_add_option(hpd_module_t *context, const char *name, const cha
     LOG_RETURN_E_ALLOC();
 }
 
+// TODO Messy function ... clean up !
 hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[])
 {
     hpd_error_t rc;
@@ -266,6 +235,40 @@ hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[])
         if ((rc = module->def.on_stop(module->data, hpd)) != HPD_E_SUCCESS)
             goto module_stop_error;
 
+    // Stop other watchers
+    hpd_ev_async_t *async, *async_tmp;
+    HPD_TAILQ_FOREACH_SAFE(async, &hpd->request_watchers, async_tmp) {
+        TAILQ_REMOVE(&hpd->request_watchers, async, HPD_TAILQ_FIELD);
+        ev_async_stop(hpd->loop, &async->watcher);
+        request_free_request(async->request); // TODO Handle error code
+        free(async);
+    }
+    HPD_TAILQ_FOREACH_SAFE(async, &hpd->respond_watchers, async_tmp) {
+        TAILQ_REMOVE(&hpd->respond_watchers, async, HPD_TAILQ_FIELD);
+        ev_async_stop(hpd->loop, &async->watcher);
+        request_free_response(async->response); // TODO Handle error code
+        free(async);
+    }
+    HPD_TAILQ_FOREACH_SAFE(async, &hpd->changed_watchers, async_tmp) {
+        TAILQ_REMOVE(&hpd->changed_watchers, async, HPD_TAILQ_FIELD);
+        ev_async_stop(hpd->loop, &async->watcher);
+        discovery_free_sid(async->service); // TODO Handle error code
+        value_free(async->value); // TODO Handle error code
+        free(async);
+    }
+    HPD_TAILQ_FOREACH_SAFE(async, &hpd->attached_watchers, async_tmp) {
+        TAILQ_REMOVE(&hpd->attached_watchers, async, HPD_TAILQ_FIELD);
+        ev_async_stop(hpd->loop, &async->watcher);
+        discovery_free_did(async->device); // TODO Handle error code
+        free(async);
+    }
+    HPD_TAILQ_FOREACH_SAFE(async, &hpd->detached_watchers, async_tmp) {
+        TAILQ_REMOVE(&hpd->detached_watchers, async, HPD_TAILQ_FIELD);
+        ev_async_stop(hpd->loop, &async->watcher);
+        discovery_free_did(async->device); // TODO Handle error code
+        free(async);
+    }
+
     // Destroy event loop
     ev_loop_destroy(hpd->loop);
     hpd->loop = NULL;
@@ -290,6 +293,37 @@ hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[])
     module_stop_error:
         for (module = TAILQ_PREV(module, modules, HPD_TAILQ_FIELD); module; module = TAILQ_PREV(module, modules, HPD_TAILQ_FIELD))
             module->def.on_stop(module->data, hpd);
+        HPD_TAILQ_FOREACH_SAFE(async, &hpd->request_watchers, async_tmp) {
+            TAILQ_REMOVE(&hpd->request_watchers, async, HPD_TAILQ_FIELD);
+            ev_async_stop(hpd->loop, &async->watcher);
+            request_free_request(async->request); // TODO Handle error code
+            free(async);
+        }
+        HPD_TAILQ_FOREACH_SAFE(async, &hpd->respond_watchers, async_tmp) {
+            TAILQ_REMOVE(&hpd->respond_watchers, async, HPD_TAILQ_FIELD);
+            ev_async_stop(hpd->loop, &async->watcher);
+            request_free_response(async->response); // TODO Handle error code
+            free(async);
+        }
+        HPD_TAILQ_FOREACH_SAFE(async, &hpd->changed_watchers, async_tmp) {
+            TAILQ_REMOVE(&hpd->changed_watchers, async, HPD_TAILQ_FIELD);
+            ev_async_stop(hpd->loop, &async->watcher);
+            discovery_free_sid(async->service); // TODO Handle error code
+            value_free(async->value); // TODO Handle error code
+            free(async);
+        }
+        HPD_TAILQ_FOREACH_SAFE(async, &hpd->attached_watchers, async_tmp) {
+            TAILQ_REMOVE(&hpd->attached_watchers, async, HPD_TAILQ_FIELD);
+            ev_async_stop(hpd->loop, &async->watcher);
+            discovery_free_did(async->device); // TODO Handle error code
+            free(async);
+        }
+        HPD_TAILQ_FOREACH_SAFE(async, &hpd->detached_watchers, async_tmp) {
+            TAILQ_REMOVE(&hpd->detached_watchers, async, HPD_TAILQ_FIELD);
+            ev_async_stop(hpd->loop, &async->watcher);
+            discovery_free_did(async->device); // TODO Handle error code
+            free(async);
+        }
     ev_new_error:
     arg_error:
         module = TAILQ_LAST(&hpd->modules, modules);

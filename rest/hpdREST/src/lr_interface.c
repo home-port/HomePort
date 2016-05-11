@@ -59,12 +59,6 @@ static void req_free(struct lri_req *req)
     }
 }
 
-static hpd_error_t on_req_free(void *req)
-{
-    req_free(req);
-    return HPD_E_SUCCESS;
-}
-
 static struct lri_req *req_new(struct lr_request *req)
 {
     struct lri_req *lri_req = malloc(sizeof(struct lri_req));
@@ -72,6 +66,13 @@ static struct lri_req *req_new(struct lr_request *req)
     lri_req->req_str = NULL;
     lri_req->in_hpd = 0;
     return lri_req;
+}
+
+static hpd_error_t on_req_free(void *req_data)
+{
+    struct lri_req *req = req_data;
+    req->in_hpd = 0;
+    return HPD_E_SUCCESS;
 }
 
 static int on_req_destroy(void *srv_data, void **req_data, struct lr_request *req)
@@ -384,6 +385,8 @@ lri_unregisterService(struct lr *lr, char* uri)
     s = lr_unregister_service(lr, uri);
     if( s == NULL )
         return HPD_E_UNKNOWN;
+
+    hpd_service_id_free(s);
 
     return HPD_E_SUCCESS;
 }

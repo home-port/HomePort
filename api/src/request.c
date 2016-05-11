@@ -230,7 +230,7 @@ static void on_respond(hpd_ev_loop_t *loop, ev_async *w, int revents)
     hpd_request_t *request = response->request;
     hpd_service_id_t *service_id = request->service;
 
-    TAILQ_REMOVE(&service_id->hpd->request_watchers, async, HPD_TAILQ_FIELD);
+    TAILQ_REMOVE(&service_id->hpd->respond_watchers, async, HPD_TAILQ_FIELD);
     ev_async_stop(loop, w);
     free(async);
 
@@ -254,6 +254,7 @@ hpd_error_t request_request(hpd_request_t *request)
     ev_async_start(hpd->loop, &async->watcher);
     ev_async_send(hpd->loop, &async->watcher);
     TAILQ_INSERT_TAIL(&hpd->request_watchers, async, HPD_TAILQ_FIELD);
+    free(request);
     return HPD_E_SUCCESS;
 
     alloc_error:
