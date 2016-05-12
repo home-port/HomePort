@@ -76,8 +76,9 @@ struct up {
    size_t insert;                ///< Location to insert new chunks
 };
 
-/// Create URL parser instance
 /**
+ * Create URL parser instance.
+ *
  *  This method creates an URL Parser instance.  It allocates memory
  *  for itself and copy the settings struct.  It also sets all values
  *  to default.
@@ -136,8 +137,9 @@ struct up *up_create(
    return instance;
 }
 
-/// Destroy URL parser instance
 /**
+ * Destroy URL parser instance.
+ *
  *  This method destroys an URL Parser instance, including the buffer
  *  and settings struct.
  *
@@ -159,8 +161,9 @@ void up_destroy(struct up *instance)
    }
 }
 
-/// Check if a given char is valid in an URL
 /**
+ * Check if a given char is valid in an URL.
+ *
  *  This method checks if a char is valid in an URL. Only specific chars
  *  are valid, others have to be encoded properly. 
  *
@@ -181,8 +184,9 @@ int isLegalURLChar(char c)
    return 0;
 }
 
-/// Parse a chunk of an URL
 /**
+ * Parse a chunk of an URL.
+ *
  *  This method receives a chunk of an URL, and calls the appropriate
  *  callbacks.  It increases the size of buffer, copies the new chunk to
  *  it and then parses each character and changes state accordingly.  A
@@ -373,8 +377,9 @@ int up_add_chunk(void *_instance, const char* chunk, size_t len)
    return 0;
 }
 
-/// Informs the parser that the URL is complete
 /**
+ * Informs the parser that the URL is complete.
+ *
  *  This method will let the parser know that the URL is complete.
  *  This always results in the on_complete callback being called, but it
  *  may also inflict two others: on_path_segment and on_key_value. This

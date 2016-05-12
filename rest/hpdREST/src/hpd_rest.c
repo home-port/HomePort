@@ -25,7 +25,6 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include <stdlib.h>
 #include "hpd_rest.h"
 #include "hpd_application_api.h"
 #include "hpd_common.h"
@@ -46,9 +45,11 @@ typedef struct hpd_rest {
     struct httpws *ws;
     struct httpws_settings ws_set;
     hpd_t *hpd;
+    hpd_module_t *context;
 } hpd_rest_t;
 
 typedef struct hpd_rest_req {
+    hpd_rest_t *rest;
     hpd_service_id_t *service;
     struct http_request *http_req;
     char *body;
@@ -56,6 +57,7 @@ typedef struct hpd_rest_req {
     hpd_request_t *hpd_request;
 } hpd_rest_req_t;
 
+// TODO Not the best error handling (probably goes for the entire file)...
 static char *url_encode(const char *decoded)
 {
     char *encoded;
@@ -70,6 +72,7 @@ static char *url_encode(const char *decoded)
     return encoded;
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 static char *url_decode(const char *encoded)
 {
     char *decoded;
@@ -83,6 +86,7 @@ static char *url_decode(const char *encoded)
     return decoded;
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 char *hpd_rest_url_create(hpd_service_id_t *service)
 {
     // TODO Better error handling - cleanup too !!
@@ -126,6 +130,7 @@ char *hpd_rest_url_create(hpd_service_id_t *service)
     return uri;
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 // TODO Should probably double-check this one...
 static hpd_error_t url_extract(const char *url, char **aid, char **did, char **sid)
 {
@@ -176,48 +181,55 @@ static hpd_error_t url_extract(const char *url, char **aid, char **did, char **s
     return  HPD_E_ALLOC;
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 static void reply_malformed_url(struct http_request *req)
 {
-    struct http_response *res = http_response_create(req, WS_HTTP_400);
+    struct http_response *res = http_response_create(req, HPD_S_400);
     http_response_sendf(res, "Malformed URL");
     http_response_destroy(res);
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 static void reply_internal_server_error(struct http_request *req)
 {
-    struct http_response *res = http_response_create(req, WS_HTTP_500);
+    struct http_response *res = http_response_create(req, HPD_S_500);
     http_response_sendf(res, "Internal Server Error");
     http_response_destroy(res);
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 static void reply_not_found(struct http_request *req)
 {
-    struct http_response *res = http_response_create(req, WS_HTTP_404);
+    struct http_response *res = http_response_create(req, HPD_S_404);
     http_response_sendf(res, "Not Found");
     http_response_destroy(res);
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 static void reply_unsupported_media_type(struct http_request *req)
 {
-    struct http_response *res = http_response_create(req, WS_HTTP_415);
+    struct http_response *res = http_response_create(req, HPD_S_415);
     http_response_sendf(res, "Unsupported Media Type");
     http_response_destroy(res);
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 static void reply_bad_request(struct http_request *req)
 {
-    struct http_response *res = http_response_create(req, WS_HTTP_400);
+    struct http_response *res = http_response_create(req, HPD_S_400);
     http_response_sendf(res, "Bad Request");
     http_response_destroy(res);
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 static void reply_method_not_allowed(struct http_request *req)
 {
-    struct http_response *res = http_response_create(req, WS_HTTP_405);
+    struct http_response *res = http_response_create(req, HPD_S_405);
     http_response_sendf(res, "Method Not Allowed");
     http_response_destroy(res);
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 static hpd_error_t on_free(void *data)
 {
     hpd_rest_req_t *rest_req = data;
@@ -235,6 +247,7 @@ static hpd_error_t on_free(void *data)
     return HPD_E_SUCCESS;
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 static int on_req_destroy(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data)
 {
     hpd_rest_req_t *rest_req = *req_data;
@@ -252,6 +265,7 @@ static int on_req_destroy(struct httpws *ins, struct http_request *req, void* ws
     return 0;
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 // TODO Double check this...
 static hpd_error_t on_response(hpd_response_t *res)
 {
@@ -280,8 +294,9 @@ static hpd_error_t on_response(hpd_response_t *res)
             switch (status) {
                 HPD_HTTP_STATUS_CODE_MAP(XX)
                 default:
-                    fprintf(stderr, "[Homeport] Unknown error code\n");
+                    HPD_LOG_ERROR(rest_req->rest->context, "Unknown error code.");
                     status = HPD_S_500;
+                    // TODO Have a look at error bodies
                     HPD_STR_CPY(buffer, "500 Internal Server Error: Unknown error code.");
             }
 #undef XX
@@ -329,9 +344,9 @@ static hpd_error_t on_response(hpd_response_t *res)
         return HPD_E_ALLOC;
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 // TODO Clean up on errors !
-static int on_req_url_cmpl(struct httpws *ins, struct http_request *req,
-                           void* ws_ctx, void** req_data)
+static int on_req_url_cmpl(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data)
 {
     struct hpd_rest *rest = ws_ctx;
     const char *url = http_request_get_url(req);
@@ -357,7 +372,7 @@ static int on_req_url_cmpl(struct httpws *ins, struct http_request *req,
             body = xmlGetConfiguration(rest->hpd);
         }
 
-        struct http_response *res = http_response_create(req, WS_HTTP_200);
+        struct http_response *res = http_response_create(req, HPD_S_200);
         http_response_sendf(res, "%s", body);
         http_response_destroy(res);
 
@@ -438,6 +453,7 @@ static int on_req_url_cmpl(struct httpws *ins, struct http_request *req,
 
     hpd_rest_req_t *rest_req;
     HPD_CALLOC(rest_req, 1, hpd_rest_req_t);
+    rest_req->rest = rest;
     rest_req->service = service;
     rest_req->http_req = req;
     *req_data = rest_req;
@@ -449,9 +465,8 @@ static int on_req_url_cmpl(struct httpws *ins, struct http_request *req,
         return 1;
 }
 
-static int on_req_hdr_cmpl(
-        struct httpws *ins, struct http_request *req,
-        void *ws_ctx, void **req_data)
+// TODO Not the best error handling (probably goes for the entire file)...
+static int on_req_hdr_cmpl(struct httpws *ins, struct http_request *req, void *ws_ctx, void **req_data)
 {
 #ifdef LR_ORIGIN
     hpd_error_t rc;
@@ -465,7 +480,7 @@ static int on_req_hdr_cmpl(
     switch(http_request_get_method(req))
     {
         case HTTP_OPTIONS:
-            res = http_response_create(req, WS_HTTP_200);
+            res = http_response_create(req, HPD_S_200);
             http_response_add_header(res, "Access-Control-Allow-Origin", "*");
             hpd_action_t *action;
             hpd_service_foreach_action(rc, action, service) {
@@ -506,9 +521,8 @@ static int on_req_hdr_cmpl(
 #endif
 }
 
-static int on_req_body(struct httpws *ins, struct http_request *req,
-                   void* ws_ctx, void** req_data,
-                   const char* chunk, size_t len)
+// TODO Not the best error handling (probably goes for the entire file)...
+static int on_req_body(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data, const char* chunk, size_t len)
 {
     hpd_rest_req_t *rest_req = *req_data;
 
@@ -522,6 +536,7 @@ static int on_req_body(struct httpws *ins, struct http_request *req,
         return 1;
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 static int on_req_cmpl(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data)
 {
     hpd_rest_req_t *rest_req = *req_data;
@@ -579,6 +594,7 @@ static int on_req_cmpl(struct httpws *ins, struct http_request *req, void* ws_ct
 static hpd_error_t on_create(void **data, hpd_module_t *context)
 {
     hpd_error_t rc;
+
     if ((rc = hpd_module_add_option(context, "port", "port", 0, "Listener port for rest server."))) return rc;
 
     struct httpws_settings ws_set = HTTPWS_SETTINGS_DEFAULT;
@@ -591,8 +607,8 @@ static hpd_error_t on_create(void **data, hpd_module_t *context)
     hpd_rest_t *rest;
     HPD_CALLOC(rest, 1, hpd_rest_t);
     rest->ws_set = ws_set;
-
     rest->ws_set.ws_ctx = rest;
+    rest->context = context;
     (*data) = rest;
 
     return HPD_E_SUCCESS;
@@ -614,21 +630,25 @@ static hpd_error_t on_start(void *data, hpd_t *hpd)
     hpd_error_t rc;
     hpd_rest_t *rest = data;
 
+    HPD_LOG_INFO(rest->context, "Starting REST server on port %d.", rest->ws_set.port);
+
+    rest->hpd = hpd;
+
     hpd_ev_loop_t *loop;
     if ((rc = hpd_get_loop(hpd, &loop))) return rc;
 
     if (!(rest->ws = httpws_create(&rest->ws_set, loop))) return HPD_E_UNKNOWN;
-
     if (httpws_start(rest->ws)) return HPD_E_UNKNOWN;
-
-    rest->hpd = hpd;
 
     return HPD_E_SUCCESS;
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 static hpd_error_t on_stop(void *data, hpd_t *hpd)
 {
     hpd_rest_t *rest = data;
+
+    HPD_LOG_INFO(rest->context, "Stopping REST server.");
 
     httpws_stop(rest->ws);
     httpws_destroy(rest->ws);
@@ -639,6 +659,7 @@ static hpd_error_t on_stop(void *data, hpd_t *hpd)
     return HPD_E_SUCCESS;
 }
 
+// TODO Not the best error handling (probably goes for the entire file)...
 static hpd_error_t on_parse_opt(void *data, const char *name, const char *arg)
 {
     hpd_rest_t *rest = data;

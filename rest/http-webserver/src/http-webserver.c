@@ -35,12 +35,13 @@
 
 /// http-webserver instance struct
 struct httpws {
-   struct httpws_settings settings; ///< Settings
-   struct ws *webserver;            ///< Webserver instance
+    struct httpws_settings settings; ///< Settings
+    struct ws *webserver;            ///< Webserver instance
 };
 
-/// Callback for webserver library
 /**
+ * Callback for webserver library.
+ *
  *  Handles new connections, by creating a request for them.
  *
  *  \param  instance  Webserver instance
@@ -53,18 +54,19 @@ struct httpws {
 static int on_connect(struct ws *instance, struct ws_conn *conn,
                       void *http_ins, void **req)
 {
-   struct httpws *parent = http_ins;
-   *req = http_request_create(parent, &parent->settings, conn);
-   if (!req) {
-      fprintf(stderr, "Not enough memory for request\n");
-      return 1;
-   }
+    struct httpws *parent = http_ins;
+    *req = http_request_create(parent, &parent->settings, conn);
+    if (!req) {
+        fprintf(stderr, "Not enough memory for request\n");
+        return 1;
+    }
 
-   return 0;
+    return 0;
 }
 
-/// Callback for webserver library
 /**
+ * Callback for webserver library.
+ *
  *  Handles reception of data, by supplying it to the http_parser
  *  associated with the request.
  *
@@ -79,13 +81,14 @@ static int on_receive(struct ws *instance, struct ws_conn *conn,
                       void *http_ins, void **req,
                       const char *buf, size_t len)
 {
-   http_request_parse(*req, buf, len);
+    http_request_parse(*req, buf, len);
 
-   return 0;
+    return 0;
 }
 
-/// Callback for webserver library
 /**
+ * Callback for webserver library.
+ *
  *  Handles closure of connections, by creating a destroying the
  *  request.
  *
@@ -97,16 +100,17 @@ static int on_receive(struct ws *instance, struct ws_conn *conn,
  *  \return 0 on success, 1 on error
  */
 static int on_disconnect(struct ws *instance, struct ws_conn *conn,
-                      void *http_ins, void **req)
+                         void *http_ins, void **req)
 {
-   http_request_destroy(*req);
-   *req = NULL;
+    http_request_destroy(*req);
+    *req = NULL;
 
-   return 0;
+    return 0;
 }
 
-/// Create a new http-server instance
 /**
+ * Create a new http-server instance.
+ *
  *  Allocates a new http-webserver instance, that should be freed with
  *  httpws_destroy()
  *
@@ -121,35 +125,36 @@ static int on_disconnect(struct ws *instance, struct ws_conn *conn,
 struct httpws *httpws_create(struct httpws_settings *settings,
                              struct ev_loop *loop)
 {
-   // Allocate instance
-   struct httpws *instance = malloc(sizeof(struct httpws));
-   if (instance == NULL) {
-      fprintf(stderr, "ERROR: Cannot allocate memory for a " \
+    // Allocate instance
+    struct httpws *instance = malloc(sizeof(struct httpws));
+    if (instance == NULL) {
+        fprintf(stderr, "ERROR: Cannot allocate memory for a " \
                       "webserver instance\n");
-      return NULL;
-   }
+        return NULL;
+    }
 
-   // Copy settings
-   memcpy(&instance->settings, settings,
-          sizeof(struct httpws_settings));
+    // Copy settings
+    memcpy(&instance->settings, settings,
+           sizeof(struct httpws_settings));
 
-   // Construct settings for webserver
-   struct ws_settings ws_settings = WS_SETTINGS_DEFAULT;
-   ws_settings.port          = settings->port;
-   ws_settings.timeout       = settings->timeout;
-   ws_settings.on_connect    = on_connect;
-   ws_settings.on_receive    = on_receive;
-   ws_settings.on_disconnect = on_disconnect;
-   ws_settings.ws_ctx        = instance;
+    // Construct settings for webserver
+    struct ws_settings ws_settings = WS_SETTINGS_DEFAULT;
+    ws_settings.port          = settings->port;
+    ws_settings.timeout       = settings->timeout;
+    ws_settings.on_connect    = on_connect;
+    ws_settings.on_receive    = on_receive;
+    ws_settings.on_disconnect = on_disconnect;
+    ws_settings.ws_ctx        = instance;
 
-   // Create webserver
-   instance->webserver = ws_create(&ws_settings, loop);
+    // Create webserver
+    instance->webserver = ws_create(&ws_settings, loop);
 
-   return instance;
+    return instance;
 }
 
-/// Destroy a http-server instance
 /**
+ * Destroy a http-server instance.
+ *
  *  Destroy a http-webserver instance created with httpws_create(). If
  *  the server is started it should be stopped first by httpws_stop().
  *
@@ -157,12 +162,13 @@ struct httpws *httpws_create(struct httpws_settings *settings,
  */
 void httpws_destroy(struct httpws *instance)
 {
-   ws_destroy(instance->webserver);
-   free(instance);
+    ws_destroy(instance->webserver);
+    free(instance);
 }
 
-/// Start a http-server instance
 /**
+ * Start a http-server instance.
+ *
  *  Starts a created http-webserver.
  *
  *  \param  instance  The instance to start.
@@ -171,11 +177,12 @@ void httpws_destroy(struct httpws *instance)
  */
 int httpws_start(struct httpws *instance)
 {
-   return ws_start(instance->webserver);
+    return ws_start(instance->webserver);
 }
 
-/// Stop a http-server instance
 /**
+ * Stop a http-server instance.
+ *
  *  Stops an already started http-webserver instance. All open connections will
  *  be killed without notifying clients, nor sending remaining data.
  *
@@ -183,6 +190,6 @@ int httpws_start(struct httpws *instance)
  */
 void httpws_stop(struct httpws *instance)
 {
-   ws_stop(instance->webserver);
+    ws_stop(instance->webserver);
 }
 

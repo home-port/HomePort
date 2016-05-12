@@ -48,8 +48,8 @@ enum state {
     S_ERROR            ///< An error has happened
 };
 
-/// An http request
 /**
+ * An http request.
  *
  * <h1>Public interface</h1>
  *
@@ -157,20 +157,9 @@ static http_parser_settings parser_settings =
                 .on_message_complete = parser_msg_cmpl
         };
 
-void http_request_print(struct http_request *req)
-{
-    printf("----- HTTP Request -----\n");
-    if (!req) {
-        printf("   (null)\n");
-    } else {
-        printf("   URL: %s\n", req->url);
-        printf("   State: %i\n", req->state);
-        ws_conn_print(req->conn);
-    }
-}
-
-/// Callback for URL parser
 /**
+ * Callback for URL parser.
+ *
  *  Called when the full path has been parsed and stores the full path
  *  in the url field of the request.
  *
@@ -192,8 +181,9 @@ static void url_parser_path_complete(void *data,
     req->url[segment_length] = '\0';
 }
 
-/// Callback for URL parser
 /**
+ * Callback for URL parser.
+ *
  *  Called when the URL parser has parsed an argument pair, with a key
  *  and a value.
  *
@@ -217,8 +207,9 @@ static void url_parser_key_value(void *data,
         return;
 }
 
-/// Callback for the header parser
 /**
+ * Callback for the header parser.
+ *
  *  Is called for each header pairs with a field and a value. If the
  *  header pair is a cookie, the cookied will be parsed and stored in
  *  the list of cookies. Multiple headers will be combined into a
@@ -288,8 +279,9 @@ static void header_parser_field_value_pair_complete(void* data,
         return;
 }
 
-/// Message begin callback for http_parser
 /**
+ * Message begin callback for http_parser.
+ *
  *  Called when the http request message begins, by the http_parser.
  *  This will call on_request_begin() and on_request_method() from
  *  ws_settings.
@@ -322,8 +314,9 @@ static int parser_msg_begin(http_parser *parser)
     }
 }
 
-/// URL callback for http_parser
 /**
+ * URL callback for http_parser.
+ *
  *  Called from http_parser with chunks of the URL. Each chunk is sent
  *  to the on_request_url() callback in ws_settings and the the URL
  *  parser.
@@ -366,8 +359,9 @@ static int parser_url(http_parser *parser, const char *buf, size_t len)
     }
 }
 
-/// Header field callback for http_parser
 /**
+ * Header field callback for http_parser.
+ *
  *  Called from http_parser with chunks of a header field. The first
  *  call to this callback will trigger a on_request_url_complete. Each
  *  chunk is sent on to the on_request_header_field() callback from
@@ -409,8 +403,9 @@ static int parser_hdr_field(http_parser *parser, const char *buf, size_t len)
     }
 }
 
-/// Header value callback for http_parser
 /**
+ * Header value callback for http_parser.
+ *
  *  Called from http_parser with chunks of a header value. The chunk
  *  will be sent on to the on_request_header_value() callback in
  *  ws_settings.
@@ -445,8 +440,9 @@ static int parser_hdr_value(http_parser *parser, const char *buf, size_t len)
     }
 }
 
-/// Header complete callback for http_parser.
 /**
+ * Header complete callback for http_parser.
+ *
  *  Called from http_parser when all headers are parsed. If any remains
  *  are left of the message, they are assumed to be the body. If there
  *  were no headers in the message, this will trigger a call to
@@ -486,8 +482,9 @@ static int parser_hdr_cmpl(http_parser *parser)
     }
 }
 
-/// Body callback for http_parser.
 /**
+ * Body callback for http_parser.
+ *
  *  Called from http_parser each time it receives a chunk of the message
  *  body. Each chunk will be sent on to on_request_body() from
  *  ws_settings.
@@ -522,8 +519,9 @@ static int parser_body(http_parser *parser, const char *buf, size_t len)
     }
 }
 
-/// Messages complete callback for http_parser.
 /**
+ * Messages complete callback for http_parser.
+ *
  *  Called from http_parser when the full message have been parsed. This
  *  will trigger a call to on_request_complete() in ws_settings.
  *
@@ -553,8 +551,9 @@ static int parser_msg_cmpl(http_parser *parser)
     }
 }
 
-/// Create a new ws_request
 /**
+ * Create a new ws_request.
+ *
  *  The created ws_request is ready to receive data through
  *  ws_reqeust_parse(), and it should be freed using
  *  ws_request_destroy() to avoid memory leaks.
@@ -613,8 +612,9 @@ struct http_request *http_request_create(
     return req;
 }
 
-/// Destroy a ws_request
 /**
+ * Destroy a ws_request.
+ *
  *  All ws_requests should be freed by a call to this function to avoid
  *  memory leaks.
  *
@@ -641,8 +641,9 @@ void http_request_destroy(struct http_request *req)
     free(req);
 }
 
-/// Parse a new chunk of the message.
 /**
+ * Parse a new chunk of the message.
+ *
  *  This will sent the chunk to the http_parser, which will parse the
  *  new chunk and call the callbacks defined in parser_settings on
  *  events. The callbacks will change state of the ws_request and make
@@ -665,8 +666,9 @@ size_t http_request_parse(
     return http_parser_execute(&req->parser, &parser_settings, buf, len);
 }
 
-/// Get the method of the http request
 /**
+ * Get the method of the http request.
+ *
  *  \param  req  http request
  *
  *  \return The method as a enum http_method
@@ -676,8 +678,9 @@ enum http_method http_request_get_method(struct http_request *req)
     return req->parser.method;
 }
 
-/// Get the URL of this request
 /**
+ * Get the URL of this request.
+ *
  *  \param  req  http request
  *
  *  \return URL as a string
@@ -687,8 +690,9 @@ const char *http_request_get_url(struct http_request *req)
     return req->url;
 }
 
-/// Get a linked map of all headers for a request
 /**
+ * Get a linked map of all headers for a request.
+ *
  *  \param  req  http request
  *
  *  \return Headers as a linkedmap (struct lm)
@@ -698,8 +702,9 @@ map_t * http_request_get_headers(struct http_request *req)
     return &req->headers;
 }
 
-/// Get a specific header of a request
 /**
+ * Get a specific header of a request.
+ *
  *  \param  req  http request
  *  \param  key  Key for the header to get
  *
@@ -713,8 +718,9 @@ const char *http_request_get_header(struct http_request *req, const char* key)
     return val;
 }
 
-/// Get a linked map of all URL arguements for a request
 /**
+ * Get a linked map of all URL arguements for a request.
+ *
  *  \param  req  http request
  *
  *  \return Arguments as a linkedmap (struct lm)
@@ -724,8 +730,9 @@ map_t * http_request_get_arguments(struct http_request *req)
     return &req->arguments;
 }
 
-/// Get a specific argument of a request
 /**
+ * Get a specific argument of a request.
+ *
  *  \param  req  http request
  *  \param  key  Key value of argument to get
  *
@@ -738,8 +745,9 @@ const char *http_request_get_argument(struct http_request *req, const char* key)
     return val;
 }
 
-/// Get a all cookies for a request
 /**
+ * Get a all cookies for a request.
+ *
  *  \param  req  http request
  *
  *  \return Cookies as a linkedmap (struct lm)
@@ -749,8 +757,9 @@ map_t * http_request_get_cookies(struct http_request *req)
     return &req->cookies;
 }
 
-/// Get a specific cookie for a request
 /**
+ * Get a specific cookie for a request.
+ *
  *  \param  req  http request
  *  \param  key  Key of cookie to get
  *
@@ -764,8 +773,9 @@ const char *http_request_get_cookie(struct http_request *req, const char* key)
     return val;
 }
 
-/// Get the connection of a request
 /**
+ * Get the connection of a request.
+ *
  *  \param  req  http request
  *
  *  \return The connection
@@ -775,8 +785,9 @@ struct ws_conn *http_request_get_connection(struct http_request *req)
     return req->conn;
 }
 
-/// Get the IP of a request
 /**
+ * Get the IP of a request.
+ *
  *  \param  req  http request
  *
  *  \return IP as a string
@@ -786,8 +797,9 @@ const char *http_request_get_ip(struct http_request *req)
     return ws_conn_get_ip(req->conn);
 }
 
-/// Keep the connection for a request open
 /**
+ * Keep the connection for a request open.
+ *
  *  Normally connections are closed when there has been no activity on
  *  it for the amount specified in the timeout field in the
  *  http-webserver settings struct. To keep the connection open forever,

@@ -43,8 +43,9 @@
 #define HTTP_VERSION "HTTP/1.1 "
 #define CRLF "\r\n"
 
-/// A http response
 /**
+ * A http response.
+ *
  *  A response should be created to an already existing request with
  *  http_response_create(), sent with http_response_sendf() or
  *  http_response_vsendf(), and freed with http_response_destroy().
@@ -62,39 +63,9 @@ struct http_response
     char *msg;            ///< Status/headers to send
 };
 
-void http_response_print(struct http_response *res)
-{
-    printf("----- HTTP Response -----\n");
-    if (!res) {
-        printf("   (null)\n");
-    } else {
-        printf("   Message: '%s'\n", res->msg);
-        ws_conn_print(res->conn);
-    }
-}
-
-#ifdef DEBUG
-// TODO: Code from libc manual - can probably be removed when bug has been fixed
-void print_trace (void) {
-    void *array[10];
-    size_t size;
-    char **strings;
-    size_t i;
-
-    size = backtrace (array, 10);
-    strings = backtrace_symbols (array, size);
-
-    printf ("Obtained %zd stack frames.\n", size);
-
-    for (i = 0; i < size; i++)
-        printf ("%s\n", strings[i]);
-
-    free (strings);
-}
-#endif
-
-/// Convert a status code to string
 /**
+ * Convert a status code to string.
+ *
  *  The result is constructed to match the textual status code in the
  *  first line in a http response, according to RFC 2616.
  *
@@ -110,8 +81,9 @@ static char* http_status_codes_to_str(hpd_status_t status)
     return NULL;
 }
 
-/// Destroy a http_response
 /**
+ * Destroy a http_response.
+ *
  *  The will close the connection and free up any memory used by the
  *  response.
  *
@@ -127,7 +99,6 @@ void http_response_destroy(struct http_response *res)
     free(res);
 }
 
-/// Create a reponse to a http request
 /**
  *  Create the reponse and constructs the status line.
  *
@@ -181,16 +152,16 @@ struct http_response *http_response_create(
     if (status_str) strcat(res->msg, status_str);
     strcat(res->msg, CRLF);
 
-    // TODO Real persistant connections is not supported, so tell client
-    // that we close connection after response has been sent
+    // TODO Real persistant connections is not supported, so tell client that we close connection after response has been sent
     // TODO Check return value
     http_response_add_header(res, "Connection", "close");
 
     return res;
 }
 
-/// Add header to a response
 /**
+ * Add header to a response.
+ *
  *  This returns an error if any of the send functions has already been
  *  called.
  *
@@ -215,11 +186,6 @@ int http_response_add_header(struct http_response *res,
     char *msg;
     int msg_len = strlen(res->msg)+strlen(field)+2+strlen(value)+strlen(CRLF)+1;
 
-#ifdef DEBUG
-    if (msg_len > 100000)
-        print_trace();
-#endif
-
     msg = realloc(res->msg, msg_len*sizeof(char));
     if (msg == NULL) {
         fprintf(stderr, "ERROR: Cannot allocate memory\n");
@@ -235,8 +201,9 @@ int http_response_add_header(struct http_response *res,
     return 0;
 }
 
-/// Add cookie header to response
 /**
+ *  Add cookie header to response.
+ *
  *  Works similarily to http_response_add_header(), but constructs a
  *  cookie header based on the details in RFC 6265. Refer to this for
  *  the correct syntax of the parameters.
@@ -321,8 +288,9 @@ int http_response_add_cookie(struct http_response *res,
     return 0;
 }
 
-/// Send response to client
 /**
+ * Send response to client.
+ *
  *  Similar to the standard printf function. See http_response_vsendf()
  *  for details.
  *
@@ -337,8 +305,9 @@ void http_response_sendf(struct http_response *res, const char *fmt, ...)
     va_end(arg);
 }
 
-/// Send response to client
 /**
+ * Send response to client.
+ *
  *  Similar to the standard vprintf functions
  *
  *  First it sends the status and header lines, if these haven't been

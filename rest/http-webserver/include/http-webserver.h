@@ -32,6 +32,7 @@
 #include <stddef.h>
 #include <stdarg.h>
 #include "hpd_types.h"
+#include "http_parser.h"
 
 // Structs
 struct ev_loop;
@@ -51,8 +52,9 @@ typedef int (*httpws_nodata_cb)(
         struct httpws *ins, struct http_request *req,
         void* ws_ctx, void** req_data);
 
-/// Settings struct for webserver
 /**
+ * Settings struct for webserver.
+ *
  *  Please initialise this struct as following, to ensure that all
  *  settings have acceptable default values:
  *  \code
@@ -112,8 +114,9 @@ struct httpws_settings {
     httpws_nodata_cb on_req_destroy;
 };
 
-/// Default settings for http-webserver
 /**
+ * Default settings for http-webserver.
+ *
  *  Use this as:
  *  \code
  *  struct httpws_settings *settings = HTTPWS_SETTINGS_DEFAULT;
@@ -155,7 +158,6 @@ const char *      http_request_get_cookie    (struct http_request *req,
                                               const char* key);
 const char *      http_request_get_ip        (struct http_request *req);
 void              http_request_keep_open     (struct http_request *req);
-void              http_request_print         (struct http_request *req);
 
 // Response functions
 void  http_response_destroy    (struct http_response *res);
@@ -174,9 +176,7 @@ int   http_response_add_cookie (struct http_response *res,
                                 const char *domain, const char *path,
                                 int secure, int http_only,
                                 const char *extension);
-void  http_response_print      (struct http_response *res);
 
-/// Convert from enum http_method to a string
 const char *http_method_str(enum http_method m);
 
 #endif

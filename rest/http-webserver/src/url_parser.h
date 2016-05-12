@@ -38,8 +38,9 @@ typedef void (*up_void_cb)(void *data);
 
 struct up;
 
-/// Settings struct for the URL Parser
 /**
+ * Settings struct for the URL Parser.
+ *
  *  Please initialise this struct as following, to ensure that all
  *  settings have acceptable default values:
  *  \code

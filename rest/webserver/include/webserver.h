@@ -30,6 +30,7 @@
 
 #include <stddef.h>
 #include <stdarg.h>
+#include "hpd_types.h"
 
 // Structs
 struct ev_loop;
@@ -40,14 +41,12 @@ struct ws_conn;
  *  Callbacks                                                         *
  **********************************************************************/
 
-typedef int  (*ws_nodata_cb)(struct ws *instance, struct ws_conn *conn,
-                             void *ws_ctx, void **data);
-typedef int  (*ws_data_cb)  (struct ws *instance, struct ws_conn *conn,
-                             void *ws_ctx, void **data,
-                             const char *buf, size_t len);
+typedef int  (*ws_nodata_cb)(struct ws *instance, struct ws_conn *conn, void *ws_ctx, void **data);
+typedef int  (*ws_data_cb)  (struct ws *instance, struct ws_conn *conn, void *ws_ctx, void **data, const char *buf, size_t len);
 
-/// Settings struct for webserver
 /**
+ * Settings struct for webserver.
+ *
  *  Please initialise this struct as following, to ensure that all
  *  settings have acceptable default values:
  *  \code
@@ -90,11 +89,12 @@ struct ws_settings {
     void *ws_ctx;
 };
 
-/// Default settings for webserver
 /**
+ * Default settings for webserver.
+ *
  *  Use this as:
  *  \code
- *  struct ws_settings *settings = WS_SETTINGS_DEFAULT;
+ *  struct ws_settings settings = WS_SETTINGS_DEFAULT;
  *  \endcode
  */
 #define WS_SETTINGS_DEFAULT { \
@@ -111,16 +111,14 @@ struct ws *ws_create(struct ws_settings *settings, struct ev_loop *loop);
 void ws_destroy(struct ws *instance);
 int ws_start(struct ws *instance);
 void ws_stop(struct ws *instance);
-void ws_print(struct ws *ws);
 
 // Client functions
-void ws_conn_kill(struct ws_conn *conn);
-void ws_conn_close(struct ws_conn *conn);
-int ws_conn_sendf(struct ws_conn *conn, const char *fmt, ...);
-int ws_conn_vsendf(struct ws_conn *conn, const char *fmt, va_list arg);
 const char *ws_conn_get_ip(struct ws_conn *conn);
 void ws_conn_keep_open(struct ws_conn *conn);
-void ws_conn_print(struct ws_conn *conn);
+int ws_conn_sendf(struct ws_conn *conn, const char *fmt, ...);
+int ws_conn_vsendf(struct ws_conn *conn, const char *fmt, va_list arg);
+void ws_conn_close(struct ws_conn *conn);
+void ws_conn_kill(struct ws_conn *conn);
 
 #endif
 
