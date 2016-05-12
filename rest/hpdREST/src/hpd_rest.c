@@ -645,7 +645,7 @@ static hpd_error_t on_parse_opt(void *data, const char *name, const char *arg)
 
     if (strcmp(name, "port") == 0) {
         // TODO Lazy error handling:
-        rest->ws_set.port = (enum ws_port) atoi(arg);
+        rest->ws_set.port = (hpd_port_t) atoi(arg);
     } else {
         return HPD_E_ARGUMENT;
     }

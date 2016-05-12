@@ -133,7 +133,7 @@ typedef enum hpd_method {
 } hpd_method_t;
 /// [hpd_method_t]
 
-// TODO Codes are duplicated in http_types.h FIX !!!
+/// [hpd_status_t]
 /**
  * HTTP status codes according to http://www.w3.org/Protocols/rfc2616/rfc2616.html
  *
@@ -144,7 +144,6 @@ typedef enum hpd_method {
  *     Client Error 4xx
  *     Server Error 5xx
  */
-/// [hpd_status_t]
 #define HPD_HTTP_STATUS_CODE_MAP(XX) \
     XX(100, Continue) \
     XX(101, Switching Protocols) \
@@ -194,6 +193,23 @@ typedef enum hpd_status {
 #undef XX
 } hpd_status_t;
 /// [hpd_status_t]
+
+/// [hpd_port_t]
+// Port numbers are assigned according to
+// http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml
+// (Site may have very long loading time)
+#define HPD_PORT_MAP(XX) \
+   XX(  80, HTTP    ) \
+   XX( 443, HTTPS   ) \
+   XX(8080, HTTP_ALT)
+
+typedef enum hpd_port
+{
+#define XX(num, str) WS_PORT_##str = num,
+    HPD_PORT_MAP(XX)
+#undef XX
+} hpd_port_t;
+/// [hpd_port_t]
 
 /// [hpd_log_level_t]
 typedef enum hpd_log_level {

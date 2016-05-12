@@ -28,8 +28,6 @@
 #ifndef WEBSERVER_H
 #define WEBSERVER_H
 
-#include "ws_types.h"
-
 #include <stddef.h>
 #include <stdarg.h>
 
@@ -83,13 +81,13 @@ typedef int  (*ws_data_cb)  (struct ws *instance, struct ws_conn *conn,
  *    - any: Ignored as client is to be killed anyways.
  */
 struct ws_settings {
-   enum ws_port port; ///< Port number
-   int timeout;
-   size_t maxdatasize;
-   ws_nodata_cb on_connect;
-   ws_data_cb   on_receive;
-   ws_nodata_cb on_disconnect;
-   void *ws_ctx;
+    hpd_port_t port; ///< Port number
+    int timeout;
+    size_t maxdatasize;
+    ws_nodata_cb on_connect;
+    ws_data_cb   on_receive;
+    ws_nodata_cb on_disconnect;
+    void *ws_ctx;
 };
 
 /// Default settings for webserver

@@ -28,10 +28,10 @@
 #ifndef HTTP_WEBSERVER_H
 #define HTTP_WEBSERVER_H
 
-#include "http_types.h"
 #include "hpd_map.h"
 #include <stddef.h>
 #include <stdarg.h>
+#include "hpd_types.h"
 
 // Structs
 struct ev_loop;
@@ -44,12 +44,12 @@ struct http_response;
  **********************************************************************/
 
 typedef int (*httpws_data_cb)(
-      struct httpws *ins, struct http_request *req,
-      void* ws_ctx, void** req_data,
-      const char *buf, size_t len);
+        struct httpws *ins, struct http_request *req,
+        void* ws_ctx, void** req_data,
+        const char *buf, size_t len);
 typedef int (*httpws_nodata_cb)(
-      struct httpws *ins, struct http_request *req,
-      void* ws_ctx, void** req_data);
+        struct httpws *ins, struct http_request *req,
+        void* ws_ctx, void** req_data);
 
 /// Settings struct for webserver
 /**
@@ -97,19 +97,19 @@ typedef int (*httpws_nodata_cb)(
  *  on_req_destroy is ignored.
  */
 struct httpws_settings {
-   enum ws_port port;
-   int timeout;
-   void* ws_ctx;
-   httpws_nodata_cb on_req_begin;
-   httpws_data_cb   on_req_method;
-   httpws_data_cb   on_req_url;
-   httpws_nodata_cb on_req_url_cmpl;
-   httpws_data_cb   on_req_hdr_field;
-   httpws_data_cb   on_req_hdr_value;
-   httpws_nodata_cb on_req_hdr_cmpl;
-   httpws_data_cb   on_req_body;
-   httpws_nodata_cb on_req_cmpl;
-   httpws_nodata_cb on_req_destroy;
+    hpd_port_t port;
+    int timeout;
+    void* ws_ctx;
+    httpws_nodata_cb on_req_begin;
+    httpws_data_cb   on_req_method;
+    httpws_data_cb   on_req_url;
+    httpws_nodata_cb on_req_url_cmpl;
+    httpws_data_cb   on_req_hdr_field;
+    httpws_data_cb   on_req_hdr_value;
+    httpws_nodata_cb on_req_hdr_cmpl;
+    httpws_data_cb   on_req_body;
+    httpws_nodata_cb on_req_cmpl;
+    httpws_nodata_cb on_req_destroy;
 };
 
 /// Default settings for http-webserver
@@ -160,8 +160,8 @@ void              http_request_print         (struct http_request *req);
 // Response functions
 void  http_response_destroy    (struct http_response *res);
 struct http_response *
-      http_response_create     (struct http_request *req,
-                                enum httpws_http_status_code status);
+        http_response_create(struct http_request *req,
+                             hpd_status_t status);
 int   http_response_add_header (struct http_response *res,
                                 const char *field, const char *value);
 void  http_response_sendf      (struct http_response *res,
@@ -176,5 +176,7 @@ int   http_response_add_cookie (struct http_response *res,
                                 const char *extension);
 void  http_response_print      (struct http_response *res);
 
+/// Convert from enum http_method to a string
+const char *http_method_str(enum http_method m);
 
 #endif

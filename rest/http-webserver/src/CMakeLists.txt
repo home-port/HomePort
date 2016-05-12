@@ -30,12 +30,13 @@
 
 # Main library
 add_library(http-webserver
-      http-webserver.c
-      request.c
-      url_parser.c
-      header_parser.c
-      response.c
-      )
+        ../include/http-webserver.h
+        http-webserver.c
+        request.c
+        url_parser.c
+        header_parser.c
+        response.c
+        )
 target_link_libraries(http-webserver webserver http-parser)
 
 # URL Parser Test

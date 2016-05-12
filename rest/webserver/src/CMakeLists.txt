@@ -30,8 +30,9 @@
 
 # Main library
 add_library(webserver
-      webserver.c
-      )
+        ../include/webserver.h
+        webserver.c
+        )
 target_link_libraries(webserver ev)
 
 # Webserver Test

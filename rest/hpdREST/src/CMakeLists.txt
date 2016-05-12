@@ -30,6 +30,7 @@
 
 # Main library
 add_library(hpd_rest SHARED
+        ../include/hpd_rest.h
         hpd_rest_intern.h
         hpd_rest.c
         json.c

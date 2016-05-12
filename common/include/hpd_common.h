@@ -28,8 +28,8 @@
 #ifndef HOMEPORT_HPD_COMMON_H
 #define HOMEPORT_HPD_COMMON_H
 
-#include "stdlib.h"
-#include "string.h"
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {

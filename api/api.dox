@@ -195,12 +195,16 @@
  *
  * \snippet include/hpd_types.h Default keys
  *
- * \subsection sec_methods Method enumeration
+ * \subsection sec_methods Method and Port enumeration
  *
  * Services have a set of actions, currently for get and put only, but these are define in a enumeration, thus can
  * easily be expanded later:
  *
  * \snippet include/hpd_types.h hpd_method_t
+ *
+ * As many modules needs to refer to port numbers, we provide the following enum:
+ *
+ * \snippet include/hpd_types.h hpd_port_t
  *
  * \subsection sec_custom_data Custom user data and free functions
  *

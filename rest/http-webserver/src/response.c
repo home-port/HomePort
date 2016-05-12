@@ -36,6 +36,8 @@
 
 #ifdef DEBUG
 #include <execinfo.h>
+#include <hpd_types.h>
+
 #endif
 
 #define HTTP_VERSION "HTTP/1.1 "
@@ -100,10 +102,10 @@ void print_trace (void) {
  *
  *  \return The status code as text
  */
-static char* http_status_codes_to_str(enum httpws_http_status_code status)
+static char* http_status_codes_to_str(hpd_status_t status)
 {
 #define XX(num, str) if(status == num) {return #str;}
-    HTTPWS_HTTP_STATUS_CODE_MAP(XX)
+    HPD_HTTP_STATUS_CODE_MAP(XX)
 #undef XX
     return NULL;
 }
@@ -144,7 +146,7 @@ void http_response_destroy(struct http_response *res)
  */
 struct http_response *http_response_create(
         struct http_request *req,
-        enum httpws_http_status_code status)
+        hpd_status_t status)
 {
     struct http_response *res = NULL;
     int len;
