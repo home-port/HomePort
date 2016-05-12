@@ -28,8 +28,6 @@
 #ifndef HOMEPORT_HPD_QUEUE_H
 #define HOMEPORT_HPD_QUEUE_H
 
-// Not the same as other queue.h
-// TODO Include this as source instead?
 #include <bsd/sys/queue.h>
 
 #ifdef __cplusplus

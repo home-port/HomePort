@@ -1,5 +1,3 @@
-#include "../../api/include/hpd_types.h"
-
 /*
  * Copyright 2011 Aalborg University. All rights reserved.
  *
