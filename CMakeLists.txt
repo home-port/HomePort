@@ -46,6 +46,10 @@ endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 add_subdirectory(lib/googletest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
+# Http-Parser
+add_library(http-parser lib/http-parser/http_parser.c)
+include_directories(lib/http-parser)
+
 # Generate API documentation with Doxygen
 find_package(Doxygen)
 if(DOXYGEN_FOUND)

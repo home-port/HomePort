@@ -29,7 +29,9 @@
 #define HTTP_TYPES_H
 
 #include "ws_types.h"
+#include "http_parser.h"
 
+// TODO Remove these and use hpd_types.h?
 // HTTP status codes according to
 // http://www.w3.org/Protocols/rfc2616/rfc2616.html
 #define HTTPWS_HTTP_STATUS_CODE_MAP(XX) \
@@ -56,53 +58,6 @@ enum httpws_http_status_code
 	HTTPWS_HTTP_STATUS_CODE_MAP(XX)
 #undef XX
 };
-
-// Copied from http-parser.h
-#ifndef HTTP_METHOD_MAP
-#define HTTP_METHOD_MAP(XX)         \
-  XX(0,  DELETE,      DELETE)       \
-  XX(1,  GET,         GET)          \
-  XX(2,  HEAD,        HEAD)         \
-  XX(3,  POST,        POST)         \
-  XX(4,  PUT,         PUT)          \
-  /* pathological */                \
-  XX(5,  CONNECT,     CONNECT)      \
-  XX(6,  OPTIONS,     OPTIONS)      \
-  XX(7,  TRACE,       TRACE)        \
-  /* webdav */                      \
-  XX(8,  COPY,        COPY)         \
-  XX(9,  LOCK,        LOCK)         \
-  XX(10, MKCOL,       MKCOL)        \
-  XX(11, MOVE,        MOVE)         \
-  XX(12, PROPFIND,    PROPFIND)     \
-  XX(13, PROPPATCH,   PROPPATCH)    \
-  XX(14, SEARCH,      SEARCH)       \
-  XX(15, UNLOCK,      UNLOCK)       \
-  /* subversion */                  \
-  XX(16, REPORT,      REPORT)       \
-  XX(17, MKACTIVITY,  MKACTIVITY)   \
-  XX(18, CHECKOUT,    CHECKOUT)     \
-  XX(19, MERGE,       MERGE)        \
-  /* upnp */                        \
-  XX(20, MSEARCH,     M-SEARCH)     \
-  XX(21, NOTIFY,      NOTIFY)       \
-  XX(22, SUBSCRIBE,   SUBSCRIBE)    \
-  XX(23, UNSUBSCRIBE, UNSUBSCRIBE)  \
-  /* RFC-5789 */                    \
-  XX(24, PATCH,       PATCH)        \
-  XX(25, PURGE,       PURGE)        \
-
-/// HTTP methods
-/**
- *  Copied here from http-parser.h to make them easier accessible.
- */
-enum http_method
-  {
-#define XX(num, name, string) HTTP_##name = num,
-  HTTP_METHOD_MAP(XX)
-#undef XX
-  };
-#endif
 
 /// Convert from enum http_method to a string
 const char *http_method_str(enum http_method m);

@@ -149,7 +149,7 @@ static http_parser_settings parser_settings =
         {
                 .on_message_begin = parser_msg_begin,
                 .on_url = parser_url,
-                .on_status_complete = NULL,
+                .on_status = NULL,
                 .on_header_field = parser_hdr_field,
                 .on_header_value = parser_hdr_value,
                 .on_headers_complete = parser_hdr_cmpl,
