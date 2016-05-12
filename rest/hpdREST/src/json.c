@@ -25,10 +25,9 @@
 
 #include "json.h"
 #include <jansson.h>
-#include <curl/curl.h>
-#include "lr_interface.h"
 #include "hpd_application_api.h"
 #include <string.h>
+#include "hpd_rest_intern.h"
 
 // TODO Error handling on the entire file !!!
 // TODO Shouldn't json object be free'd on errors ?
@@ -86,7 +85,7 @@ serviceToJson(hpd_service_id_t *service)
     hpd_service_get_id(service, &id);
     if (!add_id(serviceJson, id)) return NULL;
 
-    char *uri = lri_alloc_uri(service);
+    char *uri = hpd_rest_url_create(service);
     if (uri) {
         if (!(value = json_string(uri)) || json_object_set_new(serviceJson, "_uri", value) != 0) {
             free(uri);

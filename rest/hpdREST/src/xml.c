@@ -26,9 +26,8 @@
 #include "xml.h"
 #include <time.h>
 #include <mxml.h>
-#include <curl/curl.h>
-#include "lr_interface.h"
 #include "hpd_application_api.h"
+#include "hpd_rest_intern.h"
 
 // TODO Verify that keys do not overlap (use encoding?)
 
@@ -99,7 +98,7 @@ serviceToXml(hpd_service_id_t *service, mxml_node_t *parent)
         mxmlElementSetAttr(serviceXml, key, val);
     }
 
-    char *uri = lri_alloc_uri(service);
+    char *uri = hpd_rest_url_create(service);
     if(uri != NULL) {
         mxmlElementSetAttr(serviceXml, "_uri", uri);
         free(uri);

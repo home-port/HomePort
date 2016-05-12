@@ -30,11 +30,11 @@
 
 # Main library
 add_library(hpd_rest SHARED
-      lr_interface.c
-      hpd_rest.c
-      json.c
-      xml.c
-      )
-target_link_libraries(hpd_rest libREST jansson mxml curl)
+        hpd_rest_intern.h
+        hpd_rest.c
+        json.c
+        xml.c
+        )
+target_link_libraries(hpd_rest http-webserver jansson mxml curl)
 install (TARGETS hpd_rest DESTINATION lib)
 set_target_properties(hpd_rest PROPERTIES VERSION 0.0.0 SOVERSION 0)

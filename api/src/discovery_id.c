@@ -172,6 +172,8 @@ hpd_error_t discovery_free_did(hpd_device_id_t *id)
 hpd_error_t discovery_free_sid(hpd_service_id_t *id)
 {
     free(id->aid);
+    free(id->did);
+    free(id->sid);
     free(id);
     return HPD_E_SUCCESS;
 }

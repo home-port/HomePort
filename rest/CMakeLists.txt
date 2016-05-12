@@ -28,8 +28,6 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_subdirectory(trie)
 add_subdirectory(webserver)
 add_subdirectory(http-webserver)
-add_subdirectory(libREST)
 add_subdirectory(hpdREST)

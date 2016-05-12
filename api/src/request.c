@@ -273,6 +273,7 @@ hpd_error_t request_respond(hpd_response_t *response)
     ev_async_start(hpd->loop, &async->watcher);
     ev_async_send(hpd->loop, &async->watcher);
     TAILQ_INSERT_TAIL(&hpd->respond_watchers, async, HPD_TAILQ_FIELD);
+    free(response);
     return HPD_E_SUCCESS;
 
     alloc_error:
