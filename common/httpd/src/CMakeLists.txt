@@ -28,8 +28,15 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_subdirectory(include)
-include_directories(include)
-
-add_subdirectory(httpd)
-add_subdirectory(tcpd)
+add_library(httpd SHARED
+        ../include/httpd.h
+        ../include/httpd_types.h
+        httpd.c
+        request.c
+        url_parser.c
+        header_parser.c
+        response.c
+        )
+set_target_properties(httpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
+target_link_libraries(httpd tcpd http-parser)
+install(TARGETS httpd DESTINATION lib/hpd)

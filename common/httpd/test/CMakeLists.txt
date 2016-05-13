@@ -28,8 +28,28 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_subdirectory(include)
-include_directories(include)
+# URL Parser Test
+# TODO OLD test deactivated, changing to googletest
+# add_executable(url_parser_test EXCLUDE_FROM_ALL
+#       url_parser_test.c
+#       )
+# add_test(url_parser_test ${CMAKE_CURRENT_BINARY_DIR}/url_parser_test)
+# add_dependencies(check url_parser_test)
 
-add_subdirectory(httpd)
-add_subdirectory(tcpd)
+# Header Parser Test
+# TODO OLD test deactivated, changing to googletest
+# add_executable(header_parser_test EXCLUDE_FROM_ALL
+#       header_parser_test.c
+#       )
+# add_test(header_parser_test ${CMAKE_CURRENT_BINARY_DIR}/header_parser_test)
+# add_dependencies(check header_parser_test)
+
+# Http-Webserver Test
+# TODO OLD test deactivated, changing to googletest
+# add_executable(http-webserver_test EXCLUDE_FROM_ALL
+#       http-webserver_test.c
+#       )
+# target_link_libraries(http-webserver_test curl pthread httpd)
+# add_test(http-webserver_test ${CMAKE_CURRENT_BINARY_DIR}/http-webserver_test)
+# add_dependencies(check http-webserver_test)
+

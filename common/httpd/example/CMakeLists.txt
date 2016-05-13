@@ -28,8 +28,8 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_subdirectory(include)
-include_directories(include)
-
-add_subdirectory(httpd)
-add_subdirectory(tcpd)
+# Greetings httpd
+add_executable(greeting-server EXCLUDE_FROM_ALL
+      greeting.c
+      )
+target_link_libraries(greeting-server httpd)

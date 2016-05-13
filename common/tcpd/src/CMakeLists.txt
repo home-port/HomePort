@@ -28,8 +28,12 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_subdirectory(include)
-include_directories(include)
+add_library(tcpd SHARED
+        ../include/tcpd.h
+        ../include/tcpd_types.h
+        tcpd.c
+        )
+set_target_properties(tcpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
+target_link_libraries(tcpd ev)
+install(TARGETS tcpd DESTINATION lib/hpd)
 
-add_subdirectory(httpd)
-add_subdirectory(tcpd)

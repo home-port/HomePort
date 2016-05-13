@@ -28,8 +28,30 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_subdirectory(include)
-include_directories(include)
+# Webserver Test
+# TODO OLD test deactivated, changing to googletest
+# add_executable(webserver_test EXCLUDE_FROM_ALL
+#       webserver_test.c
+#       )
+# target_link_libraries(webserver_test ev)
+# add_test(webserver_test ${CMAKE_CURRENT_BINARY_DIR}/webserver_test)
+# add_dependencies(check webserver_test)
 
-add_subdirectory(httpd)
-add_subdirectory(tcpd)
+# Big Data Test
+# TODO OLD test deactivated, changing to googletest
+# add_executable(webserver_big_data_test EXCLUDE_FROM_ALL
+#       big_data_test.c
+#       )
+# target_link_libraries(webserver_big_data_test curl pthread tcpd)
+# add_test(webserver_big_data_test ${CMAKE_CURRENT_BINARY_DIR}/webserver_big_data_test)
+# add_dependencies(check webserver_big_data_test)
+
+# Load Test
+# TODO OLD test deactivated, changing to googletest
+# add_executable(webserver_load_test EXCLUDE_FROM_ALL
+#       load_test.c
+#       )
+# target_link_libraries(webserver_load_test curl pthread tcpd)
+# add_test(webserver_load_test ${CMAKE_CURRENT_BINARY_DIR}/webserver_load_test)
+# add_dependencies(check webserver_load_test)
+

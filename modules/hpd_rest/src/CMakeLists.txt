@@ -28,8 +28,14 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_subdirectory(include)
-include_directories(include)
-
-add_subdirectory(httpd)
-add_subdirectory(tcpd)
+# Main library
+add_library(hpd_rest SHARED
+        ../include/hpd_rest.h
+        hpd_rest_intern.h
+        hpd_rest.c
+        json.c
+        xml.c
+        )
+target_link_libraries(hpd_rest httpd jansson mxml curl)
+install(TARGETS hpd_rest DESTINATION lib/hpd)
+set_target_properties(hpd_rest PROPERTIES VERSION 0.0.0 SOVERSION 0)

@@ -28,8 +28,8 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(${CMAKE_SOURCE_DIR}/api/include)
-include_directories(${CMAKE_SOURCE_DIR}/rest/hpdREST/include)
+include_directories(${CMAKE_SOURCE_DIR}/hpd/include)
+include_directories(${CMAKE_SOURCE_DIR}/modules/hpd_rest/include)
 
 add_library(example_demo_adapter
         demo_adapter.h

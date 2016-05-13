@@ -28,8 +28,5 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_subdirectory(include)
-include_directories(include)
-
-add_subdirectory(httpd)
-add_subdirectory(tcpd)
+install(FILES httpd.h DESTINATION include/hpd)
+install(FILES httpd_types.h DESTINATION include/hpd)

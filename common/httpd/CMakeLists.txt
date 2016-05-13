@@ -28,8 +28,11 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_subdirectory(include)
-include_directories(include)
+include_directories(${PROJECT_SOURCE_DIR}/common/tcpd/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_subdirectory(httpd)
-add_subdirectory(tcpd)
+add_subdirectory(include)
+add_subdirectory(src)
+add_subdirectory(test)
+add_subdirectory(example)
+
