@@ -28,8 +28,8 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-add_subdirectory(src)
-add_subdirectory(example)
-
+# Echo tcp-server
+add_executable(echo-server EXCLUDE_FROM_ALL
+      echo.c
+      )
+target_link_libraries(echo-server tcp-server)

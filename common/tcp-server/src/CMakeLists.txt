@@ -28,13 +28,11 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-install(FILES hpd_queue.h DESTINATION include/hpd)
-install(FILES hpd_common.h DESTINATION include/hpd)
-install(FILES hpd_map.h DESTINATION include/hpd)
-
-add_library(hpd_common SHARED
-        ../include/hpd_common.h
-        ../include/hpd_queue.h
-        ../include/hpd_map.h
+add_library(tcp-server SHARED
+        ../include/tcp-server.h
+        tcp-server.c
         )
-set_target_properties(hpd_common PROPERTIES LINKER_LANGUAGE C)
+set_target_properties(tcp-server PROPERTIES VERSION 0.0.0 SOVERSION 0)
+target_link_libraries(tcp-server ev)
+install(TARGETS tcp-server DESTINATION lib/hpd)
+

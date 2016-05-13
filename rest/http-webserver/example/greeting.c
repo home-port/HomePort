@@ -37,77 +37,78 @@ static struct httpws *server = NULL;
 // Handle correct exiting
 static void exit_handler(int sig)
 {
-   // Stop server
-   if (server) {
-      httpws_stop(server);
-      httpws_destroy(server);
-   }
+    // Stop server
+    if (server) {
+        httpws_stop(server);
+        httpws_destroy(server);
+    }
 
-   // Exit
-   printf("Exiting....\n");
-   exit(sig);
+    // Exit
+    printf("Exiting....\n");
+    exit(sig);
 }
 
 void header_printer(void *data, const char* key, const char* value)
 {
-   printf("\tHeader key/value = {%s : %s}\n",key,value);
+    printf("\tHeader key/value = {%s : %s}\n",key,value);
 }
 
 int handle_request(struct httpws *ins, struct http_request *req, void* ws_ctx, void** req_data)
 {
-   const char *method = http_method_str(http_request_get_method(req));
-   const char *url = http_request_get_url(req);
+    const char *method = http_method_str(http_request_get_method(req));
+    const char *url = http_request_get_url(req);
 
-   struct lm *headers = http_request_get_headers(req);
+    struct lm *headers = http_request_get_headers(req);
 
-   printf("Got %s request on %s\n", method, url);
+    printf("Got %s request on %s\n", method, url);
 
-   // print headers
-   lm_map(headers, header_printer, NULL);
+    // print headers
+    lm_map(headers, header_printer, NULL);
 
-   char *body1 = "<html><body><h1>Hello</h1>Your language: ";
-   char *body2 = lm_find(headers, "Accept-Language");
-   if (body2 == NULL) body2 = "n/a";
-   char *body3 = "</body></html>";
-   char *body = malloc((strlen(body1)+strlen(body2)+strlen(body3)+1)*sizeof(char));
-   sprintf(body, "%s%s%s",body1, body2, body3);
+    char *body1 = "<html><body><h1>Hello</h1>Your language: ";
+    char *body2 = lm_find(headers, "Accept-Language");
+    if (body2 == NULL) body2 = "n/a";
+    char *body3 = "</body></html>";
+    char *body = malloc((strlen(body1)+strlen(body2)+strlen(body3)+1)*sizeof(char));
+    sprintf(body, "%s%s%s",body1, body2, body3);
 
-   struct http_response *res = http_response_create(req, WS_HTTP_200);
-   http_response_sendf(res, body);
+    struct http_response *res = http_response_create(req, WS_HTTP_200);
+    http_response_sendf(res, body);
 
-   free(body);
-   
-   return 0;
+    free(body);
+
+    return 0;
 }
 
 // Main function
 int main(int argc, char *argv[])
 {
-   // The event loop for the webserver to run on
-   struct ev_loop *loop = EV_DEFAULT;
+    // The event loop for the webserver to run on
+    hpd_ev_loop_t *loop = EV_DEFAULT;
 
-   // Set settings for the webserver
-   struct httpws_settings settings = HTTPWS_SETTINGS_DEFAULT;
-   settings.on_req_cmpl = handle_request;
-   settings.port = WS_PORT_HTTP_ALT;
+    // Set settings for the webserver
+    struct httpws_settings settings = HTTPWS_SETTINGS_DEFAULT;
+    settings.on_req_cmpl = handle_request;
+    settings.port = HPD_P_HTTP_ALT;
 
-   // Inform if we have been built with debug flag
+    // Inform if we have been built with debug flag
 #ifdef DEBUG
-   printf("Debugging is set\n");
+    printf("Debugging is set\n");
 #endif
 
-   // Register signals for correctly exiting
-   signal(SIGINT, exit_handler);
-   signal(SIGTERM, exit_handler);
+    // Register signals for correctly exiting
+    signal(SIGINT, exit_handler);
+    signal(SIGTERM, exit_handler);
 
-   // Create server
-   server = httpws_create(&settings, loop);
+    // Create server
+    // TODO Parameter cannot be null !
+    server = httpws_create(&settings, NULL, loop);
 
-   // Start the event loop and webserver
-   if (!httpws_start(server))
-      ev_run(loop, 0);
+    // Start the event loop and webserver
+    if (!httpws_start(server))
+        ev_run(loop, 0);
 
-   // Exit
-   exit_handler(0);
-   return 0;
+    // Exit
+    exit_handler(0);
+    return 0;
 }

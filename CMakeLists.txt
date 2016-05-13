@@ -43,7 +43,7 @@ if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 
 # GoogleTest
-add_subdirectory(lib/googletest)
+add_subdirectory(lib/googletest EXCLUDE_FROM_ALL)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 # Http-Parser
@@ -89,8 +89,11 @@ else(DOXYGEN_FOUND)
     message(WARNING "Please install doxygen to generate documentation")
 endif(DOXYGEN_FOUND)
 
+include_directories(${PROJECT_SOURCE_DIR}/api/include)
+include_directories(${PROJECT_SOURCE_DIR}/common/include)
+include_directories(${PROJECT_SOURCE_DIR}/common/tcp-server/include)
+
 add_subdirectory(common)
-include_directories(${CMAKE_SOURCE_DIR}/common/include)
 add_subdirectory(api)
 add_subdirectory(example)
 add_subdirectory(rest)

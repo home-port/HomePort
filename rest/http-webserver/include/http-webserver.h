@@ -35,7 +35,6 @@
 #include "http_parser.h"
 
 // Structs
-struct ev_loop;
 struct httpws;
 struct http_request;
 struct http_response;
@@ -123,7 +122,7 @@ struct httpws_settings {
  *  \endcode
  */
 #define HTTPWS_SETTINGS_DEFAULT { \
-   .port = WS_PORT_HTTP, \
+   .port = HPD_P_HTTP, \
    .timeout = 15, \
    .ws_ctx = NULL, \
    .on_req_begin = NULL, \
@@ -138,8 +137,7 @@ struct httpws_settings {
    .on_req_cmpl = NULL }
 
 // Webserver functions
-struct httpws *  httpws_create  (struct httpws_settings *settings,
-                                 struct ev_loop *loop);
+struct httpws *httpws_create(struct httpws_settings *settings, hpd_module_t *context, hpd_ev_loop_t *loop);
 void             httpws_destroy (struct httpws *instance);
 int              httpws_start   (struct httpws *instance);
 void             httpws_stop    (struct httpws *instance);

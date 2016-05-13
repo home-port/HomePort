@@ -36,7 +36,7 @@
 static char *big_data;
 
 static int started = 0;
-static struct ws *ws = NULL;
+static hpd_ws_t *ws = NULL;
 static struct ev_loop *loop;
 static struct ev_async exit_watcher;
 
@@ -138,7 +138,7 @@ static int test_thread()
 	curl_global_init(CURL_GLOBAL_ALL);
 
    // Run test
-	printf("Running webserver tests\n");
+	printf("Running tcp-server tests\n");
 	testresult = basic_get_test("http://localhost:8080");
 
    // Check result
@@ -155,9 +155,9 @@ static int test_thread()
 	return ret;
 }
 
-/// On connect callback for webserver
-static int on_connect(struct ws *instance,
-                      struct ws_conn *conn, void *ws_ctx, void **data)
+/// On connect callback for tcp-server
+static int on_connect(hpd_ws_t *instance,
+                      hpd_ws_conn_t *conn, void *ws_ctx, void **data)
 {
    char *body = malloc(sizeof(char));
    body[0] = '\0';
@@ -166,9 +166,9 @@ static int on_connect(struct ws *instance,
    return 0;
 }
 
-/// On receive callback for webserver
-static int on_receive(struct ws *instance,
-                      struct ws_conn *conn, void *ctx, void **data,
+/// On receive callback for tcp-server
+static int on_receive(hpd_ws_t *instance,
+                      hpd_ws_conn_t *conn, void *ctx, void **data,
                       const char *buf, size_t len)
 {
    char *body = *data, *new;
@@ -193,9 +193,9 @@ static int on_receive(struct ws *instance,
    return 0;
 }
 
-/// On disconnect callback for webserver
-static int on_disconnect(struct ws *instance,
-                         struct ws_conn *conn, void *ws_ctx, void **data)
+/// On disconnect callback for tcp-server
+static int on_disconnect(hpd_ws_t *instance,
+                         hpd_ws_conn_t *conn, void *ws_ctx, void **data)
 {
    free(*data);
    return 0;
@@ -211,8 +211,8 @@ static void exit_handler(int sig)
 /// Exit callback for async watcher (Webserver)
 static void exit_cb(EV_P_ ev_async *watcher, int revents)
 {
-   fprintf(stderr, "Stopping webserver\n");
-   // Stop webserver
+   fprintf(stderr, "Stopping tcp-server\n");
+   // Stop tcp-server
    if (ws != NULL) {
       ws_stop(ws);
       ws_destroy(ws);
@@ -224,16 +224,16 @@ static void exit_cb(EV_P_ ev_async *watcher, int revents)
 /// Webserver thread
 static void *webserver_thread(void *arg)
 {
-   // The event loop for the webserver to run on
+   // The event loop for the tcp-server to run on
    loop = EV_DEFAULT;
 
    // Add a watcher to stop it again
    ev_async_init(&exit_watcher, exit_cb);
    ev_async_start(loop, &exit_watcher);
 
-   // Settings for the webserver
+   // Settings for the tcp-server
    struct ws_settings settings = WS_SETTINGS_DEFAULT;
-   settings.port = WS_PORT_HTTP_ALT;
+   settings.port = HPD_P_HTTP_ALT;
    settings.on_connect = on_connect;
    settings.on_receive = on_receive;
    settings.on_disconnect = on_disconnect;
@@ -247,11 +247,11 @@ static void *webserver_thread(void *arg)
    signal(SIGINT, exit_handler);
    signal(SIGTERM, exit_handler);
 
-   // Create webserver
+   // Create tcp-server
    ws = ws_create(&settings, loop);
    ws_start(ws);
 
-   // Start the event loop and webserver
+   // Start the event loop and tcp-server
    started = 1;
    ev_run(loop, 0);
 
@@ -275,7 +275,7 @@ int main(int argc, char *argv[])
    big_data[size-2] = 'F';
    big_data[size-1] = '\0';
 
-   // Start webserver and wait for it to start
+   // Start tcp-server and wait for it to start
    pthread_create(&server_thread, NULL, webserver_thread, NULL);
    // TODO Someone needs too add a timeout here...
    while (!started);
@@ -283,7 +283,7 @@ int main(int argc, char *argv[])
    // Run test
    stat = test_thread();
 
-   // Stop webserver properly
+   // Stop tcp-server properly
    exit_handler(0);
    pthread_join(server_thread, NULL);
 

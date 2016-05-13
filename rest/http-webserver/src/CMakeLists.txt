@@ -37,7 +37,7 @@ add_library(http-webserver
         header_parser.c
         response.c
         )
-target_link_libraries(http-webserver webserver http-parser)
+target_link_libraries(http-webserver tcp-server http-parser)
 
 # URL Parser Test
 # TODO OLD test deactivated, changing to googletest

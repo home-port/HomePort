@@ -50,6 +50,7 @@ hpd_error_t hpd_vlogf(hpd_module_t *context, hpd_log_level_t level, const char *
 #define HPD_LOG_WARN(CONTEXT, FMT, ...) hpd_logf((CONTEXT), HPD_L_WARN , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
 #define HPD_LOG_INFO(CONTEXT, FMT, ...) hpd_logf((CONTEXT), HPD_L_INFO , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
 #define HPD_LOG_DEBUG(CONTEXT, FMT, ...) hpd_logf((CONTEXT), HPD_L_DEBUG, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
+#define HPD_LOG_VERBOSE(CONTEXT, FMT, ...) hpd_logf((CONTEXT), HPD_L_VERBOSE, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
 /// [log functions]
 
 /// [id_t functions]

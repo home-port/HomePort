@@ -25,32 +25,32 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef WEBSERVER_H
-#define WEBSERVER_H
+#ifndef HOMEPORT_TCP_SERVER_H
+#define HOMEPORT_TCP_SERVER_H
 
 #include <stddef.h>
 #include <stdarg.h>
 #include "hpd_types.h"
 
 // Structs
-struct ev_loop;
-struct ws;
-struct ws_conn;
+typedef struct hpd_tcpd hpd_tcpd_t;
+typedef struct hpd_tcpd_settings hpd_tcpd_settings_t;
+typedef struct hpd_tcpd_conn hpd_tcpd_conn_t;
 
 /**********************************************************************
  *  Callbacks                                                         *
  **********************************************************************/
 
-typedef int  (*ws_nodata_cb)(struct ws *instance, struct ws_conn *conn, void *ws_ctx, void **data);
-typedef int  (*ws_data_cb)  (struct ws *instance, struct ws_conn *conn, void *ws_ctx, void **data, const char *buf, size_t len);
+typedef hpd_error_t (*hpd_tcpd_nodata_f)(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx);
+typedef hpd_error_t (*hpd_tcpd_data_f)(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx, const char *buf, size_t len);
 
 /**
- * Settings struct for webserver.
+ * Settings struct for tcp-server.
  *
  *  Please initialise this struct as following, to ensure that all
  *  settings have acceptable default values:
  *  \code
- *  struct ws_settings *settings = WS_SETTINGS_DEFAULT;
+ *  hpd_tcpd_settings_t *settings = HPD_TCPD_SETTINGS_DEFAULT;
  *  \endcode
  *
  *  The settings hold a series of callbacks of type either data_cb or
@@ -79,46 +79,48 @@ typedef int  (*ws_data_cb)  (struct ws *instance, struct ws_conn *conn, void *ws
  *  - on_disconnect:
  *    - any: Ignored as client is to be killed anyways.
  */
-struct ws_settings {
+struct hpd_tcpd_settings {
     hpd_port_t port; ///< Port number
     int timeout;
-    size_t maxdatasize;
-    ws_nodata_cb on_connect;
-    ws_data_cb   on_receive;
-    ws_nodata_cb on_disconnect;
-    void *ws_ctx;
+    int retry_delay;
+    size_t max_data_size;
+    hpd_tcpd_nodata_f on_connect;
+    hpd_tcpd_data_f on_receive;
+    hpd_tcpd_nodata_f on_disconnect;
+    void *tcpd_ctx;
 };
 
 /**
- * Default settings for webserver.
+ * Default settings for tcp-server.
  *
  *  Use this as:
  *  \code
- *  struct ws_settings settings = WS_SETTINGS_DEFAULT;
+ *  hpd_tcpd_settings_t settings = HPD_TCPD_SETTINGS_DEFAULT;
  *  \endcode
  */
-#define WS_SETTINGS_DEFAULT { \
-   .port = WS_PORT_HTTP, \
+#define HPD_TCPD_SETTINGS_DEFAULT { \
+   .port = HPD_P_HTTP, \
    .timeout = 15, \
-   .maxdatasize = 1024, \
+   .retry_delay = 5, \
+   .max_data_size = 1024, \
    .on_connect = NULL, \
    .on_receive = NULL, \
    .on_disconnect = NULL, \
-   .ws_ctx = NULL }
+   .tcpd_ctx = NULL }
 
 // Webserver functions
-struct ws *ws_create(struct ws_settings *settings, struct ev_loop *loop);
-void ws_destroy(struct ws *instance);
-int ws_start(struct ws *instance);
-void ws_stop(struct ws *instance);
+hpd_error_t hpd_tcpd_create(hpd_tcpd_t **tcpd, hpd_tcpd_settings_t *settings, hpd_module_t *context, hpd_ev_loop_t *loop);
+hpd_error_t hpd_tcpd_destroy(hpd_tcpd_t *tcpd);
+hpd_error_t hpd_tcpd_start(hpd_tcpd_t *tcpd);
+hpd_error_t hpd_tcpd_stop(hpd_tcpd_t *tcpd);
 
 // Client functions
-const char *ws_conn_get_ip(struct ws_conn *conn);
-void ws_conn_keep_open(struct ws_conn *conn);
-int ws_conn_sendf(struct ws_conn *conn, const char *fmt, ...);
-int ws_conn_vsendf(struct ws_conn *conn, const char *fmt, va_list arg);
-void ws_conn_close(struct ws_conn *conn);
-void ws_conn_kill(struct ws_conn *conn);
+hpd_error_t hpd_tcpd_conn_get_ip(hpd_tcpd_conn_t *conn, const char **ip);
+hpd_error_t hpd_tcpd_conn_keep_open(hpd_tcpd_conn_t *conn);
+hpd_error_t hpd_tcpd_conn_sendf(hpd_tcpd_conn_t *conn, const char *fmt, ...);
+hpd_error_t hpd_tcpd_conn_vsendf(hpd_tcpd_conn_t *conn, const char *fmt, va_list vp);
+hpd_error_t hpd_tcpd_conn_close(hpd_tcpd_conn_t *conn);
+hpd_error_t hpd_tcpd_conn_kill(hpd_tcpd_conn_t *conn);
 
-#endif
+#endif // HOMEPORT_TCP_SERVER_H
 

@@ -67,14 +67,10 @@ typedef struct hpd_parameter_id hpd_parameter_id_t;
 /// [hpd_error_t]
 typedef enum hpd_error {
     HPD_E_SUCCESS = 0,  //< The operation was successful.
-    HPD_E_UNKNOWN = 1,  //< An unknown error with no further details.
+    HPD_E_UNKNOWN = 1,  //< An unknown error
     HPD_E_NULL,         //< Null pointer error.
     HPD_E_ALLOC,        //< Memory allocation error.
-    HPD_E_STATE,        //< Cannot perform the operation because the object is in an invalid state.
-    // TODO Are these not used ?
-    HPD_E_ATTACHED,     //< Cannot perform the operation because the object is attached.
-    HPD_E_DETACHED,     //< Cannot perform the operation because the object is detached.
-    HPD_E_UNSUBSCRIBED, //< Cannot perform the operation because the object is not subscribed.
+    HPD_E_STATE,        //< An object is in an invalid state.
     HPD_E_ARGUMENT,     //< An argument is invalid.
     HPD_E_NOT_UNIQUE,   //< An argument is not unique.
     HPD_E_NOT_FOUND,    //< The object could not be found.
@@ -205,7 +201,7 @@ typedef enum hpd_status {
 
 typedef enum hpd_port
 {
-#define XX(num, str) WS_PORT_##str = num,
+#define XX(num, str) HPD_P_##str = num,
     HPD_PORT_MAP(XX)
 #undef XX
 } hpd_port_t;
@@ -217,6 +213,7 @@ typedef enum hpd_log_level {
     HPD_L_WARN,
     HPD_L_INFO,
     HPD_L_DEBUG,
+    HPD_L_VERBOSE,
 } hpd_log_level_t;
 /// [hpd_log_level_t]
 

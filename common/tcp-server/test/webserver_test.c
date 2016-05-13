@@ -25,65 +25,24 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "webserver.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ev.h>
+#include "tcp-server.c"
+#include "unit_test.h"
 
-// A webserver instance
-static struct ws *ws = NULL;
+TEST_START(webserver.c)
 
-// Receive messages
-static int on_receive(struct ws *instance, struct ws_conn *conn, void *ctx, void **data,
-                      const char *buf, size_t len)
-{
-   ws_conn_sendf(conn, "%.*s", (int)len, buf);
-   return 0;
-}
+TEST(sendf)
+   hpd_ws_conn_t conn;
+   conn.send_msg = NULL;
+   conn.send_len = 0;
+   conn.instance = NULL;
 
-// Handle correct exiting
-static void exit_handler(int sig)
-{
-   // Stop webserver
-   if (ws != NULL) {
-      ws_stop(ws);
-      ws_destroy(ws);
-   }
+   ws_conn_sendf(&conn, "Hello");
+   ws_conn_sendf(&conn, " World");
 
-   // Exit
-   printf("Exiting....\n");
-   exit(sig);
-}
+   ASSERT_STR_EQUAL(conn.send_msg, "Hello World");
+   ASSERT_EQUAL(conn.send_len, 11);
 
-// Main function
-int main(int argc, char *argv[])
-{
-   // The event loop for the webserver to run on
-   struct ev_loop *loop = EV_DEFAULT;
+   free(conn.send_msg);
+TSET()
 
-   // Settings for the webserver
-   struct ws_settings settings = WS_SETTINGS_DEFAULT;
-   settings.port = WS_PORT_HTTP_ALT;
-   settings.on_receive = on_receive;
-
-   // Inform if we have been built with debug flag
-#ifdef DEBUG
-   printf("Debugging is set\n");
-#endif
-
-   // Register signals for correctly exiting
-   signal(SIGINT, exit_handler);
-   signal(SIGTERM, exit_handler);
-
-   // Create webserver
-   ws = ws_create(&settings, loop);
-   ws_start(ws);
-
-   // Start the event loop and webserver
-   ev_run(loop, 0);
-
-   // Exit
-   exit_handler(0);
-   return 0;
-}
+TEST_END()

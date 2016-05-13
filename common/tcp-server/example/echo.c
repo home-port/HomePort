@@ -25,24 +25,65 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "webserver.c"
-#include "unit_test.h"
+#include "tcp-server.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ev.h>
 
-TEST_START(webserver.c)
+// A tcp-server instance
+static hpd_tcpd_t *ws = NULL;
 
-TEST(sendf)
-   struct ws_conn conn;
-   conn.send_msg = NULL;
-   conn.send_len = 0;
-   conn.instance = NULL;
+// Receive messages
+static int on_receive(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ctx, void **data,
+                      const char *buf, size_t len)
+{
+   hpd_tcpd_conn_sendf(conn, "%.*s", (int) len, buf);
+   return 0;
+}
 
-   ws_conn_sendf(&conn, "Hello");
-   ws_conn_sendf(&conn, " World");
+// Handle correct exiting
+static void exit_handler(int sig)
+{
+   // Stop tcp-server
+   if (hpd_ws != NULL) {
+      hpd_tcpd_stop(hpd_ws);
+      hpd_tcpd_destroy(hpd_ws);
+   }
 
-   ASSERT_STR_EQUAL(conn.send_msg, "Hello World");
-   ASSERT_EQUAL(conn.send_len, 11);
+   // Exit
+   printf("Exiting....\n");
+   exit(sig);
+}
 
-   free(conn.send_msg);
-TSET()
+// Main function
+int main(int argc, char *argv[])
+{
+   // The event loop for the tcp-server to run on
+   hpd_ev_loop_t *loop = EV_DEFAULT;
 
-TEST_END()
+   // Settings for the tcp-server
+   hpd_tcpd_settings_t settings = HPD_TCPD_SETTINGS_DEFAULT;
+   settings.port = HPD_P_HTTP_ALT;
+   settings.on_receive = on_receive;
+
+   // Inform if we have been built with debug flag
+#ifdef DEBUG
+   printf("Debugging is set\n");
+#endif
+
+   // Register signals for correctly exiting
+   signal(SIGINT, exit_handler);
+   signal(SIGTERM, exit_handler);
+
+   // Create tcp-server
+   hpd_ws = hpd_tcpd_create(NULL, &settings, NULL, NULL);
+   hpd_tcpd_start(hpd_ws);
+
+   // Start the event loop and tcp-server
+   ev_run(loop, 0);
+
+   // Exit
+   exit_handler(0);
+   return 0;
+}

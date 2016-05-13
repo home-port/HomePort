@@ -28,9 +28,10 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_library(hpd_common SHARED
-        ../include/hpd_common.h
-        ../include/hpd_queue.h
-        ../include/hpd_map.h
-        )
-set_target_properties(hpd_common PROPERTIES LINKER_LANGUAGE C)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+add_subdirectory(include)
+add_subdirectory(src)
+add_subdirectory(test)
+add_subdirectory(example)
+

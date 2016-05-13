@@ -490,7 +490,7 @@ static void *webserver_thread(void *arg)
 
    // Settings for the webserver
    struct httpws_settings settings = HTTPWS_SETTINGS_DEFAULT;
-   settings.port = WS_PORT_HTTP_ALT;
+   settings.port = HPD_P_HTTP_ALT;
    settings.on_req_begin = on_req_begin;
    settings.on_req_method = on_req_method;
    settings.on_req_url = on_req_url;

@@ -28,7 +28,7 @@
 #include "response.h"
 #include "request.h"
 #include "http-webserver.h"
-#include "webserver.h"
+#include "tcp-server.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -59,7 +59,7 @@
  */
 struct http_response
 {
-    struct ws_conn *conn; ///< The connection to send on
+    hpd_tcpd_conn_t *conn; ///< The connection to send on
     char *msg;            ///< Status/headers to send
 };
 
@@ -94,7 +94,7 @@ static char* http_status_codes_to_str(hpd_status_t status)
  */
 void http_response_destroy(struct http_response *res)
 {
-    ws_conn_close(res->conn);
+    hpd_tcpd_conn_close(res->conn); // TODO Ignoring error
     free(res->msg);
     free(res);
 }
@@ -327,14 +327,14 @@ void http_response_vsendf(struct http_response *res,
 {
     if (res->msg) {
         // TODO Sendf returns a status
-        ws_conn_sendf(res->conn, "%s%s", res->msg, CRLF);
+        hpd_tcpd_conn_sendf(res->conn, "%s%s", res->msg, CRLF); // TODO Ignoring error
         free(res->msg);
         res->msg = NULL;
     }
 
     if (fmt) {
         // TODO Sendf returns a status
-        ws_conn_vsendf(res->conn, fmt, arg);
+        hpd_tcpd_conn_vsendf(res->conn, fmt, arg); // TODO Ignoring error
     }
 
 }

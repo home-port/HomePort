@@ -29,21 +29,15 @@
 #define PARSER_H
 
 #include "http-webserver.h"
+#include "tcp-server.h"
 #include <stddef.h>
 
-struct ws_conn;
-
-struct http_request *http_request_create(
-      struct httpws *webserver,
-      struct httpws_settings *settings,
-      struct ws_conn *conn);
+struct http_request *http_request_create(struct httpws *webserver, struct httpws_settings *settings, hpd_tcpd_conn_t *conn);
 
 void http_request_destroy(struct http_request *req);
 
-size_t http_request_parse(struct http_request *req,
-                          const char *buf,
-                          size_t len);
+size_t http_request_parse(struct http_request *req, const char *buf, size_t len);
 
-struct ws_conn *http_request_get_connection(struct http_request *req);
+hpd_tcpd_conn_t *http_request_get_connection(struct http_request *req);
 
 #endif

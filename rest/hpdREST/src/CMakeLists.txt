@@ -37,5 +37,5 @@ add_library(hpd_rest SHARED
         xml.c
         )
 target_link_libraries(hpd_rest http-webserver jansson mxml curl)
-install (TARGETS hpd_rest DESTINATION lib)
+install(TARGETS hpd_rest DESTINATION lib/hpd)
 set_target_properties(hpd_rest PROPERTIES VERSION 0.0.0 SOVERSION 0)

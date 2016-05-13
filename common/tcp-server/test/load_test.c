@@ -45,7 +45,7 @@ static int multithreaded_results;
 static pthread_mutex_t lock;
 static pthread_t threadID[NTHREADS];
 static int started = 0;
-static struct ws *ws = NULL;
+static hpd_ws_t *ws = NULL;
 
 static void init_libcurl()
 {
@@ -181,7 +181,7 @@ static int test_thread()
    int ret =1;
 	init_tests();
 
-	printf("Running webserver tests:\n");
+	printf("Running tcp-server tests:\n");
 
 	printf("\tBasic connection test: ");
 	testresult = basic_get_contains_test("http://localhost:8080", "Hello");
@@ -207,7 +207,7 @@ static int test_thread()
 	return ret;
 }
 
-static int on_receive(struct ws *instance, struct ws_conn *conn, void *ctx, void **data,
+static int on_receive(hpd_ws_t *instance, hpd_ws_conn_t *conn, void *ctx, void **data,
                       const char *buf, size_t len)
 {
    ws_conn_sendf(conn, "HTTP/1.1 200 OK\r\n\r\nHello");
@@ -228,8 +228,8 @@ static void exit_handler(int sig)
 
 static void exit_cb(EV_P_ ev_async *watcher, int revents)
 {
-   fprintf(stderr, "Stopping webserver\n");
-   // Stop webserver
+   fprintf(stderr, "Stopping tcp-server\n");
+   // Stop tcp-server
    if (ws != NULL) {
       ws_stop(ws);
       ws_destroy(ws);
@@ -240,16 +240,16 @@ static void exit_cb(EV_P_ ev_async *watcher, int revents)
 
 static void *webserver_thread(void *arg)
 {
-   // The event loop for the webserver to run on
+   // The event loop for the tcp-server to run on
    loop = EV_DEFAULT;
 
    // Add a watcher to stop it again
    ev_async_init(&exit_watcher, exit_cb);
    ev_async_start(loop, &exit_watcher);
 
-   // Settings for the webserver
+   // Settings for the tcp-server
    struct ws_settings settings = WS_SETTINGS_DEFAULT;
-   settings.port = WS_PORT_HTTP_ALT;
+   settings.port = HPD_P_HTTP_ALT;
    settings.on_receive = on_receive;
 
    // Inform if we have been built with debug flag
@@ -261,11 +261,11 @@ static void *webserver_thread(void *arg)
    signal(SIGINT, exit_handler);
    signal(SIGTERM, exit_handler);
 
-   // Create webserver
+   // Create tcp-server
    ws = ws_create(&settings, loop);
    ws_start(ws);
 
-   // Start the event loop and webserver
+   // Start the event loop and tcp-server
    started = 1;
    ev_run(loop, 0);
 

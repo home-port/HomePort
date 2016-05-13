@@ -29,7 +29,7 @@
 #include "http_parser.h"
 #include "url_parser.h"
 #include "header_parser.h"
-#include "webserver.h"
+#include "tcp-server.h"
 #include "hpd_map.h"
 
 #include <stdio.h>
@@ -53,7 +53,7 @@ enum state {
  *
  * <h1>Public interface</h1>
  *
- * nodata_cb and data_cb functions in ws_settings provides a request as
+ * nodata_cb and data_cb functions in hpd_tcpd_settings provides a request as
  * their parameters. This allows the implenter of a webserver to receive
  * requests.
  *
@@ -73,7 +73,7 @@ enum state {
  * ws_request_parse() which appends a new string to the request. Note
  * that the request do not save any data itself, beside from its state.
  * All data in the string will be passed on as pointers to the callbacks
- * defined in ws_settings.
+ * defined in hpd_tcpd_settings.
  *
  * ws_request_get_client() gets the client that sent the request.
  *
@@ -82,7 +82,7 @@ enum state {
  * A request will take states in the following order, the states of
  * S_STOP and S_ERROR can be assumed as always possible target for a
  * transition. The labels on the edges denote the callback from
- * ws_settings, that will be called upon the transition.
+ * hpd_tcpd_settings, that will be called upon the transition.
  * \dot
  * digraph request_states {
  * node [fontsize=10];
@@ -123,7 +123,7 @@ struct http_request
 {
     struct httpws *webserver;         ///< HTTP Webserver
     struct httpws_settings *settings; ///< Settings
-    struct ws_conn *conn;             ///< Connection to client
+    hpd_tcpd_conn_t *conn;             ///< Connection to client
     http_parser parser;               ///< HTTP parser
     struct up *url_parser;            ///< URL Parser
     struct hp *header_parser;         ///< Header Parser
@@ -284,7 +284,7 @@ static void header_parser_field_value_pair_complete(void* data,
  *
  *  Called when the http request message begins, by the http_parser.
  *  This will call on_request_begin() and on_request_method() from
- *  ws_settings.
+ *  hpd_tcpd_settings.
  *
  *  @param  parser The http_parser calling.
  *
@@ -318,7 +318,7 @@ static int parser_msg_begin(http_parser *parser)
  * URL callback for http_parser.
  *
  *  Called from http_parser with chunks of the URL. Each chunk is sent
- *  to the on_request_url() callback in ws_settings and the the URL
+ *  to the on_request_url() callback in hpd_tcpd_settings and the the URL
  *  parser.
  *
  *  @param  parser The http_parser calling.
@@ -365,7 +365,7 @@ static int parser_url(http_parser *parser, const char *buf, size_t len)
  *  Called from http_parser with chunks of a header field. The first
  *  call to this callback will trigger a on_request_url_complete. Each
  *  chunk is sent on to the on_request_header_field() callback from
- *  ws_settings.
+ *  hpd_tcpd_settings.
  *
  *  @param  parser The http_parser calling.
  *  @param  buf    The buffer containing the chunk. Note that the buffer
@@ -408,7 +408,7 @@ static int parser_hdr_field(http_parser *parser, const char *buf, size_t len)
  *
  *  Called from http_parser with chunks of a header value. The chunk
  *  will be sent on to the on_request_header_value() callback in
- *  ws_settings.
+ *  hpd_tcpd_settings.
  *
  *  @param  parser The http_parser calling.
  *  @param  buf    The buffer containing the chunk. Note that the buffer
@@ -446,7 +446,7 @@ static int parser_hdr_value(http_parser *parser, const char *buf, size_t len)
  *  Called from http_parser when all headers are parsed. If any remains
  *  are left of the message, they are assumed to be the body. If there
  *  were no headers in the message, this will trigger a call to
- *  on_request_url_complete() from ws_settings. For both messages with
+ *  on_request_url_complete() from hpd_tcpd_settings. For both messages with
  *  or without headers, on_request_header_complete() will also be
  *  called.
  *
@@ -487,7 +487,7 @@ static int parser_hdr_cmpl(http_parser *parser)
  *
  *  Called from http_parser each time it receives a chunk of the message
  *  body. Each chunk will be sent on to on_request_body() from
- *  ws_settings.
+ *  hpd_tcpd_settings.
  *
  *  @param  parser The http_parser calling.
  *  @param  buf    The buffer containing the chunk. Note that the buffer
@@ -523,7 +523,7 @@ static int parser_body(http_parser *parser, const char *buf, size_t len)
  * Messages complete callback for http_parser.
  *
  *  Called from http_parser when the full message have been parsed. This
- *  will trigger a call to on_request_complete() in ws_settings.
+ *  will trigger a call to on_request_complete() in hpd_tcpd_settings.
  *
  *  @param  parser The http_parser calling.
  *  @return 1 to signal the parser to stop, or 0 to signal a continue.
@@ -570,7 +570,7 @@ static int parser_msg_cmpl(http_parser *parser)
 struct http_request *http_request_create(
         struct httpws *webserver,
         struct httpws_settings *settings,
-        struct ws_conn *conn)
+        hpd_tcpd_conn_t *conn)
 {
     struct http_request *req = malloc(sizeof(struct http_request));
     if(req == NULL) {
@@ -647,7 +647,7 @@ void http_request_destroy(struct http_request *req)
  *  This will sent the chunk to the http_parser, which will parse the
  *  new chunk and call the callbacks defined in parser_settings on
  *  events. The callbacks will change state of the ws_request and make
- *  calls on the functions defined in ws_settings.
+ *  calls on the functions defined in hpd_tcpd_settings.
  *
  *  @param  req The request, to which the chunk should be added.
  *  @param  buf The chunk, which is not assumed to be \\0 terminated.
@@ -780,7 +780,7 @@ const char *http_request_get_cookie(struct http_request *req, const char* key)
  *
  *  \return The connection
  */
-struct ws_conn *http_request_get_connection(struct http_request *req)
+hpd_tcpd_conn_t *http_request_get_connection(struct http_request *req)
 {
     return req->conn;
 }
@@ -794,7 +794,9 @@ struct ws_conn *http_request_get_connection(struct http_request *req)
  */
 const char *http_request_get_ip(struct http_request *req)
 {
-    return ws_conn_get_ip(req->conn);
+    const char *ip;
+    hpd_tcpd_conn_get_ip(req->conn, &ip); // TODO ignoring error
+    return ip;
 }
 
 /**
@@ -810,5 +812,5 @@ const char *http_request_get_ip(struct http_request *req)
  */
 void http_request_keep_open(struct http_request *req)
 {
-    ws_conn_keep_open(req->conn);
+    hpd_tcpd_conn_keep_open(req->conn); // TODO Ignoring error
 }

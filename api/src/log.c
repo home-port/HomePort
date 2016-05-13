@@ -58,8 +58,12 @@ hpd_error_t log_vlogf(const char *module, hpd_log_level_t level, const char *fil
             type = "INFO";
             break;
         case HPD_L_DEBUG:
-            stream = stdout;
+            stream = stderr;
             type = "DEBUG";
+            break;
+        case HPD_L_VERBOSE:
+            stream = stdout;
+            type = "VERBOSE";
             break;
         default:
             LOG_RETURN(HPD_E_ARGUMENT, "Unknown log level.");

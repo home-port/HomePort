@@ -28,8 +28,5 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(${PROJECT_SOURCE_DIR}/api/include)
-
-add_subdirectory(webserver)
 add_subdirectory(http-webserver)
 add_subdirectory(hpdREST)

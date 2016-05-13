@@ -637,7 +637,7 @@ static hpd_error_t on_start(void *data, hpd_t *hpd)
     hpd_ev_loop_t *loop;
     if ((rc = hpd_get_loop(hpd, &loop))) return rc;
 
-    if (!(rest->ws = httpws_create(&rest->ws_set, loop))) return HPD_E_UNKNOWN;
+    if (!(rest->ws = httpws_create(&rest->ws_set, rest->context, loop))) return HPD_E_UNKNOWN;
     if (httpws_start(rest->ws)) return HPD_E_UNKNOWN;
 
     return HPD_E_SUCCESS;

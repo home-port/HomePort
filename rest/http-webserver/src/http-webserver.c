@@ -26,7 +26,7 @@
  */
 
 #include "http-webserver.h"
-#include "webserver.h"
+#include "tcp-server.h"
 #include "request.h"
 
 #include <stdlib.h>
@@ -36,27 +36,26 @@
 /// http-webserver instance struct
 struct httpws {
     struct httpws_settings settings; ///< Settings
-    struct ws *webserver;            ///< Webserver instance
+    hpd_tcpd_t *webserver;            ///< Webserver instance
 };
 
 /**
- * Callback for webserver library.
+ * Callback for tcp-server library.
  *
  *  Handles new connections, by creating a request for them.
  *
  *  \param  instance  Webserver instance
  *  \param  conn      Connection
- *  \param  http_ins  The http webserver instance
+ *  \param  tcpd_ctx  The http webserver instance
  *  \param  req       The http request
  *
  *  \return 0 on success, 1 on error
  */
-static int on_connect(struct ws *instance, struct ws_conn *conn,
-                      void *http_ins, void **req)
+static hpd_error_t on_connect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx)
 {
-    struct httpws *parent = http_ins;
-    *req = http_request_create(parent, &parent->settings, conn);
-    if (!req) {
+    struct httpws *parent = ws_ctx;
+    *conn_ctx = http_request_create(parent, &parent->settings, conn);
+    if (!conn_ctx) {
         fprintf(stderr, "Not enough memory for request\n");
         return 1;
     }
@@ -65,45 +64,42 @@ static int on_connect(struct ws *instance, struct ws_conn *conn,
 }
 
 /**
- * Callback for webserver library.
+ * Callback for tcp-server library.
  *
  *  Handles reception of data, by supplying it to the http_parser
  *  associated with the request.
  *
  *  \param  instance  Webserver instance
  *  \param  conn      Connection
- *  \param  http_ins  The http webserver instance
+ *  \param  tcpd_ctx  The http webserver instance
  *  \param  req       The http request
  *
  *  \return 0 on success, 1 on error
  */
-static int on_receive(struct ws *instance, struct ws_conn *conn,
-                      void *http_ins, void **req,
-                      const char *buf, size_t len)
+static hpd_error_t on_receive(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx, const char *buf, size_t len)
 {
-    http_request_parse(*req, buf, len);
+    http_request_parse(*conn_ctx, buf, len);
 
     return 0;
 }
 
 /**
- * Callback for webserver library.
+ * Callback for tcp-server library.
  *
  *  Handles closure of connections, by creating a destroying the
  *  request.
  *
  *  \param  instance  Webserver instance
  *  \param  conn      Connection
- *  \param  http_ins  The http webserver instance
+ *  \param  tcpd_ctx  The http webserver instance
  *  \param  req       The http request
  *
  *  \return 0 on success, 1 on error
  */
-static int on_disconnect(struct ws *instance, struct ws_conn *conn,
-                         void *http_ins, void **req)
+static hpd_error_t on_disconnect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx)
 {
-    http_request_destroy(*req);
-    *req = NULL;
+    http_request_destroy(*conn_ctx);
+    *conn_ctx = NULL;
 
     return 0;
 }
@@ -122,8 +118,7 @@ static int on_disconnect(struct ws *instance, struct ws_conn *conn,
  *
  *  \returns  The newly created instance.
  */
-struct httpws *httpws_create(struct httpws_settings *settings,
-                             struct ev_loop *loop)
+struct httpws *httpws_create(struct httpws_settings *settings, hpd_module_t *context, hpd_ev_loop_t *loop)
 {
     // Allocate instance
     struct httpws *instance = malloc(sizeof(struct httpws));
@@ -137,17 +132,17 @@ struct httpws *httpws_create(struct httpws_settings *settings,
     memcpy(&instance->settings, settings,
            sizeof(struct httpws_settings));
 
-    // Construct settings for webserver
-    struct ws_settings ws_settings = WS_SETTINGS_DEFAULT;
+    // Construct settings for tcp-server
+    hpd_tcpd_settings_t ws_settings = HPD_TCPD_SETTINGS_DEFAULT;
     ws_settings.port          = settings->port;
     ws_settings.timeout       = settings->timeout;
     ws_settings.on_connect    = on_connect;
     ws_settings.on_receive    = on_receive;
     ws_settings.on_disconnect = on_disconnect;
-    ws_settings.ws_ctx        = instance;
+    ws_settings.tcpd_ctx        = instance;
 
-    // Create webserver
-    instance->webserver = ws_create(&ws_settings, loop);
+    // Create tcp-server
+    hpd_tcpd_create(&instance->webserver, &ws_settings, context, loop); // TODO Ignoring error
 
     return instance;
 }
@@ -162,7 +157,7 @@ struct httpws *httpws_create(struct httpws_settings *settings,
  */
 void httpws_destroy(struct httpws *instance)
 {
-    ws_destroy(instance->webserver);
+    hpd_tcpd_destroy(instance->webserver); // TODO Ignoring error
     free(instance);
 }
 
@@ -173,11 +168,11 @@ void httpws_destroy(struct httpws *instance)
  *
  *  \param  instance  The instance to start.
  *
- *  \return The error code of ws_start()
+ *  \return The error code of hpd_tcpd_start()
  */
 int httpws_start(struct httpws *instance)
 {
-    return ws_start(instance->webserver);
+    return hpd_tcpd_start(instance->webserver);
 }
 
 /**
@@ -190,6 +185,6 @@ int httpws_start(struct httpws *instance)
  */
 void httpws_stop(struct httpws *instance)
 {
-    ws_stop(instance->webserver);
+    hpd_tcpd_stop(instance->webserver); // TODO Ignoring error
 }
 

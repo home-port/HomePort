@@ -29,7 +29,7 @@
 # as representing official policies, either expressed.
 
 include_directories(${PROJECT_SOURCE_DIR}/api/include)
-include_directories(${PROJECT_SOURCE_DIR}/rest/webserver/include)
+include_directories(${PROJECT_SOURCE_DIR}/rest/tcp-server/include)
 include_directories(${PROJECT_SOURCE_DIR}/rest/http-webserver/include)
 include_directories(${PROJECT_SOURCE_DIR}/rest/libREST/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
