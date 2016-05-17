@@ -102,9 +102,3 @@ hpd_error_t hpd_value_next_header(hpd_pair_t **pair)
     if (!pair || !*pair) LOG_RETURN_E_NULL();
     return value_next_header(pair);
 }
-
-hpd_error_t hpd_pair_get(hpd_pair_t *pair, const char **key, const char **value)
-{
-    if (!pair || (!key && !value)) LOG_RETURN_E_NULL();
-    return value_get_pair(pair, key, value);
-}

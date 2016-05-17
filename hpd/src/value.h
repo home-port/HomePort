@@ -46,7 +46,6 @@ hpd_error_t value_get_header(hpd_value_t *value, const char *key, const char **v
 hpd_error_t value_get_headers_v(hpd_value_t *value, va_list vp);
 hpd_error_t value_first_header(hpd_value_t *value, hpd_pair_t **pair);
 hpd_error_t value_next_header(hpd_pair_t **pair);
-hpd_error_t value_get_pair(hpd_pair_t *pair, const char **key, const char **value);
 
 #ifdef __cplusplus
 }

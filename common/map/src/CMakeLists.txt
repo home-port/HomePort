@@ -28,57 +28,9 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_library(daemon
-        daemon.h
-        daemon.c
-        daemon_api.c
+add_library(map SHARED
+        ../include/hpd_map.h
+        map.c
         )
-
-add_library(discovery
-        discovery.h
-        discovery.c
-        discovery_id.c
-        discovery_api.c
-        )
-target_link_libraries(discovery map)
-
-add_library(value
-        value.h
-        value.c
-        value_api.c
-        )
-target_link_libraries(value map)
-
-add_library(request
-        request.h
-        request.c
-        request_api.c
-        )
-
-add_library(event
-        event.h
-        event.c
-        event_api.c
-        )
-
-add_library(log
-        log.h
-        log.c
-        log_api.c
-        )
-
-add_library(hpd SHARED
-        model.h
-        comm.h
-        ../include/hpd_adapter_api.h
-        ../include/hpd_api.h
-        ../include/hpd_application_api.h
-        ../include/hpd_daemon_api.h
-        ../include/hpd_shared_api.h
-        ../include/hpd_types.h
-        ../api.dox
-)
-set_target_properties(hpd PROPERTIES LINKER_LANGUAGE C)
-set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
-target_link_libraries(hpd daemon discovery value request event ev log)
-install(TARGETS hpd DESTINATION lib/hpd)
+set_target_properties(map PROPERTIES VERSION 0.0.0 SOVERSION 0)
+install(TARGETS map DESTINATION lib/hpd)

@@ -91,6 +91,7 @@ endif(DOXYGEN_FOUND)
 
 include_directories(${PROJECT_SOURCE_DIR}/hpd/include)
 include_directories(${PROJECT_SOURCE_DIR}/common/include)
+include_directories(${PROJECT_SOURCE_DIR}/common/map/include)
 
 add_subdirectory(common)
 add_subdirectory(hpd)

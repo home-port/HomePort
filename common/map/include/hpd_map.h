@@ -25,54 +25,40 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_COMM_H
-#define HOMEPORT_COMM_H
+#ifndef HOMEPORT_HPD_MAP_H
+#define HOMEPORT_HPD_MAP_H
+
+#include "hpd_types.h"
+#include "hpd_queue.h"
+#include <stddef.h>
+#include <stdarg.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct listeners listeners_t;
+typedef struct hpd_map hpd_map_t;
+typedef struct hpd_pair hpd_pair_t;
 
-TAILQ_HEAD(listeners, hpd_listener);
+hpd_error_t hpd_map_alloc(hpd_map_t **map);
+hpd_error_t hpd_map_first(hpd_map_t *map, hpd_pair_t **pair);
+hpd_error_t hpd_map_next(hpd_pair_t **pair);
+hpd_error_t hpd_map_remove(hpd_map_t *map, hpd_pair_t *pair);
+hpd_error_t hpd_map_free(hpd_map_t *map);
+hpd_error_t hpd_map_get(hpd_map_t *map, const char *k, const char **v);
+hpd_error_t hpd_map_get_n(hpd_map_t *map, const char *k, size_t k_len, const char **v);
+hpd_error_t hpd_map_set(hpd_map_t *map, const char *k, const char *v);
+hpd_error_t hpd_map_set_n(hpd_map_t *map, const char *k, size_t k_len, const char *v, size_t v_len);
+hpd_error_t hpd_map_v_matches(hpd_map_t *map, va_list vp);
+hpd_error_t hpd_pair_get(hpd_pair_t *pair, const char **key, const char **value);
 
-struct hpd_listener {
-    // Navigational members
-    TAILQ_ENTRY(hpd_listener) HPD_TAILQ_FIELD;
-    hpd_t *hpd;
-    // Data members
-    hpd_value_f on_change;
-    hpd_device_f on_attach;
-    hpd_device_f on_detach;
-    // User data
-    void *data;
-    hpd_free_f on_free;
-};
-
-struct hpd_request {
-    hpd_service_id_t  *service;
-    hpd_method_t    method;
-    hpd_value_t    *value;
-    // Callback and data for returning the response to sender
-    hpd_response_f  on_response; // Nullable
-    hpd_free_f      on_free;
-    void       *data;
-};
-
-struct hpd_response {
-    hpd_request_t  *request;
-    hpd_status_t    status;
-    hpd_value_t    *value;
-};
-
-struct hpd_value {
-    hpd_map_t  *headers;
-    char       *body;
-    size_t      len;
-};
+#define hpd_map_foreach(RC, PAIR, MAP) for ( \
+    (RC) = hpd_map_first((MAP), &(PAIR)); \
+    !(RC) && (PAIR); \
+    (RC) = hpd_map_next(&(PAIR)))
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //HOMEPORT_COMM_H
+#endif //HOMEPORT_HPD_MAP_H

@@ -31,5 +31,6 @@
 add_subdirectory(include)
 include_directories(include)
 
+add_subdirectory(map)
 add_subdirectory(httpd)
 add_subdirectory(tcpd)

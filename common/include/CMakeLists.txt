@@ -30,11 +30,9 @@
 
 install(FILES hpd_queue.h DESTINATION include/hpd)
 install(FILES hpd_common.h DESTINATION include/hpd)
-install(FILES hpd_map.h DESTINATION include/hpd)
 
 add_library(hpd_common SHARED
         ../include/hpd_common.h
         ../include/hpd_queue.h
-        ../include/hpd_map.h
         )
 set_target_properties(hpd_common PROPERTIES LINKER_LANGUAGE C)

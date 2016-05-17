@@ -31,11 +31,16 @@
 #include "comm.h"
 #include "log.h"
 
+// TODO No printing on hpd_map_*() (All files...)
+
 hpd_error_t value_alloc(hpd_value_t **value, const char *body, int len)
 {
+    hpd_error_t rc;
     HPD_CALLOC((*value), 1, hpd_value_t);
-    HPD_CALLOC((*value)->headers, 1, hpd_map_t);
-    HPD_MAP_INIT((*value)->headers);
+    if ((rc = hpd_map_alloc(&(*value)->headers))) {
+        free(*value);
+        return rc;
+    }
     if (body) {
         HPD_STR_CPY((*value)->body, body);
         if (len == HPD_NULL_TERMINATED) (*value)->len = strlen(body);
@@ -54,35 +59,34 @@ hpd_error_t value_copy(hpd_value_t **dst, const hpd_value_t *src)
     hpd_error_t rc;
     if ((rc = value_alloc(dst, src->body, (int) src->len))) return rc;
     hpd_pair_t *pair;
-    HPD_MAP_FOREACH(pair, src->headers) {
-        if ((rc = value_set_header(*dst, pair->k, pair->v))) {
+    hpd_map_foreach(rc, pair, src->headers) {
+        const char *k, *v;
+        if ((rc = hpd_pair_get(pair, &k, &v))) {
+            value_free(*dst);
+            return rc;
+        }
+        if ((rc = value_set_header(*dst, k, v))) {
             value_free(*dst);
             return rc;
         }
     }
-    return HPD_E_SUCCESS;
+    return rc;
 }
 
 hpd_error_t value_free(hpd_value_t *value)
 {
+    hpd_error_t rc = HPD_E_SUCCESS;
     if (value) {
-        if (value->headers) {
-            HPD_MAP_FREE(value->headers);
-            free(value->headers);
-        }
+        rc = hpd_map_free(value->headers);
         free(value->body);
     }
     free(value);
-    return HPD_E_SUCCESS;
+    return rc;
 }
 
 hpd_error_t value_set_header(hpd_value_t *value, const char *key, const char *val)
 {
-    HPD_MAP_SET(value->headers, key, val);
-    return HPD_E_SUCCESS;
-
-    alloc_error:
-        LOG_RETURN_E_ALLOC();
+    return hpd_map_set(value->headers, key, val);
 }
 
 hpd_error_t value_set_headers_v(hpd_value_t *value, va_list vp)
@@ -107,8 +111,7 @@ hpd_error_t value_get_body(hpd_value_t *value, const char **body, size_t *len)
 
 hpd_error_t value_get_header(hpd_value_t *value, const char *key, const char **val)
 {
-    HPD_MAP_GET(value->headers, key, *val);
-    return HPD_E_SUCCESS;
+    return hpd_map_get(value->headers, key, val);
 }
 
 hpd_error_t value_get_headers_v(hpd_value_t *value, va_list vp)
@@ -126,19 +129,11 @@ hpd_error_t value_get_headers_v(hpd_value_t *value, va_list vp)
 
 hpd_error_t value_first_header(hpd_value_t *value, hpd_pair_t **pair)
 {
-    (*pair) = TAILQ_FIRST(value->headers);
-    return HPD_E_SUCCESS;
+    return hpd_map_first(value->headers, pair);
 }
 
 hpd_error_t value_next_header(hpd_pair_t **pair)
 {
-    (*pair) = TAILQ_NEXT(*pair, HPD_TAILQ_FIELD);
-    return HPD_E_SUCCESS;
+    return hpd_map_next(pair);
 }
 
-hpd_error_t value_get_pair(hpd_pair_t *pair, const char **key, const char **value)
-{
-    if (key) (*key) = pair->k;
-    if (value) (*value) = pair->v;
-    return HPD_E_SUCCESS;
-}

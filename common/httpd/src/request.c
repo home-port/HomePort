@@ -31,8 +31,10 @@
 #include "header_parser.h"
 #include "tcpd.h"
 #include "hpd_map.h"
-#include <stdio.h>
 #include "httpd_types.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 /// The possible states of a request
 enum state {
@@ -129,9 +131,9 @@ struct hpd_httpd_request
     struct hp *header_parser;         ///< Header Parser
     enum state state;                 ///< Current state
     char *url;                        ///< URL
-    hpd_map_t arguments;             ///< URL Arguments
-    hpd_map_t headers;               ///< Header Pairs
-    hpd_map_t cookies;               ///< Cookie Pairs
+    hpd_map_t *arguments;             ///< URL Arguments
+    hpd_map_t *headers;               ///< Header Pairs
+    hpd_map_t *cookies;               ///< Cookie Pairs
     void* data;                       ///< User data
 };
 
@@ -199,12 +201,7 @@ static void url_parser_key_value(void *data,
 {
     hpd_httpd_request_t *req = data;
 
-    HPD_MAP_SET_LEN(&req->arguments, key, key_len, value, value_len);
-    return;
-
-    alloc_error:
-        // TODO Fix this...
-        return;
+    hpd_map_set_n(req->arguments, key, key_len, value, value_len); // TODO Handle error
 }
 
 /**
@@ -228,14 +225,14 @@ static void header_parser_field_value_pair_complete(void* data,
 {
     hpd_httpd_request_t *req = data;
 
-    char *existing;
-    HPD_MAP_GET_LEN(&req->headers, field, field_length, existing);
+    const char *existing;
+    hpd_map_get_n(req->headers, field, field_length, &existing); // TODO Handle error
 
     //printf("Header: %.*s\n", (int)field_length, field);
 
     // If cookie, then store it in cookie list
     if (strncmp(field, "Cookie", 6) == 0) {
-        int key_s = 0, key_e, val_s, val_e;
+        size_t key_s = 0, key_e, val_s, val_e;
 
         while (key_s < value_length) {
             for (key_e = key_s;
@@ -247,8 +244,8 @@ static void header_parser_field_value_pair_complete(void* data,
                  val_e < value_length && strncmp(&value[val_e], "; ", 2) != 0;
                  val_e++);
             if (key_e-key_s > 0 && val_e-val_s > 0)
-                HPD_MAP_SET_LEN(&req->cookies, &value[key_s], (size_t) key_e-key_s,
-                            &value[val_s], val_e-val_s);
+                hpd_map_set_n(req->cookies, &value[key_s], (size_t) key_e-key_s,
+                            &value[val_s], val_e-val_s); // TODO handle error
             key_s = val_e + 2;
         }
     }
@@ -264,19 +261,13 @@ static void header_parser_field_value_pair_complete(void* data,
         new[new_len-1] = '\0';
 
         // Replace
-        HPD_MAP_SET_LEN(&req->headers, field, field_length, new, new_len);
+        hpd_map_set_n(req->headers, field, field_length, new, new_len); // TODO Handle error
 
         // Clean up
         free(new);
     } else {
-        HPD_MAP_SET_LEN(&req->headers, field, field_length, value, value_length);
+        hpd_map_set_n(req->headers, field, field_length, value, value_length); // TODO Handle error
     }
-
-    return;
-
-    alloc_error:
-        // TODO Fix me
-        return;
 }
 
 /**
@@ -601,9 +592,9 @@ hpd_httpd_request_t *http_request_create(
     req->header_parser = hp_create(&hp_settings);
 
     // Create linked maps
-    HPD_MAP_INIT(&req->arguments);
-    HPD_MAP_INIT(&req->headers);
-    HPD_MAP_INIT(&req->cookies);
+    hpd_map_alloc(&req->arguments); // TODO Handle error
+    hpd_map_alloc(&req->headers); // TODO Handle error
+    hpd_map_alloc(&req->cookies); // TODO Handle error
 
     // Other field to init
     req->url = NULL;
@@ -633,9 +624,9 @@ void http_request_destroy(hpd_httpd_request_t *req)
 
     // Free request
     up_destroy(req->url_parser);
-    HPD_MAP_FREE(&req->arguments);
-    HPD_MAP_FREE(&req->headers);
-    HPD_MAP_FREE(&req->cookies);
+    hpd_map_free(req->arguments); // TODO Handle error
+    hpd_map_free(req->headers); // TODO Handle error
+    hpd_map_free(req->cookies); // TODO Handle error
     hp_destroy(req->header_parser);
     free(req->url);
     free(req);
@@ -709,7 +700,7 @@ const char *hpd_httpd_request_get_url(hpd_httpd_request_t *req)
  */
 hpd_map_t * hpd_httpd_request_get_headers(hpd_httpd_request_t *req)
 {
-    return &req->headers;
+    return req->headers;
 }
 
 /**
@@ -724,7 +715,7 @@ hpd_map_t * hpd_httpd_request_get_headers(hpd_httpd_request_t *req)
 const char *hpd_httpd_request_get_header(hpd_httpd_request_t *req, const char *key)
 {
     const char *val;
-    HPD_MAP_GET(&req->headers, key, val);
+    hpd_map_get(req->headers, key, &val); // TODO Handle error
     return val;
 }
 
@@ -737,7 +728,7 @@ const char *hpd_httpd_request_get_header(hpd_httpd_request_t *req, const char *k
  */
 hpd_map_t * hpd_httpd_request_get_arguments(hpd_httpd_request_t *req)
 {
-    return &req->arguments;
+    return req->arguments;
 }
 
 /**
@@ -751,7 +742,7 @@ hpd_map_t * hpd_httpd_request_get_arguments(hpd_httpd_request_t *req)
 const char *hpd_httpd_request_get_argument(hpd_httpd_request_t *req, const char *key)
 {
     const char *val;
-    HPD_MAP_GET(&req->arguments, key, val);
+    hpd_map_get(req->arguments, key, &val); // TODO Handle error
     return val;
 }
 
@@ -764,7 +755,7 @@ const char *hpd_httpd_request_get_argument(hpd_httpd_request_t *req, const char 
  */
 hpd_map_t * hpd_httpd_request_get_cookies(hpd_httpd_request_t *req)
 {
-    return &req->cookies;
+    return req->cookies;
 }
 
 /**
@@ -779,7 +770,7 @@ hpd_map_t * hpd_httpd_request_get_cookies(hpd_httpd_request_t *req)
 const char *hpd_httpd_request_get_cookie(hpd_httpd_request_t *req, const char *key)
 {
     const char *val;
-    HPD_MAP_GET(&req->cookies, key, val);
+    hpd_map_get(req->cookies, key, &val); // TODO Handle error
     return val;
 }
 

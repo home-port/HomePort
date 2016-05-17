@@ -34,11 +34,16 @@
 
 hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const char *id)
 {
+    hpd_error_t rc;
+
     HPD_CALLOC((*adapter), 1, hpd_adapter_t);
     HPD_CALLOC((*adapter)->devices, 1, devices_t);
     TAILQ_INIT((*adapter)->devices);
-    HPD_CALLOC((*adapter)->attributes, 1, hpd_map_t);
-    HPD_MAP_INIT((*adapter)->attributes);
+    if ((rc = hpd_map_alloc(&(*adapter)->attributes))) {
+        discovery_free_adapter(*adapter);
+        (*adapter) = NULL;
+        return rc;
+    }
     HPD_STR_CPY((*adapter)->id, id);
     return HPD_E_SUCCESS;
 
@@ -50,11 +55,16 @@ hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const char *id)
 
 hpd_error_t discovery_alloc_device(hpd_device_t **device, const char *id)
 {
+    hpd_error_t rc;
+
     HPD_CALLOC((*device), 1, hpd_device_t);
     HPD_CALLOC((*device)->services, 1, services_t);
     TAILQ_INIT((*device)->services);
-    HPD_CALLOC((*device)->attributes, 1, hpd_map_t);
-    HPD_MAP_INIT((*device)->attributes);
+    if ((rc = hpd_map_alloc(&(*device)->attributes))) {
+        discovery_free_device(*device);
+        (*device) = NULL;
+        return rc;
+    }
     HPD_STR_CPY((*device)->id, id);
     return HPD_E_SUCCESS;
 
@@ -66,11 +76,16 @@ hpd_error_t discovery_alloc_device(hpd_device_t **device, const char *id)
 
 hpd_error_t discovery_alloc_service(hpd_service_t **service, const char *id)
 {
+    hpd_error_t rc;
+
     HPD_CALLOC((*service), 1, hpd_service_t);
     HPD_CALLOC((*service)->parameters, 1, parameters_t);
     TAILQ_INIT((*service)->parameters);
-    HPD_CALLOC((*service)->attributes, 1, hpd_map_t);
-    HPD_MAP_INIT((*service)->attributes);
+    if ((rc = hpd_map_alloc(&(*service)->attributes))) {
+        discovery_free_service(*service);
+        (*service) = NULL;
+        return rc;
+    }
     HPD_STR_CPY((*service)->id, id);
     for (hpd_method_t method = HPD_M_NONE+1; method < HPD_M_COUNT; method++) {
         (*service)->actions[method].method = method;
@@ -86,9 +101,14 @@ hpd_error_t discovery_alloc_service(hpd_service_t **service, const char *id)
 
 hpd_error_t discovery_alloc_parameter(hpd_parameter_t **parameter, const char *id)
 {
+    hpd_error_t rc;
+
     HPD_CALLOC((*parameter), 1, hpd_parameter_t);
-    HPD_CALLOC((*parameter)->attributes, 1, hpd_map_t);
-    HPD_MAP_INIT((*parameter)->attributes);
+    if ((rc = hpd_map_alloc(&(*parameter)->attributes))) {
+        discovery_free_parameter(*parameter);
+        (*parameter) = NULL;
+        return rc;
+    }
     HPD_STR_CPY((*parameter)->id, id);
     return HPD_E_SUCCESS;
 
@@ -106,13 +126,10 @@ hpd_error_t discovery_free_adapter(hpd_adapter_t *adapter)
         HPD_TAILQ_MAP_REMOVE(adapter->devices, discovery_free_device, hpd_device_t, rc);
         free(adapter->devices);
     }
-    if (adapter->attributes) {
-        HPD_MAP_FREE(adapter->attributes);
-        free(adapter->attributes);
-    }
+    rc = hpd_map_free(adapter->attributes);
     free(adapter->id);
     free(adapter);
-    return HPD_E_SUCCESS;
+    return rc;
 
     map_error:
         // TODO This is bad ...
@@ -127,13 +144,10 @@ hpd_error_t discovery_free_device(hpd_device_t *device)
         HPD_TAILQ_MAP_REMOVE(device->services, discovery_free_service, hpd_service_t, rc);
         free(device->services);
     }
-    if (device->attributes) {
-        HPD_MAP_FREE(device->attributes);
-        free(device->attributes);
-    }
+    rc = hpd_map_free(device->attributes);
     free(device->id);
     free(device);
-    return HPD_E_SUCCESS;
+    return rc;
 
     map_error:
         // TODO This is bad ...
@@ -148,13 +162,10 @@ hpd_error_t discovery_free_service(hpd_service_t *service)
         HPD_TAILQ_MAP_REMOVE(service->parameters, discovery_free_parameter, hpd_parameter_t, rc);
         free(service->parameters);
     }
-    if (service->attributes) {
-        HPD_MAP_FREE(service->attributes);
-        free(service->attributes);
-    }
+    rc = hpd_map_free(service->attributes);
     free(service->id);
     free(service);
-    return HPD_E_SUCCESS;
+    return rc;
 
     map_error:
         // TODO This is bad ...
@@ -164,13 +175,11 @@ hpd_error_t discovery_free_service(hpd_service_t *service)
 
 hpd_error_t discovery_free_parameter(hpd_parameter_t *parameter)
 {
-    if (parameter->attributes) {
-        HPD_MAP_FREE(parameter->attributes);
-        free(parameter->attributes);
-    }
+    hpd_error_t rc;
+    rc = hpd_map_free(parameter->attributes);
     free(parameter->id);
     free(parameter);
-    return HPD_E_SUCCESS;
+    return rc;
 }
 
 hpd_error_t discovery_attach_adapter(hpd_t *hpd, hpd_adapter_t *adapter)
@@ -354,26 +363,22 @@ hpd_error_t discovery_get_parameter_id(hpd_parameter_t *parameter, const char **
 
 hpd_error_t discovery_get_adapter_attr(hpd_adapter_t *adapter, const char *key, const char **val)
 {
-    HPD_MAP_GET(adapter->attributes, key, *val);
-    return HPD_E_SUCCESS;
+    return hpd_map_get(adapter->attributes, key, val);
 }
 
 hpd_error_t discovery_get_device_attr(hpd_device_t *device, const char *key, const char **val)
 {
-    HPD_MAP_GET(device->attributes, key, *val);
-    return HPD_E_SUCCESS;
+    return hpd_map_get(device->attributes, key, val);
 }
 
 hpd_error_t discovery_get_service_attr(hpd_service_t *service, const char *key, const char **val)
 {
-    HPD_MAP_GET(service->attributes, key, *val);
-    return HPD_E_SUCCESS;
+    return hpd_map_get(service->attributes, key, val);
 }
 
 hpd_error_t discovery_get_parameter_attr(hpd_parameter_t *parameter, const char *key, const char **val)
 {
-    HPD_MAP_GET(parameter->attributes, key, *val);
-    return HPD_E_SUCCESS;
+    return hpd_map_get(parameter->attributes, key, val);
 }
 
 hpd_error_t discovery_get_adapter_attrs_v(hpd_adapter_t *adapter, va_list vp)
@@ -463,38 +468,22 @@ hpd_error_t discovery_set_service_data(hpd_service_t *service, void *data, hpd_f
 
 hpd_error_t discovery_set_adapter_attr(hpd_adapter_t *adapter, const char *key, const char *val)
 {
-    HPD_MAP_SET(adapter->attributes, key, val);
-    return HPD_E_SUCCESS;
-
-    alloc_error:
-    LOG_RETURN_E_ALLOC();
+    return hpd_map_set(adapter->attributes, key, val);
 }
 
 hpd_error_t discovery_set_device_attr(hpd_device_t *device, const char *key, const char *val)
 {
-    HPD_MAP_SET(device->attributes, key, val);
-    return HPD_E_SUCCESS;
-
-    alloc_error:
-    LOG_RETURN_E_ALLOC();
+    return hpd_map_set(device->attributes, key, val);
 }
 
 hpd_error_t discovery_set_service_attr(hpd_service_t *service, const char *key, const char *val)
 {
-    HPD_MAP_SET(service->attributes, key, val);
-    return HPD_E_SUCCESS;
-
-    alloc_error:
-    LOG_RETURN_E_ALLOC();
+    return hpd_map_set(service->attributes, key, val);
 }
 
 hpd_error_t discovery_set_parameter_attr(hpd_parameter_t *parameter, const char *key, const char *val)
 {
-    HPD_MAP_SET(parameter->attributes, key, val);
-    return HPD_E_SUCCESS;
-
-    alloc_error:
-    LOG_RETURN_E_ALLOC();
+    return hpd_map_set(parameter->attributes, key, val);
 }
 
 hpd_error_t discovery_set_service_action(hpd_service_t *service, const hpd_method_t method, hpd_action_f action)
@@ -582,26 +571,22 @@ hpd_error_t discovery_first_action_in_service(hpd_service_t *service, hpd_action
 
 hpd_error_t discovery_first_adapter_attr(hpd_adapter_t *adapter, hpd_pair_t **pair)
 {
-    (*pair) = TAILQ_FIRST(adapter->attributes);
-    return HPD_E_SUCCESS;
+    return hpd_map_first(adapter->attributes, pair);
 }
 
 hpd_error_t discovery_first_device_attr(hpd_device_t *device, hpd_pair_t **pair)
 {
-    (*pair) = TAILQ_FIRST(device->attributes);
-    return HPD_E_SUCCESS;
+    return hpd_map_first(device->attributes, pair);
 }
 
 hpd_error_t discovery_first_service_attr(hpd_service_t *service, hpd_pair_t **pair)
 {
-    (*pair) = TAILQ_FIRST(service->attributes);
-    return HPD_E_SUCCESS;
+    return hpd_map_first(service->attributes, pair);
 }
 
 hpd_error_t discovery_first_parameter_attr(hpd_parameter_t *parameter, hpd_pair_t **pair)
 {
-    (*pair) = TAILQ_FIRST(parameter->attributes);
-    return HPD_E_SUCCESS;
+    return hpd_map_first(parameter->attributes, pair);
 }
 
 hpd_error_t discovery_first_hpd_adapter(hpd_t *hpd, hpd_adapter_t **adapter)
@@ -683,26 +668,22 @@ hpd_error_t discovery_next_action_in_service(hpd_action_t **action)
 
 hpd_error_t discovery_next_adapter_attr(hpd_pair_t **pair)
 {
-    *pair = TAILQ_NEXT(*pair, HPD_TAILQ_FIELD);
-    return HPD_E_SUCCESS;
+    return hpd_map_next(pair);
 }
 
 hpd_error_t discovery_next_device_attr(hpd_pair_t **pair)
 {
-    *pair = TAILQ_NEXT(*pair, HPD_TAILQ_FIELD);
-    return HPD_E_SUCCESS;
+    return hpd_map_next(pair);
 }
 
 hpd_error_t discovery_next_service_attr(hpd_pair_t **pair)
 {
-    *pair = TAILQ_NEXT(*pair, HPD_TAILQ_FIELD);
-    return HPD_E_SUCCESS;
+    return hpd_map_next(pair);
 }
 
 hpd_error_t discovery_next_parameter_attr(hpd_pair_t **pair)
 {
-    *pair = TAILQ_NEXT(*pair, HPD_TAILQ_FIELD);
-    return HPD_E_SUCCESS;
+    return hpd_map_next(pair);
 }
 
 hpd_error_t discovery_next_hpd_adapter(hpd_adapter_t **adapter)
