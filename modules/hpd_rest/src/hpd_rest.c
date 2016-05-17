@@ -282,7 +282,7 @@ static hpd_error_t on_response(hpd_response_t *res)
         hpd_status_t status;
         if ((rc = hpd_response_get_status(res, &status))) return rc;
 
-        map_t *headersIn = hpd_httpd_request_get_headers(rest_req->http_req);
+        hpd_map_t *headersIn = hpd_httpd_request_get_headers(rest_req->http_req);
 
         char *buffer = NULL;
         if (val) {
@@ -305,7 +305,7 @@ static hpd_error_t on_response(hpd_response_t *res)
         if (status == HPD_S_200 && val) {
             /*TODO Check header for XML or jSON*/
             char *accept;
-            MAP_GET(headersIn, "Accept", accept);
+            HPD_MAP_GET(headersIn, "Accept", accept);
             char *state;
             hpd_httpd_response_t *response = hpd_httpd_response_create(rest_req->http_req, status);
             if (accept != NULL && strcmp(accept, "application/json") == 0)
@@ -358,11 +358,11 @@ static int on_req_url_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_
     }
 
     if (strcmp(url, "/devices") == 0) {
-        map_t *headersIn = hpd_httpd_request_get_headers(req);
+        hpd_map_t *headersIn = hpd_httpd_request_get_headers(req);
         char *accept;
         char *body;
 
-        MAP_GET(headersIn, "Accept", accept);
+        HPD_MAP_GET(headersIn, "Accept", accept);
 
         /** Defaults to XML */
         // TODO: There's a double check on application/json somewhere else, extract method!
@@ -551,9 +551,9 @@ static int on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_ctx,
 
     hpd_value_t *value = NULL;
     if (rest_req->body) {
-        map_t *headersIn = hpd_httpd_request_get_headers(req);
+        hpd_map_t *headersIn = hpd_httpd_request_get_headers(req);
         char *contentType;
-        MAP_GET(headersIn, "Content-Type", contentType);
+        HPD_MAP_GET(headersIn, "Content-Type", contentType);
         char *v;
 
         if (contentType == NULL ||

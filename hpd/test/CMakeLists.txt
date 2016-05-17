@@ -28,6 +28,8 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
+include_directories(../src/)
+
 add_executable(test_api
         daemon_api_test.cpp
 )

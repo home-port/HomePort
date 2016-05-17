@@ -29,45 +29,45 @@
 # as representing official policies, either expressed.
 
 add_library(daemon
-        ../include/daemon.h
+        daemon.h
         daemon.c
         daemon_api.c
         )
 
 add_library(discovery
-        ../include/discovery.h
+        discovery.h
         discovery.c
         discovery_id.c
         discovery_api.c
         )
 
 add_library(value
-        ../include/value.h
+        value.h
         value.c
         value_api.c
         )
 
 add_library(request
-        ../include/request.h
+        request.h
         request.c
         request_api.c
         )
 
 add_library(event
-        ../include/event.h
+        event.h
         event.c
         event_api.c
         )
 
 add_library(log
-        ../include/log.h
+        log.h
         log.c
         log_api.c
         )
 
 add_library(hpd SHARED
-        ../include/model.h
-        ../include/comm.h
+        model.h
+        comm.h
         ../include/hpd_adapter_api.h
         ../include/hpd_api.h
         ../include/hpd_application_api.h

@@ -35,7 +35,7 @@
 extern "C" {
 #endif
 
-typedef struct hpd_map map_t;
+typedef struct hpd_map hpd_map_t;
 typedef struct hpd_pair hpd_pair_t;
 
 TAILQ_HEAD(hpd_map, hpd_pair);
@@ -46,38 +46,38 @@ struct hpd_pair {
     char *v;                 //< Value
 };
 
-#define MAP_INIT(MAP) TAILQ_INIT((MAP))
+#define HPD_MAP_INIT(MAP) TAILQ_INIT((MAP))
 
-#define MAP_FOREACH(VAR, HEAD) HPD_TAILQ_FOREACH((VAR), (HEAD))
+#define HPD_MAP_FOREACH(VAR, HEAD) HPD_TAILQ_FOREACH((VAR), (HEAD))
 
-#define MAP_REMOVE(MAP, PAIR) do { \
+#define HPD_MAP_REMOVE(MAP, PAIR) do { \
     TAILQ_REMOVE((MAP), (PAIR), HPD_TAILQ_FIELD); \
     free((PAIR)->k); \
     free((PAIR)->v); \
     free((PAIR)); \
 } while(0)
 
-#define MAP_FREE(MAP) do { \
+#define HPD_MAP_FREE(MAP) do { \
     hpd_pair_t *attr, *tmp; \
     HPD_TAILQ_FOREACH_SAFE(attr, (MAP), tmp) { \
-        MAP_REMOVE((MAP), attr); \
+        HPD_MAP_REMOVE((MAP), attr); \
     } \
 } while(0)
 
-#define MAP_GET(MAP, K, V) do { \
+#define HPD_MAP_GET(MAP, K, V) do { \
     hpd_pair_t *attr; \
     (V) = NULL; \
-    MAP_FOREACH(attr, (MAP)) \
+    HPD_MAP_FOREACH(attr, (MAP)) \
         if (strcmp(attr->k, (K)) == 0) { \
             (V) = attr->v; \
             break; \
         } \
 } while(0)
 
-#define MAP_GET_LEN(MAP, K, K_LEN, V) do { \
+#define HPD_MAP_GET_LEN(MAP, K, K_LEN, V) do { \
     hpd_pair_t *attr; \
     (V) = NULL; \
-    MAP_FOREACH(attr, (MAP)) \
+    HPD_MAP_FOREACH(attr, (MAP)) \
         if (strncmp(attr->k, (K), (K_LEN)) == 0) { \
             (V) = attr->v; \
             break; \
@@ -85,13 +85,13 @@ struct hpd_pair {
 } while(0)
 
 // TODO Memory left in a inconsistent state if this fails with HPD_E_ALLOC
-#define MAP_SET(MAP, K, V) do { \
+#define HPD_MAP_SET(MAP, K, V) do { \
     hpd_pair_t *attr = NULL; \
-    MAP_FOREACH(attr, (MAP)) \
+    HPD_MAP_FOREACH(attr, (MAP)) \
         if (strcmp(attr->k, (K)) == 0) \
             break; \
     if ((V) == NULL) { \
-        if (attr) MAP_REMOVE((MAP), attr); \
+        if (attr) HPD_MAP_REMOVE((MAP), attr); \
     } else if (!attr) { \
         HPD_CALLOC(attr, 1, hpd_pair_t); \
         HPD_STR_CPY(attr->k, (K)); \
@@ -103,13 +103,13 @@ struct hpd_pair {
 } while(0)
 
 // TODO Memory left in a inconsistent state if this fails with HPD_E_ALLOC
-#define MAP_SET_LEN(MAP, K, K_LEN, V, V_LEN) do { \
+#define HPD_MAP_SET_LEN(MAP, K, K_LEN, V, V_LEN) do { \
     hpd_pair_t *attr = NULL; \
-    MAP_FOREACH(attr, (MAP)) \
+    HPD_MAP_FOREACH(attr, (MAP)) \
         if (strncmp(attr->k, (K), (K_LEN)) == 0) \
             break; \
     if ((V) == NULL) { \
-        if (attr) MAP_REMOVE((MAP), attr); \
+        if (attr) HPD_MAP_REMOVE((MAP), attr); \
     } else if (!attr) { \
         HPD_CALLOC(attr, 1, hpd_pair_t); \
         HPD_STR_N_CPY(attr->k, (K), (K_LEN)); \
@@ -120,14 +120,14 @@ struct hpd_pair {
     } \
 } while(0)
 
-#define MAP_MATCHES_VA(MAP, VP) do { \
+#define HPD_MAP_MATCHES_VA(MAP, VP) do { \
     va_list _vp; \
     const char *key, *val, *val2; \
     va_copy(_vp, (VP)); \
     while ((key = va_arg(_vp, const char *))) { \
         val = va_arg(_vp, const char *); \
         if (!val) goto null_error; \
-        MAP_GET((MAP), key, val2); \
+        HPD_MAP_GET((MAP), key, val2); \
         if (!val2 || strcmp(val, val2) != 0) goto mismatch; \
     } \
     goto match; \

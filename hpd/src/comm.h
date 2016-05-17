@@ -25,96 +25,54 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_MODEL_H
-#define HOMEPORT_MODEL_H
-
-#include "hpd_types.h"
-#include "hpd_queue.h"
-#include "hpd_map.h"
-#include "comm.h"
+#ifndef HOMEPORT_COMM_H
+#define HOMEPORT_COMM_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct configuration configuration_t;
-typedef struct adapters adapters_t;
-typedef struct devices devices_t;
-typedef struct services services_t;
-typedef struct parameters parameters_t;
+typedef struct listeners listeners_t;
 
-TAILQ_HEAD(adapters, hpd_adapter);
-TAILQ_HEAD(devices, hpd_device);
-TAILQ_HEAD(services, hpd_service);
-TAILQ_HEAD(parameters, hpd_parameter);
+TAILQ_HEAD(listeners, hpd_listener);
 
-struct hpd_action {
-    hpd_service_t *service;
-    hpd_method_t method;           //< Method
-    hpd_action_f action;           //< Action
-};
-
-struct configuration
-{
+struct hpd_listener {
     // Navigational members
-    adapters_t  adapters;
-    listeners_t listeners;
-    hpd_t *data; // TODO Rename to hpd
-};
-
-struct hpd_adapter
-{
-    // Navigational members
-    configuration_t *configuration;
-    TAILQ_ENTRY(hpd_adapter) HPD_TAILQ_FIELD;
-    devices_t *devices;
+    TAILQ_ENTRY(hpd_listener) HPD_TAILQ_FIELD;
+    hpd_t *hpd;
     // Data members
-    char *id;
-    map_t *attributes;
+    hpd_value_f on_change;
+    hpd_device_f on_attach;
+    hpd_device_f on_detach;
     // User data
-    hpd_free_f on_free;
     void *data;
+    hpd_free_f on_free;
 };
 
-struct hpd_device
-{
-    // Navigational members
-    hpd_adapter_t *adapter;
-    TAILQ_ENTRY(hpd_device) HPD_TAILQ_FIELD;
-    services_t *services;
-    // Data members
-    char *id;
-    map_t *attributes;
-    // User data
-    hpd_free_f on_free;
-    void *data;
+struct hpd_request {
+    hpd_service_id_t  *service;
+    hpd_method_t    method;
+    hpd_value_t    *value;
+    // Callback and data for returning the response to sender
+    hpd_response_f  on_response; // Nullable
+    hpd_free_f      on_free;
+    void       *data;
 };
 
-struct hpd_service
-{
-    // Navigational members
-    hpd_device_t *device;
-    TAILQ_ENTRY(hpd_service) HPD_TAILQ_FIELD;
-    parameters_t *parameters;
-    // Data members
-    char *id;
-    map_t *attributes;
-    hpd_action_t actions[HPD_M_COUNT];
-    // User data
-    hpd_free_f on_free;
-    void *data;
+struct hpd_response {
+    hpd_request_t  *request;
+    hpd_status_t    status;
+    hpd_value_t    *value;
 };
 
-struct hpd_parameter
-{
-    hpd_service_t *service;
-    TAILQ_ENTRY(hpd_parameter) HPD_TAILQ_FIELD;
-    char *id;
-    map_t *attributes;
+struct hpd_value {
+    hpd_map_t       *headers;
+    char       *body;
+    size_t      len;
 };
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //HOMEPORT_MODEL_H
+#endif //HOMEPORT_COMM_H

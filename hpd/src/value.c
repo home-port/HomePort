@@ -34,8 +34,8 @@
 hpd_error_t value_alloc(hpd_value_t **value, const char *body, int len)
 {
     HPD_CALLOC((*value), 1, hpd_value_t);
-    HPD_CALLOC((*value)->headers, 1, map_t);
-    MAP_INIT((*value)->headers);
+    HPD_CALLOC((*value)->headers, 1, hpd_map_t);
+    HPD_MAP_INIT((*value)->headers);
     if (body) {
         HPD_STR_CPY((*value)->body, body);
         if (len == HPD_NULL_TERMINATED) (*value)->len = strlen(body);
@@ -54,7 +54,7 @@ hpd_error_t value_copy(hpd_value_t **dst, const hpd_value_t *src)
     hpd_error_t rc;
     if ((rc = value_alloc(dst, src->body, (int) src->len))) return rc;
     hpd_pair_t *pair;
-    MAP_FOREACH(pair, src->headers) {
+    HPD_MAP_FOREACH(pair, src->headers) {
         if ((rc = value_set_header(*dst, pair->k, pair->v))) {
             value_free(*dst);
             return rc;
@@ -67,7 +67,7 @@ hpd_error_t value_free(hpd_value_t *value)
 {
     if (value) {
         if (value->headers) {
-            MAP_FREE(value->headers);
+            HPD_MAP_FREE(value->headers);
             free(value->headers);
         }
         free(value->body);
@@ -78,7 +78,7 @@ hpd_error_t value_free(hpd_value_t *value)
 
 hpd_error_t value_set_header(hpd_value_t *value, const char *key, const char *val)
 {
-    MAP_SET(value->headers, key, val);
+    HPD_MAP_SET(value->headers, key, val);
     return HPD_E_SUCCESS;
 
     alloc_error:
@@ -107,7 +107,7 @@ hpd_error_t value_get_body(hpd_value_t *value, const char **body, size_t *len)
 
 hpd_error_t value_get_header(hpd_value_t *value, const char *key, const char **val)
 {
-    MAP_GET(value->headers, key, *val);
+    HPD_MAP_GET(value->headers, key, *val);
     return HPD_E_SUCCESS;
 }
 

@@ -28,10 +28,10 @@
 #ifndef HOMEPORT_HPD_SHARED_API_H
 #define HOMEPORT_HPD_SHARED_API_H
 
-#include <stddef.h>
-
 #include "hpd_types.h"
-#include "discovery.h"
+
+#include <stddef.h>
+#include <stdarg.h>
 
 #ifdef __cplusplus
 extern "C" {

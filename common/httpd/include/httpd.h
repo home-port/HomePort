@@ -143,11 +143,11 @@ void hpd_httpd_stop(hpd_httpd_t *httpd);
 // Request functions
 hpd_httpd_method_t hpd_httpd_request_get_method(hpd_httpd_request_t *req);
 const char *hpd_httpd_request_get_url(hpd_httpd_request_t *req);
-map_t *hpd_httpd_request_get_headers(hpd_httpd_request_t *req);
+hpd_map_t *hpd_httpd_request_get_headers(hpd_httpd_request_t *req);
 const char *hpd_httpd_request_get_header(hpd_httpd_request_t *req, const char *key);
-map_t *hpd_httpd_request_get_arguments(hpd_httpd_request_t *req);
+hpd_map_t *hpd_httpd_request_get_arguments(hpd_httpd_request_t *req);
 const char *hpd_httpd_request_get_argument(hpd_httpd_request_t *req, const char *key);
-map_t *hpd_httpd_request_get_cookies(hpd_httpd_request_t *req);
+hpd_map_t *hpd_httpd_request_get_cookies(hpd_httpd_request_t *req);
 const char *hpd_httpd_request_get_cookie(hpd_httpd_request_t *req, const char *key);
 const char *hpd_httpd_request_get_ip(hpd_httpd_request_t *req);
 void hpd_httpd_request_keep_open(hpd_httpd_request_t *req);
