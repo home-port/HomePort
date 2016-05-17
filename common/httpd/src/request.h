@@ -32,12 +32,9 @@
 #include "tcpd.h"
 #include <stddef.h>
 
-hpd_httpd_request_t *http_request_create(hpd_httpd_t *webserver, hpd_httpd_settings_t *settings, hpd_tcpd_conn_t *conn);
-
-void http_request_destroy(hpd_httpd_request_t *req);
-
+hpd_error_t http_request_create(hpd_httpd_request_t **req, hpd_httpd_t *httpd, hpd_httpd_settings_t *settings, hpd_tcpd_conn_t *conn);
+hpd_error_t http_request_destroy(hpd_httpd_request_t *req);
 size_t http_request_parse(hpd_httpd_request_t *req, const char *buf, size_t len);
-
 hpd_tcpd_conn_t *http_request_get_connection(hpd_httpd_request_t *req);
 
 #endif

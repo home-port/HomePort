@@ -92,11 +92,14 @@ static char* http_status_codes_to_str(hpd_status_t status)
  *
  *  \param  res  The HTTP Response to destroy
  */
-void hpd_httpd_response_destroy(hpd_httpd_response_t *res)
+hpd_error_t hpd_httpd_response_destroy(hpd_httpd_response_t *res)
 {
-    hpd_tcpd_conn_close(res->conn); // TODO Ignoring error
+    if (!res) return  HPD_E_NULL;
+
+    hpd_error_t rc = hpd_tcpd_conn_close(res->conn);
     free(res->msg);
     free(res);
+    return rc;
 }
 
 /**
@@ -115,11 +118,11 @@ void hpd_httpd_response_destroy(hpd_httpd_response_t *res)
  *
  *  \return  The http respond created
  */
-hpd_httpd_response_t *hpd_httpd_response_create(
-        hpd_httpd_request_t *req,
-        hpd_status_t status)
+hpd_error_t hpd_httpd_response_create(hpd_httpd_response_t **response, hpd_httpd_request_t *req,
+                                      hpd_status_t status)
 {
-    hpd_httpd_response_t *res = NULL;
+    if (!response || !req) return HPD_E_NULL;
+
     int len;
 
     // Get data
@@ -132,31 +135,31 @@ hpd_httpd_response_t *hpd_httpd_response_create(
     len += strlen(CRLF);
 
     // Allocate space
-    res = malloc(sizeof(hpd_httpd_response_t));
-    if (res == NULL) {
+    (*response) = malloc(sizeof(hpd_httpd_response_t));
+    if ((*response) == NULL) {
         fprintf(stderr, "ERROR: Cannot allocate memory\n");
-        return NULL;
+        return HPD_E_ALLOC;
     }
-    res->msg = malloc(len*sizeof(char));
-    if (res == NULL) {
+    (*response)->msg = malloc(len*sizeof(char));
+    if ((*response)->msg == NULL) {
         fprintf(stderr, "ERROR: Cannot allocate memory\n");
-        hpd_httpd_response_destroy(res);
-        return NULL;
+        hpd_httpd_response_destroy((*response));
+        return HPD_E_ALLOC;
     }
 
     // Init struct
-    res->conn = http_request_get_connection(req);
+    (*response)->conn = http_request_get_connection(req);
 
     // Construct msg
-    strcpy(res->msg, HTTP_VERSION);
-    if (status_str) strcat(res->msg, status_str);
-    strcat(res->msg, CRLF);
+    strcpy((*response)->msg, HTTP_VERSION);
+    if (status_str) strcat((*response)->msg, status_str);
+    strcat((*response)->msg, CRLF);
 
     // TODO Real persistant connections is not supported, so tell client that we close connection after response has been sent
     // TODO Check return value
-    hpd_httpd_response_add_header(res, "Connection", "close");
+    hpd_httpd_response_add_header((*response), "Connection", "close");
 
-    return res;
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -173,14 +176,16 @@ hpd_httpd_response_t *hpd_httpd_response_create(
  *
  *  \return 0 on success and 1 on failure
  */
-int hpd_httpd_response_add_header(hpd_httpd_response_t *res,
-                                  const char *field, const char *value)
+hpd_error_t hpd_httpd_response_add_header(hpd_httpd_response_t *res,
+                                          const char *field, const char *value)
 {
+    if (!res || !field || !value) return HPD_E_NULL;
+
     // Headers already sent
     if (!res->msg) {
         fprintf(stderr,
                 "Cannot add header, they are already sent to client\n");
-        return 1;
+        return HPD_E_STATE;
     }
 
     char *msg;
@@ -189,7 +194,7 @@ int hpd_httpd_response_add_header(hpd_httpd_response_t *res,
     msg = realloc(res->msg, msg_len*sizeof(char));
     if (msg == NULL) {
         fprintf(stderr, "ERROR: Cannot allocate memory\n");
-        return 1;
+        return HPD_E_ALLOC;
     }
     res->msg = msg;
 
@@ -198,7 +203,7 @@ int hpd_httpd_response_add_header(hpd_httpd_response_t *res,
     strcat(res->msg, value);
     strcat(res->msg, CRLF);
 
-    return 0;
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -221,20 +226,20 @@ int hpd_httpd_response_add_header(hpd_httpd_response_t *res,
  *
  *  \return 0 on success and 1 otherwise
  */
-int hpd_httpd_response_add_cookie(hpd_httpd_response_t *res,
-                                  const char *field, const char *value,
-                                  const char *expires, const char *max_age,
-                                  const char *domain, const char *path,
-                                  int secure, int http_only,
-                                  const char *extension)
+hpd_error_t hpd_httpd_response_add_cookie(hpd_httpd_response_t *res,
+                                          const char *field, const char *value,
+                                          const char *expires, const char *max_age,
+                                          const char *domain, const char *path,
+                                          int secure, int http_only,
+                                          const char *extension)
 {
-    if (!res || !field || !value) return 1;
+    if (!res || !field || !value) return HPD_E_NULL;
 
     // Headers already sent
-    if (!res->msg) return 1;
+    if (!res->msg) return HPD_E_STATE;
 
     char *msg;
-    int msg_len = strlen(res->msg) + 12 +
+    size_t msg_len = strlen(res->msg) + 12 +
                   strlen(field) + 1 +
                   strlen(value) +
                   strlen(CRLF) + 1;
@@ -252,7 +257,7 @@ int hpd_httpd_response_add_cookie(hpd_httpd_response_t *res,
     msg = realloc(res->msg, msg_len*sizeof(char));
     if (msg == NULL) {
         fprintf(stderr, "ERROR: Cannot allocate memory\n");
-        return 1;
+        return HPD_E_ALLOC;
     }
     res->msg = msg;
 
@@ -285,7 +290,7 @@ int hpd_httpd_response_add_cookie(hpd_httpd_response_t *res,
         strcat(res->msg, extension);
     }
 
-    return 0;
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -297,12 +302,15 @@ int hpd_httpd_response_add_cookie(hpd_httpd_response_t *res,
  *  \param  res  The respond to sent
  *  \param  fmt  The format string for the body
  */
-void hpd_httpd_response_sendf(hpd_httpd_response_t *res, const char *fmt, ...)
+hpd_error_t hpd_httpd_response_sendf(hpd_httpd_response_t *res, const char *fmt, ...)
 {
+    if (!res) return HPD_E_NULL;
+
     va_list arg;
     va_start(arg, fmt);
-    hpd_httpd_response_vsendf(res, fmt, arg);
+    hpd_error_t rc = hpd_httpd_response_vsendf(res, fmt, arg);
     va_end(arg);
+    return rc;
 }
 
 /**
@@ -322,20 +330,24 @@ void hpd_httpd_response_sendf(hpd_httpd_response_t *res, const char *fmt, ...)
  *  \param  res  The http response to send.
  *  \param  fmt  The format string for the body
  */
-void hpd_httpd_response_vsendf(hpd_httpd_response_t *res,
-                               const char *fmt, va_list arg)
+hpd_error_t hpd_httpd_response_vsendf(hpd_httpd_response_t *res, const char *fmt, va_list arg)
 {
+    if (!res) return HPD_E_NULL;
+
+    hpd_error_t rc;
+
     if (res->msg) {
         // TODO Sendf returns a status
-        hpd_tcpd_conn_sendf(res->conn, "%s%s", res->msg, CRLF); // TODO Ignoring error
+        if ((rc = hpd_tcpd_conn_sendf(res->conn, "%s%s", res->msg, CRLF))) return rc;
         free(res->msg);
         res->msg = NULL;
     }
 
     if (fmt) {
         // TODO Sendf returns a status
-        hpd_tcpd_conn_vsendf(res->conn, fmt, arg); // TODO Ignoring error
+        return hpd_tcpd_conn_vsendf(res->conn, fmt, arg);
     }
 
+    return HPD_E_SUCCESS;
 }
 

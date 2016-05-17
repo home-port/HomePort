@@ -28,13 +28,11 @@
 #ifndef URL_PARSER_H
 #define URL_PARSER_H
 
-typedef void (*up_string_cb)(void *data,
-                             const char* parsedSegment,
-                             size_t segment_length);
-typedef void (*up_pair_cb)(void *data,
-                           const char* key, size_t key_length,
-                           const char* value, size_t value_length);
-typedef void (*up_void_cb)(void *data);
+#include "hpd_types.h"
+
+typedef hpd_error_t (*up_string_cb)(void *data, const char* parsedSegment, size_t segment_length);
+typedef hpd_error_t (*up_pair_cb)(void *data, const char* key, size_t key_length, const char* value, size_t value_length);
+typedef hpd_error_t (*up_void_cb)(void *data);
 
 struct up;
 
@@ -74,11 +72,10 @@ struct up_settings {
 	.on_port = NULL, .on_path_segment = NULL, .on_path_complete = NULL, \
 	.on_key_value = NULL, .on_complete = NULL }
 
-struct up *up_create(
-        struct up_settings *settings, void* data);
-void up_destroy(struct up *);
+hpd_error_t up_create(struct up **instance, struct up_settings *settings, void *data);
+hpd_error_t up_destroy(struct up *instance);
 
-int up_add_chunk(void *_instance, const char* chunk, size_t chunk_size);
-int up_complete(void *_instance);
+hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t chunk_size);
+hpd_error_t up_complete(struct up *instance);
 
 #endif

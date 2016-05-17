@@ -51,16 +51,16 @@ struct hpd_httpd {
  *
  *  \return 0 on success, 1 on error
  */
-static hpd_error_t on_connect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx)
+static hpd_tcpd_return_t on_connect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx)
 {
+    hpd_error_t rc;
     hpd_httpd_t *parent = ws_ctx;
-    *conn_ctx = http_request_create(parent, &parent->settings, conn);
-    if (!conn_ctx) {
-        fprintf(stderr, "Not enough memory for request\n");
-        return 1;
+    if ((rc = http_request_create((hpd_httpd_request_t **) conn_ctx, parent, &parent->settings, conn))) {
+        fprintf(stderr, "Failed with code: %d\n", rc);
+        return HPD_TCPD_R_STOP;
     }
 
-    return 0;
+    return HPD_TCPD_R_CONTINUE;
 }
 
 /**
@@ -76,11 +76,11 @@ static hpd_error_t on_connect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void 
  *
  *  \return 0 on success, 1 on error
  */
-static hpd_error_t on_receive(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx, const char *buf, size_t len)
+static hpd_tcpd_return_t on_receive(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx, const char *buf, size_t len)
 {
     http_request_parse(*conn_ctx, buf, len);
 
-    return 0;
+    return HPD_TCPD_R_CONTINUE;
 }
 
 /**
@@ -96,12 +96,12 @@ static hpd_error_t on_receive(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void 
  *
  *  \return 0 on success, 1 on error
  */
-static hpd_error_t on_disconnect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx)
+static hpd_tcpd_return_t on_disconnect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx)
 {
-    http_request_destroy(*conn_ctx);
+    http_request_destroy(*conn_ctx); // TODO Handle error code
     *conn_ctx = NULL;
 
-    return 0;
+    return HPD_TCPD_R_CONTINUE;
 }
 
 /**
@@ -118,19 +118,20 @@ static hpd_error_t on_disconnect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, vo
  *
  *  \returns  The newly created instance.
  */
-hpd_httpd_t *hpd_httpd_create(hpd_httpd_settings_t *settings, hpd_module_t *context, hpd_ev_loop_t *loop)
+hpd_error_t hpd_httpd_create(hpd_httpd_t **httpd, hpd_httpd_settings_t *settings, hpd_module_t *context,
+                             hpd_ev_loop_t *loop)
 {
+    if (!httpd || !settings || !context || !loop) return HPD_E_NULL;
+
     // Allocate instance
-    hpd_httpd_t *instance = malloc(sizeof(hpd_httpd_t));
-    if (instance == NULL) {
-        fprintf(stderr, "ERROR: Cannot allocate memory for a " \
-                      "webserver instance\n");
-        return NULL;
+    (*httpd) = malloc(sizeof(hpd_httpd_t));
+    if ((*httpd) == NULL) {
+        fprintf(stderr, "ERROR: Cannot allocate memory for a webserver instance\n");
+        return HPD_E_ALLOC;
     }
 
     // Copy settings
-    memcpy(&instance->settings, settings,
-           sizeof(hpd_httpd_settings_t));
+    memcpy(&(*httpd)->settings, settings, sizeof(hpd_httpd_settings_t));
 
     // Construct settings for tcpd
     hpd_tcpd_settings_t ws_settings = HPD_TCPD_SETTINGS_DEFAULT;
@@ -139,12 +140,16 @@ hpd_httpd_t *hpd_httpd_create(hpd_httpd_settings_t *settings, hpd_module_t *cont
     ws_settings.on_connect    = on_connect;
     ws_settings.on_receive    = on_receive;
     ws_settings.on_disconnect = on_disconnect;
-    ws_settings.tcpd_ctx        = instance;
+    ws_settings.tcpd_ctx        = (*httpd);
 
     // Create tcpd
-    hpd_tcpd_create(&instance->webserver, &ws_settings, context, loop); // TODO Ignoring error
+    hpd_error_t rc;
+    if ((rc = hpd_tcpd_create(&(*httpd)->webserver, &ws_settings, context, loop))) {
+        hpd_httpd_destroy(*httpd);
+        return rc;
+    }
 
-    return instance;
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -155,10 +160,13 @@ hpd_httpd_t *hpd_httpd_create(hpd_httpd_settings_t *settings, hpd_module_t *cont
  *
  *  \param  instance  The httpd instance to destroy.
  */
-void hpd_httpd_destroy(hpd_httpd_t *httpd)
+hpd_error_t hpd_httpd_destroy(hpd_httpd_t *httpd)
 {
-    hpd_tcpd_destroy(httpd->webserver); // TODO Ignoring error
+    if (!httpd) return HPD_E_NULL;
+
+    hpd_error_t rc = hpd_tcpd_destroy(httpd->webserver);
     free(httpd);
+    return rc;
 }
 
 /**
@@ -170,8 +178,10 @@ void hpd_httpd_destroy(hpd_httpd_t *httpd)
  *
  *  \return The error code of hpd_tcpd_start()
  */
-int hpd_httpd_start(hpd_httpd_t *httpd)
+hpd_error_t hpd_httpd_start(hpd_httpd_t *httpd)
 {
+    if (!httpd) return HPD_E_NULL;
+
     return hpd_tcpd_start(httpd->webserver);
 }
 
@@ -183,8 +193,10 @@ int hpd_httpd_start(hpd_httpd_t *httpd)
  *
  *  \param  instance  Instance to stop.
  */
-void hpd_httpd_stop(hpd_httpd_t *httpd)
+hpd_error_t hpd_httpd_stop(hpd_httpd_t *httpd)
 {
-    hpd_tcpd_stop(httpd->webserver); // TODO Ignoring error
+    if (!httpd) return HPD_E_NULL;
+
+    return hpd_tcpd_stop(httpd->webserver);
 }
 

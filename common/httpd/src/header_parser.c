@@ -31,7 +31,10 @@
 
 #include "header_parser.h"
 
+// TODO Need to get rid of printfs in a lot of places (this file and others...)
+
 enum hp_state {
+	S_ERROR = -1,
 	S_FIELD,
 	S_VALUE,
 	S_COMPLETED
@@ -49,15 +52,10 @@ struct hp {
 	size_t value_buffer_size;
 };
 
-void reset_buffers(struct hp *instance)
+static void reset_buffers(struct hp *instance)
 {
-		if(instance->field_buffer != NULL) {
-			free(instance->field_buffer);
-		}
-
-		if(instance->value_buffer != NULL) {
-			free(instance->value_buffer);
-		}
+		if(instance->field_buffer) free(instance->field_buffer);
+		if(instance->value_buffer) free(instance->value_buffer);
 
 		instance -> field_buffer_size = 0;
 		instance -> field_buffer = NULL;
@@ -66,117 +64,123 @@ void reset_buffers(struct hp *instance)
 		instance -> value_buffer = NULL;
 }
 
-struct hp *hp_create(struct hp_settings *settings)
+hpd_error_t hp_create(struct hp **instance, struct hp_settings *settings)
 {
-	struct hp *instance;
+    if (!instance || !settings) return HPD_E_NULL;
 
-	instance = malloc(sizeof(struct hp));
+	(*instance) = malloc(sizeof(struct hp));
+    if (!(*instance)) return HPD_E_ALLOC;
 
-	instance -> settings = malloc(sizeof(struct hp_settings));
+	(*instance)->settings = malloc(sizeof(struct hp_settings));
+    if (!(*instance)->settings) {
+        fprintf(stderr, "Malloc failed in header parser when allocating space for header parser settings\n");
+        free(*instance);
+        return HPD_E_ALLOC;
+    }
 
-	if(instance->settings == NULL)
-	{
-		fprintf(stderr, "Malloc failed in header parser when allocating space for header parser settings\n");
-		return NULL;
-	}
+	memcpy((*instance)->settings, settings, sizeof(struct hp_settings));
 
-	memcpy(instance->settings, settings, sizeof(struct hp_settings));
+	(*instance)->state = S_FIELD;
 
-	instance -> state = S_FIELD;
+	(*instance)->field_buffer_size = 0;
+    (*instance)->field_buffer = NULL;
 
-	instance -> field_buffer_size = 0;
-    instance -> field_buffer = NULL;
+	(*instance)->value_buffer_size = 0;
+	(*instance)->value_buffer = NULL;
 
-	instance -> value_buffer_size = 0;
-	instance -> value_buffer = NULL;
-
-	return instance;
+	return HPD_E_SUCCESS;
 }
 
-void hp_on_header_field(struct hp *instance, const char* field_chunk, size_t length)
+hpd_error_t hp_on_header_field(struct hp *instance, const char *field_chunk, size_t length)
 {
-	if(instance->state == S_COMPLETED) {
-		fprintf(stderr, "The header parser received additional data after a call to completed\n");
-		return;
-	}
+    if (!instance || field_chunk) return HPD_E_NULL;
 
-	size_t old_buffer_size = instance->field_buffer_size;
+    hpd_error_t rc;
+    size_t old_buffer_size = instance->field_buffer_size;
 
-	// If state is S_VALUE, yield a field-value pair
-	if(instance->state == S_VALUE) {
-		instance->settings->on_field_value_pair(instance->settings->data, instance->field_buffer, instance->field_buffer_size, instance->value_buffer, instance->value_buffer_size);
-
-		reset_buffers(instance);
-		old_buffer_size = 0;
-	}
-
-	instance->state = S_FIELD;
-	instance->field_buffer_size += length;
-
-	instance->field_buffer = realloc(instance->field_buffer, instance->field_buffer_size * (sizeof(char)));
-	if(instance->field_buffer == NULL)
-	{
-		fprintf(stderr, "Realloc failed in URL parser when allocating space for new URL chunk\n");
-		return;
-	}
-
-	memcpy(instance->field_buffer+old_buffer_size, field_chunk, length);
-
-	return;
+    switch (instance->state) {
+        case S_VALUE:
+            if ((rc = instance->settings->on_field_value_pair(instance->settings->data, instance->field_buffer, instance->field_buffer_size, instance->value_buffer, instance->value_buffer_size))) {
+                instance->state = S_ERROR;
+                return rc;
+            }
+            reset_buffers(instance);
+            old_buffer_size = 0;
+            instance->state = S_FIELD;
+        case S_FIELD:
+            instance->field_buffer_size += length;
+            instance->field_buffer = realloc(instance->field_buffer, instance->field_buffer_size * (sizeof(char)));
+            if(instance->field_buffer == NULL) {
+                fprintf(stderr, "Realloc failed in URL parser when allocating space for new URL chunk\n");
+                return HPD_E_ALLOC;
+            }
+            memcpy(instance->field_buffer+old_buffer_size, field_chunk, length);
+            return HPD_E_SUCCESS;
+        case S_COMPLETED:
+            fprintf(stderr, "The header parser received additional data after a call to completed\n");
+        case S_ERROR: // TODO Error msg ?
+        default:
+            return HPD_E_STATE;
+    }
 }
 
-void hp_on_header_value(struct hp *instance, const char* value_chunk, size_t length)
+hpd_error_t hp_on_header_value(struct hp *instance, const char *value_chunk, size_t length)
 {
-	if(instance->state == S_COMPLETED) {
-		fprintf(stderr, "The header parser received additional data after a call to completed\n");
-		return;
-	}
+    if (!instance || !value_chunk) return  HPD_E_NULL;
 
-	instance->state = S_VALUE;
+    size_t old_buffer_size = instance->value_buffer_size;
 
-	size_t old_buffer_size = instance->value_buffer_size;
-
-	instance->value_buffer_size += length;
-
-	instance->value_buffer = realloc(instance->value_buffer, instance->value_buffer_size * (sizeof(char)));
-	if(instance->value_buffer == NULL)
-	{
-		fprintf(stderr, "Realloc failed in URL parser when allocating space for new URL chunk\n");
-		return;
-	}
-
-	memcpy(instance->value_buffer+old_buffer_size, value_chunk, length);
-
-	return;
+    switch (instance->state) {
+        case S_FIELD:
+            instance->state = S_VALUE;
+        case S_VALUE:
+            instance->value_buffer_size += length;
+            instance->value_buffer = realloc(instance->value_buffer, instance->value_buffer_size * (sizeof(char)));
+            if(instance->value_buffer == NULL) {
+                fprintf(stderr, "Realloc failed in URL parser when allocating space for new URL chunk\n");
+                return HPD_E_ALLOC;
+            }
+            memcpy(instance->value_buffer+old_buffer_size, value_chunk, length);
+            return HPD_E_SUCCESS;
+        case S_COMPLETED:
+            fprintf(stderr, "The header parser received additional data after a call to completed\n");
+        case S_ERROR: // TODO Error msg ?
+        default:
+            return HPD_E_STATE;
+    }
 }
 
-void hp_on_header_complete(struct hp *instance)
+hpd_error_t hp_on_header_complete(struct hp *instance)
 {
-	if(instance->state == S_VALUE)
-	{
-		instance->settings->on_field_value_pair(instance->settings->data, instance->field_buffer, instance->field_buffer_size, instance->value_buffer, instance->value_buffer_size);
-		instance->state = S_COMPLETED;
-	} else if (instance->state == S_FIELD) {
-		fprintf(stderr, "The header parser was missing a value when the call to completed was made\n");
-	}
-	else
-	{
-		// Completed called multiple times
-	}
-	
-	return;
+    if (!instance) return HPD_E_NULL;
+
+    hpd_error_t rc;
+
+    switch (instance->state) {
+        case S_FIELD:
+            fprintf(stderr, "The header parser was missing a value when the call to completed was made\n");
+            return HPD_E_STATE;
+        case S_VALUE:
+            if ((rc = instance->settings->on_field_value_pair(instance->settings->data, instance->field_buffer, instance->field_buffer_size, instance->value_buffer, instance->value_buffer_size))) {
+                instance->state = S_ERROR;
+                return rc;
+            }
+            instance->state = S_COMPLETED;
+            return HPD_E_SUCCESS;
+        case S_COMPLETED: // TODO Error msg ?
+        case S_ERROR: // TODO Error msg ?
+        default: // TODO Error msg ?
+            return HPD_E_STATE;
+    }
 }
 
-void hp_destroy(struct hp *instance)
+hpd_error_t hp_destroy(struct hp *instance)
 {
-	if(instance != NULL){ 
+    if (!instance) return HPD_E_NULL;
 
-		if(instance->settings != NULL) {
-			free(instance->settings);
-		}
+    if(instance->settings != NULL) free(instance->settings);
+    reset_buffers(instance);
+    free(instance);
 
-		reset_buffers(instance);
-	
-		free(instance);
-	}
+    return HPD_E_SUCCESS;
 }

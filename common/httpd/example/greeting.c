@@ -39,8 +39,8 @@ static void exit_handler(int sig)
 {
     // Stop server
     if (server) {
-        hpd_httpd_stop(server);
-        hpd_httpd_destroy(server);
+        hpd_httpd_stop(server); // TODO Check error
+        hpd_httpd_destroy(server); // TODO Check error
     }
 
     // Exit
@@ -55,10 +55,12 @@ void header_printer(void *data, const char* key, const char* value)
 
 int handle_request(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_ctx, void** req_data)
 {
-    const char *method = hpd_httpd_method_str(hpd_httpd_request_get_method(req));
-    const char *url = hpd_httpd_request_get_url(req);
+    hpd_httpd_method_t m;
+    hpd_httpd_request_get_method(req, &m); // TODO Error handling
+    const char *method = hpd_httpd_method_str(m);
+    const char *url = hpd_httpd_request_get_url(req, NULL);
 
-    struct lm *headers = hpd_httpd_request_get_headers(req);
+    struct lm *headers = hpd_httpd_request_get_headers(req, NULL);
 
     printf("Got %s request on %s\n", method, url);
 
@@ -72,7 +74,7 @@ int handle_request(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_ctx, voi
     char *body = malloc((strlen(body1)+strlen(body2)+strlen(body3)+1)*sizeof(char));
     sprintf(body, "%s%s%s",body1, body2, body3);
 
-    hpd_httpd_response_t *res = hpd_httpd_response_create(req, WS_HTTP_200);
+    hpd_httpd_response_t *res = hpd_httpd_response_create(NULL, req, WS_HTTP_200);
     hpd_httpd_response_sendf(res, body);
 
     free(body);
@@ -102,7 +104,7 @@ int main(int argc, char *argv[])
 
     // Create server
     // TODO Parameter cannot be null !
-    server = hpd_httpd_create(&settings, NULL, loop);
+    hpd_httpd_create(&server, &settings, NULL, loop); // TODO Check error
 
     // Start the event loop and webserver
     if (!hpd_httpd_start(server))

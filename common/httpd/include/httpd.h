@@ -40,12 +40,17 @@ typedef struct hpd_httpd_request hpd_httpd_request_t;
 typedef struct hpd_httpd_response hpd_httpd_response_t;
 typedef struct hpd_httpd_settings hpd_httpd_settings_t;
 
+typedef enum hpd_httpd_return {
+    HPD_HTTPD_R_CONTINUE = 0,
+    HPD_HTTPD_R_STOP = 1,
+} hpd_httpd_return_t;
+
 /**********************************************************************
  *  Callbacks                                                         *
  **********************************************************************/
 
-typedef int (*hpd_httpd_data_f)(hpd_httpd_t *httpd, hpd_httpd_request_t *req, void* httpd_ctx, void** req_data, const char *buf, size_t len);
-typedef int (*hpd_httpd_nodata_f)(hpd_httpd_t *httpd, hpd_httpd_request_t *req, void* httpd_ctx, void** req_data);
+typedef hpd_httpd_return_t (*hpd_httpd_data_f)(hpd_httpd_t *httpd, hpd_httpd_request_t *req, void* httpd_ctx, void** req_data, const char *buf, size_t len);
+typedef hpd_httpd_return_t (*hpd_httpd_nodata_f)(hpd_httpd_t *httpd, hpd_httpd_request_t *req, void* httpd_ctx, void** req_data);
 
 /**
  * Settings struct for webserver.
@@ -132,34 +137,35 @@ struct hpd_httpd_settings {
    .on_req_destroy = NULL, \
    .on_req_cmpl = NULL }
 
-// TODO Make functions return hpd_error_t instead !
-
 // Webserver functions
-hpd_httpd_t *hpd_httpd_create(hpd_httpd_settings_t *settings, hpd_module_t *context, hpd_ev_loop_t *loop);
-void hpd_httpd_destroy(hpd_httpd_t *httpd);
-int hpd_httpd_start(hpd_httpd_t *httpd);
-void hpd_httpd_stop(hpd_httpd_t *httpd);
+hpd_error_t hpd_httpd_create(hpd_httpd_t **httpd, hpd_httpd_settings_t *settings, hpd_module_t *context,
+                             hpd_ev_loop_t *loop);
+hpd_error_t hpd_httpd_destroy(hpd_httpd_t *httpd);
+hpd_error_t hpd_httpd_start(hpd_httpd_t *httpd);
+hpd_error_t hpd_httpd_stop(hpd_httpd_t *httpd);
 
 // Request functions
-hpd_httpd_method_t hpd_httpd_request_get_method(hpd_httpd_request_t *req);
-const char *hpd_httpd_request_get_url(hpd_httpd_request_t *req);
-hpd_map_t *hpd_httpd_request_get_headers(hpd_httpd_request_t *req);
-const char *hpd_httpd_request_get_header(hpd_httpd_request_t *req, const char *key);
-hpd_map_t *hpd_httpd_request_get_arguments(hpd_httpd_request_t *req);
-const char *hpd_httpd_request_get_argument(hpd_httpd_request_t *req, const char *key);
-hpd_map_t *hpd_httpd_request_get_cookies(hpd_httpd_request_t *req);
-const char *hpd_httpd_request_get_cookie(hpd_httpd_request_t *req, const char *key);
-const char *hpd_httpd_request_get_ip(hpd_httpd_request_t *req);
-void hpd_httpd_request_keep_open(hpd_httpd_request_t *req);
+hpd_error_t hpd_httpd_request_get_method(hpd_httpd_request_t *req, hpd_httpd_method_t *method);
+hpd_error_t hpd_httpd_request_get_url(hpd_httpd_request_t *req, const char **url);
+hpd_error_t hpd_httpd_request_get_headers(hpd_httpd_request_t *req, hpd_map_t **headers);
+hpd_error_t hpd_httpd_request_get_header(hpd_httpd_request_t *req, const char *key, const char **value);
+hpd_error_t hpd_httpd_request_get_arguments(hpd_httpd_request_t *req, hpd_map_t **arguments);
+hpd_error_t hpd_httpd_request_get_argument(hpd_httpd_request_t *req, const char *key, const char **val);
+hpd_error_t hpd_httpd_request_get_cookies(hpd_httpd_request_t *req, hpd_map_t **cookies);
+hpd_error_t hpd_httpd_request_get_cookie(hpd_httpd_request_t *req, const char *key, const char **val);
+hpd_error_t hpd_httpd_request_get_ip(hpd_httpd_request_t *req, const char **ip);
+hpd_error_t hpd_httpd_request_keep_open(hpd_httpd_request_t *req);
 
 // Response functions
-void hpd_httpd_response_destroy(hpd_httpd_response_t *res);
-hpd_httpd_response_t *hpd_httpd_response_create(hpd_httpd_request_t *req, hpd_status_t status);
-int hpd_httpd_response_add_header(hpd_httpd_response_t *res, const char *field, const char *value);
-void hpd_httpd_response_sendf(hpd_httpd_response_t *res, const char *fmt, ...);
-void hpd_httpd_response_vsendf(hpd_httpd_response_t *res, const char *fmt, va_list arg);
-int hpd_httpd_response_add_cookie(hpd_httpd_response_t *res, const char *field, const char *value,
-                                  const char *expires, const char *max_age, const char *domain, const char *path,
-                                  int secure, int http_only, const char *extension);
+hpd_error_t hpd_httpd_response_destroy(hpd_httpd_response_t *res);
+hpd_error_t hpd_httpd_response_create(hpd_httpd_response_t **response, hpd_httpd_request_t *req,
+                                      hpd_status_t status);
+hpd_error_t hpd_httpd_response_add_header(hpd_httpd_response_t *res, const char *field, const char *value);
+hpd_error_t hpd_httpd_response_sendf(hpd_httpd_response_t *res, const char *fmt, ...);
+hpd_error_t hpd_httpd_response_vsendf(hpd_httpd_response_t *res, const char *fmt, va_list arg);
+hpd_error_t hpd_httpd_response_add_cookie(hpd_httpd_response_t *res, const char *field, const char *value,
+                                          const char *expires, const char *max_age, const char *domain,
+                                          const char *path,
+                                          int secure, int http_only, const char *extension);
 
 #endif // HOMEPORT_HTTPD_H

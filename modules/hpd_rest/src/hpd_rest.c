@@ -184,7 +184,8 @@ static hpd_error_t url_extract(const char *url, char **aid, char **did, char **s
 // TODO Not the best error handling (probably goes for the entire file)...
 static void reply_malformed_url(hpd_httpd_request_t *req)
 {
-    hpd_httpd_response_t *res = hpd_httpd_response_create(req, HPD_S_400);
+    hpd_httpd_response_t *res;
+    hpd_httpd_response_create(&res, req, HPD_S_400);
     hpd_httpd_response_sendf(res, "Malformed URL");
     hpd_httpd_response_destroy(res);
 }
@@ -192,7 +193,8 @@ static void reply_malformed_url(hpd_httpd_request_t *req)
 // TODO Not the best error handling (probably goes for the entire file)...
 static void reply_internal_server_error(hpd_httpd_request_t *req)
 {
-    hpd_httpd_response_t *res = hpd_httpd_response_create(req, HPD_S_500);
+    hpd_httpd_response_t *res;
+    hpd_httpd_response_create(&res, req, HPD_S_500);
     hpd_httpd_response_sendf(res, "Internal Server Error");
     hpd_httpd_response_destroy(res);
 }
@@ -200,7 +202,8 @@ static void reply_internal_server_error(hpd_httpd_request_t *req)
 // TODO Not the best error handling (probably goes for the entire file)...
 static void reply_not_found(hpd_httpd_request_t *req)
 {
-    hpd_httpd_response_t *res = hpd_httpd_response_create(req, HPD_S_404);
+    hpd_httpd_response_t *res;
+    hpd_httpd_response_create(&res, req, HPD_S_404);
     hpd_httpd_response_sendf(res, "Not Found");
     hpd_httpd_response_destroy(res);
 }
@@ -208,7 +211,8 @@ static void reply_not_found(hpd_httpd_request_t *req)
 // TODO Not the best error handling (probably goes for the entire file)...
 static void reply_unsupported_media_type(hpd_httpd_request_t *req)
 {
-    hpd_httpd_response_t *res = hpd_httpd_response_create(req, HPD_S_415);
+    hpd_httpd_response_t *res;
+    hpd_httpd_response_create(&res, req, HPD_S_415);
     hpd_httpd_response_sendf(res, "Unsupported Media Type");
     hpd_httpd_response_destroy(res);
 }
@@ -216,7 +220,8 @@ static void reply_unsupported_media_type(hpd_httpd_request_t *req)
 // TODO Not the best error handling (probably goes for the entire file)...
 static void reply_bad_request(hpd_httpd_request_t *req)
 {
-    hpd_httpd_response_t *res = hpd_httpd_response_create(req, HPD_S_400);
+    hpd_httpd_response_t *res;
+    hpd_httpd_response_create(&res, req, HPD_S_400);
     hpd_httpd_response_sendf(res, "Bad Request");
     hpd_httpd_response_destroy(res);
 }
@@ -224,7 +229,8 @@ static void reply_bad_request(hpd_httpd_request_t *req)
 // TODO Not the best error handling (probably goes for the entire file)...
 static void reply_method_not_allowed(hpd_httpd_request_t *req)
 {
-    hpd_httpd_response_t *res = hpd_httpd_response_create(req, HPD_S_405);
+    hpd_httpd_response_t *res;
+    hpd_httpd_response_create(&res, req, HPD_S_405);
     hpd_httpd_response_sendf(res, "Method Not Allowed");
     hpd_httpd_response_destroy(res);
 }
@@ -248,11 +254,11 @@ static hpd_error_t on_free(void *data)
 }
 
 // TODO Not the best error handling (probably goes for the entire file)...
-static int on_req_destroy(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_ctx, void** req_data)
+static hpd_httpd_return_t on_req_destroy(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_ctx, void** req_data)
 {
     hpd_rest_req_t *rest_req = *req_data;
 
-    if (!rest_req) return 0;
+    if (!rest_req) return HPD_HTTPD_R_CONTINUE;
 
     if (rest_req->hpd_request) {
         rest_req->http_req = NULL;
@@ -262,7 +268,7 @@ static int on_req_destroy(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_c
         free(rest_req);
     }
 
-    return 0;
+    return HPD_HTTPD_R_CONTINUE;
 }
 
 // TODO Not the best error handling (probably goes for the entire file)...
@@ -282,7 +288,8 @@ static hpd_error_t on_response(hpd_response_t *res)
         hpd_status_t status;
         if ((rc = hpd_response_get_status(res, &status))) return rc;
 
-        hpd_map_t *headersIn = hpd_httpd_request_get_headers(rest_req->http_req);
+        hpd_map_t *headersIn;
+        hpd_httpd_request_get_headers(rest_req->http_req, &headersIn);
 
         char *buffer = NULL;
         if (val) {
@@ -307,7 +314,8 @@ static hpd_error_t on_response(hpd_response_t *res)
             const char *accept;
             hpd_map_get(headersIn, "Accept", &accept); // TODO Handle error
             char *state;
-            hpd_httpd_response_t *response = hpd_httpd_response_create(rest_req->http_req, status);
+            hpd_httpd_response_t *response;
+            hpd_httpd_response_create(&response, rest_req->http_req, status);
             if (accept != NULL && strcmp(accept, "application/json") == 0)
             {
                 state = jsonGetState(buffer);
@@ -325,7 +333,8 @@ static hpd_error_t on_response(hpd_response_t *res)
             free(state);
         } else {
             fprintf(stderr, "%s\n", buffer);
-            hpd_httpd_response_t *response = hpd_httpd_response_create(rest_req->http_req, status);
+            hpd_httpd_response_t *response;
+            hpd_httpd_response_create(&response, rest_req->http_req, status);
             // TODO Consider headers to add
 #ifdef LR_ORIGIN
             hpd_httpd_response_add_header(response, "Access-Control-Allow-Origin", "*");
@@ -346,19 +355,21 @@ static hpd_error_t on_response(hpd_response_t *res)
 
 // TODO Not the best error handling (probably goes for the entire file)...
 // TODO Clean up on errors !
-static int on_req_url_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_ctx, void** req_data)
+static hpd_httpd_return_t on_req_url_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_ctx, void** req_data)
 {
     struct hpd_rest *rest = ws_ctx;
-    const char *url = hpd_httpd_request_get_url(req);
+    const char *url;
+    hpd_httpd_request_get_url(req, &url);
 
     if (!rest->hpd) {
         // TODO Best error type ?
         reply_internal_server_error(req);
-        return 1;
+        return HPD_HTTPD_R_STOP; // TODO Best error type ?
     }
 
     if (strcmp(url, "/devices") == 0) {
-        hpd_map_t *headersIn = hpd_httpd_request_get_headers(req);
+        hpd_map_t *headersIn;
+        hpd_httpd_request_get_headers(req, &headersIn);
         const char *accept;
         char *body;
 
@@ -372,32 +383,33 @@ static int on_req_url_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_
             body = xmlGetConfiguration(rest->hpd);
         }
 
-        hpd_httpd_response_t *res = hpd_httpd_response_create(req, HPD_S_200);
+        hpd_httpd_response_t *res;
+        hpd_httpd_response_create(&res, req, HPD_S_200);
         hpd_httpd_response_sendf(res, "%s", body);
         hpd_httpd_response_destroy(res);
 
         free(body);
 
-        return 1;
+        return HPD_HTTPD_R_STOP; // TODO Best error type ?
     }
-    
+
     char *aid_encoded, *did_encoded, *sid_encoded;
     if (url == NULL) {
         reply_malformed_url(req);
-        return 1;
+        return HPD_HTTPD_R_STOP; // TODO Best error type ?
     }
     switch (url_extract(url, &aid_encoded, &did_encoded, &sid_encoded)) {
         case HPD_E_ALLOC:
             reply_internal_server_error(req);
-            return 1;
+            return HPD_HTTPD_R_STOP; // TODO Best error type ?
         case HPD_E_ARGUMENT:
             reply_malformed_url(req);
-            return 1;
+            return HPD_HTTPD_R_STOP; // TODO Best error type ?
         case HPD_E_SUCCESS:
             break;
         default:
             reply_internal_server_error(req);
-            return 1;
+            return HPD_HTTPD_R_STOP; // TODO Best error type ?
     }
 
     char *aid_decoded, *did_decoded, *sid_decoded;
@@ -414,8 +426,10 @@ static int on_req_url_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_
     free(did_decoded);
     free(sid_decoded);
 
+    hpd_httpd_method_t m;
+    hpd_httpd_request_get_method(req, &m); // TODO Error handling
     hpd_method_t method;
-    switch(hpd_httpd_request_get_method(req))
+    switch(m)
     {
         case HPD_HTTPD_M_GET:
             method = HPD_M_GET;
@@ -430,7 +444,7 @@ static int on_req_url_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_
 #endif
         default:
             reply_method_not_allowed(req);
-            return 1;
+            return HPD_HTTPD_R_STOP; // TODO Best error type ?
     }
     if (method > HPD_M_NONE) {
         hpd_bool_t bool;
@@ -441,7 +455,7 @@ static int on_req_url_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_
         };
         if (!bool) {
             reply_method_not_allowed(req);
-            return 1;
+            return HPD_HTTPD_R_STOP; // TODO Best error type ?
         }
     }
 
@@ -452,15 +466,15 @@ static int on_req_url_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_
     rest_req->http_req = req;
     *req_data = rest_req;
 
-    return 0;
+    return HPD_HTTPD_R_CONTINUE; // TODO Best error type ?
 
     alloc_error:
         reply_internal_server_error(req);
-        return 1;
+        return HPD_HTTPD_R_STOP; // TODO Best error type ?
 }
 
 // TODO Not the best error handling (probably goes for the entire file)...
-static int on_req_hdr_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void *ws_ctx, void **req_data)
+static hpd_httpd_return_t on_req_hdr_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void *ws_ctx, void **req_data)
 {
 #ifdef LR_ORIGIN
     hpd_error_t rc;
@@ -471,10 +485,12 @@ static int on_req_hdr_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void *ws_
     char methods[23];
     methods[0] = '\0';
 
-    switch(hpd_httpd_request_get_method(req))
+    hpd_httpd_method_t m;
+    hpd_httpd_request_get_method(req, &m); // TODO Error handling
+    switch(m)
     {
         case HPD_HTTPD_M_OPTIONS:
-            res = hpd_httpd_response_create(req, HPD_S_200);
+            hpd_httpd_response_create(&res, req, HPD_S_200);
             hpd_httpd_response_add_header(res, "Access-Control-Allow-Origin", "*");
             hpd_action_t *action;
             hpd_service_foreach_action(rc, action, service) {
@@ -499,7 +515,7 @@ static int on_req_hdr_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void *ws_
                 case HPD_E_NOT_FOUND:
                     // TODO Do I need to clean up rest_req or will destroy always be called from downstairs?
                     reply_not_found(req);
-                    return 1;
+                    return HPD_HTTPD_R_STOP; // TODO Best error type ?
             }
             hpd_httpd_response_add_header(res, "Access-Control-Allow-Methods", methods);
             // TODO Having so many specified headers here is not really thaaaat good
@@ -507,9 +523,9 @@ static int on_req_hdr_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void *ws_
                                           "Content-Type, Cache-Control, Accept, X-Requested-With");
             hpd_httpd_response_sendf(res, "OK");
             hpd_httpd_response_destroy(res);
-            return 1;
+            return HPD_HTTPD_R_STOP; // TODO Best error type ?
         default:
-            return 0;
+            return HPD_HTTPD_R_CONTINUE; // TODO Best error type ?
     }
 #else
     return 0;
@@ -517,28 +533,30 @@ static int on_req_hdr_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void *ws_
 }
 
 // TODO Not the best error handling (probably goes for the entire file)...
-static int on_req_body(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_ctx, void** req_data, const char* chunk, size_t len)
+static hpd_httpd_return_t on_req_body(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_ctx, void** req_data, const char* chunk, size_t len)
 {
     hpd_rest_req_t *rest_req = *req_data;
 
     HPD_REALLOC(rest_req->body, rest_req->len + len, char);
     strncpy(&rest_req->body[rest_req->len], chunk, len);
     rest_req->len += len;
-    return 0;
+    return HPD_HTTPD_R_CONTINUE; // TODO Best error type ?
 
     alloc_error:
         // TODO Error handling
-        return 1;
+        return HPD_HTTPD_R_STOP; // TODO Best error type ?
 }
 
 // TODO Not the best error handling (probably goes for the entire file)...
-static int on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_ctx, void** req_data)
+static hpd_httpd_return_t on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_ctx, void** req_data)
 {
     hpd_rest_req_t *rest_req = *req_data;
     hpd_service_id_t *service = rest_req->service;
 
+    hpd_httpd_method_t m;
+    hpd_httpd_request_get_method(req, &m); // TODO Error handling
     hpd_method_t method;
-    switch(hpd_httpd_request_get_method(req)) {
+    switch(m) {
         case HPD_HTTPD_M_GET:
             method = HPD_M_GET;
             break;
@@ -546,12 +564,13 @@ static int on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_ctx,
             method = HPD_M_PUT;
             break;
         default:
-            return 1;
+            return HPD_HTTPD_R_STOP; // TODO Best error type ?
     }
 
     hpd_value_t *value = NULL;
     if (rest_req->body) {
-        hpd_map_t *headersIn = hpd_httpd_request_get_headers(req);
+        hpd_map_t *headersIn;
+        hpd_httpd_request_get_headers(req, &headersIn);
         const char *contentType;
         hpd_map_get(headersIn, "Content-Type", &contentType); // TODO Handle error
         char *v;
@@ -565,12 +584,12 @@ static int on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_ctx,
             v = (char *) jsonParseState(rest_req->body);
         } else {
             reply_unsupported_media_type(req);
-            return 1;
+            return HPD_HTTPD_R_STOP; // TODO Best error type ?
         }
 
         if (!v) {
             reply_bad_request(req);
-            return 1;
+            return HPD_HTTPD_R_STOP; // TODO Best error type ?
         }
 
         hpd_value_alloc(&value, v, HPD_NULL_TERMINATED); // TODO Check for errors!
@@ -583,7 +602,7 @@ static int on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req, void* ws_ctx,
     hpd_request(rest_req->hpd_request); // TODO Check for errors!
 
     hpd_httpd_request_keep_open(rest_req->http_req);
-    return 0;
+    return HPD_HTTPD_R_CONTINUE; // TODO Best error type ?
 }
 
 static hpd_error_t on_create(void **data, hpd_module_t *context)
@@ -632,8 +651,8 @@ static hpd_error_t on_start(void *data, hpd_t *hpd)
     hpd_ev_loop_t *loop;
     if ((rc = hpd_get_loop(hpd, &loop))) return rc;
 
-    if (!(rest->ws = hpd_httpd_create(&rest->ws_set, rest->context, loop))) return HPD_E_UNKNOWN;
-    if (hpd_httpd_start(rest->ws)) return HPD_E_UNKNOWN;
+    if ((rc = hpd_httpd_create(&rest->ws, &rest->ws_set, rest->context, loop))) return rc;
+    if ((rc = hpd_httpd_start(rest->ws))) return rc;
 
     return HPD_E_SUCCESS;
 }

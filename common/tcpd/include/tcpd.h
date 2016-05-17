@@ -38,12 +38,17 @@ typedef struct hpd_tcpd hpd_tcpd_t;
 typedef struct hpd_tcpd_settings hpd_tcpd_settings_t;
 typedef struct hpd_tcpd_conn hpd_tcpd_conn_t;
 
+typedef enum hpd_tcpd_return {
+    HPD_TCPD_R_CONTINUE = 0,
+    HPD_TCPD_R_STOP = 1,
+} hpd_tcpd_return_t;
+
 /**********************************************************************
  *  Callbacks                                                         *
  **********************************************************************/
 
-typedef hpd_error_t (*hpd_tcpd_nodata_f)(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx);
-typedef hpd_error_t (*hpd_tcpd_data_f)(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx, const char *buf, size_t len);
+typedef hpd_tcpd_return_t (*hpd_tcpd_nodata_f)(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx);
+typedef hpd_tcpd_return_t (*hpd_tcpd_data_f)(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx, const char *buf, size_t len);
 
 /**
  * Settings struct for tcpd.

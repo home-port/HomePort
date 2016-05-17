@@ -29,9 +29,6 @@
 #include "http_parser.h"
 #include "url_parser.h"
 #include "header_parser.h"
-#include "tcpd.h"
-#include "hpd_map.h"
-#include "httpd_types.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -169,18 +166,19 @@ static http_parser_settings parser_settings =
  *  \param  parsendSegment  Full path, not null-terminated.
  *  \param  segment_length  Length of path in characters
  */
-static void url_parser_path_complete(void *data,
-                                     const char* parsedSegment, size_t segment_length)
+static hpd_error_t url_parser_path_complete(void *data, const char* parsedSegment, size_t segment_length)
 {
     hpd_httpd_request_t *req = data;
     char *newUrl = realloc(req->url, sizeof(char)*(segment_length+1));
     if(newUrl == NULL){
         fprintf(stderr, "realloc failed in url_parser_path_complete\n");
-        return;
+        return HPD_E_ALLOC;
     }
     req->url = newUrl;
     strncpy(req->url, parsedSegment, segment_length);
     req->url[segment_length] = '\0';
+
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -195,13 +193,10 @@ static void url_parser_path_complete(void *data,
  *  \param  value      The value, not null-terminated
  *  \param  value_len  The length of the value
  */
-static void url_parser_key_value(void *data,
-                                 const char *key, size_t key_len,
-                                 const char *value, size_t value_len)
+static hpd_error_t url_parser_key_value(void *data, const char *key, size_t key_len, const char *value, size_t value_len)
 {
     hpd_httpd_request_t *req = data;
-
-    hpd_map_set_n(req->arguments, key, key_len, value, value_len); // TODO Handle error
+    return hpd_map_set_n(req->arguments, key, key_len, value, value_len);
 }
 
 /**
@@ -219,14 +214,13 @@ static void url_parser_key_value(void *data,
  *  \param  value         The value, not null-terminated
  *  \param  value_length  The length of the value
  */
-static void header_parser_field_value_pair_complete(void* data,
-                                                    const char* field, size_t field_length,
-                                                    const char* value, size_t value_length)
+static hpd_error_t header_parser_field_value_pair_complete(void* data, const char* field, size_t field_length, const char* value, size_t value_length)
 {
+    hpd_error_t rc;
     hpd_httpd_request_t *req = data;
 
     const char *existing;
-    hpd_map_get_n(req->headers, field, field_length, &existing); // TODO Handle error
+    if ((rc = hpd_map_get_n(req->headers, field, field_length, &existing))) return rc;
 
     //printf("Header: %.*s\n", (int)field_length, field);
 
@@ -235,17 +229,15 @@ static void header_parser_field_value_pair_complete(void* data,
         size_t key_s = 0, key_e, val_s, val_e;
 
         while (key_s < value_length) {
-            for (key_e = key_s;
-                 key_e < value_length && value[key_e] != '=';
-                 key_e++);
-            // TODO If key_e reached value_length it is an error
+            for (key_e = key_s; key_e < value_length && value[key_e] != '='; key_e++);
+            if (key_e == value_length) return HPD_E_ARGUMENT;
             val_s = key_e + 1;
-            for (val_e = val_s;
-                 val_e < value_length && strncmp(&value[val_e], "; ", 2) != 0;
-                 val_e++);
-            if (key_e-key_s > 0 && val_e-val_s > 0)
-                hpd_map_set_n(req->cookies, &value[key_s], (size_t) key_e-key_s,
-                            &value[val_s], val_e-val_s); // TODO handle error
+            for (val_e = val_s; val_e < value_length && value[val_e] != ';'; val_e++);
+            if (key_e-key_s > 0 && val_e-val_s > 0) {
+                if ((rc = hpd_map_set_n(req->cookies, &value[key_s], (size_t) key_e - key_s, &value[val_s], val_e - val_s))) return rc;
+            } else {
+                return HPD_E_ARGUMENT;
+            }
             key_s = val_e + 2;
         }
     }
@@ -255,19 +247,24 @@ static void header_parser_field_value_pair_complete(void* data,
         // Combine values
         size_t new_len = strlen(existing) + 1 + value_length + 1;
         char *new = malloc(new_len * sizeof(char));
+        if (!new) return HPD_E_ALLOC;
         strcpy(new, existing);
         strcat(new, ",");
         strncat(new, value, value_length);
         new[new_len-1] = '\0';
 
         // Replace
-        hpd_map_set_n(req->headers, field, field_length, new, new_len); // TODO Handle error
+        rc = hpd_map_set_n(req->headers, field, field_length, new, new_len);
 
         // Clean up
         free(new);
+
+        if (rc) return rc;
     } else {
-        hpd_map_set_n(req->headers, field, field_length, value, value_length); // TODO Handle error
+        if ((rc = hpd_map_set_n(req->headers, field, field_length, value, value_length))) return rc;
     }
+
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -283,10 +280,9 @@ static void header_parser_field_value_pair_complete(void* data,
  */
 static int parser_msg_begin(http_parser *parser)
 {
-    int stat = 0;
+    hpd_httpd_return_t stat;
     hpd_httpd_request_t *req = parser->data;
     const hpd_httpd_settings_t *settings = req->settings;
-    const hpd_httpd_nodata_f begin_cb = settings->on_req_begin;
 
     switch (req->state) {
         case S_STOP:
@@ -294,9 +290,9 @@ static int parser_msg_begin(http_parser *parser)
         case S_START:
             req->state = S_BEGIN;
             // Send request begin
-            if(begin_cb)
-                stat = begin_cb(req->webserver, req, settings->httpd_ctx, &req->data);
-            if (stat) { req->state = S_STOP; return stat; }
+            if(settings->on_req_begin && (stat = settings->on_req_begin(req->webserver, req, settings->httpd_ctx, &req->data))) {
+                req->state = S_STOP; return stat;
+            }
 
             return 0;
         default:
@@ -320,11 +316,10 @@ static int parser_msg_begin(http_parser *parser)
  */
 static int parser_url(http_parser *parser, const char *buf, size_t len)
 {
-    int stat = 0;
+    hpd_error_t rc;
+    hpd_httpd_return_t stat;
     hpd_httpd_request_t *req = parser->data;
     hpd_httpd_settings_t *settings = req->settings;
-    hpd_httpd_data_f url_cb = settings->on_req_url;
-    const hpd_httpd_data_f method_cb = settings->on_req_method;
     const char *method;
 
     switch (req->state) {
@@ -333,16 +328,21 @@ static int parser_url(http_parser *parser, const char *buf, size_t len)
         case S_BEGIN:
             // Send method
             method = http_method_str(parser->method);
-            //printf("Method: %s\n", method);
-            if(method_cb)
-                stat = method_cb(req->webserver, req, settings->httpd_ctx, &req->data, method, strlen(method));
-            if (stat) { req->state = S_STOP; return stat; }
+            if(settings->on_req_method && (stat = settings->on_req_method(req->webserver, req, settings->httpd_ctx, &req->data, method, strlen(method)))) {
+                req->state = S_STOP;
+                return stat;
+            }
             req->state = S_URL;
         case S_URL:
-            up_add_chunk(req->url_parser, buf, len);
-            if(url_cb)
-                stat = url_cb(req->webserver, req, settings->httpd_ctx, &req->data, buf, len);
-            if (stat) { req->state = S_STOP; return stat; }
+            if ((rc = up_add_chunk(req->url_parser, buf, len))) {
+                fprintf(stderr, "URL parser failed (code: %d)\n", rc);
+                req->state = S_ERROR;
+                return 1;
+            }
+            if(settings->on_req_url && (stat = settings->on_req_url(req->webserver, req, settings->httpd_ctx, &req->data, buf, len))) {
+                req->state = S_STOP;
+                return stat;
+            }
             return 0;
         default:
             req->state = S_ERROR;
@@ -366,27 +366,36 @@ static int parser_url(http_parser *parser, const char *buf, size_t len)
  */
 static int parser_hdr_field(http_parser *parser, const char *buf, size_t len)
 {
-    int stat = 0;
+    hpd_error_t rc;
+    hpd_httpd_return_t stat;
     hpd_httpd_request_t *req = parser->data;
     hpd_httpd_settings_t *settings = req->settings;
-    hpd_httpd_nodata_f url_cmpl_cb = settings->on_req_url_cmpl;
-    hpd_httpd_data_f header_field_cb = settings->on_req_hdr_field;
 
     switch (req->state) {
         case S_STOP:
             return 1;
         case S_URL:
-            up_complete(req->url_parser);
-            if(url_cmpl_cb)
-                stat = url_cmpl_cb(req->webserver, req, settings->httpd_ctx, &req->data);
-            if (stat) { req->state = S_STOP; return stat; }
+            if ((rc = up_complete(req->url_parser))) {
+                fprintf(stderr, "Url parser failed (code: %d)\n", rc);
+                req->state = S_ERROR;
+                return 1;
+            }
+            if(settings->on_req_url_cmpl && (stat = settings->on_req_url_cmpl(req->webserver, req, settings->httpd_ctx, &req->data))) {
+                req->state = S_STOP;
+                return stat;
+            }
         case S_HEADER_VALUE:
             req->state = S_HEADER_FIELD;
         case S_HEADER_FIELD:
-            hp_on_header_field(req->header_parser, buf, len);
-            if(header_field_cb)
-                stat = header_field_cb(req->webserver, req, settings->httpd_ctx, &req->data, buf, len);
-            if (stat) { req->state = S_STOP; return stat; }
+            if ((rc = hp_on_header_field(req->header_parser, buf, len))) {
+                fprintf(stderr, "Header parser failed (code: %d)\n", rc);
+                req->state = S_ERROR;
+                return 1;
+            }
+            if(settings->on_req_hdr_field && (stat = settings->on_req_hdr_field(req->webserver, req, settings->httpd_ctx, &req->data, buf, len))) {
+                req->state = S_STOP;
+                return stat;
+            }
             return 0;
         default:
             req->state = S_ERROR;
@@ -409,10 +418,10 @@ static int parser_hdr_field(http_parser *parser, const char *buf, size_t len)
  */
 static int parser_hdr_value(http_parser *parser, const char *buf, size_t len)
 {
-    int stat = 0;
+    hpd_error_t rc;
+    hpd_httpd_return_t stat;
     hpd_httpd_request_t *req = parser->data;
     hpd_httpd_settings_t *settings = req->settings;
-    hpd_httpd_data_f header_value_cb = settings->on_req_hdr_value;
 
     switch (req->state) {
         case S_STOP:
@@ -420,10 +429,15 @@ static int parser_hdr_value(http_parser *parser, const char *buf, size_t len)
         case S_HEADER_FIELD:
             req->state = S_HEADER_VALUE;
         case S_HEADER_VALUE:
-            hp_on_header_value(req->header_parser, buf, len);
-            if(header_value_cb)
-                stat = header_value_cb(req->webserver, req, settings->httpd_ctx, &req->data, buf, len);
-            if (stat) { req->state = S_STOP; return stat; }
+            if ((rc = hp_on_header_value(req->header_parser, buf, len))) {
+                fprintf(stderr, "Header parser failed (code: %d)\n", rc);
+                req->state = S_ERROR;
+                return 1;
+            }
+            if(settings->on_req_hdr_value && (stat = settings->on_req_hdr_value(req->webserver, req, settings->httpd_ctx, &req->data, buf, len))) {
+                req->state = S_STOP;
+                return stat;
+            }
             return 0;
         default:
             req->state = S_ERROR;
@@ -446,26 +460,35 @@ static int parser_hdr_value(http_parser *parser, const char *buf, size_t len)
  */
 static int parser_hdr_cmpl(http_parser *parser)
 {
-    int stat = 0;
+    hpd_error_t rc;
+    hpd_httpd_return_t stat;
     hpd_httpd_request_t *req = parser->data;
     hpd_httpd_settings_t *settings = req->settings;
-    hpd_httpd_nodata_f url_cmpl_cb = settings->on_req_url_cmpl;
-    hpd_httpd_nodata_f header_cmpl_cb = settings->on_req_hdr_cmpl;
 
     switch (req->state) {
         case S_STOP:
             return 1;
         case S_URL:
-            up_complete(req->url_parser);
-            if(url_cmpl_cb)
-                stat = url_cmpl_cb(req->webserver, req, settings->httpd_ctx, &req->data);
-            if (stat) { req->state = S_STOP; return stat; }
+            if ((rc = up_complete(req->url_parser))) {
+                fprintf(stderr, "Header parser failed (code: %d)\n", rc);
+                req->state = S_ERROR;
+                return 1;
+            }
+            if(settings->on_req_url_cmpl && (stat = settings->on_req_url_cmpl(req->webserver, req, settings->httpd_ctx, &req->data))){
+                req->state = S_STOP;
+                return stat;
+            }
         case S_HEADER_VALUE:
-            hp_on_header_complete(req->header_parser);
+            if ((rc = hp_on_header_complete(req->header_parser))) {
+                fprintf(stderr, "Header parser failed (code: %d)\n", rc);
+                req->state = S_ERROR;
+                return 1;
+            }
             req->state = S_HEADER_COMPLETE;
-            if(header_cmpl_cb)
-                stat = header_cmpl_cb(req->webserver, req, settings->httpd_ctx, &req->data);
-            if (stat) { req->state = S_STOP; return stat; }
+            if(settings->on_req_hdr_cmpl && (stat = settings->on_req_hdr_cmpl(req->webserver, req, settings->httpd_ctx, &req->data))) {
+                req->state = S_STOP;
+                return stat;
+            }
             return 0;
         default:
             req->state = S_ERROR;
@@ -488,10 +511,9 @@ static int parser_hdr_cmpl(http_parser *parser)
  */
 static int parser_body(http_parser *parser, const char *buf, size_t len)
 {
-    int stat = 0;
+    hpd_httpd_return_t stat;
     hpd_httpd_request_t *req = parser->data;
     hpd_httpd_settings_t *settings = req->settings;
-    hpd_httpd_data_f body_cb = settings->on_req_body;
 
     switch (req->state) {
         case S_STOP:
@@ -499,8 +521,8 @@ static int parser_body(http_parser *parser, const char *buf, size_t len)
         case S_HEADER_COMPLETE:
             req->state = S_BODY;
         case S_BODY:
-            if (body_cb) {
-                stat = body_cb(req->webserver, req, settings->httpd_ctx, &req->data, buf, len);
+            if (settings->on_req_body) {
+                stat = settings->on_req_body(req->webserver, req, settings->httpd_ctx, &req->data, buf, len);
                 if (stat) { req->state = S_STOP; return stat; }
             }
             return 0;
@@ -521,10 +543,9 @@ static int parser_body(http_parser *parser, const char *buf, size_t len)
  */
 static int parser_msg_cmpl(http_parser *parser)
 {
-    int stat = 0;
+    hpd_httpd_return_t stat;
     hpd_httpd_request_t *req = parser->data;
     hpd_httpd_settings_t *settings = req->settings;
-    hpd_httpd_nodata_f complete_cb = settings->on_req_cmpl;
 
     switch (req->state) {
         case S_STOP:
@@ -532,9 +553,10 @@ static int parser_msg_cmpl(http_parser *parser)
         case S_HEADER_COMPLETE:
         case S_BODY:
             req->state = S_COMPLETE;
-            if(complete_cb)
-                stat = complete_cb(req->webserver, req, settings->httpd_ctx, &req->data);
-            if (stat) { req->state = S_STOP; return stat; }
+            if(settings->on_req_cmpl && (stat = settings->on_req_cmpl(req->webserver, req, settings->httpd_ctx, &req->data))) {
+                req->state = S_STOP;
+                return stat;
+            }
             return 0;
         default:
             req->state = S_ERROR;
@@ -558,49 +580,65 @@ static int parser_msg_cmpl(http_parser *parser)
  *
  *  @return The newly create ws_request.
  */
-hpd_httpd_request_t *http_request_create(
-        hpd_httpd_t *webserver,
-        hpd_httpd_settings_t *settings,
-        hpd_tcpd_conn_t *conn)
+hpd_error_t http_request_create(hpd_httpd_request_t **req, hpd_httpd_t *httpd, hpd_httpd_settings_t *settings, hpd_tcpd_conn_t *conn)
 {
-    hpd_httpd_request_t *req = malloc(sizeof(hpd_httpd_request_t));
-    if(req == NULL) {
+    if (!req || !httpd || !settings || !conn) return HPD_E_NULL;
+
+    hpd_error_t rc;
+
+    (*req) = malloc(sizeof(hpd_httpd_request_t));
+    if(!(*req)) {
         fprintf(stderr, "ERROR: Cannot allocate memory\n");
-        return NULL;
+        return HPD_E_ALLOC;
     }
 
     // Init references
-    req->webserver = webserver;
-    req->conn = conn;
-    req->settings = settings;
+    (*req)->webserver = httpd;
+    (*req)->conn = conn;
+    (*req)->settings = settings;
 
     // Init parser
-    http_parser_init(&(req->parser), HTTP_REQUEST);
-    req->parser.data = req;
-    req->state = S_START;
+    http_parser_init(&((*req)->parser), HTTP_REQUEST);
+    (*req)->parser.data = (*req);
+    (*req)->state = S_START;
 
     // Init URL Parser
     struct up_settings up_settings = UP_SETTINGS_DEFAULT;
     up_settings.on_path_complete = url_parser_path_complete;
     up_settings.on_key_value = url_parser_key_value;
-    req->url_parser = up_create(&up_settings, req);
+    if ((rc = up_create(&(*req)->url_parser, &up_settings, (*req)))) {
+        http_request_destroy(*req); // TODO Handle error code
+        return rc;
+    }
 
     // Init Header Parser
     struct hp_settings hp_settings = HP_SETTINGS_DEFAULT;
-    hp_settings.data = req;
+    hp_settings.data = (*req);
     hp_settings.on_field_value_pair = header_parser_field_value_pair_complete;
-    req->header_parser = hp_create(&hp_settings);
+    if ((rc = hp_create(&(*req)->header_parser, &hp_settings))) {
+        http_request_destroy(*req); // TODO Handle error code
+        return rc;
+    }
 
     // Create linked maps
-    hpd_map_alloc(&req->arguments); // TODO Handle error
-    hpd_map_alloc(&req->headers); // TODO Handle error
-    hpd_map_alloc(&req->cookies); // TODO Handle error
+    if ((rc = hpd_map_alloc(&(*req)->arguments))) {
+        http_request_destroy(*req); // TODO Handle error code
+        return rc;
+    }
+    if ((rc = hpd_map_alloc(&(*req)->headers))) {
+        http_request_destroy(*req); // TODO Handle error code
+        return rc;
+    }
+    if ((rc = hpd_map_alloc(&(*req)->cookies))) {
+        http_request_destroy(*req); // TODO Handle error code
+        return rc;
+    }
 
     // Other field to init
-    req->url = NULL;
-    req->data = NULL;
+    (*req)->url = NULL;
+    (*req)->data = NULL;
 
-    return req;
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -611,25 +649,25 @@ hpd_httpd_request_t *http_request_create(
  *
  *  @param req The request to be destroyed.
  */
-void http_request_destroy(hpd_httpd_request_t *req)
+hpd_error_t http_request_destroy(hpd_httpd_request_t *req)
 {
-    if (!req) return;
+    if (!req) return HPD_E_NULL;
 
     // Call callback
     hpd_httpd_settings_t *settings = req->settings;
-    hpd_httpd_nodata_f destroy_cb = settings->on_req_destroy;
-    if (destroy_cb) {
-        destroy_cb(req->webserver, req, settings->httpd_ctx, &req->data);
+    if (settings->on_req_destroy) {
+        settings->on_req_destroy(req->webserver, req, settings->httpd_ctx, &req->data); // TODO Handle error
     }
 
     // Free request
-    up_destroy(req->url_parser);
+    up_destroy(req->url_parser); // TODO Handle error
     hpd_map_free(req->arguments); // TODO Handle error
     hpd_map_free(req->headers); // TODO Handle error
     hpd_map_free(req->cookies); // TODO Handle error
-    hp_destroy(req->header_parser);
+    hp_destroy(req->header_parser); // TODO Handle error
     free(req->url);
     free(req);
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -646,10 +684,7 @@ void http_request_destroy(hpd_httpd_request_t *req)
  *
  *  @return What http_parser_execute() returns.
  */
-size_t http_request_parse(
-        hpd_httpd_request_t *req,
-        const char *buf,
-        size_t len)
+size_t http_request_parse(hpd_httpd_request_t *req, const char *buf, size_t len)
 {
     // TODO This needs to send some kind of error message if any of the
     // parsers fails (http, header, url, etc.), including their callbacks
@@ -664,19 +699,25 @@ size_t http_request_parse(
  *
  *  \return The method as a enum http_method
  */
-hpd_httpd_method_t hpd_httpd_request_get_method(hpd_httpd_request_t *req)
+hpd_error_t hpd_httpd_request_get_method(hpd_httpd_request_t *req, hpd_httpd_method_t *method)
 {
-    enum http_method method = (enum http_method) req->parser.method;
-    switch (method) {
+    if (!req || !method) return HPD_E_NULL;
+
+    switch ((enum http_method) req->parser.method) {
         case HTTP_GET:
-            return HPD_HTTPD_M_GET;
+            (*method) = HPD_HTTPD_M_GET;
+            break;
         case HTTP_PUT:
-            return HPD_HTTPD_M_PUT;
+            (*method) = HPD_HTTPD_M_PUT;
+            break;
         case HTTP_OPTIONS:
-            return HPD_HTTPD_M_OPTIONS;
+            (*method) = HPD_HTTPD_M_OPTIONS;
+            break;
         default:
-            return HPD_HTTPD_M_UNKNOWN;
+            (*method) = HPD_HTTPD_M_UNKNOWN;
+            break;
     }
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -686,9 +727,12 @@ hpd_httpd_method_t hpd_httpd_request_get_method(hpd_httpd_request_t *req)
  *
  *  \return URL as a string
  */
-const char *hpd_httpd_request_get_url(hpd_httpd_request_t *req)
+hpd_error_t hpd_httpd_request_get_url(hpd_httpd_request_t *req, const char **url)
 {
-    return req->url;
+    if (!req || !url) return HPD_E_NULL;
+
+    (*url) = req->url;
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -698,9 +742,12 @@ const char *hpd_httpd_request_get_url(hpd_httpd_request_t *req)
  *
  *  \return Headers as a linkedmap (struct lm)
  */
-hpd_map_t * hpd_httpd_request_get_headers(hpd_httpd_request_t *req)
+hpd_error_t hpd_httpd_request_get_headers(hpd_httpd_request_t *req, hpd_map_t **headers)
 {
-    return req->headers;
+    if (!req || !headers) return HPD_E_NULL;
+
+    (*headers) = req->headers;
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -712,11 +759,11 @@ hpd_map_t * hpd_httpd_request_get_headers(hpd_httpd_request_t *req)
  *  \return The value of the header with the specified key, or NULL if
  *          not found
  */
-const char *hpd_httpd_request_get_header(hpd_httpd_request_t *req, const char *key)
+hpd_error_t hpd_httpd_request_get_header(hpd_httpd_request_t *req, const char *key, const char **value)
 {
-    const char *val;
-    hpd_map_get(req->headers, key, &val); // TODO Handle error
-    return val;
+    if (!req || !key || !value) return HPD_E_NULL;
+
+    return hpd_map_get(req->headers, key, value);
 }
 
 /**
@@ -726,9 +773,12 @@ const char *hpd_httpd_request_get_header(hpd_httpd_request_t *req, const char *k
  *
  *  \return Arguments as a linkedmap (struct lm)
  */
-hpd_map_t * hpd_httpd_request_get_arguments(hpd_httpd_request_t *req)
+hpd_error_t hpd_httpd_request_get_arguments(hpd_httpd_request_t *req, hpd_map_t **arguments)
 {
-    return req->arguments;
+    if (!req || !arguments) return HPD_E_NULL;
+
+    (*arguments) = req->arguments;
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -739,11 +789,11 @@ hpd_map_t * hpd_httpd_request_get_arguments(hpd_httpd_request_t *req)
  *
  *  \return Value of argument as string, or NULL if not found
  */
-const char *hpd_httpd_request_get_argument(hpd_httpd_request_t *req, const char *key)
+hpd_error_t hpd_httpd_request_get_argument(hpd_httpd_request_t *req, const char *key, const char **val)
 {
-    const char *val;
-    hpd_map_get(req->arguments, key, &val); // TODO Handle error
-    return val;
+    if (!req || !key || !val) return HPD_E_NULL;
+
+    return hpd_map_get(req->arguments, key, val);
 }
 
 /**
@@ -753,9 +803,11 @@ const char *hpd_httpd_request_get_argument(hpd_httpd_request_t *req, const char 
  *
  *  \return Cookies as a linkedmap (struct lm)
  */
-hpd_map_t * hpd_httpd_request_get_cookies(hpd_httpd_request_t *req)
+hpd_error_t hpd_httpd_request_get_cookies(hpd_httpd_request_t *req, hpd_map_t **cookies)
 {
-    return req->cookies;
+    if (!req || !cookies) return HPD_E_NULL;
+    (*cookies) = req->cookies;
+    return HPD_E_SUCCESS;
 }
 
 /**
@@ -767,11 +819,11 @@ hpd_map_t * hpd_httpd_request_get_cookies(hpd_httpd_request_t *req)
  *  \return The value of the cookie as String, or NULL if cookie was not
  *          found
  */
-const char *hpd_httpd_request_get_cookie(hpd_httpd_request_t *req, const char *key)
+hpd_error_t hpd_httpd_request_get_cookie(hpd_httpd_request_t *req, const char *key, const char **val)
 {
-    const char *val;
-    hpd_map_get(req->cookies, key, &val); // TODO Handle error
-    return val;
+    if (!req || !key || !val) return HPD_E_NULL;
+
+    return hpd_map_get(req->cookies, key, val);
 }
 
 /**
@@ -793,11 +845,11 @@ hpd_tcpd_conn_t *http_request_get_connection(hpd_httpd_request_t *req)
  *
  *  \return IP as a string
  */
-const char *hpd_httpd_request_get_ip(hpd_httpd_request_t *req)
+hpd_error_t hpd_httpd_request_get_ip(hpd_httpd_request_t *req, const char **ip)
 {
-    const char *ip;
-    hpd_tcpd_conn_get_ip(req->conn, &ip); // TODO ignoring error
-    return ip;
+    if (!req | !ip) return HPD_E_NULL;
+
+    return hpd_tcpd_conn_get_ip(req->conn, ip);
 }
 
 /**
@@ -811,7 +863,9 @@ const char *hpd_httpd_request_get_ip(hpd_httpd_request_t *req)
  *
  *  \param  req  http request to keep open
  */
-void hpd_httpd_request_keep_open(hpd_httpd_request_t *req)
+hpd_error_t hpd_httpd_request_keep_open(hpd_httpd_request_t *req)
 {
-    hpd_tcpd_conn_keep_open(req->conn); // TODO Ignoring error
+    if (!req) return HPD_E_NULL;
+
+    return hpd_tcpd_conn_keep_open(req->conn);
 }

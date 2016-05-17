@@ -28,7 +28,9 @@
 #ifndef HEADER_PARSER_H
 #define HEADER_PARSER_H
 
-typedef void (*hp_string_cb)(void* data, const char* field, size_t field_length, const char* value, size_t value_length);
+#include "hpd_types.h"
+
+typedef hpd_error_t (*hp_string_cb)(void* data, const char* field, size_t field_length, const char* value, size_t value_length);
 
 struct hp;
 
@@ -41,11 +43,11 @@ struct hp_settings {
 	.on_field_value_pair = NULL, \
 	.data = NULL }
 
-struct hp *hp_create(struct hp_settings*);
-void hp_destroy(struct hp*);
+hpd_error_t hp_create(struct hp **instance, struct hp_settings *settings);
+hpd_error_t hp_destroy(struct hp*);
 
-void hp_on_header_field(struct hp *instance, const char* field_chunk, size_t length);
-void hp_on_header_value(struct hp *instance, const char* value_chunk, size_t length);
-void hp_on_header_complete(struct hp *instance);
+hpd_error_t hp_on_header_field(struct hp *instance, const char *field_chunk, size_t length);
+hpd_error_t hp_on_header_value(struct hp *instance, const char *value_chunk, size_t length);
+hpd_error_t hp_on_header_complete(struct hp *instance);
 
 #endif
