@@ -27,9 +27,9 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 #include "url_parser.h"
+#include "hpd_shared_api.h"
 
 /// The possible states of the URL Parser
 enum up_state {
@@ -48,6 +48,7 @@ enum up_state {
 
 /// An URL Parser instance
 struct up {
+    hpd_module_t *context;
     struct up_settings *settings; ///< Settings
     void *data;                   ///< User data
 
@@ -92,21 +93,21 @@ struct up {
  *
  *  \return  a pointer to the newly created instance
  */
-hpd_error_t up_create(struct up **instance, struct up_settings *settings, void *data)
+hpd_error_t up_create(struct up **instance, struct up_settings *settings, hpd_module_t *context, void *data)
 {
-    if (!instance || !settings) return HPD_E_NULL;
+    if (!context) return HPD_E_NULL;
+    if (!instance || !settings) HPD_LOG_RETURN_E_NULL(context);
 
     (*instance) = malloc(sizeof(struct up));
-    if (!(*instance)) return HPD_E_ALLOC; // TODO Error msg?
+    if (!(*instance)) return HPD_E_ALLOC;
+
+    (*instance)->context = context;
 
     // Store settings
     (*instance)->settings = malloc(sizeof(struct up_settings));
-    if((*instance)->settings == NULL)
-    {
-        fprintf(stderr, "Malloc failed in URL parser when allocating "
-                "space for URL parser settings\n");
+    if (!(*instance)->settings) {
         free(*instance);
-        return HPD_E_ALLOC;
+        HPD_LOG_RETURN_E_ALLOC(context);
     }
     memcpy((*instance)->settings, settings, sizeof(struct up_settings));
 
@@ -215,10 +216,9 @@ hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t len)
     // Add chunk to buffer
     instance->end += len;
     buffer = realloc(instance->buffer, instance->end * sizeof(char));
-    if(buffer == NULL) {
-        fprintf(stderr, "Realloc failed in URL parser when allocating"
-                "space for new URL chunk\n");
+    if (!buffer) {
         instance->state = S_ERROR;
+        HPD_LOG_RETURN_E_ALLOC(instance->context);
         return HPD_E_ALLOC;
     }
     instance->buffer = buffer;
@@ -234,9 +234,8 @@ hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t len)
         // and set parser to error state
         if (!isLegalURLChar(c))
         {
-            fprintf(stderr, "The URL parser received an invalid "
-                    "character: %c\n", c);
             instance->state = S_ERROR;
+            HPD_LOG_RETURN(instance->context, HPD_E_ARGUMENT, "Invalid character ('%c') in URL.", c);
         }
 
         switch(instance->state)
@@ -267,6 +266,7 @@ hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t len)
                     instance->state = S_SLASH2;
                 } else {
                     instance->state = S_ERROR;
+                    HPD_LOG_RETURN(instance->context, HPD_E_ARGUMENT, "URL Parse error.");
                 }
                 break;
             case S_SLASH2:
@@ -275,6 +275,7 @@ hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t len)
                     instance->host = instance->parser + 1;
                 } else {
                     instance->state = S_ERROR;
+                    HPD_LOG_RETURN(instance->context, HPD_E_ARGUMENT, "URL Parse error.");
                 }
                 break;
             case S_HOST:
@@ -293,8 +294,10 @@ hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t len)
                 }
                 break;
             case S_PREPORT:
-                if(c == '/')
+                if(c == '/') {
                     instance->state = S_ERROR;
+                    HPD_LOG_RETURN(instance->context, HPD_E_ARGUMENT, "URL Parse error.");
+                }
                 instance->state = S_PORT;
                 instance->port = instance->parser;
                 instance->port_l++;
@@ -349,8 +352,9 @@ hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t len)
                 break;
 
             case S_ERROR:
-                fprintf(stderr,"The URL parser has reached an error state\n");
-                return HPD_E_STATE;
+                HPD_LOG_RETURN(instance->context, HPD_E_STATE, "URL Parser in error state.");
+            default:
+                HPD_LOG_RETURN(instance->context, HPD_E_STATE, "Unexpected state.");
         }
     }
 
@@ -387,7 +391,6 @@ hpd_error_t up_complete(struct up *instance)
         case S_VALUE:
             CALL (on_key_value, &instance->buffer[instance->last_key], instance->last_key_l, &instance->buffer[instance->last_value], instance->last_value_l);
             break;
-
         case S_HOST:
             CALL(on_host, &instance->buffer[instance->host], instance->host_l);
             break;
@@ -395,9 +398,7 @@ hpd_error_t up_complete(struct up *instance)
             CALL(on_port, &instance->buffer[instance->port], instance->port_l);
             break;
         default:
-            fprintf(stderr, "An error has happened in the URL parser. End "
-                    "state: %d\n", instance->state);
-            return HPD_E_STATE;
+            HPD_LOG_RETURN(instance->context, HPD_E_STATE, "Unexpected state.");
     }
 
     CALL(on_complete, instance->buffer, instance->parser);

@@ -29,7 +29,7 @@
 #include "hpd_api.h"
 #include "daemon.h"
 
-#define CASE api_daemon_api
+#define CASE hpd_daemon_api
 
 typedef struct {
     int next;

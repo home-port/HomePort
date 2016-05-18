@@ -31,6 +31,7 @@
 add_library(tcpd SHARED
         ../include/tcpd.h
         ../include/tcpd_types.h
+        tcpd_intern.h
         tcpd.c
         )
 set_target_properties(tcpd PROPERTIES VERSION 0.0.0 SOVERSION 0)

@@ -33,8 +33,8 @@ TAILQ_HEAD(hpd_map, hpd_pair);
 
 struct hpd_pair {
     TAILQ_ENTRY(hpd_pair) HPD_TAILQ_FIELD; //< Tailq members
-    char *k;                 //< Key (not null)
-    char *v;                 //< Value
+    char *k; //< Key (not null)
+    char *v; //< Value
 };
 
 hpd_error_t hpd_map_alloc(hpd_map_t **map)
@@ -116,6 +116,7 @@ hpd_error_t hpd_map_get_n(hpd_map_t *map, const char *k, size_t k_len, const cha
             return HPD_E_SUCCESS;
         }
     }
+    (*v) = NULL;
     return HPD_E_NOT_FOUND;
 }
 

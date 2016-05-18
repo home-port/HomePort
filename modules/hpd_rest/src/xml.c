@@ -249,7 +249,7 @@ xmlParseState(char *xml_value)
     xml = mxmlLoadString(NULL, xml_value, MXML_TEXT_CALLBACK);
     if(xml == NULL)
     {
-        printf("XML value format uncompatible with HomePort\n");
+        printf("XML value format uncompatible with HomePort\n"); // TODO Wrong!
         return NULL;
     }
 
@@ -257,7 +257,7 @@ xmlParseState(char *xml_value)
     if(node == NULL || node-> child == NULL || node->child->value.text.string == NULL)
     {
         mxmlDelete(xml);
-        printf("No \"value\" in the XML file\n");
+        printf("No \"value\" in the XML file\n"); // TODO Wrong!
         return NULL;
     }
 

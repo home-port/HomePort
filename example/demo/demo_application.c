@@ -51,7 +51,7 @@ static hpd_error_t hpd_demo_app_stop(void *data, hpd_t *hpd)
 
 static hpd_error_t hpd_demo_app_parse_opt(void *data, const char *name, const char *arg)
 {
-    printf("Got <%s, %s>\n", name, arg);
+    printf("Got <%s, %s>\n", name, arg); // TODO Wrong!
     return HPD_E_SUCCESS;
 }
 

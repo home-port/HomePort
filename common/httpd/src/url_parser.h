@@ -72,7 +72,7 @@ struct up_settings {
 	.on_port = NULL, .on_path_segment = NULL, .on_path_complete = NULL, \
 	.on_key_value = NULL, .on_complete = NULL }
 
-hpd_error_t up_create(struct up **instance, struct up_settings *settings, void *data);
+hpd_error_t up_create(struct up **instance, struct up_settings *settings, hpd_module_t *context, void *data);
 hpd_error_t up_destroy(struct up *instance);
 
 hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t chunk_size);

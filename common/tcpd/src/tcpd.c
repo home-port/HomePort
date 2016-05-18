@@ -25,8 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "tcpd.h"
-#include "hpd_queue.h"
+#include "tcpd_intern.h"
 #include "hpd_shared_api.h"
 
 #include <stdio.h>
@@ -39,35 +38,6 @@
 #include <errno.h>
 #include <ev.h>
 #include <fcntl.h>
-
-TAILQ_HEAD(hpd_tcpd_conns, hpd_tcpd_conn);
-typedef struct hpd_tcpd_conns hpd_tcpd_conns_t;
-
-/// Instance of a tcpd
-struct hpd_tcpd {
-    hpd_tcpd_settings_t settings; ///< Settings
-    char port_str[6];           ///< Port number - as a string
-    hpd_ev_loop_t *loop;        ///< Event loop
-    hpd_tcpd_conns_t conns;       ///< Linked List of connections
-    int sockfd;                 ///< Socket file descriptor
-    ev_io watcher;              ///< New connection watcher
-    hpd_module_t *context;
-};
-
-/// All data to represent a connection
-struct hpd_tcpd_conn {
-    TAILQ_ENTRY(hpd_tcpd_conn) HPD_TAILQ_FIELD;
-    hpd_tcpd_t *tcpd;        ///< Webserver instance
-    char ip[INET6_ADDRSTRLEN]; ///< IP address of client
-    ev_timer timeout_watcher;  ///< Timeout watcher
-    int timeout;               ///< Restart timeout watcher ?
-    ev_io recv_watcher;        ///< Recieve watcher
-    ev_io send_watcher;        ///< Send watcher
-    char *send_msg;            ///< Data to send
-    size_t send_len;           ///< Length of data to send
-    int send_close;            ///< Close socket after send ?
-    void *ctx;                 ///< Connection context
-};
 
 /**
  * Get the in_addr from a sockaddr (IPv4 or IPv6)
@@ -584,10 +554,7 @@ hpd_error_t hpd_tcpd_conn_vsendf(hpd_tcpd_conn_t *conn, const char *fmt, va_list
     // Expand message to send
     new_msg = realloc(conn->send_msg,
                       (conn->send_len + new_len + 1)*sizeof(char));
-    if (new_msg == NULL) {
-        HPD_LOG_DEBUG(conn->tcpd->context, "Cannot allocate enough memory.");
-        return HPD_E_ALLOC;
-    }
+    if (new_msg == NULL) HPD_LOG_RETURN_E_ALLOC(conn->tcpd->context);
     conn->send_msg = new_msg;
 
     // Concatenate strings

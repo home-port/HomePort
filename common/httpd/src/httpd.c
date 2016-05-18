@@ -28,6 +28,7 @@
 #include "httpd.h"
 #include "tcpd.h"
 #include "request.h"
+#include "hpd_shared_api.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -36,7 +37,8 @@
 /// httpd instance struct
 struct hpd_httpd {
     hpd_httpd_settings_t settings; ///< Settings
-    hpd_tcpd_t *webserver;            ///< Webserver instance
+    hpd_tcpd_t *webserver; ///< Webserver instance
+    hpd_module_t *context;
 };
 
 /**
@@ -54,9 +56,10 @@ struct hpd_httpd {
 static hpd_tcpd_return_t on_connect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx)
 {
     hpd_error_t rc;
-    hpd_httpd_t *parent = ws_ctx;
-    if ((rc = http_request_create((hpd_httpd_request_t **) conn_ctx, parent, &parent->settings, conn))) {
-        fprintf(stderr, "Failed with code: %d\n", rc);
+    hpd_httpd_t *httpd = ws_ctx;
+
+    if ((rc = http_request_create((hpd_httpd_request_t **) conn_ctx, httpd, &httpd->settings, conn, httpd->context))) {
+        HPD_LOG_ERROR(httpd->context, "Failed to create request (code: %d).", rc);
         return HPD_TCPD_R_STOP;
     }
 
@@ -78,8 +81,13 @@ static hpd_tcpd_return_t on_connect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn,
  */
 static hpd_tcpd_return_t on_receive(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx, const char *buf, size_t len)
 {
-    http_request_parse(*conn_ctx, buf, len);
+    hpd_error_t rc;
+    hpd_httpd_t *httpd = ws_ctx;
 
+    if ((rc = http_request_parse(*conn_ctx, buf, len))) {
+        HPD_LOG_ERROR(httpd->context, "Failed to parse request (code: %d).", rc);
+        return HPD_TCPD_R_STOP;
+    }
     return HPD_TCPD_R_CONTINUE;
 }
 
@@ -98,7 +106,13 @@ static hpd_tcpd_return_t on_receive(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn,
  */
 static hpd_tcpd_return_t on_disconnect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx)
 {
-    http_request_destroy(*conn_ctx); // TODO Handle error code
+    hpd_error_t rc;
+    hpd_httpd_t *httpd = ws_ctx;
+
+    if ((rc = http_request_destroy(*conn_ctx))) {
+        HPD_LOG_ERROR(httpd->context, "Failed to destroy request (code: %d).", rc);
+        return HPD_TCPD_R_STOP;
+    }
     *conn_ctx = NULL;
 
     return HPD_TCPD_R_CONTINUE;
@@ -118,17 +132,17 @@ static hpd_tcpd_return_t on_disconnect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *co
  *
  *  \returns  The newly created instance.
  */
-hpd_error_t hpd_httpd_create(hpd_httpd_t **httpd, hpd_httpd_settings_t *settings, hpd_module_t *context,
-                             hpd_ev_loop_t *loop)
+hpd_error_t hpd_httpd_create(hpd_httpd_t **httpd, hpd_httpd_settings_t *settings, hpd_module_t *context, hpd_ev_loop_t *loop)
 {
-    if (!httpd || !settings || !context || !loop) return HPD_E_NULL;
+    if (!context) return HPD_E_NULL;
+    if (!httpd || !settings || !loop) HPD_LOG_RETURN_E_NULL(context);
 
     // Allocate instance
     (*httpd) = malloc(sizeof(hpd_httpd_t));
-    if ((*httpd) == NULL) {
-        fprintf(stderr, "ERROR: Cannot allocate memory for a webserver instance\n");
-        return HPD_E_ALLOC;
-    }
+    if (!(*httpd)) HPD_LOG_RETURN_E_ALLOC(context);
+
+    // Set context
+    (*httpd)->context = context;
 
     // Copy settings
     memcpy(&(*httpd)->settings, settings, sizeof(hpd_httpd_settings_t));
@@ -140,7 +154,7 @@ hpd_error_t hpd_httpd_create(hpd_httpd_t **httpd, hpd_httpd_settings_t *settings
     ws_settings.on_connect    = on_connect;
     ws_settings.on_receive    = on_receive;
     ws_settings.on_disconnect = on_disconnect;
-    ws_settings.tcpd_ctx        = (*httpd);
+    ws_settings.tcpd_ctx      = (*httpd);
 
     // Create tcpd
     hpd_error_t rc;

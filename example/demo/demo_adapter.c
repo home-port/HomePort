@@ -91,7 +91,7 @@ static hpd_error_t hpd_demo_adapter_start(void *data, hpd_t *hpd)
     struct hpd_demo_adapter *demo_adapter = data;
     hpd_error_t rc;
 
-    printf("[adapter] Starting with %i lamps...\n", demo_adapter->num_lamps);
+    printf("[adapter] Starting with %i lamps...\n", demo_adapter->num_lamps); // TODO Wrong!
 
     // TODO Clean up on errors !
 
@@ -142,7 +142,7 @@ static hpd_error_t hpd_demo_adapter_stop(void *data, hpd_t *hpd)
 {
     struct hpd_demo_adapter *demo_adapter = data;
 
-    printf("[adapter] Stopping...\n");
+    printf("[adapter] Stopping...\n"); // TODO Wrong!
 
     // Detach our adapter from hpd
     // It is now in our control again, hpd does no longer know about it

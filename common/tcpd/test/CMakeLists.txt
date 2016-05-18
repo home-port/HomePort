@@ -28,14 +28,12 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-# Webserver Test
-# TODO OLD test deactivated, changing to googletest
-# add_executable(webserver_test EXCLUDE_FROM_ALL
-#       webserver_test.c
-#       )
-# target_link_libraries(webserver_test ev)
-# add_test(webserver_test ${CMAKE_CURRENT_BINARY_DIR}/webserver_test)
-# add_dependencies(check webserver_test)
+# tcpd Test
+include_directories(../src/)
+add_executable(test_tcpd
+        webserver_test.cpp
+        )
+target_link_libraries(test_tcpd hpd tcpd gtest gtest_main)
 
 # Big Data Test
 # TODO OLD test deactivated, changing to googletest

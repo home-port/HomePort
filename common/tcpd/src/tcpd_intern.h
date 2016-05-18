@@ -25,24 +25,50 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "tcp-server.c"
-#include "unit_test.h"
+#ifndef HOMEPORT_TCPD_INTERN_H
+#define HOMEPORT_TCPD_INTERN_H
 
-TEST_START(webserver.c)
+#include "tcpd.h"
+#include "hpd_types.h"
+#include "hpd_queue.h"
+#include <ev.h>
+#include <netinet/in.h>
 
-TEST(sendf)
-   hpd_ws_conn_t conn;
-   conn.send_msg = NULL;
-   conn.send_len = 0;
-   conn.instance = NULL;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-   ws_conn_sendf(&conn, "Hello");
-   ws_conn_sendf(&conn, " World");
+TAILQ_HEAD(hpd_tcpd_conns, hpd_tcpd_conn);
+typedef struct hpd_tcpd_conns hpd_tcpd_conns_t;
 
-   ASSERT_STR_EQUAL(conn.send_msg, "Hello World");
-   ASSERT_EQUAL(conn.send_len, 11);
+/// Instance of a tcpd
+struct hpd_tcpd {
+    hpd_tcpd_settings_t settings; ///< Settings
+    char port_str[6];           ///< Port number - as a string
+    hpd_ev_loop_t *loop;        ///< Event loop
+    hpd_tcpd_conns_t conns;       ///< Linked List of connections
+    int sockfd;                 ///< Socket file descriptor
+    ev_io watcher;              ///< New connection watcher
+    hpd_module_t *context;
+};
 
-   free(conn.send_msg);
-TSET()
+/// All data to represent a connection
+struct hpd_tcpd_conn {
+    TAILQ_ENTRY(hpd_tcpd_conn) HPD_TAILQ_FIELD;
+    hpd_tcpd_t *tcpd;        ///< Webserver instance
+    char ip[INET6_ADDRSTRLEN]; ///< IP address of client
+    ev_timer timeout_watcher;  ///< Timeout watcher
+    int timeout;               ///< Restart timeout watcher ?
+    ev_io recv_watcher;        ///< Recieve watcher
+    ev_io send_watcher;        ///< Send watcher
+    char *send_msg;            ///< Data to send
+    size_t send_len;           ///< Length of data to send
+    int send_close;            ///< Close socket after send ?
+    void *ctx;                 ///< Connection context
+};
 
-TEST_END()
+#ifdef __cplusplus
+}
+#endif
+
+#endif //HOMEPORT_TCPD_INTERN_H

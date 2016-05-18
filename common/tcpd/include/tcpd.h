@@ -33,6 +33,10 @@
 #include "hpd_types.h"
 #include "tcpd_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Structs
 typedef struct hpd_tcpd hpd_tcpd_t;
 typedef struct hpd_tcpd_settings hpd_tcpd_settings_t;
@@ -47,8 +51,10 @@ typedef enum hpd_tcpd_return {
  *  Callbacks                                                         *
  **********************************************************************/
 
-typedef hpd_tcpd_return_t (*hpd_tcpd_nodata_f)(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx);
-typedef hpd_tcpd_return_t (*hpd_tcpd_data_f)(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx, const char *buf, size_t len);
+typedef hpd_tcpd_return_t (*hpd_tcpd_nodata_f)(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx,
+                                               void **conn_ctx);
+typedef hpd_tcpd_return_t (*hpd_tcpd_data_f)(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx,
+                                             const char *buf, size_t len);
 
 /**
  * Settings struct for tcpd.
@@ -115,7 +121,8 @@ struct hpd_tcpd_settings {
    .tcpd_ctx = NULL }
 
 // Webserver functions
-hpd_error_t hpd_tcpd_create(hpd_tcpd_t **tcpd, hpd_tcpd_settings_t *settings, hpd_module_t *context, hpd_ev_loop_t *loop);
+hpd_error_t hpd_tcpd_create(hpd_tcpd_t **tcpd, hpd_tcpd_settings_t *settings, hpd_module_t *context,
+                            hpd_ev_loop_t *loop);
 hpd_error_t hpd_tcpd_destroy(hpd_tcpd_t *tcpd);
 hpd_error_t hpd_tcpd_start(hpd_tcpd_t *tcpd);
 hpd_error_t hpd_tcpd_stop(hpd_tcpd_t *tcpd);
@@ -127,6 +134,10 @@ hpd_error_t hpd_tcpd_conn_sendf(hpd_tcpd_conn_t *conn, const char *fmt, ...);
 hpd_error_t hpd_tcpd_conn_vsendf(hpd_tcpd_conn_t *conn, const char *fmt, va_list vp);
 hpd_error_t hpd_tcpd_conn_close(hpd_tcpd_conn_t *conn);
 hpd_error_t hpd_tcpd_conn_kill(hpd_tcpd_conn_t *conn);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // HOMEPORT_TCPD_H
 

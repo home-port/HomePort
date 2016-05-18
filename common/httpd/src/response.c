@@ -25,20 +25,11 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "response.h"
 #include "request.h"
-#include "httpd.h"
-#include "tcpd.h"
+#include "hpd_shared_api.h"
 
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
-
-#ifdef DEBUG
-#include <execinfo.h>
-#include <hpd_types.h>
-
-#endif
 
 #define HTTP_VERSION "HTTP/1.1 "
 #define CRLF "\r\n"
@@ -59,6 +50,7 @@
  */
 struct hpd_httpd_response
 {
+    hpd_module_t *context;
     hpd_tcpd_conn_t *conn; ///< The connection to send on
     char *msg;            ///< Status/headers to send
 };
@@ -118,10 +110,13 @@ hpd_error_t hpd_httpd_response_destroy(hpd_httpd_response_t *res)
  *
  *  \return  The http respond created
  */
-hpd_error_t hpd_httpd_response_create(hpd_httpd_response_t **response, hpd_httpd_request_t *req,
-                                      hpd_status_t status)
+hpd_error_t hpd_httpd_response_create(hpd_httpd_response_t **response, hpd_httpd_request_t *req, hpd_status_t status)
 {
-    if (!response || !req) return HPD_E_NULL;
+    if (!req) return HPD_E_NULL;
+    hpd_error_t rc, rc2;
+    hpd_module_t *context;
+    if ((rc = http_request_get_context(req, &context))) return rc;
+    if (!response) HPD_LOG_RETURN_E_NULL(context);
 
     int len;
 
@@ -136,30 +131,28 @@ hpd_error_t hpd_httpd_response_create(hpd_httpd_response_t **response, hpd_httpd
 
     // Allocate space
     (*response) = malloc(sizeof(hpd_httpd_response_t));
-    if ((*response) == NULL) {
-        fprintf(stderr, "ERROR: Cannot allocate memory\n");
-        return HPD_E_ALLOC;
-    }
+    if (!(*response)) HPD_LOG_RETURN_E_ALLOC(context);
     (*response)->msg = malloc(len*sizeof(char));
-    if ((*response)->msg == NULL) {
-        fprintf(stderr, "ERROR: Cannot allocate memory\n");
-        hpd_httpd_response_destroy((*response));
-        return HPD_E_ALLOC;
+    if (!(*response)->msg) {
+        if ((rc = hpd_httpd_response_destroy((*response))))
+            HPD_LOG_ERROR(context, "Failed to destroy response (code: %d).", rc);
+        HPD_LOG_RETURN_E_ALLOC(context);
     }
 
     // Init struct
-    (*response)->conn = http_request_get_connection(req);
+    (*response)->context = context;
+    if ((rc = http_request_get_connection(req, &(*response)->conn))) return rc;
 
     // Construct msg
     strcpy((*response)->msg, HTTP_VERSION);
     if (status_str) strcat((*response)->msg, status_str);
     strcat((*response)->msg, CRLF);
 
-    // TODO Real persistant connections is not supported, so tell client that we close connection after response has been sent
-    // TODO Check return value
-    hpd_httpd_response_add_header((*response), "Connection", "close");
-
-    return HPD_E_SUCCESS;
+    // Real persistent connections is not supported, so tell client that we close connection after response has been sent
+    rc = hpd_httpd_response_add_header((*response), "Connection", "close");
+    if (rc && (rc2 = hpd_httpd_response_destroy(*response)))
+        HPD_LOG_ERROR(context, "Failed to destroy response (code: %d).", rc2);;
+    return rc;
 }
 
 /**
@@ -176,26 +169,20 @@ hpd_error_t hpd_httpd_response_create(hpd_httpd_response_t **response, hpd_httpd
  *
  *  \return 0 on success and 1 on failure
  */
-hpd_error_t hpd_httpd_response_add_header(hpd_httpd_response_t *res,
-                                          const char *field, const char *value)
+hpd_error_t hpd_httpd_response_add_header(hpd_httpd_response_t *res, const char *field, const char *value)
 {
-    if (!res || !field || !value) return HPD_E_NULL;
+    if (!res) return HPD_E_NULL;
+    if (!field || !value) HPD_LOG_RETURN_E_NULL(res->context);
 
     // Headers already sent
-    if (!res->msg) {
-        fprintf(stderr,
-                "Cannot add header, they are already sent to client\n");
-        return HPD_E_STATE;
-    }
+    if (!res->msg)
+        HPD_LOG_RETURN(res->context, HPD_E_STATE, "Cannot add header, they have already been sent to client.");
 
     char *msg;
-    int msg_len = strlen(res->msg)+strlen(field)+2+strlen(value)+strlen(CRLF)+1;
+    size_t msg_len = strlen(res->msg)+strlen(field)+2+strlen(value)+strlen(CRLF)+1;
 
     msg = realloc(res->msg, msg_len*sizeof(char));
-    if (msg == NULL) {
-        fprintf(stderr, "ERROR: Cannot allocate memory\n");
-        return HPD_E_ALLOC;
-    }
+    if (!msg) HPD_LOG_RETURN_E_ALLOC(res->context);
     res->msg = msg;
 
     strcat(res->msg, field);
@@ -233,16 +220,14 @@ hpd_error_t hpd_httpd_response_add_cookie(hpd_httpd_response_t *res,
                                           int secure, int http_only,
                                           const char *extension)
 {
-    if (!res || !field || !value) return HPD_E_NULL;
+    if (!res) return HPD_E_NULL;
+    if (!field || !value) HPD_LOG_RETURN_E_NULL(res->context);
 
     // Headers already sent
     if (!res->msg) return HPD_E_STATE;
 
     char *msg;
-    size_t msg_len = strlen(res->msg) + 12 +
-                  strlen(field) + 1 +
-                  strlen(value) +
-                  strlen(CRLF) + 1;
+    size_t msg_len = strlen(res->msg) + 12 + strlen(field) + 1 + strlen(value) + strlen(CRLF) + 1;
 
     // Calculate length
     if (expires)   msg_len += 10 + strlen(expires);
@@ -255,10 +240,7 @@ hpd_error_t hpd_httpd_response_add_cookie(hpd_httpd_response_t *res,
 
     // Reallocate message
     msg = realloc(res->msg, msg_len*sizeof(char));
-    if (msg == NULL) {
-        fprintf(stderr, "ERROR: Cannot allocate memory\n");
-        return HPD_E_ALLOC;
-    }
+    if (!msg) HPD_LOG_RETURN_E_ALLOC(res->context);
     res->msg = msg;
 
     // Apply header
@@ -337,14 +319,12 @@ hpd_error_t hpd_httpd_response_vsendf(hpd_httpd_response_t *res, const char *fmt
     hpd_error_t rc;
 
     if (res->msg) {
-        // TODO Sendf returns a status
         if ((rc = hpd_tcpd_conn_sendf(res->conn, "%s%s", res->msg, CRLF))) return rc;
         free(res->msg);
         res->msg = NULL;
     }
 
     if (fmt) {
-        // TODO Sendf returns a status
         return hpd_tcpd_conn_vsendf(res->conn, fmt, arg);
     }
 

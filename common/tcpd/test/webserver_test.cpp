@@ -25,18 +25,26 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef PARSER_H
-#define PARSER_H
+#include <gtest/gtest.h>
 
-#include "httpd.h"
-#include "tcpd.h"
-#include <stddef.h>
+#define CASE tcpd_webserver
 
-hpd_error_t http_request_create(hpd_httpd_request_t **req, hpd_httpd_t *httpd, hpd_httpd_settings_t *settings,
-                                hpd_tcpd_conn_t *conn, hpd_module_t *context);
-hpd_error_t http_request_destroy(hpd_httpd_request_t *req);
-hpd_error_t http_request_parse(hpd_httpd_request_t *req, const char *buf, size_t len);
-hpd_error_t http_request_get_connection(hpd_httpd_request_t *req, hpd_tcpd_conn_t **conn);
-hpd_error_t http_request_get_context(hpd_httpd_request_t *req, hpd_module_t **context);
+#include "tcpd_intern.h"
 
-#endif
+TEST(CASE, sendf) {
+    hpd_tcpd_conn_t conn;
+    conn.send_msg = NULL;
+    conn.send_len = 0;
+    conn.tcpd = NULL;
+
+    hpd_error_t rc;
+    rc = hpd_tcpd_conn_sendf(&conn, "Hello");
+    ASSERT_EQ(rc, HPD_E_SUCCESS);
+    rc = hpd_tcpd_conn_sendf(&conn, " World");
+    ASSERT_EQ(rc, HPD_E_SUCCESS);
+
+    ASSERT_STREQ(conn.send_msg, "Hello World");
+    ASSERT_EQ(conn.send_len, (size_t) 11);
+
+    free(conn.send_msg);
+}

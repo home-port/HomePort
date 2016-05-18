@@ -332,7 +332,7 @@ static hpd_error_t on_response(hpd_response_t *res)
             hpd_httpd_response_destroy(response);
             free(state);
         } else {
-            fprintf(stderr, "%s\n", buffer);
+            fprintf(stderr, "%s\n", buffer); // TODO Wrong!
             hpd_httpd_response_t *response;
             hpd_httpd_response_create(&response, rest_req->http_req, status);
             // TODO Consider headers to add
