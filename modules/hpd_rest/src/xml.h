@@ -26,8 +26,9 @@
  */
 
 #include "hpd_types.h"
+#include "hpd_rest_intern.h"
 
-char *xmlGetConfiguration(hpd_t *homeport);
+char *xmlGetConfiguration(hpd_rest_t *rest, hpd_t *hpd);
 char *xmlGetState(char *state);
 
 char *xmlParseState(char *xml_value);

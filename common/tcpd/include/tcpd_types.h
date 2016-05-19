@@ -32,12 +32,18 @@
 // http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml
 // (Site may have very long loading time)
 #define HPD_TCPD_PORT_MAP(XX) \
-   XX(  80, HTTP    ) \
-   XX( 443, HTTPS   ) \
-   XX(8080, HTTP_ALT)
+   XX(    0, SYSTEM_PORTS_START) \
+   XX(   80, HTTP    ) \
+   XX(  443, HTTPS   ) \
+   XX( 1023, SYSTEM_PORTS_END) \
+   XX( 1023, USER_PORTS_START) \
+   XX( 8080, HTTP_ALT) \
+   XX(49151, USER_PORTS_END) \
+   XX(49152, DYNAMIC_PORTS_START) \
+   XX(65535, DYNAMIC_PORTS_END)
 
 typedef enum hpd_tcpd_port
-{
+{ // TODO Rename HPD_P_ to HPD_TCPD_P_
 #define XX(num, str) HPD_P_##str = num,
     HPD_TCPD_PORT_MAP(XX)
 #undef XX

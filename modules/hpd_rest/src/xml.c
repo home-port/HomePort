@@ -84,7 +84,7 @@ parameterToXml(hpd_parameter_id_t *parameter, mxml_node_t *parent)
 }
 
 static mxml_node_t *
-serviceToXml(hpd_service_id_t *service, mxml_node_t *parent)
+serviceToXml(hpd_rest_t *rest, hpd_service_id_t *service, mxml_node_t *parent)
 {
     hpd_error_t rc;
     hpd_pair_t *pair;
@@ -100,10 +100,11 @@ serviceToXml(hpd_service_id_t *service, mxml_node_t *parent)
         mxmlElementSetAttr(serviceXml, key, val);
     }
 
-    char *uri = hpd_rest_url_create(service);
-    if(uri != NULL) {
-        mxmlElementSetAttr(serviceXml, "_uri", uri);
-        free(uri);
+    char *url;
+    hpd_rest_url_create(rest, service, &url); // TODO error check
+    if(url != NULL) {
+        mxmlElementSetAttr(serviceXml, "_uri", url);
+        free(url);
     }
 
     hpd_action_t *action;
@@ -130,7 +131,7 @@ serviceToXml(hpd_service_id_t *service, mxml_node_t *parent)
 }
 
 static mxml_node_t*
-deviceToXml(hpd_device_id_t *device, mxml_node_t *parent)
+deviceToXml(hpd_rest_t *rest, hpd_device_id_t *device, mxml_node_t *parent)
 {
     if(device == NULL) return NULL;
 
@@ -151,14 +152,14 @@ deviceToXml(hpd_device_id_t *device, mxml_node_t *parent)
     hpd_service_id_t *iterator;
     hpd_device_foreach_service(rc, iterator, device)
     {
-        serviceToXml(iterator, deviceXml);
+        serviceToXml(rest, iterator, deviceXml);
     }
 
     return deviceXml;
 }
 
 static mxml_node_t*
-adapterToXml(hpd_adapter_id_t *adapter, mxml_node_t *parent)
+adapterToXml(hpd_rest_t *rest, hpd_adapter_id_t *adapter, mxml_node_t *parent)
 {
     if(adapter == NULL) return NULL;
 
@@ -179,14 +180,14 @@ adapterToXml(hpd_adapter_id_t *adapter, mxml_node_t *parent)
     hpd_device_id_t *iterator;
     hpd_adapter_foreach_device(rc, iterator, adapter)
     {
-        deviceToXml(iterator, adapterXml);
+        deviceToXml(rest, iterator, adapterXml);
     }
 
     return adapterXml;
 }
 
 static mxml_node_t*
-configurationToXml(hpd_t *hpd, mxml_node_t *parent)
+configurationToXml(hpd_rest_t *rest, hpd_t *hpd, mxml_node_t *parent)
 {
     mxml_node_t *configXml;
 
@@ -206,18 +207,18 @@ configurationToXml(hpd_t *hpd, mxml_node_t *parent)
     hpd_adapter_id_t *iterator;
     hpd_foreach_adapter(rc, iterator, hpd)
     {
-        adapterToXml(iterator, configXml);
+        adapterToXml(rest, iterator, configXml);
     }
 
     return configXml;
 }
 
 char *
-xmlGetConfiguration(hpd_t *homeport)
+xmlGetConfiguration(hpd_rest_t *rest, hpd_t *hpd)
 {
     char *res;
     mxml_node_t *xml = mxmlNewXML("1.0");
-    configurationToXml(homeport, xml);
+    configurationToXml(rest, hpd, xml);
     res = mxmlSaveAllocString(xml, MXML_NO_CALLBACK);
     mxmlDelete(xml);
     return res;

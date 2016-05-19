@@ -73,8 +73,7 @@ typedef hpd_httpd_return_t (*hpd_httpd_nodata_f)(hpd_httpd_t *httpd, hpd_httpd_r
  *  called at any time):
  *  \dot
  *  digraph callback_order {
- *  on_req_begin -> on_req_method;
- *  on_req_method -> on_req_url;
+ *  on_req_begin -> on_req_url;
  *  on_req_url -> on_req_url;
  *  on_req_url -> on_req_url_cmpl;
  *  on_req_url_cmpl -> on_req_hdr_field;
@@ -103,7 +102,6 @@ struct hpd_httpd_settings {
     int timeout;
     void* httpd_ctx;
     hpd_httpd_nodata_f on_req_begin;
-    hpd_httpd_data_f   on_req_method;
     hpd_httpd_data_f   on_req_url;
     hpd_httpd_nodata_f on_req_url_cmpl;
     hpd_httpd_data_f   on_req_hdr_field;
@@ -127,7 +125,6 @@ struct hpd_httpd_settings {
    .timeout = 15, \
    .httpd_ctx = NULL, \
    .on_req_begin = NULL, \
-   .on_req_method = NULL, \
    .on_req_url = NULL, \
    .on_req_url_cmpl = NULL, \
    .on_req_hdr_field = NULL, \

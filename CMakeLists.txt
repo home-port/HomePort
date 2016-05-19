@@ -69,6 +69,9 @@ if(DOXYGEN_FOUND)
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
             COMMENT "Generating API documentation (HTML)" VERBATIM
             )
+    add_custom_command(TARGET doc-html POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --cyan
+            "Documentation at ${CMAKE_BINARY_DIR}/doc/html/index.html")
     add_custom_target(doc-latex
             COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/doxygen-latex.conf
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
@@ -85,6 +88,9 @@ if(DOXYGEN_FOUND)
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
             COMMENT "Generating API documentation (HTML, LaTeX, PDF)" VERBATIM
             )
+    add_custom_command(TARGET doc-all POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E cmake_echo_color --cyan
+            "Documentation at ${CMAKE_BINARY_DIR}/doc/html/index.html")
 else(DOXYGEN_FOUND)
     message(WARNING "Please install doxygen to generate documentation")
 endif(DOXYGEN_FOUND)

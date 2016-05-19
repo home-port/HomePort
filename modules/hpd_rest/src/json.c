@@ -71,7 +71,7 @@ static json_t *parameterToJson(hpd_parameter_id_t *parameter)
 }
 
 static json_t*
-serviceToJson(hpd_service_id_t *service)
+serviceToJson(hpd_rest_t *rest, hpd_service_id_t *service)
 {
     json_t *serviceJson;
     json_t *value;
@@ -87,13 +87,14 @@ serviceToJson(hpd_service_id_t *service)
     hpd_service_get_id(service, &id);
     if (!add_id(serviceJson, id)) return NULL;
 
-    char *uri = hpd_rest_url_create(service);
-    if (uri) {
-        if (!(value = json_string(uri)) || json_object_set_new(serviceJson, "_uri", value) != 0) {
-            free(uri);
+    char *url;
+    hpd_rest_url_create(rest, service, &url); // TODO error check
+    if (url) {
+        if (!(value = json_string(url)) || json_object_set_new(serviceJson, "_uri", value) != 0) {
+            free(url);
             return NULL;
         }
-        free(uri);
+        free(url);
     }
 
     hpd_action_t *action;
@@ -130,7 +131,7 @@ serviceToJson(hpd_service_id_t *service)
 }
 
 static json_t*
-deviceToJson(hpd_device_id_t *device)
+deviceToJson(hpd_rest_t *rest, hpd_device_id_t *device)
 {
     json_t *deviceJson;
     json_t *serviceArray;
@@ -156,7 +157,7 @@ deviceToJson(hpd_device_id_t *device)
 
     hpd_service_id_t *service;
     hpd_device_foreach_service(rc, service, device) {
-        if( json_array_append_new(serviceArray, serviceToJson(service)) != 0 )
+        if( json_array_append_new(serviceArray, serviceToJson(rest, service)) != 0 )
         {
             return NULL;
         }
@@ -171,7 +172,7 @@ deviceToJson(hpd_device_id_t *device)
 }
 
 static json_t*
-adapterToJson(hpd_adapter_id_t *adapter)
+adapterToJson(hpd_rest_t *rest, hpd_adapter_id_t *adapter)
 {
     json_t *adapterJson = NULL;
     json_t *value = NULL;
@@ -200,7 +201,7 @@ adapterToJson(hpd_adapter_id_t *adapter)
     hpd_adapter_foreach_device(rc, device, adapter)
     {
             json_t *deviceJson;
-            if( ( ( deviceJson = deviceToJson(device) ) == NULL ) || ( json_array_append_new(deviceArray, deviceJson) != 0 ) )
+            if( ( ( deviceJson = deviceToJson(rest, device) ) == NULL ) || ( json_array_append_new(deviceArray, deviceJson) != 0 ) )
             {
                 goto error;
             }
@@ -220,7 +221,7 @@ adapterToJson(hpd_adapter_id_t *adapter)
 }
 
 static json_t*
-configurationToJson(hpd_t *hpd)
+configurationToJson(hpd_rest_t *rest, hpd_t *hpd)
 {
     hpd_error_t rc;
     json_t *configJson=NULL;
@@ -252,7 +253,7 @@ configurationToJson(hpd_t *hpd)
 
     hpd_foreach_adapter(rc, iterator, hpd)
     {
-        adapter = adapterToJson(iterator);
+        adapter = adapterToJson(rest, iterator);
         if( ( adapter == NULL ) || ( json_array_append_new(adapterArray, adapter) != 0 ) )
         {
             goto error;
@@ -273,10 +274,10 @@ configurationToJson(hpd_t *hpd)
 }
 
 char *
-jsonGetConfiguration(hpd_t *homeport)
+jsonGetConfiguration(hpd_rest_t *rest, hpd_t *hpd)
 {
     char *res;
-    json_t * configurationJson = configurationToJson( homeport );
+    json_t *configurationJson = configurationToJson(rest, hpd);
     res = json_dumps( configurationJson, 0 );
     json_decref(configurationJson);
     return res;

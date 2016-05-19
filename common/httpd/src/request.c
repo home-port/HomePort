@@ -133,6 +133,7 @@ struct hpd_httpd_request
     hpd_map_t *headers;             ///< Header Pairs
     hpd_map_t *cookies;             ///< Cookie Pairs
     void* data;                     ///< User data
+    hpd_httpd_method_t method;
 };
 
 // Methods for http_parser settings
@@ -323,18 +324,26 @@ static int parser_url(http_parser *parser, const char *buf, size_t len)
     hpd_httpd_return_t stat;
     hpd_httpd_request_t *req = parser->data;
     hpd_httpd_settings_t *settings = req->settings;
-    const char *method;
+
+    switch ((enum http_method) req->parser.method) {
+        case HTTP_GET:
+            req->method = HPD_HTTPD_M_GET;
+            break;
+        case HTTP_PUT:
+            req->method = HPD_HTTPD_M_PUT;
+            break;
+        case HTTP_OPTIONS:
+            req->method = HPD_HTTPD_M_OPTIONS;
+            break;
+        default:
+            req->method = HPD_HTTPD_M_UNKNOWN;
+            break;
+    }
 
     switch (req->state) {
         case S_STOP:
             return 1;
         case S_BEGIN:
-            // Send method
-            method = http_method_str(parser->method);
-            if(settings->on_req_method && (stat = settings->on_req_method(req->webserver, req, settings->httpd_ctx, &req->data, method, strlen(method)))) {
-                req->state = S_STOP;
-                return stat;
-            }
             req->state = S_URL;
         case S_URL:
             if ((rc = up_add_chunk(req->url_parser, buf, len))) {
@@ -752,20 +761,7 @@ hpd_error_t hpd_httpd_request_get_method(hpd_httpd_request_t *req, hpd_httpd_met
     if (!req) return HPD_E_NULL;
     if (!method) HPD_LOG_RETURN_E_NULL(req->context);
 
-    switch ((enum http_method) req->parser.method) {
-        case HTTP_GET:
-            (*method) = HPD_HTTPD_M_GET;
-            break;
-        case HTTP_PUT:
-            (*method) = HPD_HTTPD_M_PUT;
-            break;
-        case HTTP_OPTIONS:
-            (*method) = HPD_HTTPD_M_OPTIONS;
-            break;
-        default:
-            (*method) = HPD_HTTPD_M_UNKNOWN;
-            break;
-    }
+    (*method) = req->method;
     return HPD_E_SUCCESS;
 }
 

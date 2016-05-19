@@ -28,6 +28,10 @@
 #ifndef HOMEPORT_HPD_REST_INTERN_H
 #define HOMEPORT_HPD_REST_INTERN_H
 
-char *hpd_rest_url_create(hpd_service_id_t *service);
+#include "hpd_types.h"
+
+typedef struct hpd_rest hpd_rest_t;
+
+hpd_error_t hpd_rest_url_create(hpd_rest_t *rest, hpd_service_id_t *service, char **url);
 
 #endif //HOMEPORT_HPD_REST_INTERN_H

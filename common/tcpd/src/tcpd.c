@@ -272,6 +272,7 @@ hpd_error_t hpd_tcpd_create(hpd_tcpd_t **tcpd, hpd_tcpd_settings_t *settings, hp
                             hpd_ev_loop_t *loop)
 {
     if (settings == NULL || context == NULL || loop == NULL) return HPD_E_NULL;
+    if (settings->port <= HPD_P_SYSTEM_PORTS_START || settings->port > HPD_P_DYNAMIC_PORTS_END) return HPD_E_ARGUMENT;
 
     (*tcpd) = malloc(sizeof(hpd_tcpd_t));
     if (!(*tcpd)) return HPD_E_ALLOC;

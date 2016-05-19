@@ -26,8 +26,9 @@
  */
 
 #include "hpd_types.h"
+#include "hpd_rest_intern.h"
 
-char *jsonGetConfiguration(hpd_t *homeport);
+char *jsonGetConfiguration(hpd_rest_t *rest, hpd_t *hpd);
 char *jsonGetState(char *state);
 
 const char *jsonParseState(char *json_value);
