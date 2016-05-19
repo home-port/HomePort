@@ -52,6 +52,7 @@ hpd_error_t hpd_value_free(hpd_value_t *value)
 hpd_error_t hpd_value_set_header(hpd_value_t *value, const char *key, const char *val)
 {
     if (!value || !key) LOG_RETURN_E_NULL();
+    if (key[0] == '_') LOG_RETURN(HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated headers");
     return value_set_header(value, key, val);
 }
 

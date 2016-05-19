@@ -68,11 +68,11 @@ parameterToXml(hpd_parameter_id_t *parameter, mxml_node_t *parent)
 {
     hpd_error_t rc;
     hpd_pair_t *pair;
-    mxml_node_t *parameterXml = mxmlNewElement(parent, "parameter");
+    mxml_node_t *parameterXml = mxmlNewElement(parent, HPD_REST_KEY_PARAMETER);
 
     const char *id;
     hpd_parameter_get_id(parameter, &id);
-    mxmlElementSetAttr(parameterXml, "_id", id);
+    mxmlElementSetAttr(parameterXml, HPD_REST_KEY_ID, id);
 
     hpd_parameter_foreach_attr(rc, pair, parameter) {
         const char *key, *val;
@@ -88,11 +88,11 @@ serviceToXml(hpd_rest_t *rest, hpd_service_id_t *service, mxml_node_t *parent)
 {
     hpd_error_t rc;
     hpd_pair_t *pair;
-    mxml_node_t *serviceXml = mxmlNewElement(parent, "service");
+    mxml_node_t *serviceXml = mxmlNewElement(parent, HPD_REST_KEY_SERVICE);
 
     const char *id;
     hpd_service_get_id(service, &id);
-    mxmlElementSetAttr(serviceXml, "_id", id);
+    mxmlElementSetAttr(serviceXml, HPD_REST_KEY_ID, id);
 
     hpd_service_foreach_attr(rc, pair, service) {
         const char *key, *val;
@@ -103,7 +103,7 @@ serviceToXml(hpd_rest_t *rest, hpd_service_id_t *service, mxml_node_t *parent)
     char *url;
     hpd_rest_url_create(rest, service, &url); // TODO error check
     if(url != NULL) {
-        mxmlElementSetAttr(serviceXml, "_uri", url);
+        mxmlElementSetAttr(serviceXml, HPD_REST_KEY_URI, url);
         free(url);
     }
 
@@ -114,10 +114,10 @@ serviceToXml(hpd_rest_t *rest, hpd_service_id_t *service, mxml_node_t *parent)
         switch (method) {
             case HPD_M_NONE:break;
             case HPD_M_GET:
-                mxmlElementSetAttr(serviceXml, "_get", "1");
+                mxmlElementSetAttr(serviceXml, HPD_REST_KEY_GET, HPD_REST_VAL_TRUE);
                 break;
             case HPD_M_PUT:
-                mxmlElementSetAttr(serviceXml, "_put", "1");
+                mxmlElementSetAttr(serviceXml, HPD_REST_KEY_PUT, HPD_REST_VAL_TRUE);
                 break;
             case HPD_M_COUNT:break;
         }
@@ -137,11 +137,11 @@ deviceToXml(hpd_rest_t *rest, hpd_device_id_t *device, mxml_node_t *parent)
 
     hpd_error_t rc;
     hpd_pair_t *pair;
-    mxml_node_t *deviceXml = mxmlNewElement(parent, "device");
+    mxml_node_t *deviceXml = mxmlNewElement(parent, HPD_REST_KEY_DEVICE);
 
     const char *id;
     hpd_device_get_id(device, &id);
-    mxmlElementSetAttr(deviceXml, "_id", id);
+    mxmlElementSetAttr(deviceXml, HPD_REST_KEY_ID, id);
 
     hpd_device_foreach_attr(rc, pair, device) {
         const char *key, *val;
@@ -165,11 +165,11 @@ adapterToXml(hpd_rest_t *rest, hpd_adapter_id_t *adapter, mxml_node_t *parent)
 
     hpd_error_t rc;
     hpd_pair_t *pair;
-    mxml_node_t *adapterXml = mxmlNewElement(parent, "adapter");
+    mxml_node_t *adapterXml = mxmlNewElement(parent, HPD_REST_KEY_ADAPTER);
 
     const char *id;
     hpd_adapter_get_id(adapter, &id);
-    mxmlElementSetAttr(adapterXml, "_id", id);
+    mxmlElementSetAttr(adapterXml, HPD_REST_KEY_ID, id);
 
     hpd_adapter_foreach_attr(rc, pair, adapter) {
         const char *key, *val;
@@ -191,16 +191,16 @@ configurationToXml(hpd_rest_t *rest, hpd_t *hpd, mxml_node_t *parent)
 {
     mxml_node_t *configXml;
 
-    configXml = mxmlNewElement(parent, "configuration");
+    configXml = mxmlNewElement(parent, HPD_REST_KEY_CONFIGURATION);
 
 #ifdef CURL_ICONV_CODESET_OF_HOST
     curl_version_info_data *curl_ver = curl_version_info(CURLVERSION_NOW);
   if (curl_ver->features & CURL_VERSION_CONV && curl_ver->iconv_ver_num != 0)
-    mxmlElementSetAttr(configXml, "urlEncodedCharset", CURL_ICONV_CODESET_OF_HOST);
+    mxmlElementSetAttr(configXml, HPD_REST_KEY_URL_ENCODED_CHARSET, CURL_ICONV_CODESET_OF_HOST);
   else
-    mxmlElementSetAttr(configXml, "urlEncodedCharset", "ASCII");
+    mxmlElementSetAttr(configXml, HPD_REST_KEY_URL_ENCODED_CHARSET, HPD_REST_VAL_ASCII);
 #else
-    mxmlElementSetAttr(configXml, "urlEncodedCharset", "ASCII");
+    mxmlElementSetAttr(configXml, HPD_REST_KEY_URL_ENCODED_CHARSET, HPD_REST_VAL_ASCII);
 #endif
 
     hpd_error_t rc;
@@ -231,8 +231,8 @@ xmlGetState(char *state)
     mxml_node_t *stateXml;
 
     xml = mxmlNewXML("1.0");
-    stateXml = mxmlNewElement(xml, "value");
-    mxmlElementSetAttr(stateXml, "timestamp", timestamp());
+    stateXml = mxmlNewElement(xml, HPD_REST_KEY_VALUE);
+    mxmlElementSetAttr(stateXml, HPD_REST_KEY_TIMESTAMP, timestamp());
     mxmlNewText(stateXml, 0, state);
 
     char* return_value = mxmlSaveAllocString(xml, MXML_NO_CALLBACK);
@@ -254,7 +254,7 @@ xmlParseState(char *xml_value)
         return NULL;
     }
 
-    node = mxmlFindElement(xml, xml, "value", NULL, NULL, MXML_DESCEND);
+    node = mxmlFindElement(xml, xml, HPD_REST_KEY_VALUE, NULL, NULL, MXML_DESCEND);
     if(node == NULL || node-> child == NULL || node->child->value.text.string == NULL)
     {
         mxmlDelete(xml);

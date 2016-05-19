@@ -146,6 +146,7 @@ hpd_error_t hpd_adapter_set_data(hpd_adapter_t *adapter, void *data, hpd_free_f 
 hpd_error_t hpd_adapter_set_attr(hpd_adapter_t *adapter, const char *key, const char *val)
 {
     if (!adapter || !key) LOG_RETURN_E_NULL();
+    if (key[0] == '_') LOG_RETURN(HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
     return discovery_set_adapter_attr(adapter, key, val);
 }
 
@@ -275,6 +276,7 @@ hpd_error_t hpd_device_set_data(hpd_device_t *device, void *data, hpd_free_f on_
 hpd_error_t hpd_device_set_attr(hpd_device_t *device, const char *key, const char *val)
 {
     if (!device || !key) LOG_RETURN_E_NULL();
+    if (key[0] == '_') LOG_RETURN(HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
     return discovery_set_device_attr(device, key, val);
 }
 
@@ -396,6 +398,7 @@ hpd_error_t hpd_service_set_data(hpd_service_t *service, void *data, hpd_free_f 
 hpd_error_t hpd_service_set_attr(hpd_service_t *service, const char *key, const char *val)
 {
     if (!service || !key) LOG_RETURN_E_NULL();
+    if (key[0] == '_') LOG_RETURN(HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
     return discovery_set_service_attr(service, key, val);
 }
 
@@ -560,6 +563,7 @@ hpd_error_t hpd_parameter_detach(hpd_parameter_id_t *id, hpd_parameter_t **param
 hpd_error_t hpd_parameter_set_attr(hpd_parameter_t *parameter, const char *key, const char *val)
 {
     if (!parameter || !key) LOG_RETURN_E_NULL();
+    if (key[0] == '_') LOG_RETURN(HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
     return discovery_set_parameter_attr(parameter, key, val);
 }
 

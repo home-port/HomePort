@@ -51,6 +51,7 @@ hpd_error_t hpd_get_loop(hpd_t *hpd, hpd_ev_loop_t **loop)
 
 hpd_error_t hpd_module(hpd_t *hpd, const char *id, hpd_module_def_t *module_def)
 {
+    // TODO Reserve module names hpd and log? (maybe even create them as modules)
     hpd_module_t *module;
     if (!hpd || !id || !module_def) LOG_RETURN_E_NULL();
     if (hpd->configuration) LOG_RETURN(HPD_E_STATE, "Cannot add module while hpd is running.");

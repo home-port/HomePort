@@ -33,5 +33,23 @@
 typedef struct hpd_rest hpd_rest_t;
 
 hpd_error_t hpd_rest_url_create(hpd_rest_t *rest, hpd_service_id_t *service, char **url);
+hpd_error_t hpd_rest_get_timestamp(hpd_module_t *context, char str[21]);
+
+// ALL keys starts with _ to avoid conflicts with adapter provided ones..
+static const char * const HPD_REST_KEY_ID = "_id";
+static const char * const HPD_REST_KEY_URI = "_uri";
+static const char * const HPD_REST_KEY_GET = "_get";
+static const char * const HPD_REST_KEY_PUT = "_put";
+static const char * const HPD_REST_KEY_PARAMETER = "_parameter";
+static const char * const HPD_REST_KEY_SERVICE = "_service";
+static const char * const HPD_REST_KEY_DEVICE = "_device";
+static const char * const HPD_REST_KEY_URL_ENCODED_CHARSET = "_urlEncodedCharset";
+static const char * const HPD_REST_KEY_ADAPTER = "_adapter";
+static const char * const HPD_REST_KEY_VALUE = "_value";
+static const char * const HPD_REST_KEY_CONFIGURATION = "_configuration";
+static const char * const HPD_REST_KEY_TIMESTAMP = "_timestamp";
+
+static const char * const HPD_REST_VAL_TRUE = "1";
+static const char * const HPD_REST_VAL_ASCII = "ASCII";
 
 #endif //HOMEPORT_HPD_REST_INTERN_H

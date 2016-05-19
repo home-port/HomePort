@@ -29,317 +29,406 @@
 #include <jansson.h>
 #include "hpd_application_api.h"
 #include <string.h>
-#include "hpd_rest_intern.h"
 
-// TODO Error handling on the entire file !!!
-// TODO Shouldn't json object be free'd on errors ?
+// For backward compatibility
+#if JANSSON_VERSION_HEX < 0x020700
+#define json_string_length(JSON) strlen(json_string_value(JSON))
+#endif
 
-static json_t *add_attr(json_t *json, hpd_pair_t *pair)
+#define RETURN_JSON_ERROR(CONTEXT) HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Json error")
+
+static hpd_error_t add(json_t *parent, const char *key, const char *val, hpd_module_t *context)
 {
-    json_t *value;
+    json_t *json;
+    if (!(json = json_string(val))) RETURN_JSON_ERROR(context);
+    if (!json_object_set_new(parent, key, json)) {
+        json_decref(json);
+        RETURN_JSON_ERROR(context);
+    }
+    return HPD_E_SUCCESS;
+}
+
+static hpd_error_t add_attr(json_t *parent, hpd_pair_t *pair, hpd_module_t *context)
+{
+    hpd_error_t rc;
+
+    // Get key and value
     const char *key, *val;
+    if ((rc = hpd_pair_get(pair, &key, &val))) return rc;
 
-    hpd_pair_get(pair, &key, &val);
-    // TODO Verify that key is not those below... (use encoding?)
-    if (!(value = json_string(val)) || json_object_set_new(json, key, value) != 0) return NULL;
-    return value;
+    return add(parent, key, val, context);
 }
 
-static json_t *add_id(json_t *json, const char *id)
+static hpd_error_t add_parameter(json_t *parent, hpd_parameter_id_t *parameter, hpd_module_t *context)
 {
-    json_t *value;
-    if (!(value = json_string(id)) || json_object_set_new(json, "_id", value) != 0) return NULL;
-    return value;
-}
-
-static json_t *parameterToJson(hpd_parameter_id_t *parameter)
-{
-    json_t *parameterJson;
     hpd_error_t rc;
+
+    // Create object
+    json_t *json;
+    if (!(json = json_object())) RETURN_JSON_ERROR(context);
+
+    // Add id
+    const char *id;
+    if ((rc = hpd_parameter_get_id(parameter, &id))) goto error;
+    if ((rc = add(json, HPD_REST_KEY_ID, id, context))) goto error;
+
+    // Add attributes
     hpd_pair_t *pair;
-
-    if (!(parameterJson = json_object())) return NULL;
-
     hpd_parameter_foreach_attr(rc, pair, parameter)
-        if (!add_attr(parameterJson, pair)) return NULL;
+        if ((rc = add_attr(json, pair, context))) goto error;
+    if (rc) goto error;
 
-    const char *id;
-    hpd_parameter_get_id(parameter, &id);
-    if (!add_id(parameterJson, id)) return NULL;
-
-    return parameterJson;
-}
-
-static json_t*
-serviceToJson(hpd_rest_t *rest, hpd_service_id_t *service)
-{
-    json_t *serviceJson;
-    json_t *value;
-    hpd_error_t rc;
-    hpd_pair_t *pair;
-
-    if (!(serviceJson = json_object())) return NULL;
-
-    hpd_service_foreach_attr(rc, pair, service)
-        if (!add_attr(serviceJson, pair)) return NULL;
-
-    const char *id;
-    hpd_service_get_id(service, &id);
-    if (!add_id(serviceJson, id)) return NULL;
-
-    char *url;
-    hpd_rest_url_create(rest, service, &url); // TODO error check
-    if (url) {
-        if (!(value = json_string(url)) || json_object_set_new(serviceJson, "_uri", value) != 0) {
-            free(url);
-            return NULL;
-        }
-        free(url);
+    // Add to parent
+    if (!json_array_append_new(parent, json)) {
+        json_decref(json);
+        RETURN_JSON_ERROR(context);
     }
 
+    return HPD_E_SUCCESS;
+
+    error:
+        json_decref(json);
+        return rc;
+}
+
+static hpd_error_t add_parameters(json_t *parent, hpd_service_id_t *service, hpd_module_t *context)
+{
+    hpd_error_t rc;
+
+    // Create array
+    json_t *json;
+    if (!(json = json_array())) RETURN_JSON_ERROR(context);
+
+    // Add services
+    hpd_parameter_id_t *parameter;
+    hpd_service_foreach_parameter(rc, parameter, service) {
+        if ((rc = add_parameter(json, parameter, context))) goto error;
+    }
+    if (rc) goto error;
+
+    // Add to parent
+    if (!json_object_set_new(parent, HPD_REST_KEY_PARAMETER, json)) {
+        json_decref(json);
+        RETURN_JSON_ERROR(context);
+    }
+
+    error:
+    json_decref(json);
+    return rc;
+}
+
+static hpd_error_t add_service(json_t *parent, hpd_service_id_t *service, hpd_rest_t *rest, hpd_module_t *context)
+{
+    hpd_error_t rc;
+
+    // Create object
+    json_t *json;
+    if (!(json = json_object())) RETURN_JSON_ERROR(context);
+
+    // Add id
+    const char *id;
+    if ((rc = hpd_service_get_id(service, &id))) goto error;
+    if ((rc = add(json, HPD_REST_KEY_ID, id, context))) goto error;
+
+    // Add url
+    char *url;
+    if ((rc = hpd_rest_url_create(rest, service, &url))) goto error;
+    if ((rc = add(json, HPD_REST_KEY_URI, url, context))) {
+        free(url);
+        goto error;
+    }
+    free(url);
+
+    // Add actions
     hpd_action_t *action;
     hpd_service_foreach_action(rc, action, service) {
         hpd_method_t method;
-        hpd_action_get_method(action, &method);
+        if ((rc = hpd_action_get_method(action, &method))) goto error;
         switch (method) {
             case HPD_M_NONE:break;
             case HPD_M_GET:
-                if( ( ( value = json_string("1") ) == NULL ) || (json_object_set_new(serviceJson, "_get", value) != 0 ) )
-                {
-                    return NULL;
-                }
+                if ((rc = add(json, HPD_REST_KEY_GET, HPD_REST_VAL_TRUE, context))) goto error;
                 break;
             case HPD_M_PUT:
-                if( ( ( value = json_string("1") ) == NULL ) || (json_object_set_new(serviceJson, "_put", value) != 0 ) )
-                {
-                    return NULL;
-                }
+                if ((rc = add(json, HPD_REST_KEY_PUT, HPD_REST_VAL_TRUE, context))) goto error;
                 break;
             case HPD_M_COUNT:break;
         }
     }
+    if (rc) goto error;
 
-    hpd_parameter_id_t *parameter;
-    hpd_service_foreach_parameter(rc, parameter, service) {
-        json_t *parameterJson = parameterToJson(parameter);
-        if( parameterJson == NULL || json_object_set_new(serviceJson, "parameter", parameterJson) != 0 ) {
-            return NULL;
-        }
+    // Add attributes
+    hpd_pair_t *pair;
+    hpd_service_foreach_attr(rc, pair, service)
+        if ((rc = add_attr(json, pair, context))) goto error;
+    if (rc) goto error;
+
+    // Add parameters
+    if ((rc = add_parameters(json, service, context))) goto error;
+
+    // Add to parent
+    if (!json_array_append_new(parent, json)) {
+        json_decref(json);
+        RETURN_JSON_ERROR(context);
     }
 
-    return serviceJson;
+    return HPD_E_SUCCESS;
+
+    error:
+    json_decref(json);
+    return rc;
 }
 
-static json_t*
-deviceToJson(hpd_rest_t *rest, hpd_device_id_t *device)
+static hpd_error_t add_services(json_t *parent, hpd_device_id_t *device, hpd_rest_t *rest, hpd_module_t *context)
 {
-    json_t *deviceJson;
-    json_t *serviceArray;
     hpd_error_t rc;
-    hpd_pair_t *pair;
 
-    if( ( deviceJson = json_object() ) == NULL )
-    {
-        return NULL;
-    }
+    // Create array
+    json_t *json;
+    if (!(json = json_array())) RETURN_JSON_ERROR(context);
 
-    hpd_device_foreach_attr(rc, pair, device)
-        if (!add_attr(deviceJson, pair)) return NULL;
-
-    const char *id;
-    hpd_device_get_id(device, &id);
-    if (!add_id(deviceJson, id)) return NULL;
-
-    if( ( serviceArray = json_array() ) == NULL )
-    {
-        return NULL;
-    }
-
+    // Add services
     hpd_service_id_t *service;
     hpd_device_foreach_service(rc, service, device) {
-        if( json_array_append_new(serviceArray, serviceToJson(rest, service)) != 0 )
-        {
-            return NULL;
-        }
+        if ((rc = add_service(json, service, rest, context))) goto error;
+    }
+    if (rc) goto error;
+
+    // Add to parent
+    if (!json_object_set_new(parent, HPD_REST_KEY_SERVICE, json)) {
+        json_decref(json);
+        RETURN_JSON_ERROR(context);
     }
 
-    if( json_object_set_new(deviceJson, "service", serviceArray) != 0 )
-    {
-        return NULL;
-    }
-
-    return deviceJson;
-}
-
-static json_t*
-adapterToJson(hpd_rest_t *rest, hpd_adapter_id_t *adapter)
-{
-    json_t *adapterJson = NULL;
-    json_t *value = NULL;
-    json_t *deviceArray = NULL;
-    hpd_error_t rc;
-    hpd_pair_t *pair;
-
-    if( ( adapterJson = json_object() ) == NULL )
-    {
-        goto error;
-    }
-
-    hpd_adapter_foreach_attr(rc, pair, adapter)
-        if (!add_attr(adapterJson, pair)) return NULL;
-
-    const char *id;
-    hpd_adapter_get_id(adapter, &id);
-    if (!add_id(adapterJson, id)) return NULL;
-
-    if( ( deviceArray = json_array() ) == NULL )
-    {
-        goto error;
-    }
-
-    hpd_device_id_t *device;
-    hpd_adapter_foreach_device(rc, device, adapter)
-    {
-            json_t *deviceJson;
-            if( ( ( deviceJson = deviceToJson(rest, device) ) == NULL ) || ( json_array_append_new(deviceArray, deviceJson) != 0 ) )
-            {
-                goto error;
-            }
-    }
-
-    if( json_object_set_new(adapterJson, "device", deviceArray) != 0 )
-    {
-        goto error;
-    }
-
-    return adapterJson;
     error:
-    if(adapterJson) json_decref(adapterJson);
-    if(value) json_decref(value);
-    if(deviceArray) json_decref(deviceArray);
-    return NULL;
+    json_decref(json);
+    return rc;
 }
 
-static json_t*
-configurationToJson(hpd_rest_t *rest, hpd_t *hpd)
+static hpd_error_t add_device(json_t *parent, hpd_device_id_t *device, hpd_rest_t *rest, hpd_module_t *context)
 {
     hpd_error_t rc;
-    json_t *configJson=NULL;
-    json_t *adapterArray=NULL;
-    json_t *adapter=NULL;
-    json_t *value=NULL;
 
-    if( ( configJson = json_object() ) == NULL )
-    {
-        goto error;
+    // Create object
+    json_t *json;
+    if (!(json = json_object())) RETURN_JSON_ERROR(context);
+
+    // Add id
+    const char *id;
+    if ((rc = hpd_device_get_id(device, &id))) goto error;
+    if ((rc = add(json, HPD_REST_KEY_ID, id, context))) goto error;
+
+    // Add attributes
+    hpd_pair_t *pair;
+    hpd_device_foreach_attr(rc, pair, device)
+        if ((rc = add_attr(json, pair, context))) goto error;
+    if (rc) goto error;
+
+    // Add services
+    if ((rc = add_services(json, device, rest, context))) goto error;
+
+    // Add to parent
+    if (!json_array_append_new(parent, json)) {
+        json_decref(json);
+        RETURN_JSON_ERROR(context);
     }
 
+    return HPD_E_SUCCESS;
+
+    error:
+    json_decref(json);
+    return rc;
+}
+
+static hpd_error_t add_devices(json_t *parent, hpd_adapter_id_t *adapter, hpd_rest_t *rest, hpd_module_t *context)
+{
+    hpd_error_t rc;
+
+    // Create array
+    json_t *json;
+    if (!(json = json_array())) RETURN_JSON_ERROR(context);
+
+    // Add services
+    hpd_device_id_t *device;
+    hpd_adapter_foreach_device(rc, device, adapter) {
+        if ((rc = add_device(json, device, rest, context))) goto error;
+    }
+    if (rc) goto error;
+
+    // Add to parent
+    if (!json_object_set_new(parent, HPD_REST_KEY_DEVICE, json)) {
+        json_decref(json);
+        RETURN_JSON_ERROR(context);
+    }
+
+    error:
+    json_decref(json);
+    return rc;
+}
+
+static hpd_error_t add_adapter(json_t *parent, hpd_adapter_id_t *adapter, hpd_rest_t *rest, hpd_module_t *context)
+{
+    hpd_error_t rc;
+
+    // Create object
+    json_t *json;
+    if (!(json = json_object())) RETURN_JSON_ERROR(context);
+
+    // Add id
+    const char *id;
+    if ((rc = hpd_adapter_get_id(adapter, &id))) goto error;
+    if ((rc = add(json, HPD_REST_KEY_ID, id, context))) goto error;
+
+    // Add attributes
+    hpd_pair_t *pair;
+    hpd_adapter_foreach_attr(rc, pair, adapter) {
+        if ((rc = add_attr(json, pair, context))) goto error;
+    }
+    if (rc) goto error;
+
+    // Add devices
+    if ((rc = add_devices(json, adapter, rest, context))) goto error;
+
+    // Add to parent
+    if (!json_array_append_new(parent, json)) {
+        json_decref(json);
+        RETURN_JSON_ERROR(context);
+    }
+
+    return HPD_E_SUCCESS;
+
+    error:
+    json_decref(json);
+    return rc;
+}
+
+static hpd_error_t add_adapters(json_t *parent, hpd_t *hpd, hpd_rest_t *rest, hpd_module_t *context)
+{
+    hpd_error_t rc;
+
+    // Create array
+    json_t *json;
+    if (!(json = json_array())) RETURN_JSON_ERROR(context);
+
+    // Add adapters
+    hpd_adapter_id_t *adapter;
+    hpd_foreach_adapter(rc, adapter, hpd) {
+        if ((rc = add_adapter(json, adapter, rest, context))) goto error;
+    }
+    if (rc) goto error;
+
+    // Add to parent
+    if (!json_object_set_new(parent, HPD_REST_KEY_ADAPTER, json)) {
+        json_decref(json);
+        RETURN_JSON_ERROR(context);
+    }
+
+    error:
+    json_decref(json);
+    return rc;
+}
+
+static hpd_error_t add_configuration(json_t *parent, hpd_t *hpd, hpd_rest_t *rest, hpd_module_t *context)
+{
+    hpd_error_t rc;
+
+    // Create object
+    json_t *json;
+    if (!(json = json_object())) RETURN_JSON_ERROR(context);
+
+    // Add encoded charset
 #ifdef CURL_ICONV_CODESET_OF_HOST
     curl_version_info_data *curl_ver = curl_version_info(CURLVERSION_NOW);
-  if (curl_ver->features & CURL_VERSION_CONV && curl_ver->iconv_ver_num != 0)
-    if(((value = json_string(CURL_ICONV_CODESET_OF_HOST)) == NULL) || (json_object_set_new(configJson, "urlEncodedCharset", value) != 0)) goto error;
-  else
-    if(((value = json_string("ASCII")) == NULL) || (json_object_set_new(configJson, "urlEncodedCharset", value) != 0)) goto error;
+    if (curl_ver->features & CURL_VERSION_CONV && curl_ver->iconv_ver_num != 0)
+        if ((rc = add(json, HPD_REST_KEY_URL_ENCODED_CHARSET, CURL_ICONV_CODESET_OF_HOST, context))) goto error;
+    else
+        if ((rc = add(json, HPD_REST_KEY_URL_ENCODED_CHARSET, HPD_REST_VAL_ASCII, context))) goto error;
 #else
-    if(((value = json_string("ASCII")) == NULL) || (json_object_set_new(configJson, "urlEncodedCharset", value) != 0)) goto error;
+    if ((rc = add(json, HPD_REST_KEY_URL_ENCODED_CHARSET, HPD_REST_VAL_ASCII, context))) goto error;
 #endif
 
-    hpd_adapter_id_t *iterator;
+    // Add adapters
+    if ((rc = add_adapters(json, hpd, rest, context))) goto error;
 
-    if( ( adapterArray = json_array() ) == NULL )
-    {
-        goto error;
+    // Add to parent
+    if (!json_object_set_new(parent, HPD_REST_KEY_CONFIGURATION, json)) {
+        json_decref(json);
+        RETURN_JSON_ERROR(context);
     }
 
-    hpd_foreach_adapter(rc, iterator, hpd)
-    {
-        adapter = adapterToJson(rest, iterator);
-        if( ( adapter == NULL ) || ( json_array_append_new(adapterArray, adapter) != 0 ) )
-        {
-            goto error;
-        }
-    }
+    return HPD_E_SUCCESS;
 
-    if( json_object_set_new(configJson, "adapter", adapterArray) != 0 )
-    {
-        goto error;
-    }
-
-    return configJson;
     error:
-    if(adapter) json_decref(adapter);
-    if(adapterArray) json_decref(adapterArray);
-    if(configJson) json_decref(configJson);
-    return NULL;
-}
-
-char *
-jsonGetConfiguration(hpd_rest_t *rest, hpd_t *hpd)
-{
-    char *res;
-    json_t *configurationJson = configurationToJson(rest, hpd);
-    res = json_dumps( configurationJson, 0 );
-    json_decref(configurationJson);
-    return res;
-}
-
-char*
-jsonGetState(char *state)
-{
-    json_t *json=NULL;
-    json_t *value=NULL;
-
-    if( ( json = json_object() ) == NULL )
-    {
-        goto error;
-    }
-    if( ( ( value = json_string(state) ) == NULL ) || ( json_object_set_new(json, "value", value) != 0 ) )
-    {
-        goto error;
-    }
-
-    char *ret = json_dumps( json, 0 );
     json_decref(json);
-    return ret;
-
-    error:
-    if(value) json_decref(value);
-    if(json) json_decref(json);
-    return NULL;
+    return rc;
 }
 
-const char*
-jsonParseState(char *json_value)
+hpd_error_t hpd_rest_json_get_configuration(hpd_t *hpd, hpd_rest_t *rest, hpd_module_t *context, char **out)
 {
+    hpd_error_t rc;
+
+    json_t *json;
+    if (!(json = json_object())) RETURN_JSON_ERROR(context);
+
+    if ((rc = add_configuration(json, hpd, rest, context))) goto error;
+
+    (*out) = json_dumps(json, 0);
+    json_decref(json);
+    return HPD_E_SUCCESS;
+
+    error:
+    json_decref(json);
+    return rc;
+}
+
+hpd_error_t hpd_rest_json_get_value(char *value, hpd_module_t *context, char **out)
+{
+    hpd_error_t rc;
+
+    json_t *json;
+    if (!(json = json_object())) RETURN_JSON_ERROR(context);
+
+    // Add timestamp
+    char timestamp[21];
+    if ((rc = hpd_rest_get_timestamp(context, timestamp))) goto error;
+    if ((rc = add(json, HPD_REST_KEY_TIMESTAMP, timestamp, context))) goto error;
+    if ((rc = add(json, HPD_REST_KEY_VALUE, value, context))) goto error;
+
+    (*out) = json_dumps(json, 0);
+    json_decref(json);
+    return HPD_E_SUCCESS;
+
+    error:
+    json_decref(json);
+    return rc;
+}
+
+hpd_error_t hpd_rest_json_parse_value(const char *in, hpd_module_t *context, char **out)
+{
+    // Load json
     json_t *json = NULL;
-    json_error_t *error=NULL;
-    json_t *value = NULL;
-
-    if( ( json = json_loads(json_value, 0, error) ) == NULL )
-    {
-        goto error;
+    json_error_t *error = NULL;
+    if (!(json = json_loads(in, 0, error))) {
+        HPD_LOG_RETURN(context, HPD_E_ARGUMENT, "Json parsing error: %s", error->text);
     }
 
-    if( json_is_object(json) == 0 )
-    {
-        goto error;
+    // Get value
+    json_t *value;
+    if (!json_is_object(json) || !(value = json_object_get(json, HPD_REST_KEY_VALUE))) {
+        json_decref(json);
+        HPD_LOG_RETURN(context, HPD_E_ARGUMENT, "Json parsing error");
     }
 
-    if( ( value = json_object_get(json, "value") ) == NULL )
-    {
-        goto error;
+    // Allocate a copy
+    (*out) = malloc((json_string_length(value)+1)*sizeof(char));
+    if (!(*out)) {
+        json_decref(json);
+        HPD_LOG_RETURN_E_ALLOC(context);
     }
-
-    const char *ret = json_string_value(value);
-    char *ret_alloc = malloc((strlen(ret)+1)*sizeof(char));
-    strcpy(ret_alloc, ret);
+    strcpy((*out), json_string_value(value));
 
     json_decref(json);
-
-    return ret_alloc;
-
-    error:
-    return NULL;
+    return HPD_E_SUCCESS;
 }
 
 

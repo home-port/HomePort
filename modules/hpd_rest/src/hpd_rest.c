@@ -33,6 +33,7 @@
 #include <curl/curl.h>
 #include "json.h"
 #include "xml.h"
+#include <time.h>
 
 static hpd_error_t on_create(void **data, hpd_module_t *context);
 static hpd_error_t on_destroy(void *data);
@@ -105,6 +106,16 @@ static hpd_error_t url_decode(hpd_rest_t *rest, const char *encoded, char **deco
 {
     (*decoded) = curl_easy_unescape(rest->curl, encoded, 0, NULL);
     if (!(*decoded)) HPD_LOG_RETURN(rest->context, HPD_E_UNKNOWN, "Curl failed decoding url.");
+    return HPD_E_SUCCESS;
+}
+
+// Conforms to ISO 8601
+hpd_error_t hpd_rest_get_timestamp(hpd_module_t *context, char str[21])
+{
+    time_t now = time(NULL);
+    struct tm *tm = gmtime(&now);
+    if (!tm) HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Time conversion failed.");
+    strftime(str, 20, "%FT%TZ", tm);
     return HPD_E_SUCCESS;
 }
 
@@ -301,7 +312,7 @@ static hpd_error_t reply_devices(hpd_rest_req_t *rest_req)
             body = xmlGetConfiguration(rest, rest->hpd);
             break;
         case CONTENT_JSON:
-            body = jsonGetConfiguration(rest, rest->hpd);
+            if ((rc = hpd_rest_json_get_configuration(rest->hpd, rest, context, &body))) return rc;
             break;
         case CONTENT_UNKNOWN:
         default:
@@ -326,8 +337,6 @@ static hpd_error_t reply_devices(hpd_rest_req_t *rest_req)
         rest_req->http_res = NULL;
     create_error:
         free(body);
-        if ((rc2 = reply_internal_server_error(http_req, rest_req, context)))
-            HPD_LOG_ERROR(context, "Failed to send internal server error response (code: %d).", rc2);
     return rc;
 }
 
@@ -540,7 +549,7 @@ static hpd_error_t on_response(hpd_response_t *res)
             if ((rc = hpd_httpd_response_add_header(http_res, "Content-Type", "application/xml"))) goto error_free_state;
             break;
         case CONTENT_JSON:
-            state = jsonGetState(body); // TODO Check error
+            if ((rc = hpd_rest_json_get_value(body, context, &state))) goto error_free_res;
             if ((rc = hpd_httpd_response_add_header(http_res, "Content-Type", "application/json"))) goto error_free_state;
             break;
         default:
@@ -831,14 +840,28 @@ static hpd_httpd_return_t on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req
         }
 
         // Construct actual value
-        const char *val;
+        char *val;
         switch (media_type_to_enum(content_type)) {
             case CONTENT_NONE:
             case CONTENT_XML:
                 val = xmlParseState(rest_req->body);
                 break;
             case CONTENT_JSON:
-                val = jsonParseState(rest_req->body);
+                switch ((rc = hpd_rest_json_parse_value(rest_req->body, context, &val))) {
+                    case HPD_E_SUCCESS:
+                        break;
+                    case HPD_E_ARGUMENT:
+                        if ((rc2 = reply_bad_request(req, rest_req, context))) {
+                            HPD_LOG_ERROR(context, "Failed to send bad request response (code: %d).", rc2);
+                        }
+                        return HPD_HTTPD_R_STOP;
+                    default:
+                        HPD_LOG_ERROR(context, "Failed to parse value (code: %d).", rc);
+                        if ((rc2 = reply_internal_server_error(req, rest_req, context))) {
+                            HPD_LOG_ERROR(context, "Failed to send internal server error response (code: %d).", rc2);
+                        }
+                        return HPD_HTTPD_R_STOP;
+                }
                 break;
             case CONTENT_UNKNOWN:
             default:
@@ -859,12 +882,14 @@ static hpd_httpd_return_t on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req
 
         // Allocate hpd value
         if ((rc = hpd_value_alloc(&value, val, HPD_NULL_TERMINATED))) {
+            free(val);
             HPD_LOG_ERROR(context, "Unable to allocate value (code: %d).", rc);
             if ((rc2 = reply_internal_server_error(req, rest_req, context))) {
                 HPD_LOG_ERROR(context, "Failed to send internal server error response (code: %d).", rc2);
             }
             return HPD_HTTPD_R_STOP;
         }
+        free(val);
     }
 
     // Send hpd request
