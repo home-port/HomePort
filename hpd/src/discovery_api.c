@@ -80,7 +80,8 @@ hpd_error_t hpd_service_id_copy(hpd_service_id_t **dst, hpd_service_id_t *src)
 
 hpd_error_t hpd_service_id_free(hpd_service_id_t *id)
 {
-    if (!id) LOG_RETURN_E_NULL();
+    if (!id)
+        LOG_RETURN_E_NULL();
     return discovery_free_sid(id);
 }
 

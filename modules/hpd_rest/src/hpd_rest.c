@@ -77,13 +77,19 @@ typedef struct hpd_rest_req {
     hpd_httpd_response_t *http_res;
 } hpd_rest_req_t;
 
-static content_type_t media_type_to_enum(const char *str)
+static content_type_t media_type_to_enum(const char *haystack)
 {
-    if (str == NULL)
+    char *str;
+
+    if (haystack == NULL)
         return CONTENT_NONE;
-    if (strcmp(str, "application/xml") == 0 || strncmp(str, "application/xml;", 16) == 0)
+    if (    strcmp(haystack, "application/xml") == 0 ||
+            strncmp(haystack, "application/xml;", 16) == 0 ||
+            ((str = strstr(haystack, ",application/xml")) && (str[16] == ';' || str[16] == '\0')))
         return CONTENT_XML;
-    if (strcmp(str, "application/json" ) == 0 || strncmp(str, "application/json;", 17) == 0)
+    if (    strcmp(haystack, "application/json") == 0 ||
+            strncmp(haystack, "application/json;", 17) == 0 ||
+            ((str = strstr(haystack, ",application/json")) && (str[17] == ';' || str[17] == '\0')))
         return CONTENT_JSON;
     return CONTENT_UNKNOWN;
 }
@@ -302,7 +308,7 @@ static hpd_error_t reply_devices(hpd_rest_req_t *rest_req)
             if ((rc = reply_unsupported_media_type(http_req, rest_req, context))) {
                 HPD_LOG_ERROR(context, "Failed to send unsupported media type response (code: %d).", rc);
             }
-            return HPD_E_ARGUMENT;
+            return HPD_E_SUCCESS;
     }
 
     // Send response
@@ -325,8 +331,7 @@ static hpd_error_t reply_devices(hpd_rest_req_t *rest_req)
     return rc;
 }
 
-// TODO Rename LR_ORIGIN to HPD_REST_ORIGIN ??
-#ifdef LR_ORIGIN
+#ifdef HPD_REST_ORIGIN
 static hpd_error_t reply_options(hpd_rest_req_t *rest_req)
 {
     hpd_error_t rc, rc2;
@@ -435,7 +440,7 @@ static hpd_httpd_return_t on_req_destroy(hpd_httpd_t *ins, hpd_httpd_request_t *
         rest_req->http_req = NULL;
         return HPD_HTTPD_R_CONTINUE;
     } else {
-        if ((rc = hpd_service_id_free(rest_req->service)))
+        if (rest_req->service && (rc = hpd_service_id_free(rest_req->service)))
             HPD_LOG_ERROR(rest_req->rest->context, "Failed to free service id.");
         free(rest_req->body);
         free(rest_req);
@@ -525,7 +530,6 @@ static hpd_error_t on_response(hpd_response_t *res)
     }
     
     // Create response
-    // TODO check if res already have been sent?
     if ((rc = hpd_httpd_response_create(&rest_req->http_res, http_req, status))) goto error_send_res;
     hpd_httpd_response_t *http_res = rest_req->http_res;
     char *state = NULL;
@@ -543,7 +547,7 @@ static hpd_error_t on_response(hpd_response_t *res)
             HPD_LOG_ERROR(context, "Should definitely not be here.");
             goto error_free_res;
     }
-#ifdef LR_ORIGIN
+#ifdef HPD_REST_ORIGIN
     if ((rc = hpd_httpd_response_add_header(http_res, "Access-Control-Allow-Origin", "*"))) goto error_free_state;
 #endif
     if ((rc = hpd_httpd_response_sendf(http_res, "%s", state))) goto error_free_state;
@@ -761,7 +765,7 @@ static hpd_httpd_return_t on_req_hdr_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t 
             }
             return HPD_HTTPD_R_CONTINUE;
         }
-#ifdef LR_ORIGIN
+#ifdef HPD_REST_ORIGIN
         case HPD_HTTPD_M_OPTIONS: {
             if ((rc = reply_options(rest_req))) {
                 HPD_LOG_ERROR(context, "Failed to reply with devices list (code: %d).", rc);

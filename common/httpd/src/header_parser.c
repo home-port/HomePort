@@ -140,7 +140,7 @@ hpd_error_t hp_on_header_value(struct hp *instance, const char *value_chunk, siz
         case S_VALUE: {
             size_t new_len = instance->value_buffer_size + length;
             char *new_buf = realloc(instance->value_buffer, new_len * (sizeof(char)));
-            if (!instance->value_buffer) HPD_LOG_RETURN_E_ALLOC(instance->context);
+            if (!new_buf) HPD_LOG_RETURN_E_ALLOC(instance->context);
             instance->value_buffer = new_buf;
             instance->value_buffer_size = new_len;
             memcpy(instance->value_buffer+old_buffer_size, value_chunk, length);

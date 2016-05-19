@@ -31,9 +31,9 @@
 cmake_minimum_required(VERSION 2.6)
 project(HOMEPORT C CXX)
 
-set(CMAKE_C_FLAGS "-DLR_ORIGIN")
+set(CMAKE_C_FLAGS "-DHPD_REST_ORIGIN")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -g -DDEBUG -Wall")
-set(CMAKE_CXX_FLAGS "-std=gnu++0x -DLR_ORIGIN")
+set(CMAKE_CXX_FLAGS "-std=gnu++0x -DHPD_REST_ORIGIN")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -DDEBUG -Wall")
 
 # -fPIC is for compiling on 64bit
