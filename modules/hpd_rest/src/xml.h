@@ -28,7 +28,6 @@
 #include "hpd_types.h"
 #include "hpd_rest_intern.h"
 
-char *xmlGetConfiguration(hpd_rest_t *rest, hpd_t *hpd);
-char *xmlGetState(char *state);
-
-char *xmlParseState(char *xml_value);
+hpd_error_t hpd_rest_xml_get_configuration(hpd_t *hpd, hpd_rest_t *rest, hpd_module_t *context, char **out);
+hpd_error_t hpd_rest_xml_get_value(char *value, hpd_module_t *context, char **out);
+hpd_error_t hpd_rest_xml_parse_value(const char *in, hpd_module_t *context, char **out);

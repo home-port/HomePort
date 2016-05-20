@@ -309,7 +309,7 @@ static hpd_error_t reply_devices(hpd_rest_req_t *rest_req)
     switch (media_type_to_enum(accept)) {
         case CONTENT_NONE:
         case CONTENT_XML:
-            body = xmlGetConfiguration(rest, rest->hpd);
+            body = hpd_rest_xml_get_configuration(rest->hpd, rest);
             break;
         case CONTENT_JSON:
             if ((rc = hpd_rest_json_get_configuration(rest->hpd, rest, context, &body))) return rc;
@@ -545,7 +545,7 @@ static hpd_error_t on_response(hpd_response_t *res)
     switch (accept_type) {
         case CONTENT_NONE:
         case CONTENT_XML:
-            state = xmlGetState(body); // TODO Check error
+            state = hpd_rest_xml_get_value(body); // TODO Check error
             if ((rc = hpd_httpd_response_add_header(http_res, "Content-Type", "application/xml"))) goto error_free_state;
             break;
         case CONTENT_JSON:
@@ -844,7 +844,7 @@ static hpd_httpd_return_t on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req
         switch (media_type_to_enum(content_type)) {
             case CONTENT_NONE:
             case CONTENT_XML:
-                val = xmlParseState(rest_req->body);
+                val = hpd_rest_xml_parse_value(rest_req->body);
                 break;
             case CONTENT_JSON:
                 switch ((rc = hpd_rest_json_parse_value(rest_req->body, context, &val))) {
