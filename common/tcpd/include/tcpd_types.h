@@ -43,8 +43,8 @@
    XX(65535, DYNAMIC_PORTS_END)
 
 typedef enum hpd_tcpd_port
-{ // TODO Rename HPD_P_ to HPD_TCPD_P_
-#define XX(num, str) HPD_P_##str = num,
+{
+#define XX(num, str) HPD_TCPD_P_##str = num,
     HPD_TCPD_PORT_MAP(XX)
 #undef XX
 } hpd_tcpd_port_t;

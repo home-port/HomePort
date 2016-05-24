@@ -40,8 +40,9 @@
 static hpd_error_t add(json_t *parent, const char *key, const char *val, hpd_module_t *context)
 {
     json_t *json;
-    if (!(json = json_string(val))) RETURN_JSON_ERROR(context);
-    if (!json_object_set_new(parent, key, json)) {
+    if (!(json = json_string(val)))
+        RETURN_JSON_ERROR(context);
+    if (json_object_set_new(parent, key, json)) {
         json_decref(json);
         RETURN_JSON_ERROR(context);
     }
@@ -79,7 +80,7 @@ static hpd_error_t add_parameter(json_t *parent, hpd_parameter_id_t *parameter, 
     if (rc) goto error;
 
     // Add to parent
-    if (!json_array_append_new(parent, json)) {
+    if (json_array_append_new(parent, json)) {
         json_decref(json);
         RETURN_JSON_ERROR(context);
     }
@@ -99,7 +100,7 @@ static hpd_error_t add_parameters(json_t *parent, hpd_service_id_t *service, hpd
     json_t *json;
     if (!(json = json_array())) RETURN_JSON_ERROR(context);
 
-    // Add services
+    // Add parameters
     hpd_parameter_id_t *parameter;
     hpd_service_foreach_parameter(rc, parameter, service) {
         if ((rc = add_parameter(json, parameter, context))) goto error;
@@ -107,10 +108,11 @@ static hpd_error_t add_parameters(json_t *parent, hpd_service_id_t *service, hpd
     if (rc) goto error;
 
     // Add to parent
-    if (!json_object_set_new(parent, HPD_REST_KEY_PARAMETER, json)) {
+    if (json_object_set_new(parent, HPD_REST_KEY_PARAMETER, json)) {
         json_decref(json);
         RETURN_JSON_ERROR(context);
     }
+    return HPD_E_SUCCESS;
 
     error:
     json_decref(json);
@@ -167,7 +169,7 @@ static hpd_error_t add_service(json_t *parent, hpd_service_id_t *service, hpd_re
     if ((rc = add_parameters(json, service, context))) goto error;
 
     // Add to parent
-    if (!json_array_append_new(parent, json)) {
+    if (json_array_append_new(parent, json)) {
         json_decref(json);
         RETURN_JSON_ERROR(context);
     }
@@ -195,10 +197,11 @@ static hpd_error_t add_services(json_t *parent, hpd_device_id_t *device, hpd_res
     if (rc) goto error;
 
     // Add to parent
-    if (!json_object_set_new(parent, HPD_REST_KEY_SERVICE, json)) {
+    if (json_object_set_new(parent, HPD_REST_KEY_SERVICE, json)) {
         json_decref(json);
         RETURN_JSON_ERROR(context);
     }
+    return HPD_E_SUCCESS;
 
     error:
     json_decref(json);
@@ -228,7 +231,7 @@ static hpd_error_t add_device(json_t *parent, hpd_device_id_t *device, hpd_rest_
     if ((rc = add_services(json, device, rest, context))) goto error;
 
     // Add to parent
-    if (!json_array_append_new(parent, json)) {
+    if (json_array_append_new(parent, json)) {
         json_decref(json);
         RETURN_JSON_ERROR(context);
     }
@@ -248,7 +251,7 @@ static hpd_error_t add_devices(json_t *parent, hpd_adapter_id_t *adapter, hpd_re
     json_t *json;
     if (!(json = json_array())) RETURN_JSON_ERROR(context);
 
-    // Add services
+    // Add devices
     hpd_device_id_t *device;
     hpd_adapter_foreach_device(rc, device, adapter) {
         if ((rc = add_device(json, device, rest, context))) goto error;
@@ -256,10 +259,12 @@ static hpd_error_t add_devices(json_t *parent, hpd_adapter_id_t *adapter, hpd_re
     if (rc) goto error;
 
     // Add to parent
-    if (!json_object_set_new(parent, HPD_REST_KEY_DEVICE, json)) {
+    if (json_object_set_new(parent, HPD_REST_KEY_DEVICE, json)) {
         json_decref(json);
         RETURN_JSON_ERROR(context);
     }
+
+    return HPD_E_SUCCESS;
 
     error:
     json_decref(json);
@@ -290,7 +295,7 @@ static hpd_error_t add_adapter(json_t *parent, hpd_adapter_id_t *adapter, hpd_re
     if ((rc = add_devices(json, adapter, rest, context))) goto error;
 
     // Add to parent
-    if (!json_array_append_new(parent, json)) {
+    if (json_array_append_new(parent, json)) {
         json_decref(json);
         RETURN_JSON_ERROR(context);
     }
@@ -318,10 +323,12 @@ static hpd_error_t add_adapters(json_t *parent, hpd_t *hpd, hpd_rest_t *rest, hp
     if (rc) goto error;
 
     // Add to parent
-    if (!json_object_set_new(parent, HPD_REST_KEY_ADAPTER, json)) {
+    if (json_object_set_new(parent, HPD_REST_KEY_ADAPTER, json)) {
         json_decref(json);
         RETURN_JSON_ERROR(context);
     }
+
+    return HPD_E_SUCCESS;
 
     error:
     json_decref(json);
@@ -351,7 +358,7 @@ static hpd_error_t add_configuration(json_t *parent, hpd_t *hpd, hpd_rest_t *res
     if ((rc = add_adapters(json, hpd, rest, context))) goto error;
 
     // Add to parent
-    if (!json_object_set_new(parent, HPD_REST_KEY_CONFIGURATION, json)) {
+    if (json_object_set_new(parent, HPD_REST_KEY_CONFIGURATION, json)) {
         json_decref(json);
         RETURN_JSON_ERROR(context);
     }
@@ -372,7 +379,11 @@ hpd_error_t hpd_rest_json_get_configuration(hpd_t *hpd, hpd_rest_t *rest, hpd_mo
 
     if ((rc = add_configuration(json, hpd, rest, context))) goto error;
 
-    (*out) = json_dumps(json, 0);
+    if (!((*out) = json_dumps(json, 0))) {
+        json_decref(json);
+        RETURN_JSON_ERROR(context);
+    }
+
     json_decref(json);
     return HPD_E_SUCCESS;
 
@@ -392,9 +403,15 @@ hpd_error_t hpd_rest_json_get_value(char *value, hpd_module_t *context, char **o
     char timestamp[21];
     if ((rc = hpd_rest_get_timestamp(context, timestamp))) goto error;
     if ((rc = add(json, HPD_REST_KEY_TIMESTAMP, timestamp, context))) goto error;
+
+    // Add value
     if ((rc = add(json, HPD_REST_KEY_VALUE, value, context))) goto error;
 
-    (*out) = json_dumps(json, 0);
+    if (!((*out) = json_dumps(json, 0))) {
+        json_decref(json);
+        RETURN_JSON_ERROR(context);
+    }
+
     json_decref(json);
     return HPD_E_SUCCESS;
 

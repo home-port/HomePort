@@ -47,6 +47,7 @@ extern "C" {
 
 /**
  * CAST is for c++ compatibility (tests).
+ * TODO Seriously bad for alloc errors, (PTR) is lost
  */
 #define HPD_REALLOC(PTR, NUM, CAST) do { \
     (PTR) = (CAST *) realloc((PTR), (NUM)*sizeof(CAST)); \

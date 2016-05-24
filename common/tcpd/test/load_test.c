@@ -249,7 +249,7 @@ static void *webserver_thread(void *arg)
 
    // Settings for the tcpd
    struct ws_settings settings = WS_SETTINGS_DEFAULT;
-   settings.port = HPD_P_HTTP_ALT;
+   settings.port = HPD_TCPD_P_HTTP_ALT;
    settings.on_receive = on_receive;
 
    // Inform if we have been built with debug flag

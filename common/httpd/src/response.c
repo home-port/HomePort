@@ -53,6 +53,7 @@ struct hpd_httpd_response
     hpd_module_t *context;
     hpd_tcpd_conn_t *conn; ///< The connection to send on
     char *msg;            ///< Status/headers to send
+    hpd_status_t status;
 };
 
 /**
@@ -132,6 +133,7 @@ hpd_error_t hpd_httpd_response_create(hpd_httpd_response_t **response, hpd_httpd
     // Allocate space
     (*response) = malloc(sizeof(hpd_httpd_response_t));
     if (!(*response)) HPD_LOG_RETURN_E_ALLOC(context);
+    (*response)->status = status;
     (*response)->msg = malloc(len*sizeof(char));
     if (!(*response)->msg) {
         if ((rc = hpd_httpd_response_destroy((*response))))
@@ -319,6 +321,12 @@ hpd_error_t hpd_httpd_response_vsendf(hpd_httpd_response_t *res, const char *fmt
     hpd_error_t rc;
 
     if (res->msg) {
+        const char *ip;
+        if ((rc = hpd_tcpd_conn_get_ip(res->conn, &ip))) {
+            HPD_LOG_WARN(res->context, "Failed to get ip.");
+            ip = "(unknown)";
+        }
+        HPD_LOG_VERBOSE(res->context, "Sending response to %s: %i %s.", ip, res->status, http_status_codes_to_str(res->status));
         if ((rc = hpd_tcpd_conn_sendf(res->conn, "%s%s", res->msg, CRLF))) return rc;
         free(res->msg);
         res->msg = NULL;

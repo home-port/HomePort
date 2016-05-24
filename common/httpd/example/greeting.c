@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
     // Set settings for the webserver
     hpd_httpd_settings_t settings = HPD_HTTPD_SETTINGS_DEFAULT;
     settings.on_req_cmpl = handle_request;
-    settings.port = HPD_P_HTTP_ALT;
+    settings.port = HPD_TCPD_P_HTTP_ALT;
 
     // Inform if we have been built with debug flag
 #ifdef DEBUG

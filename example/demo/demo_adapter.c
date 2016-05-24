@@ -86,6 +86,22 @@ static hpd_error_t hpd_demo_on_get(hpd_request_t *req)
     return HPD_E_SUCCESS;
 }
 
+// TODO Just a quick hack for testing - lots of fixes needed
+static hpd_error_t hpd_demo_on_put(hpd_request_t *req)
+{
+    hpd_value_t *val_in, *val_out;
+    hpd_request_get_value(req, &val_in);
+    hpd_value_copy(&val_out, val_in);
+
+    hpd_error_t rc;
+    hpd_response_t *res;
+    if ((rc = hpd_response_alloc(&res, req, HPD_S_200))) return rc;
+    if ((rc = hpd_response_set_value(res, val_out))) return rc;
+    if ((rc = hpd_respond(res))) return rc;
+
+    return HPD_E_SUCCESS;
+}
+
 static hpd_error_t hpd_demo_adapter_start(void *data, hpd_t *hpd)
 {
     struct hpd_demo_adapter *demo_adapter = data;
@@ -120,6 +136,7 @@ static hpd_error_t hpd_demo_adapter_start(void *data, hpd_t *hpd)
         if ((rc = hpd_service_alloc(&service, "srv0"))) return rc;
         if ((rc = hpd_service_set_actions(service,
                                           HPD_M_GET, hpd_demo_on_get,
+                                          HPD_M_PUT, hpd_demo_on_put,
                                           HPD_M_NONE))) return rc;
         hpd_parameter_t *parameter;
         if ((rc = hpd_parameter_alloc(&parameter, "param0"))) return rc;

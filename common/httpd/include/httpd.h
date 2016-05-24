@@ -121,7 +121,7 @@ struct hpd_httpd_settings {
  *  \endcode
  */
 #define HPD_HTTPD_SETTINGS_DEFAULT { \
-   .port = HPD_P_HTTP, \
+   .port = HPD_TCPD_P_HTTP, \
    .timeout = 15, \
    .httpd_ctx = NULL, \
    .on_req_begin = NULL, \

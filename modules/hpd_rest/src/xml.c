@@ -28,6 +28,7 @@
 #include "xml.h"
 #include <time.h>
 #include <mxml.h>
+#include <zlib.h>
 #include "hpd_application_api.h"
 #include "hpd_rest_intern.h"
 
@@ -35,154 +36,188 @@ static const char * const XML_VERSION = "1.0";
 
 #define RETURN_XML_ERROR(CONTEXT) HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Xml error")
 
+static hpd_error_t add(mxml_node_t *parent, const char *key, const char *val, hpd_module_t *context)
+{
+    mxmlElementSetAttr(parent, key, val);
+    if (!mxmlElementGetAttr(parent, key)) RETURN_XML_ERROR(context);
+    return HPD_E_SUCCESS;
+}
+
+static hpd_error_t add_attr(mxml_node_t *parent, hpd_pair_t *pair, hpd_module_t *context)
+{
+    hpd_error_t rc;
+
+    // Get key and value
+    const char *key, *val;
+    if ((rc = hpd_pair_get(pair, &key, &val))) return rc;
+
+    return add(parent, key, val, context);
+}
+
 static hpd_error_t add_parameter(mxml_node_t *parent, hpd_parameter_id_t *parameter, hpd_module_t *context)
 {
     hpd_error_t rc;
 
     // Create node
     mxml_node_t *xml;
-    if (!(xml = mxmlNewElement(parent, HPD_REST_KEY_PARAMETER))) RETURN_XML_ERROR(context)
+    if (!(xml = mxmlNewElement(parent, HPD_REST_KEY_PARAMETER))) RETURN_XML_ERROR(context);
 
     // Add id
     const char *id;
     if ((rc = hpd_parameter_get_id(parameter, &id))) return rc;
-    mxmlElementSetAttr(xml, HPD_REST_KEY_ID, id);
+    if ((rc = add(xml, HPD_REST_KEY_ID, id, context))) return rc;
 
     // Add attributes
     hpd_pair_t *pair;
-    hpd_parameter_foreach_attr(rc, pair, parameter) {
-        const char *key, *val;
-        hpd_pair_get(pair, &key, &val);
-        mxmlElementSetAttr(xml, key, val);
-    }
+    hpd_parameter_foreach_attr(rc, pair, parameter)
+        if ((rc = add_attr(xml, pair, context))) return rc;
+    if (rc) return rc;
 
-    return xml;
+    return HPD_E_SUCCESS;
 }
 
 static hpd_error_t add_service(mxml_node_t *parent, hpd_service_id_t *service, hpd_rest_t *rest, hpd_module_t *context)
 {
     hpd_error_t rc;
-    hpd_pair_t *pair;
-    mxml_node_t *xml = mxmlNewElement(parent, HPD_REST_KEY_SERVICE);
 
+    // Create node
+    mxml_node_t *xml;
+    if (!(xml = mxmlNewElement(parent, HPD_REST_KEY_SERVICE))) RETURN_XML_ERROR(context);
+
+    // Add id
     const char *id;
-    hpd_service_get_id(service, &id);
-    mxmlElementSetAttr(xml, HPD_REST_KEY_ID, id);
+    if ((rc = hpd_service_get_id(service, &id))) return rc;
+    if ((rc = add(xml, HPD_REST_KEY_ID, id, context))) return rc;
 
-    hpd_service_foreach_attr(rc, pair, service) {
-        const char *key, *val;
-        hpd_pair_get(pair, &key, &val);
-        mxmlElementSetAttr(xml, key, val);
-    }
-
+    // Add url
     char *url;
-    hpd_rest_url_create(rest, service, &url); // TODO error check
-    if(url != NULL) {
-        mxmlElementSetAttr(xml, HPD_REST_KEY_URI, url);
+    if ((rc = hpd_rest_url_create(rest, service, &url))) return rc;
+    if ((rc = add(xml, HPD_REST_KEY_URI, url, context))) {
         free(url);
+        return rc;
     }
+    free(url);
 
+    // Add actions
     hpd_action_t *action;
     hpd_service_foreach_action(rc, action, service) {
         hpd_method_t method;
-        hpd_action_get_method(action, &method);
+        if ((rc = hpd_action_get_method(action, &method))) return rc;
         switch (method) {
             case HPD_M_NONE:break;
             case HPD_M_GET:
-                mxmlElementSetAttr(xml, HPD_REST_KEY_GET, HPD_REST_VAL_TRUE);
+                if ((rc = add(xml, HPD_REST_KEY_GET, HPD_REST_VAL_TRUE, context))) return rc;
                 break;
             case HPD_M_PUT:
-                mxmlElementSetAttr(xml, HPD_REST_KEY_PUT, HPD_REST_VAL_TRUE);
+                if ((rc = add(xml, HPD_REST_KEY_PUT, HPD_REST_VAL_TRUE, context))) return rc;
                 break;
             case HPD_M_COUNT:break;
         }
     }
+    if (rc) return rc;
 
+    // Add attributes
+    hpd_pair_t *pair;
+    hpd_service_foreach_attr(rc, pair, service)
+        if ((rc = add_attr(xml, pair, context))) return rc;
+    if (rc) return rc;
+
+    // Add parameters
     hpd_parameter_id_t *parameter;
-    hpd_service_foreach_parameter(rc, parameter, service)
-        add_parameter(xml, parameter);
+    hpd_service_foreach_parameter(rc, parameter, service) {
+        if ((rc = add_parameter(xml, parameter, context))) return rc;
+    }
+    if (rc) return rc;
 
-    return xml;
+    return HPD_E_SUCCESS;
 }
 
 static hpd_error_t add_device(mxml_node_t *parent, hpd_device_id_t *device, hpd_rest_t *rest, hpd_module_t *context)
 {
-    if(device == NULL) return NULL;
-
     hpd_error_t rc;
-    hpd_pair_t *pair;
-    mxml_node_t *xml = mxmlNewElement(parent, HPD_REST_KEY_DEVICE);
 
+    // Create object
+    mxml_node_t *xml;
+    if (!(xml = mxmlNewElement(parent, HPD_REST_KEY_DEVICE))) RETURN_XML_ERROR(context);
+
+    // Add id
     const char *id;
-    hpd_device_get_id(device, &id);
-    mxmlElementSetAttr(xml, HPD_REST_KEY_ID, id);
+    if ((rc = hpd_device_get_id(device, &id))) return rc;
+    if ((rc = add(xml, HPD_REST_KEY_ID, id, context))) return rc;
 
-    hpd_device_foreach_attr(rc, pair, device) {
-        const char *key, *val;
-        hpd_pair_get(pair, &key, &val);
-        mxmlElementSetAttr(xml, key, val);
+    // Add attributes
+    hpd_pair_t *pair;
+    hpd_device_foreach_attr(rc, pair, device)
+        if ((rc = add_attr(xml, pair, context))) return rc;
+    if (rc) return rc;
+
+    // Add services
+    hpd_service_id_t *service;
+    hpd_device_foreach_service(rc, service, device) {
+        if ((rc = add_service(xml, service, rest, context))) return rc;
     }
+    if (rc) return rc;
 
-    hpd_service_id_t *iterator;
-    hpd_device_foreach_service(rc, iterator, device)
-    {
-        add_service(xml, iterator, rest);
-    }
-
-    return xml;
+    return HPD_E_SUCCESS;
 }
 
 static hpd_error_t add_adapter(mxml_node_t *parent, hpd_adapter_id_t *adapter, hpd_rest_t *rest, hpd_module_t *context)
 {
-    if(adapter == NULL) return NULL;
-
     hpd_error_t rc;
-    hpd_pair_t *pair;
-    mxml_node_t *xml = mxmlNewElement(parent, HPD_REST_KEY_ADAPTER);
 
+    // Create object
+    mxml_node_t *json;
+    if (!(json = mxmlNewElement(parent, HPD_REST_KEY_ADAPTER))) RETURN_XML_ERROR(context);
+
+    // Add id
     const char *id;
-    hpd_adapter_get_id(adapter, &id);
-    mxmlElementSetAttr(xml, HPD_REST_KEY_ID, id);
+    if ((rc = hpd_adapter_get_id(adapter, &id))) return rc;
+    if ((rc = add(json, HPD_REST_KEY_ID, id, context))) return rc;
 
+    // Add attributes
+    hpd_pair_t *pair;
     hpd_adapter_foreach_attr(rc, pair, adapter) {
-        const char *key, *val;
-        hpd_pair_get(pair, &key, &val);
-        mxmlElementSetAttr(xml, key, val);
+        if ((rc = add_attr(json, pair, context))) return rc;
     }
+    if (rc) return rc;
 
-    hpd_device_id_t *iterator;
-    hpd_adapter_foreach_device(rc, iterator, adapter)
-    {
-        add_device(xml, iterator, rest);
+    // Add devices
+    hpd_device_id_t *device;
+    hpd_adapter_foreach_device(rc, device, adapter) {
+        if ((rc = add_device(json, device, rest, context))) return rc;
     }
+    if (rc) return rc;
 
-    return xml;
+    return HPD_E_SUCCESS;
 }
 
 static hpd_error_t add_configuration(mxml_node_t *parent, hpd_t *hpd, hpd_rest_t *rest, hpd_module_t *context)
 {
+    hpd_error_t rc;
+
+    // Create object
     mxml_node_t *xml;
+    if (!(xml = mxmlNewElement(parent, HPD_REST_KEY_CONFIGURATION))) RETURN_XML_ERROR(context);
 
-    xml = mxmlNewElement(parent, HPD_REST_KEY_CONFIGURATION);
-
+    // Add encoded charset
 #ifdef CURL_ICONV_CODESET_OF_HOST
     curl_version_info_data *curl_ver = curl_version_info(CURLVERSION_NOW);
-  if (curl_ver->features & CURL_VERSION_CONV && curl_ver->iconv_ver_num != 0)
-    mxmlElementSetAttr(xml, HPD_REST_KEY_URL_ENCODED_CHARSET, CURL_ICONV_CODESET_OF_HOST);
-  else
-    mxmlElementSetAttr(xml, HPD_REST_KEY_URL_ENCODED_CHARSET, HPD_REST_VAL_ASCII);
+    if (curl_ver->features & CURL_VERSION_CONV && curl_ver->iconv_ver_num != 0)
+        if ((rc = add(xml, HPD_REST_KEY_URL_ENCODED_CHARSET, CURL_ICONV_CODESET_OF_HOST, context))) return rc;
+    else
+        if ((rc = add(xml, HPD_REST_KEY_URL_ENCODED_CHARSET, HPD_REST_VAL_ASCII, context))) return rc;
 #else
-    mxmlElementSetAttr(xml, HPD_REST_KEY_URL_ENCODED_CHARSET, HPD_REST_VAL_ASCII);
+    if ((rc = add(xml, HPD_REST_KEY_URL_ENCODED_CHARSET, HPD_REST_VAL_ASCII, context))) return rc;
 #endif
 
-    hpd_error_t rc;
-    hpd_adapter_id_t *iterator;
-    hpd_foreach_adapter(rc, iterator, hpd)
-    {
-        add_adapter(xml, iterator, rest);
+    // Add adapters
+    hpd_adapter_id_t *adapter;
+    hpd_foreach_adapter(rc, adapter, hpd) {
+        if ((rc = add_adapter(xml, adapter, rest, context))) return rc;
     }
+    if (rc) return rc;
 
-    return xml;
+    return HPD_E_SUCCESS;
 }
 
 // TODO Ugly hack to get context through mxml
@@ -190,7 +225,7 @@ static hpd_module_t *global_context = NULL;
 
 static void on_mxml_error(const char *msg)
 {
-
+    HPD_LOG_DEBUG(global_context, "%s", msg);
 }
 
 #define BEGIN(CONTEXT) do { \
@@ -199,70 +234,120 @@ static void on_mxml_error(const char *msg)
     mxmlSetErrorCallback(on_mxml_error); \
 } while (0) \
 
-#define END(CODE) do { \
+#define END() do { \
     global_context = NULL; \
-    return (CODE); \
 } while (0)
 
 hpd_error_t hpd_rest_xml_get_configuration(hpd_t *hpd, hpd_rest_t *rest, hpd_module_t *context, char **out)
 {
     BEGIN(context);
 
-    char *res;
-    mxml_node_t *xml = mxmlNewXML(XML_VERSION);
-    add_configuration(xml, hpd, rest);
-    res = mxmlSaveAllocString(xml, MXML_NO_CALLBACK);
-    mxmlDelete(xml);
+    hpd_error_t rc;
 
-    END(HPD_E_SUCCESS);
+    mxml_node_t *xml;
+    if (!(xml = mxmlNewXML(XML_VERSION))) {
+        END();
+        RETURN_XML_ERROR(context);
+    }
+
+    if ((rc = add_configuration(xml, hpd, rest, context))) goto error;
+
+    if (!((*out) = mxmlSaveAllocString(xml, MXML_NO_CALLBACK))) {
+        mxmlDelete(xml);
+        END();
+        RETURN_XML_ERROR(context);
+    }
+
+    mxmlDelete(xml);
+    END();
+    return HPD_E_SUCCESS;
+
+    error:
+    mxmlDelete(xml);
+    END();
+    return rc;
+}
+
+static hpd_error_t add_value(mxml_node_t *parent, char *value, hpd_module_t *context)
+{
+    hpd_error_t rc;
+
+    mxml_node_t *xml;
+    if (!(xml = mxmlNewElement(parent, HPD_REST_KEY_VALUE))) RETURN_XML_ERROR(context);
+
+    char timestamp[21];
+    if ((rc = hpd_rest_get_timestamp(context, timestamp))) return rc;
+    if ((rc = add(xml, HPD_REST_KEY_TIMESTAMP, timestamp, context))) return rc;
+
+    if (!mxmlNewText(xml, 0, value)) RETURN_XML_ERROR(context);
+
+    return HPD_E_SUCCESS;
 }
 
 hpd_error_t hpd_rest_xml_get_value(char *value, hpd_module_t *context, char **out)
 {
     BEGIN(context);
 
+    hpd_error_t rc;
+
     mxml_node_t *xml;
-    mxml_node_t *stateXml;
+    if (!(xml = mxmlNewXML(XML_VERSION))) {
+        END();
+        RETURN_XML_ERROR(context);
+    }
 
-    xml = mxmlNewXML(XML_VERSION);
-    stateXml = mxmlNewElement(xml, HPD_REST_KEY_VALUE);
-    mxmlElementSetAttr(stateXml, HPD_REST_KEY_TIMESTAMP, timestamp());
-    mxmlNewText(stateXml, 0, value);
+    if ((rc = add_value(xml, value, context))) goto error;
 
-    char* return_value = mxmlSaveAllocString(xml, MXML_NO_CALLBACK);
+    if (!((*out) = mxmlSaveAllocString(xml, MXML_NO_CALLBACK))) {
+        mxmlDelete(xml);
+        END();
+        RETURN_XML_ERROR(context);
+    }
+
     mxmlDelete(xml);
+    END();
+    return HPD_E_SUCCESS;
 
-    END(HPD_E_SUCCESS);
+    error:
+    mxmlDelete(xml);
+    END();
+    return rc;
 }
 
 hpd_error_t hpd_rest_xml_parse_value(const char *in, hpd_module_t *context, char **out)
 {
     BEGIN(context);
 
+    // TODO Return HPD_E_ARGUMENT on parse errors!
+
     mxml_node_t *xml;
+    if (!(xml = mxmlLoadString(NULL, in, MXML_TEXT_CALLBACK))) {
+        END();
+        HPD_LOG_RETURN(context, HPD_E_ARGUMENT, "XML parsing error");
+    }
+
     mxml_node_t *node;
-
-    xml = mxmlLoadString(NULL, in, MXML_TEXT_CALLBACK);
-    if(xml == NULL)
-    {
-        printf("XML value format uncompatible with HomePort\n"); // TODO Wrong!
-        return NULL;
-    }
-
     node = mxmlFindElement(xml, xml, HPD_REST_KEY_VALUE, NULL, NULL, MXML_DESCEND);
-    if(node == NULL || node-> child == NULL || node->child->value.text.string == NULL)
-    {
+    if (!node) {
         mxmlDelete(xml);
-        printf("No \"value\" in the XML file\n"); // TODO Wrong!
-        return NULL;
+        END();
+        HPD_LOG_RETURN(context, HPD_E_ARGUMENT, "XML parsing error");
     }
-
-    char *state = malloc(sizeof(char)*(strlen(node->child->value.text.string)+1));
-    strcpy(state, node->child->value.text.string);
+    
+    // TODO Alloc checks !
+    size_t len = 1;
+    (*out) = calloc(len, sizeof(char));
+    for (node = node->child; node && node->type == MXML_TEXT; node = node->next) {
+        int whitespaces = node->value.text.whitespace;
+        char *string = node->value.text.string;
+        (*out) = realloc((*out), (len + whitespaces + strlen(string)) * sizeof(char));
+        for (int i = 0; i < whitespaces; i++) strcat(*out, " ");
+        strcat(*out, string);
+    }
 
     mxmlDelete(xml);
-
-    END(HPD_E_SUCCESS);
+    END();
+    return HPD_E_SUCCESS;
 }
 
 

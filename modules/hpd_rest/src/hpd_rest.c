@@ -48,6 +48,7 @@ typedef enum content_type {
     CONTENT_NONE,
     CONTENT_XML,
     CONTENT_JSON,
+    CONTENT_WILDCARD,
 } content_type_t;
 
 struct hpd_rest {
@@ -92,6 +93,8 @@ static content_type_t media_type_to_enum(const char *haystack)
             strncmp(haystack, "application/json;", 17) == 0 ||
             ((str = strstr(haystack, ",application/json")) && (str[17] == ';' || str[17] == '\0')))
         return CONTENT_JSON;
+    if (strcmp(haystack, "*/*") == 0)
+        return CONTENT_WILDCARD;
     return CONTENT_UNKNOWN;
 }
 
@@ -309,13 +312,13 @@ static hpd_error_t reply_devices(hpd_rest_req_t *rest_req)
     switch (media_type_to_enum(accept)) {
         case CONTENT_NONE:
         case CONTENT_XML:
-            body = hpd_rest_xml_get_configuration(rest->hpd, rest);
+        case CONTENT_WILDCARD:
+            if ((rc = hpd_rest_xml_get_configuration(rest->hpd, rest, context, &body))) return rc;
             break;
         case CONTENT_JSON:
             if ((rc = hpd_rest_json_get_configuration(rest->hpd, rest, context, &body))) return rc;
             break;
         case CONTENT_UNKNOWN:
-        default:
             if ((rc = reply_unsupported_media_type(http_req, rest_req, context))) {
                 HPD_LOG_ERROR(context, "Failed to send unsupported media type response (code: %d).", rc);
             }
@@ -510,12 +513,14 @@ static hpd_error_t on_response(hpd_response_t *res)
             return rc;
     }
     switch ((accept_type = media_type_to_enum(accept))) {
-        case CONTENT_NONE:break;
-        case CONTENT_XML:break;
-        case CONTENT_JSON:break;
+        case CONTENT_NONE:
+        case CONTENT_XML:
+        case CONTENT_JSON:
+        case CONTENT_WILDCARD:
+            break;
         case CONTENT_UNKNOWN:
             if ((rc2 = reply_unsupported_media_type(http_req, rest_req, context))) {
-                HPD_LOG_ERROR(context, "Failed to send unsupported media type response (code: %d).", rc2);
+                HPD_LOG_ERROR(context, "Failed to send unsupport1ed media type response (code: %d).", rc2);
             }
             return HPD_E_SUCCESS;
     }
@@ -545,14 +550,15 @@ static hpd_error_t on_response(hpd_response_t *res)
     switch (accept_type) {
         case CONTENT_NONE:
         case CONTENT_XML:
-            state = hpd_rest_xml_get_value(body); // TODO Check error
+        case CONTENT_WILDCARD:
+            if ((rc = hpd_rest_xml_get_value(body, context, &state))) goto error_free_res;
             if ((rc = hpd_httpd_response_add_header(http_res, "Content-Type", "application/xml"))) goto error_free_state;
             break;
         case CONTENT_JSON:
             if ((rc = hpd_rest_json_get_value(body, context, &state))) goto error_free_res;
             if ((rc = hpd_httpd_response_add_header(http_res, "Content-Type", "application/json"))) goto error_free_state;
             break;
-        default:
+        case CONTENT_UNKNOWN:
             HPD_LOG_ERROR(context, "Should definitely not be here.");
             goto error_free_res;
     }
@@ -840,11 +846,24 @@ static hpd_httpd_return_t on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req
         }
 
         // Construct actual value
-        char *val;
+        char *val = NULL;
         switch (media_type_to_enum(content_type)) {
-            case CONTENT_NONE:
             case CONTENT_XML:
-                val = hpd_rest_xml_parse_value(rest_req->body);
+                switch ((rc = hpd_rest_xml_parse_value(rest_req->body, context, &val))) {
+                    case HPD_E_SUCCESS:
+                        break;
+                    case HPD_E_ARGUMENT:
+                        if ((rc2 = reply_bad_request(req, rest_req, context))) {
+                            HPD_LOG_ERROR(context, "Failed to send bad request response (code: %d).", rc2);
+                        }
+                        return HPD_HTTPD_R_STOP;
+                    default:
+                        HPD_LOG_ERROR(context, "Failed to parse value (code: %d).", rc);
+                        if ((rc2 = reply_internal_server_error(req, rest_req, context))) {
+                            HPD_LOG_ERROR(context, "Failed to send internal server error response (code: %d).", rc2);
+                        }
+                        return HPD_HTTPD_R_STOP;
+                }
                 break;
             case CONTENT_JSON:
                 switch ((rc = hpd_rest_json_parse_value(rest_req->body, context, &val))) {
@@ -864,7 +883,8 @@ static hpd_httpd_return_t on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req
                 }
                 break;
             case CONTENT_UNKNOWN:
-            default:
+            case CONTENT_NONE:
+            case CONTENT_WILDCARD:
                 if ((rc2 = reply_unsupported_media_type(req, rest_req, context))) {
                     HPD_LOG_ERROR(context, "Failed to send unsupported media type response (code: %d).", rc2);
                 }
@@ -1030,7 +1050,7 @@ static hpd_error_t on_parse_opt(void *data, const char *name, const char *arg)
 
     if (strcmp(name, "port") == 0) {
         hpd_tcpd_port_t port = (hpd_tcpd_port_t) atoi(arg);
-        if (port <= HPD_P_SYSTEM_PORTS_START || port > HPD_P_DYNAMIC_PORTS_END) return HPD_E_ARGUMENT;
+        if (port <= HPD_TCPD_P_SYSTEM_PORTS_START || port > HPD_TCPD_P_DYNAMIC_PORTS_END) return HPD_E_ARGUMENT;
         rest->ws_set.port = port;
     } else {
         return HPD_E_ARGUMENT;

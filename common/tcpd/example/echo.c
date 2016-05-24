@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 
    // Settings for the tcpd
    hpd_tcpd_settings_t settings = HPD_TCPD_SETTINGS_DEFAULT;
-   settings.port = HPD_P_HTTP_ALT;
+   settings.port = HPD_TCPD_P_HTTP_ALT;
    settings.on_receive = on_receive;
 
    // Inform if we have been built with debug flag
