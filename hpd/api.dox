@@ -29,6 +29,21 @@
  *
  * \tableofcontents
  *
+ * Directory hierarchy:
+ * - **common/**          -- _Common libraries shared between HomePort and modules._
+ *     - **httpd/**       -- _A http web server._
+ *     - **include/**     -- _Common items that requires only header files._
+ *     - **map/**         -- _An implementation of a map, with both keys and values as strings._
+ *     - **tcpd/**        -- _A tcp server._
+ * - **example/**         -- _Global examples on entire HomePort installation (local examples can be found in sub-folders)._
+ *     - **demo/**        -- _A simple demonstration of HomePort._
+ * - **hpd/**             -- _HomePort itself._
+ * - **lib/**             -- _Third party libraries._
+ * - **modules/**         -- _HomePort modules._
+ *     - **hpd_rest/**    -- _Rest web service module._
+ *
+ * \section sec_arch Overall architecture
+ *
  * @startuml "A HomePort Executable"
  * node "Main Executable" {
  *     [Adapter] - [HomePort Library]
@@ -41,136 +56,232 @@
  * - Adapter: A module that provides a connection to one or more devices.
  * - Application: A module that utilises this data, typically by providing an interface to a cloud.
  *
- * A conceptual architecture, that includes the internal components of the HomePort library:
- * \todo Outdated diagram, only included for reference.
+ * \subsection sec_headers Public header files
  *
- * \image html hpd_concept_arch.png "Conceptual Architecture"
+ * The header files provided by HomePort (excluding the common utilities) are structured in the following way:
+ *
+ * @startuml
+ *     hide empty fields
+ *     hide empty method
+ *     interface "hpd_adapter_api" as adapter
+ *     interface "hpd_api" as hpd
+ *     interface "hpd_application_api" as application
+ *     interface "hpd_daemon_api" as daemon
+ *     interface "hpd_shared_api" as shared
+ *     interface "hpd_types" as types
+ *     types <|-- shared : includes
+ *     types <|-- daemon : includes
+ *     shared <|-- adapter : includes
+ *     shared <|-- application : includes
+ *     daemon <|-- hpd : includes
+ *     adapter <|-- hpd : includes
+ *     application <|-- hpd : includes
+ * @enduml
+ *
+ * Their purpose:
+ * - hpd_types.h: Only type definitions, can be used in header files to obtain the types without the functions.
+ * - hpd_shared_api.h: Functionality shared between adapters and applications, used in libraries that may be used for
+ * both.
+ * - hpd_adapter_api.h: Adapter functionality, should only be included by adapters.
+ * - hpd_application_api.h: Application functionality, should only be included by applications.
+ * - hpd_daemon_api.h: Daemon functionality, should only be included in file defining main().
+ * - hpd_api.h: Everything in one file for the lazy, sometimes used inside HomePort when it is not possible to separate
+ * between adapter and application functionality.
+ *
+ * \subsection sec_internal_arch Internal architecture
+ *
+ * - Data Model:
+ *     - model.h
+ * - Communication Model:
+ *     - comm.h
+ * - Daemon Service:
+ *     - daemon.c
+ *     - daemon.h
+ *     - daemon_api.c
+ * - Discovery Service:
+ *     - discovery.c
+ *     - discovery.h
+ *     - discovery_api.c
+ *     - discovery_id.c
+ * - Event Dispatch Service:
+ *     - event.c
+ *     - event.h
+ *     - event_api.c
+ * - Log Dispatch Service:
+ *     - log.c
+ *     - log.h
+ *     - log_api.c
+ * - Request Dispatch Service:
+ *     - request.c
+ *     - request.h
+ *     - request_api.c
+ * - Value Service:
+ *     - value.c
+ *     - value.h
+ *     - value_api.c
  *
  * \section sec_data_mode HomePort data model
  *
  * The model layer in HomePort remains consistent with previous version, and from the outside looks like this:
  *
  * @startuml "HomePort Data Model"
- * hide empty members
- * class hpd_t
- * class adapter_t
- * class device_t
- * class service_t
- * class parameter_t
- * hpd_t o-- adapter_t
- * adapter_t o-- device_t
- * device_t o-- service_t
- * service_t o-- parameter_t
+ *     hide empty members
+ *     class hpd_t
+ *     class adapter_t
+ *     class device_t
+ *     class service_t
+ *     class parameter_t
+ *     hpd_t o-- adapter_t
+ *     adapter_t o-- device_t
+ *     device_t o-- service_t
+ *     service_t o-- parameter_t
  * @enduml
  *
  * The internal class diagram for reference, most but not all types are available to the outside through references
  * (direct access to members are generally not possible):
  *
- * \todo Class diagram is outdated, included as it is still roughly correct.
- *
  * @startuml "Class diagram (Probably outdated)"
+ * hide empty methods
  *
- * package daemon {
- *     class hpd {
+ * package "hpd_types.h" {
+ *     class hpd_module_def_t {
+ *         hpd_create_f on_create
+ *         hpd_destroy_f on_destroy
+ *         hpd_start_f on_start
+ *         hpd_stop_f on_stop
+ *         hpd_parse_opt_f on_parse_opt
+ *     }
+ * }
+ *
+ * package "comm.h" {
+ *     class hpd_listener_t {
+ *         hpd_t *hpd
+ *         hpd_value_f on_change
+ *         hpd_device_f on_attach
+ *         hpd_device_f on_detach
+ *         void *data
+ *         hpd_free_f on_free
+ *     }
+ *     
+ *     class hpd_request_t {
+ *         hpd_service_id_t *service
+ *         hpd_method_t method
+ *         hpd_response_f on_response
+ *         hpd_free_f on_free
+ *         void *data
+ *     }
+ *     
+ *     class hpd_response_t {
+ *         hpd_status_t status
+ *     }
+ *     
+ *     class hpd_value_t {
+ *         hpd_map_t *headers
+ *         char *body
+ *         size_t len
+ *     }
+ * }
+ * 
+ * package "daemon.h" {
+ *     class hpd_t {
  *         hpd_ev_loop_t *loop
  *         ev_signal sigint_watcher
  *         ev_signal sigterm_watcher
  *         int options_count
  *         argp_option_t *options
  *         hpd_module_t **option2module
+ *         hpd_ev_asyncs_t request_watchers
+ *         hpd_ev_asyncs_t respond_watchers
+ *         hpd_ev_asyncs_t changed_watchers
+ *         hpd_ev_asyncs_t attached_watchers
+ *         hpd_ev_asyncs_t detached_watchers
  *     }
- *
- *     class hpd_module {
- *         char *id;
- *         void *data;
+ *     
+ *     class hpd_ev_async_t {
+ *         ev_async watcher
+ *         hpd_request_t *request
+ *         hpd_response_t *response
+ *         hpd_t *hpd
+ *         hpd_service_id_t *service
+ *         hpd_value_t *value
+ *         hpd_device_id_t *device
  *     }
- *
- *     class hpd_module_def {
- *         hpd_create_f on_create;
- *         hpd_destroy_f on_destroy;
- *         hpd_start_f on_start;
- *         hpd_stop_f on_stop;
- *         hpd_parse_opt_f on_parse_opt;
- *     }
- * }
- *
- * package data_structures {
- *     class hpd_pair {
- *         char *k
- *         char *v
- *     }
- * }
- *
- * package comm {
- *     class hpd_request {
- *         hpd_method_t method
- *         hpd_response_f on_response
- *         hpd_free_f on_free
+ *     
+ *     class hpd_module_t {
+ *         char *id
  *         void *data
  *     }
- *
- *     class hpd_response {
- *         hpd_status_t status
- *     }
- *
- *     class hpd_value {
- *         char *body
- *         size_t len
- *     }
  * }
- *
- * package model {
- *     class configuration {
- *     }
- *     class hpd_adapter {
- *         hpd_free_f on_free;
- *         void *data;
- *     }
- *     class hpd_device {
- *         hpd_free_f on_free;
- *         void *data;
- *     }
- *     class hpd_service {
- *         hpd_free_f on_free
- *         void *data
- *     }
- *     class hpd_parameter {
- *     }
- *     class hpd_action {
+ * 
+ * package "discovery.h" {
+ *     class hpd_adapter_id_t {
+ *         hpd_t *hpd
+ *         char *aid
+ *     } 
+ *     
+ *     class hpd_device_id_t {
+ *         char *did
+ *     } 
+ *     
+ *     class hpd_service_id_t {
+ *         char *sid
+ *     } 
+ *     
+ *     class hpd_parameter_id_t {
+ *         char *pid
+ *     } 
+ * }
+ * 
+ * package "model.h" {
+ *     class hpd_action_t {
  *         hpd_method_t method
  *         hpd_action_f action
  *     }
- * }
+ *     
+ *     class configuration_t {
+ *     }
+ *     
+ *     class hpd_adapter_t {
+ *         char *id
+ *         hpd_map_t *attributes
+ *         hpd_free_f on_free
+ *         void *data
+ *     }
+ *     
+ *     class hpd_device_t {
+ *         char *id
+ *         hpd_map_t *attributes
+ *         hpd_free_f on_free
+ *         void *data
+ *     }
+ *     
+ *     class hpd_service_t {
+ *         char *id
+ *         hpd_map_t *attributes
+ *         hpd_free_f on_free
+ *         void *data
+ *     }
+ *     
+ *     class hpd_parameter_t {
+ *         char *id
+ *         hpd_map_t *attributes
+ *     }
  *
- * hpd_request --> hpd_service
- * hpd_request --> hpd_value
- * hpd_response -> hpd_request
- * hpd_response -> hpd_value
- * hpd_value --> hpd_pair : headers
- * hpd "1" *-- "1" configuration
- * hpd "1" *-- "*" hpd_module
- * hpd_module "1" *-- "1" hpd_module_def
- * configuration "1" *-- "*" hpd_adapter
- * configuration "1" *-- "*" hpd_listener
- * hpd_adapter "1" *-- "*" hpd_device
- * hpd_adapter "1" *-- "*" hpd_listener
- * hpd_adapter --> "*" hpd_pair : attributes
- * hpd_device "1" *-- "*" hpd_service
- * hpd_device "1" *-- "*" hpd_listener
- * hpd_device --> "*" hpd_pair : attributes
- * hpd_service "1" *-- "*" hpd_parameter
- * hpd_service "1" *-- "*" hpd_listener
- * hpd_service --> "*" hpd_pair : attributes
- * hpd_service --> "*" hpd_action
- * hpd_parameter --> hpd_pair : attributes
- *
- * class hpd_listener {
- *     enum {} type
- *     hpd_value_f on_change
- *     hpd_device_f on_attach
- *     hpd_device_f on_detach
- *     void *data
- *     hpd_free_f on_free
+ *     hpd_adapter_id_t <|-- hpd_device_id_t
+ *     hpd_device_id_t <|-- hpd_service_id_t
+ *     hpd_service_id_t <|-- hpd_parameter_id_t
+ *     hpd_request_t "1" <- "-" hpd_response_t
+ *     hpd_response_t "-" *-- "1" hpd_value_t
+ *     hpd_request_t "-" *-- "1" hpd_value_t
+ *     hpd_t "1" *-- "1" configuration_t
+ *     hpd_t "1" *- "*" hpd_module_t
+ *     hpd_module_t "-" *- "1" hpd_module_def_t
+ *     hpd_action_t "*" -* "1" hpd_service_t
+ *     configuration_t "1" *-- "*" hpd_adapter_t
+ *     hpd_adapter_t "1" *-- "*" hpd_device_t
+ *     hpd_device_t "1" *-- "*" hpd_service_t
+ *     hpd_service_t "1" *-- "*" hpd_parameter_t
+ *     configuration_t "-" *- "*" hpd_listener_t
  * }
  *
  * @enduml

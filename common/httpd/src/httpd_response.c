@@ -25,7 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "request.h"
+#include "httpd_request.h"
 #include "hpd_shared_api.h"
 
 #include <string.h>

@@ -33,12 +33,12 @@
 #include "hpd_queue.h"
 #include <ev.h>
 #include <argp.h>
-#include "model.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+typedef struct configuration configuration_t;
 typedef struct modules modules_t;
 typedef struct argp_option argp_option_t;
 typedef struct hpd_ev_async hpd_ev_async_t;

@@ -30,11 +30,12 @@
 #include "hpd_api.h"
 #include "event.h"
 #include "log.h"
+#include "comm.h"
 
 hpd_error_t hpd_changed(hpd_service_id_t *id, hpd_value_t *val)
 {
     if (!id || !val) LOG_RETURN_E_NULL();
-    if (!id->hpd->loop) LOG_RETURN_HPD_STOPPED();
+    if (!id->device.adapter.hpd->loop) LOG_RETURN_HPD_STOPPED();
     return event_changed(id, val);
 }
 

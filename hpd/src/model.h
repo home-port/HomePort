@@ -54,16 +54,14 @@ struct hpd_action {
     hpd_action_f action;           //< Action
 };
 
-struct configuration
-{
+struct configuration {
     // Navigational members
     adapters_t  adapters;
     listeners_t listeners;
-    hpd_t *data; // TODO Rename to hpd
+    hpd_t *hpd;
 };
 
-struct hpd_adapter
-{
+struct hpd_adapter {
     // Navigational members
     configuration_t *configuration;
     TAILQ_ENTRY(hpd_adapter) HPD_TAILQ_FIELD;
@@ -76,8 +74,7 @@ struct hpd_adapter
     void *data;
 };
 
-struct hpd_device
-{
+struct hpd_device {
     // Navigational members
     hpd_adapter_t *adapter;
     TAILQ_ENTRY(hpd_device) HPD_TAILQ_FIELD;
@@ -90,8 +87,7 @@ struct hpd_device
     void *data;
 };
 
-struct hpd_service
-{
+struct hpd_service {
     // Navigational members
     hpd_device_t *device;
     TAILQ_ENTRY(hpd_service) HPD_TAILQ_FIELD;
@@ -105,8 +101,7 @@ struct hpd_service
     void *data;
 };
 
-struct hpd_parameter
-{
+struct hpd_parameter {
     hpd_service_t *service;
     TAILQ_ENTRY(hpd_parameter) HPD_TAILQ_FIELD;
     char *id;

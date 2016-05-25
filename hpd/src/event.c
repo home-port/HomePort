@@ -31,6 +31,8 @@
 #include "discovery.h"
 #include "value.h"
 #include "log.h"
+#include "comm.h"
+#include "model.h"
 
 hpd_error_t event_alloc_listener(hpd_listener_t **listener, hpd_t *hpd)
 {
@@ -101,7 +103,7 @@ hpd_error_t event_foreach_attached(hpd_listener_t *listener)
     HPD_TAILQ_FOREACH(adapter, &configuration->adapters) {
         HPD_TAILQ_FOREACH(device, adapter->devices) {
             hpd_device_id_t *did;
-            if ((rc = discovery_alloc_did(&did, configuration->data, adapter->id, device->id))) return rc;
+            if ((rc = discovery_alloc_did(&did, configuration->hpd, adapter->id, device->id))) return rc;
             listener->on_attach(listener->data, did);
             if ((rc = discovery_free_did(did))) return rc;
         }
@@ -190,7 +192,7 @@ hpd_error_t event_changed(hpd_service_id_t *id, hpd_value_t *val)
     HPD_CALLOC(async, 1, hpd_ev_async_t);
     HPD_CPY_ALLOC(async->value, val, hpd_value_t);
     if ((rc = discovery_copy_sid(&async->service, id))) goto copy_sid_error;
-    hpd_t *hpd = id->hpd;
+    hpd_t *hpd = id->device.adapter.hpd;
     async->hpd = hpd;
     ev_async_init(&async->watcher, on_changed);
     async->watcher.data = async;
@@ -238,7 +240,7 @@ hpd_error_t event_inform_device_attached(hpd_device_t *device)
     hpd_ev_async_t *async;
     HPD_CALLOC(async, 1, hpd_ev_async_t);
     hpd_adapter_t *adapter = device->adapter;
-    hpd_t *hpd = adapter->configuration->data;
+    hpd_t *hpd = adapter->configuration->hpd;
     if ((rc = discovery_alloc_did(&async->device, hpd, adapter->id, device->id))) goto did_error;
     async->hpd = hpd;
     ev_async_init(&async->watcher, on_attached);
@@ -265,7 +267,7 @@ hpd_error_t event_inform_device_detached(hpd_device_t *device)
     hpd_ev_async_t *async;
     HPD_CALLOC(async, 1, hpd_ev_async_t);
     hpd_adapter_t *adapter = device->adapter;
-    hpd_t *hpd = adapter->configuration->data;
+    hpd_t *hpd = adapter->configuration->hpd;
     if ((rc = discovery_alloc_did(&async->device, hpd, adapter->id, device->id))) goto did_error;
     async->hpd = hpd;
     ev_async_init(&async->watcher, on_detached);

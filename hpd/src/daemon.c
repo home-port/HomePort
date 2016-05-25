@@ -31,6 +31,7 @@
 #include "event.h"
 #include "value.h"
 #include "log.h"
+#include "model.h"
 
 static void sig_cb(hpd_ev_loop_t *loop, ev_signal *w, int revents)
 {
@@ -65,7 +66,7 @@ static hpd_error_t daemon_alloc_conf(configuration_t **conf, void *data)
     HPD_CALLOC(*conf, 1, configuration_t);
     TAILQ_INIT(&(*conf)->adapters);
     TAILQ_INIT(&(*conf)->listeners);
-    (*conf)->data = (data);
+    (*conf)->hpd = (data);
     return HPD_E_SUCCESS;
 
     alloc_error:

@@ -32,6 +32,8 @@
 #include <ev.h>
 #include "daemon.h"
 #include "log.h"
+#include "comm.h"
+#include "model.h"
 
 hpd_error_t request_alloc_request(hpd_request_t **request, hpd_service_id_t *id, hpd_method_t method, hpd_response_f on_response)
 {
@@ -184,7 +186,12 @@ static void on_request(hpd_ev_loop_t *loop, ev_async *w, int revents)
     hpd_request_t *request = async->request;
     hpd_service_id_t *service_id = request->service;
 
-    TAILQ_REMOVE(&service_id->hpd->request_watchers, async, HPD_TAILQ_FIELD);
+    hpd_t *hpd = service_id->device.adapter.hpd;
+    char *sid = service_id->sid;
+    char *did = service_id->device.did;
+    char *aid = service_id->device.adapter.aid;
+    
+    TAILQ_REMOVE(&hpd->request_watchers, async, HPD_TAILQ_FIELD);
     ev_async_stop(loop, w);
     free(async);
 
@@ -193,7 +200,7 @@ static void on_request(hpd_ev_loop_t *loop, ev_async *w, int revents)
     
     switch (discovery_find_service(service_id, &service)) {
         case HPD_E_NOT_FOUND: {
-            LOG_DEBUG("Did not find service %s/%s/%s.", service_id->aid, service_id->did, service_id->sid);
+            LOG_DEBUG("Did not find service %s/%s/%s.", aid, did, sid);
             if ((rc = request_alloc_response(&response, request, HPD_S_404))) goto error_free_request;
             if ((rc = request_respond(response))) goto error_free_response;
             return;
@@ -229,8 +236,9 @@ static void on_respond(hpd_ev_loop_t *loop, ev_async *w, int revents)
     hpd_response_t *response = async->response;
     hpd_request_t *request = response->request;
     hpd_service_id_t *service_id = request->service;
+    hpd_t *hpd = service_id->device.adapter.hpd;
 
-    TAILQ_REMOVE(&service_id->hpd->respond_watchers, async, HPD_TAILQ_FIELD);
+    TAILQ_REMOVE(&hpd->respond_watchers, async, HPD_TAILQ_FIELD);
     ev_async_stop(loop, w);
     free(async);
 
@@ -250,7 +258,7 @@ hpd_error_t request_request(hpd_request_t *request)
     HPD_CPY_ALLOC(async->request, request, hpd_request_t);
     ev_async_init(&async->watcher, on_request);
     async->watcher.data = async;
-    hpd_t *hpd = request->service->hpd;
+    hpd_t *hpd = request->service->device.adapter.hpd;
     ev_async_start(hpd->loop, &async->watcher);
     ev_async_send(hpd->loop, &async->watcher);
     TAILQ_INSERT_TAIL(&hpd->request_watchers, async, HPD_TAILQ_FIELD);
@@ -269,7 +277,7 @@ hpd_error_t request_respond(hpd_response_t *response)
     HPD_CPY_ALLOC(async->response, response, hpd_response_t);
     ev_async_init(&async->watcher, on_respond);
     async->watcher.data = async;
-    hpd_t *hpd = response->request->service->hpd;
+    hpd_t *hpd = response->request->service->device.adapter.hpd;
     ev_async_start(hpd->loop, &async->watcher);
     ev_async_send(hpd->loop, &async->watcher);
     TAILQ_INSERT_TAIL(&hpd->respond_watchers, async, HPD_TAILQ_FIELD);

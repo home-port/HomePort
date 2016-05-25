@@ -30,6 +30,7 @@
 #include "hpd_api.h"
 #include "request.h"
 #include "log.h"
+#include "comm.h"
 
 hpd_error_t hpd_request_alloc(hpd_request_t **request, hpd_service_id_t *id, hpd_method_t method, hpd_response_f on_response)
 {
@@ -60,7 +61,7 @@ hpd_error_t hpd_request_set_data(hpd_request_t *request, void *data, hpd_free_f 
 hpd_error_t hpd_request(hpd_request_t *request)
 {
     if (!request) LOG_RETURN_E_NULL();
-    if (!request->service->hpd->loop) LOG_RETURN_HPD_STOPPED();
+    if (!request->service->device.adapter.hpd->loop) LOG_RETURN_HPD_STOPPED();
     return request_request(request);
 }
 
@@ -148,7 +149,7 @@ hpd_error_t hpd_response_set_value(hpd_response_t *response, hpd_value_t *value)
 hpd_error_t hpd_respond(hpd_response_t *response)
 {
     if (!response) LOG_RETURN_E_NULL();
-    if (!response->request->service->hpd->loop) LOG_RETURN_HPD_STOPPED();
+    if (!response->request->service->device.adapter.hpd->loop) LOG_RETURN_HPD_STOPPED();
     return request_respond(response);
 }
 

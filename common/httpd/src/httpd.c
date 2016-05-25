@@ -27,7 +27,7 @@
 
 #include "httpd.h"
 #include "tcpd.h"
-#include "request.h"
+#include "httpd_request.h"
 #include "hpd_shared_api.h"
 
 #include <stdlib.h>

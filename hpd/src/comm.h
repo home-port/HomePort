@@ -32,6 +32,8 @@
 extern "C" {
 #endif
 
+#include "hpd_map.h"
+
 typedef struct listeners listeners_t;
 
 TAILQ_HEAD(listeners, hpd_listener);

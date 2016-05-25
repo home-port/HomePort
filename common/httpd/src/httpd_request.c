@@ -25,7 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "request.h"
+#include "httpd_request.h"
 #include "http_parser.h"
 #include "url_parser.h"
 #include "header_parser.h"

@@ -41,23 +41,17 @@ typedef struct hpd_adapter_id {
 } hpd_adapter_id_t;
 
 typedef struct hpd_device_id {
-    hpd_t *hpd;
-    char *aid;
+    hpd_adapter_id_t adapter;
     char *did;
 } hpd_device_id_t;
 
 typedef struct hpd_service_id {
-    hpd_t *hpd;
-    char *aid;
-    char *did;
+    hpd_device_id_t device;
     char *sid;
 } hpd_service_id_t;
 
 typedef struct hpd_parameter_id {
-    hpd_t *hpd;
-    char *aid;
-    char *did;
-    char *sid;
+    hpd_service_id_t service;
     char *pid;
 } hpd_parameter_id_t;
 
@@ -76,10 +70,10 @@ hpd_error_t discovery_free_did(hpd_device_id_t *id);
 hpd_error_t discovery_free_sid(hpd_service_id_t *id);
 hpd_error_t discovery_free_pid(hpd_parameter_id_t *id);
 
-hpd_error_t discovery_set_aid(hpd_adapter_id_t **id, hpd_t *hpd, const char *aid);
-hpd_error_t discovery_set_did(hpd_device_id_t **id, hpd_t *hpd, const char *aid, const char *did);
-hpd_error_t discovery_set_sid(hpd_service_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid);
-hpd_error_t discovery_set_pid(hpd_parameter_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid, const char *pid);
+hpd_error_t discovery_set_aid(hpd_adapter_id_t *id, hpd_t *hpd, const char *aid);
+hpd_error_t discovery_set_did(hpd_device_id_t *id, hpd_t *hpd, const char *aid, const char *did);
+hpd_error_t discovery_set_sid(hpd_service_id_t *id, hpd_t *hpd, const char *aid, const char *did, const char *sid);
+hpd_error_t discovery_set_pid(hpd_parameter_id_t *id, hpd_t *hpd, const char *aid, const char *did, const char *sid, const char *pid);
 
 hpd_error_t discovery_find_adapter(hpd_adapter_id_t *id, hpd_adapter_t **adapter);
 hpd_error_t discovery_find_device(const hpd_device_id_t *id, hpd_device_t **device);

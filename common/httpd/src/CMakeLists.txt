@@ -32,10 +32,10 @@ add_library(httpd SHARED
         ../include/httpd.h
         ../include/httpd_types.h
         httpd.c
-        request.c
+        httpd_request.c
         url_parser.c
         header_parser.c
-        response.c
+        httpd_response.c
         )
 set_target_properties(httpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
 target_link_libraries(httpd tcpd http-parser)

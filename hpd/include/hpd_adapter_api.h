@@ -28,7 +28,6 @@
 #ifndef HOMEPORT_HPD_ADAPTER_API_H
 #define HOMEPORT_HPD_ADAPTER_API_H
 
-#include "hpd_types.h"
 #include "hpd_shared_api.h"
 
 #ifdef __cplusplus
