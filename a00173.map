@@ -1,4 +1,3 @@
-<map id="example/demo/demo_application.h" name="example/demo/demo_application.h">
-<area shape="rect" id="node2" href="$a00049.html" title="example/demo/demo_application.c" alt="" coords="5,80,228,107"/>
-<area shape="rect" id="node3" href="$a00051.html" title="example/demo/main.c" alt="" coords="252,80,403,107"/>
+<map id="example/demo/demo_adapter.h" name="example/demo/demo_adapter.h">
+<area shape="rect" id="node2" href="$a00021.html" title="hpd_types.h" alt="" coords="61,80,154,107"/>
 </map>

@@ -61,7 +61,7 @@ var sectionId = 'dynsection-18';
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00042.html#a8d23b888fb4bb3f951c7d48f1928ee9a" target="_top" xlink:title="hpd_map_alloc">
+<g id="a_node2"><a xlink:href="a00046.html#a8d23b888fb4bb3f951c7d48f1928ee9a" target="_top" xlink:title="hpd_map_alloc">
 <polygon fill="none" stroke="black" points="174.5,-54.8572 174.5,-73.8572 256.5,-73.8572 256.5,-54.8572 174.5,-54.8572"/>
 <text text-anchor="middle" x="215.5" y="-61.8572" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_map_alloc</text>
 </a>
@@ -74,7 +74,7 @@ var sectionId = 'dynsection-18';
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00059.html#a562bd655fd329da0289d21ec36973322" target="_top" xlink:title="discovery_free_service">
+<g id="a_node3"><a xlink:href="a00063.html#a562bd655fd329da0289d21ec36973322" target="_top" xlink:title="discovery_free_service">
 <polygon fill="none" stroke="black" points="157,-16.8572 157,-35.8572 274,-35.8572 274,-16.8572 157,-16.8572"/>
 <text text-anchor="middle" x="215.5" y="-23.8572" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_free_service</text>
 </a>
@@ -87,7 +87,7 @@ var sectionId = 'dynsection-18';
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00059.html#ad18143d06649d9220e4fd8d74dbdec79" target="_top" xlink:title="discovery_free_parameter">
+<g id="a_node4"><a xlink:href="a00063.html#ad18143d06649d9220e4fd8d74dbdec79" target="_top" xlink:title="discovery_free_parameter">
 <polygon fill="none" stroke="black" points="310,-16.8572 310,-35.8572 439,-35.8572 439,-16.8572 310,-16.8572"/>
 <text text-anchor="middle" x="374.5" y="-23.8572" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_free_parameter</text>
 </a>
@@ -100,7 +100,7 @@ var sectionId = 'dynsection-18';
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="a00042.html#a195d511a075f2349200563af1c5d1fd7" target="_top" xlink:title="hpd_map_free">
+<g id="a_node5"><a xlink:href="a00046.html#a195d511a075f2349200563af1c5d1fd7" target="_top" xlink:title="hpd_map_free">
 <polygon fill="none" stroke="black" points="475,-54.8572 475,-73.8572 553,-73.8572 553,-54.8572 475,-54.8572"/>
 <text text-anchor="middle" x="514" y="-61.8572" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_map_free</text>
 </a>

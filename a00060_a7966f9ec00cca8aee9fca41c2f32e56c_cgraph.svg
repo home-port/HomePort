@@ -48,7 +48,7 @@ if (edges && edges.length) {
 <script type="text/javascript">
 var viewWidth = 552;
 var viewHeight = 135;
-var sectionId = 'dynsection-10';
+var sectionId = 'dynsection-5';
 </script>
 <script xlink:href="svgpan.js"/>
 <svg id="graph" class="graph">
@@ -74,7 +74,7 @@ var sectionId = 'dynsection-10';
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00059.html#a71ab799b537e11f2423cb2c0a46ee52f" target="_top" xlink:title="discovery_first_adapter\l_device">
+<g id="a_node3"><a xlink:href="a00063.html#a71ab799b537e11f2423cb2c0a46ee52f" target="_top" xlink:title="discovery_first_adapter\l_device">
 <polygon fill="none" stroke="black" points="161,-58 161,-88 279,-88 279,-58 161,-58"/>
 <text text-anchor="start" x="169" y="-76" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_first_adapter</text>
 <text text-anchor="middle" x="220" y="-65" font-family="Helvetica,sans-Serif" font-size="10.00">_device</text>
@@ -101,7 +101,7 @@ var sectionId = 'dynsection-10';
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="a00061.html#acd5e8c2bf3e761abc7e2fd2294238a74" target="_top" xlink:title="discovery_set_did">
+<g id="a_node5"><a xlink:href="a00065.html#acd5e8c2bf3e761abc7e2fd2294238a74" target="_top" xlink:title="discovery_set_did">
 <polygon fill="none" stroke="black" points="316.5,-38.5 316.5,-57.5 411.5,-57.5 411.5,-38.5 316.5,-38.5"/>
 <text text-anchor="middle" x="364" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_set_did</text>
 </a>
@@ -114,7 +114,7 @@ var sectionId = 'dynsection-10';
 </g>
 <!-- Node7 -->
 <g id="node7" class="node"><title>Node7</title>
-<g id="a_node7"><a xlink:href="a00061.html#ae1a000b225c8b3f365c2cec8362b8483" target="_top" xlink:title="discovery_free_did">
+<g id="a_node7"><a xlink:href="a00065.html#ae1a000b225c8b3f365c2cec8362b8483" target="_top" xlink:title="discovery_free_did">
 <polygon fill="none" stroke="black" points="315,-0.5 315,-19.5 413,-19.5 413,-0.5 315,-0.5"/>
 <text text-anchor="middle" x="364" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_free_did</text>
 </a>
@@ -127,7 +127,7 @@ var sectionId = 'dynsection-10';
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="a00061.html#af2f553cfc3af4678b87a8fc75f35a5c6" target="_top" xlink:title="discovery_set_aid">
+<g id="a_node6"><a xlink:href="a00065.html#af2f553cfc3af4678b87a8fc75f35a5c6" target="_top" xlink:title="discovery_set_aid">
 <polygon fill="none" stroke="black" points="449,-38.5 449,-57.5 544,-57.5 544,-38.5 449,-38.5"/>
 <text text-anchor="middle" x="496.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_set_aid</text>
 </a>

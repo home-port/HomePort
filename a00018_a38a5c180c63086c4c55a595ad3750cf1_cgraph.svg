@@ -141,7 +141,7 @@ var sectionId = 'dynsection-21';
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="a00045.html#a222b05aa1f3416a31ddb08b5e2bfbff8" target="_top" xlink:title="Send message on connection. ">
+<g id="a_node6"><a xlink:href="a00049.html#a222b05aa1f3416a31ddb08b5e2bfbff8" target="_top" xlink:title="Send message on connection. ">
 <polygon fill="none" stroke="black" points="443,-76.5 443,-95.5 560,-95.5 560,-76.5 443,-76.5"/>
 <text text-anchor="middle" x="501.5" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_tcpd_conn_vsendf</text>
 </a>

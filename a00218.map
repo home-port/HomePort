@@ -1,6 +1,4 @@
-<map id="hpd/src/model.h" name="hpd/src/model.h">
-<area shape="rect" id="node2" href="$a00021.html" title="hpd_types.h" alt="" coords="5,229,99,256"/>
-<area shape="rect" id="node3" href="$a00041.html" title="hpd_queue.h" alt="" coords="309,229,405,256"/>
-<area shape="rect" id="node5" href="$a00042.html" title="hpd_map.h" alt="" coords="142,155,229,181"/>
-<area shape="rect" id="node8" href="$a00024.html" title="comm.h" alt="" coords="179,80,248,107"/>
+<map id="hpd/src/log.c" name="hpd/src/log.c">
+<area shape="rect" id="node2" href="$a00070.html" title="log.h" alt="" coords="79,80,129,107"/>
+<area shape="rect" id="node3" href="$a00021.html" title="hpd_types.h" alt="" coords="5,155,99,181"/>
 </map>

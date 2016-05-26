@@ -1,0 +1,9 @@
+<map id="hpd_device_set_attrs" name="hpd_device_set_attrs">
+<area shape="rect" id="node2" href="$a00063.html#ae15e002e2b5408db4a705d3c5cd98c3a" title="discovery_set_device\l_attrs_v" alt="" coords="200,49,348,90"/>
+<area shape="rect" id="node3" href="$a00063.html#a56b004be3282718fac95524a7446748c" title="discovery_set_device_attr" alt="" coords="396,56,571,83"/>
+<area shape="rect" id="node4" href="$a00046.html#a230c25a2f8e5de7ce61623a4ce8a809f" title="hpd_map_set" alt="" coords="619,56,719,83"/>
+<area shape="rect" id="node5" href="$a00022.html#ae1085dd4fd40466d18b02ec077ef4d6d" title="hpd_map_remove" alt="" coords="767,5,892,32"/>
+<area shape="rect" id="node7" href="$a00022.html#a2c93ecbbe80ca388721bf496a9460fac" title="insert" alt="" coords="802,56,857,83"/>
+<area shape="rect" id="node8" href="$a00022.html#a75e1f12b222f5319f70b05db93c3ee3e" title="replace" alt="" coords="797,107,861,133"/>
+<area shape="rect" id="node6" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="940,31,984,57"/>
+</map>

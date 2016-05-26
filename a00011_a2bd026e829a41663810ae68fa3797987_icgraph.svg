@@ -61,7 +61,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00060.html#a6dfca5e2723ca3a11d12fe545e69923e" target="_top" xlink:title="hpd_adapter_id_free">
+<g id="a_node2"><a xlink:href="a00064.html#a6dfca5e2723ca3a11d12fe545e69923e" target="_top" xlink:title="hpd_adapter_id_free">
 <polygon fill="none" stroke="black" points="134,-262 134,-281 238,-281 238,-262 134,-262"/>
 <text text-anchor="middle" x="186" y="-269" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_adapter_id_free</text>
 </a>
@@ -74,7 +74,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node16 -->
 <g id="node16" class="node"><title>Node16</title>
-<g id="a_node16"><a xlink:href="a00060.html#a460c1d013092f65b4bf7d7ece3ff7efc" target="_top" xlink:title="hpd_next_adapter">
+<g id="a_node16"><a xlink:href="a00064.html#a460c1d013092f65b4bf7d7ece3ff7efc" target="_top" xlink:title="hpd_next_adapter">
 <polygon fill="none" stroke="black" points="139,-205 139,-224 233,-224 233,-205 139,-205"/>
 <text text-anchor="middle" x="186" y="-212" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_next_adapter</text>
 </a>
@@ -87,7 +87,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node17 -->
 <g id="node17" class="node"><title>Node17</title>
-<g id="a_node17"><a xlink:href="a00061.html#a1915dc6bbbb6b1a2a587723caa22069d" target="_top" xlink:title="discovery_alloc_aid">
+<g id="a_node17"><a xlink:href="a00065.html#a1915dc6bbbb6b1a2a587723caa22069d" target="_top" xlink:title="discovery_alloc_aid">
 <polygon fill="none" stroke="black" points="135,-148 135,-167 237,-167 237,-148 135,-148"/>
 <text text-anchor="middle" x="186" y="-155" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_alloc_aid</text>
 </a>
@@ -113,7 +113,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00075.html#ae30c92f3bb2ebffcbb82054ad60c1ac5" target="_top" xlink:title="hpd_rest_url_create">
+<g id="a_node4"><a xlink:href="a00079.html#ae30c92f3bb2ebffcbb82054ad60c1ac5" target="_top" xlink:title="hpd_rest_url_create">
 <polygon fill="none" stroke="black" points="609,-163 609,-182 711,-182 711,-163 609,-163"/>
 <text text-anchor="middle" x="660" y="-170" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_rest_url_create</text>
 </a>
@@ -126,7 +126,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="a00076.html#aa3eb7c0c809c6c24396cb9321b6b57dc" target="_top" xlink:title="add_service">
+<g id="a_node5"><a xlink:href="a00080.html#aa3eb7c0c809c6c24396cb9321b6b57dc" target="_top" xlink:title="add_service">
 <polygon fill="none" stroke="black" points="747,-163 747,-182 816,-182 816,-163 747,-163"/>
 <text text-anchor="middle" x="781.5" y="-170" font-family="Helvetica,sans-Serif" font-size="10.00">add_service</text>
 </a>
@@ -139,7 +139,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="a00076.html#a2e3a16674e810068b936c145267184bb" target="_top" xlink:title="add_services">
+<g id="a_node6"><a xlink:href="a00080.html#a2e3a16674e810068b936c145267184bb" target="_top" xlink:title="add_services">
 <polygon fill="none" stroke="black" points="852,-163 852,-182 926,-182 926,-163 852,-163"/>
 <text text-anchor="middle" x="889" y="-170" font-family="Helvetica,sans-Serif" font-size="10.00">add_services</text>
 </a>
@@ -152,7 +152,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node7 -->
 <g id="node7" class="node"><title>Node7</title>
-<g id="a_node7"><a xlink:href="a00076.html#a57ebcecdb1a111267049578c1d9c51de" target="_top" xlink:title="add_device">
+<g id="a_node7"><a xlink:href="a00080.html#a57ebcecdb1a111267049578c1d9c51de" target="_top" xlink:title="add_device">
 <polygon fill="none" stroke="black" points="962,-163 962,-182 1028,-182 1028,-163 962,-163"/>
 <text text-anchor="middle" x="995" y="-170" font-family="Helvetica,sans-Serif" font-size="10.00">add_device</text>
 </a>
@@ -165,7 +165,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node8 -->
 <g id="node8" class="node"><title>Node8</title>
-<g id="a_node8"><a xlink:href="a00076.html#a4028efc20daa3dbda3727bcb6fdd0635" target="_top" xlink:title="add_devices">
+<g id="a_node8"><a xlink:href="a00080.html#a4028efc20daa3dbda3727bcb6fdd0635" target="_top" xlink:title="add_devices">
 <polygon fill="none" stroke="black" points="1064,-163 1064,-182 1135,-182 1135,-163 1064,-163"/>
 <text text-anchor="middle" x="1099.5" y="-170" font-family="Helvetica,sans-Serif" font-size="10.00">add_devices</text>
 </a>
@@ -178,7 +178,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node9 -->
 <g id="node9" class="node"><title>Node9</title>
-<g id="a_node9"><a xlink:href="a00076.html#aa21890dddb121282884859a2c8bfd134" target="_top" xlink:title="add_adapter">
+<g id="a_node9"><a xlink:href="a00080.html#aa21890dddb121282884859a2c8bfd134" target="_top" xlink:title="add_adapter">
 <polygon fill="none" stroke="black" points="1171,-163 1171,-182 1241,-182 1241,-163 1171,-163"/>
 <text text-anchor="middle" x="1206" y="-170" font-family="Helvetica,sans-Serif" font-size="10.00">add_adapter</text>
 </a>
@@ -191,7 +191,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node10 -->
 <g id="node10" class="node"><title>Node10</title>
-<g id="a_node10"><a xlink:href="a00076.html#a9a90e4e11e2111c0d0b29f277b1d24c4" target="_top" xlink:title="add_adapters">
+<g id="a_node10"><a xlink:href="a00080.html#a9a90e4e11e2111c0d0b29f277b1d24c4" target="_top" xlink:title="add_adapters">
 <polygon fill="none" stroke="black" points="1277,-163 1277,-182 1352,-182 1352,-163 1277,-163"/>
 <text text-anchor="middle" x="1314.5" y="-170" font-family="Helvetica,sans-Serif" font-size="10.00">add_adapters</text>
 </a>
@@ -204,7 +204,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node11 -->
 <g id="node11" class="node"><title>Node11</title>
-<g id="a_node11"><a xlink:href="a00076.html#ab8e279d4c33ab258d7118b3e2f28400e" target="_top" xlink:title="add_configuration">
+<g id="a_node11"><a xlink:href="a00080.html#ab8e279d4c33ab258d7118b3e2f28400e" target="_top" xlink:title="add_configuration">
 <polygon fill="none" stroke="black" points="1388,-163 1388,-182 1481,-182 1481,-163 1388,-163"/>
 <text text-anchor="middle" x="1434.5" y="-170" font-family="Helvetica,sans-Serif" font-size="10.00">add_configuration</text>
 </a>
@@ -217,7 +217,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node12 -->
 <g id="node12" class="node"><title>Node12</title>
-<g id="a_node12"><a xlink:href="a00077.html#a0f69305250a2916043c87e8e3865b28d" target="_top" xlink:title="hpd_rest_json_get_configuration">
+<g id="a_node12"><a xlink:href="a00081.html#a0f69305250a2916043c87e8e3865b28d" target="_top" xlink:title="hpd_rest_json_get_configuration">
 <polygon fill="none" stroke="black" points="1517,-163 1517,-182 1674,-182 1674,-163 1517,-163"/>
 <text text-anchor="middle" x="1595.5" y="-170" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_rest_json_get_configuration</text>
 </a>
@@ -269,7 +269,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node18 -->
 <g id="node18" class="node"><title>Node18</title>
-<g id="a_node18"><a xlink:href="a00060.html#aaf24eefdbdf2debbf530eb19db96bd86" target="_top" xlink:title="[log functions] ">
+<g id="a_node18"><a xlink:href="a00064.html#aaf24eefdbdf2debbf530eb19db96bd86" target="_top" xlink:title="[log functions] ">
 <polygon fill="none" stroke="black" points="283,-224 283,-243 391,-243 391,-224 283,-224"/>
 <text text-anchor="middle" x="337" y="-231" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_adapter_id_alloc</text>
 </a>
@@ -282,7 +282,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node20 -->
 <g id="node20" class="node"><title>Node20</title>
-<g id="a_node20"><a xlink:href="a00060.html#a35bf26228e2c725f300412ef59eecf4b" target="_top" xlink:title="hpd_first_adapter">
+<g id="a_node20"><a xlink:href="a00064.html#a35bf26228e2c725f300412ef59eecf4b" target="_top" xlink:title="hpd_first_adapter">
 <polygon fill="none" stroke="black" points="291,-186 291,-205 383,-205 383,-186 291,-186"/>
 <text text-anchor="middle" x="337" y="-193" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_first_adapter</text>
 </a>
@@ -295,7 +295,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node21 -->
 <g id="node21" class="node"><title>Node21</title>
-<g id="a_node21"><a xlink:href="a00061.html#a6a2b2714b9bb4b2ea68a6ca5fcdb7538" target="_top" xlink:title="discovery_copy_aid">
+<g id="a_node21"><a xlink:href="a00065.html#a6a2b2714b9bb4b2ea68a6ca5fcdb7538" target="_top" xlink:title="discovery_copy_aid">
 <polygon fill="none" stroke="black" points="285.5,-148 285.5,-167 388.5,-167 388.5,-148 285.5,-148"/>
 <text text-anchor="middle" x="337" y="-155" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_copy_aid</text>
 </a>
@@ -308,7 +308,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node23 -->
 <g id="node23" class="node"><title>Node23</title>
-<g id="a_node23"><a xlink:href="a00061.html#a427784ccb53776af393d2dedf7a77f62" target="_top" xlink:title="discovery_get_device\l_adapter">
+<g id="a_node23"><a xlink:href="a00065.html#a427784ccb53776af393d2dedf7a77f62" target="_top" xlink:title="discovery_get_device\l_adapter">
 <polygon fill="none" stroke="black" points="281.5,-98.5 281.5,-128.5 392.5,-128.5 392.5,-98.5 281.5,-98.5"/>
 <text text-anchor="start" x="289.5" y="-116.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_get_device</text>
 <text text-anchor="middle" x="337" y="-105.5" font-family="Helvetica,sans-Serif" font-size="10.00">_adapter</text>
@@ -322,7 +322,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node25 -->
 <g id="node25" class="node"><title>Node25</title>
-<g id="a_node25"><a xlink:href="a00061.html#a25f79cc6f338b4ff23b5ecdec0dc03af" target="_top" xlink:title="discovery_get_service\l_adapter">
+<g id="a_node25"><a xlink:href="a00065.html#a25f79cc6f338b4ff23b5ecdec0dc03af" target="_top" xlink:title="discovery_get_service\l_adapter">
 <polygon fill="none" stroke="black" points="280,-49.5 280,-79.5 394,-79.5 394,-49.5 280,-49.5"/>
 <text text-anchor="start" x="288" y="-67.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_get_service</text>
 <text text-anchor="middle" x="337" y="-56.5" font-family="Helvetica,sans-Serif" font-size="10.00">_adapter</text>
@@ -336,7 +336,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node27 -->
 <g id="node27" class="node"><title>Node27</title>
-<g id="a_node27"><a xlink:href="a00061.html#a3bf9619ca5dc42ca73573722cc29badc" target="_top" xlink:title="discovery_get_parameter\l_adapter">
+<g id="a_node27"><a xlink:href="a00065.html#a3bf9619ca5dc42ca73573722cc29badc" target="_top" xlink:title="discovery_get_parameter\l_adapter">
 <polygon fill="none" stroke="black" points="274,-0.5 274,-30.5 400,-30.5 400,-0.5 274,-0.5"/>
 <text text-anchor="start" x="282" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_get_parameter</text>
 <text text-anchor="middle" x="337" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">_adapter</text>
@@ -363,7 +363,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node22 -->
 <g id="node22" class="node"><title>Node22</title>
-<g id="a_node22"><a xlink:href="a00060.html#a6d2b00a1eb132508e48ea8fba1f7e4ce" target="_top" xlink:title="hpd_adapter_id_copy">
+<g id="a_node22"><a xlink:href="a00064.html#a6d2b00a1eb132508e48ea8fba1f7e4ce" target="_top" xlink:title="hpd_adapter_id_copy">
 <polygon fill="none" stroke="black" points="450,-148 450,-167 559,-167 559,-148 450,-148"/>
 <text text-anchor="middle" x="504.5" y="-155" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_adapter_id_copy</text>
 </a>
@@ -376,7 +376,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node24 -->
 <g id="node24" class="node"><title>Node24</title>
-<g id="a_node24"><a xlink:href="a00060.html#ad00868337d8af8bc10e7860bef5f6493" target="_top" xlink:title="hpd_device_get_adapter">
+<g id="a_node24"><a xlink:href="a00064.html#ad00868337d8af8bc10e7860bef5f6493" target="_top" xlink:title="hpd_device_get_adapter">
 <polygon fill="none" stroke="black" points="443.5,-104 443.5,-123 565.5,-123 565.5,-104 443.5,-104"/>
 <text text-anchor="middle" x="504.5" y="-111" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_device_get_adapter</text>
 </a>
@@ -389,7 +389,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node26 -->
 <g id="node26" class="node"><title>Node26</title>
-<g id="a_node26"><a xlink:href="a00060.html#a1ce881941d5fa5be20c50439118ce79c" target="_top" xlink:title="hpd_service_get_adapter">
+<g id="a_node26"><a xlink:href="a00064.html#a1ce881941d5fa5be20c50439118ce79c" target="_top" xlink:title="hpd_service_get_adapter">
 <polygon fill="none" stroke="black" points="442,-60 442,-79 567,-79 567,-60 442,-60"/>
 <text text-anchor="middle" x="504.5" y="-67" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_service_get_adapter</text>
 </a>
@@ -407,7 +407,7 @@ var sectionId = 'dynsection-67';
 </g>
 <!-- Node28 -->
 <g id="node28" class="node"><title>Node28</title>
-<g id="a_node28"><a xlink:href="a00060.html#ad0aef71da69a9524dd452959fc810c6c" target="_top" xlink:title="hpd_parameter_get_adapter">
+<g id="a_node28"><a xlink:href="a00064.html#ad0aef71da69a9524dd452959fc810c6c" target="_top" xlink:title="hpd_parameter_get_adapter">
 <polygon fill="none" stroke="black" points="436,-6 436,-25 573,-25 573,-6 436,-6"/>
 <text text-anchor="middle" x="504.5" y="-13" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_parameter_get_adapter</text>
 </a>

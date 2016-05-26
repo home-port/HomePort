@@ -1,29 +1,6 @@
-<map id="common/include/hpd_queue.h" name="common/include/hpd_queue.h">
-<area shape="rect" id="node2" href="$a00042.html" title="common/map/include\l/hpd_map.h" alt="" coords="863,95,1009,136"/>
-<area shape="rect" id="node12" href="$a00005.html" title="hpd/src/model.h" alt="" coords="564,281,679,307"/>
-<area shape="rect" id="node22" href="$a00027.html" title="common/tcpd/src/tcpd\l_intern.h" alt="" coords="1560,95,1712,136"/>
-<area shape="rect" id="node25" href="$a00009.html" title="hpd/src/daemon.h" alt="" coords="793,281,919,307"/>
-<area shape="rect" id="node3" href="$a00018.html" title="common/httpd/include\l/httpd.h" alt="" coords="1366,184,1517,225"/>
-<area shape="rect" id="node10" href="$a00022.html" title="common/map/src/map.c" alt="" coords="851,191,1013,218"/>
-<area shape="rect" id="node11" href="$a00024.html" title="hpd/src/comm.h" alt="" coords="710,191,826,218"/>
-<area shape="rect" id="node21" href="$a00071.html" title="hpd/src/value.c" alt="" coords="1046,281,1157,307"/>
-<area shape="rect" id="node4" href="$a00034.html" title="common/httpd/example\l/greeting.c" alt="" coords="1451,273,1610,315"/>
-<area shape="rect" id="node5" href="$a00015.html" title="common/httpd/src/httpd.c" alt="" coords="1779,370,1949,397"/>
-<area shape="rect" id="node6" href="$a00036.html" title="common/httpd/src/httpd\l_request.h" alt="" coords="1867,273,2027,315"/>
-<area shape="rect" id="node9" href="$a00025.html" title="modules/hpd_rest/src\l/hpd_rest.c" alt="" coords="1280,273,1427,315"/>
-<area shape="rect" id="node7" href="$a00016.html" title="common/httpd/src/httpd\l_request.c" alt="" coords="1973,363,2133,404"/>
-<area shape="rect" id="node8" href="$a00017.html" title="common/httpd/src/httpd\l_response.c" alt="" coords="2157,363,2317,404"/>
-<area shape="rect" id="node17" href="$a00062.html" title="hpd/src/event.c" alt="" coords="152,370,264,397"/>
-<area shape="rect" id="node18" href="$a00068.html" title="hpd/src/request.c" alt="" coords="5,370,128,397"/>
-<area shape="rect" id="node19" href="$a00064.html" title="hpd/src/event_api.c" alt="" coords="1448,370,1584,397"/>
-<area shape="rect" id="node20" href="$a00070.html" title="hpd/src/request_api.c" alt="" coords="1608,370,1755,397"/>
-<area shape="rect" id="node13" href="$a00057.html" title="hpd/src/daemon.c" alt="" coords="465,370,591,397"/>
-<area shape="rect" id="node14" href="$a00059.html" title="hpd/src/discovery.c" alt="" coords="616,370,752,397"/>
-<area shape="rect" id="node15" href="$a00060.html" title="hpd/src/discovery_api.c" alt="" coords="776,370,936,397"/>
-<area shape="rect" id="node16" href="$a00061.html" title="hpd/src/discovery_id.c" alt="" coords="287,370,441,397"/>
-<area shape="rect" id="node23" href="$a00045.html" title="common/tcpd/src/tcpd.c" alt="" coords="1756,191,1919,218"/>
-<area shape="rect" id="node24" href="$a00047.html" title="common/tcpd/test/webserver\l_test.cpp" alt="" coords="1541,184,1731,225"/>
-<area shape="rect" id="node26" href="$a00058.html" title="hpd/src/daemon_api.c" alt="" coords="1127,370,1278,397"/>
-<area shape="rect" id="node27" href="$a00067.html" title="hpd/src/log_api.c" alt="" coords="1302,370,1423,397"/>
-<area shape="rect" id="node28" href="$a00030.html" title="hpd/test/daemon_api\l_test.cpp" alt="" coords="961,363,1103,404"/>
+<map id="common/httpd/test/url_parser_test.c" name="common/httpd/test/url_parser_test.c">
+<area shape="rect" id="node2" href="$a00032.html" title="url_parser.c" alt="" coords="82,95,173,121"/>
+<area shape="rect" id="node5" href="$a00033.html" title="url_parser.h" alt="" coords="183,169,274,196"/>
+<area shape="rect" id="node7" href="$a00060.html" title="hpd_shared_api.h" alt="" coords="299,169,423,196"/>
+<area shape="rect" id="node6" href="$a00021.html" title="hpd_types.h" alt="" coords="189,244,282,271"/>
 </map>

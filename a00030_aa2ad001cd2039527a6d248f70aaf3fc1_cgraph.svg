@@ -15,7 +15,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00055.html#a3d879947af1cc338c9bb9cf68fcce672" target="_top" xlink:title="[hpd_t functions] ">
+<g id="a_node2"><a xlink:href="a00059.html#a3d879947af1cc338c9bb9cf68fcce672" target="_top" xlink:title="[hpd_t functions] ">
 <polygon fill="none" stroke="black" points="78,-38.5 78,-57.5 136,-57.5 136,-38.5 78,-38.5"/>
 <text text-anchor="middle" x="107" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_alloc</text>
 </a>
@@ -28,7 +28,7 @@
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="a00055.html#aa833627ad45d82173c0caf687cd30126" target="_top" xlink:title="hpd_free">
+<g id="a_node6"><a xlink:href="a00059.html#aa833627ad45d82173c0caf687cd30126" target="_top" xlink:title="hpd_free">
 <polygon fill="none" stroke="black" points="80,-0.5 80,-19.5 134,-19.5 134,-0.5 80,-0.5"/>
 <text text-anchor="middle" x="107" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_free</text>
 </a>
@@ -41,7 +41,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00057.html#a9c4bde30e05010d189231e469da9336b" target="_top" xlink:title="daemon_alloc">
+<g id="a_node3"><a xlink:href="a00061.html#a9c4bde30e05010d189231e469da9336b" target="_top" xlink:title="daemon_alloc">
 <polygon fill="none" stroke="black" points="172,-38.5 172,-57.5 249,-57.5 249,-38.5 172,-38.5"/>
 <text text-anchor="middle" x="210.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">daemon_alloc</text>
 </a>
@@ -54,7 +54,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00057.html#a136e9884bcc5a6969066966324fd0493" target="_top" xlink:title="sig_cb">
+<g id="a_node4"><a xlink:href="a00061.html#a136e9884bcc5a6969066966324fd0493" target="_top" xlink:title="sig_cb">
 <polygon fill="none" stroke="black" points="285,-38.5 285,-57.5 330,-57.5 330,-38.5 285,-38.5"/>
 <text text-anchor="middle" x="307.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">sig_cb</text>
 </a>
@@ -80,7 +80,7 @@
 </g>
 <!-- Node7 -->
 <g id="node7" class="node"><title>Node7</title>
-<g id="a_node7"><a xlink:href="a00057.html#a05bbc5573fc67fa53c2765cf7e5b1920" target="_top" xlink:title="daemon_free">
+<g id="a_node7"><a xlink:href="a00061.html#a05bbc5573fc67fa53c2765cf7e5b1920" target="_top" xlink:title="daemon_free">
 <polygon fill="none" stroke="black" points="174,-0.5 174,-19.5 247,-19.5 247,-0.5 174,-0.5"/>
 <text text-anchor="middle" x="210.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">daemon_free</text>
 </a>

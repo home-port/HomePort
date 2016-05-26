@@ -48,7 +48,7 @@ if (edges && edges.length) {
 <script type="text/javascript">
 var viewWidth = 555;
 var viewHeight = 78;
-var sectionId = 'dynsection-15';
+var sectionId = 'dynsection-8';
 </script>
 <script xlink:href="svgpan.js"/>
 <svg id="graph" class="graph">
@@ -74,7 +74,7 @@ var sectionId = 'dynsection-15';
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00059.html#a670ca2cfa38959b6150a39ca57159966" target="_top" xlink:title="discovery_get_adapter\l_attrs_v">
+<g id="a_node3"><a xlink:href="a00063.html#a670ca2cfa38959b6150a39ca57159966" target="_top" xlink:title="discovery_get_adapter\l_attrs_v">
 <polygon fill="none" stroke="black" points="150,-0.5 150,-30.5 265,-30.5 265,-0.5 150,-0.5"/>
 <text text-anchor="start" x="158" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_get_adapter</text>
 <text text-anchor="middle" x="207.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">_attrs_v</text>
@@ -88,7 +88,7 @@ var sectionId = 'dynsection-15';
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00059.html#a4f5a827380896e402579189925e8e70a" target="_top" xlink:title="discovery_get_adapter_attr">
+<g id="a_node4"><a xlink:href="a00063.html#a4f5a827380896e402579189925e8e70a" target="_top" xlink:title="discovery_get_adapter_attr">
 <polygon fill="none" stroke="black" points="302,-6 302,-25 436,-25 436,-6 302,-6"/>
 <text text-anchor="middle" x="369" y="-13" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_get_adapter_attr</text>
 </a>
@@ -101,7 +101,7 @@ var sectionId = 'dynsection-15';
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="a00042.html#a3eb33be000f845d28ec16639f235ceb2" target="_top" xlink:title="hpd_map_get">
+<g id="a_node5"><a xlink:href="a00046.html#a3eb33be000f845d28ec16639f235ceb2" target="_top" xlink:title="hpd_map_get">
 <polygon fill="none" stroke="black" points="472,-6 472,-25 547,-25 547,-6 472,-6"/>
 <text text-anchor="middle" x="509.5" y="-13" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_map_get</text>
 </a>

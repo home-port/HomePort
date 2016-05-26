@@ -1,10 +1,10 @@
 <map id="TEST" name="TEST">
-<area shape="rect" id="node2" href="$a00055.html#a3d879947af1cc338c9bb9cf68fcce672" title="[hpd_t functions] " alt="" coords="120,5,197,32"/>
-<area shape="rect" id="node6" href="$a00056.html#abb80916ac5990db56afd0fc309949f4c" title="hpd_get_loop" alt="" coords="109,56,208,83"/>
-<area shape="rect" id="node8" href="$a00055.html#aa833627ad45d82173c0caf687cd30126" title="hpd_free" alt="" coords="123,107,195,133"/>
-<area shape="rect" id="node3" href="$a00057.html#a9c4bde30e05010d189231e469da9336b" title="daemon_alloc" alt="" coords="267,5,369,32"/>
-<area shape="rect" id="node4" href="$a00057.html#a136e9884bcc5a6969066966324fd0493" title="sig_cb" alt="" coords="428,5,488,32"/>
+<area shape="rect" id="node2" href="$a00059.html#a3d879947af1cc338c9bb9cf68fcce672" title="[hpd_t functions] " alt="" coords="120,5,197,32"/>
+<area shape="rect" id="node6" href="$a00060.html#abb80916ac5990db56afd0fc309949f4c" title="hpd_get_loop" alt="" coords="109,56,208,83"/>
+<area shape="rect" id="node8" href="$a00059.html#aa833627ad45d82173c0caf687cd30126" title="hpd_free" alt="" coords="123,107,195,133"/>
+<area shape="rect" id="node3" href="$a00061.html#a9c4bde30e05010d189231e469da9336b" title="daemon_alloc" alt="" coords="267,5,369,32"/>
+<area shape="rect" id="node4" href="$a00061.html#a136e9884bcc5a6969066966324fd0493" title="sig_cb" alt="" coords="428,5,488,32"/>
 <area shape="rect" id="node5" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="436,81,480,108"/>
-<area shape="rect" id="node7" href="$a00057.html#a7ff86e8cdc7db41600fc2605ef1c457b" title="daemon_get_loop" alt="" coords="256,56,380,83"/>
-<area shape="rect" id="node9" href="$a00057.html#a05bbc5573fc67fa53c2765cf7e5b1920" title="daemon_free" alt="" coords="269,107,367,133"/>
+<area shape="rect" id="node7" href="$a00061.html#a7ff86e8cdc7db41600fc2605ef1c457b" title="daemon_get_loop" alt="" coords="256,56,380,83"/>
+<area shape="rect" id="node9" href="$a00061.html#a05bbc5573fc67fa53c2765cf7e5b1920" title="daemon_free" alt="" coords="269,107,367,133"/>
 </map>

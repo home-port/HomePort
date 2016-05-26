@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>Homeport Documentation: hpd/src/value.c Source File</title>
+<title>Homeport Documentation: hpd/src/log_api.c Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,12 +81,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_ab00a9b86cff89a0b86b44294c0aada6.html">hpd</a></li><li class="navelem"><a class="el" href="dir_3128ee3f19d8356fe970e43f9e882e44.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_2cad9915d3465dafc0c8c8572bece9a6.html">hpd</a></li><li class="navelem"><a class="el" href="dir_ccdac1f62f237d0526fb2f8df84d1331.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">value.c</div>  </div>
+<div class="title">log_api.c</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a00071.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
@@ -116,160 +116,39 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * authors and should not be interpreted as representing official policies, either expressed</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00072.html">value.h</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00040.html">hpd_common.h</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00042.html">hpd_map.h</a>&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00024.html">comm.h</a>&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00066.html">log.h</a>&quot;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">// TODO No printing on hpd_map_*() (All files...)</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="a00072.html#a9e0cbc30fcd2121d212f1995c8e834ba">   36</a></span>&#160;<a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> <a class="code" href="a00071.html#a9e0cbc30fcd2121d212f1995c8e834ba">value_alloc</a>(<a class="code" href="a00024.html#a00110">hpd_value_t</a> **<a class="code" href="a00038.html#aee53bdc848584e095375d0d39aa400b8">value</a>, <span class="keyword">const</span> <span class="keywordtype">char</span> *body, <span class="keywordtype">int</span> len)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> rc;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="a00040.html#a3845681e01afcaa2d65abc4c62dc34de">HPD_CALLOC</a>((*value), 1, <a class="code" href="a00024.html#a00110">hpd_value_t</a>);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00042.html#a8d23b888fb4bb3f951c7d48f1928ee9a">hpd_map_alloc</a>(&amp;(*value)-&gt;headers))) {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <a class="code" href="a00006.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(*value);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordflow">return</span> rc;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">if</span> (body) {</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <a class="code" href="a00040.html#aeb54026c07aa12169c4ddf82b92fab17">HPD_STR_CPY</a>((*value)-&gt;body, body);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordflow">if</span> (len == <a class="code" href="a00021.html#a4f7dac4aa40064855557ca873911757a">HPD_NULL_TERMINATED</a>) (*value)-&gt;len = strlen(body);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">else</span> (*value)-&gt;len = (<span class="keywordtype">size_t</span>) len;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    alloc_error:</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;        <a class="code" href="a00071.html#a1ec3b1d4547e5080bcec544c877852da">value_free</a>(*value);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        (*value) = NULL;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <a class="code" href="a00066.html#aa3459e6f23717905b1d2e3ddff9bd0c4">LOG_RETURN_E_ALLOC</a>();</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="a00072.html#acb46c0254b5e6856197be334a0a058ad">   57</a></span>&#160;<a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> <a class="code" href="a00071.html#acb46c0254b5e6856197be334a0a058ad">value_copy</a>(<a class="code" href="a00024.html#a00110">hpd_value_t</a> **dst, <span class="keyword">const</span> <a class="code" href="a00024.html#a00110">hpd_value_t</a> *src)</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;{</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> rc;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a9e0cbc30fcd2121d212f1995c8e834ba">value_alloc</a>(dst, src-&gt;<a class="code" href="a00024.html#a7b511c06c4222b6fd0a3b8e769016099">body</a>, (<span class="keywordtype">int</span>) src-&gt;<a class="code" href="a00024.html#a7469be7389c3f462a14a5f864641e996">len</a>))) <span class="keywordflow">return</span> rc;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="a00022.html#a00101">hpd_pair_t</a> *pair;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="a00042.html#aa5a88a681f1f37ea04964db0a91b9439">hpd_map_foreach</a>(rc, pair, src-&gt;<a class="code" href="a00024.html#a74dbf5094ab20a05bf059b204b9775bd">headers</a>) {</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span> *k, *v;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordflow">if</span> ((rc = <a class="code" href="a00042.html#ad8de9589846a9987ae60b199fc05094d">hpd_pair_get</a>(pair, &amp;k, &amp;v))) {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            <a class="code" href="a00071.html#a1ec3b1d4547e5080bcec544c877852da">value_free</a>(*dst);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            <span class="keywordflow">return</span> rc;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        }</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a8e74f34c0eb423e170161eadec463df3">value_set_header</a>(*dst, k, v))) {</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <a class="code" href="a00071.html#a1ec3b1d4547e5080bcec544c877852da">value_free</a>(*dst);</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            <span class="keywordflow">return</span> rc;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        }</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">return</span> rc;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;</div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="a00072.html#a1ec3b1d4547e5080bcec544c877852da">   76</a></span>&#160;<a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> <a class="code" href="a00071.html#a1ec3b1d4547e5080bcec544c877852da">value_free</a>(<a class="code" href="a00024.html#a00110">hpd_value_t</a> *<a class="code" href="a00038.html#aee53bdc848584e095375d0d39aa400b8">value</a>)</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;{</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> rc = <a class="code" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">if</span> (value) {</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;        rc = <a class="code" href="a00042.html#a195d511a075f2349200563af1c5d1fd7">hpd_map_free</a>(value-&gt;<a class="code" href="a00024.html#a74dbf5094ab20a05bf059b204b9775bd">headers</a>);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <a class="code" href="a00006.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(value-&gt;<a class="code" href="a00024.html#a7b511c06c4222b6fd0a3b8e769016099">body</a>);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    }</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="a00006.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(value);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">return</span> rc;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="a00072.html#a8e74f34c0eb423e170161eadec463df3">   87</a></span>&#160;<a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> <a class="code" href="a00071.html#a8e74f34c0eb423e170161eadec463df3">value_set_header</a>(<a class="code" href="a00024.html#a00110">hpd_value_t</a> *<a class="code" href="a00038.html#aee53bdc848584e095375d0d39aa400b8">value</a>, <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="a00006.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a>, <span class="keyword">const</span> <span class="keywordtype">char</span> *val)</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;{</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00042.html#a230c25a2f8e5de7ce61623a4ce8a809f">hpd_map_set</a>(value-&gt;<a class="code" href="a00024.html#a74dbf5094ab20a05bf059b204b9775bd">headers</a>, key, val);</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;}</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="a00072.html#a0d75ed4c4f2374d031c908cf626dcf4a">   92</a></span>&#160;<a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> <a class="code" href="a00071.html#a0d75ed4c4f2374d031c908cf626dcf4a">value_set_headers_v</a>(<a class="code" href="a00024.html#a00110">hpd_value_t</a> *<a class="code" href="a00038.html#aee53bdc848584e095375d0d39aa400b8">value</a>, va_list vp)</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;{</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> rc;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="a00006.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a>, *val;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">while</span> ((key = va_arg(vp, <span class="keyword">const</span> <span class="keywordtype">char</span> *))) {</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        val = va_arg(vp, <span class="keyword">const</span> <span class="keywordtype">char</span> *);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordflow">if</span> (!val) <a class="code" href="a00066.html#a75936067d8534c3319d57d70fff18b8f">LOG_RETURN_E_NULL</a>();</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a8e74f34c0eb423e170161eadec463df3">value_set_header</a>(value, key, val))) <span class="keywordflow">return</span> rc;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    }</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;}</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno"><a class="line" href="a00072.html#a49b8ecaa784e618d8ee5fad8664b6d05">  105</a></span>&#160;<a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> <a class="code" href="a00071.html#a49b8ecaa784e618d8ee5fad8664b6d05">value_get_body</a>(<a class="code" href="a00024.html#a00110">hpd_value_t</a> *<a class="code" href="a00038.html#aee53bdc848584e095375d0d39aa400b8">value</a>, <span class="keyword">const</span> <span class="keywordtype">char</span> **body, <span class="keywordtype">size_t</span> *len)</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;{</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordflow">if</span> (body) (*body) = value-&gt;<a class="code" href="a00024.html#a7b511c06c4222b6fd0a3b8e769016099">body</a>;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordflow">if</span> (len) (*len) = value-&gt;<a class="code" href="a00024.html#a7469be7389c3f462a14a5f864641e996">len</a>;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;}</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno"><a class="line" href="a00072.html#aef90af0d3ed776bb297c450684dc5aab">  112</a></span>&#160;<a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> <a class="code" href="a00071.html#aef90af0d3ed776bb297c450684dc5aab">value_get_header</a>(<a class="code" href="a00024.html#a00110">hpd_value_t</a> *<a class="code" href="a00038.html#aee53bdc848584e095375d0d39aa400b8">value</a>, <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="a00006.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a>, <span class="keyword">const</span> <span class="keywordtype">char</span> **val)</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;{</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00042.html#a3eb33be000f845d28ec16639f235ceb2">hpd_map_get</a>(value-&gt;<a class="code" href="a00024.html#a74dbf5094ab20a05bf059b204b9775bd">headers</a>, key, val);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;}</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
-<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="a00072.html#a483ed40fcd8aa91d03597e999b49d5fd">  117</a></span>&#160;<a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> <a class="code" href="a00071.html#a483ed40fcd8aa91d03597e999b49d5fd">value_get_headers_v</a>(<a class="code" href="a00024.html#a00110">hpd_value_t</a> *<a class="code" href="a00038.html#aee53bdc848584e095375d0d39aa400b8">value</a>, va_list vp)</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;{</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> rc;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="a00006.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a>, **val;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordflow">while</span> ((key = va_arg(vp, <span class="keyword">const</span> <span class="keywordtype">char</span> *))) {</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        val = va_arg(vp, <span class="keyword">const</span> <span class="keywordtype">char</span> **);</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <span class="keywordflow">if</span> (!val) <a class="code" href="a00066.html#a75936067d8534c3319d57d70fff18b8f">LOG_RETURN_E_NULL</a>();</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#aef90af0d3ed776bb297c450684dc5aab">value_get_header</a>(value, key, val))) <span class="keywordflow">return</span> rc;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    }</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;}</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno"><a class="line" href="a00072.html#a77cd6c0e04fdf701e4636a6ed1da78c5">  130</a></span>&#160;<a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> <a class="code" href="a00071.html#a77cd6c0e04fdf701e4636a6ed1da78c5">value_first_header</a>(<a class="code" href="a00024.html#a00110">hpd_value_t</a> *<a class="code" href="a00038.html#aee53bdc848584e095375d0d39aa400b8">value</a>, <a class="code" href="a00022.html#a00101">hpd_pair_t</a> **pair)</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;{</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00042.html#add245d9f3bd8d51960f62e547a5cec7c">hpd_map_first</a>(value-&gt;<a class="code" href="a00024.html#a74dbf5094ab20a05bf059b204b9775bd">headers</a>, pair);</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;}</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
-<div class="line"><a name="l00135"></a><span class="lineno"><a class="line" href="a00072.html#ab57527ba9b5f81741b2aec384f9d0821">  135</a></span>&#160;<a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> <a class="code" href="a00071.html#ab57527ba9b5f81741b2aec384f9d0821">value_next_header</a>(<a class="code" href="a00022.html#a00101">hpd_pair_t</a> **pair)</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;{</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00042.html#af695ac28accfa977234c1a554db94bb0">hpd_map_next</a>(pair);</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;}</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;</div>
-<div class="ttc" id="a00024_html"><div class="ttname"><a href="a00024.html">comm.h</a></div></div>
-<div class="ttc" id="a00021_html_a4f7dac4aa40064855557ca873911757a"><div class="ttname"><a href="a00021.html#a4f7dac4aa40064855557ca873911757a">HPD_NULL_TERMINATED</a></div><div class="ttdeci">#define HPD_NULL_TERMINATED</div><div class="ttdoc">Value to be used in len parameters on \0 terminated strings. </div><div class="ttdef"><b>Definition:</b> <a href="a00021_source.html#l00061">hpd_types.h:61</a></div></div>
-<div class="ttc" id="a00038_html_aee53bdc848584e095375d0d39aa400b8"><div class="ttname"><a href="a00038.html#aee53bdc848584e095375d0d39aa400b8">value</a></div><div class="ttdeci">data value</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00067">header_parser_test.c:67</a></div></div>
-<div class="ttc" id="a00042_html_a195d511a075f2349200563af1c5d1fd7"><div class="ttname"><a href="a00042.html#a195d511a075f2349200563af1c5d1fd7">hpd_map_free</a></div><div class="ttdeci">hpd_error_t hpd_map_free(hpd_map_t *map)</div><div class="ttdef"><b>Definition:</b> <a href="a00022_source.html#l00079">map.c:79</a></div></div>
-<div class="ttc" id="a00042_html_a8d23b888fb4bb3f951c7d48f1928ee9a"><div class="ttname"><a href="a00042.html#a8d23b888fb4bb3f951c7d48f1928ee9a">hpd_map_alloc</a></div><div class="ttdeci">hpd_error_t hpd_map_alloc(hpd_map_t **map)</div><div class="ttdef"><b>Definition:</b> <a href="a00022_source.html#l00040">map.c:40</a></div></div>
-<div class="ttc" id="a00042_html"><div class="ttname"><a href="a00042.html">hpd_map.h</a></div></div>
-<div class="ttc" id="a00024_html_a74dbf5094ab20a05bf059b204b9775bd"><div class="ttname"><a href="a00024.html#a74dbf5094ab20a05bf059b204b9775bd">hpd_value::headers</a></div><div class="ttdeci">hpd_map_t * headers</div><div class="ttdef"><b>Definition:</b> <a href="a00024_source.html#l00071">comm.h:71</a></div></div>
-<div class="ttc" id="a00071_html_a8e74f34c0eb423e170161eadec463df3"><div class="ttname"><a href="a00071.html#a8e74f34c0eb423e170161eadec463df3">value_set_header</a></div><div class="ttdeci">hpd_error_t value_set_header(hpd_value_t *value, const char *key, const char *val)</div><div class="ttdef"><b>Definition:</b> <a href="a00071_source.html#l00087">value.c:87</a></div></div>
-<div class="ttc" id="a00040_html_aeb54026c07aa12169c4ddf82b92fab17"><div class="ttname"><a href="a00040.html#aeb54026c07aa12169c4ddf82b92fab17">HPD_STR_CPY</a></div><div class="ttdeci">#define HPD_STR_CPY(DST, SRC)</div><div class="ttdef"><b>Definition:</b> <a href="a00040_source.html#l00063">hpd_common.h:63</a></div></div>
-<div class="ttc" id="a00071_html_a49b8ecaa784e618d8ee5fad8664b6d05"><div class="ttname"><a href="a00071.html#a49b8ecaa784e618d8ee5fad8664b6d05">value_get_body</a></div><div class="ttdeci">hpd_error_t value_get_body(hpd_value_t *value, const char **body, size_t *len)</div><div class="ttdef"><b>Definition:</b> <a href="a00071_source.html#l00105">value.c:105</a></div></div>
-<div class="ttc" id="a00071_html_aef90af0d3ed776bb297c450684dc5aab"><div class="ttname"><a href="a00071.html#aef90af0d3ed776bb297c450684dc5aab">value_get_header</a></div><div class="ttdeci">hpd_error_t value_get_header(hpd_value_t *value, const char *key, const char **val)</div><div class="ttdef"><b>Definition:</b> <a href="a00071_source.html#l00112">value.c:112</a></div></div>
-<div class="ttc" id="a00066_html_a75936067d8534c3319d57d70fff18b8f"><div class="ttname"><a href="a00066.html#a75936067d8534c3319d57d70fff18b8f">LOG_RETURN_E_NULL</a></div><div class="ttdeci">#define LOG_RETURN_E_NULL()</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00050">log.h:50</a></div></div>
-<div class="ttc" id="a00024_html_a7b511c06c4222b6fd0a3b8e769016099"><div class="ttname"><a href="a00024.html#a7b511c06c4222b6fd0a3b8e769016099">hpd_value::body</a></div><div class="ttdeci">char * body</div><div class="ttdef"><b>Definition:</b> <a href="a00024_source.html#l00072">comm.h:72</a></div></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00070.html">log.h</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00009.html">daemon.h</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="a00071.html#aeae04e52f7ec61b5f07fce88a3380a5f">   31</a></span>&#160;<a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> <a class="code" href="a00071.html#aeae04e52f7ec61b5f07fce88a3380a5f">hpd_logf</a>(<a class="code" href="a00020.html">hpd_module_t</a> *context, <a class="code" href="a00021.html#ae3a610c1a6d76924196036930d9ce8dc">hpd_log_level_t</a> level, <span class="keyword">const</span> <span class="keywordtype">char</span> *file, <span class="keywordtype">int</span> line, <span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...)</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordflow">if</span> (!context || !fmt) <a class="code" href="a00070.html#a75936067d8534c3319d57d70fff18b8f">LOG_RETURN_E_NULL</a>();</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> rc;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    va_list vp;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    va_start(vp, fmt);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    rc = <a class="code" href="a00069.html#af3d821ecc912efc276dbc731d52b1bcc">log_vlogf</a>(context-&gt;<a class="code" href="a00020.html#a7dc51a00eb88a3db99c29e7316974f5e">id</a>, level, file, line, fmt, vp);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    va_end(vp);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">return</span> rc;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="a00071.html#a8ef10c6537eea5fd723aa619bbc2bf4c">   42</a></span>&#160;<a class="code" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> <a class="code" href="a00071.html#a8ef10c6537eea5fd723aa619bbc2bf4c">hpd_vlogf</a>(<a class="code" href="a00020.html">hpd_module_t</a> *context, <a class="code" href="a00021.html#ae3a610c1a6d76924196036930d9ce8dc">hpd_log_level_t</a> level, <span class="keyword">const</span> <span class="keywordtype">char</span> *file, <span class="keywordtype">int</span> line, <span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, va_list vp)</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">if</span> (!context || !fmt) <a class="code" href="a00070.html#a75936067d8534c3319d57d70fff18b8f">LOG_RETURN_E_NULL</a>();</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00069.html#af3d821ecc912efc276dbc731d52b1bcc">log_vlogf</a>(context-&gt;<a class="code" href="a00020.html#a7dc51a00eb88a3db99c29e7316974f5e">id</a>, level, file, line, fmt, vp);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;}</div>
+<div class="ttc" id="a00071_html_aeae04e52f7ec61b5f07fce88a3380a5f"><div class="ttname"><a href="a00071.html#aeae04e52f7ec61b5f07fce88a3380a5f">hpd_logf</a></div><div class="ttdeci">hpd_error_t hpd_logf(hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt,...)</div><div class="ttdoc">[hpd_t functions] </div><div class="ttdef"><b>Definition:</b> <a href="a00071_source.html#l00031">log_api.c:31</a></div></div>
+<div class="ttc" id="a00071_html_a8ef10c6537eea5fd723aa619bbc2bf4c"><div class="ttname"><a href="a00071.html#a8ef10c6537eea5fd723aa619bbc2bf4c">hpd_vlogf</a></div><div class="ttdeci">hpd_error_t hpd_vlogf(hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp)</div><div class="ttdef"><b>Definition:</b> <a href="a00071_source.html#l00042">log_api.c:42</a></div></div>
+<div class="ttc" id="a00070_html"><div class="ttname"><a href="a00070.html">log.h</a></div></div>
 <div class="ttc" id="a00021_html_ad26385b6709a2fc6c0f9141e11598d7a"><div class="ttname"><a href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a></div><div class="ttdeci">enum hpd_error hpd_error_t</div><div class="ttdoc">[HPD_NULL_TERMINATED] </div></div>
-<div class="ttc" id="a00071_html_a0d75ed4c4f2374d031c908cf626dcf4a"><div class="ttname"><a href="a00071.html#a0d75ed4c4f2374d031c908cf626dcf4a">value_set_headers_v</a></div><div class="ttdeci">hpd_error_t value_set_headers_v(hpd_value_t *value, va_list vp)</div><div class="ttdef"><b>Definition:</b> <a href="a00071_source.html#l00092">value.c:92</a></div></div>
-<div class="ttc" id="a00021_html_af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940"><div class="ttname"><a href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a></div><div class="ttdef"><b>Definition:</b> <a href="a00021_source.html#l00069">hpd_types.h:69</a></div></div>
-<div class="ttc" id="a00066_html_aa3459e6f23717905b1d2e3ddff9bd0c4"><div class="ttname"><a href="a00066.html#aa3459e6f23717905b1d2e3ddff9bd0c4">LOG_RETURN_E_ALLOC</a></div><div class="ttdeci">#define LOG_RETURN_E_ALLOC()</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00051">log.h:51</a></div></div>
-<div class="ttc" id="a00042_html_ad8de9589846a9987ae60b199fc05094d"><div class="ttname"><a href="a00042.html#ad8de9589846a9987ae60b199fc05094d">hpd_pair_get</a></div><div class="ttdeci">hpd_error_t hpd_pair_get(hpd_pair_t *pair, const char **key, const char **value)</div><div class="ttdef"><b>Definition:</b> <a href="a00022_source.html#l00229">map.c:229</a></div></div>
-<div class="ttc" id="a00042_html_af695ac28accfa977234c1a554db94bb0"><div class="ttname"><a href="a00042.html#af695ac28accfa977234c1a554db94bb0">hpd_map_next</a></div><div class="ttdeci">hpd_error_t hpd_map_next(hpd_pair_t **pair)</div><div class="ttdef"><b>Definition:</b> <a href="a00022_source.html#l00060">map.c:60</a></div></div>
-<div class="ttc" id="a00071_html_a9e0cbc30fcd2121d212f1995c8e834ba"><div class="ttname"><a href="a00071.html#a9e0cbc30fcd2121d212f1995c8e834ba">value_alloc</a></div><div class="ttdeci">hpd_error_t value_alloc(hpd_value_t **value, const char *body, int len)</div><div class="ttdef"><b>Definition:</b> <a href="a00071_source.html#l00036">value.c:36</a></div></div>
-<div class="ttc" id="a00006_html_adf46370d9c211c3be22966b4606ba9b0"><div class="ttname"><a href="a00006.html#adf46370d9c211c3be22966b4606ba9b0">free</a></div><div class="ttdeci">free(data.url)</div></div>
-<div class="ttc" id="a00066_html"><div class="ttname"><a href="a00066.html">log.h</a></div></div>
-<div class="ttc" id="a00071_html_acb46c0254b5e6856197be334a0a058ad"><div class="ttname"><a href="a00071.html#acb46c0254b5e6856197be334a0a058ad">value_copy</a></div><div class="ttdeci">hpd_error_t value_copy(hpd_value_t **dst, const hpd_value_t *src)</div><div class="ttdef"><b>Definition:</b> <a href="a00071_source.html#l00057">value.c:57</a></div></div>
-<div class="ttc" id="a00040_html"><div class="ttname"><a href="a00040.html">hpd_common.h</a></div></div>
-<div class="ttc" id="a00024_html_a00110"><div class="ttname"><a href="a00024.html#a00110">hpd_value</a></div><div class="ttdef"><b>Definition:</b> <a href="a00024_source.html#l00070">comm.h:70</a></div></div>
-<div class="ttc" id="a00071_html_ab57527ba9b5f81741b2aec384f9d0821"><div class="ttname"><a href="a00071.html#ab57527ba9b5f81741b2aec384f9d0821">value_next_header</a></div><div class="ttdeci">hpd_error_t value_next_header(hpd_pair_t **pair)</div><div class="ttdef"><b>Definition:</b> <a href="a00071_source.html#l00135">value.c:135</a></div></div>
-<div class="ttc" id="a00040_html_a3845681e01afcaa2d65abc4c62dc34de"><div class="ttname"><a href="a00040.html#a3845681e01afcaa2d65abc4c62dc34de">HPD_CALLOC</a></div><div class="ttdeci">#define HPD_CALLOC(PTR, NUM, CAST)</div><div class="ttdoc">Allocates and zeros a structure. </div><div class="ttdef"><b>Definition:</b> <a href="a00040_source.html#l00043">hpd_common.h:43</a></div></div>
-<div class="ttc" id="a00042_html_add245d9f3bd8d51960f62e547a5cec7c"><div class="ttname"><a href="a00042.html#add245d9f3bd8d51960f62e547a5cec7c">hpd_map_first</a></div><div class="ttdeci">hpd_error_t hpd_map_first(hpd_map_t *map, hpd_pair_t **pair)</div><div class="ttdef"><b>Definition:</b> <a href="a00022_source.html#l00052">map.c:52</a></div></div>
-<div class="ttc" id="a00072_html"><div class="ttname"><a href="a00072.html">value.h</a></div></div>
-<div class="ttc" id="a00022_html_a00101"><div class="ttname"><a href="a00022.html#a00101">hpd_pair</a></div><div class="ttdef"><b>Definition:</b> <a href="a00022_source.html#l00034">map.c:34</a></div></div>
-<div class="ttc" id="a00042_html_a3eb33be000f845d28ec16639f235ceb2"><div class="ttname"><a href="a00042.html#a3eb33be000f845d28ec16639f235ceb2">hpd_map_get</a></div><div class="ttdeci">hpd_error_t hpd_map_get(hpd_map_t *map, const char *k, const char **v)</div><div class="ttdef"><b>Definition:</b> <a href="a00022_source.html#l00092">map.c:92</a></div></div>
-<div class="ttc" id="a00071_html_a1ec3b1d4547e5080bcec544c877852da"><div class="ttname"><a href="a00071.html#a1ec3b1d4547e5080bcec544c877852da">value_free</a></div><div class="ttdeci">hpd_error_t value_free(hpd_value_t *value)</div><div class="ttdef"><b>Definition:</b> <a href="a00071_source.html#l00076">value.c:76</a></div></div>
-<div class="ttc" id="a00071_html_a77cd6c0e04fdf701e4636a6ed1da78c5"><div class="ttname"><a href="a00071.html#a77cd6c0e04fdf701e4636a6ed1da78c5">value_first_header</a></div><div class="ttdeci">hpd_error_t value_first_header(hpd_value_t *value, hpd_pair_t **pair)</div><div class="ttdef"><b>Definition:</b> <a href="a00071_source.html#l00130">value.c:130</a></div></div>
-<div class="ttc" id="a00042_html_a230c25a2f8e5de7ce61623a4ce8a809f"><div class="ttname"><a href="a00042.html#a230c25a2f8e5de7ce61623a4ce8a809f">hpd_map_set</a></div><div class="ttdeci">hpd_error_t hpd_map_set(hpd_map_t *map, const char *k, const char *v)</div><div class="ttdef"><b>Definition:</b> <a href="a00022_source.html#l00175">map.c:175</a></div></div>
-<div class="ttc" id="a00006_html_ad0ed575d03a4dca41d2d38d4fa19a442"><div class="ttname"><a href="a00006.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a></div><div class="ttdeci">data key</div><div class="ttdef"><b>Definition:</b> <a href="a00006_source.html#l00202">url_parser_test.c:202</a></div></div>
-<div class="ttc" id="a00042_html_aa5a88a681f1f37ea04964db0a91b9439"><div class="ttname"><a href="a00042.html#aa5a88a681f1f37ea04964db0a91b9439">hpd_map_foreach</a></div><div class="ttdeci">#define hpd_map_foreach(RC, PAIR, MAP)</div><div class="ttdef"><b>Definition:</b> <a href="a00042_source.html#l00055">hpd_map.h:55</a></div></div>
-<div class="ttc" id="a00071_html_a483ed40fcd8aa91d03597e999b49d5fd"><div class="ttname"><a href="a00071.html#a483ed40fcd8aa91d03597e999b49d5fd">value_get_headers_v</a></div><div class="ttdeci">hpd_error_t value_get_headers_v(hpd_value_t *value, va_list vp)</div><div class="ttdef"><b>Definition:</b> <a href="a00071_source.html#l00117">value.c:117</a></div></div>
-<div class="ttc" id="a00024_html_a7469be7389c3f462a14a5f864641e996"><div class="ttname"><a href="a00024.html#a7469be7389c3f462a14a5f864641e996">hpd_value::len</a></div><div class="ttdeci">size_t len</div><div class="ttdef"><b>Definition:</b> <a href="a00024_source.html#l00073">comm.h:73</a></div></div>
+<div class="ttc" id="a00009_html"><div class="ttname"><a href="a00009.html">daemon.h</a></div></div>
+<div class="ttc" id="a00069_html_af3d821ecc912efc276dbc731d52b1bcc"><div class="ttname"><a href="a00069.html#af3d821ecc912efc276dbc731d52b1bcc">log_vlogf</a></div><div class="ttdeci">hpd_error_t log_vlogf(const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp)</div><div class="ttdef"><b>Definition:</b> <a href="a00069_source.html#l00041">log.c:41</a></div></div>
+<div class="ttc" id="a00020_html"><div class="ttname"><a href="a00020.html">hpd_module</a></div><div class="ttdef"><b>Definition:</b> <a href="a00009_source.html#l00086">daemon.h:86</a></div></div>
+<div class="ttc" id="a00020_html_a7dc51a00eb88a3db99c29e7316974f5e"><div class="ttname"><a href="a00020.html#a7dc51a00eb88a3db99c29e7316974f5e">hpd_module::id</a></div><div class="ttdeci">char * id</div><div class="ttdef"><b>Definition:</b> <a href="a00009_source.html#l00090">daemon.h:90</a></div></div>
+<div class="ttc" id="a00021_html_ae3a610c1a6d76924196036930d9ce8dc"><div class="ttname"><a href="a00021.html#ae3a610c1a6d76924196036930d9ce8dc">hpd_log_level_t</a></div><div class="ttdeci">enum hpd_log_level hpd_log_level_t</div><div class="ttdoc">[hpd_status_t] </div></div>
+<div class="ttc" id="a00070_html_a75936067d8534c3319d57d70fff18b8f"><div class="ttname"><a href="a00070.html#a75936067d8534c3319d57d70fff18b8f">LOG_RETURN_E_NULL</a></div><div class="ttdeci">#define LOG_RETURN_E_NULL()</div><div class="ttdef"><b>Definition:</b> <a href="a00070_source.html#l00050">log.h:50</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 26 2016 13:51:27 for Homeport Documentation by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 26 2016 14:09:16 for Homeport Documentation by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

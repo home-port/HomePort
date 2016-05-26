@@ -1,6 +1,2 @@
-<map id="hpd_listener" name="hpd_listener">
-<area shape="rect" id="node2" href="$a00009.html#a00087" title="{hpd\n||}" alt="" coords="545,204,588,281"/>
-<area shape="rect" id="node5" href="$a00005.html#a00083" title="{configuration\n||}" alt="" coords="732,344,828,421"/>
-<area shape="rect" id="node12" href="$a00020.html" title="{hpd_module\n||+ TAILQ_ENTRY()\l}" alt="" coords="255,344,388,421"/>
-<area shape="rect" id="node13" href="$a00021.html#a00100" title="[Application API Callbacks] " alt="" coords="189,204,307,281"/>
+<map id="hpd_ev_async" name="hpd_ev_async">
 </map>

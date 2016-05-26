@@ -1,16 +1,2 @@
-<map id="hpd_httpd_request" name="hpd_httpd_request">
-<area shape="rect" id="node3" href="$a00018.html#a00099" title="Settings struct for webserver. " alt="" coords="216,748,348,825"/>
-<area shape="rect" id="node6" href="$a00015.html#a00096" title="httpd instance struct " alt="" coords="433,1086,512,1163"/>
-<area shape="rect" id="node10" href="$a00009.html#a00087" title="{hpd\n||}" alt="" coords="2614,748,2657,825"/>
-<area shape="rect" id="node21" href="$a00027.html#a00108" title="Instance of a tcpd. " alt="" coords="894,748,969,825"/>
-<area shape="rect" id="node24" href="$a00029.html#a00109" title="Settings struct for tcpd. " alt="" coords="634,1086,762,1163"/>
-<area shape="rect" id="node35" href="$a00006.html#a00084" title="{data\n|+ key\l+ path\l|}" alt="" coords="1998,491,2057,583"/>
-<area shape="rect" id="node37" href="$a00028.html" title="All data to represent a connection. " alt="" coords="1203,1086,1337,1163"/>
-<area shape="rect" id="node7" href="$a00020.html" title="{hpd_module\n||+ TAILQ_ENTRY()\l}" alt="" coords="1579,498,1713,575"/>
-<area shape="rect" id="node28" href="$a00007.html#a00085" title="{hp\n||}" alt="" coords="1655,1086,1693,1163"/>
-<area shape="rect" id="node32" href="$a00032.html#a00113" title="An URL Parser instance. " alt="" coords="2068,1035,2171,1215"/>
-<area shape="rect" id="node8" href="$a00021.html#a00100" title="[Application API Callbacks] " alt="" coords="1635,204,1753,281"/>
-<area shape="rect" id="node30" href="$a00008.html#a00086" title="{hp_settings\n||}" alt="" coords="1360,498,1449,575"/>
-<area shape="rect" id="node13" href="$a00005.html#a00083" title="{configuration\n||}" alt="" coords="2678,1086,2774,1163"/>
-<area shape="rect" id="node34" href="$a00033.html#a00114" title="Settings struct for the URL Parser. " alt="" coords="2113,748,2203,825"/>
+<map id="hp_settings" name="hp_settings">
 </map>
