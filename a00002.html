@@ -84,6 +84,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li class="level2"><a href="#sec_internal_arch">Internal architecture</a></li>
 </ul>
 </li>
+<li class="level1"><a href="#sec_use_cases">Use cases covered by the API</a><ul><li class="level2"><a href="#sec_configurator">Configurator</a></li>
+<li class="level2"><a href="#sec_adapter_dev">Adapter Developer</a></li>
+<li class="level2"><a href="#sec_application_dev">Application Developer</a></li>
+<li class="level2"><a href="#sec_sub_task">Sub-tasks</a></li>
+</ul>
+</li>
 <li class="level1"><a href="#sec_data_mode">HomePort data model</a><ul><li class="level2"><a href="#sec_error_handling">Enumerations for error handling</a></li>
 <li class="level2"><a href="#sec_attrs">Attribute default keys</a></li>
 <li class="level2"><a href="#sec_methods">Method and Port enumeration</a></li>
@@ -113,26 +119,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </li>
 </ul>
 </div>
-<div class="textblock"><p>Directory hierarchy:</p><ul>
-<li><b>common/</b> &ndash; <em>Common libraries shared between HomePort and modules.</em><ul>
-<li><b>httpd/</b> &ndash; <em>A http web server.</em></li>
-<li><b>include/</b> &ndash; <em>Common items that requires only header files.</em></li>
-<li><b>map/</b> &ndash; <em>An implementation of a map, with both keys and values as strings.</em></li>
-<li><b>tcpd/</b> &ndash; <em>A tcp server.</em></li>
-</ul>
-</li>
-<li><b>example/</b> &ndash; <em>Global examples on entire HomePort installation (local examples can be found in sub-folders).</em><ul>
-<li><b>demo/</b> &ndash; <em>A simple demonstration of HomePort.</em></li>
-</ul>
-</li>
-<li><b>hpd/</b> &ndash; <em>HomePort itself.</em></li>
-<li><b>lib/</b> &ndash; <em>Third party libraries.</em></li>
-<li><b>modules/</b> &ndash; <em>HomePort modules.</em><ul>
-<li><b>hpd_rest/</b> &ndash; <em>Rest web service module.</em></li>
-</ul>
-</li>
-</ul>
-<h1><a class="anchor" id="sec_arch"></a>
+<div class="textblock"><h1><a class="anchor" id="sec_arch"></a>
 Overall architecture</h1>
 <div align="center">
 <object type="image/svg+xml" data="inline_umlgraph_1.svg"></object>
@@ -205,6 +192,58 @@ Internal architecture</h2>
 <li><a class="el" href="a00077.html">value_api.c</a></li>
 </ul>
 </li>
+</ul>
+<h1><a class="anchor" id="sec_use_cases"></a>
+Use cases covered by the API</h1>
+<p>Actors involved:</p><ul>
+<li>Configurator: Collects a set of modules into an executable file with a main function.</li>
+<li>Adapter developer.</li>
+<li>Application developer.</li>
+</ul>
+<h2><a class="anchor" id="sec_configurator"></a>
+Configurator</h2>
+<p>Functionality provided by: <a class="el" href="a00059.html">hpd_daemon_api.h</a></p>
+<p>Tasks:</p><ul>
+<li>Start and stop HomePort [<a class="el" href="a00002.html#sec_main">Daemon API</a>].</li>
+<li>Add modules to HomePort [<a class="el" href="a00002.html#sec_main">Daemon API</a>].</li>
+</ul>
+<p>In addition, the configurator needs the module definitions (hpd_module_def_t) as provided by the adapters and applications to add them to HomePort.</p>
+<h2><a class="anchor" id="sec_adapter_dev"></a>
+Adapter Developer</h2>
+<p>Functionality provided by: <a class="el" href="a00056.html">hpd_adapter_api.h</a></p>
+<p>Tasks:</p><ul>
+<li>Define a HomePort module for the configurator [<a class="el" href="a00002.html#sec_modules">Modules</a>].</li>
+<li>Manage the appropriate models in HomePort (adapters, devices, ...) [<a class="el" href="a00002.html#sec_adapter_api">Adapter API</a>].</li>
+<li>Answer to a request for a value [<a class="el" href="a00002.html#sec_adapter_comm">Adapter API - Communication</a>].<ul>
+<li>Read contents of PUT value [<a class="el" href="a00002.html#sec_value">Shared API - Value structure</a>].</li>
+<li>Construct the value [<a class="el" href="a00002.html#sec_value">Shared API - Value structure</a>].</li>
+</ul>
+</li>
+<li>Report that a service have changed value [<a class="el" href="a00002.html#sec_adapter_comm">Adapter API - Communication</a>].<ul>
+<li>Construct the value [<a class="el" href="a00002.html#sec_value">Shared API - Value structure</a>].</li>
+</ul>
+</li>
+</ul>
+<p>In addition, the adapter developer may need to browse the models provided by the adapter, when communicating with the underlying network (as they can store data within these models) [<a class="el" href="a00002.html#sec_shared_api_cont">Shared API (Adapters and Applications) - Part II</a>].</p>
+<h2><a class="anchor" id="sec_application_dev"></a>
+Application Developer</h2>
+<p>Functionality provided by: <a class="el" href="a00058.html">hpd_application_api.h</a></p>
+<p>Tasks:</p><ul>
+<li>Define a HomePort module for the configurator [<a class="el" href="a00002.html#sec_modules">Modules</a>].</li>
+<li>Browsing available services in HomePort [<a class="el" href="a00002.html#sec_shared_api_cont">Shared API (Adapters and Applications) - Part II</a>].</li>
+<li>Request a value [<a class="el" href="a00002.html#sec_application_api">Application API - Communication</a>].<ul>
+<li>Construct the value for PUT request [<a class="el" href="a00002.html#sec_value">Shared API - Value structure</a>].</li>
+<li>Read the response [<a class="el" href="a00002.html#sec_value">Shared API - Value structure</a>].</li>
+</ul>
+</li>
+<li>Listen to events [<a class="el" href="a00002.html#sec_application_api">Application API - Communication</a>].</li>
+</ul>
+<h2><a class="anchor" id="sec_sub_task"></a>
+Sub-tasks</h2>
+<p>The following tasks may be a sub-component for those mentioned above:</p>
+<ul>
+<li>Functions for logging (error) messages [<a class="el" href="a00002.html#sec_logging">Logging</a>].</li>
+<li>Functions for managing indirect references [<a class="el" href="a00002.html#sec_indirect_refs">Indirect references</a>].</li>
 </ul>
 <h1><a class="anchor" id="sec_data_mode"></a>
 HomePort data model</h1>
@@ -692,7 +731,7 @@ Lifetime of listener structures</div>
  </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 26 2016 14:09:27 for Homeport Documentation by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 26 2016 15:01:11 for Homeport Documentation by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>
