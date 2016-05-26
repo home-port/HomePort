@@ -1,0 +1,8 @@
+<map id="event_inform_device_detached" name="event_inform_device_detached">
+<area shape="rect" id="node2" href="$a00011.html#a8d6472e9a8006949786f5975d5b02648" title="discovery_detach_device" alt="" coords="196,5,365,32"/>
+<area shape="rect" id="node4" href="$a00063.html#ab3279e57e3faeb9689b5b60283103ef2" title="event_inform_adapter\l_detached" alt="" coords="207,57,354,98"/>
+<area shape="rect" id="node3" href="$a00060.html#a228c00929674efd7d29edec9043b2da6" title="hpd_device_detach" alt="" coords="433,5,568,32"/>
+<area shape="rect" id="node5" href="$a00011.html#adb9f3d73fc28b0ec1c15d72b03db7239" title="discovery_detach_adapter" alt="" coords="413,64,588,91"/>
+<area shape="rect" id="node6" href="$a00060.html#ace6bdcd24107e5a84d35a2dc90d3c58e" title="hpd_adapter_detach" alt="" coords="636,64,775,91"/>
+<area shape="rect" id="node7" href="$a00012.html#a51ee1d39c3be7ad828e223b971bd1a96" title="hpd_demo_adapter_stop" alt="" coords="823,64,987,91"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="add_attr" name="add_attr">
+<area shape="rect" id="node2" href="$a00078.html#acf68a0065671229ae03183a5cd04e8fc" title="add_parameter" alt="" coords="123,5,231,32"/>
+<area shape="rect" id="node3" href="$a00078.html#a795ab169f665e263af4a7c277df38a68" title="add_service" alt="" coords="279,56,371,83"/>
+<area shape="rect" id="node4" href="$a00078.html#a0e06b2640ece880b49d5d39ef432dd2c" title="add_device" alt="" coords="419,107,507,133"/>
+<area shape="rect" id="node5" href="$a00078.html#a74a4370db05c108f928bce2eb5395cc9" title="add_adapter" alt="" coords="555,132,648,159"/>
+<area shape="rect" id="node6" href="$a00078.html#ad88fa453c669223e047c6c1fe5d1be2b" title="add_configuration" alt="" coords="696,132,820,159"/>
+<area shape="rect" id="node7" href="$a00079.html#a8e4fec5aee8ef4584d875f74051b25b0" title="hpd_rest_xml_get_configuration" alt="" coords="868,132,1075,159"/>
+<area shape="rect" id="node8" href="$a00025.html#a144860c2e3dfe3d8d9fd021968bbd8ff" title="reply_devices" alt="" coords="1123,132,1225,159"/>
+<area shape="rect" id="node9" href="$a00025.html#abd6f4422cb70766aae33a18dc6b6cb74" title="on_req_hdr_cmpl" alt="" coords="1273,132,1395,159"/>
+<area shape="rect" id="node10" href="$a00025.html#ad079431c7eba97c5dd5e4e202cdf6102" title="on_create" alt="" coords="1443,132,1521,159"/>
+</map>

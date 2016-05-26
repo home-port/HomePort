@@ -1,0 +1,9 @@
+<map id="hpd_adapter_free" name="hpd_adapter_free">
+<area shape="rect" id="node2" href="$a00059.html#aec714553397f80039bf246b3b0800420" title="discovery_free_adapter" alt="" coords="176,245,333,272"/>
+<area shape="rect" id="node3" href="$a00059.html#a3c72fb9020b183238e0205b722d7ea95" title="discovery_free_device" alt="" coords="381,157,533,184"/>
+<area shape="rect" id="node6" href="$a00042.html#a195d511a075f2349200563af1c5d1fd7" title="hpd_map_free" alt="" coords="1005,169,1109,196"/>
+<area shape="rect" id="node8" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="1331,119,1375,145"/>
+<area shape="rect" id="node4" href="$a00059.html#a562bd655fd329da0289d21ec36973322" title="discovery_free_service" alt="" coords="581,119,737,145"/>
+<area shape="rect" id="node5" href="$a00059.html#ad18143d06649d9220e4fd8d74dbdec79" title="discovery_free_parameter" alt="" coords="785,93,957,120"/>
+<area shape="rect" id="node7" href="$a00022.html#ae1085dd4fd40466d18b02ec077ef4d6d" title="hpd_map_remove" alt="" coords="1157,195,1283,221"/>
+</map>

@@ -1,0 +1,33 @@
+<map id="hpd_tcpd_conn_close" name="hpd_tcpd_conn_close">
+<area shape="rect" id="node2" href="$a00017.html#a36a5feca39485163b3ef446c9e3171a3" title="Destroy a hpd_httpd_response. " alt="" coords="201,484,340,526"/>
+<area shape="rect" id="node3" href="$a00017.html#a3b100e8d7e1214067cf1b90ad577745c" title="Create the reponse and constructs the status line. " alt="" coords="388,514,527,555"/>
+<area shape="rect" id="node6" href="$a00025.html#afb08e2b5fbac2394319e24be39ac931a" title="reply" alt="" coords="605,462,655,489"/>
+<area shape="rect" id="node21" href="$a00025.html#abccd0d79ed3acf405337a07b4572d223" title="on_response" alt="" coords="1024,462,1120,489"/>
+<area shape="rect" id="node30" href="$a00025.html#a144860c2e3dfe3d8d9fd021968bbd8ff" title="reply_devices" alt="" coords="1021,766,1123,793"/>
+<area shape="rect" id="node4" href="$a00034.html#a2eb873ac7e610c2dff8e49d216d3aff8" title="handle_request" alt="" coords="575,766,685,793"/>
+<area shape="rect" id="node5" href="$a00034.html#a0ddf1224851353fc92bfbff6f499fa97" title="main" alt="" coords="809,766,860,793"/>
+<area shape="rect" id="node7" href="$a00025.html#a78818d54ff3643716564aad97c70c7e2" title="reply_internal_server\l_error" alt="" coords="763,324,906,366"/>
+<area shape="rect" id="node28" href="$a00025.html#a8352457dd87933b3ad1f5d5746480c61" title="reply_not_found" alt="" coords="777,614,892,641"/>
+<area shape="rect" id="node29" href="$a00025.html#a06c43484d9f060f5ad9edc943c1b4623" title="reply_unsupported_media_type" alt="" coords="733,564,936,590"/>
+<area shape="rect" id="node31" href="$a00025.html#a5340d41fbbc57c84fec47b6ba6879a07" title="reply_bad_request" alt="" coords="771,125,899,152"/>
+<area shape="rect" id="node32" href="$a00025.html#af80e97c85acb30ce80480d39ae70fdac" title="reply_method_not_allowed" alt="" coords="984,716,1160,742"/>
+<area shape="rect" id="node8" href="$a00025.html#a65f3fe01ba50f1473cad1a4418cfdf09" title="on_free" alt="" coords="1039,310,1105,337"/>
+<area shape="rect" id="node19" href="$a00025.html#a74ba52adbe4c46e9a9c33649e3b75243" title="on_req_cmpl" alt="" coords="1641,209,1737,236"/>
+<area shape="rect" id="node24" href="$a00025.html#a1d92ec8021d08d20067d78e70d770511" title="on_req_begin" alt="" coords="1640,108,1739,134"/>
+<area shape="rect" id="node25" href="$a00025.html#a5c8c7b4d085339a6ba0fb0e3d50cef93" title="on_req_url_cmpl" alt="" coords="1013,614,1131,641"/>
+<area shape="rect" id="node26" href="$a00025.html#abd6f4422cb70766aae33a18dc6b6cb74" title="on_req_hdr_cmpl" alt="" coords="1240,665,1361,692"/>
+<area shape="rect" id="node27" href="$a00025.html#ae022dba8bfed1279999755534594fc36" title="on_req_body" alt="" coords="1641,6,1737,33"/>
+<area shape="rect" id="node9" href="$a00011.html#a7d6f0b9bdced07007cfc6513f3a35d22" title="discovery_set_adapter_data" alt="" coords="1208,260,1393,286"/>
+<area shape="rect" id="node11" href="$a00011.html#a2da392ca7e69d9bde8b356d9cf917ff3" title="discovery_set_device_data" alt="" coords="1211,310,1391,337"/>
+<area shape="rect" id="node13" href="$a00011.html#a4c01b35f7a53d7d3b4fcdc53cd3a275a" title="discovery_set_service_data" alt="" coords="1209,361,1393,388"/>
+<area shape="rect" id="node15" href="$a00063.html#a89ff40606fb6eb1f5a0969a5b65ead1d" title="event_set_listener_data" alt="" coords="1221,412,1381,438"/>
+<area shape="rect" id="node17" href="$a00069.html#af2e70ea5267e6e806be3509474d049e0" title="request_set_request_data" alt="" coords="1215,158,1387,185"/>
+<area shape="rect" id="node10" href="$a00060.html#ae4435821a3fd887ed393c05dacd2a79d" title="hpd_adapter_set_data" alt="" coords="1441,260,1592,286"/>
+<area shape="rect" id="node12" href="$a00060.html#a082d6cbdcf9bc2051d3372e9275b7c9f" title="hpd_device_set_data" alt="" coords="1444,310,1589,337"/>
+<area shape="rect" id="node14" href="$a00060.html#a3974326e212a829eef3dc2a4f554ccf0" title="hpd_service_set_data" alt="" coords="1442,361,1591,388"/>
+<area shape="rect" id="node16" href="$a00064.html#a6ed81ad49352be61e2a8710624396e93" title="hpd_listener_set_data" alt="" coords="1442,412,1591,438"/>
+<area shape="rect" id="node18" href="$a00070.html#ac9eeff8f3e494a62942c2ebed8f05cd9" title="hpd_request_set_data" alt="" coords="1441,158,1592,185"/>
+<area shape="rect" id="node20" href="$a00025.html#ad079431c7eba97c5dd5e4e202cdf6102" title="on_create" alt="" coords="1787,209,1865,236"/>
+<area shape="rect" id="node22" href="$a00069.html#af762dc3db213f4a84ba5fe3ab36a78fe" title="request_alloc_request" alt="" coords="1226,462,1375,489"/>
+<area shape="rect" id="node23" href="$a00070.html#ac8e7c21db1c80443994e79d29eae8286" title="[hpd_request_t functions] " alt="" coords="1453,462,1580,489"/>
+</map>

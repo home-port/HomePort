@@ -1,0 +1,5 @@
+<map id="discovery_has_service_action" name="discovery_has_service_action">
+<area shape="rect" id="node2" href="$a00060.html#af976ab216b0e38ff248e50283dcff1e9" title="hpd_service_has_action" alt="" coords="208,13,371,39"/>
+<area shape="rect" id="node3" href="$a00025.html#abd6f4422cb70766aae33a18dc6b6cb74" title="on_req_hdr_cmpl" alt="" coords="419,13,540,39"/>
+<area shape="rect" id="node4" href="$a00025.html#ad079431c7eba97c5dd5e4e202cdf6102" title="on_create" alt="" coords="588,13,667,39"/>
+</map>

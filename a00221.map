@@ -1,0 +1,10 @@
+<map id="hpd_action" name="hpd_action">
+<area shape="rect" id="node2" href="$a00026.html" title="{hpd_service\n||+ TAILQ_ENTRY()\l}" alt="" coords="375,785,508,863"/>
+<area shape="rect" id="node8" href="$a00013.html" title="{hpd_device\n||+ TAILQ_ENTRY()\l}" alt="" coords="456,645,589,723"/>
+<area shape="rect" id="node10" href="$a00010.html" title="{hpd_adapter\n||+ TAILQ_ENTRY()\l}" alt="" coords="387,505,520,583"/>
+<area shape="rect" id="node6" href="$a00006.html#a00084" title="{data\n|+ key\l+ path\l|}" alt="" coords="295,292,353,384"/>
+<area shape="rect" id="node13" href="$a00009.html#a00087" title="{hpd\n||}" alt="" coords="1632,505,1675,583"/>
+<area shape="rect" id="node11" href="$a00005.html#a00083" title="{configuration\n||}" alt="" coords="1647,299,1743,377"/>
+<area shape="rect" id="node19" href="$a00020.html" title="{hpd_module\n||+ TAILQ_ENTRY()\l}" alt="" coords="1203,645,1336,723"/>
+<area shape="rect" id="node20" href="$a00021.html#a00100" title="[Application API Callbacks] " alt="" coords="1211,505,1328,583"/>
+</map>

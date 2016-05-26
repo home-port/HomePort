@@ -1,0 +1,32 @@
+<map id="discovery_find_service" name="discovery_find_service">
+<area shape="rect" id="node2" href="$a00060.html#a2f5dcf91dddd8b49a61f53627740452b" title="hpd_service_detach" alt="" coords="232,5,371,32"/>
+<area shape="rect" id="node3" href="$a00060.html#ad0fd5e015b802be56562d809b90aec61" title="hpd_service_get_data" alt="" coords="227,56,376,83"/>
+<area shape="rect" id="node4" href="$a00060.html#a90138cb6c91b2b93f66c4f8a76495394" title="[hpd_device_t functions] " alt="" coords="234,107,369,133"/>
+<area shape="rect" id="node19" href="$a00060.html#aab0ca1039ebd394001e1862ea9d545ba" title="hpd_service_get_attr" alt="" coords="230,157,373,184"/>
+<area shape="rect" id="node20" href="$a00060.html#ab649732a8091d3c716fb1c6e8eaa9a54" title="hpd_service_get_attrs" alt="" coords="226,208,377,235"/>
+<area shape="rect" id="node21" href="$a00060.html#af976ab216b0e38ff248e50283dcff1e9" title="hpd_service_has_action" alt="" coords="1131,259,1293,285"/>
+<area shape="rect" id="node22" href="$a00060.html#ad8b2fbfea2b54c6d744c7f4401f17d7f" title="hpd_service_first_action" alt="" coords="220,309,383,336"/>
+<area shape="rect" id="node23" href="$a00060.html#a3484f905e2600c79e4fcf79fb316285a" title="hpd_service_first_attr" alt="" coords="228,360,375,387"/>
+<area shape="rect" id="node24" href="$a00060.html#a6642489e16ed0070356079e6a2bf4591" title="hpd_service_first_parameter" alt="" coords="208,411,395,437"/>
+<area shape="rect" id="node25" href="$a00060.html#ae9856eccf954759353ca4f68a1a2839d" title="hpd_next_service" alt="" coords="239,461,363,488"/>
+<area shape="rect" id="node26" href="$a00060.html#acc19d8881fd760ae0a219a9b70da4eb4" title="hpd_adapter_next_service" alt="" coords="214,512,389,539"/>
+<area shape="rect" id="node27" href="$a00060.html#a928f2263cd4b1d300e9c73936531c544" title="hpd_device_next_service" alt="" coords="217,563,386,589"/>
+<area shape="rect" id="node28" href="$a00068.html#adae8c0a742917417d73d4e19d9b68810" title="on_request" alt="" coords="467,576,554,603"/>
+<area shape="rect" id="node5" href="$a00012.html#ab9d884c8b98aaa2f2d23e6884afdeffe" title="hpd_demo_on_get" alt="" coords="447,57,575,84"/>
+<area shape="rect" id="node7" href="$a00075.html#ae30c92f3bb2ebffcbb82054ad60c1ac5" title="hpd_rest_url_create" alt="" coords="443,108,579,135"/>
+<area shape="rect" id="node8" href="$a00076.html#aa3eb7c0c809c6c24396cb9321b6b57dc" title="add_service" alt="" coords="663,159,755,185"/>
+<area shape="rect" id="node6" href="$a00012.html#a723fb54ea3963ea674c9830e41a40e00" title="hpd_demo_adapter_start" alt="" coords="627,57,792,84"/>
+<area shape="rect" id="node9" href="$a00076.html#a2e3a16674e810068b936c145267184bb" title="add_services" alt="" coords="840,184,939,211"/>
+<area shape="rect" id="node10" href="$a00076.html#a57ebcecdb1a111267049578c1d9c51de" title="add_device" alt="" coords="991,196,1079,223"/>
+<area shape="rect" id="node11" href="$a00076.html#a4028efc20daa3dbda3727bcb6fdd0635" title="add_devices" alt="" coords="1165,203,1259,229"/>
+<area shape="rect" id="node12" href="$a00076.html#aa21890dddb121282884859a2c8bfd134" title="add_adapter" alt="" coords="1341,205,1435,232"/>
+<area shape="rect" id="node13" href="$a00076.html#a9a90e4e11e2111c0d0b29f277b1d24c4" title="add_adapters" alt="" coords="1483,207,1583,233"/>
+<area shape="rect" id="node14" href="$a00076.html#ab8e279d4c33ab258d7118b3e2f28400e" title="add_configuration" alt="" coords="1631,208,1755,235"/>
+<area shape="rect" id="node15" href="$a00077.html#a0f69305250a2916043c87e8e3865b28d" title="hpd_rest_json_get_configuration" alt="" coords="1803,208,2012,235"/>
+<area shape="rect" id="node16" href="$a00025.html#a144860c2e3dfe3d8d9fd021968bbd8ff" title="reply_devices" alt="" coords="2060,208,2163,235"/>
+<area shape="rect" id="node17" href="$a00025.html#abd6f4422cb70766aae33a18dc6b6cb74" title="on_req_hdr_cmpl" alt="" coords="2211,259,2332,285"/>
+<area shape="rect" id="node18" href="$a00025.html#ad079431c7eba97c5dd5e4e202cdf6102" title="on_create" alt="" coords="2380,291,2459,317"/>
+<area shape="rect" id="node29" href="$a00069.html#a49ae36dd88ac39bfa09a7cfc34323872" title="request_request" alt="" coords="652,537,767,564"/>
+<area shape="rect" id="node30" href="$a00070.html#a077adc41aa1c0f7270a995ff42420424" title="hpd_request" alt="" coords="843,461,936,488"/>
+<area shape="rect" id="node31" href="$a00025.html#a74ba52adbe4c46e9a9c33649e3b75243" title="on_req_cmpl" alt="" coords="987,385,1083,412"/>
+</map>

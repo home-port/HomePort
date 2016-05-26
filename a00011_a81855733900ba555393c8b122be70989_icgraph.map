@@ -1,0 +1,9 @@
+<map id="discovery_free_pid" name="discovery_free_pid">
+<area shape="rect" id="node2" href="$a00060.html#a672ca4a557b724d795853002ea453429" title="hpd_parameter_id_free" alt="" coords="201,5,356,32"/>
+<area shape="rect" id="node3" href="$a00060.html#a79ffb29dcdd02248b02806b84bd137ba" title="hpd_service_next_parameter" alt="" coords="184,56,373,83"/>
+<area shape="rect" id="node4" href="$a00061.html#a346f5beb62cb1df721f8428b245c1ecb" title="discovery_alloc_pid" alt="" coords="211,107,347,133"/>
+<area shape="rect" id="node5" href="$a00060.html#ac1e2289044cde6f0f992588a434fa891" title="hpd_parameter_id_alloc" alt="" coords="435,56,594,83"/>
+<area shape="rect" id="node6" href="$a00060.html#a6642489e16ed0070356079e6a2bf4591" title="hpd_service_first_parameter" alt="" coords="421,107,608,133"/>
+<area shape="rect" id="node7" href="$a00061.html#a800ca378bb37445e590b8d1c15fbc798" title="discovery_copy_pid" alt="" coords="446,157,583,184"/>
+<area shape="rect" id="node8" href="$a00060.html#a2e143536ee2b6fe282b15b52e22b98ea" title="hpd_parameter_id_copy" alt="" coords="656,157,816,184"/>
+</map>

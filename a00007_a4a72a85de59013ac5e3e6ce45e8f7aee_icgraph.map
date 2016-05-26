@@ -1,0 +1,12 @@
+<map id="reset_buffers" name="reset_buffers">
+<area shape="rect" id="node2" href="$a00008.html#a3734df5dbe38729c61890828b63ccae0" title="hp_on_header_field" alt="" coords="152,5,287,32"/>
+<area shape="rect" id="node4" href="$a00008.html#ad8b6abab7f0f61810a2740c1958b7cfe" title="hp_destroy" alt="" coords="176,56,263,83"/>
+<area shape="rect" id="node3" href="$a00016.html#a6c84ef26434635eaa329b5ac86202289" title="Header field callback for http_parser. " alt="" coords="349,5,464,32"/>
+<area shape="rect" id="node5" href="$a00036.html#aa1cd13c07d2d143d8a989a651a57e497" title="Destroy a ws_request. " alt="" coords="335,56,479,83"/>
+<area shape="rect" id="node6" href="$a00015.html#a42d99b2bf42ff8eedd6c276afad095e3" title="Callback for tcpd library. " alt="" coords="712,31,819,57"/>
+<area shape="rect" id="node10" href="$a00036.html#a64ce145f4bd2b212ac9494fb18b43615" title="Create a new ws_request. " alt="" coords="527,81,664,108"/>
+<area shape="rect" id="node7" href="$a00015.html#a8287f77cb41a94d39f282b607616df70" title="Create a new httpd instance. " alt="" coords="867,56,989,83"/>
+<area shape="rect" id="node8" href="$a00034.html#a0ddf1224851353fc92bfbff6f499fa97" title="main" alt="" coords="1047,31,1097,57"/>
+<area shape="rect" id="node9" href="$a00025.html#a665691f420dff4eebb8f4b4af62d7a49" title="on_start" alt="" coords="1037,81,1107,108"/>
+<area shape="rect" id="node11" href="$a00015.html#acbf369331509bd9760bf346f6292376a" title="Callback for tcpd library. " alt="" coords="721,81,810,108"/>
+</map>
