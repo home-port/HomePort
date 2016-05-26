@@ -1,5 +1,5 @@
 <map id="discovery_set_device_attr" name="discovery_set_device_attr">
-<area shape="rect" id="node2" href="$a00046.html#a230c25a2f8e5de7ce61623a4ce8a809f" title="hpd_map_set" alt="" coords="228,56,328,83"/>
+<area shape="rect" id="node2" href="$a00042.html#a230c25a2f8e5de7ce61623a4ce8a809f" title="hpd_map_set" alt="" coords="228,56,328,83"/>
 <area shape="rect" id="node3" href="$a00022.html#ae1085dd4fd40466d18b02ec077ef4d6d" title="hpd_map_remove" alt="" coords="376,5,501,32"/>
 <area shape="rect" id="node5" href="$a00022.html#a2c93ecbbe80ca388721bf496a9460fac" title="insert" alt="" coords="411,56,466,83"/>
 <area shape="rect" id="node6" href="$a00022.html#a75e1f12b222f5319f70b05db93c3ee3e" title="replace" alt="" coords="407,107,471,133"/>

@@ -28,7 +28,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00063.html#a21f81e9307d67c1ee0bef537519b1be6" target="_top" xlink:title="discovery_next_device\l_service">
+<g id="a_node3"><a xlink:href="a00059.html#a21f81e9307d67c1ee0bef537519b1be6" target="_top" xlink:title="discovery_next_device\l_service">
 <polygon fill="none" stroke="black" points="163,-77 163,-107 279,-107 279,-77 163,-77"/>
 <text text-anchor="start" x="171" y="-95" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_next_device</text>
 <text text-anchor="middle" x="221" y="-84" font-family="Helvetica,sans-Serif" font-size="10.00">_service</text>
@@ -81,7 +81,7 @@
 </g>
 <!-- Node7 -->
 <g id="node7" class="node"><title>Node7</title>
-<g id="a_node7"><a xlink:href="a00065.html#acd5e8c2bf3e761abc7e2fd2294238a74" target="_top" xlink:title="discovery_set_did">
+<g id="a_node7"><a xlink:href="a00061.html#acd5e8c2bf3e761abc7e2fd2294238a74" target="_top" xlink:title="discovery_set_did">
 <polygon fill="none" stroke="black" points="315,-0.5 315,-19.5 410,-19.5 410,-0.5 315,-0.5"/>
 <text text-anchor="middle" x="362.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_set_did</text>
 </a>
@@ -94,7 +94,7 @@
 </g>
 <!-- Node8 -->
 <g id="node8" class="node"><title>Node8</title>
-<g id="a_node8"><a xlink:href="a00065.html#af2f553cfc3af4678b87a8fc75f35a5c6" target="_top" xlink:title="discovery_set_aid">
+<g id="a_node8"><a xlink:href="a00061.html#af2f553cfc3af4678b87a8fc75f35a5c6" target="_top" xlink:title="discovery_set_aid">
 <polygon fill="none" stroke="black" points="446,-0.5 446,-19.5 541,-19.5 541,-0.5 446,-0.5"/>
 <text text-anchor="middle" x="493.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_set_aid</text>
 </a>

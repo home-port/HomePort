@@ -48,7 +48,7 @@ if (edges && edges.length) {
 <script type="text/javascript">
 var viewWidth = 545;
 var viewHeight = 78;
-var sectionId = 'dynsection-24';
+var sectionId = 'dynsection-42';
 </script>
 <script xlink:href="svgpan.js"/>
 <svg id="graph" class="graph">
@@ -74,7 +74,7 @@ var sectionId = 'dynsection-24';
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00063.html#a055799f2d3b822dabcd46d9c64ec1754" target="_top" xlink:title="discovery_get_device\l_attrs_v">
+<g id="a_node3"><a xlink:href="a00059.html#a055799f2d3b822dabcd46d9c64ec1754" target="_top" xlink:title="discovery_get_device\l_attrs_v">
 <polygon fill="none" stroke="black" points="147,-0.5 147,-30.5 258,-30.5 258,-0.5 147,-0.5"/>
 <text text-anchor="start" x="155" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_get_device</text>
 <text text-anchor="middle" x="202.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">_attrs_v</text>
@@ -88,7 +88,7 @@ var sectionId = 'dynsection-24';
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00063.html#a31da2ef1244bf969b9a023e458f60e69" target="_top" xlink:title="discovery_get_device_attr">
+<g id="a_node4"><a xlink:href="a00059.html#a31da2ef1244bf969b9a023e458f60e69" target="_top" xlink:title="discovery_get_device_attr">
 <polygon fill="none" stroke="black" points="295,-6 295,-25 426,-25 426,-6 295,-6"/>
 <text text-anchor="middle" x="360.5" y="-13" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_get_device_attr</text>
 </a>
@@ -101,7 +101,7 @@ var sectionId = 'dynsection-24';
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="a00046.html#a3eb33be000f845d28ec16639f235ceb2" target="_top" xlink:title="hpd_map_get">
+<g id="a_node5"><a xlink:href="a00042.html#a3eb33be000f845d28ec16639f235ceb2" target="_top" xlink:title="hpd_map_get">
 <polygon fill="none" stroke="black" points="462,-6 462,-25 537,-25 537,-6 462,-6"/>
 <text text-anchor="middle" x="499.5" y="-13" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_map_get</text>
 </a>

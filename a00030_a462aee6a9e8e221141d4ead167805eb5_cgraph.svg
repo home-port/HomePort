@@ -28,7 +28,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00060.html#ae215a28ac4e61dfa35bee54fa68f59dc" target="_top" xlink:title="[hpd_t functions] ">
+<g id="a_node3"><a xlink:href="a00056.html#ae215a28ac4e61dfa35bee54fa68f59dc" target="_top" xlink:title="[hpd_t functions] ">
 <polygon fill="none" stroke="black" points="153,-0.5 153,-19.5 275,-19.5 275,-0.5 153,-0.5"/>
 <text text-anchor="middle" x="214" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_module_add_option</text>
 </a>
@@ -41,7 +41,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00061.html#a27a83a7b452cacefcf9f08c8962243f5" target="_top" xlink:title="daemon_add_option">
+<g id="a_node4"><a xlink:href="a00057.html#a27a83a7b452cacefcf9f08c8962243f5" target="_top" xlink:title="daemon_add_option">
 <polygon fill="none" stroke="black" points="311,-0.5 311,-19.5 415,-19.5 415,-0.5 311,-0.5"/>
 <text text-anchor="middle" x="363" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">daemon_add_option</text>
 </a>

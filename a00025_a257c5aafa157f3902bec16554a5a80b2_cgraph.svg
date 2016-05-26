@@ -100,7 +100,7 @@ var sectionId = 'dynsection-28';
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00049.html#a58068e1a4c60b401bc6fc99c25e9a3f6" target="_top" xlink:title="Kill and clean up after a connection. ">
+<g id="a_node4"><a xlink:href="a00045.html#a58068e1a4c60b401bc6fc99c25e9a3f6" target="_top" xlink:title="Kill and clean up after a connection. ">
 <polygon fill="none" stroke="black" points="339,-76.5 339,-95.5 439,-95.5 439,-76.5 339,-76.5"/>
 <text text-anchor="middle" x="389" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_tcpd_conn_kill</text>
 </a>

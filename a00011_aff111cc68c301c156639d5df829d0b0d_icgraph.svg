@@ -30,7 +30,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00064.html#a9182a04ddc18d88a20bf55285179a581" target="_top" xlink:title="hpd_adapter_first_service">
+<g id="a_node4"><a xlink:href="a00060.html#a9182a04ddc18d88a20bf55285179a581" target="_top" xlink:title="hpd_adapter_first_service">
 <polygon fill="none" stroke="black" points="154,-0.5 154,-19.5 282,-19.5 282,-0.5 154,-0.5"/>
 <text text-anchor="middle" x="218" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_adapter_first_service</text>
 </a>
@@ -43,7 +43,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00064.html#ae9856eccf954759353ca4f68a1a2839d" target="_top" xlink:title="hpd_next_service">
+<g id="a_node3"><a xlink:href="a00060.html#ae9856eccf954759353ca4f68a1a2839d" target="_top" xlink:title="hpd_next_service">
 <polygon fill="none" stroke="black" points="318,-44.5 318,-63.5 411,-63.5 411,-44.5 318,-44.5"/>
 <text text-anchor="middle" x="364.5" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_next_service</text>
 </a>

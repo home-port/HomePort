@@ -61,7 +61,7 @@ var sectionId = 'dynsection-8';
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00040.html#a64ce145f4bd2b212ac9494fb18b43615" target="_top" xlink:title="Create a new ws_request. ">
+<g id="a_node2"><a xlink:href="a00036.html#a64ce145f4bd2b212ac9494fb18b43615" target="_top" xlink:title="Create a new ws_request. ">
 <polygon fill="none" stroke="black" points="95,-19.5 95,-38.5 198,-38.5 198,-19.5 95,-19.5"/>
 <text text-anchor="middle" x="146.5" y="-26.5" font-family="Helvetica,sans-Serif" font-size="10.00">http_request_create</text>
 </a>
@@ -100,7 +100,7 @@ var sectionId = 'dynsection-8';
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="a00038.html#a0ddf1224851353fc92bfbff6f499fa97" target="_top" xlink:title="main">
+<g id="a_node5"><a xlink:href="a00034.html#a0ddf1224851353fc92bfbff6f499fa97" target="_top" xlink:title="main">
 <polygon fill="none" stroke="black" points="472,-38.5 472,-57.5 510,-57.5 510,-38.5 472,-38.5"/>
 <text text-anchor="middle" x="491" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">main</text>
 </a>

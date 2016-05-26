@@ -1,4 +1,4 @@
 <map id="stop_hpd" name="stop_hpd">
-<area shape="rect" id="node2" href="$a00059.html#ad279f4f771e132927c09bd599fbe2b1b" title="hpd_stop" alt="" coords="128,5,203,32"/>
-<area shape="rect" id="node3" href="$a00061.html#a47e709c904aab5ba86a017daddfc449c" title="daemon_stop" alt="" coords="251,5,351,32"/>
+<area shape="rect" id="node2" href="$a00055.html#ad279f4f771e132927c09bd599fbe2b1b" title="hpd_stop" alt="" coords="128,5,203,32"/>
+<area shape="rect" id="node3" href="$a00057.html#a47e709c904aab5ba86a017daddfc449c" title="daemon_stop" alt="" coords="251,5,351,32"/>
 </map>

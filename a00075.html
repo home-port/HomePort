@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>Homeport Documentation: hpd/src/value.c File Reference</title>
+<title>Homeport Documentation: modules/hpd_rest/src/hpd_rest_intern.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,69 +81,107 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_2cad9915d3465dafc0c8c8572bece9a6.html">hpd</a></li><li class="navelem"><a class="el" href="dir_ccdac1f62f237d0526fb2f8df84d1331.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_e05d7e2b1ecd646af5bb94391405f3b5.html">modules</a></li><li class="navelem"><a class="el" href="dir_24b2af04eabaaa805652b4713b235510.html">hpd_rest</a></li><li class="navelem"><a class="el" href="dir_cb80023dd8f8b364ce5cb184ff6fe9c3.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">value.c File Reference</div>  </div>
+<div class="title">hpd_rest_intern.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><div class="dynheader">
-Include dependency graph for value.c:</div>
+Include dependency graph for hpd_rest_intern.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00230.svg" width="570" height="336"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00237.svg" width="158" height="127"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</div><div class="textblock"><div class="dynheader">
+This graph shows which files directly or indirectly include this file:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00238.svg" width="511" height="231"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
 </div>
 </div>
 <p><a href="a00075_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a73846ce9ca68d5bd52e91b1ba4694266"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00025.html#a00105">hpd_rest</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a73846ce9ca68d5bd52e91b1ba4694266">hpd_rest_t</a></td></tr>
+<tr class="separator:a73846ce9ca68d5bd52e91b1ba4694266"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a9e0cbc30fcd2121d212f1995c8e834ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a9e0cbc30fcd2121d212f1995c8e834ba">value_alloc</a> (<a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> **<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>, const char *body, int len)</td></tr>
-<tr class="separator:a9e0cbc30fcd2121d212f1995c8e834ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb46c0254b5e6856197be334a0a058ad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#acb46c0254b5e6856197be334a0a058ad">value_copy</a> (<a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> **dst, const <a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *src)</td></tr>
-<tr class="separator:acb46c0254b5e6856197be334a0a058ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a77cd6c0e04fdf701e4636a6ed1da78c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a77cd6c0e04fdf701e4636a6ed1da78c5">value_first_header</a> (<a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>, <a class="el" href="a00046.html#a614533cddb18d20146e2a10a79cd8cfe">hpd_pair_t</a> **pair)</td></tr>
-<tr class="separator:a77cd6c0e04fdf701e4636a6ed1da78c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ec3b1d4547e5080bcec544c877852da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a1ec3b1d4547e5080bcec544c877852da">value_free</a> (<a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>)</td></tr>
-<tr class="separator:a1ec3b1d4547e5080bcec544c877852da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49b8ecaa784e618d8ee5fad8664b6d05"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a49b8ecaa784e618d8ee5fad8664b6d05">value_get_body</a> (<a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>, const char **body, size_t *len)</td></tr>
-<tr class="separator:a49b8ecaa784e618d8ee5fad8664b6d05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef90af0d3ed776bb297c450684dc5aab"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#aef90af0d3ed776bb297c450684dc5aab">value_get_header</a> (<a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>, const char *<a class="el" href="a00006.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a>, const char **val)</td></tr>
-<tr class="separator:aef90af0d3ed776bb297c450684dc5aab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a483ed40fcd8aa91d03597e999b49d5fd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a483ed40fcd8aa91d03597e999b49d5fd">value_get_headers_v</a> (<a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>, va_list vp)</td></tr>
-<tr class="separator:a483ed40fcd8aa91d03597e999b49d5fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab57527ba9b5f81741b2aec384f9d0821"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#ab57527ba9b5f81741b2aec384f9d0821">value_next_header</a> (<a class="el" href="a00046.html#a614533cddb18d20146e2a10a79cd8cfe">hpd_pair_t</a> **pair)</td></tr>
-<tr class="separator:ab57527ba9b5f81741b2aec384f9d0821"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e74f34c0eb423e170161eadec463df3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a8e74f34c0eb423e170161eadec463df3">value_set_header</a> (<a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>, const char *<a class="el" href="a00006.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a>, const char *val)</td></tr>
-<tr class="separator:a8e74f34c0eb423e170161eadec463df3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d75ed4c4f2374d031c908cf626dcf4a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a0d75ed4c4f2374d031c908cf626dcf4a">value_set_headers_v</a> (<a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>, va_list vp)</td></tr>
-<tr class="separator:a0d75ed4c4f2374d031c908cf626dcf4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0105094094e327ff02d8891cd2d55171"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a0105094094e327ff02d8891cd2d55171">hpd_rest_get_timestamp</a> (<a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *context, char str[21])</td></tr>
+<tr class="separator:a0105094094e327ff02d8891cd2d55171"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae30c92f3bb2ebffcbb82054ad60c1ac5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#ae30c92f3bb2ebffcbb82054ad60c1ac5">hpd_rest_url_create</a> (<a class="el" href="a00075.html#a73846ce9ca68d5bd52e91b1ba4694266">hpd_rest_t</a> *rest, <a class="el" href="a00021.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> *service, char **<a class="el" href="a00006.html#a8887c2fa1e081a4df18dff878d9ce142">url</a>)</td></tr>
+<tr class="separator:ae30c92f3bb2ebffcbb82054ad60c1ac5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:afc9fc20e13b5c5eb0a0c22631f71dd91"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#afc9fc20e13b5c5eb0a0c22631f71dd91">HPD_REST_KEY_ADAPTER</a> = &quot;_adapter&quot;</td></tr>
+<tr class="separator:afc9fc20e13b5c5eb0a0c22631f71dd91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e2e9d6ba92d5becad64ba2761d1f89a"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a6e2e9d6ba92d5becad64ba2761d1f89a">HPD_REST_KEY_CONFIGURATION</a> = &quot;_configuration&quot;</td></tr>
+<tr class="separator:a6e2e9d6ba92d5becad64ba2761d1f89a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a0b6b1db1b5b868c2ed68b2e0132cd3"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a6a0b6b1db1b5b868c2ed68b2e0132cd3">HPD_REST_KEY_DEVICE</a> = &quot;_device&quot;</td></tr>
+<tr class="separator:a6a0b6b1db1b5b868c2ed68b2e0132cd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4ca3cc9158b81f7f8a5d10f0336b82c"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#ac4ca3cc9158b81f7f8a5d10f0336b82c">HPD_REST_KEY_GET</a> = &quot;_get&quot;</td></tr>
+<tr class="separator:ac4ca3cc9158b81f7f8a5d10f0336b82c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9eff1a7c055fe846968bc2a6d4c2147b"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a9eff1a7c055fe846968bc2a6d4c2147b">HPD_REST_KEY_ID</a> = &quot;_id&quot;</td></tr>
+<tr class="separator:a9eff1a7c055fe846968bc2a6d4c2147b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6a3b4433e70eba4efc9d0110df845b0"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#ac6a3b4433e70eba4efc9d0110df845b0">HPD_REST_KEY_PARAMETER</a> = &quot;_parameter&quot;</td></tr>
+<tr class="separator:ac6a3b4433e70eba4efc9d0110df845b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94341c06ce6e1879d1880e8ca9af8a01"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a94341c06ce6e1879d1880e8ca9af8a01">HPD_REST_KEY_PUT</a> = &quot;_put&quot;</td></tr>
+<tr class="separator:a94341c06ce6e1879d1880e8ca9af8a01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a119ad8024afc022ee2991a44da293b62"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a119ad8024afc022ee2991a44da293b62">HPD_REST_KEY_SERVICE</a> = &quot;_service&quot;</td></tr>
+<tr class="separator:a119ad8024afc022ee2991a44da293b62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97c526af091cdcbb14be523ef0ff5c9e"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a97c526af091cdcbb14be523ef0ff5c9e">HPD_REST_KEY_TIMESTAMP</a> = &quot;_timestamp&quot;</td></tr>
+<tr class="separator:a97c526af091cdcbb14be523ef0ff5c9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ec2e4b760873a0a28359738b2fa4d6b"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a7ec2e4b760873a0a28359738b2fa4d6b">HPD_REST_KEY_URI</a> = &quot;_uri&quot;</td></tr>
+<tr class="separator:a7ec2e4b760873a0a28359738b2fa4d6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f0ff3b2d15e952d717407b557e991e0"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a5f0ff3b2d15e952d717407b557e991e0">HPD_REST_KEY_URL_ENCODED_CHARSET</a> = &quot;_urlEncodedCharset&quot;</td></tr>
+<tr class="separator:a5f0ff3b2d15e952d717407b557e991e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd5eea9d87556edb1fb7e2cf02e43208"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#afd5eea9d87556edb1fb7e2cf02e43208">HPD_REST_KEY_VALUE</a> = &quot;_value&quot;</td></tr>
+<tr class="separator:afd5eea9d87556edb1fb7e2cf02e43208"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7c12916026a019a7093d780d2bee7fa"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#aa7c12916026a019a7093d780d2bee7fa">HPD_REST_VAL_ASCII</a> = &quot;ASCII&quot;</td></tr>
+<tr class="separator:aa7c12916026a019a7093d780d2bee7fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1babed7c4c488e531c8f2b58be32e99d"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00075.html#a1babed7c4c488e531c8f2b58be32e99d">HPD_REST_VAL_TRUE</a> = &quot;1&quot;</td></tr>
+<tr class="separator:a1babed7c4c488e531c8f2b58be32e99d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a class="anchor" id="a73846ce9ca68d5bd52e91b1ba4694266"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00025.html#a00105">hpd_rest</a> <a class="el" href="a00075.html#a73846ce9ca68d5bd52e91b1ba4694266">hpd_rest_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00075_source.html#l00033">33</a> of file <a class="el" href="a00075_source.html">hpd_rest_intern.h</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a9e0cbc30fcd2121d212f1995c8e834ba"></a>
+<a class="anchor" id="a0105094094e327ff02d8891cd2d55171"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> value_alloc </td>
+          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> hpd_rest_get_timestamp </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> **&#160;</td>
-          <td class="paramname"><em>value</em>, </td>
+          <td class="paramtype"><a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>body</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>len</em>&#160;</td>
+          <td class="paramtype">char&#160;</td>
+          <td class="paramname"><em>str</em>[21]&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -153,39 +191,39 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00075_source.html#l00036">36</a> of file <a class="el" href="a00075_source.html">value.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00075_a9e0cbc30fcd2121d212f1995c8e834ba_cgraph.svg" width="100%" height="480"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-</div>
-</p>
+<p>Definition at line <a class="el" href="a00025_source.html#l00116">116</a> of file <a class="el" href="a00025_source.html">hpd_rest.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00075_a9e0cbc30fcd2121d212f1995c8e834ba_icgraph.svg" width="100%" height="404"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00075_a0105094094e327ff02d8891cd2d55171_icgraph.svg" width="100%" height="366"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="acb46c0254b5e6856197be334a0a058ad"></a>
+<a class="anchor" id="ae30c92f3bb2ebffcbb82054ad60c1ac5"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> value_copy </td>
+          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> hpd_rest_url_create </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> **&#160;</td>
-          <td class="paramname"><em>dst</em>, </td>
+          <td class="paramtype"><a class="el" href="a00075.html#a73846ce9ca68d5bd52e91b1ba4694266">hpd_rest_t</a> *&#160;</td>
+          <td class="paramname"><em>rest</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *&#160;</td>
-          <td class="paramname"><em>src</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="a00021.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> *&#160;</td>
+          <td class="paramname"><em>service</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char **&#160;</td>
+          <td class="paramname"><em>url</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -195,355 +233,339 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00075_source.html#l00057">57</a> of file <a class="el" href="a00075_source.html">value.c</a>.</p>
+<p>Definition at line <a class="el" href="a00025_source.html#l00125">125</a> of file <a class="el" href="a00025_source.html">hpd_rest.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00075_acb46c0254b5e6856197be334a0a058ad_cgraph.svg" width="100%" height="556"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00075_ae30c92f3bb2ebffcbb82054ad60c1ac5_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 </div>
 </p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00075_acb46c0254b5e6856197be334a0a058ad_icgraph.svg" width="652" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00075_ae30c92f3bb2ebffcbb82054ad60c1ac5_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a77cd6c0e04fdf701e4636a6ed1da78c5"></a>
+<h2 class="groupheader">Variable Documentation</h2>
+<a class="anchor" id="afc9fc20e13b5c5eb0a0c22631f71dd91"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> value_first_header </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *&#160;</td>
-          <td class="paramname"><em>value</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00046.html#a614533cddb18d20146e2a10a79cd8cfe">hpd_pair_t</a> **&#160;</td>
-          <td class="paramname"><em>pair</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="memname">const char* const HPD_REST_KEY_ADAPTER = &quot;_adapter&quot;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00075_source.html#l00130">130</a> of file <a class="el" href="a00075_source.html">value.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00075_a77cd6c0e04fdf701e4636a6ed1da78c5_cgraph.svg" width="291" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00075_a77cd6c0e04fdf701e4636a6ed1da78c5_icgraph.svg" width="343" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</p>
+<p>Definition at line <a class="el" href="a00075_source.html#l00047">47</a> of file <a class="el" href="a00075_source.html">hpd_rest_intern.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a1ec3b1d4547e5080bcec544c877852da"></a>
+<a class="anchor" id="a6e2e9d6ba92d5becad64ba2761d1f89a"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> value_free </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *&#160;</td>
-          <td class="paramname"><em>value</em></td><td>)</td>
-          <td></td>
+          <td class="memname">const char* const HPD_REST_KEY_CONFIGURATION = &quot;_configuration&quot;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00075_source.html#l00076">76</a> of file <a class="el" href="a00075_source.html">value.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00075_a1ec3b1d4547e5080bcec544c877852da_cgraph.svg" width="511" height="114"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00075_a1ec3b1d4547e5080bcec544c877852da_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-</div>
-</p>
+<p>Definition at line <a class="el" href="a00075_source.html#l00049">49</a> of file <a class="el" href="a00075_source.html">hpd_rest_intern.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a49b8ecaa784e618d8ee5fad8664b6d05"></a>
+<a class="anchor" id="a6a0b6b1db1b5b868c2ed68b2e0132cd3"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> value_get_body </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *&#160;</td>
-          <td class="paramname"><em>value</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char **&#160;</td>
-          <td class="paramname"><em>body</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t *&#160;</td>
-          <td class="paramname"><em>len</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="memname">const char* const HPD_REST_KEY_DEVICE = &quot;_device&quot;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00075_source.html#l00105">105</a> of file <a class="el" href="a00075_source.html">value.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00075_a49b8ecaa784e618d8ee5fad8664b6d05_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-</div>
-</p>
+<p>Definition at line <a class="el" href="a00075_source.html#l00045">45</a> of file <a class="el" href="a00075_source.html">hpd_rest_intern.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aef90af0d3ed776bb297c450684dc5aab"></a>
+<a class="anchor" id="ac4ca3cc9158b81f7f8a5d10f0336b82c"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> value_get_header </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *&#160;</td>
-          <td class="paramname"><em>value</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>key</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char **&#160;</td>
-          <td class="paramname"><em>val</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="memname">const char* const HPD_REST_KEY_GET = &quot;_get&quot;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00075_source.html#l00112">112</a> of file <a class="el" href="a00075_source.html">value.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00075_aef90af0d3ed776bb297c450684dc5aab_cgraph.svg" width="283" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00075_aef90af0d3ed776bb297c450684dc5aab_icgraph.svg" width="542" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</p>
+<p>Definition at line <a class="el" href="a00075_source.html#l00041">41</a> of file <a class="el" href="a00075_source.html">hpd_rest_intern.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a483ed40fcd8aa91d03597e999b49d5fd"></a>
+<a class="anchor" id="a9eff1a7c055fe846968bc2a6d4c2147b"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> value_get_headers_v </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *&#160;</td>
-          <td class="paramname"><em>value</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">va_list&#160;</td>
-          <td class="paramname"><em>vp</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="memname">const char* const HPD_REST_KEY_ID = &quot;_id&quot;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00075_source.html#l00117">117</a> of file <a class="el" href="a00075_source.html">value.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00075_a483ed40fcd8aa91d03597e999b49d5fd_cgraph.svg" width="476" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00075_a483ed40fcd8aa91d03597e999b49d5fd_icgraph.svg" width="363" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</p>
+<p>Definition at line <a class="el" href="a00075_source.html#l00039">39</a> of file <a class="el" href="a00075_source.html">hpd_rest_intern.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab57527ba9b5f81741b2aec384f9d0821"></a>
+<a class="anchor" id="ac6a3b4433e70eba4efc9d0110df845b0"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> value_next_header </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00046.html#a614533cddb18d20146e2a10a79cd8cfe">hpd_pair_t</a> **&#160;</td>
-          <td class="paramname"><em>pair</em></td><td>)</td>
-          <td></td>
+          <td class="memname">const char* const HPD_REST_KEY_PARAMETER = &quot;_parameter&quot;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00075_source.html#l00135">135</a> of file <a class="el" href="a00075_source.html">value.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00075_ab57527ba9b5f81741b2aec384f9d0821_cgraph.svg" width="296" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00075_ab57527ba9b5f81741b2aec384f9d0821_icgraph.svg" width="348" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</p>
+<p>Definition at line <a class="el" href="a00075_source.html#l00043">43</a> of file <a class="el" href="a00075_source.html">hpd_rest_intern.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a8e74f34c0eb423e170161eadec463df3"></a>
+<a class="anchor" id="a94341c06ce6e1879d1880e8ca9af8a01"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> value_set_header </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *&#160;</td>
-          <td class="paramname"><em>value</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>key</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>val</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="memname">const char* const HPD_REST_KEY_PUT = &quot;_put&quot;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00075_source.html#l00087">87</a> of file <a class="el" href="a00075_source.html">value.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00075_a8e74f34c0eb423e170161eadec463df3_cgraph.svg" width="548" height="139"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00075_a8e74f34c0eb423e170161eadec463df3_icgraph.svg" width="100%" height="404"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
-</div>
-</p>
+<p>Definition at line <a class="el" href="a00075_source.html#l00042">42</a> of file <a class="el" href="a00075_source.html">hpd_rest_intern.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a0d75ed4c4f2374d031c908cf626dcf4a"></a>
+<a class="anchor" id="a119ad8024afc022ee2991a44da293b62"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> value_set_headers_v </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *&#160;</td>
-          <td class="paramname"><em>value</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">va_list&#160;</td>
-          <td class="paramname"><em>vp</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="memname">const char* const HPD_REST_KEY_SERVICE = &quot;_service&quot;</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00075_source.html#l00092">92</a> of file <a class="el" href="a00075_source.html">value.c</a>.</p>
+<p>Definition at line <a class="el" href="a00075_source.html#l00044">44</a> of file <a class="el" href="a00075_source.html">hpd_rest_intern.h</a>.</p>
 
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00075_a0d75ed4c4f2374d031c908cf626dcf4a_cgraph.svg" width="100%" height="404"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
-</p>
+</div>
+<a class="anchor" id="a97c526af091cdcbb14be523ef0ff5c9e"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_REST_KEY_TIMESTAMP = &quot;_timestamp&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00075_a0d75ed4c4f2374d031c908cf626dcf4a_icgraph.svg" width="363" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<p>Definition at line <a class="el" href="a00075_source.html#l00050">50</a> of file <a class="el" href="a00075_source.html">hpd_rest_intern.h</a>.</p>
+
 </div>
-</p>
+</div>
+<a class="anchor" id="a7ec2e4b760873a0a28359738b2fa4d6b"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_REST_KEY_URI = &quot;_uri&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00075_source.html#l00040">40</a> of file <a class="el" href="a00075_source.html">hpd_rest_intern.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5f0ff3b2d15e952d717407b557e991e0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_REST_KEY_URL_ENCODED_CHARSET = &quot;_urlEncodedCharset&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00075_source.html#l00046">46</a> of file <a class="el" href="a00075_source.html">hpd_rest_intern.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afd5eea9d87556edb1fb7e2cf02e43208"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_REST_KEY_VALUE = &quot;_value&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00075_source.html#l00048">48</a> of file <a class="el" href="a00075_source.html">hpd_rest_intern.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa7c12916026a019a7093d780d2bee7fa"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_REST_VAL_ASCII = &quot;ASCII&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00075_source.html#l00053">53</a> of file <a class="el" href="a00075_source.html">hpd_rest_intern.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1babed7c4c488e531c8f2b58be32e99d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_REST_VAL_TRUE = &quot;1&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00075_source.html#l00052">52</a> of file <a class="el" href="a00075_source.html">hpd_rest_intern.h</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 26 2016 15:00:58 for Homeport Documentation by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 26 2016 15:14:21 for Homeport Documentation by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

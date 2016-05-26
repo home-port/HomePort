@@ -1,5 +1,5 @@
 <map id="discovery_set_service_attr" name="discovery_set_service_attr">
 <area shape="rect" id="node2" href="$a00011.html#a39fdda2b73169dd093a0009131f256bd" title="discovery_set_service\l_attrs_v" alt="" coords="232,5,384,47"/>
-<area shape="rect" id="node4" href="$a00064.html#ad7f06997cb2f69f3decb671a16d2bdb6" title="hpd_service_set_attr" alt="" coords="237,71,379,98"/>
-<area shape="rect" id="node3" href="$a00064.html#a436b38305c5c560b7c2d78285ac7e27c" title="hpd_service_set_attrs" alt="" coords="432,13,583,39"/>
+<area shape="rect" id="node4" href="$a00060.html#ad7f06997cb2f69f3decb671a16d2bdb6" title="hpd_service_set_attr" alt="" coords="237,71,379,98"/>
+<area shape="rect" id="node3" href="$a00060.html#a436b38305c5c560b7c2d78285ac7e27c" title="hpd_service_set_attrs" alt="" coords="432,13,583,39"/>
 </map>

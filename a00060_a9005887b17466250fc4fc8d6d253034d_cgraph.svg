@@ -28,7 +28,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00063.html#a01d64284d4ff469a8dffa0260a92eea2" target="_top" xlink:title="discovery_get_device_id">
+<g id="a_node3"><a xlink:href="a00059.html#a01d64284d4ff469a8dffa0260a92eea2" target="_top" xlink:title="discovery_get_device_id">
 <polygon fill="none" stroke="black" points="134,-0.5 134,-19.5 258,-19.5 258,-0.5 134,-0.5"/>
 <text text-anchor="middle" x="196" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_get_device_id</text>
 </a>

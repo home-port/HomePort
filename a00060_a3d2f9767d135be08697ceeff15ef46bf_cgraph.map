@@ -1,8 +1,8 @@
 <map id="hpd_device_id_copy" name="hpd_device_id_copy">
 <area shape="rect" id="node2" href="$a00011.html#a80aa32d3be39079195d1cbb8c4818cd8" title="discovery_copy_did" alt="" coords="193,31,331,57"/>
-<area shape="rect" id="node3" href="$a00065.html#aebd10ac1c18be51340c39d6d5a54e6d1" title="discovery_alloc_did" alt="" coords="379,31,515,57"/>
-<area shape="rect" id="node4" href="$a00065.html#acd5e8c2bf3e761abc7e2fd2294238a74" title="discovery_set_did" alt="" coords="565,5,691,32"/>
-<area shape="rect" id="node6" href="$a00065.html#ae1a000b225c8b3f365c2cec8362b8483" title="discovery_free_did" alt="" coords="563,56,693,83"/>
-<area shape="rect" id="node5" href="$a00065.html#af2f553cfc3af4678b87a8fc75f35a5c6" title="discovery_set_aid" alt="" coords="741,5,868,32"/>
+<area shape="rect" id="node3" href="$a00061.html#aebd10ac1c18be51340c39d6d5a54e6d1" title="discovery_alloc_did" alt="" coords="379,31,515,57"/>
+<area shape="rect" id="node4" href="$a00061.html#acd5e8c2bf3e761abc7e2fd2294238a74" title="discovery_set_did" alt="" coords="565,5,691,32"/>
+<area shape="rect" id="node6" href="$a00061.html#ae1a000b225c8b3f365c2cec8362b8483" title="discovery_free_did" alt="" coords="563,56,693,83"/>
+<area shape="rect" id="node5" href="$a00061.html#af2f553cfc3af4678b87a8fc75f35a5c6" title="discovery_set_aid" alt="" coords="741,5,868,32"/>
 <area shape="rect" id="node7" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="783,56,827,83"/>
 </map>

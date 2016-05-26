@@ -28,7 +28,7 @@
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="a00040.html#a64ce145f4bd2b212ac9494fb18b43615" target="_top" xlink:title="Create a new ws_request. ">
+<g id="a_node6"><a xlink:href="a00036.html#a64ce145f4bd2b212ac9494fb18b43615" target="_top" xlink:title="Create a new ws_request. ">
 <polygon fill="none" stroke="black" points="144,-0.5 144,-19.5 247,-19.5 247,-0.5 144,-0.5"/>
 <text text-anchor="middle" x="195.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">http_request_create</text>
 </a>
@@ -54,7 +54,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00038.html#a0ddf1224851353fc92bfbff6f499fa97" target="_top" xlink:title="main">
+<g id="a_node4"><a xlink:href="a00034.html#a0ddf1224851353fc92bfbff6f499fa97" target="_top" xlink:title="main">
 <polygon fill="none" stroke="black" points="534,-38.5 534,-57.5 572,-57.5 572,-38.5 534,-38.5"/>
 <text text-anchor="middle" x="553" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">main</text>
 </a>

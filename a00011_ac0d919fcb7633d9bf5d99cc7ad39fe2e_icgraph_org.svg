@@ -15,7 +15,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00064.html#adcfc7ced2dccafaac60ca13f700061d5" target="_top" xlink:title="hpd_service_id_alloc">
+<g id="a_node2"><a xlink:href="a00060.html#adcfc7ced2dccafaac60ca13f700061d5" target="_top" xlink:title="hpd_service_id_alloc">
 <polygon fill="none" stroke="black" points="148.5,-202 148.5,-221 255.5,-221 255.5,-202 148.5,-202"/>
 <text text-anchor="middle" x="202" y="-209" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_service_id_alloc</text>
 </a>
@@ -28,7 +28,7 @@
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="a00064.html#ad8e76c9feefa648fbca586e7d7421501" target="_top" xlink:title="hpd_first_service">
+<g id="a_node5"><a xlink:href="a00060.html#ad8e76c9feefa648fbca586e7d7421501" target="_top" xlink:title="hpd_first_service">
 <polygon fill="none" stroke="black" points="156.5,-164 156.5,-183 247.5,-183 247.5,-164 156.5,-164"/>
 <text text-anchor="middle" x="202" y="-171" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_first_service</text>
 </a>
@@ -41,7 +41,7 @@
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="a00064.html#a9182a04ddc18d88a20bf55285179a581" target="_top" xlink:title="hpd_adapter_first_service">
+<g id="a_node6"><a xlink:href="a00060.html#a9182a04ddc18d88a20bf55285179a581" target="_top" xlink:title="hpd_adapter_first_service">
 <polygon fill="none" stroke="black" points="138,-126 138,-145 266,-145 266,-126 138,-126"/>
 <text text-anchor="middle" x="202" y="-133" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_adapter_first_service</text>
 </a>
@@ -54,7 +54,7 @@
 </g>
 <!-- Node7 -->
 <g id="node7" class="node"><title>Node7</title>
-<g id="a_node7"><a xlink:href="a00064.html#a532ad51864602ea42cd8c9ca6aabe189" target="_top" xlink:title="hpd_device_first_service">
+<g id="a_node7"><a xlink:href="a00060.html#a532ad51864602ea42cd8c9ca6aabe189" target="_top" xlink:title="hpd_device_first_service">
 <polygon fill="none" stroke="black" points="139.5,-88 139.5,-107 264.5,-107 264.5,-88 139.5,-88"/>
 <text text-anchor="middle" x="202" y="-95" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_device_first_service</text>
 </a>
@@ -67,7 +67,7 @@
 </g>
 <!-- Node8 -->
 <g id="node8" class="node"><title>Node8</title>
-<g id="a_node8"><a xlink:href="a00065.html#adc3810426cc8c5e8191f9701821a3aa3" target="_top" xlink:title="discovery_copy_sid">
+<g id="a_node8"><a xlink:href="a00061.html#adc3810426cc8c5e8191f9701821a3aa3" target="_top" xlink:title="discovery_copy_sid">
 <polygon fill="none" stroke="black" points="150.5,-50 150.5,-69 253.5,-69 253.5,-50 150.5,-50"/>
 <text text-anchor="middle" x="202" y="-57" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_copy_sid</text>
 </a>
@@ -80,7 +80,7 @@
 </g>
 <!-- Node15 -->
 <g id="node15" class="node"><title>Node15</title>
-<g id="a_node15"><a xlink:href="a00065.html#a1ed75dadb5c8dca2cc91a0015a1df97d" target="_top" xlink:title="discovery_get_parameter\l_service">
+<g id="a_node15"><a xlink:href="a00061.html#a1ed75dadb5c8dca2cc91a0015a1df97d" target="_top" xlink:title="discovery_get_parameter\l_service">
 <polygon fill="none" stroke="black" points="139,-0.5 139,-30.5 265,-30.5 265,-0.5 139,-0.5"/>
 <text text-anchor="start" x="147" y="-18.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_get_parameter</text>
 <text text-anchor="middle" x="202" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">_service</text>
@@ -120,7 +120,7 @@
 </g>
 <!-- Node9 -->
 <g id="node9" class="node"><title>Node9</title>
-<g id="a_node9"><a xlink:href="a00064.html#a06b25de4929ff540e0f7553404730e56" target="_top" xlink:title="hpd_service_id_copy">
+<g id="a_node9"><a xlink:href="a00060.html#a06b25de4929ff540e0f7553404730e56" target="_top" xlink:title="hpd_service_id_copy">
 <polygon fill="none" stroke="black" points="316.5,-123 316.5,-142 424.5,-142 424.5,-123 316.5,-123"/>
 <text text-anchor="middle" x="370.5" y="-130" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_service_id_copy</text>
 </a>
@@ -133,7 +133,7 @@
 </g>
 <!-- Node10 -->
 <g id="node10" class="node"><title>Node10</title>
-<g id="a_node10"><a xlink:href="a00067.html#a4fe0122223191a771d05d2d1454cdee9" target="_top" xlink:title="event_changed">
+<g id="a_node10"><a xlink:href="a00063.html#a4fe0122223191a771d05d2d1454cdee9" target="_top" xlink:title="event_changed">
 <polygon fill="none" stroke="black" points="329,-85 329,-104 412,-104 412,-85 329,-85"/>
 <text text-anchor="middle" x="370.5" y="-92" font-family="Helvetica,sans-Serif" font-size="10.00">event_changed</text>
 </a>
@@ -146,7 +146,7 @@
 </g>
 <!-- Node12 -->
 <g id="node12" class="node"><title>Node12</title>
-<g id="a_node12"><a xlink:href="a00073.html#af762dc3db213f4a84ba5fe3ab36a78fe" target="_top" xlink:title="request_alloc_request">
+<g id="a_node12"><a xlink:href="a00069.html#af762dc3db213f4a84ba5fe3ab36a78fe" target="_top" xlink:title="request_alloc_request">
 <polygon fill="none" stroke="black" points="314.5,-47 314.5,-66 426.5,-66 426.5,-47 314.5,-47"/>
 <text text-anchor="middle" x="370.5" y="-54" font-family="Helvetica,sans-Serif" font-size="10.00">request_alloc_request</text>
 </a>
@@ -159,7 +159,7 @@
 </g>
 <!-- Node11 -->
 <g id="node11" class="node"><title>Node11</title>
-<g id="a_node11"><a xlink:href="a00068.html#a4e10a7a459f294991735e9bcd384b03a" target="_top" xlink:title="[hpd_response_t functions] ">
+<g id="a_node11"><a xlink:href="a00064.html#a4e10a7a459f294991735e9bcd384b03a" target="_top" xlink:title="[hpd_response_t functions] ">
 <polygon fill="none" stroke="black" points="485.5,-85 485.5,-104 559.5,-104 559.5,-85 485.5,-85"/>
 <text text-anchor="middle" x="522.5" y="-92" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_changed</text>
 </a>
@@ -172,7 +172,7 @@
 </g>
 <!-- Node13 -->
 <g id="node13" class="node"><title>Node13</title>
-<g id="a_node13"><a xlink:href="a00074.html#ac8e7c21db1c80443994e79d29eae8286" target="_top" xlink:title="[hpd_request_t functions] ">
+<g id="a_node13"><a xlink:href="a00070.html#ac8e7c21db1c80443994e79d29eae8286" target="_top" xlink:title="[hpd_request_t functions] ">
 <polygon fill="none" stroke="black" points="475,-47 475,-66 570,-66 570,-47 475,-47"/>
 <text text-anchor="middle" x="522.5" y="-54" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_request_alloc</text>
 </a>
@@ -203,7 +203,7 @@
 </g>
 <!-- Node16 -->
 <g id="node16" class="node"><title>Node16</title>
-<g id="a_node16"><a xlink:href="a00064.html#adc3ca988a540a210fbd2cea132ed0a1e" target="_top" xlink:title="hpd_parameter_get_service">
+<g id="a_node16"><a xlink:href="a00060.html#adc3ca988a540a210fbd2cea132ed0a1e" target="_top" xlink:title="hpd_parameter_get_service">
 <polygon fill="none" stroke="black" points="302,-6 302,-25 439,-25 439,-6 302,-6"/>
 <text text-anchor="middle" x="370.5" y="-13" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_parameter_get_service</text>
 </a>

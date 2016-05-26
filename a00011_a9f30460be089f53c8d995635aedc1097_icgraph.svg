@@ -15,7 +15,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00064.html#a10a4b84cc7128e1900008dc1de4653a2" target="_top" xlink:title="A note on reusing IDs: An other module or remote client may have outstanding references to the old ID...">
+<g id="a_node2"><a xlink:href="a00060.html#a10a4b84cc7128e1900008dc1de4653a2" target="_top" xlink:title="A note on reusing IDs: An other module or remote client may have outstanding references to the old ID...">
 <polygon fill="none" stroke="black" points="154,-0.5 154,-19.5 246,-19.5 246,-0.5 154,-0.5"/>
 <text text-anchor="middle" x="200" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_device_alloc</text>
 </a>

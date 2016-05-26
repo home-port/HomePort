@@ -62,7 +62,7 @@ var sectionId = 'dynsection-168';
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00063.html#a2c62fa50d5ba2ac0e0db8df95d319687" target="_top" xlink:title="discovery_set_service_attr">
+<g id="a_node2"><a xlink:href="a00059.html#a2c62fa50d5ba2ac0e0db8df95d319687" target="_top" xlink:title="discovery_set_service_attr">
 <polygon fill="none" stroke="black" points="150,-38.5 150,-57.5 284,-57.5 284,-38.5 150,-38.5"/>
 <text text-anchor="middle" x="217" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_set_service_attr</text>
 </a>
@@ -75,7 +75,7 @@ var sectionId = 'dynsection-168';
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00046.html#a230c25a2f8e5de7ce61623a4ce8a809f" target="_top" xlink:title="hpd_map_set">
+<g id="a_node3"><a xlink:href="a00042.html#a230c25a2f8e5de7ce61623a4ce8a809f" target="_top" xlink:title="hpd_map_set">
 <polygon fill="none" stroke="black" points="320,-38.5 320,-57.5 395,-57.5 395,-38.5 320,-38.5"/>
 <text text-anchor="middle" x="357.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_map_set</text>
 </a>

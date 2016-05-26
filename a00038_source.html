@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>Homeport Documentation: common/httpd/example/greeting.c Source File</title>
+<title>Homeport Documentation: common/httpd/test/header_parser_test.c Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,12 +81,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_92c8123cc8c952444b1cbf20f3d9ebba.html">common</a></li><li class="navelem"><a class="el" href="dir_b8866f0152409874d07ad7858b53b19d.html">httpd</a></li><li class="navelem"><a class="el" href="dir_180b80b4a8bf5c03597937dbad5566c3.html">example</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_de836088bc1383ea19051eab00d43ec5.html">httpd</a></li><li class="navelem"><a class="el" href="dir_2e94e98e180a6c5e43b770bfbc8691b2.html">test</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">greeting.c</div>  </div>
+<div class="title">header_parser_test.c</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a00038.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
@@ -116,131 +116,98 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * authors and should not be interpreted as representing official policies, either expressed</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00018.html">httpd.h</a>&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;string.h&gt;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;ev.h&gt;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">// The server instance</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="a00038.html#ae9615250b71157d64da7f4b61aca6072">   35</a></span>&#160;<span class="keyword">static</span> <a class="code" href="a00015.html#a00100">hpd_httpd_t</a> *<a class="code" href="a00038.html#ae9615250b71157d64da7f4b61aca6072">server</a> = NULL;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// Handle correct exiting</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="a00038.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">   38</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a00038.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">exit_handler</a>(<span class="keywordtype">int</span> sig)</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="comment">// Stop server</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">if</span> (server) {</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <a class="code" href="a00018.html#a4404f8d3cbdf72597c7cc5ce8ee96a6a">hpd_httpd_stop</a>(server); <span class="comment">// TODO Check error</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <a class="code" href="a00018.html#a5b2691e281b72e90f2aa231db8368e89">hpd_httpd_destroy</a>(server); <span class="comment">// TODO Check error</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="comment">// Exit</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    printf(<span class="stringliteral">&quot;Exiting....\n&quot;</span>);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    exit(sig);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="a00038.html#a11c86e94a014c07292d3d4515ba35245">   51</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00038.html#a11c86e94a014c07292d3d4515ba35245">header_printer</a>(<span class="keywordtype">void</span> *<a class="code" href="a00006.html#a00088">data</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="a00006.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a>, <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="a00042.html#aee53bdc848584e095375d0d39aa400b8">value</a>)</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    printf(<span class="stringliteral">&quot;\tHeader key/value = {%s : %s}\n&quot;</span>,key,value);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;}</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="a00038.html#a2eb873ac7e610c2dff8e49d216d3aff8">   56</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="a00038.html#a2eb873ac7e610c2dff8e49d216d3aff8">handle_request</a>(<a class="code" href="a00015.html#a00100">hpd_httpd_t</a> *ins, <a class="code" href="a00016.html#a00101">hpd_httpd_request_t</a> *req, <span class="keywordtype">void</span>* ws_ctx, <span class="keywordtype">void</span>** <a class="code" href="a00043.html#aa627b853c0e793b0ef4d3abba2bbffb4">req_data</a>)</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;{</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <a class="code" href="a00039.html#aa590dd72311e669f281eb4918d0dcb9e">hpd_httpd_method_t</a> m;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <a class="code" href="a00018.html#a52623947d02344728eab0b54b56cb623">hpd_httpd_request_get_method</a>(req, &amp;m); <span class="comment">// TODO Error handling</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> *method = hpd_httpd_method_str(m);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="a00006.html#a8887c2fa1e081a4df18dff878d9ce142">url</a> = <a class="code" href="a00018.html#ae55ff43648523d2d14e378f3fce33890">hpd_httpd_request_get_url</a>(req, NULL);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;unit_test.h&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00007.html">header_parser.c</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a00006.html">   32</a></span>&#160;<span class="keyword">struct </span><a class="code" href="a00006.html#a00084">data</a> {</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="a00006.html#ac4380a90deb0ee29a62bbbf2f2cb0014">   33</a></span>&#160;   <span class="keywordtype">char</span> *<a class="code" href="a00006.html#ac4380a90deb0ee29a62bbbf2f2cb0014">field</a>;</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a00006.html#abf8750f63285d3c5f402fad45c34ed6d">   34</a></span>&#160;   <span class="keywordtype">char</span> *<a class="code" href="a00006.html#abf8750f63285d3c5f402fad45c34ed6d">value</a>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="a00006.html#a7892a9c6964754ba99fa712061cebc8b">   35</a></span>&#160;   <span class="keywordtype">int</span> <a class="code" href="a00006.html#a7892a9c6964754ba99fa712061cebc8b">count</a>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="a00006.html#ab12920c68955e93a61ee2c5829fd69a9">   36</a></span>&#160;   <span class="keywordtype">int</span> <a class="code" href="a00006.html#ab12920c68955e93a61ee2c5829fd69a9">errors</a>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;};</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="a00038.html#a4c3a4b438bfb98afcf582fbfb841819b">   39</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="a00038.html#a4c3a4b438bfb98afcf582fbfb841819b">on_field_value</a>(<span class="keywordtype">void</span> * _data,</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;                    <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="a00038.html#a4618b601e2463984c3c5702ce654053f">field</a>, <span class="keywordtype">size_t</span> field_length,</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;                    <span class="keyword">const</span> <span class="keywordtype">char</span>* <a class="code" href="a00038.html#aee53bdc848584e095375d0d39aa400b8">value</a>, <span class="keywordtype">size_t</span> value_length)</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;   <span class="keywordtype">int</span> <a class="code" href="a00038.html#ae4d68f7885f6ff0e6b643e8bfc056a34">_errors</a> = 0;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;   <span class="keyword">struct </span><a class="code" href="a00006.html#a00084">data</a> *<a class="code" href="a00006.html#a00084">data</a> = _data;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;   <span class="keywordtype">int</span> i;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;   <span class="keywordtype">char</span> *expect_field = data-&gt;<a class="code" href="a00006.html#ac4380a90deb0ee29a62bbbf2f2cb0014">field</a>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;   <span class="keywordtype">char</span> *expect_value = data-&gt;<a class="code" href="a00006.html#abf8750f63285d3c5f402fad45c34ed6d">value</a>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;   <span class="keywordflow">for</span> (i = 0; i &lt; data-&gt;<a class="code" href="a00006.html#a7892a9c6964754ba99fa712061cebc8b">count</a>; i++) {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      expect_field = &amp;expect_field[strlen(expect_field)+1];</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      expect_value = &amp;expect_value[strlen(expect_value)+1];</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;   }</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;   <a class="code" href="a00038.html#a3e22da197083e90a2456a4ccd8a374d0">ASSERT_EQUAL</a>(strncmp(field, expect_field, field_length), 0);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;   <a class="code" href="a00038.html#a3e22da197083e90a2456a4ccd8a374d0">ASSERT_EQUAL</a>(strncmp(value, expect_value, value_length), 0);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;   data-&gt;<a class="code" href="a00006.html#a7892a9c6964754ba99fa712061cebc8b">count</a>++;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;   data-&gt;<a class="code" href="a00006.html#ab12920c68955e93a61ee2c5829fd69a9">errors</a> += <a class="code" href="a00038.html#ae4d68f7885f6ff0e6b643e8bfc056a34">_errors</a>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;TEST_START(<span class="stringliteral">&quot;header_parser.c&quot;</span>)</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="a00038.html#a418c751a61f0272a6fef8a19a4173342">   60</a></span>&#160;   struct <a class="code" href="a00008.html#a00086">hp_settings</a> <a class="code" href="a00038.html#a418c751a61f0272a6fef8a19a4173342">settings</a> = <a class="code" href="a00008.html#a6247175add148b35e976352658acd514">HP_SETTINGS_DEFAULT</a>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="a00038.html#aec76163b9a779bf013191c836a7ae039">   61</a></span>&#160;   <a class="code" href="a00038.html#a418c751a61f0272a6fef8a19a4173342">settings</a>.<a class="code" href="a00038.html#aec76163b9a779bf013191c836a7ae039">on_field_value_pair</a> = &amp;<a class="code" href="a00038.html#a4c3a4b438bfb98afcf582fbfb841819b">on_field_value</a>;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">struct </span>lm *headers = <a class="code" href="a00018.html#a22e218d575f4b42004377a401c38812d">hpd_httpd_request_get_headers</a>(req, NULL);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<a class="code" href="a00047.html#ab99f040bf74f8fe99f6021eaa5224db6">TEST</a>(Header parser test)</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    printf(<span class="stringliteral">&quot;Got %s request on %s\n&quot;</span>, method, url);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="comment">// print headers</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    lm_map(headers, <a class="code" href="a00038.html#a11c86e94a014c07292d3d4515ba35245">header_printer</a>, NULL);</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">char</span> *body1 = <span class="stringliteral">&quot;&lt;html&gt;&lt;body&gt;&lt;h1&gt;Hello&lt;/h1&gt;Your language: &quot;</span>;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">char</span> *body2 = lm_find(headers, <span class="stringliteral">&quot;Accept-Language&quot;</span>);</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordflow">if</span> (body2 == NULL) body2 = <span class="stringliteral">&quot;n/a&quot;</span>;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">char</span> *body3 = <span class="stringliteral">&quot;&lt;/body&gt;&lt;/html&gt;&quot;</span>;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">char</span> *body = malloc((strlen(body1)+strlen(body2)+strlen(body3)+1)*<span class="keyword">sizeof</span>(<span class="keywordtype">char</span>));</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    sprintf(body, <span class="stringliteral">&quot;%s%s%s&quot;</span>,body1, body2, body3);</div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="a00038.html#a7eeea53acac92b2cc17084963282fc11">   65</a></span>&#160;   struct <a class="code" href="a00006.html#a00084">data</a> <a class="code" href="a00006.html#a00084">data</a>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="a00038.html#a4618b601e2463984c3c5702ce654053f">   66</a></span>&#160;   data.<a class="code" href="a00038.html#a4618b601e2463984c3c5702ce654053f">field</a> = &quot;cat\0dog&quot;;</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="a00038.html#aee53bdc848584e095375d0d39aa400b8">   67</a></span>&#160;   data.<a class="code" href="a00038.html#aee53bdc848584e095375d0d39aa400b8">value</a> = &quot;yes\0yes, this is dog&quot;;</div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="a00038.html#a9cc5551919abb9b1130445edd4c35c2a">   68</a></span>&#160;   data.<a class="code" href="a00038.html#a9cc5551919abb9b1130445edd4c35c2a">count</a> = 0;</div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="a00038.html#ac2067e44d4acde43a80005346dc1f449">   69</a></span>&#160;   data.<a class="code" href="a00038.html#ac2067e44d4acde43a80005346dc1f449">errors</a> = 0;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;   <a class="code" href="a00038.html#a418c751a61f0272a6fef8a19a4173342">settings</a>.data = &amp;data;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;   </div>
+<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="a00038.html#a75d115a8690aabe8bfb8a547bcaa220f">   72</a></span>&#160;   struct <a class="code" href="a00007.html#a00085">hp</a> *<a class="code" href="a00007.html#a00085">hp</a> = <a class="code" href="a00007.html#aeb32296963a29ccb5a15e1f152c6d2fd">hp_create</a>(&amp;<a class="code" href="a00038.html#a418c751a61f0272a6fef8a19a4173342">settings</a>);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;   <a class="code" href="a00038.html#a8562052f079d603577dafaad936921c5">hp_on_header_field</a>(<a class="code" href="a00007.html#a00085">hp</a>, &quot;cat&quot;,3);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;   <a class="code" href="a00038.html#affc17ce882f26ac0c90a90c678d4cd3f">hp_on_header_value</a>(hp, &quot;yes&quot;,3);</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <a class="code" href="a00017.html#a00102">hpd_httpd_response_t</a> *res = <a class="code" href="a00018.html#a3b100e8d7e1214067cf1b90ad577745c">hpd_httpd_response_create</a>(NULL, req, WS_HTTP_200);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <a class="code" href="a00018.html#a38a5c180c63086c4c55a595ad3750cf1">hpd_httpd_response_sendf</a>(res, body);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <a class="code" href="a00006.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(body);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;   <a class="code" href="a00038.html#a8562052f079d603577dafaad936921c5">hp_on_header_field</a>(hp, &quot;dog&quot;,3);</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;   <a class="code" href="a00038.html#affc17ce882f26ac0c90a90c678d4cd3f">hp_on_header_value</a>(hp, &quot;yes, thi&quot;,8);</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;   <a class="code" href="a00038.html#affc17ce882f26ac0c90a90c678d4cd3f">hp_on_header_value</a>(hp, &quot;s is dog&quot;,8);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;   <a class="code" href="a00038.html#ab9607ed3d8c9ea72a99ab850336cd4ee">hp_on_header_complete</a>(hp);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;   <a class="code" href="a00038.html#ac4db214b9849dac754a88fa696264be6">hp_destroy</a>(hp);</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="comment">// Main function</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="a00038.html#a0ddf1224851353fc92bfbff6f499fa97">   86</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="a00038.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;{</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="comment">// The event loop for the webserver to run on</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <a class="code" href="a00021.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *<a class="code" href="a00043.html#a855923b555731173d3509ecb645de0e0">loop</a> = EV_DEFAULT;</div>
+<div class="line"><a name="l00085"></a><span class="lineno"><a class="line" href="a00038.html#ae4d68f7885f6ff0e6b643e8bfc056a34">   85</a></span>&#160;   <a class="code" href="a00038.html#ae4d68f7885f6ff0e6b643e8bfc056a34">_errors</a> += data.errors;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;   <a class="code" href="a00038.html#a3e22da197083e90a2456a4ccd8a374d0">ASSERT_EQUAL</a>(data.count, 2);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;TSET()</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="comment">// Set settings for the webserver</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <a class="code" href="a00018.html#a00103">hpd_httpd_settings_t</a> <a class="code" href="a00042.html#a418c751a61f0272a6fef8a19a4173342">settings</a> = <a class="code" href="a00018.html#a726b3c4c728cacfd3e8889c0a4f05fcd">HPD_HTTPD_SETTINGS_DEFAULT</a>;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    settings.<a class="code" href="a00018.html#a993f5c43367cb338ba22b266d6010e85">on_req_cmpl</a> = <a class="code" href="a00038.html#a2eb873ac7e610c2dff8e49d216d3aff8">handle_request</a>;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    settings.<a class="code" href="a00018.html#ac59c2e4ec44411812f8e2175f44c7627">port</a> = HPD_TCPD_P_HTTP_ALT;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="comment">// Inform if we have been built with debug flag</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    printf(<span class="stringliteral">&quot;Debugging is set\n&quot;</span>);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="comment">// Register signals for correctly exiting</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    signal(SIGINT, <a class="code" href="a00038.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">exit_handler</a>);</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    signal(SIGTERM, <a class="code" href="a00038.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">exit_handler</a>);</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="comment">// Create server</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="comment">// TODO Parameter cannot be null !</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <a class="code" href="a00018.html#a8287f77cb41a94d39f282b607616df70">hpd_httpd_create</a>(&amp;server, &amp;settings, NULL, loop); <span class="comment">// TODO Check error</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="comment">// Start the event loop and webserver</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordflow">if</span> (!<a class="code" href="a00018.html#ab26dd9acbd2ec17e5863a50f01e70e65">hpd_httpd_start</a>(server))</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        ev_run(loop, 0);</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="comment">// Exit</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <a class="code" href="a00038.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">exit_handler</a>(0);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;}</div>
-<div class="ttc" id="a00016_html_a00101"><div class="ttname"><a href="a00016.html#a00101">hpd_httpd_request</a></div><div class="ttdoc">An http request. </div><div class="ttdef"><b>Definition:</b> <a href="a00016_source.html#l00121">httpd_request.c:121</a></div></div>
-<div class="ttc" id="a00038_html_a2eb873ac7e610c2dff8e49d216d3aff8"><div class="ttname"><a href="a00038.html#a2eb873ac7e610c2dff8e49d216d3aff8">handle_request</a></div><div class="ttdeci">int handle_request(hpd_httpd_t *ins, hpd_httpd_request_t *req, void *ws_ctx, void **req_data)</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00056">greeting.c:56</a></div></div>
-<div class="ttc" id="a00042_html_aee53bdc848584e095375d0d39aa400b8"><div class="ttname"><a href="a00042.html#aee53bdc848584e095375d0d39aa400b8">value</a></div><div class="ttdeci">data value</div><div class="ttdef"><b>Definition:</b> <a href="a00042_source.html#l00067">header_parser_test.c:67</a></div></div>
-<div class="ttc" id="a00018_html_a726b3c4c728cacfd3e8889c0a4f05fcd"><div class="ttname"><a href="a00018.html#a726b3c4c728cacfd3e8889c0a4f05fcd">HPD_HTTPD_SETTINGS_DEFAULT</a></div><div class="ttdeci">#define HPD_HTTPD_SETTINGS_DEFAULT</div><div class="ttdoc">Default settings for httpd. </div><div class="ttdef"><b>Definition:</b> <a href="a00018_source.html#l00123">httpd.h:123</a></div></div>
-<div class="ttc" id="a00018_html_a4404f8d3cbdf72597c7cc5ce8ee96a6a"><div class="ttname"><a href="a00018.html#a4404f8d3cbdf72597c7cc5ce8ee96a6a">hpd_httpd_stop</a></div><div class="ttdeci">hpd_error_t hpd_httpd_stop(hpd_httpd_t *httpd)</div><div class="ttdoc">Stop a httpd instance. </div><div class="ttdef"><b>Definition:</b> <a href="a00015_source.html#l00210">httpd.c:210</a></div></div>
-<div class="ttc" id="a00018_html_a8287f77cb41a94d39f282b607616df70"><div class="ttname"><a href="a00018.html#a8287f77cb41a94d39f282b607616df70">hpd_httpd_create</a></div><div class="ttdeci">hpd_error_t hpd_httpd_create(hpd_httpd_t **httpd, hpd_httpd_settings_t *settings, hpd_module_t *context, hpd_ev_loop_t *loop)</div><div class="ttdoc">Create a new httpd instance. </div><div class="ttdef"><b>Definition:</b> <a href="a00015_source.html#l00135">httpd.c:135</a></div></div>
-<div class="ttc" id="a00018_html_ab26dd9acbd2ec17e5863a50f01e70e65"><div class="ttname"><a href="a00018.html#ab26dd9acbd2ec17e5863a50f01e70e65">hpd_httpd_start</a></div><div class="ttdeci">hpd_error_t hpd_httpd_start(hpd_httpd_t *httpd)</div><div class="ttdoc">Start a httpd instance. </div><div class="ttdef"><b>Definition:</b> <a href="a00015_source.html#l00195">httpd.c:195</a></div></div>
-<div class="ttc" id="a00006_html_a8887c2fa1e081a4df18dff878d9ce142"><div class="ttname"><a href="a00006.html#a8887c2fa1e081a4df18dff878d9ce142">url</a></div><div class="ttdeci">char * url</div><div class="ttdef"><b>Definition:</b> <a href="a00006_source.html#l00194">url_parser_test.c:194</a></div></div>
-<div class="ttc" id="a00018_html_a993f5c43367cb338ba22b266d6010e85"><div class="ttname"><a href="a00018.html#a993f5c43367cb338ba22b266d6010e85">hpd_httpd_settings::on_req_cmpl</a></div><div class="ttdeci">hpd_httpd_nodata_f on_req_cmpl</div><div class="ttdef"><b>Definition:</b> <a href="a00018_source.html#l00111">httpd.h:111</a></div></div>
-<div class="ttc" id="a00018_html"><div class="ttname"><a href="a00018.html">httpd.h</a></div></div>
-<div class="ttc" id="a00018_html_ae55ff43648523d2d14e378f3fce33890"><div class="ttname"><a href="a00018.html#ae55ff43648523d2d14e378f3fce33890">hpd_httpd_request_get_url</a></div><div class="ttdeci">hpd_error_t hpd_httpd_request_get_url(hpd_httpd_request_t *req, const char **url)</div><div class="ttdoc">Get the URL of this request. </div><div class="ttdef"><b>Definition:</b> <a href="a00016_source.html#l00775">httpd_request.c:775</a></div></div>
-<div class="ttc" id="a00015_html_a00100"><div class="ttname"><a href="a00015.html#a00100">hpd_httpd</a></div><div class="ttdoc">httpd instance struct </div><div class="ttdef"><b>Definition:</b> <a href="a00015_source.html#l00038">httpd.c:38</a></div></div>
-<div class="ttc" id="a00018_html_a3b100e8d7e1214067cf1b90ad577745c"><div class="ttname"><a href="a00018.html#a3b100e8d7e1214067cf1b90ad577745c">hpd_httpd_response_create</a></div><div class="ttdeci">hpd_error_t hpd_httpd_response_create(hpd_httpd_response_t **response, hpd_httpd_request_t *req, hpd_status_t status)</div><div class="ttdoc">Create the reponse and constructs the status line. </div><div class="ttdef"><b>Definition:</b> <a href="a00017_source.html#l00114">httpd_response.c:114</a></div></div>
-<div class="ttc" id="a00038_html_a49f6d3bb9d22d5b9cf5c7eb6175318d1"><div class="ttname"><a href="a00038.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">exit_handler</a></div><div class="ttdeci">static void exit_handler(int sig)</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00038">greeting.c:38</a></div></div>
-<div class="ttc" id="a00018_html_a22e218d575f4b42004377a401c38812d"><div class="ttname"><a href="a00018.html#a22e218d575f4b42004377a401c38812d">hpd_httpd_request_get_headers</a></div><div class="ttdeci">hpd_error_t hpd_httpd_request_get_headers(hpd_httpd_request_t *req, hpd_map_t **headers)</div><div class="ttdoc">Get a linked map of all headers for a request. </div><div class="ttdef"><b>Definition:</b> <a href="a00016_source.html#l00791">httpd_request.c:791</a></div></div>
-<div class="ttc" id="a00038_html_a11c86e94a014c07292d3d4515ba35245"><div class="ttname"><a href="a00038.html#a11c86e94a014c07292d3d4515ba35245">header_printer</a></div><div class="ttdeci">void header_printer(void *data, const char *key, const char *value)</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00051">greeting.c:51</a></div></div>
-<div class="ttc" id="a00018_html_a38a5c180c63086c4c55a595ad3750cf1"><div class="ttname"><a href="a00018.html#a38a5c180c63086c4c55a595ad3750cf1">hpd_httpd_response_sendf</a></div><div class="ttdeci">hpd_error_t hpd_httpd_response_sendf(hpd_httpd_response_t *res, const char *fmt,...)</div><div class="ttdoc">Send response to client. </div><div class="ttdef"><b>Definition:</b> <a href="a00017_source.html#l00289">httpd_response.c:289</a></div></div>
-<div class="ttc" id="a00043_html_aa627b853c0e793b0ef4d3abba2bbffb4"><div class="ttname"><a href="a00043.html#aa627b853c0e793b0ef4d3abba2bbffb4">req_data</a></div><div class="ttdeci">static char * req_data</div><div class="ttdef"><b>Definition:</b> <a href="a00043_source.html#l00050">http-webserver_test.c:50</a></div></div>
-<div class="ttc" id="a00006_html_adf46370d9c211c3be22966b4606ba9b0"><div class="ttname"><a href="a00006.html#adf46370d9c211c3be22966b4606ba9b0">free</a></div><div class="ttdeci">free(data.url)</div></div>
-<div class="ttc" id="a00017_html_a00102"><div class="ttname"><a href="a00017.html#a00102">hpd_httpd_response</a></div><div class="ttdoc">A http response. </div><div class="ttdef"><b>Definition:</b> <a href="a00017_source.html#l00051">httpd_response.c:51</a></div></div>
-<div class="ttc" id="a00038_html_ae9615250b71157d64da7f4b61aca6072"><div class="ttname"><a href="a00038.html#ae9615250b71157d64da7f4b61aca6072">server</a></div><div class="ttdeci">static hpd_httpd_t * server</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00035">greeting.c:35</a></div></div>
-<div class="ttc" id="a00018_html_a5b2691e281b72e90f2aa231db8368e89"><div class="ttname"><a href="a00018.html#a5b2691e281b72e90f2aa231db8368e89">hpd_httpd_destroy</a></div><div class="ttdeci">hpd_error_t hpd_httpd_destroy(hpd_httpd_t *httpd)</div><div class="ttdoc">Destroy a httpd instance. </div><div class="ttdef"><b>Definition:</b> <a href="a00015_source.html#l00177">httpd.c:177</a></div></div>
-<div class="ttc" id="a00038_html_a0ddf1224851353fc92bfbff6f499fa97"><div class="ttname"><a href="a00038.html#a0ddf1224851353fc92bfbff6f499fa97">main</a></div><div class="ttdeci">int main(int argc, char *argv[])</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00086">greeting.c:86</a></div></div>
-<div class="ttc" id="a00042_html_a418c751a61f0272a6fef8a19a4173342"><div class="ttname"><a href="a00042.html#a418c751a61f0272a6fef8a19a4173342">settings</a></div><div class="ttdeci">struct hp_settings settings</div><div class="ttdef"><b>Definition:</b> <a href="a00042_source.html#l00060">header_parser_test.c:60</a></div></div>
-<div class="ttc" id="a00039_html_aa590dd72311e669f281eb4918d0dcb9e"><div class="ttname"><a href="a00039.html#aa590dd72311e669f281eb4918d0dcb9e">hpd_httpd_method_t</a></div><div class="ttdeci">enum hpd_httpd_method hpd_httpd_method_t</div></div>
-<div class="ttc" id="a00021_html_a8b9d6b16dbb9ccaf08497a11cc0b1d29"><div class="ttname"><a href="a00021.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a></div><div class="ttdeci">struct ev_loop hpd_ev_loop_t</div><div class="ttdef"><b>Definition:</b> <a href="a00021_source.html#l00051">hpd_types.h:51</a></div></div>
-<div class="ttc" id="a00018_html_ac59c2e4ec44411812f8e2175f44c7627"><div class="ttname"><a href="a00018.html#ac59c2e4ec44411812f8e2175f44c7627">hpd_httpd_settings::port</a></div><div class="ttdeci">hpd_tcpd_port_t port</div><div class="ttdef"><b>Definition:</b> <a href="a00018_source.html#l00101">httpd.h:101</a></div></div>
-<div class="ttc" id="a00006_html_ad0ed575d03a4dca41d2d38d4fa19a442"><div class="ttname"><a href="a00006.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a></div><div class="ttdeci">data key</div><div class="ttdef"><b>Definition:</b> <a href="a00006_source.html#l00202">url_parser_test.c:202</a></div></div>
-<div class="ttc" id="a00018_html_a00103"><div class="ttname"><a href="a00018.html#a00103">hpd_httpd_settings</a></div><div class="ttdoc">Settings struct for webserver. </div><div class="ttdef"><b>Definition:</b> <a href="a00018_source.html#l00100">httpd.h:100</a></div></div>
-<div class="ttc" id="a00043_html_a855923b555731173d3509ecb645de0e0"><div class="ttname"><a href="a00043.html#a855923b555731173d3509ecb645de0e0">loop</a></div><div class="ttdeci">static struct ev_loop * loop</div><div class="ttdef"><b>Definition:</b> <a href="a00043_source.html#l00054">http-webserver_test.c:54</a></div></div>
-<div class="ttc" id="a00006_html_a00088"><div class="ttname"><a href="a00006.html#a00088">data</a></div><div class="ttdef"><b>Definition:</b> <a href="a00042_source.html#l00032">header_parser_test.c:32</a></div></div>
-<div class="ttc" id="a00018_html_a52623947d02344728eab0b54b56cb623"><div class="ttname"><a href="a00018.html#a52623947d02344728eab0b54b56cb623">hpd_httpd_request_get_method</a></div><div class="ttdeci">hpd_error_t hpd_httpd_request_get_method(hpd_httpd_request_t *req, hpd_httpd_method_t *method)</div><div class="ttdoc">Get the method of the http request. </div><div class="ttdef"><b>Definition:</b> <a href="a00016_source.html#l00759">httpd_request.c:759</a></div></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;TEST_END()</div>
+<div class="ttc" id="a00038_html_ab9607ed3d8c9ea72a99ab850336cd4ee"><div class="ttname"><a href="a00038.html#ab9607ed3d8c9ea72a99ab850336cd4ee">hp_on_header_complete</a></div><div class="ttdeci">hp_on_header_complete(hp)</div></div>
+<div class="ttc" id="a00038_html_a4618b601e2463984c3c5702ce654053f"><div class="ttname"><a href="a00038.html#a4618b601e2463984c3c5702ce654053f">field</a></div><div class="ttdeci">data field</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00066">header_parser_test.c:66</a></div></div>
+<div class="ttc" id="a00038_html_aee53bdc848584e095375d0d39aa400b8"><div class="ttname"><a href="a00038.html#aee53bdc848584e095375d0d39aa400b8">value</a></div><div class="ttdeci">data value</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00067">header_parser_test.c:67</a></div></div>
+<div class="ttc" id="a00038_html_a9cc5551919abb9b1130445edd4c35c2a"><div class="ttname"><a href="a00038.html#a9cc5551919abb9b1130445edd4c35c2a">count</a></div><div class="ttdeci">data count</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00068">header_parser_test.c:68</a></div></div>
+<div class="ttc" id="a00047_html_ab99f040bf74f8fe99f6021eaa5224db6"><div class="ttname"><a href="a00047.html#ab99f040bf74f8fe99f6021eaa5224db6">TEST</a></div><div class="ttdeci">TEST(CASE, sendf)</div><div class="ttdef"><b>Definition:</b> <a href="a00047_source.html#l00034">webserver_test.cpp:34</a></div></div>
+<div class="ttc" id="a00006_html_abf8750f63285d3c5f402fad45c34ed6d"><div class="ttname"><a href="a00006.html#abf8750f63285d3c5f402fad45c34ed6d">data::value</a></div><div class="ttdeci">char * value</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00034">header_parser_test.c:34</a></div></div>
+<div class="ttc" id="a00038_html_ac4db214b9849dac754a88fa696264be6"><div class="ttname"><a href="a00038.html#ac4db214b9849dac754a88fa696264be6">hp_destroy</a></div><div class="ttdeci">hp_destroy(hp)</div></div>
+<div class="ttc" id="a00006_html_a7892a9c6964754ba99fa712061cebc8b"><div class="ttname"><a href="a00006.html#a7892a9c6964754ba99fa712061cebc8b">data::count</a></div><div class="ttdeci">int count</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00035">header_parser_test.c:35</a></div></div>
+<div class="ttc" id="a00038_html_affc17ce882f26ac0c90a90c678d4cd3f"><div class="ttname"><a href="a00038.html#affc17ce882f26ac0c90a90c678d4cd3f">hp_on_header_value</a></div><div class="ttdeci">hp_on_header_value(hp,&quot;yes&quot;, 3)</div></div>
+<div class="ttc" id="a00038_html_a4c3a4b438bfb98afcf582fbfb841819b"><div class="ttname"><a href="a00038.html#a4c3a4b438bfb98afcf582fbfb841819b">on_field_value</a></div><div class="ttdeci">void on_field_value(void *_data, const char *field, size_t field_length, const char *value, size_t value_length)</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00039">header_parser_test.c:39</a></div></div>
+<div class="ttc" id="a00038_html_a3e22da197083e90a2456a4ccd8a374d0"><div class="ttname"><a href="a00038.html#a3e22da197083e90a2456a4ccd8a374d0">ASSERT_EQUAL</a></div><div class="ttdeci">ASSERT_EQUAL(data.count, 2)</div></div>
+<div class="ttc" id="a00038_html_a418c751a61f0272a6fef8a19a4173342"><div class="ttname"><a href="a00038.html#a418c751a61f0272a6fef8a19a4173342">settings</a></div><div class="ttdeci">struct hp_settings settings</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00060">header_parser_test.c:60</a></div></div>
+<div class="ttc" id="a00006_html_ab12920c68955e93a61ee2c5829fd69a9"><div class="ttname"><a href="a00006.html#ab12920c68955e93a61ee2c5829fd69a9">data::errors</a></div><div class="ttdeci">int errors</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00036">header_parser_test.c:36</a></div></div>
+<div class="ttc" id="a00038_html_ac2067e44d4acde43a80005346dc1f449"><div class="ttname"><a href="a00038.html#ac2067e44d4acde43a80005346dc1f449">errors</a></div><div class="ttdeci">data errors</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00069">header_parser_test.c:69</a></div></div>
+<div class="ttc" id="a00038_html_aec76163b9a779bf013191c836a7ae039"><div class="ttname"><a href="a00038.html#aec76163b9a779bf013191c836a7ae039">on_field_value_pair</a></div><div class="ttdeci">settings on_field_value_pair</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00061">header_parser_test.c:61</a></div></div>
+<div class="ttc" id="a00007_html_a00085"><div class="ttname"><a href="a00007.html#a00085">hp</a></div><div class="ttdef"><b>Definition:</b> <a href="a00007_source.html#l00042">header_parser.c:42</a></div></div>
+<div class="ttc" id="a00008_html_a6247175add148b35e976352658acd514"><div class="ttname"><a href="a00008.html#a6247175add148b35e976352658acd514">HP_SETTINGS_DEFAULT</a></div><div class="ttdeci">#define HP_SETTINGS_DEFAULT</div><div class="ttdef"><b>Definition:</b> <a href="a00008_source.html#l00042">header_parser.h:42</a></div></div>
+<div class="ttc" id="a00038_html_ae4d68f7885f6ff0e6b643e8bfc056a34"><div class="ttname"><a href="a00038.html#ae4d68f7885f6ff0e6b643e8bfc056a34">_errors</a></div><div class="ttdeci">_errors</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00085">header_parser_test.c:85</a></div></div>
+<div class="ttc" id="a00007_html_aeb32296963a29ccb5a15e1f152c6d2fd"><div class="ttname"><a href="a00007.html#aeb32296963a29ccb5a15e1f152c6d2fd">hp_create</a></div><div class="ttdeci">hpd_error_t hp_create(struct hp **instance, struct hp_settings *settings, hpd_module_t *context)</div><div class="ttdef"><b>Definition:</b> <a href="a00007_source.html#l00067">header_parser.c:67</a></div></div>
+<div class="ttc" id="a00008_html_a00086"><div class="ttname"><a href="a00008.html#a00086">hp_settings</a></div><div class="ttdef"><b>Definition:</b> <a href="a00008_source.html#l00037">header_parser.h:37</a></div></div>
+<div class="ttc" id="a00006_html_ac4380a90deb0ee29a62bbbf2f2cb0014"><div class="ttname"><a href="a00006.html#ac4380a90deb0ee29a62bbbf2f2cb0014">data::field</a></div><div class="ttdeci">char * field</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00033">header_parser_test.c:33</a></div></div>
+<div class="ttc" id="a00038_html_a8562052f079d603577dafaad936921c5"><div class="ttname"><a href="a00038.html#a8562052f079d603577dafaad936921c5">hp_on_header_field</a></div><div class="ttdeci">hp_on_header_field(hp,&quot;cat&quot;, 3)</div></div>
+<div class="ttc" id="a00006_html_a00084"><div class="ttname"><a href="a00006.html#a00084">data</a></div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00032">header_parser_test.c:32</a></div></div>
+<div class="ttc" id="a00007_html"><div class="ttname"><a href="a00007.html">header_parser.c</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 26 2016 15:00:57 for Homeport Documentation by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu May 26 2016 15:14:20 for Homeport Documentation by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

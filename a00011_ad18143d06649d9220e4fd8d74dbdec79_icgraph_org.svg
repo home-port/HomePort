@@ -41,7 +41,7 @@
 </g>
 <!-- Node23 -->
 <g id="node23" class="node"><title>Node23</title>
-<g id="a_node23"><a xlink:href="a00064.html#ad8c6360b9faf931207a84a045e44b858" target="_top" xlink:title="hpd_parameter_free">
+<g id="a_node23"><a xlink:href="a00060.html#ad8c6360b9faf931207a84a045e44b858" target="_top" xlink:title="hpd_parameter_free">
 <polygon fill="none" stroke="black" points="180,-114.5 180,-133.5 283,-133.5 283,-114.5 180,-114.5"/>
 <text text-anchor="middle" x="231.5" y="-121.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_parameter_free</text>
 </a>
@@ -54,7 +54,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00064.html#a510d8b9b58d0cf4d661e7e433004ca10" target="_top" xlink:title="[hpd_service_t functions] ">
+<g id="a_node3"><a xlink:href="a00060.html#a510d8b9b58d0cf4d661e7e433004ca10" target="_top" xlink:title="[hpd_service_t functions] ">
 <polygon fill="none" stroke="black" points="811,-209.5 811,-228.5 918,-228.5 918,-209.5 811,-209.5"/>
 <text text-anchor="middle" x="864.5" y="-216.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_parameter_alloc</text>
 </a>
@@ -106,7 +106,7 @@
 </g>
 <!-- Node22 -->
 <g id="node22" class="node"><title>Node22</title>
-<g id="a_node22"><a xlink:href="a00064.html#acebc47c8796cb46b14899df696fae147" target="_top" xlink:title="hpd_service_free">
+<g id="a_node22"><a xlink:href="a00060.html#acebc47c8796cb46b14899df696fae147" target="_top" xlink:title="hpd_service_free">
 <polygon fill="none" stroke="black" points="349,-171.5 349,-190.5 440,-190.5 440,-171.5 349,-171.5"/>
 <text text-anchor="middle" x="394.5" y="-178.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_service_free</text>
 </a>
@@ -119,7 +119,7 @@
 </g>
 <!-- Node7 -->
 <g id="node7" class="node"><title>Node7</title>
-<g id="a_node7"><a xlink:href="a00064.html#ae265c33796304a96d8a0e670e61e7a3a" target="_top" xlink:title="[hpd_device_t functions] ">
+<g id="a_node7"><a xlink:href="a00060.html#ae265c33796304a96d8a0e670e61e7a3a" target="_top" xlink:title="[hpd_device_t functions] ">
 <polygon fill="none" stroke="black" points="502.5,-171.5 502.5,-190.5 597.5,-190.5 597.5,-171.5 502.5,-171.5"/>
 <text text-anchor="middle" x="550" y="-178.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_service_alloc</text>
 </a>
@@ -163,7 +163,7 @@
 </g>
 <!-- Node21 -->
 <g id="node21" class="node"><title>Node21</title>
-<g id="a_node21"><a xlink:href="a00064.html#a7b20f2cfe2e46cdbfe4112b95922446b" target="_top" xlink:title="hpd_device_free">
+<g id="a_node21"><a xlink:href="a00060.html#a7b20f2cfe2e46cdbfe4112b95922446b" target="_top" xlink:title="hpd_device_free">
 <polygon fill="none" stroke="black" points="506,-95.5 506,-114.5 594,-114.5 594,-95.5 506,-95.5"/>
 <text text-anchor="middle" x="550" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_device_free</text>
 </a>
@@ -176,7 +176,7 @@
 </g>
 <!-- Node10 -->
 <g id="node10" class="node"><title>Node10</title>
-<g id="a_node10"><a xlink:href="a00064.html#a10a4b84cc7128e1900008dc1de4653a2" target="_top" xlink:title="A note on reusing IDs: An other module or remote client may have outstanding references to the old ID...">
+<g id="a_node10"><a xlink:href="a00060.html#a10a4b84cc7128e1900008dc1de4653a2" target="_top" xlink:title="A note on reusing IDs: An other module or remote client may have outstanding references to the old ID...">
 <polygon fill="none" stroke="black" points="660,-133.5 660,-152.5 752,-152.5 752,-133.5 660,-133.5"/>
 <text text-anchor="middle" x="706" y="-140.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_device_alloc</text>
 </a>
@@ -194,7 +194,7 @@
 </g>
 <!-- Node12 -->
 <g id="node12" class="node"><title>Node12</title>
-<g id="a_node12"><a xlink:href="a00061.html#a975d2ced1742515d1e9a9a8bb0cd8000" target="_top" xlink:title="daemon_free_conf">
+<g id="a_node12"><a xlink:href="a00057.html#a975d2ced1742515d1e9a9a8bb0cd8000" target="_top" xlink:title="daemon_free_conf">
 <polygon fill="none" stroke="black" points="657.5,-19.5 657.5,-38.5 754.5,-38.5 754.5,-19.5 657.5,-19.5"/>
 <text text-anchor="middle" x="706" y="-26.5" font-family="Helvetica,sans-Serif" font-size="10.00">daemon_free_conf</text>
 </a>
@@ -220,7 +220,7 @@
 </g>
 <!-- Node19 -->
 <g id="node19" class="node"><title>Node19</title>
-<g id="a_node19"><a xlink:href="a00064.html#a0a2b0d9eef603396a0171d5b0c67bbbf" target="_top" xlink:title="hpd_adapter_free">
+<g id="a_node19"><a xlink:href="a00060.html#a0a2b0d9eef603396a0171d5b0c67bbbf" target="_top" xlink:title="hpd_adapter_free">
 <polygon fill="none" stroke="black" points="660,-57.5 660,-76.5 752,-76.5 752,-57.5 660,-57.5"/>
 <text text-anchor="middle" x="706" y="-64.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_adapter_free</text>
 </a>
@@ -246,7 +246,7 @@
 </g>
 <!-- Node14 -->
 <g id="node14" class="node"><title>Node14</title>
-<g id="a_node14"><a xlink:href="a00062.html#a4a5e670df4a5790a7955aaef5483c08a" target="_top" xlink:title="hpd_start">
+<g id="a_node14"><a xlink:href="a00058.html#a4a5e670df4a5790a7955aaef5483c08a" target="_top" xlink:title="hpd_start">
 <polygon fill="none" stroke="black" points="995.5,-19.5 995.5,-38.5 1052.5,-38.5 1052.5,-19.5 995.5,-19.5"/>
 <text text-anchor="middle" x="1024" y="-26.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_start</text>
 </a>
@@ -259,7 +259,7 @@
 </g>
 <!-- Node15 -->
 <g id="node15" class="node"><title>Node15</title>
-<g id="a_node15"><a xlink:href="a00055.html#a0ddf1224851353fc92bfbff6f499fa97" target="_top" xlink:title="main">
+<g id="a_node15"><a xlink:href="a00051.html#a0ddf1224851353fc92bfbff6f499fa97" target="_top" xlink:title="main">
 <polygon fill="none" stroke="black" points="1124,-38.5 1124,-57.5 1162,-57.5 1162,-38.5 1124,-38.5"/>
 <text text-anchor="middle" x="1143" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">main</text>
 </a>
@@ -285,7 +285,7 @@
 </g>
 <!-- Node18 -->
 <g id="node18" class="node"><title>Node18</title>
-<g id="a_node18"><a xlink:href="a00064.html#aec51fa5c17a707a90a1634358ae1a9b4" target="_top" xlink:title="[hpd_adapter_t functions] ">
+<g id="a_node18"><a xlink:href="a00060.html#aec51fa5c17a707a90a1634358ae1a9b4" target="_top" xlink:title="[hpd_adapter_t functions] ">
 <polygon fill="none" stroke="black" points="817,-95.5 817,-114.5 912,-114.5 912,-95.5 817,-95.5"/>
 <text text-anchor="middle" x="864.5" y="-102.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_adapter_alloc</text>
 </a>

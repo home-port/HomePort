@@ -29,7 +29,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00064.html#ad7f06997cb2f69f3decb671a16d2bdb6" target="_top" xlink:title="hpd_service_set_attr">
+<g id="a_node4"><a xlink:href="a00060.html#ad7f06997cb2f69f3decb671a16d2bdb6" target="_top" xlink:title="hpd_service_set_attr">
 <polygon fill="none" stroke="black" points="173.5,-0.5 173.5,-19.5 280.5,-19.5 280.5,-0.5 173.5,-0.5"/>
 <text text-anchor="middle" x="227" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_service_set_attr</text>
 </a>
@@ -42,7 +42,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00064.html#a436b38305c5c560b7c2d78285ac7e27c" target="_top" xlink:title="hpd_service_set_attrs">
+<g id="a_node3"><a xlink:href="a00060.html#a436b38305c5c560b7c2d78285ac7e27c" target="_top" xlink:title="hpd_service_set_attrs">
 <polygon fill="none" stroke="black" points="320,-44.5 320,-63.5 433,-63.5 433,-44.5 320,-44.5"/>
 <text text-anchor="middle" x="376.5" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_service_set_attrs</text>
 </a>

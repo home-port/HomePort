@@ -15,7 +15,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00063.html#a8e0d939d976ec6a9d03c5099d71e8e09" target="_top" xlink:title="discovery_next_parameter_attr">
+<g id="a_node2"><a xlink:href="a00059.html#a8e0d939d976ec6a9d03c5099d71e8e09" target="_top" xlink:title="discovery_next_parameter_attr">
 <polygon fill="none" stroke="black" points="161,-0.5 161,-19.5 312,-19.5 312,-0.5 161,-0.5"/>
 <text text-anchor="middle" x="236.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_next_parameter_attr</text>
 </a>
@@ -28,7 +28,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00046.html#af695ac28accfa977234c1a554db94bb0" target="_top" xlink:title="hpd_map_next">
+<g id="a_node3"><a xlink:href="a00042.html#af695ac28accfa977234c1a554db94bb0" target="_top" xlink:title="hpd_map_next">
 <polygon fill="none" stroke="black" points="348,-0.5 348,-19.5 428,-19.5 428,-0.5 348,-0.5"/>
 <text text-anchor="middle" x="388" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_map_next</text>
 </a>

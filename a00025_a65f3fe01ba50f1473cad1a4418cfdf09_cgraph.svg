@@ -88,7 +88,7 @@ var sectionId = 'dynsection-11';
 </g>
 <!-- Node14 -->
 <g id="node14" class="node"><title>Node14</title>
-<g id="a_node14"><a xlink:href="a00060.html#a19ce779c8a8a82fcb624cd7631eaee20" target="_top" xlink:title="hpd_service_id_free">
+<g id="a_node14"><a xlink:href="a00056.html#a19ce779c8a8a82fcb624cd7631eaee20" target="_top" xlink:title="hpd_service_id_free">
 <polygon fill="none" stroke="black" points="228,-16.4029 228,-35.4029 332,-35.4029 332,-16.4029 228,-16.4029"/>
 <text text-anchor="middle" x="280" y="-23.4029" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_service_id_free</text>
 </a>
@@ -227,7 +227,7 @@ var sectionId = 'dynsection-11';
 </g>
 <!-- Node9 -->
 <g id="node9" class="node"><title>Node9</title>
-<g id="a_node9"><a xlink:href="a00049.html#a58068e1a4c60b401bc6fc99c25e9a3f6" target="_top" xlink:title="Kill and clean up after a connection. ">
+<g id="a_node9"><a xlink:href="a00045.html#a58068e1a4c60b401bc6fc99c25e9a3f6" target="_top" xlink:title="Kill and clean up after a connection. ">
 <polygon fill="none" stroke="black" points="833,-133.403 833,-152.403 933,-152.403 933,-133.403 833,-133.403"/>
 <text text-anchor="middle" x="883" y="-140.403" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_tcpd_conn_kill</text>
 </a>

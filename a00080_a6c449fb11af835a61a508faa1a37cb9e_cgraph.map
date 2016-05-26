@@ -1,9 +1,0 @@
-<map id="add_parameters" name="add_parameters">
-<area shape="rect" id="node2" href="$a00080.html#af86403a1e06bf3f39721b1cb53ee156a" title="add_parameter" alt="" coords="168,107,276,133"/>
-<area shape="rect" id="node3" href="$a00060.html#a43c7d86904fd4d8c82ec9e52ce52a188" title="[hpd_service_t functions] " alt="" coords="324,56,475,83"/>
-<area shape="rect" id="node6" href="$a00080.html#aa181e2f731323873699902e5cf92eea8" title="add" alt="" coords="594,107,637,133"/>
-<area shape="rect" id="node7" href="$a00080.html#ae8f63d2ca9864211a681b077c4431a33" title="add_attr" alt="" coords="365,157,434,184"/>
-<area shape="rect" id="node4" href="$a00011.html#a2348a6596051f9e054ab671a5bdeb11a" title="discovery_find_parameter" alt="" coords="530,5,701,32"/>
-<area shape="rect" id="node5" href="$a00063.html#a38635fc999dfcdb5d1273a3aed037fbf" title="discovery_get_parameter_id" alt="" coords="523,56,708,83"/>
-<area shape="rect" id="node8" href="$a00046.html#ad8de9589846a9987ae60b199fc05094d" title="hpd_pair_get" alt="" coords="567,157,663,184"/>
-</map>

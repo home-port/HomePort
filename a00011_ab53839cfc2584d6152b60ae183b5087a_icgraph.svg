@@ -16,7 +16,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00064.html#acc19d8881fd760ae0a219a9b70da4eb4" target="_top" xlink:title="hpd_adapter_next_service">
+<g id="a_node2"><a xlink:href="a00060.html#acc19d8881fd760ae0a219a9b70da4eb4" target="_top" xlink:title="hpd_adapter_next_service">
 <polygon fill="none" stroke="black" points="156,-6 156,-25 287,-25 287,-6 156,-6"/>
 <text text-anchor="middle" x="221.5" y="-13" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_adapter_next_service</text>
 </a>

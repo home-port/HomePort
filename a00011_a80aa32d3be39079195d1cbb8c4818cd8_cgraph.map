@@ -1,7 +1,7 @@
 <map id="discovery_copy_did" name="discovery_copy_did">
-<area shape="rect" id="node2" href="$a00065.html#aebd10ac1c18be51340c39d6d5a54e6d1" title="discovery_alloc_did" alt="" coords="191,31,327,57"/>
-<area shape="rect" id="node3" href="$a00065.html#acd5e8c2bf3e761abc7e2fd2294238a74" title="discovery_set_did" alt="" coords="377,5,503,32"/>
-<area shape="rect" id="node5" href="$a00065.html#ae1a000b225c8b3f365c2cec8362b8483" title="discovery_free_did" alt="" coords="375,56,505,83"/>
-<area shape="rect" id="node4" href="$a00065.html#af2f553cfc3af4678b87a8fc75f35a5c6" title="discovery_set_aid" alt="" coords="553,5,680,32"/>
+<area shape="rect" id="node2" href="$a00061.html#aebd10ac1c18be51340c39d6d5a54e6d1" title="discovery_alloc_did" alt="" coords="191,31,327,57"/>
+<area shape="rect" id="node3" href="$a00061.html#acd5e8c2bf3e761abc7e2fd2294238a74" title="discovery_set_did" alt="" coords="377,5,503,32"/>
+<area shape="rect" id="node5" href="$a00061.html#ae1a000b225c8b3f365c2cec8362b8483" title="discovery_free_did" alt="" coords="375,56,505,83"/>
+<area shape="rect" id="node4" href="$a00061.html#af2f553cfc3af4678b87a8fc75f35a5c6" title="discovery_set_aid" alt="" coords="553,5,680,32"/>
 <area shape="rect" id="node6" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="595,56,639,83"/>
 </map>

@@ -1,6 +1,6 @@
 <map id="hpd_httpd_request_get_method" name="hpd_httpd_request_get_method">
-<area shape="rect" id="node2" href="$a00038.html#a2eb873ac7e610c2dff8e49d216d3aff8" title="handle_request" alt="" coords="213,5,324,32"/>
+<area shape="rect" id="node2" href="$a00034.html#a2eb873ac7e610c2dff8e49d216d3aff8" title="handle_request" alt="" coords="213,5,324,32"/>
 <area shape="rect" id="node4" href="$a00025.html#abd6f4422cb70766aae33a18dc6b6cb74" title="on_req_hdr_cmpl" alt="" coords="208,56,329,83"/>
-<area shape="rect" id="node3" href="$a00038.html#a0ddf1224851353fc92bfbff6f499fa97" title="main" alt="" coords="391,5,442,32"/>
+<area shape="rect" id="node3" href="$a00034.html#a0ddf1224851353fc92bfbff6f499fa97" title="main" alt="" coords="391,5,442,32"/>
 <area shape="rect" id="node5" href="$a00025.html#ad079431c7eba97c5dd5e4e202cdf6102" title="on_create" alt="" coords="377,56,456,83"/>
 </map>

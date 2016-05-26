@@ -15,7 +15,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00049.html#ab4a4e8ef0831797b20bdb331abf9f316" target="_top" xlink:title="Initialise and accept connection. ">
+<g id="a_node2"><a xlink:href="a00045.html#ab4a4e8ef0831797b20bdb331abf9f316" target="_top" xlink:title="Initialise and accept connection. ">
 <polygon fill="none" stroke="black" points="117,-76.5 117,-95.5 186,-95.5 186,-76.5 117,-76.5"/>
 <text text-anchor="middle" x="151.5" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">on_ev_conn</text>
 </a>
@@ -28,7 +28,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00049.html#a67d03b167f8adca86cde7eeed5850982" target="_top" xlink:title="Get the in_addr from a sockaddr (IPv4 or IPv6) ">
+<g id="a_node3"><a xlink:href="a00045.html#a67d03b167f8adca86cde7eeed5850982" target="_top" xlink:title="Get the in_addr from a sockaddr (IPv4 or IPv6) ">
 <polygon fill="none" stroke="black" points="228.5,-152.5 228.5,-171.5 295.5,-171.5 295.5,-152.5 228.5,-152.5"/>
 <text text-anchor="middle" x="262" y="-159.5" font-family="Helvetica,sans-Serif" font-size="10.00">get_in_addr</text>
 </a>
@@ -41,7 +41,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00049.html#a58068e1a4c60b401bc6fc99c25e9a3f6" target="_top" xlink:title="Kill and clean up after a connection. ">
+<g id="a_node4"><a xlink:href="a00045.html#a58068e1a4c60b401bc6fc99c25e9a3f6" target="_top" xlink:title="Kill and clean up after a connection. ">
 <polygon fill="none" stroke="black" points="338,-38.5 338,-57.5 438,-57.5 438,-38.5 338,-38.5"/>
 <text text-anchor="middle" x="388" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_tcpd_conn_kill</text>
 </a>
@@ -54,7 +54,7 @@
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="a00049.html#a40658d68fcbff9425c35176b188f0191" target="_top" xlink:title="Recieve callback for io&#45;watcher. ">
+<g id="a_node6"><a xlink:href="a00045.html#a40658d68fcbff9425c35176b188f0191" target="_top" xlink:title="Recieve callback for io&#45;watcher. ">
 <polygon fill="none" stroke="black" points="228.5,-76.5 228.5,-95.5 295.5,-95.5 295.5,-76.5 228.5,-76.5"/>
 <text text-anchor="middle" x="262" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">on_ev_recv</text>
 </a>
@@ -67,7 +67,7 @@
 </g>
 <!-- Node7 -->
 <g id="node7" class="node"><title>Node7</title>
-<g id="a_node7"><a xlink:href="a00049.html#ac92de38ee89f3dac24453a2d8b2f4027" target="_top" xlink:title="Send callback for io&#45;watcher. ">
+<g id="a_node7"><a xlink:href="a00045.html#ac92de38ee89f3dac24453a2d8b2f4027" target="_top" xlink:title="Send callback for io&#45;watcher. ">
 <polygon fill="none" stroke="black" points="227.5,-0.5 227.5,-19.5 296.5,-19.5 296.5,-0.5 227.5,-0.5"/>
 <text text-anchor="middle" x="262" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">on_ev_send</text>
 </a>
@@ -80,7 +80,7 @@
 </g>
 <!-- Node8 -->
 <g id="node8" class="node"><title>Node8</title>
-<g id="a_node8"><a xlink:href="a00049.html#a00be9f92695597655a179e6f581e5350" target="_top" xlink:title="Timeout callback for timeout watcher. ">
+<g id="a_node8"><a xlink:href="a00045.html#a00be9f92695597655a179e6f581e5350" target="_top" xlink:title="Timeout callback for timeout watcher. ">
 <polygon fill="none" stroke="black" points="222,-38.5 222,-57.5 302,-57.5 302,-38.5 222,-38.5"/>
 <text text-anchor="middle" x="262" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">on_ev_timeout</text>
 </a>

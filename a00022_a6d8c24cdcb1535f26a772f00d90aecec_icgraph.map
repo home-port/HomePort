@@ -1,9 +1,9 @@
 <map id="hpd_map_set_n" name="hpd_map_set_n">
 <area shape="rect" id="node2" href="$a00016.html#aa1a343cae2ed36c50eb1052da871a9ad" title="Callback for URL parser. " alt="" coords="169,5,315,32"/>
 <area shape="rect" id="node8" href="$a00016.html#abdc31e7d6e3800ddd79939673452f59c" title="Callback for the header parser. " alt="" coords="168,57,316,98"/>
-<area shape="rect" id="node3" href="$a00040.html#a64ce145f4bd2b212ac9494fb18b43615" title="Create a new ws_request. " alt="" coords="364,35,501,61"/>
+<area shape="rect" id="node3" href="$a00036.html#a64ce145f4bd2b212ac9494fb18b43615" title="Create a new ws_request. " alt="" coords="364,35,501,61"/>
 <area shape="rect" id="node4" href="$a00015.html#acbf369331509bd9760bf346f6292376a" title="Callback for tcpd library. " alt="" coords="549,35,639,61"/>
 <area shape="rect" id="node5" href="$a00015.html#a8287f77cb41a94d39f282b607616df70" title="Create a new httpd instance. " alt="" coords="687,35,809,61"/>
-<area shape="rect" id="node6" href="$a00038.html#a0ddf1224851353fc92bfbff6f499fa97" title="main" alt="" coords="867,9,917,36"/>
+<area shape="rect" id="node6" href="$a00034.html#a0ddf1224851353fc92bfbff6f499fa97" title="main" alt="" coords="867,9,917,36"/>
 <area shape="rect" id="node7" href="$a00025.html#a665691f420dff4eebb8f4b4af62d7a49" title="on_start" alt="" coords="857,60,927,87"/>
 </map>

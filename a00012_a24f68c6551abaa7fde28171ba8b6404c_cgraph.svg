@@ -61,7 +61,7 @@ var sectionId = 'dynsection-2';
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00060.html#ad2f7effac0a1e5955e159ea5aca1ea78" target="_top" xlink:title="hpd_module_get_id">
+<g id="a_node2"><a xlink:href="a00056.html#ad2f7effac0a1e5955e159ea5aca1ea78" target="_top" xlink:title="hpd_module_get_id">
 <polygon fill="none" stroke="black" points="177.5,-38.5 177.5,-57.5 278.5,-57.5 278.5,-38.5 177.5,-38.5"/>
 <text text-anchor="middle" x="228" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_module_get_id</text>
 </a>
@@ -74,7 +74,7 @@ var sectionId = 'dynsection-2';
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00060.html#ae215a28ac4e61dfa35bee54fa68f59dc" target="_top" xlink:title="[hpd_t functions] ">
+<g id="a_node4"><a xlink:href="a00056.html#ae215a28ac4e61dfa35bee54fa68f59dc" target="_top" xlink:title="[hpd_t functions] ">
 <polygon fill="none" stroke="black" points="167,-0.5 167,-19.5 289,-19.5 289,-0.5 167,-0.5"/>
 <text text-anchor="middle" x="228" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_module_add_option</text>
 </a>
@@ -87,7 +87,7 @@ var sectionId = 'dynsection-2';
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00061.html#aefe9c12aa200eb18ec2ade2ed01b2229" target="_top" xlink:title="daemon_get_id">
+<g id="a_node3"><a xlink:href="a00057.html#aefe9c12aa200eb18ec2ade2ed01b2229" target="_top" xlink:title="daemon_get_id">
 <polygon fill="none" stroke="black" points="335.5,-38.5 335.5,-57.5 418.5,-57.5 418.5,-38.5 335.5,-38.5"/>
 <text text-anchor="middle" x="377" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">daemon_get_id</text>
 </a>
@@ -100,7 +100,7 @@ var sectionId = 'dynsection-2';
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="a00061.html#a27a83a7b452cacefcf9f08c8962243f5" target="_top" xlink:title="daemon_add_option">
+<g id="a_node5"><a xlink:href="a00057.html#a27a83a7b452cacefcf9f08c8962243f5" target="_top" xlink:title="daemon_add_option">
 <polygon fill="none" stroke="black" points="325,-0.5 325,-19.5 429,-19.5 429,-0.5 325,-0.5"/>
 <text text-anchor="middle" x="377" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">daemon_add_option</text>
 </a>

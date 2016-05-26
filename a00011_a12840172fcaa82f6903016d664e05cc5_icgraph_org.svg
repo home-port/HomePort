@@ -30,7 +30,7 @@
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="a00064.html#a66883e77bc53793b588c5768621c477e" target="_top" xlink:title="hpd_service_set_action">
+<g id="a_node5"><a xlink:href="a00060.html#a66883e77bc53793b588c5768621c477e" target="_top" xlink:title="hpd_service_set_action">
 <polygon fill="none" stroke="black" points="150,-0.5 150,-19.5 269,-19.5 269,-0.5 150,-0.5"/>
 <text text-anchor="middle" x="209.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_service_set_action</text>
 </a>
@@ -43,7 +43,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00064.html#a8a4f9edb085f44b1eb5d9b31447f06c9" target="_top" xlink:title="hpd_service_set_actions">
+<g id="a_node3"><a xlink:href="a00060.html#a8a4f9edb085f44b1eb5d9b31447f06c9" target="_top" xlink:title="hpd_service_set_actions">
 <polygon fill="none" stroke="black" points="305,-44.5 305,-63.5 430,-63.5 430,-44.5 305,-44.5"/>
 <text text-anchor="middle" x="367.5" y="-51.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_service_set_actions</text>
 </a>

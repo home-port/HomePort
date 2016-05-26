@@ -48,7 +48,7 @@ if (edges && edges.length) {
 <script type="text/javascript">
 var viewWidth = 618;
 var viewHeight = 66;
-var sectionId = 'dynsection-22';
+var sectionId = 'dynsection-40';
 </script>
 <script xlink:href="svgpan.js"/>
 <svg id="graph" class="graph">
@@ -75,7 +75,7 @@ var sectionId = 'dynsection-22';
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00065.html#a1915dc6bbbb6b1a2a587723caa22069d" target="_top" xlink:title="discovery_alloc_aid">
+<g id="a_node3"><a xlink:href="a00061.html#a1915dc6bbbb6b1a2a587723caa22069d" target="_top" xlink:title="discovery_alloc_aid">
 <polygon fill="none" stroke="black" points="305,-19.5 305,-38.5 407,-38.5 407,-19.5 305,-19.5"/>
 <text text-anchor="middle" x="356" y="-26.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_alloc_aid</text>
 </a>
@@ -88,7 +88,7 @@ var sectionId = 'dynsection-22';
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00065.html#af2f553cfc3af4678b87a8fc75f35a5c6" target="_top" xlink:title="discovery_set_aid">
+<g id="a_node4"><a xlink:href="a00061.html#af2f553cfc3af4678b87a8fc75f35a5c6" target="_top" xlink:title="discovery_set_aid">
 <polygon fill="none" stroke="black" points="444.5,-38.5 444.5,-57.5 539.5,-57.5 539.5,-38.5 444.5,-38.5"/>
 <text text-anchor="middle" x="492" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_set_aid</text>
 </a>
@@ -101,7 +101,7 @@ var sectionId = 'dynsection-22';
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="a00065.html#a2bd026e829a41663810ae68fa3797987" target="_top" xlink:title="discovery_free_aid">
+<g id="a_node5"><a xlink:href="a00061.html#a2bd026e829a41663810ae68fa3797987" target="_top" xlink:title="discovery_free_aid">
 <polygon fill="none" stroke="black" points="443,-0.5 443,-19.5 541,-19.5 541,-0.5 443,-0.5"/>
 <text text-anchor="middle" x="492" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_free_aid</text>
 </a>

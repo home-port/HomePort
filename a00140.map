@@ -1,5 +1,5 @@
-<map id="common/httpd/src/url_parser.c" name="common/httpd/src/url_parser.c">
-<area shape="rect" id="node4" href="$a00033.html" title="url_parser.h" alt="" coords="183,95,274,121"/>
-<area shape="rect" id="node6" href="$a00060.html" title="hpd_shared_api.h" alt="" coords="299,95,423,121"/>
-<area shape="rect" id="node5" href="$a00021.html" title="hpd_types.h" alt="" coords="189,169,282,196"/>
+<map id="common/httpd/src/url_parser.h" name="common/httpd/src/url_parser.h">
+<area shape="rect" id="node2" href="$a00016.html" title="common/httpd/src/httpd\l_request.c" alt="" coords="5,95,165,136"/>
+<area shape="rect" id="node3" href="$a00032.html" title="common/httpd/src/url\l_parser.c" alt="" coords="190,95,335,136"/>
+<area shape="rect" id="node4" href="$a00006.html" title="common/httpd/test/url\l_parser_test.c" alt="" coords="188,184,337,225"/>
 </map>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nthreads',['NTHREADS',['../a00031.html#a51ca9914034cd3e92903476fd4eebbd6',1,'load_test.c']]]
+  ['up_5fsettings_5fdefault',['UP_SETTINGS_DEFAULT',['../a00033.html#a993405f31c2a01b4d8234ede5451d8a8',1,'url_parser.h']]]
 ];

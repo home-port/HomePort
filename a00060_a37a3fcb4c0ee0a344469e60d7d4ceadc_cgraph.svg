@@ -28,7 +28,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00063.html#a03d22a47b126d8ef69f3cbab450a8ea8" target="_top" xlink:title="discovery_first_device_attr">
+<g id="a_node3"><a xlink:href="a00059.html#a03d22a47b126d8ef69f3cbab450a8ea8" target="_top" xlink:title="discovery_first_device_attr">
 <polygon fill="none" stroke="black" points="143,-0.5 143,-19.5 277,-19.5 277,-0.5 143,-0.5"/>
 <text text-anchor="middle" x="210" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_first_device_attr</text>
 </a>
@@ -41,7 +41,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00046.html#add245d9f3bd8d51960f62e547a5cec7c" target="_top" xlink:title="hpd_map_first">
+<g id="a_node4"><a xlink:href="a00042.html#add245d9f3bd8d51960f62e547a5cec7c" target="_top" xlink:title="hpd_map_first">
 <polygon fill="none" stroke="black" points="313,-0.5 313,-19.5 391,-19.5 391,-0.5 313,-0.5"/>
 <text text-anchor="middle" x="352" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_map_first</text>
 </a>

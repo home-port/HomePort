@@ -15,7 +15,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00064.html#a228c00929674efd7d29edec9043b2da6" target="_top" xlink:title="hpd_device_detach">
+<g id="a_node2"><a xlink:href="a00060.html#a228c00929674efd7d29edec9043b2da6" target="_top" xlink:title="hpd_device_detach">
 <polygon fill="none" stroke="black" points="163,-0.5 163,-19.5 264,-19.5 264,-0.5 163,-0.5"/>
 <text text-anchor="middle" x="213.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_device_detach</text>
 </a>

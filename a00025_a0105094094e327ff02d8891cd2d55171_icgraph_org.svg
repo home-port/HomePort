@@ -15,7 +15,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00081.html#aeadeff1313529703cc61d6d21b19fa6c" target="_top" xlink:title="hpd_rest_json_get_value">
+<g id="a_node2"><a xlink:href="a00077.html#aeadeff1313529703cc61d6d21b19fa6c" target="_top" xlink:title="hpd_rest_json_get_value">
 <polygon fill="none" stroke="black" points="257,-38.5 257,-57.5 382,-57.5 382,-38.5 257,-38.5"/>
 <text text-anchor="middle" x="319.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_rest_json_get_value</text>
 </a>
@@ -28,7 +28,7 @@
 </g>
 <!-- Node8 -->
 <g id="node8" class="node"><title>Node8</title>
-<g id="a_node8"><a xlink:href="a00082.html#a9b2c38a1bc9deee96af9960602897b6c" target="_top" xlink:title="add_value">
+<g id="a_node8"><a xlink:href="a00078.html#a9b2c38a1bc9deee96af9960602897b6c" target="_top" xlink:title="add_value">
 <polygon fill="none" stroke="black" points="160,-0.5 160,-19.5 221,-19.5 221,-0.5 160,-0.5"/>
 <text text-anchor="middle" x="190.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">add_value</text>
 </a>
@@ -54,7 +54,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00073.html#af762dc3db213f4a84ba5fe3ab36a78fe" target="_top" xlink:title="request_alloc_request">
+<g id="a_node4"><a xlink:href="a00069.html#af762dc3db213f4a84ba5fe3ab36a78fe" target="_top" xlink:title="request_alloc_request">
 <polygon fill="none" stroke="black" points="526,-38.5 526,-57.5 638,-57.5 638,-38.5 526,-38.5"/>
 <text text-anchor="middle" x="582" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">request_alloc_request</text>
 </a>
@@ -80,7 +80,7 @@
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="a00074.html#ac8e7c21db1c80443994e79d29eae8286" target="_top" xlink:title="[hpd_request_t functions] ">
+<g id="a_node5"><a xlink:href="a00070.html#ac8e7c21db1c80443994e79d29eae8286" target="_top" xlink:title="[hpd_request_t functions] ">
 <polygon fill="none" stroke="black" points="674,-38.5 674,-57.5 769,-57.5 769,-38.5 674,-38.5"/>
 <text text-anchor="middle" x="721.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_request_alloc</text>
 </a>
@@ -111,7 +111,7 @@
 </g>
 <!-- Node9 -->
 <g id="node9" class="node"><title>Node9</title>
-<g id="a_node9"><a xlink:href="a00083.html#ac3cc2f5b51221178a56055bc3b4f328f" target="_top" xlink:title="hpd_rest_xml_get_value">
+<g id="a_node9"><a xlink:href="a00079.html#ac3cc2f5b51221178a56055bc3b4f328f" target="_top" xlink:title="hpd_rest_xml_get_value">
 <polygon fill="none" stroke="black" points="258.5,-0.5 258.5,-19.5 380.5,-19.5 380.5,-0.5 258.5,-0.5"/>
 <text text-anchor="middle" x="319.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_rest_xml_get_value</text>
 </a>
