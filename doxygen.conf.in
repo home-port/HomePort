@@ -795,6 +795,7 @@ RECURSIVE              = YES
 
 EXCLUDE                = @CMAKE_CURRENT_BINARY_DIR@ \
                          @CMAKE_CURRENT_SOURCE_DIR@/lib \
+                         @CMAKE_CURRENT_SOURCE_DIR@/build \
                          @CMAKE_CURRENT_SOURCE_DIR@/REST/http-webserver/lib
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or

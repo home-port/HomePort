@@ -29,19 +29,6 @@
  *
  * \tableofcontents
  *
- * Directory hierarchy:
- * - **common/**          -- _Common libraries shared between HomePort and modules._
- *     - **httpd/**       -- _A http web server._
- *     - **include/**     -- _Common items that requires only header files._
- *     - **map/**         -- _An implementation of a map, with both keys and values as strings._
- *     - **tcpd/**        -- _A tcp server._
- * - **example/**         -- _Global examples on entire HomePort installation (local examples can be found in sub-folders)._
- *     - **demo/**        -- _A simple demonstration of HomePort._
- * - **hpd/**             -- _HomePort itself._
- * - **lib/**             -- _Third party libraries._
- * - **modules/**         -- _HomePort modules._
- *     - **hpd_rest/**    -- _Rest web service module._
- *
  * \section sec_arch Overall architecture
  *
  * @startuml "A HomePort Executable"
@@ -119,6 +106,59 @@
  *     - value.c
  *     - value.h
  *     - value_api.c
+ *
+ * \section sec_use_cases Use cases covered by the API
+ *
+ * Actors involved:
+ * - Configurator: Collects a set of modules into an executable file with a main function.
+ * - Adapter developer.
+ * - Application developer.
+ *
+ * \subsection sec_configurator Configurator
+ *
+ * Functionality provided by: hpd_daemon_api.h
+ *
+ * Tasks:
+ * - Start and stop HomePort [\ref sec_main].
+ * - Add modules to HomePort [\ref sec_main].
+ *
+ * In addition, the configurator needs the module definitions (hpd_module_def_t) as provided by the adapters and
+ * applications to add them to HomePort.
+ *
+ * \subsection sec_adapter_dev Adapter Developer
+ *
+ * Functionality provided by: hpd_adapter_api.h
+ *
+ * Tasks:
+ * - Define a HomePort module for the configurator [\ref sec_modules].
+ * - Manage the appropriate models in HomePort (adapters, devices, ...) [\ref sec_adapter_api].
+ * - Answer to a request for a value [\ref sec_adapter_comm].
+ *     - Read contents of PUT value [\ref sec_value].
+ *     - Construct the value [\ref sec_value].
+ * - Report that a service have changed value [\ref sec_adapter_comm].
+ *     - Construct the value [\ref sec_value].
+ *
+ * In addition, the adapter developer may need to browse the models provided by the adapter, when communicating with
+ * the underlying network (as they can store data within these models) [\ref sec_shared_api_cont].
+ *
+ * \subsection sec_application_dev Application Developer
+ *
+ * Functionality provided by: hpd_application_api.h
+ *
+ * Tasks:
+ * - Define a HomePort module for the configurator [\ref sec_modules].
+ * - Browsing available services in HomePort [\ref sec_shared_api_cont].
+ * - Request a value [\ref sec_application_api].
+ *      - Construct the value for PUT request [\ref sec_value].
+ *      - Read the response [\ref sec_value].
+ * - Listen to events [\ref sec_application_api].
+ *
+ * \subsection sec_sub_task Sub-tasks
+ *
+ * The following tasks may be a sub-component for those mentioned above:
+ *
+ * - Functions for logging (error) messages [\ref sec_logging].
+ * - Functions for managing indirect references [\ref sec_indirect_refs].
  *
  * \section sec_data_mode HomePort data model
  *
