@@ -132,8 +132,7 @@ hpd_error_t discovery_free_adapter(hpd_adapter_t *adapter)
     return rc;
 
     map_error:
-        // TODO This is bad ...
-        return rc;
+    LOG_RETURN(rc, "Free function returned an error [code: %i]", rc);
 }
 
 hpd_error_t discovery_free_device(hpd_device_t *device)
@@ -150,8 +149,7 @@ hpd_error_t discovery_free_device(hpd_device_t *device)
     return rc;
 
     map_error:
-        // TODO This is bad ...
-        return rc;
+    LOG_RETURN(rc, "Free function returned an error [code: %i]", rc);
 }
 
 hpd_error_t discovery_free_service(hpd_service_t *service)
@@ -168,8 +166,7 @@ hpd_error_t discovery_free_service(hpd_service_t *service)
     return rc;
 
     map_error:
-        // TODO This is bad ...
-        return rc;
+    LOG_RETURN(rc, "Free function returned an error [code: %i]", rc);
 }
 
 

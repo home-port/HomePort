@@ -81,8 +81,7 @@ static hpd_error_t daemon_free_conf(configuration_t *conf) {
     return HPD_E_SUCCESS;
 
     map_error:
-        // TODO This is bad ...
-        return rc;
+        LOG_RETURN(rc, "Free function returned an error [code: %i]", rc);
 }
 
 hpd_error_t daemon_alloc(hpd_t **hpd)

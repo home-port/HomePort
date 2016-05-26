@@ -47,11 +47,11 @@ extern "C" {
 
 /**
  * CAST is for c++ compatibility (tests).
- * TODO Seriously bad for alloc errors, (PTR) is lost
  */
 #define HPD_REALLOC(PTR, NUM, CAST) do { \
-    (PTR) = (CAST *) realloc((PTR), (NUM)*sizeof(CAST)); \
-    if(!(PTR)) goto alloc_error; \
+    void *_tmp = realloc((PTR), (NUM)*sizeof(CAST)); \
+    if(!_tmp) goto alloc_error; \
+    (PTR) = (CAST *) _tmp; \
 } while(0)
 
 #define HPD_CPY_ALLOC(DST, SRC, CAST) do { \
@@ -72,10 +72,10 @@ extern "C" {
 } while(0)
 
 #define HPD_SPRINTF_ALLOC(DST, FMT, ...) do { \
-    size_t len; \
-    if ((len = snprintf(NULL, 0, (FMT), ##__VA_ARGS__)) < 0) goto nsprintf_error; \
-    if (!((DST) = calloc(len+1, sizeof(char)))) goto alloc_error; \
-    if (snprintf((DST), len+1, (FMT), ##__VA_ARGS__) < 0) { free((DST)); goto nsprintf_error; } \
+    size_t _len; \
+    if ((_len = snprintf(NULL, 0, (FMT), ##__VA_ARGS__)) < 0) goto nsprintf_error; \
+    if (!((DST) = calloc(_len+1, sizeof(char)))) goto alloc_error; \
+    if (snprintf((DST), _len+1, (FMT), ##__VA_ARGS__) < 0) { free((DST)); goto nsprintf_error; } \
 } while (0)
 
 #ifdef __cplusplus

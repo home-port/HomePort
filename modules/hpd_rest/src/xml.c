@@ -29,10 +29,29 @@
 #include <time.h>
 #include <mxml.h>
 #include <zlib.h>
+#include <hpd_common.h>
 #include "hpd_application_api.h"
 #include "hpd_rest_intern.h"
 
 static const char * const XML_VERSION = "1.0";
+
+// TODO Ugly hack to get context through mxml
+static hpd_module_t *global_context = NULL;
+
+static void on_mxml_error(const char *msg)
+{
+    HPD_LOG_DEBUG(global_context, "%s", msg);
+}
+
+#define BEGIN(CONTEXT) do { \
+    if (global_context) HPD_LOG_WARN((CONTEXT), "Global context is already set (trying anyways)..."); \
+    global_context = (CONTEXT); \
+    mxmlSetErrorCallback(on_mxml_error); \
+} while (0) \
+
+#define END() do { \
+    global_context = NULL; \
+} while (0)
 
 #define RETURN_XML_ERROR(CONTEXT) HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Xml error")
 
@@ -220,24 +239,6 @@ static hpd_error_t add_configuration(mxml_node_t *parent, hpd_t *hpd, hpd_rest_t
     return HPD_E_SUCCESS;
 }
 
-// TODO Ugly hack to get context through mxml
-static hpd_module_t *global_context = NULL;
-
-static void on_mxml_error(const char *msg)
-{
-    HPD_LOG_DEBUG(global_context, "%s", msg);
-}
-
-#define BEGIN(CONTEXT) do { \
-    if (global_context) HPD_LOG_WARN((CONTEXT), "Global context is already set (trying anyways)..."); \
-    global_context = (CONTEXT); \
-    mxmlSetErrorCallback(on_mxml_error); \
-} while (0) \
-
-#define END() do { \
-    global_context = NULL; \
-} while (0)
-
 hpd_error_t hpd_rest_xml_get_configuration(hpd_t *hpd, hpd_rest_t *rest, hpd_module_t *context, char **out)
 {
     BEGIN(context);
@@ -318,8 +319,6 @@ hpd_error_t hpd_rest_xml_parse_value(const char *in, hpd_module_t *context, char
 {
     BEGIN(context);
 
-    // TODO Return HPD_E_ARGUMENT on parse errors!
-
     mxml_node_t *xml;
     if (!(xml = mxmlLoadString(NULL, in, MXML_TEXT_CALLBACK))) {
         END();
@@ -333,14 +332,13 @@ hpd_error_t hpd_rest_xml_parse_value(const char *in, hpd_module_t *context, char
         END();
         HPD_LOG_RETURN(context, HPD_E_ARGUMENT, "XML parsing error");
     }
-    
-    // TODO Alloc checks !
+
     size_t len = 1;
-    (*out) = calloc(len, sizeof(char));
+    HPD_CALLOC(*out, len, char);
     for (node = node->child; node && node->type == MXML_TEXT; node = node->next) {
         int whitespaces = node->value.text.whitespace;
         char *string = node->value.text.string;
-        (*out) = realloc((*out), (len + whitespaces + strlen(string)) * sizeof(char));
+        HPD_REALLOC(*out, len + whitespaces + strlen(string), char);
         for (int i = 0; i < whitespaces; i++) strcat(*out, " ");
         strcat(*out, string);
     }
@@ -348,6 +346,11 @@ hpd_error_t hpd_rest_xml_parse_value(const char *in, hpd_module_t *context, char
     mxmlDelete(xml);
     END();
     return HPD_E_SUCCESS;
+
+    alloc_error:
+        mxmlDelete(xml);
+        END();
+        HPD_LOG_RETURN_E_ALLOC(context);
 }
 
 

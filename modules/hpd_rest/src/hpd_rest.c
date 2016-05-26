@@ -184,7 +184,6 @@ hpd_error_t hpd_rest_url_create(hpd_rest_t *rest, hpd_service_id_t *service, cha
     return rc;
 }
 
-// TODO Should probably double-check this one...
 static hpd_error_t url_extract(hpd_rest_t *rest, const char *url, char **aid, char **did, char **sid)
 {
     const char *aid_p, *did_p, *sid_p;
@@ -889,15 +888,6 @@ static hpd_httpd_return_t on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req
                     HPD_LOG_ERROR(context, "Failed to send unsupported media type response (code: %d).", rc2);
                 }
                 return HPD_HTTPD_R_STOP;
-        }
-
-        // Check for parse errors
-        // TODO Does this become obsolete then updating xml and json layers?
-        if (!val) {
-            if ((rc2 = reply_bad_request(req, rest_req, context))) {
-                HPD_LOG_ERROR(context, "Failed to send bad request response (code: %d).", rc2);
-            }
-            return HPD_HTTPD_R_STOP;
         }
 
         // Allocate hpd value

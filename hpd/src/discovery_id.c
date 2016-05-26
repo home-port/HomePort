@@ -31,16 +31,22 @@
 #include "log.h"
 #include "model.h"
 
+/**
+ * HPD_E_ALLOC: id might be partially updated
+ */
 hpd_error_t discovery_set_aid(hpd_adapter_id_t *id, hpd_t *hpd, const char *aid)
 {
     id->hpd = hpd;
     HPD_STR_CPY(id->aid, aid);
     return HPD_E_SUCCESS;
 
-    alloc_error: // TODO Might leave id in invalid state
+    alloc_error:
     LOG_RETURN_E_ALLOC();
 }
 
+/**
+ * HPD_E_ALLOC: id might be partially updated
+ */
 hpd_error_t discovery_set_did(hpd_device_id_t *id, hpd_t *hpd, const char *aid, const char *did)
 {
     hpd_error_t rc;
@@ -48,10 +54,13 @@ hpd_error_t discovery_set_did(hpd_device_id_t *id, hpd_t *hpd, const char *aid, 
     HPD_STR_CPY(id->did, did);
     return HPD_E_SUCCESS;
 
-    alloc_error: // TODO Might leave id in invalid state
+    alloc_error:
     LOG_RETURN_E_ALLOC();
 }
 
+/**
+ * HPD_E_ALLOC: id might be partially updated
+ */
 hpd_error_t discovery_set_sid(hpd_service_id_t *id, hpd_t *hpd, const char *aid, const char *did, const char *sid)
 {
     hpd_error_t rc;
@@ -59,10 +68,13 @@ hpd_error_t discovery_set_sid(hpd_service_id_t *id, hpd_t *hpd, const char *aid,
     HPD_STR_CPY(id->sid, sid);
     return HPD_E_SUCCESS;
 
-    alloc_error: // TODO Might leave id in invalid state
+    alloc_error:
     LOG_RETURN_E_ALLOC();
 }
 
+/**
+ * HPD_E_ALLOC: id might be partially updated
+ */
 hpd_error_t discovery_set_pid(hpd_parameter_id_t *id, hpd_t *hpd, const char *aid, const char *did, const char *sid, const char *pid)
 {
     hpd_error_t rc;
@@ -70,7 +82,7 @@ hpd_error_t discovery_set_pid(hpd_parameter_id_t *id, hpd_t *hpd, const char *ai
     HPD_STR_CPY(id->pid, pid);
     return HPD_E_SUCCESS;
 
-    alloc_error: // TODO Might leave id in invalid state
+    alloc_error:
     LOG_RETURN_E_ALLOC();
 }
 
@@ -80,6 +92,7 @@ hpd_error_t discovery_alloc_aid(hpd_adapter_id_t **id, hpd_t *hpd, const char *a
     HPD_CALLOC(*id, 1, hpd_adapter_id_t);
     if ((rc = discovery_set_aid(*id, hpd, aid))) {
         discovery_free_aid(*id);
+        (*id) = NULL;
         return rc;
     }
     return HPD_E_SUCCESS;
@@ -94,6 +107,7 @@ hpd_error_t discovery_alloc_did(hpd_device_id_t **id, hpd_t *hpd, const char *ai
     HPD_CALLOC(*id, 1, hpd_device_id_t);
     if ((rc = discovery_set_did(*id, hpd, aid, did))) {
         discovery_free_did(*id);
+        (*id) = NULL;
         return rc;
     }
     return HPD_E_SUCCESS;
@@ -108,6 +122,7 @@ hpd_error_t discovery_alloc_sid(hpd_service_id_t **id, hpd_t *hpd, const char *a
     HPD_CALLOC(*id, 1, hpd_service_id_t);
     if ((rc = discovery_set_sid(*id, hpd, aid, did, sid))) {
         discovery_free_sid(*id);
+        (*id) = NULL;
         return rc;
     }
     return HPD_E_SUCCESS;
@@ -123,6 +138,7 @@ hpd_error_t discovery_alloc_pid(hpd_parameter_id_t **id, hpd_t *hpd, const char 
     HPD_CALLOC(*id, 1, hpd_parameter_id_t);
     if ((rc = discovery_set_pid(*id, hpd, aid, did, sid, pid))) {
         discovery_free_pid(*id);
+        (*id) = NULL;
         return rc;
     }
     return HPD_E_SUCCESS;
