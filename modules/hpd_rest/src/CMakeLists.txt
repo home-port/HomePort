@@ -29,13 +29,13 @@
 # as representing official policies, either expressed.
 
 # Main library
-add_library(hpd_rest SHARED
+add_library(hpd-rest SHARED
         ../include/hpd_rest.h
         hpd_rest_intern.h
         hpd_rest.c
         json.c
         xml.c
         )
-target_link_libraries(hpd_rest httpd jansson mxml curl)
-install(TARGETS hpd_rest DESTINATION lib/hpd)
-set_target_properties(hpd_rest PROPERTIES VERSION 0.0.0 SOVERSION 0)
+target_link_libraries(hpd-rest hpd-httpd jansson mxml curl)
+install(TARGETS hpd-rest DESTINATION lib)
+set_target_properties(hpd-rest PROPERTIES VERSION 0.0.0 SOVERSION 0)

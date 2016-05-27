@@ -500,7 +500,6 @@ hpd_error_t discovery_set_adapter_attrs_v(hpd_adapter_t *adapter, va_list vp)
     while ((key = va_arg(vp, const char *))) {
         if (key[0] == '_') LOG_RETURN(HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
         val = va_arg(vp, const char *);
-        if (!val) LOG_RETURN_E_NULL();
         if ((rc = discovery_set_adapter_attr(adapter, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -514,7 +513,6 @@ hpd_error_t discovery_set_device_attrs_v(hpd_device_t *device, va_list vp)
     while ((key = va_arg(vp, const char *))) {
         if (key[0] == '_') LOG_RETURN(HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
         val = va_arg(vp, const char *);
-        if (!val) LOG_RETURN_E_NULL();
         if ((rc = discovery_set_device_attr(device, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -528,7 +526,6 @@ hpd_error_t discovery_set_service_attrs_v(hpd_service_t *service, va_list vp)
     while ((key = va_arg(vp, const char *))) {
         if (key[0] == '_') LOG_RETURN(HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
         val = va_arg(vp, const char *);
-        if (!val) LOG_RETURN_E_NULL();
         if ((rc = discovery_set_service_attr(service, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -542,7 +539,6 @@ hpd_error_t discovery_set_parameter_attrs_v(hpd_parameter_t *parameter, va_list 
     while ((key = va_arg(vp, const char *))) {
         if (key[0] == '_') LOG_RETURN(HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
         val = va_arg(vp, const char *);
-        if (!val) LOG_RETURN_E_NULL();
         if ((rc = discovery_set_parameter_attr(parameter, key, val))) return rc;
     }
     return HPD_E_SUCCESS;

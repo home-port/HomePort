@@ -711,8 +711,8 @@ hpd_error_t hpd_first_adapter(hpd_t *hpd, hpd_adapter_id_t **adapter_id)
     if ((rc = discovery_first_hpd_adapter(hpd, &adapter))) return rc;
 
     if (!adapter) {
+        (*adapter_id) = NULL;
         return HPD_E_SUCCESS;
-        *adapter_id = NULL;
     }
 
     return discovery_alloc_aid(adapter_id, hpd, adapter->id);
@@ -728,7 +728,7 @@ hpd_error_t hpd_first_device(hpd_t *hpd, hpd_device_id_t **device_id)
     if ((rc = discovery_first_hpd_device(hpd, &device))) return rc;
 
     if (!device) {
-        *device_id = NULL;
+        (*device_id) = NULL;
         return HPD_E_SUCCESS;
     }
 
@@ -746,7 +746,7 @@ hpd_error_t hpd_first_service(hpd_t *hpd, hpd_service_id_t **service_id)
     if ((rc = discovery_first_hpd_service(hpd, &service))) return rc;
 
     if (!service) {
-        *service_id = NULL;
+        (*service_id) = NULL;
         return HPD_E_SUCCESS;
     }
 
@@ -768,7 +768,7 @@ hpd_error_t hpd_adapter_first_device(hpd_adapter_id_t *adapter_id, hpd_device_id
     if ((rc = discovery_first_adapter_device(adapter, &device))) return rc;
 
     if (!device) {
-        *device_id = NULL;
+        (*device_id) = NULL;
         return HPD_E_SUCCESS;
     }
 
@@ -789,7 +789,7 @@ hpd_error_t hpd_adapter_first_service(hpd_adapter_id_t *adapter_id, hpd_service_
     if ((rc = discovery_first_adapter_service(adapter, &service))) return rc;
 
     if (!service) {
-        *service_id = NULL;
+        (*service_id) = NULL;
         return HPD_E_SUCCESS;
     }
 
@@ -811,7 +811,7 @@ hpd_error_t hpd_device_first_service(const hpd_device_id_t *device_id, hpd_servi
     if ((rc = discovery_first_device_service(device, &service))) return rc;
 
     if (!service) {
-        *service_id = NULL;
+        (*service_id) = NULL;
         return HPD_E_SUCCESS;
     }
 
@@ -833,7 +833,7 @@ hpd_error_t hpd_service_first_parameter(hpd_service_id_t *service_id, hpd_parame
     if ((rc = discovery_first_service_parameter(service, &parameter))) return rc;
 
     if (!parameter) {
-        *parameter_id = NULL;
+        (*parameter_id) = NULL;
         return HPD_E_SUCCESS;
     }
 

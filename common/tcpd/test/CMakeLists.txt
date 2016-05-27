@@ -29,11 +29,12 @@
 # as representing official policies, either expressed.
 
 # tcpd Test
-include_directories(../src/)
-add_executable(test_tcpd
-        webserver_test.cpp
-        )
-target_link_libraries(test_tcpd hpd tcpd gtest gtest_main)
+# TODO FIX
+#include_directories(../src/)
+#add_executable(test_tcpd
+#        webserver_test.cpp
+#        )
+#target_link_libraries(test_tcpd hpd hpd-tcpd gtest gtest_main)
 
 # Big Data Test
 # TODO OLD test deactivated, changing to googletest

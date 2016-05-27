@@ -28,7 +28,7 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_library(httpd SHARED
+add_library(hpd-httpd SHARED
         ../include/httpd.h
         ../include/httpd_types.h
         httpd.c
@@ -37,6 +37,6 @@ add_library(httpd SHARED
         header_parser.c
         httpd_response.c
         )
-set_target_properties(httpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
-target_link_libraries(httpd tcpd http-parser)
-install(TARGETS httpd DESTINATION lib/hpd)
+set_target_properties(hpd-httpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
+target_link_libraries(hpd-httpd hpd-tcpd http-parser)
+install(TARGETS hpd-httpd DESTINATION lib)

@@ -69,7 +69,7 @@ static curl_ev_t *curl_ev = NULL;
 static void on_io(hpd_ev_loop_t *loop, ev_io *w, int revents)
 {
     CURLMcode cmc;
-    if ((cmc = curl_ev_socket_action(CURL_SOCKET_TIMEOUT)))
+    if ((cmc = curl_ev_socket_action(w->fd)))
         HPD_LOG_ERROR(curl_ev->context, "curl_ev_socket_action() failed [code: %i]", cmc);
 }
 
@@ -115,12 +115,15 @@ static CURLMcode on_update_socket(CURL *easy, curl_socket_t s, int what, void *u
     // Configure
     switch (what) {
         case CURL_POLL_IN:
+            HPD_LOG_VERBOSE(context, "Adding watcher for socket %i (r)", s);
             ev_io_set(&w->watcher, s, EV_READ);
             break;
         case CURL_POLL_OUT:
+            HPD_LOG_VERBOSE(context, "Adding watcher for socket %i (w)", s);
             ev_io_set(&w->watcher, s, EV_WRITE);
             break;
         case CURL_POLL_INOUT:
+            HPD_LOG_VERBOSE(context, "Adding watcher for socket %i (rw)", s);
             ev_io_set(&w->watcher, s, EV_READ | EV_WRITE);
             break;
         case CURL_POLL_REMOVE:
@@ -171,10 +174,14 @@ static hpd_error_t curl_ev_add_next()
     CURLMcode cmc, cmc2;
     hpd_module_t *context = curl_ev->context;
 
-    if (!curl_ev->mult_handle) return HPD_E_SUCCESS;
+    if (!curl_ev->mult_handle) {
+        HPD_LOG_VERBOSE(context, "Not starting, saving handle for later...");
+        return HPD_E_SUCCESS;
+    }
 
     curl_ev_handle_t *handle = TAILQ_FIRST(&curl_ev->handles);
     if (handle) {
+        HPD_LOG_VERBOSE(context, "Adding next handle");
         if ((cmc = curl_multi_add_handle(curl_ev->mult_handle, handle->handle))) goto add_error;
         if ((cmc = curl_ev_socket_action(CURL_SOCKET_TIMEOUT))) goto action_error;
     }

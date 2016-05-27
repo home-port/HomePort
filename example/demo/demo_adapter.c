@@ -109,6 +109,9 @@ static hpd_error_t hpd_demo_adapter_start(void *data, hpd_t *hpd)
 
     printf("[adapter] Starting with %i lamps...\n", demo_adapter->num_lamps); // TODO Wrong!
 
+    // TODO REMOVE THIS!
+    return HPD_E_SUCCESS;
+
     // TODO Clean up on errors !
 
     // Create adapter structure

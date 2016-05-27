@@ -28,9 +28,9 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_library(map SHARED
+add_library(hpd-map SHARED
         ../include/hpd_map.h
         map.c
         )
-set_target_properties(map PROPERTIES VERSION 0.0.0 SOVERSION 0)
-install(TARGETS map DESTINATION lib/hpd)
+set_target_properties(hpd-map PROPERTIES VERSION 0.0.0 SOVERSION 0)
+install(TARGETS hpd-map DESTINATION lib)

@@ -28,13 +28,13 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_library(tcpd SHARED
+add_library(hpd-tcpd SHARED
         ../include/tcpd.h
         ../include/tcpd_types.h
         tcpd_intern.h
         tcpd.c
         )
-set_target_properties(tcpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
-target_link_libraries(tcpd ev)
-install(TARGETS tcpd DESTINATION lib/hpd)
+set_target_properties(hpd-tcpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
+target_link_libraries(hpd-tcpd ev)
+install(TARGETS hpd-tcpd DESTINATION lib)
 

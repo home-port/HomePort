@@ -977,7 +977,7 @@ static hpd_error_t on_create(void **data, hpd_module_t *context)
     return HPD_E_SUCCESS;
 
     alloc_error:
-    return HPD_E_ALLOC;
+        HPD_LOG_RETURN_E_ALLOC(context);
 }
 
 static hpd_error_t on_destroy(void *data)
