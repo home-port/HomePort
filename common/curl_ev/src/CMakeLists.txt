@@ -28,10 +28,18 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_subdirectory(include)
-include_directories(include)
-
-add_subdirectory(map)
-add_subdirectory(httpd)
-add_subdirectory(tcpd)
-add_subdirectory(curl_ev)
+find_package(CURL)
+if (CURL_FOUND)
+    add_library(curl_ev SHARED
+            ../include/hpd_curl_ev.h
+            ../include/curl_ev.h
+            curl_ev_intern.h
+            hpd_curl_ev.c
+            curl_ev.c
+            )
+    target_link_libraries(curl_ev ${CURL_LIBRARIES} ev)
+    set_target_properties(curl_ev PROPERTIES VERSION 0.0.0 SOVERSION 0)
+    install(TARGETS curl_ev DESTINATION lib/hpd)
+else (CURL_FOUND)
+    message(WARNING "Please install curl to build curl_ev library")
+endif(CURL_FOUND)

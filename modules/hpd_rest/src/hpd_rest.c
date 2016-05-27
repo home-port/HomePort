@@ -1042,9 +1042,8 @@ static hpd_error_t on_parse_opt(void *data, const char *name, const char *arg)
         hpd_tcpd_port_t port = (hpd_tcpd_port_t) atoi(arg);
         if (port <= HPD_TCPD_P_SYSTEM_PORTS_START || port > HPD_TCPD_P_DYNAMIC_PORTS_END) return HPD_E_ARGUMENT;
         rest->ws_set.port = port;
+        return HPD_E_SUCCESS;
     } else {
         return HPD_E_ARGUMENT;
     }
-
-    return HPD_E_SUCCESS;
 }

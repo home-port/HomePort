@@ -28,10 +28,8 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_subdirectory(include)
-include_directories(include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_subdirectory(map)
-add_subdirectory(httpd)
-add_subdirectory(tcpd)
-add_subdirectory(curl_ev)
+add_subdirectory(include)
+add_subdirectory(src)
+
