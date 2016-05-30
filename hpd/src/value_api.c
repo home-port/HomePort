@@ -68,19 +68,19 @@ hpd_error_t hpd_value_set_headers(hpd_value_t *value, ...)
     return rc;
 }
 
-hpd_error_t hpd_value_get_body(hpd_value_t *value, const char **body, size_t *len)
+hpd_error_t hpd_value_get_body(const hpd_value_t *value, const char **body, size_t *len)
 {
     if (!value || (!body && !len)) LOG_RETURN_E_NULL();
     return value_get_body(value, body, len);
 }
 
-hpd_error_t hpd_value_get_header(hpd_value_t *value, const char *key, const char **val)
+hpd_error_t hpd_value_get_header(const hpd_value_t *value, const char *key, const char **val)
 {
     if (!value || !key || !val) LOG_RETURN_E_NULL();
     return value_get_header(value, key, val);
 }
 
-hpd_error_t hpd_value_get_headers(hpd_value_t *value, ...)
+hpd_error_t hpd_value_get_headers(const hpd_value_t *value, ...)
 {
     if (!value) LOG_RETURN_E_NULL();
 

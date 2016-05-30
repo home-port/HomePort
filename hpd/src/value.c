@@ -102,19 +102,19 @@ hpd_error_t value_set_headers_v(hpd_value_t *value, va_list vp)
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t value_get_body(hpd_value_t *value, const char **body, size_t *len)
+hpd_error_t value_get_body(const hpd_value_t *value, const char **body, size_t *len)
 {
     if (body) (*body) = value->body;
     if (len) (*len) = value->len;
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t value_get_header(hpd_value_t *value, const char *key, const char **val)
+hpd_error_t value_get_header(const hpd_value_t *value, const char *key, const char **val)
 {
     return hpd_map_get(value->headers, key, val);
 }
 
-hpd_error_t value_get_headers_v(hpd_value_t *value, va_list vp)
+hpd_error_t value_get_headers_v(const hpd_value_t *value, va_list vp)
 {
     hpd_error_t rc;
     const char *key, **val;

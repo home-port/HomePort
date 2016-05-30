@@ -692,11 +692,7 @@
  * \snippet include/hpd_shared_api.h Browsing functions
  *
  * In brief: Get functions will navigate upwards in the hierarchy, first functions will get the first object in the list
- * under the given object, next will give the next one, and the find functions are used to find objects based on
- * attributes. The arguments given to a find function is key-value pairs, and the attributes of an object must match all
- * the given attributes (e.g. strcmp == 0) for an object to be found, attributes whose key is not given as attribute are
- * not considered. A find function will give the first object to match, where a find next function will give the next
- * matching object.
+ * under the given object, next will give the next one.
  *
  * Because first-next function are a bit complicated to use, the following defines are also available to create simple
  * foreach loops (based on the same principle from libev):

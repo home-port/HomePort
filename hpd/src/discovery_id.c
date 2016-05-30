@@ -236,7 +236,7 @@ hpd_error_t discovery_free_pid(hpd_parameter_id_t *id)
     if (!(PARAMETER)) return HPD_E_NOT_FOUND; \
 } while (0)
 
-hpd_error_t discovery_find_adapter(hpd_adapter_id_t *id, hpd_adapter_t **adapter)
+hpd_error_t discovery_find_adapter(const hpd_adapter_id_t *id, hpd_adapter_t **adapter)
 {
     FIND_ADAPTER(id, *adapter);
     return HPD_E_SUCCESS;
@@ -248,68 +248,68 @@ hpd_error_t discovery_find_device(const hpd_device_id_t *id, hpd_device_t **devi
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discovery_find_service(hpd_service_id_t *id, hpd_service_t **service)
+hpd_error_t discovery_find_service(const hpd_service_id_t *id, hpd_service_t **service)
 {
     FIND_SERVICE(id, *service);
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discovery_find_parameter(hpd_parameter_id_t *id, hpd_parameter_t **parameter)
+hpd_error_t discovery_find_parameter(const hpd_parameter_id_t *id, hpd_parameter_t **parameter)
 {
     FIND_PARAMETER(id, *parameter);
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discovery_get_adapter_hpd(hpd_adapter_id_t *aid, hpd_t **hpd)
+hpd_error_t discovery_get_adapter_hpd(const hpd_adapter_id_t *aid, hpd_t **hpd)
 {
     (*hpd) = aid->hpd;
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discovery_get_device_hpd(hpd_device_id_t *did, hpd_t **hpd)
+hpd_error_t discovery_get_device_hpd(const hpd_device_id_t *did, hpd_t **hpd)
 {
     (*hpd) = did->adapter.hpd;
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discovery_get_device_adapter(hpd_device_id_t *did, hpd_adapter_id_t **aid)
+hpd_error_t discovery_get_device_adapter(const hpd_device_id_t *did, hpd_adapter_id_t **aid)
 {
     return discovery_alloc_aid(aid, did->adapter.hpd, did->adapter.aid);
 }
 
-hpd_error_t discovery_get_service_hpd(hpd_service_id_t *sid, hpd_t **hpd)
+hpd_error_t discovery_get_service_hpd(const hpd_service_id_t *sid, hpd_t **hpd)
 {
     (*hpd) = sid->device.adapter.hpd;
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discovery_get_service_adapter(hpd_service_id_t *sid, hpd_adapter_id_t **aid)
+hpd_error_t discovery_get_service_adapter(const hpd_service_id_t *sid, hpd_adapter_id_t **aid)
 {
     return discovery_alloc_aid(aid, sid->device.adapter.hpd, sid->device.adapter.aid);
 }
 
-hpd_error_t discovery_get_service_device(hpd_service_id_t *sid, hpd_device_id_t **did)
+hpd_error_t discovery_get_service_device(const hpd_service_id_t *sid, hpd_device_id_t **did)
 {
     return discovery_alloc_did(did, sid->device.adapter.hpd, sid->device.adapter.aid, sid->device.did);
 }
 
-hpd_error_t discovery_get_parameter_hpd(hpd_parameter_id_t *pid, hpd_t **hpd)
+hpd_error_t discovery_get_parameter_hpd(const hpd_parameter_id_t *pid, hpd_t **hpd)
 {
     (*hpd) = pid->service.device.adapter.hpd;
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discovery_get_parameter_adapter(hpd_parameter_id_t *pid, hpd_adapter_id_t **aid)
+hpd_error_t discovery_get_parameter_adapter(const hpd_parameter_id_t *pid, hpd_adapter_id_t **aid)
 {
     return discovery_alloc_aid(aid, pid->service.device.adapter.hpd, pid->service.device.adapter.aid);
 }
 
-hpd_error_t discovery_get_parameter_device(hpd_parameter_id_t *pid, hpd_device_id_t **did)
+hpd_error_t discovery_get_parameter_device(const hpd_parameter_id_t *pid, hpd_device_id_t **did)
 {
     return discovery_alloc_did(did, pid->service.device.adapter.hpd, pid->service.device.adapter.aid, pid->service.device.did);
 }
 
-hpd_error_t discovery_get_parameter_service(hpd_parameter_id_t *pid, hpd_service_id_t **sid)
+hpd_error_t discovery_get_parameter_service(const hpd_parameter_id_t *pid, hpd_service_id_t **sid)
 {
     return discovery_alloc_sid(sid, pid->service.device.adapter.hpd, pid->service.device.adapter.aid, pid->service.device.did, pid->service.sid);
 }
