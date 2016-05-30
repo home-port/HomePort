@@ -304,7 +304,18 @@ static hpd_error_t reply_devices(hpd_rest_req_t *rest_req)
 
     // Get Accept header
     const char *accept;
-    if ((rc = hpd_map_get(rest_req->headers, "Accept", &accept))) return rc;
+    switch ((rc = hpd_map_get(rest_req->headers, "Accept", &accept))) {
+        case HPD_E_SUCCESS:
+            break;
+        case HPD_E_NOT_FOUND:
+            accept = NULL;
+            break;
+        default:
+            if ((rc2 = reply_internal_server_error(http_req, rest_req, context))) {
+                HPD_LOG_ERROR(context, "Failed to send internal server error response (code: %d).", rc2);
+            }
+            return rc;
+    }
 
     // Create body
     char *body;

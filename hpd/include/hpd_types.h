@@ -216,6 +216,13 @@ static const char * const HPD_ATTR_NETWORK  = "network";
 static const char * const HPD_ATTR_DESC     = "description";
 
 /**
+ * Default attribute key for names.
+ *
+ * Short human readable name for the adapter, device, service, or parameter.
+ */
+static const char * const HPD_ATTR_NAME     = "name";
+
+/**
  * Default attribute key for vendor ids.
  *
  * Usually set to a short vendor name for devices where appropriately.
@@ -295,6 +302,8 @@ static const char * const HPD_ATTR_SCALE    = "scale";
  * Set on a parameter to the list of possible values for enumeration types.
  */
 static const char * const HPD_ATTR_VALUES   = "values";
+
+static const char * const HPD_ATTR_PROTOCOL   = "protocol";
 /// [Default keys]
 
 #ifdef __cplusplus
