@@ -115,15 +115,12 @@ static CURLMcode on_update_socket(CURL *easy, curl_socket_t s, int what, void *u
     // Configure
     switch (what) {
         case CURL_POLL_IN:
-            HPD_LOG_VERBOSE(context, "Adding watcher for socket %i (r)", s);
             ev_io_set(&w->watcher, s, EV_READ);
             break;
         case CURL_POLL_OUT:
-            HPD_LOG_VERBOSE(context, "Adding watcher for socket %i (w)", s);
             ev_io_set(&w->watcher, s, EV_WRITE);
             break;
         case CURL_POLL_INOUT:
-            HPD_LOG_VERBOSE(context, "Adding watcher for socket %i (rw)", s);
             ev_io_set(&w->watcher, s, EV_READ | EV_WRITE);
             break;
         case CURL_POLL_REMOVE:
@@ -181,7 +178,6 @@ static hpd_error_t curl_ev_add_next()
 
     curl_ev_handle_t *handle = TAILQ_FIRST(&curl_ev->handles);
     if (handle) {
-        HPD_LOG_VERBOSE(context, "Adding next handle");
         if ((cmc = curl_multi_add_handle(curl_ev->mult_handle, handle->handle))) goto add_error;
         if ((cmc = curl_ev_socket_action(CURL_SOCKET_TIMEOUT))) goto action_error;
     }
