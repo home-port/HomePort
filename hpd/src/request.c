@@ -35,7 +35,8 @@
 #include "comm.h"
 #include "model.h"
 
-hpd_error_t request_alloc_request(hpd_request_t **request, hpd_service_id_t *id, hpd_method_t method, hpd_response_f on_response)
+hpd_error_t request_alloc_request(hpd_request_t **request, const hpd_service_id_t *id, hpd_method_t method,
+                                  hpd_response_f on_response)
 {
     hpd_error_t rc = HPD_E_ALLOC;
     HPD_CALLOC(*request, 1, hpd_request_t);

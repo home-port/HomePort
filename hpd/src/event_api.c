@@ -74,7 +74,7 @@ hpd_error_t hpd_subscribe(hpd_listener_t *listener)
 hpd_error_t hpd_listener_free(hpd_listener_t *listener)
 {
     if (!listener) LOG_RETURN_E_NULL();
-    return event_unsubscribe(NULL);
+    return event_unsubscribe(listener);
 }
 
 hpd_error_t hpd_listener_get_data(hpd_listener_t *listener, void **data)

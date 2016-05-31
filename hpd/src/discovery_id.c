@@ -147,22 +147,22 @@ hpd_error_t discovery_alloc_pid(hpd_parameter_id_t **id, hpd_t *hpd, const char 
     LOG_RETURN_E_ALLOC();
 }
 
-hpd_error_t discovery_copy_aid(hpd_adapter_id_t **dst, hpd_adapter_id_t *src)
+hpd_error_t discovery_copy_aid(hpd_adapter_id_t **dst, const hpd_adapter_id_t *src)
 {
     return discovery_alloc_aid(dst, src->hpd, src->aid);
 }
 
-hpd_error_t discovery_copy_did(hpd_device_id_t **dst, hpd_device_id_t *src)
+hpd_error_t discovery_copy_did(hpd_device_id_t **dst, const hpd_device_id_t *src)
 {
     return discovery_alloc_did(dst, src->adapter.hpd, src->adapter.aid, src->did);
 }
 
-hpd_error_t discovery_copy_sid(hpd_service_id_t **dst, hpd_service_id_t *src)
+hpd_error_t discovery_copy_sid(hpd_service_id_t **dst, const hpd_service_id_t *src)
 {
     return discovery_alloc_sid(dst, src->device.adapter.hpd, src->device.adapter.aid, src->device.did, src->sid);
 }
 
-hpd_error_t discovery_copy_pid(hpd_parameter_id_t **dst, hpd_parameter_id_t *src)
+hpd_error_t discovery_copy_pid(hpd_parameter_id_t **dst, const hpd_parameter_id_t *src)
 {
     return discovery_alloc_pid(dst, src->service.device.adapter.hpd, src->service.device.adapter.aid, src->service.device.did, src->service.sid, src->pid);
 }

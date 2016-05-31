@@ -35,7 +35,7 @@ extern "C" {
 #endif
 
 /// [hpd_request_t functions]
-hpd_error_t hpd_request_alloc(hpd_request_t **request, hpd_service_id_t *id, hpd_method_t method, hpd_response_f on_response);
+hpd_error_t hpd_request_alloc(hpd_request_t **request, const hpd_service_id_t *id, hpd_method_t method, hpd_response_f on_response);
 hpd_error_t hpd_request_free(hpd_request_t *request);
 hpd_error_t hpd_request_set_value(hpd_request_t *request, hpd_value_t *value);
 hpd_error_t hpd_request_set_data(hpd_request_t *request, void *data, hpd_free_f on_free);

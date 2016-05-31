@@ -32,7 +32,8 @@
 #include "log.h"
 #include "comm.h"
 
-hpd_error_t hpd_request_alloc(hpd_request_t **request, hpd_service_id_t *id, hpd_method_t method, hpd_response_f on_response)
+hpd_error_t hpd_request_alloc(hpd_request_t **request, const hpd_service_id_t *id, hpd_method_t method,
+                              hpd_response_f on_response)
 {
     if (!request || !id) LOG_RETURN_E_NULL();
     if (method <= HPD_M_NONE || method >= HPD_M_COUNT)
