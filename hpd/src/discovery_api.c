@@ -163,7 +163,7 @@ hpd_error_t hpd_adapter_set_attrs(hpd_adapter_t *adapter, ...)
     return rc;
 }
 
-hpd_error_t hpd_adapter_get_data(hpd_adapter_id_t *id, void **data)
+hpd_error_t hpd_adapter_get_data(const hpd_adapter_id_t *id, void **data)
 {
     if (!id || !data) LOG_RETURN_E_NULL();
     if (!id->hpd->configuration) LOG_RETURN_HPD_STOPPED();
@@ -293,7 +293,7 @@ hpd_error_t hpd_device_set_attrs(hpd_device_t *device, ...)
     return rc;
 }
 
-hpd_error_t hpd_device_get_data(hpd_device_id_t *id, void **data)
+hpd_error_t hpd_device_get_data(const hpd_device_id_t *id, void **data)
 {
     if (!id || !data) LOG_RETURN_E_NULL();
     if (!id->adapter.hpd->configuration) LOG_RETURN_HPD_STOPPED();
@@ -435,7 +435,7 @@ hpd_error_t hpd_service_set_actions(hpd_service_t *service, ...)
     return rc;
 }
 
-hpd_error_t hpd_service_get_data(hpd_service_id_t *id, void **data)
+hpd_error_t hpd_service_get_data(const hpd_service_id_t *id, void **data)
 {
     if (!id || !data) LOG_RETURN_E_NULL();
     if (!id->device.adapter.hpd->configuration) LOG_RETURN_HPD_STOPPED();

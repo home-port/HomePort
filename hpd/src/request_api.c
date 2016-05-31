@@ -66,7 +66,7 @@ hpd_error_t hpd_request(hpd_request_t *request)
     return request_request(request);
 }
 
-hpd_error_t hpd_request_get_service(const hpd_request_t *req, hpd_service_id_t **id)
+hpd_error_t hpd_request_get_service(const hpd_request_t *req, const hpd_service_id_t **id)
 {
     if (!req || !id) LOG_RETURN_E_NULL();
     return request_get_request_service(req, id);
@@ -172,7 +172,7 @@ hpd_error_t hpd_response_get_request_data(const hpd_response_t *response, void *
     return request_get_response_request_data(response, data);
 }
 
-hpd_error_t hpd_response_get_request_service(const hpd_response_t *response, hpd_service_id_t **service)
+hpd_error_t hpd_response_get_request_service(const hpd_response_t *response, const hpd_service_id_t **service)
 {
     if (!response || !service) LOG_RETURN_E_NULL();
     return request_get_response_request_service(response, service);

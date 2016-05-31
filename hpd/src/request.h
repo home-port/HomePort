@@ -39,7 +39,7 @@ hpd_error_t request_free_request(hpd_request_t *request);
 hpd_error_t request_set_request_value(hpd_request_t *request, hpd_value_t *value);
 hpd_error_t request_set_request_data(hpd_request_t *request, void *data, hpd_free_f on_free);
 hpd_error_t request_request(hpd_request_t *request);
-hpd_error_t request_get_request_service(const hpd_request_t *req, hpd_service_id_t **id);
+hpd_error_t request_get_request_service(const hpd_request_t *req, const hpd_service_id_t **id);
 hpd_error_t request_get_request_method(const hpd_request_t *req, hpd_method_t *method);
 hpd_error_t request_get_request_value(const hpd_request_t *req, hpd_value_t **value);
 hpd_error_t request_alloc_response(hpd_response_t **response, hpd_request_t *request, hpd_status_t status);
@@ -49,7 +49,7 @@ hpd_error_t request_respond(hpd_response_t *response);
 hpd_error_t request_get_response_status(hpd_response_t *response, hpd_status_t *status);
 hpd_error_t request_get_response_value(hpd_response_t *response, hpd_value_t **value);
 hpd_error_t request_get_response_request_data(const hpd_response_t *response, void **data);
-hpd_error_t request_get_response_request_service(const hpd_response_t *response, hpd_service_id_t **service);
+hpd_error_t request_get_response_request_service(const hpd_response_t *response, const hpd_service_id_t **service);
 hpd_error_t request_get_response_request_method(const hpd_response_t *response, hpd_method_t *method);
 hpd_error_t request_get_response_request_value(const hpd_response_t *response, hpd_value_t **value);
 

@@ -42,7 +42,7 @@ hpd_error_t hpd_adapter_detach(hpd_adapter_id_t *id, hpd_adapter_t **adapter);
 hpd_error_t hpd_adapter_set_data(hpd_adapter_t *adapter, void *data, hpd_free_f on_free);
 hpd_error_t hpd_adapter_set_attr(hpd_adapter_t *adapter, const char *key, const char *val);
 hpd_error_t hpd_adapter_set_attrs(hpd_adapter_t *adapter, ...);
-hpd_error_t hpd_adapter_get_data(hpd_adapter_id_t *id, void **data);
+hpd_error_t hpd_adapter_get_data(const hpd_adapter_id_t *id, void **data);
 /// [hpd_adapter_t functions]
 
 /// [hpd_device_t functions]
@@ -53,7 +53,7 @@ hpd_error_t hpd_device_detach(hpd_device_id_t *id, hpd_device_t **device);
 hpd_error_t hpd_device_set_data(hpd_device_t *device, void *data, hpd_free_f on_free);
 hpd_error_t hpd_device_set_attr(hpd_device_t *device, const char *key, const char *val);
 hpd_error_t hpd_device_set_attrs(hpd_device_t *device, ...);
-hpd_error_t hpd_device_get_data(hpd_device_id_t *id, void **data);
+hpd_error_t hpd_device_get_data(const hpd_device_id_t *id, void **data);
 /// [hpd_device_t functions]
 
 /// [hpd_service_t functions]
@@ -66,7 +66,7 @@ hpd_error_t hpd_service_set_attr(hpd_service_t *service, const char *key, const 
 hpd_error_t hpd_service_set_attrs(hpd_service_t *service, ...);
 hpd_error_t hpd_service_set_action(hpd_service_t *service, const hpd_method_t method, hpd_action_f action);
 hpd_error_t hpd_service_set_actions(hpd_service_t *service, ...);
-hpd_error_t hpd_service_get_data(hpd_service_id_t *id, void **data);
+hpd_error_t hpd_service_get_data(const hpd_service_id_t *id, void **data);
 /// [hpd_service_t functions]
 
 /// [hpd_parameter_t functions]
@@ -79,7 +79,7 @@ hpd_error_t hpd_parameter_set_attrs(hpd_parameter_t *parameter, ...);
 /// [hpd_parameter_t functions]
 
 /// [hpd_request_t functions]
-hpd_error_t hpd_request_get_service(const hpd_request_t *req, hpd_service_id_t **id);
+hpd_error_t hpd_request_get_service(const hpd_request_t *req, const hpd_service_id_t **id);
 hpd_error_t hpd_request_get_method(const hpd_request_t *req, hpd_method_t *method);
 hpd_error_t hpd_request_get_value(const hpd_request_t *req, hpd_value_t **value);
 /// [hpd_request_t functions]

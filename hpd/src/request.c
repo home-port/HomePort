@@ -88,7 +88,7 @@ hpd_error_t request_set_request_data(hpd_request_t *request, void *data, hpd_fre
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t request_get_request_service(const hpd_request_t *req, hpd_service_id_t **id)
+hpd_error_t request_get_request_service(const hpd_request_t *req, const hpd_service_id_t **id)
 {
     (*id) = req->service;
     return HPD_E_SUCCESS;
@@ -162,7 +162,7 @@ hpd_error_t request_get_response_request_data(const hpd_response_t *response, vo
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t request_get_response_request_service(const hpd_response_t *response, hpd_service_id_t **service)
+hpd_error_t request_get_response_request_service(const hpd_response_t *response, const hpd_service_id_t **service)
 {
     (*service) = response->request->service;
     return HPD_E_SUCCESS;

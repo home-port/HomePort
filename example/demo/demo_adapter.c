@@ -69,7 +69,7 @@ static hpd_error_t hpd_demo_on_get(hpd_request_t *req)
     // TODO Clean up on errors !
     // TODO What about sending responses on errors?
 
-    hpd_service_id_t *sid;
+    const hpd_service_id_t *sid;
     if ((rc = hpd_request_get_service(req, &sid))) return rc;
 
     const char *id;
