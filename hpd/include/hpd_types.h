@@ -172,7 +172,7 @@ typedef enum hpd_log_level hpd_log_level_t;
  * On failure data should be left as NULL.
  */
 /// [hpd_module_def_t functions]
-typedef hpd_error_t (*hpd_create_f)    (void **data, hpd_module_t *context);
+typedef hpd_error_t (*hpd_create_f)    (void **data, const hpd_module_t *context);
 typedef hpd_error_t (*hpd_destroy_f)   (void *data);
 typedef hpd_error_t (*hpd_start_f)     (void *data, hpd_t *hpd);
 typedef hpd_error_t (*hpd_stop_f)      (void *data, hpd_t *hpd);
@@ -190,7 +190,7 @@ typedef hpd_error_t (*hpd_free_f) (void *data); //< Free function, used to free 
 
 /// Response function for handing responses on requests.
 /// [Application API Callbacks]
-typedef hpd_error_t (*hpd_response_f) (hpd_response_t *res);
+typedef hpd_error_t (*hpd_response_f) (const hpd_response_t *res);
 /// Value callback for listeners
 typedef hpd_error_t (*hpd_value_f) (void *data, const hpd_service_id_t *service, const hpd_value_t *val);
 /// Device callback for listeners

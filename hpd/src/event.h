@@ -44,11 +44,11 @@ hpd_error_t event_set_device_callback(hpd_listener_t *listener, hpd_device_f on_
 hpd_error_t event_subscribe(hpd_listener_t *listener);
 hpd_error_t event_unsubscribe(hpd_listener_t *listener);
 
-hpd_error_t event_get_listener_data(hpd_listener_t *listener, void **data);
+hpd_error_t event_get_listener_data(const hpd_listener_t *listener, void **data);
 
-hpd_error_t event_foreach_attached(hpd_listener_t *listener);
+hpd_error_t event_foreach_attached(const hpd_listener_t *listener);
 
-hpd_error_t event_changed(hpd_service_id_t *id, hpd_value_t *val);
+hpd_error_t event_changed(const hpd_service_id_t *id, hpd_value_t *val);
 
 hpd_error_t event_inform_adapter_attached(hpd_adapter_t *adapter);
 hpd_error_t event_inform_adapter_detached(hpd_adapter_t *adapter);

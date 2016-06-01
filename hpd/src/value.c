@@ -127,7 +127,7 @@ hpd_error_t value_get_headers_v(const hpd_value_t *value, va_list vp)
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t value_first_header(hpd_value_t *value, hpd_pair_t **pair)
+hpd_error_t value_first_header(const hpd_value_t *value, hpd_pair_t **pair)
 {
     return hpd_map_first(value->headers, pair);
 }

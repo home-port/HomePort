@@ -49,7 +49,7 @@ typedef struct {
 
 static module_data_t *last_module_data = NULL;
 
-static hpd_error_t on_create(void **data, hpd_module_t *)
+static hpd_error_t on_create(void **data, const hpd_module_t *)
 {
     module_data_t *module_data = (module_data_t *) calloc(1, sizeof(module_data_t));
     if (!module_data) return HPD_E_ALLOC;
@@ -59,7 +59,7 @@ static hpd_error_t on_create(void **data, hpd_module_t *)
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t on_create_add_options(void **data, hpd_module_t *context)
+static hpd_error_t on_create_add_options(void **data, const hpd_module_t *context)
 {
     hpd_t *hpd = context->hpd;
     argp_option_t *option;

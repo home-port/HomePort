@@ -120,7 +120,7 @@ enum state {
  */
 struct hpd_httpd_request
 {
-    hpd_module_t *context;
+    const hpd_module_t *context;
     hpd_httpd_t *webserver;         ///< HTTP Webserver
     hpd_httpd_settings_t *settings; ///< Settings
     hpd_tcpd_conn_t *conn;          ///< Connection to client
@@ -599,7 +599,7 @@ static int parser_msg_cmpl(http_parser *parser)
  *  @return The newly create ws_request.
  */
 hpd_error_t http_request_create(hpd_httpd_request_t **req, hpd_httpd_t *httpd, hpd_httpd_settings_t *settings,
-                                hpd_tcpd_conn_t *conn, hpd_module_t *context)
+                                hpd_tcpd_conn_t *conn, const hpd_module_t *context)
 {
     if (!context) return HPD_E_NULL;
     if (!req || !httpd || !settings || !conn) HPD_LOG_RETURN_E_NULL(context);
@@ -928,7 +928,7 @@ hpd_error_t hpd_httpd_request_keep_open(hpd_httpd_request_t *req)
     return hpd_tcpd_conn_keep_open(req->conn);
 }
 
-hpd_error_t http_request_get_context(hpd_httpd_request_t *req, hpd_module_t **context)
+hpd_error_t http_request_get_context(hpd_httpd_request_t *req, const hpd_module_t **context)
 {
     if (!req) return HPD_E_NULL;
     if (!context) HPD_LOG_RETURN_E_NULL(req->context);

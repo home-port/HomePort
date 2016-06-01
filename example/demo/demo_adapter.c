@@ -38,7 +38,7 @@ struct hpd_demo_adapter {
     hpd_adapter_id_t *adapter_id;
 };
 
-static hpd_error_t hpd_demo_adapter_create(void **data, hpd_module_t *context)
+static hpd_error_t hpd_demo_adapter_create(void **data, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -91,7 +91,8 @@ static hpd_error_t hpd_demo_on_get(hpd_request_t *req)
 // TODO Just a quick hack for testing - lots of fixes needed
 static hpd_error_t hpd_demo_on_put(hpd_request_t *req)
 {
-    hpd_value_t *val_in, *val_out;
+    const hpd_value_t *val_in;
+    hpd_value_t *val_out;
     hpd_request_get_value(req, &val_in);
     hpd_value_copy(&val_out, val_in);
 

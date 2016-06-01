@@ -29,7 +29,7 @@
 #include "hpd_application_api.h"
 #include <stdio.h>
 
-static hpd_error_t hpd_demo_app_create(void **data, hpd_module_t *context)
+static hpd_error_t hpd_demo_app_create(void **data, const hpd_module_t *context)
 {
     return HPD_E_SUCCESS;
 }

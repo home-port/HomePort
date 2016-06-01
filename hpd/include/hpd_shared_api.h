@@ -38,14 +38,15 @@ extern "C" {
 #endif
 
 /// [hpd_t functions]
-hpd_error_t hpd_module_add_option(hpd_module_t *context, const char *name, const char *arg, int flags, const char *doc);
-hpd_error_t hpd_module_get_id(hpd_module_t *context, const char **id);
+hpd_error_t hpd_module_add_option(const hpd_module_t *context, const char *name, const char *arg, int flags,
+                                  const char *doc);
+hpd_error_t hpd_module_get_id(const hpd_module_t *context, const char **id);
 hpd_error_t hpd_get_loop(hpd_t *hpd, hpd_ev_loop_t **loop);
 /// [hpd_t functions]
 
 /// [log functions]
-hpd_error_t hpd_logf(hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, ...);
-hpd_error_t hpd_vlogf(hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp);
+hpd_error_t hpd_logf(const hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, ...);
+hpd_error_t hpd_vlogf(const hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp);
 #define HPD_LOG_ERROR(CONTEXT, FMT, ...) hpd_logf((CONTEXT), HPD_L_ERROR, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
 #define HPD_LOG_WARN(CONTEXT, FMT, ...) hpd_logf((CONTEXT), HPD_L_WARN , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
 #define HPD_LOG_INFO(CONTEXT, FMT, ...) hpd_logf((CONTEXT), HPD_L_INFO , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
@@ -59,19 +60,19 @@ hpd_error_t hpd_vlogf(hpd_module_t *context, hpd_log_level_t level, const char *
 
 /// [id_t functions]
 hpd_error_t hpd_adapter_id_alloc(hpd_adapter_id_t **id, hpd_t *hpd, const char *aid);
-hpd_error_t hpd_adapter_id_copy(hpd_adapter_id_t **dst, hpd_adapter_id_t *src);
+hpd_error_t hpd_adapter_id_copy(hpd_adapter_id_t **dst, const hpd_adapter_id_t *src);
 hpd_error_t hpd_adapter_id_free(hpd_adapter_id_t *id);
 
 hpd_error_t hpd_device_id_alloc(hpd_device_id_t **id, hpd_t *hpd, const char *aid, const char *did);
-hpd_error_t hpd_device_id_copy(hpd_device_id_t **dst, hpd_device_id_t *src);
+hpd_error_t hpd_device_id_copy(hpd_device_id_t **dst, const hpd_device_id_t *src);
 hpd_error_t hpd_device_id_free(hpd_device_id_t *id);
 
 hpd_error_t hpd_service_id_alloc(hpd_service_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid);
-hpd_error_t hpd_service_id_copy(hpd_service_id_t **dst, hpd_service_id_t *src);
+hpd_error_t hpd_service_id_copy(hpd_service_id_t **dst, const hpd_service_id_t *src);
 hpd_error_t hpd_service_id_free(hpd_service_id_t *id);
 
 hpd_error_t hpd_parameter_id_alloc(hpd_parameter_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid, const char *pid);
-hpd_error_t hpd_parameter_id_copy(hpd_parameter_id_t **dst, hpd_parameter_id_t *src);
+hpd_error_t hpd_parameter_id_copy(hpd_parameter_id_t **dst, const hpd_parameter_id_t *src);
 hpd_error_t hpd_parameter_id_free(hpd_parameter_id_t *id);
 /// [id_t functions]
 
@@ -134,14 +135,13 @@ hpd_error_t hpd_parameter_next_attr(hpd_pair_t **pair);
 /// [model foreach loops]
 
 /// [hpd_action_t functions]
-hpd_error_t hpd_action_get_method(hpd_action_t *action, hpd_method_t *method);
+hpd_error_t hpd_action_get_method(const hpd_action_t *action, hpd_method_t *method);
 /// [hpd_action_t functions]
 
 /// [hpd_pair_t functions]
-hpd_error_t hpd_pair_get(hpd_pair_t *pair, const char **key, const char **value);
+hpd_error_t hpd_pair_get(const hpd_pair_t *pair, const char **key, const char **value);
 /// [hpd_pair_t functions]
 
-// TODO Look through ALL functions (especially API) and add const
 // TODO Rename get functions to get_alloc ?
 /// [Browsing functions]
 hpd_error_t hpd_adapter_get_hpd(const hpd_adapter_id_t *aid, hpd_t **hpd);
@@ -158,10 +158,10 @@ hpd_error_t hpd_parameter_get_service(const hpd_parameter_id_t *pid, hpd_service
 hpd_error_t hpd_first_adapter(hpd_t *hpd, hpd_adapter_id_t **adapter_id);
 hpd_error_t hpd_first_device(hpd_t *hpd, hpd_device_id_t **device_id);
 hpd_error_t hpd_first_service(hpd_t *hpd, hpd_service_id_t **service_id);
-hpd_error_t hpd_adapter_first_device(hpd_adapter_id_t *adapter_id, hpd_device_id_t **device_id);
-hpd_error_t hpd_adapter_first_service(hpd_adapter_id_t *adapter_id, hpd_service_id_t **service_id);
+hpd_error_t hpd_adapter_first_device(const hpd_adapter_id_t *adapter_id, hpd_device_id_t **device_id);
+hpd_error_t hpd_adapter_first_service(const hpd_adapter_id_t *adapter_id, hpd_service_id_t **service_id);
 hpd_error_t hpd_device_first_service(const hpd_device_id_t *device_id, hpd_service_id_t **service_id);
-hpd_error_t hpd_service_first_parameter(hpd_service_id_t *service_id, hpd_parameter_id_t **parameter_id);
+hpd_error_t hpd_service_first_parameter(const hpd_service_id_t *service_id, hpd_parameter_id_t **parameter_id);
 
 hpd_error_t hpd_next_adapter(hpd_adapter_id_t **adapter_id);
 hpd_error_t hpd_next_device(hpd_device_id_t **device_id);
@@ -212,7 +212,7 @@ hpd_error_t hpd_value_set_headers(hpd_value_t *value, ...);
 hpd_error_t hpd_value_get_body(const hpd_value_t *value, const char **body, size_t *len);
 hpd_error_t hpd_value_get_header(const hpd_value_t *value, const char *key, const char **val);
 hpd_error_t hpd_value_get_headers(const hpd_value_t *value, ...);
-hpd_error_t hpd_value_first_header(hpd_value_t *value, hpd_pair_t **pair);
+hpd_error_t hpd_value_first_header(const hpd_value_t *value, hpd_pair_t **pair);
 hpd_error_t hpd_value_next_header(hpd_pair_t **pair);
 /// [hpd_value_t functions]
 

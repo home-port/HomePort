@@ -50,7 +50,7 @@ hpd_error_t hpd_map_get_n(hpd_map_t *map, const char *k, size_t k_len, const cha
 hpd_error_t hpd_map_set(hpd_map_t *map, const char *k, const char *v);
 hpd_error_t hpd_map_set_n(hpd_map_t *map, const char *k, size_t k_len, const char *v, size_t v_len);
 hpd_error_t hpd_map_v_matches(hpd_map_t *map, va_list vp);
-hpd_error_t hpd_pair_get(hpd_pair_t *pair, const char **key, const char **value);
+hpd_error_t hpd_pair_get(const hpd_pair_t *pair, const char **key, const char **value);
 
 #define hpd_map_foreach(RC, PAIR, MAP) for ( \
     (RC) = hpd_map_first((MAP), &(PAIR)); \

@@ -35,7 +35,7 @@
 static const char * const XML_VERSION = "1.0";
 
 // TODO Ugly hack to get context through mxml
-static hpd_module_t *global_context = NULL;
+static const hpd_module_t *global_context = NULL;
 
 static void on_mxml_error(const char *msg)
 {
@@ -54,14 +54,14 @@ static void on_mxml_error(const char *msg)
 
 #define RETURN_XML_ERROR(CONTEXT) HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Xml error")
 
-static hpd_error_t add(mxml_node_t *parent, const char *key, const char *val, hpd_module_t *context)
+static hpd_error_t add(mxml_node_t *parent, const char *key, const char *val, const hpd_module_t *context)
 {
     mxmlElementSetAttr(parent, key, val);
     if (!mxmlElementGetAttr(parent, key)) RETURN_XML_ERROR(context);
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t add_attr(mxml_node_t *parent, hpd_pair_t *pair, hpd_module_t *context)
+static hpd_error_t add_attr(mxml_node_t *parent, hpd_pair_t *pair, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -72,7 +72,7 @@ static hpd_error_t add_attr(mxml_node_t *parent, hpd_pair_t *pair, hpd_module_t 
     return add(parent, key, val, context);
 }
 
-static hpd_error_t add_parameter(mxml_node_t *parent, hpd_parameter_id_t *parameter, hpd_module_t *context)
+static hpd_error_t add_parameter(mxml_node_t *parent, hpd_parameter_id_t *parameter, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -94,7 +94,7 @@ static hpd_error_t add_parameter(mxml_node_t *parent, hpd_parameter_id_t *parame
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t add_service(mxml_node_t *parent, hpd_service_id_t *service, hpd_rest_t *rest, hpd_module_t *context)
+static hpd_error_t add_service(mxml_node_t *parent, hpd_service_id_t *service, hpd_rest_t *rest, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -150,7 +150,7 @@ static hpd_error_t add_service(mxml_node_t *parent, hpd_service_id_t *service, h
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t add_device(mxml_node_t *parent, hpd_device_id_t *device, hpd_rest_t *rest, hpd_module_t *context)
+static hpd_error_t add_device(mxml_node_t *parent, hpd_device_id_t *device, hpd_rest_t *rest, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -179,7 +179,7 @@ static hpd_error_t add_device(mxml_node_t *parent, hpd_device_id_t *device, hpd_
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t add_adapter(mxml_node_t *parent, hpd_adapter_id_t *adapter, hpd_rest_t *rest, hpd_module_t *context)
+static hpd_error_t add_adapter(mxml_node_t *parent, hpd_adapter_id_t *adapter, hpd_rest_t *rest, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -209,7 +209,7 @@ static hpd_error_t add_adapter(mxml_node_t *parent, hpd_adapter_id_t *adapter, h
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t add_configuration(mxml_node_t *parent, hpd_t *hpd, hpd_rest_t *rest, hpd_module_t *context)
+static hpd_error_t add_configuration(mxml_node_t *parent, hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -238,7 +238,7 @@ static hpd_error_t add_configuration(mxml_node_t *parent, hpd_t *hpd, hpd_rest_t
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t hpd_rest_xml_get_configuration(hpd_t *hpd, hpd_rest_t *rest, hpd_module_t *context, char **out)
+hpd_error_t hpd_rest_xml_get_configuration(hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context, char **out)
 {
     BEGIN(context);
 
@@ -268,7 +268,7 @@ hpd_error_t hpd_rest_xml_get_configuration(hpd_t *hpd, hpd_rest_t *rest, hpd_mod
     return rc;
 }
 
-static hpd_error_t add_value(mxml_node_t *parent, char *value, hpd_module_t *context)
+static hpd_error_t add_value(mxml_node_t *parent, char *value, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -284,7 +284,7 @@ static hpd_error_t add_value(mxml_node_t *parent, char *value, hpd_module_t *con
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t hpd_rest_xml_get_value(char *value, hpd_module_t *context, char **out)
+hpd_error_t hpd_rest_xml_get_value(char *value, const hpd_module_t *context, char **out)
 {
     BEGIN(context);
 
@@ -314,7 +314,7 @@ hpd_error_t hpd_rest_xml_get_value(char *value, hpd_module_t *context, char **ou
     return rc;
 }
 
-hpd_error_t hpd_rest_xml_parse_value(const char *in, hpd_module_t *context, char **out)
+hpd_error_t hpd_rest_xml_parse_value(const char *in, const hpd_module_t *context, char **out)
 {
     BEGIN(context);
 

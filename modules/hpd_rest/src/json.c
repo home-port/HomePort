@@ -37,7 +37,7 @@
 
 #define RETURN_JSON_ERROR(CONTEXT) HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Json error")
 
-static hpd_error_t add(json_t *parent, const char *key, const char *val, hpd_module_t *context)
+static hpd_error_t add(json_t *parent, const char *key, const char *val, const hpd_module_t *context)
 {
     json_t *json;
     if (!(json = json_string(val)))
@@ -49,7 +49,7 @@ static hpd_error_t add(json_t *parent, const char *key, const char *val, hpd_mod
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t add_attr(json_t *parent, hpd_pair_t *pair, hpd_module_t *context)
+static hpd_error_t add_attr(json_t *parent, hpd_pair_t *pair, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -60,7 +60,7 @@ static hpd_error_t add_attr(json_t *parent, hpd_pair_t *pair, hpd_module_t *cont
     return add(parent, key, val, context);
 }
 
-static hpd_error_t add_parameter(json_t *parent, hpd_parameter_id_t *parameter, hpd_module_t *context)
+static hpd_error_t add_parameter(json_t *parent, hpd_parameter_id_t *parameter, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -92,7 +92,7 @@ static hpd_error_t add_parameter(json_t *parent, hpd_parameter_id_t *parameter, 
         return rc;
 }
 
-static hpd_error_t add_parameters(json_t *parent, hpd_service_id_t *service, hpd_module_t *context)
+static hpd_error_t add_parameters(json_t *parent, hpd_service_id_t *service, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -119,7 +119,7 @@ static hpd_error_t add_parameters(json_t *parent, hpd_service_id_t *service, hpd
     return rc;
 }
 
-static hpd_error_t add_service(json_t *parent, hpd_service_id_t *service, hpd_rest_t *rest, hpd_module_t *context)
+static hpd_error_t add_service(json_t *parent, hpd_service_id_t *service, hpd_rest_t *rest, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -181,7 +181,7 @@ static hpd_error_t add_service(json_t *parent, hpd_service_id_t *service, hpd_re
     return rc;
 }
 
-static hpd_error_t add_services(json_t *parent, hpd_device_id_t *device, hpd_rest_t *rest, hpd_module_t *context)
+static hpd_error_t add_services(json_t *parent, hpd_device_id_t *device, hpd_rest_t *rest, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -208,7 +208,7 @@ static hpd_error_t add_services(json_t *parent, hpd_device_id_t *device, hpd_res
     return rc;
 }
 
-static hpd_error_t add_device(json_t *parent, hpd_device_id_t *device, hpd_rest_t *rest, hpd_module_t *context)
+static hpd_error_t add_device(json_t *parent, hpd_device_id_t *device, hpd_rest_t *rest, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -243,7 +243,7 @@ static hpd_error_t add_device(json_t *parent, hpd_device_id_t *device, hpd_rest_
     return rc;
 }
 
-static hpd_error_t add_devices(json_t *parent, hpd_adapter_id_t *adapter, hpd_rest_t *rest, hpd_module_t *context)
+static hpd_error_t add_devices(json_t *parent, hpd_adapter_id_t *adapter, hpd_rest_t *rest, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -271,7 +271,7 @@ static hpd_error_t add_devices(json_t *parent, hpd_adapter_id_t *adapter, hpd_re
     return rc;
 }
 
-static hpd_error_t add_adapter(json_t *parent, hpd_adapter_id_t *adapter, hpd_rest_t *rest, hpd_module_t *context)
+static hpd_error_t add_adapter(json_t *parent, hpd_adapter_id_t *adapter, hpd_rest_t *rest, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -307,7 +307,7 @@ static hpd_error_t add_adapter(json_t *parent, hpd_adapter_id_t *adapter, hpd_re
     return rc;
 }
 
-static hpd_error_t add_adapters(json_t *parent, hpd_t *hpd, hpd_rest_t *rest, hpd_module_t *context)
+static hpd_error_t add_adapters(json_t *parent, hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -335,7 +335,7 @@ static hpd_error_t add_adapters(json_t *parent, hpd_t *hpd, hpd_rest_t *rest, hp
     return rc;
 }
 
-static hpd_error_t add_configuration(json_t *parent, hpd_t *hpd, hpd_rest_t *rest, hpd_module_t *context)
+static hpd_error_t add_configuration(json_t *parent, hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -370,7 +370,7 @@ static hpd_error_t add_configuration(json_t *parent, hpd_t *hpd, hpd_rest_t *res
     return rc;
 }
 
-hpd_error_t hpd_rest_json_get_configuration(hpd_t *hpd, hpd_rest_t *rest, hpd_module_t *context, char **out)
+hpd_error_t hpd_rest_json_get_configuration(hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context, char **out)
 {
     hpd_error_t rc;
 
@@ -392,7 +392,7 @@ hpd_error_t hpd_rest_json_get_configuration(hpd_t *hpd, hpd_rest_t *rest, hpd_mo
     return rc;
 }
 
-hpd_error_t hpd_rest_json_get_value(char *value, hpd_module_t *context, char **out)
+hpd_error_t hpd_rest_json_get_value(char *value, const hpd_module_t *context, char **out)
 {
     hpd_error_t rc;
 
@@ -420,7 +420,7 @@ hpd_error_t hpd_rest_json_get_value(char *value, hpd_module_t *context, char **o
     return rc;
 }
 
-hpd_error_t hpd_rest_json_parse_value(const char *in, hpd_module_t *context, char **out)
+hpd_error_t hpd_rest_json_parse_value(const char *in, const hpd_module_t *context, char **out)
 {
     // Load json
     json_t *json = NULL;

@@ -126,7 +126,7 @@ hpd_error_t discovery_get_service_attrs_v(hpd_service_t *service, va_list vp);
 hpd_error_t discovery_get_parameter_id(hpd_parameter_t *parameter, const char **id);
 hpd_error_t discovery_get_parameter_attr(hpd_parameter_t *parameter, const char *key, const char **val);
 hpd_error_t discovery_get_parameter_attrs_v(hpd_parameter_t *parameter, va_list vp);
-hpd_error_t discovery_get_action_method(hpd_action_t *action, hpd_method_t *method);
+hpd_error_t discovery_get_action_method(const hpd_action_t *action, hpd_method_t *method);
 
 hpd_error_t discovery_set_adapter_data(hpd_adapter_t *adapter, void *data, hpd_free_f on_free);
 hpd_error_t discovery_set_adapter_attr(hpd_adapter_t *adapter, const char *key, const char *val);

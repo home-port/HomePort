@@ -33,7 +33,7 @@
 typedef struct hpd_rest hpd_rest_t;
 
 hpd_error_t hpd_rest_url_create(hpd_rest_t *rest, hpd_service_id_t *service, char **url);
-hpd_error_t hpd_rest_get_timestamp(hpd_module_t *context, char str[21]);
+hpd_error_t hpd_rest_get_timestamp(const hpd_module_t *context, char *str);
 
 // ALL keys starts with _ to avoid conflicts with adapter provided ones..
 static const char * const HPD_REST_KEY_ID = "_id";

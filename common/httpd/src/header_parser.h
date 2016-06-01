@@ -43,7 +43,7 @@ struct hp_settings {
 	.on_field_value_pair = NULL, \
 	.data = NULL }
 
-hpd_error_t hp_create(struct hp **instance, struct hp_settings *settings, hpd_module_t *context);
+hpd_error_t hp_create(struct hp **instance, struct hp_settings *settings, const hpd_module_t *context);
 hpd_error_t hp_destroy(struct hp*);
 
 hpd_error_t hp_on_header_field(struct hp *instance, const char *field_chunk, size_t length);

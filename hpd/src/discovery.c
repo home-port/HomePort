@@ -430,7 +430,7 @@ hpd_error_t discovery_get_parameter_attrs_v(hpd_parameter_t *parameter, va_list 
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discovery_get_action_method(hpd_action_t *action, hpd_method_t *method)
+hpd_error_t discovery_get_action_method(const hpd_action_t *action, hpd_method_t *method)
 {
     (*method) = action->method;
     return HPD_E_SUCCESS;

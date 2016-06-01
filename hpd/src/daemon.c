@@ -44,7 +44,7 @@ static int parse_opt(int key, char *arg, struct argp_state *state)
     hpd_t *hpd = state->input;
 
     if (key >= 0xff && (key - 0xff) < hpd->options_count) {
-        hpd_module_t *module = hpd->option2module[key-0xff];
+        const hpd_module_t *module = hpd->option2module[key-0xff];
         const char *name = hpd->options[key - 0xff].name;
         while ((name++)[0] != '-');
         switch ((rc = module->def.on_parse_opt(module->data, name, arg))) {
@@ -119,7 +119,7 @@ hpd_error_t daemon_free(hpd_t *hpd)
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t daemon_add_module(hpd_t *hpd, const char *id, hpd_module_def_t *module_def)
+hpd_error_t daemon_add_module(hpd_t *hpd, const char *id, const hpd_module_def_t *module_def)
 {
     hpd_module_t *module;
     HPD_CALLOC(module, 1, hpd_module_t);
@@ -134,7 +134,8 @@ hpd_error_t daemon_add_module(hpd_t *hpd, const char *id, hpd_module_def_t *modu
     LOG_RETURN_E_ALLOC();
 }
 
-hpd_error_t daemon_add_option(hpd_module_t *context, const char *name, const char *arg, int flags, const char *doc)
+hpd_error_t daemon_add_option(const hpd_module_t *context, const char *name, const char *arg, int flags,
+                              const char *doc)
 {
     hpd_t *hpd = context->hpd;
     argp_option_t option = { 0 };
@@ -154,7 +155,7 @@ hpd_error_t daemon_add_option(hpd_module_t *context, const char *name, const cha
     option.doc = doc_alloc;
 
     HPD_REALLOC(hpd->options, hpd->options_count+2, argp_option_t);
-    HPD_REALLOC(hpd->option2module, hpd->options_count+1, hpd_module_t *);
+    HPD_REALLOC(hpd->option2module, hpd->options_count+1, const hpd_module_t *);
 
     hpd->option2module[hpd->options_count] = context;
     hpd->options[hpd->options_count] = option;
@@ -355,7 +356,7 @@ hpd_error_t daemon_stop(const hpd_t *hpd)
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t daemon_get_id(hpd_module_t *context, const char **id)
+hpd_error_t daemon_get_id(const hpd_module_t *context, const char **id)
 {
     (*id) = context->id;
     return HPD_E_SUCCESS;

@@ -49,7 +49,7 @@ hpd_error_t hpd_get_loop(hpd_t *hpd, hpd_ev_loop_t **loop)
     return daemon_get_loop(hpd, loop);
 }
 
-hpd_error_t hpd_module(hpd_t *hpd, const char *id, hpd_module_def_t *module_def)
+hpd_error_t hpd_module(hpd_t *hpd, const char *id, const hpd_module_def_t *module_def)
 {
     // TODO Reserve module names hpd and log? (maybe even create them as modules)
     hpd_module_t *module;
@@ -62,7 +62,8 @@ hpd_error_t hpd_module(hpd_t *hpd, const char *id, hpd_module_def_t *module_def)
     return daemon_add_module(hpd, id, module_def);
 }
 
-hpd_error_t hpd_module_add_option(hpd_module_t *context, const char *name, const char *arg, int flags, const char *doc)
+hpd_error_t hpd_module_add_option(const hpd_module_t *context, const char *name, const char *arg, int flags,
+                                  const char *doc)
 {
     if (!context || !name) LOG_RETURN_E_NULL();
     hpd_t *hpd = context->hpd;
@@ -75,7 +76,7 @@ hpd_error_t hpd_module_add_option(hpd_module_t *context, const char *name, const
     return daemon_add_option(context, name, arg, flags, doc);
 }
 
-hpd_error_t hpd_module_get_id(hpd_module_t *context, const char **id)
+hpd_error_t hpd_module_get_id(const hpd_module_t *context, const char **id)
 {
     if (!context || !id) LOG_RETURN_E_NULL();
     return daemon_get_id(context, id);

@@ -50,7 +50,7 @@
  */
 struct hpd_httpd_response
 {
-    hpd_module_t *context;
+    const hpd_module_t *context;
     hpd_tcpd_conn_t *conn; ///< The connection to send on
     char *msg;            ///< Status/headers to send
     hpd_status_t status;
@@ -115,7 +115,7 @@ hpd_error_t hpd_httpd_response_create(hpd_httpd_response_t **response, hpd_httpd
 {
     if (!req) return HPD_E_NULL;
     hpd_error_t rc, rc2;
-    hpd_module_t *context;
+    const hpd_module_t *context;
     if ((rc = http_request_get_context(req, &context))) return rc;
     if (!response) HPD_LOG_RETURN_E_NULL(context);
 

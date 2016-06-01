@@ -55,7 +55,7 @@ struct hpd {
     modules_t modules;
     int options_count;
     argp_option_t *options;
-    hpd_module_t **option2module;
+    const hpd_module_t **option2module;
     hpd_ev_asyncs_t request_watchers;
     hpd_ev_asyncs_t respond_watchers;
     hpd_ev_asyncs_t changed_watchers;
@@ -93,11 +93,12 @@ typedef struct hpd_module {
 
 hpd_error_t daemon_alloc(hpd_t **hpd);
 hpd_error_t daemon_free(hpd_t *hpd);
-hpd_error_t daemon_add_module(hpd_t *hpd, const char *id, hpd_module_def_t *module_def);
-hpd_error_t daemon_add_option(hpd_module_t *context, const char *name, const char *arg, int flags, const char *doc);
+hpd_error_t daemon_add_module(hpd_t *hpd, const char *id, const hpd_module_def_t *module_def);
+hpd_error_t daemon_add_option(const hpd_module_t *context, const char *name, const char *arg, int flags,
+                              const char *doc);
 hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[]);
 hpd_error_t daemon_stop(const hpd_t *hpd);
-hpd_error_t daemon_get_id(hpd_module_t *context, const char **id);
+hpd_error_t daemon_get_id(const hpd_module_t *context, const char **id);
 hpd_error_t daemon_get_loop(const hpd_t *hpd, hpd_ev_loop_t **loop);
 
 #ifdef __cplusplus

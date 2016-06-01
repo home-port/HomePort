@@ -48,7 +48,7 @@ enum up_state {
 
 /// An URL Parser instance
 struct up {
-    hpd_module_t *context;
+    const hpd_module_t *context;
     struct up_settings *settings; ///< Settings
     void *data;                   ///< User data
 
@@ -93,7 +93,7 @@ struct up {
  *
  *  \return  a pointer to the newly created instance
  */
-hpd_error_t up_create(struct up **instance, struct up_settings *settings, hpd_module_t *context, void *data)
+hpd_error_t up_create(struct up **instance, struct up_settings *settings, const hpd_module_t *context, void *data)
 {
     if (!context) return HPD_E_NULL;
     if (!instance || !settings) HPD_LOG_RETURN_E_NULL(context);

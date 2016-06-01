@@ -88,13 +88,13 @@ hpd_error_t event_unsubscribe(hpd_listener_t *listener)
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t event_get_listener_data(hpd_listener_t *listener, void **data)
+hpd_error_t event_get_listener_data(const hpd_listener_t *listener, void **data)
 {
     (*data) = listener->data;
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t event_foreach_attached(hpd_listener_t *listener)
+hpd_error_t event_foreach_attached(const hpd_listener_t *listener)
 {
     hpd_error_t rc;
     configuration_t *configuration = listener->hpd->configuration;
@@ -185,7 +185,7 @@ static void on_detached(hpd_ev_loop_t *loop, ev_async *w, int revents)
     }
 }
 
-hpd_error_t event_changed(hpd_service_id_t *id, hpd_value_t *val)
+hpd_error_t event_changed(const hpd_service_id_t *id, hpd_value_t *val)
 {
     hpd_error_t rc = HPD_E_ALLOC;
     hpd_ev_async_t *async;

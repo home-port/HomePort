@@ -28,6 +28,6 @@
 #include "hpd_types.h"
 #include "hpd_rest_intern.h"
 
-hpd_error_t hpd_rest_json_get_configuration(hpd_t *hpd, hpd_rest_t *rest, hpd_module_t *context, char **out);
-hpd_error_t hpd_rest_json_get_value(char *value, hpd_module_t *context, char **out);
-hpd_error_t hpd_rest_json_parse_value(const char *in, hpd_module_t *context, char **out);
+hpd_error_t hpd_rest_json_get_configuration(hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context, char **out);
+hpd_error_t hpd_rest_json_get_value(char *value, const hpd_module_t *context, char **out);
+hpd_error_t hpd_rest_json_parse_value(const char *in, const hpd_module_t *context, char **out);

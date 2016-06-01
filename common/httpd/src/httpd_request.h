@@ -33,10 +33,10 @@
 #include <stddef.h>
 
 hpd_error_t http_request_create(hpd_httpd_request_t **req, hpd_httpd_t *httpd, hpd_httpd_settings_t *settings,
-                                hpd_tcpd_conn_t *conn, hpd_module_t *context);
+                                hpd_tcpd_conn_t *conn, const hpd_module_t *context);
 hpd_error_t http_request_destroy(hpd_httpd_request_t *req);
 hpd_error_t http_request_parse(hpd_httpd_request_t *req, const char *buf, size_t len);
 hpd_error_t http_request_get_connection(hpd_httpd_request_t *req, hpd_tcpd_conn_t **conn);
-hpd_error_t http_request_get_context(hpd_httpd_request_t *req, hpd_module_t **context);
+hpd_error_t http_request_get_context(hpd_httpd_request_t *req, const hpd_module_t **context);
 
 #endif

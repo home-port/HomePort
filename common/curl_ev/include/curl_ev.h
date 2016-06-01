@@ -37,7 +37,7 @@ typedef size_t (*curl_ev_f)(char *buffer, size_t size, size_t nmemb, void *userd
 typedef void (*curl_ev_free_f)(void *userdata);
 typedef void (*curl_ev_done_f)(void *userdata, int curl_code);
 
-hpd_error_t curl_ev_init(curl_ev_handle_t **handle, hpd_module_t *context);
+hpd_error_t curl_ev_init(curl_ev_handle_t **handle, const hpd_module_t *context);
 hpd_error_t curl_ev_cleanup(curl_ev_handle_t *handle);
 
 hpd_error_t curl_ev_add_handle(curl_ev_handle_t *handle);

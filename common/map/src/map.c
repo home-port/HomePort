@@ -226,7 +226,7 @@ hpd_error_t hpd_map_v_matches(hpd_map_t *map, va_list vp)
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t hpd_pair_get(hpd_pair_t *pair, const char **key, const char **value)
+hpd_error_t hpd_pair_get(const hpd_pair_t *pair, const char **key, const char **value)
 {
     if (!pair || (!key && !value)) return HPD_E_NULL;
 

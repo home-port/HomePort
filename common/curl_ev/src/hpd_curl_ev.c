@@ -44,10 +44,10 @@ struct curl_ev {
     TAILQ_HEAD(, curl_ev_io) io_watchers;
     TAILQ_HEAD(curl_ev_handles, curl_ev_handle) handles;
     hpd_ev_loop_t *loop;
-    hpd_module_t *context;
+    const hpd_module_t *context;
 };
 
-static hpd_error_t on_create(void **data, hpd_module_t *context);
+static hpd_error_t on_create(void **data, const hpd_module_t *context);
 static hpd_error_t on_destroy(void *data);
 static hpd_error_t on_start(void *data, hpd_t *hpd);
 static hpd_error_t on_stop(void *data, hpd_t *hpd);
@@ -83,7 +83,7 @@ static void on_timeout(hpd_ev_loop_t *loop, ev_timer *w, int revents)
 static CURLMcode on_update_socket(CURL *easy, curl_socket_t s, int what, void *userp, void *socketp)
 {
     CURLMcode cmc;
-    hpd_module_t *context = curl_ev->context;
+    const hpd_module_t *context = curl_ev->context;
 
     // Assign / Alloc
     curl_ev_io_t *w = NULL;
@@ -169,7 +169,7 @@ static CURLMcode on_update_timer(CURLM *multi, long timeout_ms, void *userp)
 static hpd_error_t curl_ev_add_next()
 {
     CURLMcode cmc, cmc2;
-    hpd_module_t *context = curl_ev->context;
+    const hpd_module_t *context = curl_ev->context;
 
     if (!curl_ev->mult_handle) {
         HPD_LOG_VERBOSE(context, "Not starting, saving handle for later...");
@@ -186,7 +186,7 @@ static hpd_error_t curl_ev_add_next()
 
     action_error:
     if ((cmc2 = curl_multi_remove_handle(curl_ev->mult_handle, handle->handle)))
-        HPD_LOG_ERROR(context, "Curl multi return an error [code: %i]", cmc2);
+        HPD_LOG_ERROR(context, "Curl remove handle return an error [code: %i]", cmc2);
     add_error:
         HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Curl multi return an error [code: %i]", cmc);
 }
@@ -196,7 +196,7 @@ static CURLMcode curl_ev_socket_action(int sockfd)
     int unused;
     CURLMcode cmc;
     hpd_error_t rc;
-    hpd_module_t *context = curl_ev->context;
+    const hpd_module_t *context = curl_ev->context;
 
     if ((cmc = curl_multi_socket_action(curl_ev->mult_handle, sockfd, 0, &unused)))
         HPD_LOG_RETURN(context, cmc, "Curl multi return an error [code: %i]", cmc);
@@ -217,7 +217,6 @@ static CURLMcode curl_ev_socket_action(int sockfd)
                             HPD_LOG_WARN(context, "Curl handle error: %s [code: %i]", curl_easy_strerror(cc), cc);
                         if (handle->on_done)
                             handle->on_done(handle->data, cc);
-                        // TODO Next two lines may leave things weird if they fail...
                         if ((rc = curl_ev_remove_handle(handle))) {
                             HPD_LOG_ERROR(context, "Failed to remove handle [code: %i]", rc);
                             return CURLM_INTERNAL_ERROR;
@@ -278,10 +277,8 @@ hpd_error_t curl_ev_remove_handle(curl_ev_handle_t *handle)
         if ((cmc = curl_multi_remove_handle(curl_ev->mult_handle, handle->handle)))
             HPD_LOG_RETURN(curl_ev->context, HPD_E_UNKNOWN, "Curl multi return an error [code: %i]", cmc);
         TAILQ_REMOVE(&curl_ev->handles, handle, HPD_TAILQ_FIELD);
-        if ((rc = curl_ev_add_next())) {
-            TAILQ_INSERT_HEAD(&curl_ev->handles, handle, HPD_TAILQ_FIELD);
-            return rc;
-        }
+        if ((rc = curl_ev_add_next()))
+            HPD_LOG_RETURN(curl_ev->context, HPD_E_SUCCESS, "Curl add next failed [code: %i]", rc);
     } else {
         TAILQ_REMOVE(&curl_ev->handles, handle, HPD_TAILQ_FIELD);
     }
@@ -290,7 +287,7 @@ hpd_error_t curl_ev_remove_handle(curl_ev_handle_t *handle)
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t on_create(void **data, hpd_module_t *context)
+static hpd_error_t on_create(void **data, const hpd_module_t *context)
 {
     if (!context) return HPD_E_NULL;
     if (curl_ev)
@@ -339,7 +336,7 @@ static hpd_error_t on_start(void *data, hpd_t *hpd)
     if (!hpd) HPD_LOG_RETURN_E_NULL(curl_ev->context);
     
     hpd_error_t rc;
-    hpd_module_t *context = curl_ev->context;
+    const hpd_module_t *context = curl_ev->context;
 
     CURLcode cc;
     if ((cc = curl_global_init(CURL_GLOBAL_ALL)))
@@ -379,7 +376,7 @@ static hpd_error_t on_stop(void *data, hpd_t *hpd)
     if (!curl_ev) return HPD_E_NULL;
     
     CURLMcode cmc;
-    hpd_module_t *context = curl_ev->context;
+    const hpd_module_t *context = curl_ev->context;
 
     // Stop current handle
     curl_ev_handle_t *handle = TAILQ_FIRST(&curl_ev->handles);

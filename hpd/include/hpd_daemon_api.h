@@ -37,7 +37,7 @@ extern "C" {
 /// [hpd_t functions]
 hpd_error_t hpd_alloc(hpd_t **hpd);
 hpd_error_t hpd_free(hpd_t *hpd);
-hpd_error_t hpd_module(hpd_t *hpd, const char *id, hpd_module_def_t *module_def);
+hpd_error_t hpd_module(hpd_t *hpd, const char *id, const hpd_module_def_t *module_def);
 hpd_error_t hpd_start(hpd_t *hpd, int argc, char *argv[]);
 hpd_error_t hpd_stop(hpd_t *hpd);
 /// [hpd_t functions]

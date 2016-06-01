@@ -135,7 +135,7 @@ struct hpd_httpd_settings {
    .on_req_cmpl = NULL }
 
 // Webserver functions
-hpd_error_t hpd_httpd_create(hpd_httpd_t **httpd, hpd_httpd_settings_t *settings, hpd_module_t *context,
+hpd_error_t hpd_httpd_create(hpd_httpd_t **httpd, hpd_httpd_settings_t *settings, const hpd_module_t *context,
                              hpd_ev_loop_t *loop);
 hpd_error_t hpd_httpd_destroy(hpd_httpd_t *httpd);
 hpd_error_t hpd_httpd_start(hpd_httpd_t *httpd);

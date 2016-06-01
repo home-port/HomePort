@@ -35,7 +35,7 @@
 #include "xml.h"
 #include <time.h>
 
-static hpd_error_t on_create(void **data, hpd_module_t *context);
+static hpd_error_t on_create(void **data, const hpd_module_t *context);
 static hpd_error_t on_destroy(void *data);
 static hpd_error_t on_start(void *data, hpd_t *hpd);
 static hpd_error_t on_stop(void *data, hpd_t *hpd);
@@ -55,7 +55,7 @@ struct hpd_rest {
     hpd_httpd_t *ws;
     hpd_httpd_settings_t ws_set;
     hpd_t *hpd;
-    hpd_module_t *context;
+    const hpd_module_t *context;
     CURL *curl;
 };
 
@@ -113,7 +113,7 @@ static hpd_error_t url_decode(hpd_rest_t *rest, const char *encoded, char **deco
 }
 
 // Conforms to ISO 8601
-hpd_error_t hpd_rest_get_timestamp(hpd_module_t *context, char str[21])
+hpd_error_t hpd_rest_get_timestamp(const hpd_module_t *context, char *str)
 {
     time_t now = time(NULL);
     struct tm *tm = gmtime(&now);
@@ -233,7 +233,7 @@ static hpd_error_t url_extract(hpd_rest_t *rest, const char *url, char **aid, ch
 }
 
 static hpd_error_t reply(hpd_httpd_request_t *req, enum hpd_status status, hpd_rest_req_t *rest_req,
-                         hpd_module_t *context)
+                         const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -268,27 +268,27 @@ static hpd_error_t reply(hpd_httpd_request_t *req, enum hpd_status status, hpd_r
     return hpd_httpd_response_destroy(res);
 }
 
-static hpd_error_t reply_internal_server_error(hpd_httpd_request_t *req, hpd_rest_req_t *rest_req, hpd_module_t *context)
+static hpd_error_t reply_internal_server_error(hpd_httpd_request_t *req, hpd_rest_req_t *rest_req, const hpd_module_t *context)
 {
     return reply(req, HPD_S_500, rest_req, context);
 }
 
-static hpd_error_t reply_not_found(hpd_httpd_request_t *req, hpd_rest_req_t *rest_req, hpd_module_t *context)
+static hpd_error_t reply_not_found(hpd_httpd_request_t *req, hpd_rest_req_t *rest_req, const hpd_module_t *context)
 {
     return reply(req, HPD_S_404, rest_req, context);
 }
 
-static hpd_error_t reply_unsupported_media_type(hpd_httpd_request_t *req, hpd_rest_req_t *rest_req, hpd_module_t *context)
+static hpd_error_t reply_unsupported_media_type(hpd_httpd_request_t *req, hpd_rest_req_t *rest_req, const hpd_module_t *context)
 {
     return reply(req, HPD_S_415, rest_req, context);
 }
 
-static hpd_error_t reply_bad_request(hpd_httpd_request_t *req, hpd_rest_req_t *rest_req, hpd_module_t *context)
+static hpd_error_t reply_bad_request(hpd_httpd_request_t *req, hpd_rest_req_t *rest_req, const hpd_module_t *context)
 {
     return reply(req, HPD_S_400, rest_req, context);
 }
 
-static hpd_error_t reply_method_not_allowed(hpd_httpd_request_t *req, hpd_rest_req_t *rest_req, hpd_module_t *context)
+static hpd_error_t reply_method_not_allowed(hpd_httpd_request_t *req, hpd_rest_req_t *rest_req, const hpd_module_t *context)
 {
     return reply(req, HPD_S_405, rest_req, context);
 }
@@ -298,7 +298,7 @@ static hpd_error_t reply_devices(hpd_rest_req_t *rest_req)
     hpd_error_t rc, rc2;
     hpd_httpd_request_t *http_req = rest_req->http_req;
     hpd_rest_t *rest = rest_req->rest;
-    hpd_module_t *context = rest->context;
+    const hpd_module_t *context = rest->context;
 
     if (rest_req->http_res) HPD_LOG_RETURN(context, HPD_E_STATE, "Response already sent.");
 
@@ -358,7 +358,7 @@ static hpd_error_t reply_options(hpd_rest_req_t *rest_req)
 {
     hpd_error_t rc, rc2;
     hpd_httpd_request_t *http_req = rest_req->http_req;
-    hpd_module_t *context = rest_req->rest->context;
+    const hpd_module_t *context = rest_req->rest->context;
 
     if (rest_req->http_res) HPD_LOG_RETURN(context, HPD_E_STATE, "Response already sent.");
     
@@ -470,7 +470,7 @@ static hpd_httpd_return_t on_req_destroy(hpd_httpd_t *ins, hpd_httpd_request_t *
     }
 }
 
-static hpd_error_t on_response(hpd_response_t *res)
+static hpd_error_t on_response(const hpd_response_t *res)
 {
     hpd_error_t rc, rc2;
 
@@ -480,13 +480,13 @@ static hpd_error_t on_response(hpd_response_t *res)
     
     // Make life easier
     hpd_httpd_request_t *http_req = rest_req->http_req;
-    hpd_module_t *context = rest_req->rest->context;
+    const hpd_module_t *context = rest_req->rest->context;
     
     // Check if closed from downstairs
     if (!http_req) return HPD_E_SUCCESS;
 
     // Get data from hpd
-    hpd_value_t *value;
+    const hpd_value_t *value;
     const char *val;
     size_t len;
     hpd_status_t status;
@@ -604,7 +604,7 @@ static hpd_httpd_return_t on_req_begin(hpd_httpd_t *httpd, hpd_httpd_request_t *
 {
     hpd_error_t rc;
     struct hpd_rest *rest = httpd_ctx;
-    hpd_module_t *context = rest->context;
+    const hpd_module_t *context = rest->context;
     
     hpd_rest_req_t *rest_req;
     HPD_CALLOC(rest_req, 1, hpd_rest_req_t);
@@ -626,7 +626,7 @@ static hpd_httpd_return_t on_req_url_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t 
     hpd_error_t rc, rc2;
     hpd_rest_req_t *rest_req = *req_data;
     struct hpd_rest *rest = httpd_ctx;
-    hpd_module_t *context = rest->context;
+    const hpd_module_t *context = rest->context;
 
     // Get url
     if ((rc = hpd_httpd_request_get_url(req, &rest_req->url))) {
@@ -732,7 +732,7 @@ static hpd_httpd_return_t on_req_hdr_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t 
     hpd_error_t rc, rc2;
     hpd_rest_req_t *rest_req = *req_data;
     struct hpd_rest *rest = httpd_ctx;
-    hpd_module_t *context = rest->context;
+    const hpd_module_t *context = rest->context;
 
     // Get headers for later
     if ((rc = hpd_httpd_request_get_headers(req, &rest_req->headers))) {
@@ -814,7 +814,7 @@ static hpd_httpd_return_t on_req_body(hpd_httpd_t *ins, hpd_httpd_request_t *req
 {
     hpd_error_t rc2;
     hpd_rest_req_t *rest_req = *req_data;
-    hpd_module_t *context = rest_req->rest->context;
+    const hpd_module_t *context = rest_req->rest->context;
 
     HPD_REALLOC(rest_req->body, rest_req->len + len, char);
     strncpy(&rest_req->body[rest_req->len], chunk, len);
@@ -833,7 +833,7 @@ static hpd_httpd_return_t on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req
 {
     hpd_error_t rc, rc2;
     hpd_rest_req_t *rest_req = *req_data;
-    hpd_module_t *context = rest_req->rest->context;
+    const hpd_module_t *context = rest_req->rest->context;
     hpd_service_id_t *service = rest_req->service;
 
     // Construct value
@@ -958,7 +958,7 @@ static hpd_httpd_return_t on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t *req
     return HPD_HTTPD_R_CONTINUE;
 }
 
-static hpd_error_t on_create(void **data, hpd_module_t *context)
+static hpd_error_t on_create(void **data, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -1005,7 +1005,7 @@ static hpd_error_t on_start(void *data, hpd_t *hpd)
 {
     hpd_error_t rc, rc2;
     hpd_rest_t *rest = data;
-    hpd_module_t *context = rest->context;
+    const hpd_module_t *context = rest->context;
 
     HPD_LOG_INFO(context, "Starting REST server on port %d.", rest->ws_set.port);
 
@@ -1029,7 +1029,7 @@ static hpd_error_t on_stop(void *data, hpd_t *hpd)
 {
     hpd_error_t rc, rc2;
     hpd_rest_t *rest = data;
-    hpd_module_t *context = rest->context;
+    const hpd_module_t *context = rest->context;
 
     HPD_LOG_INFO(rest->context, "Stopping REST server.");
 

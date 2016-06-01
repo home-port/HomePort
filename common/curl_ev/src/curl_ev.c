@@ -43,7 +43,7 @@ static size_t on_body(char *buffer, size_t size, size_t nmemb, void *userdata)
     else return size*nmemb;
 }
 
-hpd_error_t curl_ev_init(curl_ev_handle_t **handle, hpd_module_t *context)
+hpd_error_t curl_ev_init(curl_ev_handle_t **handle, const hpd_module_t *context)
 {
     if (!context) return HPD_E_NULL;
     if (!handle) HPD_LOG_RETURN_E_NULL(context);

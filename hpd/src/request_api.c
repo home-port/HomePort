@@ -78,7 +78,7 @@ hpd_error_t hpd_request_get_method(const hpd_request_t *req, hpd_method_t *metho
     return request_get_request_method(req, method);
 }
 
-hpd_error_t hpd_request_get_value(const hpd_request_t *req, hpd_value_t **value)
+hpd_error_t hpd_request_get_value(const hpd_request_t *req, const hpd_value_t **value)
 {
     if (!req || !value) LOG_RETURN_E_NULL();
     return request_get_request_value(req, value);
@@ -154,13 +154,13 @@ hpd_error_t hpd_respond(hpd_response_t *response)
     return request_respond(response);
 }
 
-hpd_error_t hpd_response_get_status(hpd_response_t *response, hpd_status_t *status)
+hpd_error_t hpd_response_get_status(const hpd_response_t *response, hpd_status_t *status)
 {
     if (!response || !status) LOG_RETURN_E_NULL();
     return request_get_response_status(response, status);
 }
 
-hpd_error_t hpd_response_get_value(hpd_response_t *response, hpd_value_t **value)
+hpd_error_t hpd_response_get_value(const hpd_response_t *response, const hpd_value_t **value)
 {
     if (!response || !value) LOG_RETURN_E_NULL();
     return request_get_response_value(response, value);
@@ -184,7 +184,7 @@ hpd_error_t hpd_response_get_request_method(const hpd_response_t *response, hpd_
     return request_get_response_request_method(response, method);
 }
 
-hpd_error_t hpd_response_get_request_value(const hpd_response_t *response, hpd_value_t **value)
+hpd_error_t hpd_response_get_request_value(const hpd_response_t *response, const hpd_value_t **value)
 {
     if (!response || !value) LOG_RETURN_E_NULL();
     return request_get_response_request_value(response, value);

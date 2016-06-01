@@ -32,7 +32,7 @@
 #include "log.h"
 #include "comm.h"
 
-hpd_error_t hpd_changed(hpd_service_id_t *id, hpd_value_t *val)
+hpd_error_t hpd_changed(const hpd_service_id_t *id, hpd_value_t *val)
 {
     if (!id || !val) LOG_RETURN_E_NULL();
     if (!id->device.adapter.hpd->loop) LOG_RETURN_HPD_STOPPED();
@@ -77,13 +77,13 @@ hpd_error_t hpd_listener_free(hpd_listener_t *listener)
     return event_unsubscribe(listener);
 }
 
-hpd_error_t hpd_listener_get_data(hpd_listener_t *listener, void **data)
+hpd_error_t hpd_listener_get_data(const hpd_listener_t *listener, void **data)
 {
     if (!listener || !data) LOG_RETURN_E_NULL();
-    return event_get_listener_data(NULL, data);
+    return event_get_listener_data(listener, data);
 }
 
-hpd_error_t hpd_foreach_attached(hpd_listener_t *listener)
+hpd_error_t hpd_foreach_attached(const hpd_listener_t *listener)
 {
     if (!listener) LOG_RETURN_E_NULL();
     if (!listener->on_attach)

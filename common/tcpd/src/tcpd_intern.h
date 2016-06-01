@@ -49,7 +49,7 @@ struct hpd_tcpd {
     hpd_tcpd_conns_t conns;       ///< Linked List of connections
     int sockfd;                 ///< Socket file descriptor
     ev_io watcher;              ///< New connection watcher
-    hpd_module_t *context;
+    const hpd_module_t *context;
 };
 
 /// All data to represent a connection

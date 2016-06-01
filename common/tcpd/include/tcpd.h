@@ -121,7 +121,7 @@ struct hpd_tcpd_settings {
    .tcpd_ctx = NULL }
 
 // Webserver functions
-hpd_error_t hpd_tcpd_create(hpd_tcpd_t **tcpd, hpd_tcpd_settings_t *settings, hpd_module_t *context,
+hpd_error_t hpd_tcpd_create(hpd_tcpd_t **tcpd, hpd_tcpd_settings_t *settings, const hpd_module_t *context,
                             hpd_ev_loop_t *loop);
 hpd_error_t hpd_tcpd_destroy(hpd_tcpd_t *tcpd);
 hpd_error_t hpd_tcpd_start(hpd_tcpd_t *tcpd);

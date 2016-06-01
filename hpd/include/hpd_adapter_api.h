@@ -38,7 +38,7 @@ extern "C" {
 hpd_error_t hpd_adapter_alloc(hpd_adapter_t **adapter, const char *id);
 hpd_error_t hpd_adapter_free(hpd_adapter_t *adapter);
 hpd_error_t hpd_adapter_attach(hpd_t *hpd, hpd_adapter_t *adapter);
-hpd_error_t hpd_adapter_detach(hpd_adapter_id_t *id, hpd_adapter_t **adapter);
+hpd_error_t hpd_adapter_detach(const hpd_adapter_id_t *id, hpd_adapter_t **adapter);
 hpd_error_t hpd_adapter_set_data(hpd_adapter_t *adapter, void *data, hpd_free_f on_free);
 hpd_error_t hpd_adapter_set_attr(hpd_adapter_t *adapter, const char *key, const char *val);
 hpd_error_t hpd_adapter_set_attrs(hpd_adapter_t *adapter, ...);
@@ -48,8 +48,8 @@ hpd_error_t hpd_adapter_get_data(const hpd_adapter_id_t *id, void **data);
 /// [hpd_device_t functions]
 hpd_error_t hpd_device_alloc(hpd_device_t **device, const char *id);
 hpd_error_t hpd_device_free(hpd_device_t *device);
-hpd_error_t hpd_device_attach(hpd_adapter_id_t *id, hpd_device_t *device);
-hpd_error_t hpd_device_detach(hpd_device_id_t *id, hpd_device_t **device);
+hpd_error_t hpd_device_attach(const hpd_adapter_id_t *id, hpd_device_t *device);
+hpd_error_t hpd_device_detach(const hpd_device_id_t *id, hpd_device_t **device);
 hpd_error_t hpd_device_set_data(hpd_device_t *device, void *data, hpd_free_f on_free);
 hpd_error_t hpd_device_set_attr(hpd_device_t *device, const char *key, const char *val);
 hpd_error_t hpd_device_set_attrs(hpd_device_t *device, ...);
@@ -60,7 +60,7 @@ hpd_error_t hpd_device_get_data(const hpd_device_id_t *id, void **data);
 hpd_error_t hpd_service_alloc(hpd_service_t **service, const char *id);
 hpd_error_t hpd_service_free(hpd_service_t *service);
 hpd_error_t hpd_service_attach(hpd_device_t *device, hpd_service_t *service);
-hpd_error_t hpd_service_detach(hpd_service_id_t *id, hpd_service_t **service);
+hpd_error_t hpd_service_detach(const hpd_service_id_t *id, hpd_service_t **service);
 hpd_error_t hpd_service_set_data(hpd_service_t *service, void *data, hpd_free_f on_free);
 hpd_error_t hpd_service_set_attr(hpd_service_t *service, const char *key, const char *val);
 hpd_error_t hpd_service_set_attrs(hpd_service_t *service, ...);
@@ -73,7 +73,7 @@ hpd_error_t hpd_service_get_data(const hpd_service_id_t *id, void **data);
 hpd_error_t hpd_parameter_alloc(hpd_parameter_t **parameter, const char *id);
 hpd_error_t hpd_parameter_free(hpd_parameter_t *parameter);
 hpd_error_t hpd_parameter_attach(hpd_service_t *service, hpd_parameter_t *parameter);
-hpd_error_t hpd_parameter_detach(hpd_parameter_id_t *id, hpd_parameter_t **parameter);
+hpd_error_t hpd_parameter_detach(const hpd_parameter_id_t *id, hpd_parameter_t **parameter);
 hpd_error_t hpd_parameter_set_attr(hpd_parameter_t *parameter, const char *key, const char *val);
 hpd_error_t hpd_parameter_set_attrs(hpd_parameter_t *parameter, ...);
 /// [hpd_parameter_t functions]
@@ -81,7 +81,7 @@ hpd_error_t hpd_parameter_set_attrs(hpd_parameter_t *parameter, ...);
 /// [hpd_request_t functions]
 hpd_error_t hpd_request_get_service(const hpd_request_t *req, const hpd_service_id_t **id);
 hpd_error_t hpd_request_get_method(const hpd_request_t *req, hpd_method_t *method);
-hpd_error_t hpd_request_get_value(const hpd_request_t *req, hpd_value_t **value);
+hpd_error_t hpd_request_get_value(const hpd_request_t *req, const hpd_value_t **value);
 /// [hpd_request_t functions]
 
 /// [hpd_response_t functions]
@@ -92,7 +92,7 @@ hpd_error_t hpd_respond(hpd_response_t *response);
 /// [hpd_response_t functions]
 
 /// [hpd_changed]
-hpd_error_t hpd_changed(hpd_service_id_t *id, hpd_value_t *val);
+hpd_error_t hpd_changed(const hpd_service_id_t *id, hpd_value_t *val);
 /// [hpd_changed]
 
 #ifdef __cplusplus

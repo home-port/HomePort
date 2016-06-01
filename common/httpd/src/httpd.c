@@ -38,7 +38,7 @@
 struct hpd_httpd {
     hpd_httpd_settings_t settings; ///< Settings
     hpd_tcpd_t *webserver; ///< Webserver instance
-    hpd_module_t *context;
+    const hpd_module_t *context;
 };
 
 /**
@@ -132,7 +132,8 @@ static hpd_tcpd_return_t on_disconnect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *co
  *
  *  \returns  The newly created instance.
  */
-hpd_error_t hpd_httpd_create(hpd_httpd_t **httpd, hpd_httpd_settings_t *settings, hpd_module_t *context, hpd_ev_loop_t *loop)
+hpd_error_t hpd_httpd_create(hpd_httpd_t **httpd, hpd_httpd_settings_t *settings, const hpd_module_t *context,
+                             hpd_ev_loop_t *loop)
 {
     if (!context) return HPD_E_NULL;
     if (!httpd || !settings || !loop) HPD_LOG_RETURN_E_NULL(context);

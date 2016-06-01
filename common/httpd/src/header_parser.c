@@ -40,7 +40,7 @@ enum hp_state {
 };
 
 struct hp {
-    hpd_module_t *context;
+    const hpd_module_t *context;
 	struct hp_settings settings;
 
 	enum hp_state state;
@@ -64,7 +64,7 @@ static void reset_buffers(struct hp *instance)
 		instance -> value_buffer = NULL;
 }
 
-hpd_error_t hp_create(struct hp **instance, struct hp_settings *settings, hpd_module_t *context)
+hpd_error_t hp_create(struct hp **instance, struct hp_settings *settings, const hpd_module_t *context)
 {
     if (!context) return HPD_E_NULL;
     if (!instance || !settings) HPD_LOG_RETURN_E_NULL(context);

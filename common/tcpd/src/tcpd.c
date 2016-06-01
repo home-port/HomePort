@@ -80,7 +80,7 @@ static void on_ev_recv(hpd_ev_loop_t *loop, struct ev_io *watcher, int revents)
     hpd_tcpd_settings_t *settings = &conn->tcpd->settings;
     size_t max_data_size = settings->max_data_size;
     char buffer[max_data_size];
-    hpd_module_t *context = conn->tcpd->context;
+    const hpd_module_t *context = conn->tcpd->context;
 
     HPD_LOG_VERBOSE(context, "Receiving data from %s", conn->ip);
     if ((received = recv(watcher->fd, buffer, max_data_size-1, 0)) < 0) {
@@ -131,7 +131,7 @@ static void on_ev_send(hpd_ev_loop_t *loop, struct ev_io *watcher, int revents)
 {
     hpd_tcpd_conn_t *conn = watcher->data;
     ssize_t sent;
-    hpd_module_t *context = conn->tcpd->context;
+    const hpd_module_t *context = conn->tcpd->context;
 
     sent = send(watcher->fd, conn->send_msg, conn->send_len, 0);
     if (sent < 0) {
@@ -173,7 +173,7 @@ static void on_ev_send(hpd_ev_loop_t *loop, struct ev_io *watcher, int revents)
 static void on_ev_timeout(hpd_ev_loop_t *loop, struct ev_timer *watcher, int revents)
 {
     hpd_tcpd_conn_t *conn = watcher->data;
-    hpd_module_t *context = conn->tcpd->context;
+    const hpd_module_t *context = conn->tcpd->context;
     
     HPD_LOG_INFO(context, "Timeout on %s [%ld].", conn->ip, (long)conn);
     if (hpd_tcpd_conn_kill(conn)) HPD_LOG_ERROR(context, "Failed to kill connection.");
@@ -202,7 +202,7 @@ static void on_ev_conn(hpd_ev_loop_t *loop, struct ev_io *watcher, int revents)
     hpd_tcpd_conn_t *conn;
     hpd_tcpd_t *tcpd = (hpd_tcpd_t *)watcher->data;
     hpd_tcpd_settings_t *settings = &tcpd->settings;
-    hpd_module_t *context = tcpd->context;
+    const hpd_module_t *context = tcpd->context;
 
     // Accept connection
     in_size = sizeof *in_addr;
@@ -268,7 +268,7 @@ static void on_ev_conn(hpd_ev_loop_t *loop, struct ev_io *watcher, int revents)
  *
  *  \return  The new tcpd instance.
  */
-hpd_error_t hpd_tcpd_create(hpd_tcpd_t **tcpd, hpd_tcpd_settings_t *settings, hpd_module_t *context,
+hpd_error_t hpd_tcpd_create(hpd_tcpd_t **tcpd, hpd_tcpd_settings_t *settings, const hpd_module_t *context,
                             hpd_ev_loop_t *loop)
 {
     if (settings == NULL || context == NULL || loop == NULL) return HPD_E_NULL;
@@ -432,7 +432,7 @@ hpd_error_t hpd_tcpd_stop(hpd_tcpd_t *tcpd)
     if (!tcpd) return HPD_E_NULL;
     
     hpd_tcpd_conn_t *conn, *tmp;
-    hpd_module_t *context = tcpd->context;
+    const hpd_module_t *context = tcpd->context;
 
     // Stop accept watcher
     ev_io_stop(tcpd->loop, &tcpd->watcher);
@@ -584,7 +584,7 @@ hpd_error_t hpd_tcpd_conn_close(hpd_tcpd_conn_t *conn)
 {
     if (!conn) return HPD_E_NULL;
 
-    hpd_module_t *context = conn->tcpd->context;
+    const hpd_module_t *context = conn->tcpd->context;
 
     conn->send_close = 1;
 

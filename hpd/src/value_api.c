@@ -92,7 +92,7 @@ hpd_error_t hpd_value_get_headers(const hpd_value_t *value, ...)
     return rc;
 }
 
-hpd_error_t hpd_value_first_header(hpd_value_t *value, hpd_pair_t **pair)
+hpd_error_t hpd_value_first_header(const hpd_value_t *value, hpd_pair_t **pair)
 {
     if (!value || !pair) LOG_RETURN_E_NULL();
     return value_first_header(value, pair);

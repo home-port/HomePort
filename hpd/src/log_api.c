@@ -28,7 +28,7 @@
 #include "log.h"
 #include "daemon.h"
 
-hpd_error_t hpd_logf(hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, ...)
+hpd_error_t hpd_logf(const hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, ...)
 {
     if (!context || !fmt) LOG_RETURN_E_NULL();
     hpd_error_t rc;
@@ -39,7 +39,7 @@ hpd_error_t hpd_logf(hpd_module_t *context, hpd_log_level_t level, const char *f
     return rc;
 }
 
-hpd_error_t hpd_vlogf(hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp)
+hpd_error_t hpd_vlogf(const hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp)
 {
     if (!context || !fmt) LOG_RETURN_E_NULL();
     return log_vlogf(context->id, level, file, line, fmt, vp);
