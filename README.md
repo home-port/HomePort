@@ -1,96 +1,78 @@
-Home-Port Refactured Release
-=========
+# HomePort Documentation
 
-The following describes how to checkout and compile the sources
+## Download and install HomePort
 
-# Checkout
+This guide has been tested on Ubuntu Desktop 16.04, with the (as of
+writing) current version of HomePort.
 
-Install git:
+## Prerequisites
+
+For checkout of sources (Alternatively zip-files can be downloaded
+through GitHub):
 
 `sudo apt-get install git`
 
-Clone the repository:
+To compile in general:
 
-`git clone https://github.com/home-port/HomePort.git HomePort`
+`sudo apt-get install cmake gcc make g++ libbsd-dev libev-dev libcurl4-gnutls-dev libjansson-dev libmxml-dev`
 
-Switch branch:
+If you want to build the documentation (Notice that plantuml may 
+require a running X server):
 
-`cd HomePort`
+`sudo apt-get install doxygen graphviz plantuml`
 
-`git checkout HomePortRefactored`
+To build the LaTeX/PDF version of the documentation:
 
-# Compile
+`sudo apt-get install doxygen-latex`
 
-Install the dependencies:
+## Checkout
 
-`sudo apt-get install gcc make libev-dev cmake`
+First we clone the repository. Shown URL is for the official GitHub
+project, you need to change this to use one of the unofficial/personal
+forks of the project.
 
-Compile:
+To get a single branch:
 
-It is advised to compile in a seperate directory:
+`git clone https://github.com/home-port/HomePort.git HomePort.git -b HomePortFunctionAPI`
+
+`cd HomePort.git`
+
+`git submodule init`
+
+`git submodule update`
+
+## Configure
 
 `mkdir build && cd build`
 
-First build your makefiles with cmake:
+Normal builds:
 
 `cmake ../`
 
-Then compile:
+Debug builds:
+
+`cmake -DCMAKE_BUILD_TYPE=Debug ../`
+
+## Compile and install HPD and modules
 
 `make`
 
-# Run tests
+`sudo make install`
 
-Install requirements:
+## Compile documentation
 
-`sudo apt-get install libcurl4-gnutls-dev`
+For regular HTML Doxygen documentation:
 
-Run cmake as normal:
+`make doc-html`
 
-`mkdir build && cd build`
+For LaTeX version:
 
-`cmake ../`
+`make doc-latex`
 
-Run the tests:
+For PDF version:
 
-`make check`
+`make doc-pdf`
 
-# Build examples
+For all:
 
-Run cmake as normal:
-
-`mkdir build && cd build`
-
-`cmake ../`
-
-Build examples
-
-`make example`
-
-Example executables can be found in the various example directories
-within the build folder.
-
-# Update
-
-Update the repository to the current version:
-
-`git pull`
-
-# Build API Documentation
-
-Install doxygen:
-
-`sudo apt-get install doxygen graphviz`
-
-Compile it:
-
-`make doc`
-
-# List of various useful links
-
-* [Socket programming in C](http://www.linuxhowtos.org/C_C++/socket.htm)
-* [Beej's Guide to Network Programming (includes IPv6 support)](http://beej.us/guide/bgnet/output/html/multipage/index.html)
-* [libev documentation](http://pod.tst.eu/http://cvs.schmorp.de/libev/ev.pod)
-* [microhttpd](http://www.gnu.org/software/libmicrohttpd/)
-* [RFC 2616](http://www.w3.org/Protocols/rfc2616/rfc2616.html)
-
+`make doc-all`
