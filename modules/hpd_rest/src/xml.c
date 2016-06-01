@@ -28,7 +28,6 @@
 #include "xml.h"
 #include <time.h>
 #include <mxml.h>
-#include <zlib.h>
 #include <hpd_common.h>
 #include "hpd_application_api.h"
 #include "hpd_rest_intern.h"
