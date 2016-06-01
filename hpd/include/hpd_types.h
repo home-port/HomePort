@@ -53,6 +53,7 @@ typedef struct hpd_adapter_id hpd_adapter_id_t;
 typedef struct hpd_device_id hpd_device_id_t;
 typedef struct hpd_service_id hpd_service_id_t;
 typedef struct hpd_parameter_id hpd_parameter_id_t;
+typedef struct hpd_module_def hpd_module_def_t;
 
 /**
  * Value to be used in len parameters on \0 terminated strings
@@ -65,7 +66,7 @@ typedef struct hpd_parameter_id hpd_parameter_id_t;
  * Errors that can be returned from functions.
  */
 /// [hpd_error_t]
-typedef enum hpd_error {
+enum hpd_error {
     HPD_E_SUCCESS = 0,  //< The operation was successful.
     HPD_E_UNKNOWN = 1,  //< An unknown error
     HPD_E_NULL,         //< Null pointer error.
@@ -74,59 +75,20 @@ typedef enum hpd_error {
     HPD_E_ARGUMENT,     //< An argument is invalid.
     HPD_E_NOT_UNIQUE,   //< An argument is not unique.
     HPD_E_NOT_FOUND,    //< The object could not be found.
-} hpd_error_t;
+};
 /// [hpd_error_t]
-
-/**
- * On failure data should be left as NULL.
- */
-/// [hpd_module_def_t functions]
-typedef hpd_error_t (*hpd_create_f)    (void **data, hpd_module_t *context);
-typedef hpd_error_t (*hpd_destroy_f)   (void *data);
-typedef hpd_error_t (*hpd_start_f)     (void *data, hpd_t *hpd);
-typedef hpd_error_t (*hpd_stop_f)      (void *data, hpd_t *hpd);
-// TODO Document that this should return HPD_E_ARGUMENT if name is not known
-typedef hpd_error_t (*hpd_parse_opt_f) (void *data, const char *name, const char *arg);
-/// [hpd_module_def_t functions]
-
-/// [hpd_action_f]
-typedef hpd_error_t (*hpd_action_f) (hpd_request_t *req); //< Action function for handling requests on services.
-/// [hpd_action_f]
-
-/// [hpd_free_f]
-typedef hpd_error_t (*hpd_free_f) (void *data); //< Free function, used to free user supplied data.
-/// [hpd_free_f]
-
-/// Response function for handing responses on requests.
-/// [Application API Callbacks]
-typedef hpd_error_t (*hpd_response_f) (hpd_response_t *res);
-/// Value callback for listeners
-typedef hpd_error_t (*hpd_value_f) (void *data, const hpd_service_id_t *service, const hpd_value_t *val);
-/// Device callback for listeners
-typedef hpd_error_t (*hpd_device_f) (void *data, const hpd_device_id_t *device);
-/// [Application API Callbacks]
-
-/// [hpd_module_def_t]
-typedef struct hpd_module_def {
-    hpd_create_f on_create;
-    hpd_destroy_f on_destroy;
-    hpd_start_f on_start;
-    hpd_stop_f on_stop;
-    hpd_parse_opt_f on_parse_opt;
-} hpd_module_def_t;
-/// [hpd_module_def_t]
 
 /**
  * Methods that a service supports. Note that these should always start with zero and have increments of one (used as
  * indices in arrays).
  */
 /// [hpd_method_t]
-typedef enum hpd_method {
+enum hpd_method {
     HPD_M_NONE = -1, //< Method that does not exist, must be first below valid methods
     HPD_M_GET = 0,   //< HTTP GET like method
     HPD_M_PUT,       //< HTTP PUT like method
     HPD_M_COUNT      //< Last
-} hpd_method_t;
+};
 /// [hpd_method_t]
 
 /// [hpd_status_t]
@@ -183,22 +145,67 @@ typedef enum hpd_method {
     XX(504, Gateway Timeout) \
     XX(505, HTTP Version Not Supported)
 
-typedef enum hpd_status {
+enum hpd_status {
+    HPD_S_NONE = 0,
 #define XX(num, str) HPD_S_##num = num,
     HPD_HTTP_STATUS_CODE_MAP(XX)
 #undef XX
-} hpd_status_t;
+};
 /// [hpd_status_t]
 
 /// [hpd_log_level_t]
-typedef enum hpd_log_level {
+enum hpd_log_level {
     HPD_L_ERROR,
     HPD_L_WARN,
     HPD_L_INFO,
     HPD_L_DEBUG,
     HPD_L_VERBOSE,
-} hpd_log_level_t;
+};
 /// [hpd_log_level_t]
+
+typedef enum hpd_method hpd_method_t;
+typedef enum hpd_error hpd_error_t;
+typedef enum hpd_status hpd_status_t;
+typedef enum hpd_log_level hpd_log_level_t;
+
+/**
+ * On failure data should be left as NULL.
+ */
+/// [hpd_module_def_t functions]
+typedef hpd_error_t (*hpd_create_f)    (void **data, hpd_module_t *context);
+typedef hpd_error_t (*hpd_destroy_f)   (void *data);
+typedef hpd_error_t (*hpd_start_f)     (void *data, hpd_t *hpd);
+typedef hpd_error_t (*hpd_stop_f)      (void *data, hpd_t *hpd);
+// TODO Document that this should return HPD_E_ARGUMENT if name is not known
+typedef hpd_error_t (*hpd_parse_opt_f) (void *data, const char *name, const char *arg);
+/// [hpd_module_def_t functions]
+
+/// [hpd_action_f]
+typedef hpd_status_t (*hpd_action_f) (hpd_request_t *req); //< Action function for handling requests on services.
+/// [hpd_action_f]
+
+/// [hpd_free_f]
+typedef hpd_error_t (*hpd_free_f) (void *data); //< Free function, used to free user supplied data.
+/// [hpd_free_f]
+
+/// Response function for handing responses on requests.
+/// [Application API Callbacks]
+typedef hpd_error_t (*hpd_response_f) (hpd_response_t *res);
+/// Value callback for listeners
+typedef hpd_error_t (*hpd_value_f) (void *data, const hpd_service_id_t *service, const hpd_value_t *val);
+/// Device callback for listeners
+typedef hpd_error_t (*hpd_device_f) (void *data, const hpd_device_id_t *device);
+/// [Application API Callbacks]
+
+/// [hpd_module_def_t]
+struct hpd_module_def {
+    hpd_create_f on_create;
+    hpd_destroy_f on_destroy;
+    hpd_start_f on_start;
+    hpd_stop_f on_stop;
+    hpd_parse_opt_f on_parse_opt;
+};
+/// [hpd_module_def_t]
 
 /**
  * Default attribute key.

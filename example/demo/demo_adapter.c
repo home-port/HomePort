@@ -62,6 +62,7 @@ static hpd_error_t hpd_demo_adapter_destroy(void *data)
     return HPD_E_SUCCESS;
 }
 
+// TODO Has changed signature !
 static hpd_error_t hpd_demo_on_get(hpd_request_t *req)
 {
     hpd_error_t rc;
@@ -86,6 +87,7 @@ static hpd_error_t hpd_demo_on_get(hpd_request_t *req)
     return HPD_E_SUCCESS;
 }
 
+// TODO Has changed signature !
 // TODO Just a quick hack for testing - lots of fixes needed
 static hpd_error_t hpd_demo_on_put(hpd_request_t *req)
 {
@@ -108,9 +110,6 @@ static hpd_error_t hpd_demo_adapter_start(void *data, hpd_t *hpd)
     hpd_error_t rc;
 
     printf("[adapter] Starting with %i lamps...\n", demo_adapter->num_lamps); // TODO Wrong!
-
-    // TODO REMOVE THIS!
-    return HPD_E_SUCCESS;
 
     // TODO Clean up on errors !
 

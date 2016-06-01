@@ -214,9 +214,10 @@ static void on_request(hpd_ev_loop_t *loop, ev_async *w, int revents)
         if ((rc = request_respond(response))) goto error_free_response;
         return;
     }
-    
-    if ((rc = action(request))) {
-        if ((rc = request_alloc_response(&response, request, HPD_S_500))) goto error_free_request;
+
+    hpd_status_t status;
+    if ((status = action(request)) != HPD_S_NONE) {
+        if ((rc = request_alloc_response(&response, request, status))) goto error_free_request;
         if ((rc = request_respond(response))) goto error_free_response;
         return;
     }
