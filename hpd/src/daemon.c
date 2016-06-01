@@ -33,12 +33,12 @@
 #include "log.h"
 #include "model.h"
 
-static void sig_cb(hpd_ev_loop_t *loop, ev_signal *w, int revents)
+static void on_signal(hpd_ev_loop_t *loop, ev_signal *w, int revents)
 {
     ev_break(loop, EVBREAK_ALL);
 }
 
-static int parse_opt(int key, char *arg, struct argp_state *state)
+static int on_parse_opt(int key, char *arg, struct argp_state *state)
 {
     hpd_error_t rc;
     hpd_t *hpd = state->input;
@@ -61,27 +61,219 @@ static int parse_opt(int key, char *arg, struct argp_state *state)
     return 0;
 }
 
-static hpd_error_t daemon_alloc_conf(configuration_t **conf, void *data)
+static hpd_error_t loop_create(hpd_t *hpd)
 {
-    HPD_CALLOC(*conf, 1, configuration_t);
-    TAILQ_INIT(&(*conf)->adapters);
-    TAILQ_INIT(&(*conf)->listeners);
-    (*conf)->hpd = (data);
+    // Create event loop
+    hpd->loop = ev_loop_new(EVFLAG_AUTO);
+    if (!hpd->loop) LOG_RETURN_E_ALLOC();
+    return HPD_E_SUCCESS;
+}
+
+static void loop_destroy(hpd_t *hpd)
+{
+    // Destroy event loop
+    ev_loop_destroy(hpd->loop);
+    hpd->loop = NULL;
+}
+
+static void loop_run(hpd_t *hpd)
+{
+    // Start signal watchers
+    ev_signal_start(hpd->loop, &hpd->sigint_watcher);
+    ev_signal_start(hpd->loop, &hpd->sigterm_watcher);
+
+    // Run until we are stopped
+    // TODO Return value of ev_run can be used to run until all watchers have stopped (e.g. nice shutdown)
+    ev_run(hpd->loop, 0);
+
+    // Stop signal watchers
+    ev_signal_stop(hpd->loop, &hpd->sigterm_watcher);
+    ev_signal_stop(hpd->loop, &hpd->sigint_watcher);
+}
+
+static hpd_error_t modules_create(const hpd_t *hpd)
+{
+    // Call on_create() on modules
+    hpd_error_t rc;
+    hpd_module_t *module;
+    HPD_TAILQ_FOREACH(module, &hpd->modules)
+        if ((rc = module->def.on_create(&module->data, module)) != HPD_E_SUCCESS)
+            goto module_create_error;
+    return HPD_E_SUCCESS;
+
+    module_create_error:
+    for (; module; module = TAILQ_PREV(module, modules, HPD_TAILQ_FIELD))
+        if (module->data) module->def.on_destroy(module->data);
+    return rc;
+}
+
+static hpd_error_t modules_destroy(const hpd_t *hpd)
+{
+    // Call on_destroy on modules
+    hpd_error_t rc;
+    hpd_module_t *module;
+    TAILQ_FOREACH_REVERSE(module, &hpd->modules, modules, HPD_TAILQ_FIELD)
+        if (module->data) {
+            if ((rc = module->def.on_destroy(module->data)) != HPD_E_SUCCESS)
+                goto module_destroy_error;
+            module->data = NULL;
+        }
+    return HPD_E_SUCCESS;
+
+    module_destroy_error:
+    for (; module; module = TAILQ_PREV(module, modules, HPD_TAILQ_FIELD))
+        if (module->data) module->def.on_destroy(module->data);
+    return rc;
+}
+
+static hpd_error_t modules_start(hpd_t *hpd)
+{
+    hpd_error_t rc, rc2;
+    hpd_module_t *module;
+
+    // Call on_start() on modules
+    HPD_TAILQ_FOREACH(module, &hpd->modules)
+        if ((rc = module->def.on_start(module->data, hpd)) != HPD_E_SUCCESS)
+            goto module_error;
+
+    return HPD_E_SUCCESS;
+
+    module_error:
+    for (module = TAILQ_PREV(module, modules, HPD_TAILQ_FIELD); module; module = TAILQ_PREV(module, modules, HPD_TAILQ_FIELD))
+        if ((rc2 = module->def.on_stop(module->data, hpd)))
+            LOG_ERROR("Failed to stop module [code: %i].", rc2);
+    return rc;
+}
+
+static hpd_error_t modules_stop(hpd_t *hpd)
+{
+    hpd_error_t rc, rc2;
+    hpd_module_t *module;
+
+    // Call on_stop() on modules
+    TAILQ_FOREACH_REVERSE(module, &hpd->modules, modules, HPD_TAILQ_FIELD)
+        if ((rc = module->def.on_stop(module->data, hpd)) != HPD_E_SUCCESS)
+            goto module_error;
+
+    return HPD_E_SUCCESS;
+
+    module_error:
+    for (module = TAILQ_PREV(module, modules, HPD_TAILQ_FIELD); module; module = TAILQ_PREV(module, modules, HPD_TAILQ_FIELD))
+        if ((rc2 = module->def.on_stop(module->data, hpd)))
+            LOG_ERROR("Failed to stop module [code: %i].", rc2);
+    return rc;
+}
+
+static hpd_error_t options_create(hpd_t *hpd)
+{
+    HPD_CALLOC(hpd->options, 1, argp_option_t);
     return HPD_E_SUCCESS;
 
     alloc_error:
-        LOG_RETURN_E_ALLOC();
+    LOG_RETURN_E_ALLOC();
 }
 
-static hpd_error_t daemon_free_conf(configuration_t *conf) {
+static void options_destroy(hpd_t *hpd)
+{
+    // Deallocate option memory
+    argp_option_t empty = { 0 };
+    for (argp_option_t *option = hpd->options; memcmp(option, &empty, sizeof(argp_option_t)); option++) {
+        free((void *) option->name);
+        free((void *) option->arg);
+        free((void *) option->doc);
+    }
+    free(hpd->options);
+    hpd->options = NULL;
+    free(hpd->option2module);
+    hpd->option2module = NULL;
+}
+
+static hpd_error_t options_parse(hpd_t *hpd, int argc, char **argv)
+{
+    // Parse options
+    struct argp argp = {hpd->options, on_parse_opt };
+    if (argp_parse(&argp, argc, argv, 0, 0, hpd)) {
+        LOG_DEBUG("Error while parsing arguments.");
+        return HPD_E_ARGUMENT;
+    }
+    return HPD_E_SUCCESS;
+}
+
+static hpd_error_t runtime_create(hpd_t *hpd)
+{
+    HPD_CALLOC(hpd->configuration, 1, configuration_t);
+    TAILQ_INIT(&hpd->configuration->adapters);
+    TAILQ_INIT(&hpd->configuration->listeners);
+    hpd->configuration->hpd = hpd;
+    return HPD_E_SUCCESS;
+
+    alloc_error:
+    LOG_RETURN_E_ALLOC();
+}
+
+static hpd_error_t runtime_destroy(hpd_t *hpd)
+{
     hpd_error_t rc;
-    HPD_TAILQ_MAP_REMOVE(&conf->adapters, discovery_free_adapter, hpd_adapter_t, rc);
-    HPD_TAILQ_MAP_REMOVE(&conf->listeners, event_free_listener, hpd_listener_t, rc);
-    free(conf);
+    HPD_TAILQ_MAP_REMOVE(&hpd->configuration->adapters, discovery_free_adapter, hpd_adapter_t, rc);
+    HPD_TAILQ_MAP_REMOVE(&hpd->configuration->listeners, event_free_listener, hpd_listener_t, rc);
+    free(hpd->configuration);
+    hpd->configuration = NULL;
     return HPD_E_SUCCESS;
 
     map_error:
-        LOG_RETURN(rc, "Free function returned an error [code: %i]", rc);
+    LOG_RETURN(rc, "Free function returned an error [code: %i]", rc);
+}
+
+static hpd_error_t watchers_stop(hpd_t *hpd)
+{
+    hpd_error_t rc = HPD_E_SUCCESS, tmp;
+
+    // Stop other watchers
+    hpd_ev_async_t *async, *async_tmp;
+    HPD_TAILQ_FOREACH_SAFE(async, &hpd->request_watchers, async_tmp) {
+        TAILQ_REMOVE(&hpd->request_watchers, async, HPD_TAILQ_FIELD);
+        ev_async_stop(hpd->loop, &async->watcher);
+        tmp = request_free_request(async->request);
+        if (!rc) rc = tmp;
+        else LOG_ERROR("free function failed [code: %i]", tmp);
+        free(async);
+    }
+    HPD_TAILQ_FOREACH_SAFE(async, &hpd->respond_watchers, async_tmp) {
+        TAILQ_REMOVE(&hpd->respond_watchers, async, HPD_TAILQ_FIELD);
+        ev_async_stop(hpd->loop, &async->watcher);
+        tmp = request_free_response(async->response);
+        if (!rc) rc = tmp;
+        else LOG_ERROR("free function failed [code: %i]", tmp);
+        free(async);
+    }
+    HPD_TAILQ_FOREACH_SAFE(async, &hpd->changed_watchers, async_tmp) {
+        TAILQ_REMOVE(&hpd->changed_watchers, async, HPD_TAILQ_FIELD);
+        ev_async_stop(hpd->loop, &async->watcher);
+        tmp = discovery_free_sid(async->service);
+        if (!rc) rc = tmp;
+        else LOG_ERROR("free function failed [code: %i]", tmp);
+        tmp = value_free(async->value);
+        if (!rc) rc = tmp;
+        else LOG_ERROR("free function failed [code: %i]", tmp);
+        free(async);
+    }
+    HPD_TAILQ_FOREACH_SAFE(async, &hpd->attached_watchers, async_tmp) {
+        TAILQ_REMOVE(&hpd->attached_watchers, async, HPD_TAILQ_FIELD);
+        ev_async_stop(hpd->loop, &async->watcher);
+        tmp = discovery_free_did(async->device);
+        if (!rc) rc = tmp;
+        else LOG_ERROR("free function failed [code: %i]", tmp);
+        free(async);
+    }
+    HPD_TAILQ_FOREACH_SAFE(async, &hpd->detached_watchers, async_tmp) {
+        TAILQ_REMOVE(&hpd->detached_watchers, async, HPD_TAILQ_FIELD);
+        ev_async_stop(hpd->loop, &async->watcher);
+        tmp = discovery_free_did(async->device);if (!rc) rc = tmp;
+        else LOG_ERROR("free function failed [code: %i]", tmp);
+        free(async);
+    }
+
+    return rc;
 }
 
 hpd_error_t daemon_alloc(hpd_t **hpd)
@@ -93,8 +285,8 @@ hpd_error_t daemon_alloc(hpd_t **hpd)
     TAILQ_INIT(&(*hpd)->changed_watchers);
     TAILQ_INIT(&(*hpd)->attached_watchers);
     TAILQ_INIT(&(*hpd)->detached_watchers);
-    ev_signal_init(&(*hpd)->sigint_watcher, sig_cb, SIGINT);
-    ev_signal_init(&(*hpd)->sigterm_watcher, sig_cb, SIGTERM);
+    ev_signal_init(&(*hpd)->sigint_watcher, on_signal, SIGINT);
+    ev_signal_init(&(*hpd)->sigterm_watcher, on_signal, SIGTERM);
     (*hpd)->sigint_watcher.data = hpd;
     (*hpd)->sigterm_watcher.data = hpd;
     return HPD_E_SUCCESS;
@@ -171,183 +363,48 @@ hpd_error_t daemon_add_option(const hpd_module_t *context, const char *name, con
     LOG_RETURN_E_ALLOC();
 }
 
-// TODO Messy function ... clean up !
 hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[])
 {
-    hpd_error_t rc;
-    hpd_module_t *module;
+    hpd_error_t rc, rc2;
 
     // Allocate run-time and option memory
-    if ((rc = daemon_alloc_conf(&hpd->configuration, hpd))) goto return_error;
-    rc = HPD_E_ALLOC;
-    HPD_CALLOC(hpd->options, 1, argp_option_t);
-
-    // Call on_create() on modules
-    HPD_TAILQ_FOREACH(module, &hpd->modules)
-        if ((rc = module->def.on_create(&module->data, module)) != HPD_E_SUCCESS)
-            goto module_create_error;
-
-    // Parse options
-    struct argp argp = {hpd->options, parse_opt };
-    if (argp_parse(&argp, argc, argv, 0, 0, hpd)) {
-        LOG_DEBUG("Error while parsing arguments.");
-        rc = HPD_E_ARGUMENT;
-        goto arg_error;
-    }
-
-    // Deallocate option memory
-    argp_option_t empty = { 0 };
-    for (argp_option_t *option = hpd->options; memcmp(option, &empty, sizeof(argp_option_t)); option++) {
-        free((void *) option->name);
-        free((void *) option->arg);
-        free((void *) option->doc);
-    }
-    free(hpd->options);
-    hpd->options = NULL;
-    free(hpd->option2module);
-    hpd->option2module = NULL;
-
-    // Create event loop
-    hpd->loop = ev_loop_new(EVFLAG_AUTO);
-    if (!hpd->loop) {
-        rc = HPD_E_ALLOC;
-        goto ev_new_error;
-    }
-
-    // Call on_start() on modules
-    HPD_TAILQ_FOREACH(module, &hpd->modules)
-        if ((rc = module->def.on_start(module->data, hpd)) != HPD_E_SUCCESS)
-            goto module_start_error;
-
-    // Start signal watchers
-    ev_signal_start(hpd->loop, &hpd->sigint_watcher);
-    ev_signal_start(hpd->loop, &hpd->sigterm_watcher);
-
-    // Run until we are stopped
-    // TODO Return value of ev_run can be used to run until all watchers have stopped (e.g. nice shutdown)
-    ev_run(hpd->loop, 0);
-
-    // Stop signal watchers
-    ev_signal_stop(hpd->loop, &hpd->sigterm_watcher);
-    ev_signal_stop(hpd->loop, &hpd->sigint_watcher);
-
-    // Call on_stop() on modules
-    TAILQ_FOREACH_REVERSE(module, &hpd->modules, modules, HPD_TAILQ_FIELD)
-        if ((rc = module->def.on_stop(module->data, hpd)) != HPD_E_SUCCESS)
-            goto module_stop_error;
-
-    // Stop other watchers
-    hpd_ev_async_t *async, *async_tmp;
-    HPD_TAILQ_FOREACH_SAFE(async, &hpd->request_watchers, async_tmp) {
-        TAILQ_REMOVE(&hpd->request_watchers, async, HPD_TAILQ_FIELD);
-        ev_async_stop(hpd->loop, &async->watcher);
-        request_free_request(async->request); // TODO Handle error code
-        free(async);
-    }
-    HPD_TAILQ_FOREACH_SAFE(async, &hpd->respond_watchers, async_tmp) {
-        TAILQ_REMOVE(&hpd->respond_watchers, async, HPD_TAILQ_FIELD);
-        ev_async_stop(hpd->loop, &async->watcher);
-        request_free_response(async->response); // TODO Handle error code
-        free(async);
-    }
-    HPD_TAILQ_FOREACH_SAFE(async, &hpd->changed_watchers, async_tmp) {
-        TAILQ_REMOVE(&hpd->changed_watchers, async, HPD_TAILQ_FIELD);
-        ev_async_stop(hpd->loop, &async->watcher);
-        discovery_free_sid(async->service); // TODO Handle error code
-        value_free(async->value); // TODO Handle error code
-        free(async);
-    }
-    HPD_TAILQ_FOREACH_SAFE(async, &hpd->attached_watchers, async_tmp) {
-        TAILQ_REMOVE(&hpd->attached_watchers, async, HPD_TAILQ_FIELD);
-        ev_async_stop(hpd->loop, &async->watcher);
-        discovery_free_did(async->device); // TODO Handle error code
-        free(async);
-    }
-    HPD_TAILQ_FOREACH_SAFE(async, &hpd->detached_watchers, async_tmp) {
-        TAILQ_REMOVE(&hpd->detached_watchers, async, HPD_TAILQ_FIELD);
-        ev_async_stop(hpd->loop, &async->watcher);
-        discovery_free_did(async->device); // TODO Handle error code
-        free(async);
-    }
-
-    // Destroy event loop
-    ev_loop_destroy(hpd->loop);
-    hpd->loop = NULL;
-
-    // Call on_destroy on modules
-    TAILQ_FOREACH_REVERSE(module, &hpd->modules, modules, HPD_TAILQ_FIELD)
-        if (module->data) {
-            if ((rc = module->def.on_destroy(module->data)) != HPD_E_SUCCESS)
-                goto module_destroy_error;
-            module->data = NULL;
-        }
-
-    // Deallocate run-time memory
-    if ((rc = daemon_free_conf(hpd->configuration))) goto return_error;
-    hpd->configuration = NULL;
+    if ((rc = runtime_create(hpd))) goto runtime_create_error;
+    if ((rc = options_create(hpd))) goto options_create_error;
+    if ((rc = modules_create(hpd))) goto modules_create_error;
+    if ((rc = options_parse(hpd, argc, argv))) goto options_parse_error;
+    options_destroy(hpd);
+    if ((rc = loop_create(hpd))) goto loop_create_error;
+    if ((rc = modules_start(hpd))) goto modules_start_error;
+    loop_run(hpd);
+    if ((rc = modules_stop(hpd))) goto modules_stop_error;
+    if ((rc = watchers_stop(hpd))) goto watchers_stop_error;
+    loop_destroy(hpd);
+    if ((rc = modules_destroy(hpd))) goto modules_destroy_error;
+    if ((rc = runtime_destroy(hpd))) goto runtime_destroy_error;
 
     // Return
     return HPD_E_SUCCESS;
 
     // Return in a nice state if an error occur
-    module_start_error:
-    module_stop_error:
-        for (module = TAILQ_PREV(module, modules, HPD_TAILQ_FIELD); module; module = TAILQ_PREV(module, modules, HPD_TAILQ_FIELD))
-            module->def.on_stop(module->data, hpd);
-        HPD_TAILQ_FOREACH_SAFE(async, &hpd->request_watchers, async_tmp) {
-            TAILQ_REMOVE(&hpd->request_watchers, async, HPD_TAILQ_FIELD);
-            ev_async_stop(hpd->loop, &async->watcher);
-            request_free_request(async->request); // TODO Handle error code
-            free(async);
-        }
-        HPD_TAILQ_FOREACH_SAFE(async, &hpd->respond_watchers, async_tmp) {
-            TAILQ_REMOVE(&hpd->respond_watchers, async, HPD_TAILQ_FIELD);
-            ev_async_stop(hpd->loop, &async->watcher);
-            request_free_response(async->response); // TODO Handle error code
-            free(async);
-        }
-        HPD_TAILQ_FOREACH_SAFE(async, &hpd->changed_watchers, async_tmp) {
-            TAILQ_REMOVE(&hpd->changed_watchers, async, HPD_TAILQ_FIELD);
-            ev_async_stop(hpd->loop, &async->watcher);
-            discovery_free_sid(async->service); // TODO Handle error code
-            value_free(async->value); // TODO Handle error code
-            free(async);
-        }
-        HPD_TAILQ_FOREACH_SAFE(async, &hpd->attached_watchers, async_tmp) {
-            TAILQ_REMOVE(&hpd->attached_watchers, async, HPD_TAILQ_FIELD);
-            ev_async_stop(hpd->loop, &async->watcher);
-            discovery_free_did(async->device); // TODO Handle error code
-            free(async);
-        }
-        HPD_TAILQ_FOREACH_SAFE(async, &hpd->detached_watchers, async_tmp) {
-            TAILQ_REMOVE(&hpd->detached_watchers, async, HPD_TAILQ_FIELD);
-            ev_async_stop(hpd->loop, &async->watcher);
-            discovery_free_did(async->device); // TODO Handle error code
-            free(async);
-        }
-    ev_new_error:
-    arg_error:
-        module = TAILQ_LAST(&hpd->modules, modules);
-    module_create_error:
-    module_destroy_error:
-        for (; module; module = TAILQ_PREV(module, modules, HPD_TAILQ_FIELD))
-            if (module->data) module->def.on_destroy(module->data);
-    alloc_error:
-        if (hpd->configuration) {
-            daemon_free_conf(hpd->configuration);
-            hpd->configuration = NULL;
-        }
-        if (hpd->options) {
-            free(hpd->options);
-            hpd->options = NULL;
-        }
-    return_error:
-        switch (rc) {
-            case HPD_E_ALLOC:
-                LOG_RETURN_E_ALLOC();
-            default:
-                return rc;
-        }
+    options_parse_error:
+        if ((rc2 = modules_destroy(hpd))) LOG_ERROR("Failed to destroy modules [code: %i]", rc2);
+    modules_create_error:
+    options_destroy(hpd);
+    options_create_error:
+        if ((rc2 = runtime_destroy(hpd))) LOG_ERROR("Failed to destroy runtime [code: %i]", rc2);
+    runtime_create_error:
+        return rc;
+    modules_start_error:
+    modules_stop_error:
+        if ((rc2 = watchers_stop(hpd))) LOG_ERROR("Failed to stop watchers [code: %i]", rc2);
+    watchers_stop_error:
+    loop_destroy(hpd);
+    loop_create_error:
+        if ((rc2 = modules_destroy(hpd))) LOG_ERROR("Failed to destroy modules [code: %i]", rc2);
+    modules_destroy_error:
+        if ((rc2 = runtime_destroy(hpd))) LOG_ERROR("Failed to destroy runtime [code: %i]", rc2);
+    runtime_destroy_error:
+        return rc;
 }
 
 hpd_error_t daemon_stop(const hpd_t *hpd)

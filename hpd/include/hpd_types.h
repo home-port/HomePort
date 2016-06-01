@@ -176,7 +176,6 @@ typedef hpd_error_t (*hpd_create_f)    (void **data, const hpd_module_t *context
 typedef hpd_error_t (*hpd_destroy_f)   (void *data);
 typedef hpd_error_t (*hpd_start_f)     (void *data, hpd_t *hpd);
 typedef hpd_error_t (*hpd_stop_f)      (void *data, hpd_t *hpd);
-// TODO Document that this should return HPD_E_ARGUMENT if name is not known
 typedef hpd_error_t (*hpd_parse_opt_f) (void *data, const char *name, const char *arg);
 /// [hpd_module_def_t functions]
 
@@ -203,7 +202,7 @@ struct hpd_module_def {
     hpd_destroy_f on_destroy;
     hpd_start_f on_start;
     hpd_stop_f on_stop;
-    hpd_parse_opt_f on_parse_opt;
+    hpd_parse_opt_f on_parse_opt; //< Should return HPD_E_ARGUMENT if name is not known
 };
 /// [hpd_module_def_t]
 
