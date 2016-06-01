@@ -15,7 +15,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00055.html#ad279f4f771e132927c09bd599fbe2b1b" target="_top" xlink:title="hpd_stop">
+<g id="a_node2"><a xlink:href="a00059.html#ad279f4f771e132927c09bd599fbe2b1b" target="_top" xlink:title="hpd_stop">
 <polygon fill="none" stroke="black" points="92,-0.5 92,-19.5 148,-19.5 148,-0.5 92,-0.5"/>
 <text text-anchor="middle" x="120" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_stop</text>
 </a>
@@ -28,7 +28,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00057.html#a47e709c904aab5ba86a017daddfc449c" target="_top" xlink:title="daemon_stop">
+<g id="a_node3"><a xlink:href="a00061.html#a47e709c904aab5ba86a017daddfc449c" target="_top" xlink:title="daemon_stop">
 <polygon fill="none" stroke="black" points="184,-0.5 184,-19.5 259,-19.5 259,-0.5 184,-0.5"/>
 <text text-anchor="middle" x="221.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">daemon_stop</text>
 </a>

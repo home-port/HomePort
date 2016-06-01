@@ -15,7 +15,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00052.html#ace6bdcd24107e5a84d35a2dc90d3c58e" target="_top" xlink:title="hpd_adapter_detach">
+<g id="a_node2"><a xlink:href="a00056.html#ace6bdcd24107e5a84d35a2dc90d3c58e" target="_top" xlink:title="hpd_adapter_detach">
 <polygon fill="none" stroke="black" points="306,-317.227 306,-336.227 410,-336.227 410,-317.227 306,-317.227"/>
 <text text-anchor="middle" x="358" y="-324.227" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_adapter_detach</text>
 </a>
@@ -28,7 +28,7 @@
 </g>
 <!-- Node14 -->
 <g id="node14" class="node"><title>Node14</title>
-<g id="a_node14"><a xlink:href="a00052.html#a0a2b0d9eef603396a0171d5b0c67bbbf" target="_top" xlink:title="hpd_adapter_free">
+<g id="a_node14"><a xlink:href="a00056.html#a0a2b0d9eef603396a0171d5b0c67bbbf" target="_top" xlink:title="hpd_adapter_free">
 <polygon fill="none" stroke="black" points="165,-162.227 165,-181.227 257,-181.227 257,-162.227 165,-162.227"/>
 <text text-anchor="middle" x="211" y="-169.227" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_adapter_free</text>
 </a>
@@ -41,7 +41,7 @@
 </g>
 <!-- Node21 -->
 <g id="node21" class="node"><title>Node21</title>
-<g id="a_node21"><a xlink:href="a00056.html#a6dfca5e2723ca3a11d12fe545e69923e" target="_top" xlink:title="hpd_adapter_id_free">
+<g id="a_node21"><a xlink:href="a00060.html#a6dfca5e2723ca3a11d12fe545e69923e" target="_top" xlink:title="hpd_adapter_id_free">
 <polygon fill="none" stroke="black" points="159,-67.2266 159,-86.2266 263,-86.2266 263,-67.2266 159,-67.2266"/>
 <text text-anchor="middle" x="211" y="-74.2266" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_adapter_id_free</text>
 </a>
@@ -54,7 +54,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00011.html#a690059fc206d49f639837d41fd5ced05" target="_top" xlink:title="discovery_find_adapter">
+<g id="a_node3"><a xlink:href="a00011.html#adbc376ab1130f0595796c540f0b5e515" target="_top" xlink:title="discovery_find_adapter">
 <polygon fill="none" stroke="black" points="460,-355.227 460,-374.227 577,-374.227 577,-355.227 460,-355.227"/>
 <text text-anchor="middle" x="518.5" y="-362.227" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_find_adapter</text>
 </a>
@@ -67,7 +67,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00059.html#adb9f3d73fc28b0ec1c15d72b03db7239" target="_top" xlink:title="discovery_detach_adapter">
+<g id="a_node4"><a xlink:href="a00063.html#adb9f3d73fc28b0ec1c15d72b03db7239" target="_top" xlink:title="discovery_detach_adapter">
 <polygon fill="none" stroke="black" points="453,-317.227 453,-336.227 584,-336.227 584,-317.227 453,-317.227"/>
 <text text-anchor="middle" x="518.5" y="-324.227" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_detach_adapter</text>
 </a>
@@ -80,7 +80,7 @@
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="a00062.html#ab3279e57e3faeb9689b5b60283103ef2" target="_top" xlink:title="event_inform_adapter\l_detached">
+<g id="a_node5"><a xlink:href="a00066.html#ab3279e57e3faeb9689b5b60283103ef2" target="_top" xlink:title="event_inform_adapter\l_detached">
 <polygon fill="none" stroke="black" points="623.5,-349.727 623.5,-379.727 733.5,-379.727 733.5,-349.727 623.5,-349.727"/>
 <text text-anchor="start" x="631.5" y="-367.727" font-family="Helvetica,sans-Serif" font-size="10.00">event_inform_adapter</text>
 <text text-anchor="middle" x="678.5" y="-356.727" font-family="Helvetica,sans-Serif" font-size="10.00">_detached</text>
@@ -94,7 +94,7 @@
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="a00062.html#a38f3fa1f45b7832adcbdd3f1af2bd9a4" target="_top" xlink:title="event_inform_device\l_detached">
+<g id="a_node6"><a xlink:href="a00066.html#a38f3fa1f45b7832adcbdd3f1af2bd9a4" target="_top" xlink:title="event_inform_device\l_detached">
 <polygon fill="none" stroke="black" points="784,-367.727 784,-397.727 891,-397.727 891,-367.727 784,-367.727"/>
 <text text-anchor="start" x="792" y="-385.727" font-family="Helvetica,sans-Serif" font-size="10.00">event_inform_device</text>
 <text text-anchor="middle" x="837.5" y="-374.727" font-family="Helvetica,sans-Serif" font-size="10.00">_detached</text>
@@ -134,7 +134,7 @@
 </g>
 <!-- Node12 -->
 <g id="node12" class="node"><title>Node12</title>
-<g id="a_node12"><a xlink:href="a00062.html#a55a69c4d4f322c2d707eb69a3d2225f6" target="_top" xlink:title="on_detached">
+<g id="a_node12"><a xlink:href="a00066.html#a55a69c4d4f322c2d707eb69a3d2225f6" target="_top" xlink:title="on_detached">
 <polygon fill="none" stroke="black" points="953,-352.227 953,-371.227 1025,-371.227 1025,-352.227 953,-352.227"/>
 <text text-anchor="middle" x="989" y="-359.227" font-family="Helvetica,sans-Serif" font-size="10.00">on_detached</text>
 </a>
@@ -147,7 +147,7 @@
 </g>
 <!-- Node8 -->
 <g id="node8" class="node"><title>Node8</title>
-<g id="a_node8"><a xlink:href="a00061.html#acd5e8c2bf3e761abc7e2fd2294238a74" target="_top" xlink:title="discovery_set_did">
+<g id="a_node8"><a xlink:href="a00065.html#acd5e8c2bf3e761abc7e2fd2294238a74" target="_top" xlink:title="HPD_E_ALLOC: id might be partially updated. ">
 <polygon fill="none" stroke="black" points="1077.5,-466.227 1077.5,-485.227 1172.5,-485.227 1172.5,-466.227 1077.5,-466.227"/>
 <text text-anchor="middle" x="1125" y="-473.227" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_set_did</text>
 </a>
@@ -160,7 +160,7 @@
 </g>
 <!-- Node10 -->
 <g id="node10" class="node"><title>Node10</title>
-<g id="a_node10"><a xlink:href="a00061.html#ae1a000b225c8b3f365c2cec8362b8483" target="_top" xlink:title="discovery_free_did">
+<g id="a_node10"><a xlink:href="a00065.html#ae1a000b225c8b3f365c2cec8362b8483" target="_top" xlink:title="discovery_free_did">
 <polygon fill="none" stroke="black" points="1076,-428.227 1076,-447.227 1174,-447.227 1174,-428.227 1076,-428.227"/>
 <text text-anchor="middle" x="1125" y="-435.227" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_free_did</text>
 </a>
@@ -173,7 +173,7 @@
 </g>
 <!-- Node9 -->
 <g id="node9" class="node"><title>Node9</title>
-<g id="a_node9"><a xlink:href="a00061.html#af2f553cfc3af4678b87a8fc75f35a5c6" target="_top" xlink:title="discovery_set_aid">
+<g id="a_node9"><a xlink:href="a00065.html#af2f553cfc3af4678b87a8fc75f35a5c6" target="_top" xlink:title="HPD_E_ALLOC: id might be partially updated. ">
 <polygon fill="none" stroke="black" points="1210,-466.227 1210,-485.227 1305,-485.227 1305,-466.227 1210,-466.227"/>
 <text text-anchor="middle" x="1257.5" y="-473.227" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_set_aid</text>
 </a>
@@ -214,7 +214,7 @@
 </g>
 <!-- Node15 -->
 <g id="node15" class="node"><title>Node15</title>
-<g id="a_node15"><a xlink:href="a00059.html#aec714553397f80039bf246b3b0800420" target="_top" xlink:title="discovery_free_adapter">
+<g id="a_node15"><a xlink:href="a00063.html#aec714553397f80039bf246b3b0800420" target="_top" xlink:title="discovery_free_adapter">
 <polygon fill="none" stroke="black" points="299,-162.227 299,-181.227 417,-181.227 417,-162.227 299,-162.227"/>
 <text text-anchor="middle" x="358" y="-169.227" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_free_adapter</text>
 </a>
@@ -232,7 +232,7 @@
 </g>
 <!-- Node16 -->
 <g id="node16" class="node"><title>Node16</title>
-<g id="a_node16"><a xlink:href="a00059.html#a3c72fb9020b183238e0205b722d7ea95" target="_top" xlink:title="discovery_free_device">
+<g id="a_node16"><a xlink:href="a00063.html#a3c72fb9020b183238e0205b722d7ea95" target="_top" xlink:title="discovery_free_device">
 <polygon fill="none" stroke="black" points="461.5,-162.227 461.5,-181.227 575.5,-181.227 575.5,-162.227 461.5,-162.227"/>
 <text text-anchor="middle" x="518.5" y="-169.227" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_free_device</text>
 </a>
@@ -245,7 +245,7 @@
 </g>
 <!-- Node19 -->
 <g id="node19" class="node"><title>Node19</title>
-<g id="a_node19"><a xlink:href="a00042.html#a195d511a075f2349200563af1c5d1fd7" target="_top" xlink:title="hpd_map_free">
+<g id="a_node19"><a xlink:href="a00046.html#a195d511a075f2349200563af1c5d1fd7" target="_top" xlink:title="hpd_map_free">
 <polygon fill="none" stroke="black" points="950,-105.227 950,-124.227 1028,-124.227 1028,-105.227 950,-105.227"/>
 <text text-anchor="middle" x="989" y="-112.227" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_map_free</text>
 </a>
@@ -263,7 +263,7 @@
 </g>
 <!-- Node17 -->
 <g id="node17" class="node"><title>Node17</title>
-<g id="a_node17"><a xlink:href="a00059.html#a562bd655fd329da0289d21ec36973322" target="_top" xlink:title="discovery_free_service">
+<g id="a_node17"><a xlink:href="a00063.html#a562bd655fd329da0289d21ec36973322" target="_top" xlink:title="discovery_free_service">
 <polygon fill="none" stroke="black" points="620,-162.227 620,-181.227 737,-181.227 737,-162.227 620,-162.227"/>
 <text text-anchor="middle" x="678.5" y="-169.227" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_free_service</text>
 </a>
@@ -286,7 +286,7 @@
 </g>
 <!-- Node18 -->
 <g id="node18" class="node"><title>Node18</title>
-<g id="a_node18"><a xlink:href="a00059.html#ad18143d06649d9220e4fd8d74dbdec79" target="_top" xlink:title="discovery_free_parameter">
+<g id="a_node18"><a xlink:href="a00063.html#ad18143d06649d9220e4fd8d74dbdec79" target="_top" xlink:title="discovery_free_parameter">
 <polygon fill="none" stroke="black" points="773,-162.227 773,-181.227 902,-181.227 902,-162.227 773,-162.227"/>
 <text text-anchor="middle" x="837.5" y="-169.227" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_free_parameter</text>
 </a>

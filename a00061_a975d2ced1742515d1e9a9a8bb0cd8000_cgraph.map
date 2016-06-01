@@ -1,0 +1,10 @@
+<map id="daemon_free_conf" name="daemon_free_conf">
+<area shape="rect" id="node2" href="$a00063.html#aec714553397f80039bf246b3b0800420" title="discovery_free_adapter" alt="" coords="183,144,340,171"/>
+<area shape="rect" id="node8" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="1337,220,1381,247"/>
+<area shape="rect" id="node9" href="$a00066.html#a4cc65f197e3ad3f70ea2559bc95a68e9" title="event_free_listener" alt="" coords="398,397,530,424"/>
+<area shape="rect" id="node3" href="$a00063.html#a3c72fb9020b183238e0205b722d7ea95" title="discovery_free_device" alt="" coords="388,144,540,171"/>
+<area shape="rect" id="node6" href="$a00046.html#a195d511a075f2349200563af1c5d1fd7" title="hpd_map_free" alt="" coords="1012,169,1116,196"/>
+<area shape="rect" id="node4" href="$a00063.html#a562bd655fd329da0289d21ec36973322" title="discovery_free_service" alt="" coords="588,220,744,247"/>
+<area shape="rect" id="node5" href="$a00063.html#ad18143d06649d9220e4fd8d74dbdec79" title="discovery_free_parameter" alt="" coords="792,245,964,272"/>
+<area shape="rect" id="node7" href="$a00022.html#ae1085dd4fd40466d18b02ec077ef4d6d" title="hpd_map_remove" alt="" coords="1164,195,1289,221"/>
+</map>

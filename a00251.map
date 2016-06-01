@@ -1,6 +1,10 @@
-<map id="hpd_listener" name="hpd_listener">
-<area shape="rect" id="node2" href="$a00009.html#a00087" title="{hpd\n||}" alt="" coords="545,204,588,281"/>
-<area shape="rect" id="node5" href="$a00005.html#a00083" title="{configuration\n||}" alt="" coords="732,344,828,421"/>
-<area shape="rect" id="node12" href="$a00020.html" title="{hpd_module\n||+ TAILQ_ENTRY()\l}" alt="" coords="255,344,388,421"/>
-<area shape="rect" id="node13" href="$a00021.html#a00100" title="[Application API Callbacks] " alt="" coords="189,204,307,281"/>
+<map id="hpd_rest" name="hpd_rest">
+<area shape="rect" id="node2" href="$a00018.html#a00105" title="Settings struct for webserver. " alt="" coords="366,543,498,620"/>
+<area shape="rect" id="node5" href="$a00015.html#a00102" title="httpd instance struct " alt="" coords="886,800,965,877"/>
+<area shape="rect" id="node9" href="$a00009.html#a00093" title="{hpd\n||}" alt="" coords="1417,543,1460,620"/>
+<area shape="rect" id="node20" href="$a00027.html#a00114" title="Instance of a tcpd. " alt="" coords="545,543,620,620"/>
+<area shape="rect" id="node23" href="$a00029.html#a00115" title="Settings struct for tcpd. " alt="" coords="183,800,311,877"/>
+<area shape="rect" id="node6" href="$a00020.html" title="{hpd_module\n||+ TAILQ_ENTRY()\l}" alt="" coords="1003,344,1136,421"/>
+<area shape="rect" id="node7" href="$a00021.html#a00106" title="[Application API Callbacks] " alt="" coords="1093,204,1211,281"/>
+<area shape="rect" id="node12" href="$a00003.html#a00087" title="{configuration\n||}" alt="" coords="1296,800,1392,877"/>
 </map>

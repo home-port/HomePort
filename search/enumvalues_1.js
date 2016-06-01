@@ -8,10 +8,10 @@ var searchData=
   ['hpd_5fe_5fstate',['HPD_E_STATE',['../a00021.html#af2d90ea316126f626dd4bcd587cdfb0dad314ace10a0f6198ba4007008d63af6c',1,'hpd_types.h']]],
   ['hpd_5fe_5fsuccess',['HPD_E_SUCCESS',['../a00021.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940',1,'hpd_types.h']]],
   ['hpd_5fe_5funknown',['HPD_E_UNKNOWN',['../a00021.html#af2d90ea316126f626dd4bcd587cdfb0da2f79bfa65b655d022e4c712ea08b05ef',1,'hpd_types.h']]],
-  ['hpd_5fhttpd_5fm_5fget',['HPD_HTTPD_M_GET',['../a00035.html#a9eae2e1cde3491628d337ce25f513f0aa78032db906cbe477a78d2e637955bc1d',1,'httpd_types.h']]],
-  ['hpd_5fhttpd_5fm_5foptions',['HPD_HTTPD_M_OPTIONS',['../a00035.html#a9eae2e1cde3491628d337ce25f513f0aa682335483e1e877ddf014ab5af6fb693',1,'httpd_types.h']]],
-  ['hpd_5fhttpd_5fm_5fput',['HPD_HTTPD_M_PUT',['../a00035.html#a9eae2e1cde3491628d337ce25f513f0aa5e416281c298d0c5be1eba277a3377a5',1,'httpd_types.h']]],
-  ['hpd_5fhttpd_5fm_5funknown',['HPD_HTTPD_M_UNKNOWN',['../a00035.html#a9eae2e1cde3491628d337ce25f513f0aadfee924100a7e72cb8839e592a83817a',1,'httpd_types.h']]],
+  ['hpd_5fhttpd_5fm_5fget',['HPD_HTTPD_M_GET',['../a00039.html#a9eae2e1cde3491628d337ce25f513f0aa78032db906cbe477a78d2e637955bc1d',1,'httpd_types.h']]],
+  ['hpd_5fhttpd_5fm_5foptions',['HPD_HTTPD_M_OPTIONS',['../a00039.html#a9eae2e1cde3491628d337ce25f513f0aa682335483e1e877ddf014ab5af6fb693',1,'httpd_types.h']]],
+  ['hpd_5fhttpd_5fm_5fput',['HPD_HTTPD_M_PUT',['../a00039.html#a9eae2e1cde3491628d337ce25f513f0aa5e416281c298d0c5be1eba277a3377a5',1,'httpd_types.h']]],
+  ['hpd_5fhttpd_5fm_5funknown',['HPD_HTTPD_M_UNKNOWN',['../a00039.html#a9eae2e1cde3491628d337ce25f513f0aadfee924100a7e72cb8839e592a83817a',1,'httpd_types.h']]],
   ['hpd_5fhttpd_5fr_5fcontinue',['HPD_HTTPD_R_CONTINUE',['../a00018.html#a1b3ae59c5a76b29cfdf8cc1aa169bf14a03927b94cfcdaaeae8d43b8d1c340de3',1,'httpd.h']]],
   ['hpd_5fhttpd_5fr_5fstop',['HPD_HTTPD_R_STOP',['../a00018.html#a1b3ae59c5a76b29cfdf8cc1aa169bf14af43232563c51ad1818514767c567d13c',1,'httpd.h']]],
   ['hpd_5fl_5fdebug',['HPD_L_DEBUG',['../a00021.html#aa89d79ab2946861491c24c5a0868f6c2aeb426717209696ae37bb52aa0487326f',1,'hpd_types.h']]],
@@ -23,6 +23,7 @@ var searchData=
   ['hpd_5fm_5fget',['HPD_M_GET',['../a00021.html#ae5973cb13ba680422f6381e98b783dd1a4aa1b1492e9715dc6214b6ebf1fa21f0',1,'hpd_types.h']]],
   ['hpd_5fm_5fnone',['HPD_M_NONE',['../a00021.html#ae5973cb13ba680422f6381e98b783dd1a2c38a7f6fd4aea028bccace7aa2e5df4',1,'hpd_types.h']]],
   ['hpd_5fm_5fput',['HPD_M_PUT',['../a00021.html#ae5973cb13ba680422f6381e98b783dd1abb3582c2747d9760897062694fa369a5',1,'hpd_types.h']]],
+  ['hpd_5fs_5fnone',['HPD_S_NONE',['../a00021.html#ae4a225ffa1d7c54da791fd9109d8b026ae721ddf4e6ed5344ca7c8eb2d8c76ec1',1,'hpd_types.h']]],
   ['hpd_5ftcpd_5fr_5fcontinue',['HPD_TCPD_R_CONTINUE',['../a00029.html#a0baf3c4da7be08b4d3c9c803db0865fea9295d8049497cf154634a57e3daecb5b',1,'tcpd.h']]],
   ['hpd_5ftcpd_5fr_5fstop',['HPD_TCPD_R_STOP',['../a00029.html#a0baf3c4da7be08b4d3c9c803db0865feadaaa8816e25590613e359129bdf6c51e',1,'tcpd.h']]]
 ];

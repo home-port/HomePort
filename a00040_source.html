@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>Homeport Documentation: common/include/hpd_common.h Source File</title>
+<title>HomePort: common/httpd/src/httpd_request.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Homeport Documentation
+   <div id="projectname">HomePort
    </div>
   </td>
  </tr>
@@ -81,12 +81,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_11fbc4217d50ab21044e5ad6614aede5.html">include</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_de836088bc1383ea19051eab00d43ec5.html">httpd</a></li><li class="navelem"><a class="el" href="dir_3eb06dbdb8c6f8b7c2db8db660fe1677.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">hpd_common.h</div>  </div>
+<div class="title">httpd_request.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a00040.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
@@ -116,59 +116,39 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * authors and should not be interpreted as representing official policies, either expressed</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#ifndef HOMEPORT_HPD_COMMON_H</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#define HOMEPORT_HPD_COMMON_H</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#ifndef PARSER_H</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#define PARSER_H</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;string.h&gt;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="a00040.html#a3845681e01afcaa2d65abc4c62dc34de">   43</a></span>&#160;<span class="preprocessor">#define HPD_CALLOC(PTR, NUM, CAST) do { \</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">    (PTR) = (CAST *) calloc((NUM), sizeof(CAST)); \</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">    if(!(PTR)) goto alloc_error; \</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">} while(0)</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="a00040.html#a055a30ee6f45346e57303fa39455f9c9">   52</a></span>&#160;<span class="preprocessor">#define HPD_REALLOC(PTR, NUM, CAST) do { \</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">    (PTR) = (CAST *) realloc((PTR), (NUM)*sizeof(CAST)); \</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">    if(!(PTR)) goto alloc_error; \</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">} while(0)</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="a00040.html#ab1f7275464f4271bc0bf481cb4d020b8">   57</a></span>&#160;<span class="preprocessor">#define HPD_CPY_ALLOC(DST, SRC, CAST) do { \</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">    (DST) = (CAST *) malloc(sizeof(CAST)); \</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">    if(!(DST)) goto alloc_error; \</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">    memcpy((DST), (SRC), sizeof(CAST)); \</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">} while(0)</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="a00040.html#aeb54026c07aa12169c4ddf82b92fab17">   63</a></span>&#160;<span class="preprocessor">#define HPD_STR_CPY(DST, SRC) do { \</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">    HPD_REALLOC((DST), (strlen((SRC))+1), char); \</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">    strcpy((DST), (SRC)); \</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">} while(0)</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="a00040.html#af16aa8e101575e88940a1cd9eff5d8f3">   68</a></span>&#160;<span class="preprocessor">#define HPD_STR_N_CPY(DST, SRC, LEN) do { \</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">    HPD_REALLOC((DST), ((LEN)+1), char); \</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">    strncpy((DST), (SRC), (LEN)); \</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">    (DST)[LEN] = &#39;\0&#39;; \</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">} while(0)</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="a00040.html#a76a140a09fea8be471874e07b4a24db0">   74</a></span>&#160;<span class="preprocessor">#define HPD_SPRINTF_ALLOC(DST, FMT, ...) do { \</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">    size_t len; \</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">    if ((len = snprintf(NULL, 0, (FMT), ##__VA_ARGS__)) &lt; 0) goto nsprintf_error; \</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">    if (!((DST) = calloc(len+1, sizeof(char)))) goto alloc_error; \</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">    if (snprintf((DST), len+1, (FMT), ##__VA_ARGS__) &lt; 0) { free((DST)); goto nsprintf_error; } \</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">} while (0)</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">#endif //HOMEPORT_HPD_COMMON_H</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00018.html">httpd.h</a>&quot;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00029.html">tcpd.h</a>&quot;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;stddef.h&gt;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00040.html#a64ce145f4bd2b212ac9494fb18b43615">http_request_create</a>(<a class="code" href="a00016.html#a00103">hpd_httpd_request_t</a> **req, <a class="code" href="a00015.html#a00102">hpd_httpd_t</a> *httpd, <a class="code" href="a00018.html#a00105">hpd_httpd_settings_t</a> *<a class="code" href="a00042.html#a418c751a61f0272a6fef8a19a4173342">settings</a>,</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;                                <a class="code" href="a00028.html">hpd_tcpd_conn_t</a> *conn, <a class="code" href="a00020.html">hpd_module_t</a> *context);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00040.html#aa1cd13c07d2d143d8a989a651a57e497">http_request_destroy</a>(<a class="code" href="a00016.html#a00103">hpd_httpd_request_t</a> *req);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00040.html#afdaa7923045461457ad9c7aa725de09b">http_request_parse</a>(<a class="code" href="a00016.html#a00103">hpd_httpd_request_t</a> *req, <span class="keyword">const</span> <span class="keywordtype">char</span> *buf, <span class="keywordtype">size_t</span> len);</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00040.html#a1568fdba259271965551fb5aa1f07006">http_request_get_connection</a>(<a class="code" href="a00016.html#a00103">hpd_httpd_request_t</a> *req, <a class="code" href="a00028.html">hpd_tcpd_conn_t</a> **conn);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00040.html#a228cee03d1174febd4a716e0285542c2">http_request_get_context</a>(<a class="code" href="a00016.html#a00103">hpd_httpd_request_t</a> *req, <a class="code" href="a00020.html">hpd_module_t</a> **context);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="a00016_html_a00103"><div class="ttname"><a href="a00016.html#a00103">hpd_httpd_request</a></div><div class="ttdoc">An http request. </div><div class="ttdef"><b>Definition:</b> <a href="a00016_source.html#l00121">httpd_request.c:121</a></div></div>
+<div class="ttc" id="a00018_html"><div class="ttname"><a href="a00018.html">httpd.h</a></div></div>
+<div class="ttc" id="a00021_html_a3f117b297a535788094c22da826c2c94"><div class="ttname"><a href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a></div><div class="ttdeci">enum hpd_error hpd_error_t</div><div class="ttdef"><b>Definition:</b> <a href="a00021_source.html#l00167">hpd_types.h:167</a></div></div>
+<div class="ttc" id="a00040_html_a1568fdba259271965551fb5aa1f07006"><div class="ttname"><a href="a00040.html#a1568fdba259271965551fb5aa1f07006">http_request_get_connection</a></div><div class="ttdeci">hpd_error_t http_request_get_connection(hpd_httpd_request_t *req, hpd_tcpd_conn_t **conn)</div><div class="ttdoc">Get the connection of a request. </div><div class="ttdef"><b>Definition:</b> <a href="a00016_source.html#l00889">httpd_request.c:889</a></div></div>
+<div class="ttc" id="a00015_html_a00102"><div class="ttname"><a href="a00015.html#a00102">hpd_httpd</a></div><div class="ttdoc">httpd instance struct </div><div class="ttdef"><b>Definition:</b> <a href="a00015_source.html#l00038">httpd.c:38</a></div></div>
+<div class="ttc" id="a00029_html"><div class="ttname"><a href="a00029.html">tcpd.h</a></div></div>
+<div class="ttc" id="a00020_html"><div class="ttname"><a href="a00020.html">hpd_module</a></div><div class="ttdef"><b>Definition:</b> <a href="a00009_source.html#l00086">daemon.h:86</a></div></div>
+<div class="ttc" id="a00040_html_a228cee03d1174febd4a716e0285542c2"><div class="ttname"><a href="a00040.html#a228cee03d1174febd4a716e0285542c2">http_request_get_context</a></div><div class="ttdeci">hpd_error_t http_request_get_context(hpd_httpd_request_t *req, hpd_module_t **context)</div><div class="ttdef"><b>Definition:</b> <a href="a00016_source.html#l00931">httpd_request.c:931</a></div></div>
+<div class="ttc" id="a00040_html_a64ce145f4bd2b212ac9494fb18b43615"><div class="ttname"><a href="a00040.html#a64ce145f4bd2b212ac9494fb18b43615">http_request_create</a></div><div class="ttdeci">hpd_error_t http_request_create(hpd_httpd_request_t **req, hpd_httpd_t *httpd, hpd_httpd_settings_t *settings, hpd_tcpd_conn_t *conn, hpd_module_t *context)</div><div class="ttdoc">Create a new ws_request. </div><div class="ttdef"><b>Definition:</b> <a href="a00016_source.html#l00601">httpd_request.c:601</a></div></div>
+<div class="ttc" id="a00040_html_aa1cd13c07d2d143d8a989a651a57e497"><div class="ttname"><a href="a00040.html#aa1cd13c07d2d143d8a989a651a57e497">http_request_destroy</a></div><div class="ttdeci">hpd_error_t http_request_destroy(hpd_httpd_request_t *req)</div><div class="ttdoc">Destroy a ws_request. </div><div class="ttdef"><b>Definition:</b> <a href="a00016_source.html#l00660">httpd_request.c:660</a></div></div>
+<div class="ttc" id="a00042_html_a418c751a61f0272a6fef8a19a4173342"><div class="ttname"><a href="a00042.html#a418c751a61f0272a6fef8a19a4173342">settings</a></div><div class="ttdeci">struct hp_settings settings</div><div class="ttdef"><b>Definition:</b> <a href="a00042_source.html#l00060">header_parser_test.c:60</a></div></div>
+<div class="ttc" id="a00028_html"><div class="ttname"><a href="a00028.html">hpd_tcpd_conn</a></div><div class="ttdoc">All data to represent a connection. </div><div class="ttdef"><b>Definition:</b> <a href="a00027_source.html#l00056">tcpd_intern.h:56</a></div></div>
+<div class="ttc" id="a00018_html_a00105"><div class="ttname"><a href="a00018.html#a00105">hpd_httpd_settings</a></div><div class="ttdoc">Settings struct for webserver. </div><div class="ttdef"><b>Definition:</b> <a href="a00018_source.html#l00100">httpd.h:100</a></div></div>
+<div class="ttc" id="a00040_html_afdaa7923045461457ad9c7aa725de09b"><div class="ttname"><a href="a00040.html#afdaa7923045461457ad9c7aa725de09b">http_request_parse</a></div><div class="ttdeci">hpd_error_t http_request_parse(hpd_httpd_request_t *req, const char *buf, size_t len)</div><div class="ttdoc">Parse a new chunk of the message. </div><div class="ttdef"><b>Definition:</b> <a href="a00016_source.html#l00697">httpd_request.c:697</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 26 2016 15:14:20 for Homeport Documentation by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 1 2016 12:43:23 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

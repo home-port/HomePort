@@ -15,7 +15,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00055.html#a3d879947af1cc338c9bb9cf68fcce672" target="_top" xlink:title="[hpd_t functions] ">
+<g id="a_node2"><a xlink:href="a00059.html#a3d879947af1cc338c9bb9cf68fcce672" target="_top" xlink:title="[hpd_t functions] ">
 <polygon fill="none" stroke="black" points="78,-323.5 78,-342.5 136,-342.5 136,-323.5 78,-323.5"/>
 <text text-anchor="middle" x="107" y="-330.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_alloc</text>
 </a>
@@ -41,7 +41,7 @@
 </g>
 <!-- Node9 -->
 <g id="node9" class="node"><title>Node9</title>
-<g id="a_node9"><a xlink:href="a00055.html#a4a5e670df4a5790a7955aaef5483c08a" target="_top" xlink:title="hpd_start">
+<g id="a_node9"><a xlink:href="a00059.html#a4a5e670df4a5790a7955aaef5483c08a" target="_top" xlink:title="hpd_start">
 <polygon fill="none" stroke="black" points="78.5,-133.5 78.5,-152.5 135.5,-152.5 135.5,-133.5 78.5,-133.5"/>
 <text text-anchor="middle" x="107" y="-140.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_start</text>
 </a>
@@ -54,7 +54,7 @@
 </g>
 <!-- Node26 -->
 <g id="node26" class="node"><title>Node26</title>
-<g id="a_node26"><a xlink:href="a00055.html#aa833627ad45d82173c0caf687cd30126" target="_top" xlink:title="hpd_free">
+<g id="a_node26"><a xlink:href="a00059.html#aa833627ad45d82173c0caf687cd30126" target="_top" xlink:title="hpd_free">
 <polygon fill="none" stroke="black" points="454,-38.5 454,-57.5 508,-57.5 508,-38.5 454,-38.5"/>
 <text text-anchor="middle" x="481" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_free</text>
 </a>
@@ -67,7 +67,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00057.html#a9c4bde30e05010d189231e469da9336b" target="_top" xlink:title="daemon_alloc">
+<g id="a_node3"><a xlink:href="a00061.html#a9c4bde30e05010d189231e469da9336b" target="_top" xlink:title="daemon_alloc">
 <polygon fill="none" stroke="black" points="172,-536.5 172,-555.5 249,-555.5 249,-536.5 172,-536.5"/>
 <text text-anchor="middle" x="210.5" y="-543.5" font-family="Helvetica,sans-Serif" font-size="10.00">daemon_alloc</text>
 </a>
@@ -80,7 +80,7 @@
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00057.html#a136e9884bcc5a6969066966324fd0493" target="_top" xlink:title="sig_cb">
+<g id="a_node4"><a xlink:href="a00061.html#a136e9884bcc5a6969066966324fd0493" target="_top" xlink:title="sig_cb">
 <polygon fill="none" stroke="black" points="313,-536.5 313,-555.5 358,-555.5 358,-536.5 313,-536.5"/>
 <text text-anchor="middle" x="335.5" y="-543.5" font-family="Helvetica,sans-Serif" font-size="10.00">sig_cb</text>
 </a>
@@ -106,7 +106,7 @@
 </g>
 <!-- Node7 -->
 <g id="node7" class="node"><title>Node7</title>
-<g id="a_node7"><a xlink:href="a00055.html#ad279f4f771e132927c09bd599fbe2b1b" target="_top" xlink:title="hpd_stop">
+<g id="a_node7"><a xlink:href="a00059.html#ad279f4f771e132927c09bd599fbe2b1b" target="_top" xlink:title="hpd_stop">
 <polygon fill="none" stroke="black" points="182.5,-0.5 182.5,-19.5 238.5,-19.5 238.5,-0.5 182.5,-0.5"/>
 <text text-anchor="middle" x="210.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_stop</text>
 </a>
@@ -119,7 +119,7 @@
 </g>
 <!-- Node8 -->
 <g id="node8" class="node"><title>Node8</title>
-<g id="a_node8"><a xlink:href="a00057.html#a47e709c904aab5ba86a017daddfc449c" target="_top" xlink:title="daemon_stop">
+<g id="a_node8"><a xlink:href="a00061.html#a47e709c904aab5ba86a017daddfc449c" target="_top" xlink:title="daemon_stop">
 <polygon fill="none" stroke="black" points="298,-0.5 298,-19.5 373,-19.5 373,-0.5 298,-0.5"/>
 <text text-anchor="middle" x="335.5" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">daemon_stop</text>
 </a>
@@ -132,7 +132,7 @@
 </g>
 <!-- Node10 -->
 <g id="node10" class="node"><title>Node10</title>
-<g id="a_node10"><a xlink:href="a00057.html#affd72e7fb83ddd29450361c75672ddd4" target="_top" xlink:title="daemon_start">
+<g id="a_node10"><a xlink:href="a00061.html#affd72e7fb83ddd29450361c75672ddd4" target="_top" xlink:title="daemon_start">
 <polygon fill="none" stroke="black" points="172.5,-209.5 172.5,-228.5 248.5,-228.5 248.5,-209.5 172.5,-209.5"/>
 <text text-anchor="middle" x="210.5" y="-216.5" font-family="Helvetica,sans-Serif" font-size="10.00">daemon_start</text>
 </a>
@@ -150,7 +150,7 @@
 </g>
 <!-- Node11 -->
 <g id="node11" class="node"><title>Node11</title>
-<g id="a_node11"><a xlink:href="a00057.html#a77e3fe9d5adf1777567645d9720fd1bc" target="_top" xlink:title="daemon_alloc_conf">
+<g id="a_node11"><a xlink:href="a00061.html#a77e3fe9d5adf1777567645d9720fd1bc" target="_top" xlink:title="daemon_alloc_conf">
 <polygon fill="none" stroke="black" points="285,-342.5 285,-361.5 386,-361.5 386,-342.5 285,-342.5"/>
 <text text-anchor="middle" x="335.5" y="-349.5" font-family="Helvetica,sans-Serif" font-size="10.00">daemon_alloc_conf</text>
 </a>
@@ -163,7 +163,7 @@
 </g>
 <!-- Node12 -->
 <g id="node12" class="node"><title>Node12</title>
-<g id="a_node12"><a xlink:href="a00057.html#aaf7bc24f3891f0c63a6043f4dc2ab311" target="_top" xlink:title="parse_opt">
+<g id="a_node12"><a xlink:href="a00061.html#aaf7bc24f3891f0c63a6043f4dc2ab311" target="_top" xlink:title="parse_opt">
 <polygon fill="none" stroke="black" points="306,-304.5 306,-323.5 365,-323.5 365,-304.5 306,-304.5"/>
 <text text-anchor="middle" x="335.5" y="-311.5" font-family="Helvetica,sans-Serif" font-size="10.00">parse_opt</text>
 </a>
@@ -176,7 +176,7 @@
 </g>
 <!-- Node13 -->
 <g id="node13" class="node"><title>Node13</title>
-<g id="a_node13"><a xlink:href="a00068.html#adc90843b331f5522a8d08d6e4219e126" target="_top" xlink:title="request_free_request">
+<g id="a_node13"><a xlink:href="a00072.html#adc90843b331f5522a8d08d6e4219e126" target="_top" xlink:title="request_free_request">
 <polygon fill="none" stroke="black" points="732.5,-152.5 732.5,-171.5 840.5,-171.5 840.5,-152.5 732.5,-152.5"/>
 <text text-anchor="middle" x="786.5" y="-159.5" font-family="Helvetica,sans-Serif" font-size="10.00">request_free_request</text>
 </a>
@@ -202,7 +202,7 @@
 </g>
 <!-- Node15 -->
 <g id="node15" class="node"><title>Node15</title>
-<g id="a_node15"><a xlink:href="a00071.html#a1ec3b1d4547e5080bcec544c877852da" target="_top" xlink:title="value_free">
+<g id="a_node15"><a xlink:href="a00075.html#a1ec3b1d4547e5080bcec544c877852da" target="_top" xlink:title="value_free">
 <polygon fill="none" stroke="black" points="914.5,-266.5 914.5,-285.5 976.5,-285.5 976.5,-266.5 914.5,-266.5"/>
 <text text-anchor="middle" x="945.5" y="-273.5" font-family="Helvetica,sans-Serif" font-size="10.00">value_free</text>
 </a>
@@ -215,7 +215,7 @@
 </g>
 <!-- Node18 -->
 <g id="node18" class="node"><title>Node18</title>
-<g id="a_node18"><a xlink:href="a00068.html#a2477fb8cf085cc2b61dbfacdcdc54b82" target="_top" xlink:title="request_free_response">
+<g id="a_node18"><a xlink:href="a00072.html#a2477fb8cf085cc2b61dbfacdcdc54b82" target="_top" xlink:title="request_free_response">
 <polygon fill="none" stroke="black" points="576,-190.5 576,-209.5 692,-209.5 692,-190.5 576,-190.5"/>
 <text text-anchor="middle" x="634" y="-197.5" font-family="Helvetica,sans-Serif" font-size="10.00">request_free_response</text>
 </a>
@@ -241,7 +241,7 @@
 </g>
 <!-- Node20 -->
 <g id="node20" class="node"><title>Node20</title>
-<g id="a_node20"><a xlink:href="a00057.html#a975d2ced1742515d1e9a9a8bb0cd8000" target="_top" xlink:title="daemon_free_conf">
+<g id="a_node20"><a xlink:href="a00061.html#a975d2ced1742515d1e9a9a8bb0cd8000" target="_top" xlink:title="daemon_free_conf">
 <polygon fill="none" stroke="black" points="287,-389.5 287,-408.5 384,-408.5 384,-389.5 287,-389.5"/>
 <text text-anchor="middle" x="335.5" y="-396.5" font-family="Helvetica,sans-Serif" font-size="10.00">daemon_free_conf</text>
 </a>
@@ -279,7 +279,7 @@
 </g>
 <!-- Node16 -->
 <g id="node16" class="node"><title>Node16</title>
-<g id="a_node16"><a xlink:href="a00042.html#a195d511a075f2349200563af1c5d1fd7" target="_top" xlink:title="hpd_map_free">
+<g id="a_node16"><a xlink:href="a00046.html#a195d511a075f2349200563af1c5d1fd7" target="_top" xlink:title="hpd_map_free">
 <polygon fill="none" stroke="black" points="1056.5,-456.5 1056.5,-475.5 1134.5,-475.5 1134.5,-456.5 1056.5,-456.5"/>
 <text text-anchor="middle" x="1095.5" y="-463.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_map_free</text>
 </a>
@@ -340,7 +340,7 @@
 </g>
 <!-- Node21 -->
 <g id="node21" class="node"><title>Node21</title>
-<g id="a_node21"><a xlink:href="a00059.html#aec714553397f80039bf246b3b0800420" target="_top" xlink:title="discovery_free_adapter">
+<g id="a_node21"><a xlink:href="a00063.html#aec714553397f80039bf246b3b0800420" target="_top" xlink:title="discovery_free_adapter">
 <polygon fill="none" stroke="black" points="422,-408.5 422,-427.5 540,-427.5 540,-408.5 422,-408.5"/>
 <text text-anchor="middle" x="481" y="-415.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_free_adapter</text>
 </a>
@@ -353,7 +353,7 @@
 </g>
 <!-- Node25 -->
 <g id="node25" class="node"><title>Node25</title>
-<g id="a_node25"><a xlink:href="a00062.html#a4cc65f197e3ad3f70ea2559bc95a68e9" target="_top" xlink:title="event_free_listener">
+<g id="a_node25"><a xlink:href="a00066.html#a4cc65f197e3ad3f70ea2559bc95a68e9" target="_top" xlink:title="event_free_listener">
 <polygon fill="none" stroke="black" points="1046,-342.5 1046,-361.5 1145,-361.5 1145,-342.5 1046,-342.5"/>
 <text text-anchor="middle" x="1095.5" y="-349.5" font-family="Helvetica,sans-Serif" font-size="10.00">event_free_listener</text>
 </a>
@@ -376,7 +376,7 @@
 </g>
 <!-- Node22 -->
 <g id="node22" class="node"><title>Node22</title>
-<g id="a_node22"><a xlink:href="a00059.html#a3c72fb9020b183238e0205b722d7ea95" target="_top" xlink:title="discovery_free_device">
+<g id="a_node22"><a xlink:href="a00063.html#a3c72fb9020b183238e0205b722d7ea95" target="_top" xlink:title="discovery_free_device">
 <polygon fill="none" stroke="black" points="577,-494.5 577,-513.5 691,-513.5 691,-494.5 577,-494.5"/>
 <text text-anchor="middle" x="634" y="-501.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_free_device</text>
 </a>
@@ -399,7 +399,7 @@
 </g>
 <!-- Node23 -->
 <g id="node23" class="node"><title>Node23</title>
-<g id="a_node23"><a xlink:href="a00059.html#a562bd655fd329da0289d21ec36973322" target="_top" xlink:title="discovery_free_service">
+<g id="a_node23"><a xlink:href="a00063.html#a562bd655fd329da0289d21ec36973322" target="_top" xlink:title="discovery_free_service">
 <polygon fill="none" stroke="black" points="728,-570.5 728,-589.5 845,-589.5 845,-570.5 728,-570.5"/>
 <text text-anchor="middle" x="786.5" y="-577.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_free_service</text>
 </a>
@@ -422,7 +422,7 @@
 </g>
 <!-- Node24 -->
 <g id="node24" class="node"><title>Node24</title>
-<g id="a_node24"><a xlink:href="a00059.html#ad18143d06649d9220e4fd8d74dbdec79" target="_top" xlink:title="discovery_free_parameter">
+<g id="a_node24"><a xlink:href="a00063.html#ad18143d06649d9220e4fd8d74dbdec79" target="_top" xlink:title="discovery_free_parameter">
 <polygon fill="none" stroke="black" points="881,-570.5 881,-589.5 1010,-589.5 1010,-570.5 881,-570.5"/>
 <text text-anchor="middle" x="945.5" y="-577.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_free_parameter</text>
 </a>
@@ -450,7 +450,7 @@
 </g>
 <!-- Node27 -->
 <g id="node27" class="node"><title>Node27</title>
-<g id="a_node27"><a xlink:href="a00057.html#a05bbc5573fc67fa53c2765cf7e5b1920" target="_top" xlink:title="daemon_free">
+<g id="a_node27"><a xlink:href="a00061.html#a05bbc5573fc67fa53c2765cf7e5b1920" target="_top" xlink:title="daemon_free">
 <polygon fill="none" stroke="black" points="1191.5,-38.5 1191.5,-57.5 1264.5,-57.5 1264.5,-38.5 1191.5,-38.5"/>
 <text text-anchor="middle" x="1228" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">daemon_free</text>
 </a>

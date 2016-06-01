@@ -1,4 +1,6 @@
-<map id="common/tcpd/src/tcpd_intern.h" name="common/tcpd/src/tcpd_intern.h">
-<area shape="rect" id="node2" href="$a00045.html" title="common/tcpd/src/tcpd.c" alt="" coords="5,102,168,129"/>
-<area shape="rect" id="node3" href="$a00047.html" title="common/tcpd/test/webserver\l_test.cpp" alt="" coords="193,95,383,136"/>
+<map id="common/httpd/test/url_parser_test.c" name="common/httpd/test/url_parser_test.c">
+<area shape="rect" id="node2" href="$a00032.html" title="url_parser.c" alt="" coords="82,95,173,121"/>
+<area shape="rect" id="node5" href="$a00033.html" title="url_parser.h" alt="" coords="183,169,274,196"/>
+<area shape="rect" id="node7" href="$a00060.html" title="hpd_shared_api.h" alt="" coords="299,169,423,196"/>
+<area shape="rect" id="node6" href="$a00021.html" title="hpd_types.h" alt="" coords="189,244,282,271"/>
 </map>

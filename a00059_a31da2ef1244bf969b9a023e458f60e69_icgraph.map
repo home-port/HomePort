@@ -1,5 +1,0 @@
-<map id="discovery_get_device_attr" name="discovery_get_device_attr">
-<area shape="rect" id="node2" href="$a00011.html#a055799f2d3b822dabcd46d9c64ec1754" title="discovery_get_device\l_attrs_v" alt="" coords="228,5,376,47"/>
-<area shape="rect" id="node4" href="$a00060.html#a4808217ec639d0b1ef9f890ff727817c" title="hpd_device_get_attr" alt="" coords="233,71,371,98"/>
-<area shape="rect" id="node3" href="$a00060.html#a57b7332a30b03e1679d9cfd70bbcd71f" title="hpd_device_get_attrs" alt="" coords="424,13,571,39"/>
-</map>

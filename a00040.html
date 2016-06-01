@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>Homeport Documentation: common/include/hpd_common.h File Reference</title>
+<title>HomePort: common/httpd/src/httpd_request.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Homeport Documentation
+   <div id="projectname">HomePort
    </div>
   </td>
  </tr>
@@ -81,70 +81,82 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_11fbc4217d50ab21044e5ad6614aede5.html">include</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_de836088bc1383ea19051eab00d43ec5.html">httpd</a></li><li class="navelem"><a class="el" href="dir_3eb06dbdb8c6f8b7c2db8db660fe1677.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">hpd_common.h File Reference</div>  </div>
+<div class="title">httpd_request.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><div class="dynheader">
-Include dependency graph for hpd_common.h:</div>
+Include dependency graph for httpd_request.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00146.svg" width="166" height="127"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00148.svg" width="534" height="351"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00147.svg" width="100%" height="473"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00149.svg" width="550" height="142"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </div>
 <p><a href="a00040_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:a3845681e01afcaa2d65abc4c62dc34de"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00040.html#a3845681e01afcaa2d65abc4c62dc34de">HPD_CALLOC</a>(PTR,  NUM,  CAST)</td></tr>
-<tr class="memdesc:a3845681e01afcaa2d65abc4c62dc34de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocates and zeros a structure.  <a href="#a3845681e01afcaa2d65abc4c62dc34de">More...</a><br /></td></tr>
-<tr class="separator:a3845681e01afcaa2d65abc4c62dc34de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1f7275464f4271bc0bf481cb4d020b8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00040.html#ab1f7275464f4271bc0bf481cb4d020b8">HPD_CPY_ALLOC</a>(DST,  SRC,  CAST)</td></tr>
-<tr class="separator:ab1f7275464f4271bc0bf481cb4d020b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a055a30ee6f45346e57303fa39455f9c9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00040.html#a055a30ee6f45346e57303fa39455f9c9">HPD_REALLOC</a>(PTR,  NUM,  CAST)</td></tr>
-<tr class="memdesc:a055a30ee6f45346e57303fa39455f9c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">CAST is for c++ compatibility (tests).  <a href="#a055a30ee6f45346e57303fa39455f9c9">More...</a><br /></td></tr>
-<tr class="separator:a055a30ee6f45346e57303fa39455f9c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76a140a09fea8be471874e07b4a24db0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00040.html#a76a140a09fea8be471874e07b4a24db0">HPD_SPRINTF_ALLOC</a>(DST,  FMT, ...)</td></tr>
-<tr class="separator:a76a140a09fea8be471874e07b4a24db0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb54026c07aa12169c4ddf82b92fab17"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00040.html#aeb54026c07aa12169c4ddf82b92fab17">HPD_STR_CPY</a>(DST,  SRC)</td></tr>
-<tr class="separator:aeb54026c07aa12169c4ddf82b92fab17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af16aa8e101575e88940a1cd9eff5d8f3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00040.html#af16aa8e101575e88940a1cd9eff5d8f3">HPD_STR_N_CPY</a>(DST,  SRC,  LEN)</td></tr>
-<tr class="separator:af16aa8e101575e88940a1cd9eff5d8f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a64ce145f4bd2b212ac9494fb18b43615"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00040.html#a64ce145f4bd2b212ac9494fb18b43615">http_request_create</a> (<a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> **req, <a class="el" href="a00018.html#a164f4db82cb0cafe40d18764f7ae0c8e">hpd_httpd_t</a> *httpd, <a class="el" href="a00018.html#aef7869a58ff75fab7a7108e819160f7a">hpd_httpd_settings_t</a> *<a class="el" href="a00006.html#af199db15de773bb97002d69856cd55c0">settings</a>, <a class="el" href="a00029.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *conn, <a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *context)</td></tr>
+<tr class="memdesc:a64ce145f4bd2b212ac9494fb18b43615"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new ws_request.  <a href="#a64ce145f4bd2b212ac9494fb18b43615">More...</a><br /></td></tr>
+<tr class="separator:a64ce145f4bd2b212ac9494fb18b43615"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1cd13c07d2d143d8a989a651a57e497"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00040.html#aa1cd13c07d2d143d8a989a651a57e497">http_request_destroy</a> (<a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *req)</td></tr>
+<tr class="memdesc:aa1cd13c07d2d143d8a989a651a57e497"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy a ws_request.  <a href="#aa1cd13c07d2d143d8a989a651a57e497">More...</a><br /></td></tr>
+<tr class="separator:aa1cd13c07d2d143d8a989a651a57e497"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1568fdba259271965551fb5aa1f07006"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00040.html#a1568fdba259271965551fb5aa1f07006">http_request_get_connection</a> (<a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *req, <a class="el" href="a00029.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> **conn)</td></tr>
+<tr class="memdesc:a1568fdba259271965551fb5aa1f07006"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the connection of a request.  <a href="#a1568fdba259271965551fb5aa1f07006">More...</a><br /></td></tr>
+<tr class="separator:a1568fdba259271965551fb5aa1f07006"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a228cee03d1174febd4a716e0285542c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00040.html#a228cee03d1174febd4a716e0285542c2">http_request_get_context</a> (<a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *req, <a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> **context)</td></tr>
+<tr class="separator:a228cee03d1174febd4a716e0285542c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdaa7923045461457ad9c7aa725de09b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00040.html#afdaa7923045461457ad9c7aa725de09b">http_request_parse</a> (<a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *req, const char *buf, size_t len)</td></tr>
+<tr class="memdesc:afdaa7923045461457ad9c7aa725de09b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a new chunk of the message.  <a href="#afdaa7923045461457ad9c7aa725de09b">More...</a><br /></td></tr>
+<tr class="separator:afdaa7923045461457ad9c7aa725de09b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a class="anchor" id="a3845681e01afcaa2d65abc4c62dc34de"></a>
+<h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a64ce145f4bd2b212ac9494fb18b43615"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define HPD_CALLOC</td>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> http_request_create </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">PTR, </td>
+          <td class="paramtype"><a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> **&#160;</td>
+          <td class="paramname"><em>req</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">NUM, </td>
+          <td class="paramtype"><a class="el" href="a00018.html#a164f4db82cb0cafe40d18764f7ae0c8e">hpd_httpd_t</a> *&#160;</td>
+          <td class="paramname"><em>httpd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">CAST&#160;</td>
+          <td class="paramtype"><a class="el" href="a00018.html#aef7869a58ff75fab7a7108e819160f7a">hpd_httpd_settings_t</a> *&#160;</td>
+          <td class="paramname"><em>settings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00029.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *&#160;</td>
+          <td class="paramname"><em>conn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -153,39 +165,97 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span> { \</div>
-<div class="line">    (PTR) = (CAST *) calloc((NUM), <span class="keyword">sizeof</span>(CAST)); \</div>
-<div class="line">    if(!(PTR)) goto alloc_error; \</div>
-<div class="line">} while(0)</div>
-</div><!-- fragment -->
-<p>Allocates and zeros a structure. </p>
-<p>CAST is for c++ compatibility (tests). </p>
 
-<p>Definition at line <a class="el" href="a00040_source.html#l00043">43</a> of file <a class="el" href="a00040_source.html">hpd_common.h</a>.</p>
+<p>Create a new ws_request. </p>
+<p>The created ws_request is ready to receive data through ws_reqeust_parse(), and it should be freed using ws_request_destroy() to avoid memory leaks.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">webserver</td><td>The httpd creating the request </td></tr>
+    <tr><td class="paramname">settings</td><td>The settings for the webserver receiving the request. This will determine which callbacks to call on events. </td></tr>
+    <tr><td class="paramname">conn</td><td>The connection on which the request is being received</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The newly create ws_request. </dd></dl>
+
+<p>Definition at line <a class="el" href="a00016_source.html#l00601">601</a> of file <a class="el" href="a00016_source.html">httpd_request.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00040_a64ce145f4bd2b212ac9494fb18b43615_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00040_a64ce145f4bd2b212ac9494fb18b43615_icgraph.svg" width="574" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
 
 </div>
 </div>
-<a class="anchor" id="ab1f7275464f4271bc0bf481cb4d020b8"></a>
+<a class="anchor" id="aa1cd13c07d2d143d8a989a651a57e497"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define HPD_CPY_ALLOC</td>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> http_request_destroy </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">DST, </td>
+          <td class="paramtype"><a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *&#160;</td>
+          <td class="paramname"><em>req</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Destroy a ws_request. </p>
+<p>All ws_requests should be freed by a call to this function to avoid memory leaks.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">req</td><td>The request to be destroyed. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="a00016_source.html#l00660">660</a> of file <a class="el" href="a00016_source.html">httpd_request.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00040_aa1cd13c07d2d143d8a989a651a57e497_cgraph.svg" width="572" height="291"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00040_aa1cd13c07d2d143d8a989a651a57e497_icgraph.svg" width="100%" height="366"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a1568fdba259271965551fb5aa1f07006"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> http_request_get_connection </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *&#160;</td>
+          <td class="paramname"><em>req</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">SRC, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">CAST&#160;</td>
+          <td class="paramtype"><a class="el" href="a00029.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> **&#160;</td>
+          <td class="paramname"><em>conn</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -194,37 +264,43 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span> { \</div>
-<div class="line">    (DST) = (CAST *) malloc(<span class="keyword">sizeof</span>(CAST)); \</div>
-<div class="line">    if(!(DST)) goto alloc_error; \</div>
-<div class="line">    memcpy((DST), (SRC), sizeof(CAST)); \</div>
-<div class="line">} while(0)</div>
-</div><!-- fragment -->
-<p>Definition at line <a class="el" href="a00040_source.html#l00057">57</a> of file <a class="el" href="a00040_source.html">hpd_common.h</a>.</p>
+
+<p>Get the connection of a request. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">req</td><td>http request</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The connection </dd></dl>
+
+<p>Definition at line <a class="el" href="a00016_source.html#l00889">889</a> of file <a class="el" href="a00016_source.html">httpd_request.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00040_a1568fdba259271965551fb5aa1f07006_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
 
 </div>
 </div>
-<a class="anchor" id="a055a30ee6f45346e57303fa39455f9c9"></a>
+<a class="anchor" id="a228cee03d1174febd4a716e0285542c2"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define HPD_REALLOC</td>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> http_request_get_context </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">PTR, </td>
+          <td class="paramtype"><a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *&#160;</td>
+          <td class="paramname"><em>req</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">NUM, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">CAST&#160;</td>
+          <td class="paramtype"><a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> **&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -233,39 +309,40 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span> { \</div>
-<div class="line">    (PTR) = (CAST *) realloc((PTR), (NUM)*<span class="keyword">sizeof</span>(CAST)); \</div>
-<div class="line">    if(!(PTR)) goto alloc_error; \</div>
-<div class="line">} while(0)</div>
-</div><!-- fragment -->
-<p>CAST is for c++ compatibility (tests). </p>
-<p>TODO Seriously bad for alloc errors, (PTR) is lost </p>
 
-<p>Definition at line <a class="el" href="a00040_source.html#l00052">52</a> of file <a class="el" href="a00040_source.html">hpd_common.h</a>.</p>
+<p>Definition at line <a class="el" href="a00016_source.html#l00931">931</a> of file <a class="el" href="a00016_source.html">httpd_request.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00040_a228cee03d1174febd4a716e0285542c2_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
 
 </div>
 </div>
-<a class="anchor" id="a76a140a09fea8be471874e07b4a24db0"></a>
+<a class="anchor" id="afdaa7923045461457ad9c7aa725de09b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define HPD_SPRINTF_ALLOC</td>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> http_request_parse </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">DST, </td>
+          <td class="paramtype"><a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *&#160;</td>
+          <td class="paramname"><em>req</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">FMT, </td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>buf</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em>&#160;</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -274,94 +351,35 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span> { \</div>
-<div class="line">    size_t len; \</div>
-<div class="line">    if ((len = snprintf(NULL, 0, (FMT), ##__VA_ARGS__)) &lt; 0) goto nsprintf_error; \</div>
-<div class="line">    if (!((DST) = calloc(len+1, sizeof(<span class="keywordtype">char</span>)))) goto alloc_error; \</div>
-<div class="line">    if (snprintf((DST), len+1, (FMT), <span class="preprocessor">##__VA_ARGS__) &lt; 0) { free((DST)); goto nsprintf_error; } \</span></div>
-<div class="line"><span class="preprocessor">} while (0)</span></div>
-</div><!-- fragment -->
-<p>Definition at line <a class="el" href="a00040_source.html#l00074">74</a> of file <a class="el" href="a00040_source.html">hpd_common.h</a>.</p>
 
-</div>
-</div>
-<a class="anchor" id="aeb54026c07aa12169c4ddf82b92fab17"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define HPD_STR_CPY</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">DST, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">SRC&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span> { <a class="code" href="a00040.html#a055a30ee6f45346e57303fa39455f9c9">\</a></div>
-<div class="line"><a class="code" href="a00040.html#a055a30ee6f45346e57303fa39455f9c9">    HPD_REALLOC</a>((DST), (strlen((SRC))+1), <span class="keywordtype">char</span>); \</div>
-<div class="line">    strcpy((DST), (SRC)); \</div>
-<div class="line">} <span class="keywordflow">while</span>(0)</div>
-<div class="ttc" id="a00040_html_a055a30ee6f45346e57303fa39455f9c9"><div class="ttname"><a href="a00040.html#a055a30ee6f45346e57303fa39455f9c9">HPD_REALLOC</a></div><div class="ttdeci">#define HPD_REALLOC(PTR, NUM, CAST)</div><div class="ttdoc">CAST is for c++ compatibility (tests). </div><div class="ttdef"><b>Definition:</b> <a href="a00040_source.html#l00052">hpd_common.h:52</a></div></div>
-</div><!-- fragment -->
-<p>Definition at line <a class="el" href="a00040_source.html#l00063">63</a> of file <a class="el" href="a00040_source.html">hpd_common.h</a>.</p>
+<p>Parse a new chunk of the message. </p>
+<p>This will sent the chunk to the http_parser, which will parse the new chunk and call the callbacks defined in parser_settings on events. The callbacks will change state of the ws_request and make calls on the functions defined in <a class="el" href="a00029.html#a00115" title="Settings struct for tcpd. ">hpd_tcpd_settings</a>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">req</td><td>The request, to which the chunk should be added. </td></tr>
+    <tr><td class="paramname">buf</td><td>The chunk, which is not assumed to be \0 terminated. </td></tr>
+    <tr><td class="paramname">len</td><td>Length of the chuck.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>What http_parser_execute() returns. </dd></dl>
 
+<p>Definition at line <a class="el" href="a00016_source.html#l00697">697</a> of file <a class="el" href="a00016_source.html">httpd_request.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00040_afdaa7923045461457ad9c7aa725de09b_icgraph.svg" width="566" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
-<a class="anchor" id="af16aa8e101575e88940a1cd9eff5d8f3"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define HPD_STR_N_CPY</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">DST, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">SRC, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">LEN&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span> { <a class="code" href="a00040.html#a055a30ee6f45346e57303fa39455f9c9">\</a></div>
-<div class="line"><a class="code" href="a00040.html#a055a30ee6f45346e57303fa39455f9c9">    HPD_REALLOC</a>((DST), ((LEN)+1), <span class="keywordtype">char</span>); \</div>
-<div class="line">    strncpy((DST), (SRC), (LEN)); \</div>
-<div class="line">    (DST)[LEN] = <span class="charliteral">&#39;\0&#39;</span>; \</div>
-<div class="line">} <span class="keywordflow">while</span>(0)</div>
-<div class="ttc" id="a00040_html_a055a30ee6f45346e57303fa39455f9c9"><div class="ttname"><a href="a00040.html#a055a30ee6f45346e57303fa39455f9c9">HPD_REALLOC</a></div><div class="ttdeci">#define HPD_REALLOC(PTR, NUM, CAST)</div><div class="ttdoc">CAST is for c++ compatibility (tests). </div><div class="ttdef"><b>Definition:</b> <a href="a00040_source.html#l00052">hpd_common.h:52</a></div></div>
-</div><!-- fragment -->
-<p>Definition at line <a class="el" href="a00040_source.html#l00068">68</a> of file <a class="el" href="a00040_source.html">hpd_common.h</a>.</p>
+</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 26 2016 15:14:20 for Homeport Documentation by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 1 2016 12:43:23 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

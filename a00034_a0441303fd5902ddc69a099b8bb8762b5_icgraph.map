@@ -1,0 +1,13 @@
+<map id="curl_ev_cleanup" name="curl_ev_cleanup">
+<area shape="rect" id="node2" href="$a00004.html#a30f7e7259072d4e929092bf994dd0f7e" title="curl_ev_socket_action" alt="" coords="169,107,321,133"/>
+<area shape="rect" id="node12" href="$a00004.html#a2b2154654e3a71fc5cf31a82125b1aac" title="on_destroy" alt="" coords="202,157,289,184"/>
+<area shape="rect" id="node3" href="$a00004.html#ad3467032c766584c58cfcb260904b537" title="on_io" alt="" coords="405,5,458,32"/>
+<area shape="rect" id="node6" href="$a00004.html#a2f1cba74d908da5b27db2338c6e222dc" title="on_timeout" alt="" coords="388,56,475,83"/>
+<area shape="rect" id="node8" href="$a00004.html#a9a7791ffa0bda45533ca10f94c8183f1" title="on_update_timer" alt="" coords="372,107,491,133"/>
+<area shape="rect" id="node9" href="$a00004.html#a3f36a139b8cf22a41850235ce3a3c88c" title="curl_ev_add_next" alt="" coords="369,183,493,209"/>
+<area shape="rect" id="node4" href="$a00004.html#a2ba2998e37246c16c9707e7e5c2730de" title="on_update_socket" alt="" coords="557,5,685,32"/>
+<area shape="rect" id="node5" href="$a00004.html#a665691f420dff4eebb8f4b4af62d7a49" title="on_start" alt="" coords="748,107,817,133"/>
+<area shape="rect" id="node7" href="$a00004.html#ad079431c7eba97c5dd5e4e202cdf6102" title="on_create" alt="" coords="581,56,660,83"/>
+<area shape="rect" id="node10" href="$a00004.html#aac10c04a959a7def8f7ceabe2c46e77b" title="curl_ev_add_handle" alt="" coords="552,208,689,235"/>
+<area shape="rect" id="node11" href="$a00004.html#a17434db8bd6d65f28a654b2ae3708b9b" title="curl_ev_remove_handle" alt="" coords="541,259,700,285"/>
+</map>

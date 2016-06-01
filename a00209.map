@@ -1,11 +1,5 @@
-<map id="hpd/src/discovery_id.c" name="hpd/src/discovery_id.c">
-<area shape="rect" id="node2" href="$a00011.html" title="discovery.h" alt="" coords="81,229,170,256"/>
-<area shape="rect" id="node5" href="$a00040.html" title="hpd_common.h" alt="" coords="462,155,573,181"/>
-<area shape="rect" id="node8" href="$a00009.html" title="daemon.h" alt="" coords="626,80,705,107"/>
-<area shape="rect" id="node13" href="$a00066.html" title="log.h" alt="" coords="5,229,56,256"/>
-<area shape="rect" id="node14" href="$a00005.html" title="model.h" alt="" coords="282,80,350,107"/>
-<area shape="rect" id="node3" href="$a00021.html" title="hpd_types.h" alt="" coords="152,304,245,331"/>
-<area shape="rect" id="node9" href="$a00041.html" title="hpd_queue.h" alt="" coords="363,304,459,331"/>
-<area shape="rect" id="node15" href="$a00042.html" title="hpd_map.h" alt="" coords="254,229,341,256"/>
-<area shape="rect" id="node17" href="$a00024.html" title="comm.h" alt="" coords="245,155,315,181"/>
+<map id="hpd/src/daemon.h" name="hpd/src/daemon.h">
+<area shape="rect" id="node2" href="$a00021.html" title="hpd_types.h" alt="" coords="5,80,99,107"/>
+<area shape="rect" id="node3" href="$a00044.html" title="hpd_common.h" alt="" coords="123,80,234,107"/>
+<area shape="rect" id="node6" href="$a00045.html" title="hpd_queue.h" alt="" coords="259,80,355,107"/>
 </map>

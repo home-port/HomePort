@@ -1,6 +1,0 @@
-<map id="discovery_set_adapter_attr" name="discovery_set_adapter_attr">
-<area shape="rect" id="node2" href="$a00011.html#ad15d6de47820573ae430df83c83ca378" title="discovery_set_adapter\l_attrs_v" alt="" coords="232,5,385,47"/>
-<area shape="rect" id="node4" href="$a00060.html#a0d5ca643908e5c921d763ad9f5c9ba8e" title="hpd_adapter_set_attr" alt="" coords="237,71,381,98"/>
-<area shape="rect" id="node3" href="$a00060.html#a0dc61e22d6abc5a621e53cd3aab2f9ca" title="hpd_adapter_set_attrs" alt="" coords="441,13,591,39"/>
-<area shape="rect" id="node5" href="$a00012.html#a723fb54ea3963ea674c9830e41a40e00" title="hpd_demo_adapter_start" alt="" coords="433,71,599,98"/>
-</map>

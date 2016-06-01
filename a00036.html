@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>Homeport Documentation: common/httpd/src/httpd_request.h File Reference</title>
+<title>HomePort: common/curl_ev/src/curl_ev.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Homeport Documentation
+   <div id="projectname">HomePort
    </div>
   </td>
  </tr>
@@ -81,26 +81,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_de836088bc1383ea19051eab00d43ec5.html">httpd</a></li><li class="navelem"><a class="el" href="dir_3eb06dbdb8c6f8b7c2db8db660fe1677.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_6dfd4494962228c0e294eec4d0b1c98e.html">curl_ev</a></li><li class="navelem"><a class="el" href="dir_eacbe4268e59df3584cbe4ba0da150d0.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">httpd_request.h File Reference</div>  </div>
+<div class="title">curl_ev.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><div class="dynheader">
-Include dependency graph for httpd_request.h:</div>
+Include dependency graph for curl_ev.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00132.svg" width="534" height="351"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00133.svg" width="550" height="142"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00126.svg" width="100%" height="507"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </div>
@@ -108,49 +102,109 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a64ce145f4bd2b212ac9494fb18b43615"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#a64ce145f4bd2b212ac9494fb18b43615">http_request_create</a> (<a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> **req, <a class="el" href="a00018.html#a164f4db82cb0cafe40d18764f7ae0c8e">hpd_httpd_t</a> *httpd, <a class="el" href="a00018.html#aef7869a58ff75fab7a7108e819160f7a">hpd_httpd_settings_t</a> *<a class="el" href="a00006.html#af199db15de773bb97002d69856cd55c0">settings</a>, <a class="el" href="a00029.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *conn, <a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *context)</td></tr>
-<tr class="memdesc:a64ce145f4bd2b212ac9494fb18b43615"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new ws_request.  <a href="#a64ce145f4bd2b212ac9494fb18b43615">More...</a><br /></td></tr>
-<tr class="separator:a64ce145f4bd2b212ac9494fb18b43615"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1cd13c07d2d143d8a989a651a57e497"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#aa1cd13c07d2d143d8a989a651a57e497">http_request_destroy</a> (<a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *req)</td></tr>
-<tr class="memdesc:aa1cd13c07d2d143d8a989a651a57e497"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy a ws_request.  <a href="#aa1cd13c07d2d143d8a989a651a57e497">More...</a><br /></td></tr>
-<tr class="separator:aa1cd13c07d2d143d8a989a651a57e497"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1568fdba259271965551fb5aa1f07006"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#a1568fdba259271965551fb5aa1f07006">http_request_get_connection</a> (<a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *req, <a class="el" href="a00029.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> **conn)</td></tr>
-<tr class="memdesc:a1568fdba259271965551fb5aa1f07006"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the connection of a request.  <a href="#a1568fdba259271965551fb5aa1f07006">More...</a><br /></td></tr>
-<tr class="separator:a1568fdba259271965551fb5aa1f07006"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a228cee03d1174febd4a716e0285542c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#a228cee03d1174febd4a716e0285542c2">http_request_get_context</a> (<a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *req, <a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> **context)</td></tr>
-<tr class="separator:a228cee03d1174febd4a716e0285542c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afdaa7923045461457ad9c7aa725de09b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#afdaa7923045461457ad9c7aa725de09b">http_request_parse</a> (<a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *req, const char *buf, size_t len)</td></tr>
-<tr class="memdesc:afdaa7923045461457ad9c7aa725de09b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a new chunk of the message.  <a href="#afdaa7923045461457ad9c7aa725de09b">More...</a><br /></td></tr>
-<tr class="separator:afdaa7923045461457ad9c7aa725de09b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1087bb2306d0b67c71379e6ddaa9fce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#ab1087bb2306d0b67c71379e6ddaa9fce">curl_ev_add_header</a> (<a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *handle, const char *header)</td></tr>
+<tr class="memdesc:ab1087bb2306d0b67c71379e6ddaa9fce"><td class="mdescLeft">&#160;</td><td class="mdescRight">HPD_E_UNKNOWN: handle may be in an inconsistent state, and should not be added before a call to this function succeded.  <a href="#ab1087bb2306d0b67c71379e6ddaa9fce">More...</a><br /></td></tr>
+<tr class="separator:ab1087bb2306d0b67c71379e6ddaa9fce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0441303fd5902ddc69a099b8bb8762b5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#a0441303fd5902ddc69a099b8bb8762b5">curl_ev_cleanup</a> (<a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *handle)</td></tr>
+<tr class="separator:a0441303fd5902ddc69a099b8bb8762b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e96f52ce0e4bae61dc59be20e37b500"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#a3e96f52ce0e4bae61dc59be20e37b500">curl_ev_init</a> (<a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> **handle, <a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *context)</td></tr>
+<tr class="separator:a3e96f52ce0e4bae61dc59be20e37b500"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac876b90ae90291635500792ebafb4a7a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#ac876b90ae90291635500792ebafb4a7a">curl_ev_set_body_callback</a> (<a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *handle, <a class="el" href="a00034.html#a91a28dd16b9fbcf1cbd1b1624f1be517">curl_ev_f</a> <a class="el" href="a00036.html#afc227f2c572c4744dbf266ce208bd8c6">on_body</a>)</td></tr>
+<tr class="separator:ac876b90ae90291635500792ebafb4a7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63d838192b6dda9aaff9fc429af40d90"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#a63d838192b6dda9aaff9fc429af40d90">curl_ev_set_custom_request</a> (<a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *handle, const char *request)</td></tr>
+<tr class="separator:a63d838192b6dda9aaff9fc429af40d90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2fb429643739aa8893774e6d6d16ccc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#ad2fb429643739aa8893774e6d6d16ccc">curl_ev_set_data</a> (<a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *handle, void *<a class="el" href="a00006.html#a00090">data</a>, <a class="el" href="a00034.html#a2dc5881ff29de846223cc07c1cd9871b">curl_ev_free_f</a> <a class="el" href="a00025.html#a65f3fe01ba50f1473cad1a4418cfdf09">on_free</a>)</td></tr>
+<tr class="separator:ad2fb429643739aa8893774e6d6d16ccc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ef66bd995ccf7480b5a60bd0fe1030d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#a7ef66bd995ccf7480b5a60bd0fe1030d">curl_ev_set_done_callback</a> (<a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *handle, <a class="el" href="a00034.html#afbbee2ad8a34837a7930e35aaa6f2fb8">curl_ev_done_f</a> on_done)</td></tr>
+<tr class="separator:a7ef66bd995ccf7480b5a60bd0fe1030d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8668389b4eb074757c46b228b1a14e77"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#a8668389b4eb074757c46b228b1a14e77">curl_ev_set_header_callback</a> (<a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *handle, <a class="el" href="a00034.html#a91a28dd16b9fbcf1cbd1b1624f1be517">curl_ev_f</a> <a class="el" href="a00036.html#a8448b2426fbf01b6bc8ea1bd223ab3d1">on_header</a>)</td></tr>
+<tr class="separator:a8668389b4eb074757c46b228b1a14e77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab88324f90adfe5c91d4016e4d555e821"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#ab88324f90adfe5c91d4016e4d555e821">curl_ev_set_postfields</a> (<a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *handle, const void *<a class="el" href="a00006.html#a00090">data</a>, size_t len)</td></tr>
+<tr class="memdesc:ab88324f90adfe5c91d4016e4d555e821"><td class="mdescLeft">&#160;</td><td class="mdescRight">HPD_E_UNKNOWN: handle may be in an inconsistent state, and should not be added before a call to this function succeded.  <a href="#ab88324f90adfe5c91d4016e4d555e821">More...</a><br /></td></tr>
+<tr class="separator:ab88324f90adfe5c91d4016e4d555e821"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83d9f2a267b54b798d3b597229fedbf8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#a83d9f2a267b54b798d3b597229fedbf8">curl_ev_set_url</a> (<a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *handle, const char *<a class="el" href="a00006.html#a8887c2fa1e081a4df18dff878d9ce142">url</a>)</td></tr>
+<tr class="separator:a83d9f2a267b54b798d3b597229fedbf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3095936ad23d8c9ecb47a0ce83b29043"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#a3095936ad23d8c9ecb47a0ce83b29043">curl_ev_set_verbose</a> (<a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *handle, long int bool)</td></tr>
+<tr class="separator:a3095936ad23d8c9ecb47a0ce83b29043"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc227f2c572c4744dbf266ce208bd8c6"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#afc227f2c572c4744dbf266ce208bd8c6">on_body</a> (char *buffer, size_t size, size_t nmemb, void *userdata)</td></tr>
+<tr class="separator:afc227f2c572c4744dbf266ce208bd8c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8448b2426fbf01b6bc8ea1bd223ab3d1"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00036.html#a8448b2426fbf01b6bc8ea1bd223ab3d1">on_header</a> (char *buffer, size_t size, size_t nmemb, void *userdata)</td></tr>
+<tr class="separator:a8448b2426fbf01b6bc8ea1bd223ab3d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a64ce145f4bd2b212ac9494fb18b43615"></a>
+<a class="anchor" id="ab1087bb2306d0b67c71379e6ddaa9fce"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> http_request_create </td>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_add_header </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> **&#160;</td>
-          <td class="paramname"><em>req</em>, </td>
+          <td class="paramtype"><a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="a00018.html#a164f4db82cb0cafe40d18764f7ae0c8e">hpd_httpd_t</a> *&#160;</td>
-          <td class="paramname"><em>httpd</em>, </td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>header</em>&#160;</td>
         </tr>
         <tr>
-          <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="a00018.html#aef7869a58ff75fab7a7108e819160f7a">hpd_httpd_settings_t</a> *&#160;</td>
-          <td class="paramname"><em>settings</em>, </td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>HPD_E_UNKNOWN: handle may be in an inconsistent state, and should not be added before a call to this function succeded. </p>
+
+<p>Definition at line <a class="el" href="a00036_source.html#l00163">163</a> of file <a class="el" href="a00036_source.html">curl_ev.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0441303fd5902ddc69a099b8bb8762b5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
         <tr>
-          <td class="paramkey"></td>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_cleanup </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em></td><td>)</td>
           <td></td>
-          <td class="paramtype"><a class="el" href="a00029.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *&#160;</td>
-          <td class="paramname"><em>conn</em>, </td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00036_source.html#l00077">77</a> of file <a class="el" href="a00036_source.html">curl_ev.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00036_a0441303fd5902ddc69a099b8bb8762b5_cgraph.svg" width="219" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00036_a0441303fd5902ddc69a099b8bb8762b5_icgraph.svg" width="100%" height="518"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a3e96f52ce0e4bae61dc59be20e37b500"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> **&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -166,96 +220,33 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a new ws_request. </p>
-<p>The created ws_request is ready to receive data through ws_reqeust_parse(), and it should be freed using ws_request_destroy() to avoid memory leaks.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">webserver</td><td>The httpd creating the request </td></tr>
-    <tr><td class="paramname">settings</td><td>The settings for the webserver receiving the request. This will determine which callbacks to call on events. </td></tr>
-    <tr><td class="paramname">conn</td><td>The connection on which the request is being received</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The newly create ws_request. </dd></dl>
-
-<p>Definition at line <a class="el" href="a00016_source.html#l00601">601</a> of file <a class="el" href="a00016_source.html">httpd_request.c</a>.</p>
+<p>Definition at line <a class="el" href="a00036_source.html#l00046">46</a> of file <a class="el" href="a00036_source.html">curl_ev.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00036_a64ce145f4bd2b212ac9494fb18b43615_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00036_a64ce145f4bd2b212ac9494fb18b43615_icgraph.svg" width="574" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00036_a3e96f52ce0e4bae61dc59be20e37b500_cgraph.svg" width="230" height="139"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="aa1cd13c07d2d143d8a989a651a57e497"></a>
+<a class="anchor" id="ac876b90ae90291635500792ebafb4a7a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> http_request_destroy </td>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_set_body_callback </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *&#160;</td>
-          <td class="paramname"><em>req</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Destroy a ws_request. </p>
-<p>All ws_requests should be freed by a call to this function to avoid memory leaks.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">req</td><td>The request to be destroyed. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Definition at line <a class="el" href="a00016_source.html#l00660">660</a> of file <a class="el" href="a00016_source.html">httpd_request.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00036_aa1cd13c07d2d143d8a989a651a57e497_cgraph.svg" width="572" height="291"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00036_aa1cd13c07d2d143d8a989a651a57e497_icgraph.svg" width="100%" height="366"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a1568fdba259271965551fb5aa1f07006"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> http_request_get_connection </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *&#160;</td>
-          <td class="paramname"><em>req</em>, </td>
+          <td class="paramtype"><a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="a00029.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> **&#160;</td>
-          <td class="paramname"><em>conn</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="a00034.html#a91a28dd16b9fbcf1cbd1b1624f1be517">curl_ev_f</a>&#160;</td>
+          <td class="paramname"><em>on_body</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -265,78 +256,167 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Get the connection of a request. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">req</td><td>http request</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The connection </dd></dl>
-
-<p>Definition at line <a class="el" href="a00016_source.html#l00889">889</a> of file <a class="el" href="a00016_source.html">httpd_request.c</a>.</p>
+<p>Definition at line <a class="el" href="a00036_source.html#l00097">97</a> of file <a class="el" href="a00036_source.html">curl_ev.c</a>.</p>
 
 <p><div class="dynheader">
-Here is the caller graph for this function:</div>
+Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00036_a1568fdba259271965551fb5aa1f07006_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00036_ac876b90ae90291635500792ebafb4a7a_cgraph.svg" width="308" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a228cee03d1174febd4a716e0285542c2"></a>
+<a class="anchor" id="a63d838192b6dda9aaff9fc429af40d90"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> http_request_get_context </td>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_set_custom_request </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *&#160;</td>
-          <td class="paramname"><em>req</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> **&#160;</td>
-          <td class="paramname"><em>context</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00016_source.html#l00931">931</a> of file <a class="el" href="a00016_source.html">httpd_request.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00036_a228cee03d1174febd4a716e0285542c2_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="afdaa7923045461457ad9c7aa725de09b"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#ad26385b6709a2fc6c0f9141e11598d7a">hpd_error_t</a> http_request_parse </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00018.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *&#160;</td>
-          <td class="paramname"><em>req</em>, </td>
+          <td class="paramtype"><a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>buf</em>, </td>
+          <td class="paramname"><em>request</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00036_source.html#l00111">111</a> of file <a class="el" href="a00036_source.html">curl_ev.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad2fb429643739aa8893774e6d6d16ccc"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_set_data </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00034.html#a2dc5881ff29de846223cc07c1cd9871b">curl_ev_free_f</a>&#160;</td>
+          <td class="paramname"><em>on_free</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00036_source.html#l00120">120</a> of file <a class="el" href="a00036_source.html">curl_ev.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00036_ad2fb429643739aa8893774e6d6d16ccc_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a7ef66bd995ccf7480b5a60bd0fe1030d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_set_done_callback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00034.html#afbbee2ad8a34837a7930e35aaa6f2fb8">curl_ev_done_f</a>&#160;</td>
+          <td class="paramname"><em>on_done</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00036_source.html#l00104">104</a> of file <a class="el" href="a00036_source.html">curl_ev.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8668389b4eb074757c46b228b1a14e77"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_set_header_callback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00034.html#a91a28dd16b9fbcf1cbd1b1624f1be517">curl_ev_f</a>&#160;</td>
+          <td class="paramname"><em>on_header</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00036_source.html#l00090">90</a> of file <a class="el" href="a00036_source.html">curl_ev.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00036_a8668389b4eb074757c46b228b1a14e77_cgraph.svg" width="276" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="ab88324f90adfe5c91d4016e4d555e821"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_set_postfields </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -352,24 +432,174 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Parse a new chunk of the message. </p>
-<p>This will sent the chunk to the http_parser, which will parse the new chunk and call the callbacks defined in parser_settings on events. The callbacks will change state of the ws_request and make calls on the functions defined in <a class="el" href="a00029.html#a00109" title="Settings struct for tcpd. ">hpd_tcpd_settings</a>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">req</td><td>The request, to which the chunk should be added. </td></tr>
-    <tr><td class="paramname">buf</td><td>The chunk, which is not assumed to be \0 terminated. </td></tr>
-    <tr><td class="paramname">len</td><td>Length of the chuck.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>What http_parser_execute() returns. </dd></dl>
+<p>HPD_E_UNKNOWN: handle may be in an inconsistent state, and should not be added before a call to this function succeded. </p>
 
-<p>Definition at line <a class="el" href="a00016_source.html#l00697">697</a> of file <a class="el" href="a00016_source.html">httpd_request.c</a>.</p>
+<p>Definition at line <a class="el" href="a00036_source.html#l00131">131</a> of file <a class="el" href="a00036_source.html">curl_ev.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a83d9f2a267b54b798d3b597229fedbf8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_set_url </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>url</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00036_source.html#l00142">142</a> of file <a class="el" href="a00036_source.html">curl_ev.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3095936ad23d8c9ecb47a0ce83b29043"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_set_verbose </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long int&#160;</td>
+          <td class="paramname"><em>bool</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00036_source.html#l00151">151</a> of file <a class="el" href="a00036_source.html">curl_ev.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afc227f2c572c4744dbf266ce208bd8c6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static size_t on_body </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>nmemb</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>userdata</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00036_source.html#l00039">39</a> of file <a class="el" href="a00036_source.html">curl_ev.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00036_afdaa7923045461457ad9c7aa725de09b_icgraph.svg" width="566" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00036_afc227f2c572c4744dbf266ce208bd8c6_icgraph.svg" width="308" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a8448b2426fbf01b6bc8ea1bd223ab3d1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static size_t on_header </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>nmemb</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>userdata</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00036_source.html#l00032">32</a> of file <a class="el" href="a00036_source.html">curl_ev.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00036_a8448b2426fbf01b6bc8ea1bd223ab3d1_icgraph.svg" width="276" height="104"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
@@ -379,7 +609,7 @@ Here is the caller graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 26 2016 15:14:20 for Homeport Documentation by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 1 2016 12:43:23 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

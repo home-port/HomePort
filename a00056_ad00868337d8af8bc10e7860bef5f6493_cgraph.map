@@ -1,7 +1,0 @@
-<map id="hpd_device_get_adapter" name="hpd_device_get_adapter">
-<area shape="rect" id="node2" href="$a00011.html#a427784ccb53776af393d2dedf7a77f62" title="discovery_get_device\l_adapter" alt="" coords="216,23,364,65"/>
-<area shape="rect" id="node3" href="$a00061.html#a1915dc6bbbb6b1a2a587723caa22069d" title="discovery_alloc_aid" alt="" coords="412,31,548,57"/>
-<area shape="rect" id="node4" href="$a00061.html#af2f553cfc3af4678b87a8fc75f35a5c6" title="discovery_set_aid" alt="" coords="598,5,725,32"/>
-<area shape="rect" id="node5" href="$a00061.html#a2bd026e829a41663810ae68fa3797987" title="discovery_free_aid" alt="" coords="596,56,727,83"/>
-<area shape="rect" id="node6" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="775,56,819,83"/>
-</map>

@@ -1,16 +1,11 @@
-<map id="hpd/src/request_api.c" name="hpd/src/request_api.c">
-<area shape="rect" id="node2" href="$a00011.html" title="discovery.h" alt="" coords="443,229,532,256"/>
-<area shape="rect" id="node5" href="$a00009.html" title="daemon.h" alt="" coords="177,229,256,256"/>
-<area shape="rect" id="node13" href="$a00053.html" title="hpd_api.h" alt="" coords="652,80,731,107"/>
-<area shape="rect" id="node19" href="$a00069.html" title="request.h" alt="" coords="255,80,331,107"/>
-<area shape="rect" id="node20" href="$a00066.html" title="log.h" alt="" coords="557,229,607,256"/>
-<area shape="rect" id="node21" href="$a00024.html" title="comm.h" alt="" coords="355,80,425,107"/>
-<area shape="rect" id="node3" href="$a00021.html" title="hpd_types.h" alt="" coords="435,304,529,331"/>
-<area shape="rect" id="node6" href="$a00040.html" title="hpd_common.h" alt="" coords="27,304,137,331"/>
-<area shape="rect" id="node9" href="$a00041.html" title="hpd_queue.h" alt="" coords="315,304,411,331"/>
-<area shape="rect" id="node14" href="$a00052.html" title="hpd_adapter_api.h" alt="" coords="705,155,833,181"/>
-<area shape="rect" id="node17" href="$a00054.html" title="hpd_application_api.h" alt="" coords="857,155,1003,181"/>
-<area shape="rect" id="node18" href="$a00055.html" title="hpd_daemon_api.h" alt="" coords="550,155,681,181"/>
-<area shape="rect" id="node15" href="$a00056.html" title="hpd_shared_api.h" alt="" coords="683,229,807,256"/>
-<area shape="rect" id="node22" href="$a00042.html" title="hpd_map.h" alt="" coords="332,229,419,256"/>
+<map id="hpd/src/discovery_id.c" name="hpd/src/discovery_id.c">
+<area shape="rect" id="node2" href="$a00011.html" title="discovery.h" alt="" coords="81,229,170,256"/>
+<area shape="rect" id="node5" href="$a00044.html" title="hpd_common.h" alt="" coords="462,155,573,181"/>
+<area shape="rect" id="node8" href="$a00009.html" title="daemon.h" alt="" coords="626,80,705,107"/>
+<area shape="rect" id="node13" href="$a00070.html" title="log.h" alt="" coords="5,229,56,256"/>
+<area shape="rect" id="node14" href="$a00003.html" title="model.h" alt="" coords="282,80,350,107"/>
+<area shape="rect" id="node3" href="$a00021.html" title="hpd_types.h" alt="" coords="152,304,245,331"/>
+<area shape="rect" id="node9" href="$a00045.html" title="hpd_queue.h" alt="" coords="363,304,459,331"/>
+<area shape="rect" id="node15" href="$a00046.html" title="hpd_map.h" alt="" coords="254,229,341,256"/>
+<area shape="rect" id="node17" href="$a00024.html" title="comm.h" alt="" coords="245,155,315,181"/>
 </map>

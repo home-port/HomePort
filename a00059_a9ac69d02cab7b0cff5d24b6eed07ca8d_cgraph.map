@@ -1,8 +1,0 @@
-<map id="discovery_alloc_service" name="discovery_alloc_service">
-<area shape="rect" id="node2" href="$a00042.html#a8d23b888fb4bb3f951c7d48f1928ee9a" title="hpd_map_alloc" alt="" coords="238,56,347,83"/>
-<area shape="rect" id="node3" href="$a00059.html#a562bd655fd329da0289d21ec36973322" title="discovery_free_service" alt="" coords="215,107,371,133"/>
-<area shape="rect" id="node4" href="$a00059.html#ad18143d06649d9220e4fd8d74dbdec79" title="discovery_free_parameter" alt="" coords="419,107,591,133"/>
-<area shape="rect" id="node5" href="$a00042.html#a195d511a075f2349200563af1c5d1fd7" title="hpd_map_free" alt="" coords="639,56,743,83"/>
-<area shape="rect" id="node7" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="964,81,1008,108"/>
-<area shape="rect" id="node6" href="$a00022.html#ae1085dd4fd40466d18b02ec077ef4d6d" title="hpd_map_remove" alt="" coords="791,5,916,32"/>
-</map>

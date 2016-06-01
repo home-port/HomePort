@@ -1,5 +1,0 @@
-<map id="event_inform_adapter_detached" name="event_inform_adapter_detached">
-<area shape="rect" id="node2" href="$a00011.html#adb9f3d73fc28b0ec1c15d72b03db7239" title="discovery_detach_adapter" alt="" coords="200,13,375,39"/>
-<area shape="rect" id="node3" href="$a00060.html#ace6bdcd24107e5a84d35a2dc90d3c58e" title="hpd_adapter_detach" alt="" coords="423,13,561,39"/>
-<area shape="rect" id="node4" href="$a00012.html#a51ee1d39c3be7ad828e223b971bd1a96" title="hpd_demo_adapter_stop" alt="" coords="609,13,773,39"/>
-</map>

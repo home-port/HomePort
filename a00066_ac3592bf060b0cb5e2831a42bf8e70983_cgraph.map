@@ -1,0 +1,8 @@
+<map id="event_foreach_attached" name="event_foreach_attached">
+<area shape="rect" id="node2" href="$a00011.html#aebd10ac1c18be51340c39d6d5a54e6d1" title="discovery_alloc_did" alt="" coords="215,56,351,83"/>
+<area shape="rect" id="node7" href="$a00011.html#ae1a000b225c8b3f365c2cec8362b8483" title="discovery_free_did" alt="" coords="217,107,348,133"/>
+<area shape="rect" id="node3" href="$a00065.html#acd5e8c2bf3e761abc7e2fd2294238a74" title="HPD_E_ALLOC: id might be partially updated. " alt="" coords="401,5,527,32"/>
+<area shape="rect" id="node5" href="$a00065.html#ae1a000b225c8b3f365c2cec8362b8483" title="discovery_free_did" alt="" coords="399,56,529,83"/>
+<area shape="rect" id="node4" href="$a00065.html#af2f553cfc3af4678b87a8fc75f35a5c6" title="HPD_E_ALLOC: id might be partially updated. " alt="" coords="577,5,704,32"/>
+<area shape="rect" id="node6" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="619,81,663,108"/>
+</map>

@@ -81,7 +81,7 @@
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="a00045.html#a222b05aa1f3416a31ddb08b5e2bfbff8" target="_top" xlink:title="Send message on connection. ">
+<g id="a_node5"><a xlink:href="a00049.html#a222b05aa1f3416a31ddb08b5e2bfbff8" target="_top" xlink:title="Send message on connection. ">
 <polygon fill="none" stroke="black" points="303,-76.5 303,-95.5 420,-95.5 420,-76.5 303,-76.5"/>
 <text text-anchor="middle" x="361.5" y="-83.5" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_tcpd_conn_vsendf</text>
 </a>

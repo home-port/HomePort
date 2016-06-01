@@ -1,8 +1,0 @@
-<map id="on_ev_send" name="on_ev_send">
-<area shape="rect" id="node2" href="$a00045.html#ab4a4e8ef0831797b20bdb331abf9f316" title="Initialise and accept connection. " alt="" coords="145,56,237,83"/>
-<area shape="rect" id="node3" href="$a00045.html#ae77def0ed256affe27ea6ce37bf0ebf7" title="Start the tcpd. " alt="" coords="285,56,393,83"/>
-<area shape="rect" id="node4" href="$a00015.html#ab26dd9acbd2ec17e5863a50f01e70e65" title="Start a httpd instance. " alt="" coords="441,31,553,57"/>
-<area shape="rect" id="node7" href="$a00043.html#a0ddf1224851353fc92bfbff6f499fa97" title="main" alt="" coords="472,81,523,108"/>
-<area shape="rect" id="node5" href="$a00034.html#a0ddf1224851353fc92bfbff6f499fa97" title="main" alt="" coords="611,5,661,32"/>
-<area shape="rect" id="node6" href="$a00025.html#a665691f420dff4eebb8f4b4af62d7a49" title="on_start" alt="" coords="601,56,671,83"/>
-</map>

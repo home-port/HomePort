@@ -16,7 +16,7 @@
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00042.html#a22cdd4d80a4d9bdccf15c63ff14c66f2" target="_top" xlink:title="hpd_map_get_n">
+<g id="a_node2"><a xlink:href="a00046.html#a22cdd4d80a4d9bdccf15c63ff14c66f2" target="_top" xlink:title="hpd_map_get_n">
 <polygon fill="none" stroke="black" points="147,-84.4204 147,-103.42 233,-103.42 233,-84.4204 147,-84.4204"/>
 <text text-anchor="middle" x="190" y="-91.4204" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_map_get_n</text>
 </a>
@@ -29,7 +29,7 @@
 </g>
 <!-- Node3 -->
 <g id="node3" class="node"><title>Node3</title>
-<g id="a_node3"><a xlink:href="a00042.html#a6d8c24cdcb1535f26a772f00d90aecec" target="_top" xlink:title="hpd_map_set_n">
+<g id="a_node3"><a xlink:href="a00046.html#a6d8c24cdcb1535f26a772f00d90aecec" target="_top" xlink:title="hpd_map_set_n">
 <polygon fill="none" stroke="black" points="147,-46.4204 147,-65.4204 233,-65.4204 233,-46.4204 147,-46.4204"/>
 <text text-anchor="middle" x="190" y="-53.4204" font-family="Helvetica,sans-Serif" font-size="10.00">hpd_map_set_n</text>
 </a>

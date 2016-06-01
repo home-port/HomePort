@@ -1,7 +1,2 @@
-<map id="hpd_tcpd" name="hpd_tcpd">
-<area shape="rect" id="node6" href="$a00029.html#a00109" title="Settings struct for tcpd. " alt="" coords="329,653,457,731"/>
-<area shape="rect" id="node13" href="$a00009.html#a00087" title="{hpd\n||}" alt="" coords="843,204,885,281"/>
-<area shape="rect" id="node10" href="$a00020.html" title="{hpd_module\n||+ TAILQ_ENTRY()\l}" alt="" coords="747,344,880,421"/>
-<area shape="rect" id="node11" href="$a00021.html#a00100" title="[Application API Callbacks] " alt="" coords="1079,204,1196,281"/>
-<area shape="rect" id="node16" href="$a00005.html#a00083" title="{configuration\n||}" alt="" coords="1137,344,1233,421"/>
+<map id="common/include/hpd_common.h" name="common/include/hpd_common.h">
 </map>

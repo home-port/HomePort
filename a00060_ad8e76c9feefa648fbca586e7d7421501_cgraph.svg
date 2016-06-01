@@ -48,7 +48,7 @@ if (edges && edges.length) {
 <script type="text/javascript">
 var viewWidth = 633;
 var viewHeight = 97;
-var sectionId = 'dynsection-59';
+var sectionId = 'dynsection-36';
 </script>
 <script xlink:href="svgpan.js"/>
 <svg id="graph" class="graph">
@@ -61,7 +61,7 @@ var sectionId = 'dynsection-59';
 </g>
 <!-- Node2 -->
 <g id="node2" class="node"><title>Node2</title>
-<g id="a_node2"><a xlink:href="a00059.html#ab265f0bf4b83ba56c57c6a2ca494be4e" target="_top" xlink:title="discovery_first_hpd\l_service">
+<g id="a_node2"><a xlink:href="a00063.html#ab265f0bf4b83ba56c57c6a2ca494be4e" target="_top" xlink:title="discovery_first_hpd\l_service">
 <polygon fill="none" stroke="black" points="127.5,-58 127.5,-88 228.5,-88 228.5,-58 127.5,-58"/>
 <text text-anchor="start" x="135.5" y="-76" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_first_hpd</text>
 <text text-anchor="middle" x="178" y="-65" font-family="Helvetica,sans-Serif" font-size="10.00">_service</text>
@@ -88,7 +88,7 @@ var sectionId = 'dynsection-59';
 </g>
 <!-- Node4 -->
 <g id="node4" class="node"><title>Node4</title>
-<g id="a_node4"><a xlink:href="a00061.html#a9788f216196637a4e9c0a0110e81bab1" target="_top" xlink:title="discovery_set_sid">
+<g id="a_node4"><a xlink:href="a00065.html#a9788f216196637a4e9c0a0110e81bab1" target="_top" xlink:title="HPD_E_ALLOC: id might be partially updated. ">
 <polygon fill="none" stroke="black" points="266.5,-38.5 266.5,-57.5 361.5,-57.5 361.5,-38.5 266.5,-38.5"/>
 <text text-anchor="middle" x="314" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_set_sid</text>
 </a>
@@ -101,7 +101,7 @@ var sectionId = 'dynsection-59';
 </g>
 <!-- Node7 -->
 <g id="node7" class="node"><title>Node7</title>
-<g id="a_node7"><a xlink:href="a00061.html#a8922de7d42124afa8ab5fd339fe695ee" target="_top" xlink:title="discovery_free_sid">
+<g id="a_node7"><a xlink:href="a00065.html#a8922de7d42124afa8ab5fd339fe695ee" target="_top" xlink:title="discovery_free_sid">
 <polygon fill="none" stroke="black" points="265,-0.5 265,-19.5 363,-19.5 363,-0.5 265,-0.5"/>
 <text text-anchor="middle" x="314" y="-7.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_free_sid</text>
 </a>
@@ -114,7 +114,7 @@ var sectionId = 'dynsection-59';
 </g>
 <!-- Node5 -->
 <g id="node5" class="node"><title>Node5</title>
-<g id="a_node5"><a xlink:href="a00061.html#acd5e8c2bf3e761abc7e2fd2294238a74" target="_top" xlink:title="discovery_set_did">
+<g id="a_node5"><a xlink:href="a00065.html#acd5e8c2bf3e761abc7e2fd2294238a74" target="_top" xlink:title="HPD_E_ALLOC: id might be partially updated. ">
 <polygon fill="none" stroke="black" points="399,-38.5 399,-57.5 494,-57.5 494,-38.5 399,-38.5"/>
 <text text-anchor="middle" x="446.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_set_did</text>
 </a>
@@ -127,7 +127,7 @@ var sectionId = 'dynsection-59';
 </g>
 <!-- Node6 -->
 <g id="node6" class="node"><title>Node6</title>
-<g id="a_node6"><a xlink:href="a00061.html#af2f553cfc3af4678b87a8fc75f35a5c6" target="_top" xlink:title="discovery_set_aid">
+<g id="a_node6"><a xlink:href="a00065.html#af2f553cfc3af4678b87a8fc75f35a5c6" target="_top" xlink:title="HPD_E_ALLOC: id might be partially updated. ">
 <polygon fill="none" stroke="black" points="530,-38.5 530,-57.5 625,-57.5 625,-38.5 530,-38.5"/>
 <text text-anchor="middle" x="577.5" y="-45.5" font-family="Helvetica,sans-Serif" font-size="10.00">discovery_set_aid</text>
 </a>

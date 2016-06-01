@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>Homeport Documentation: hpd/include/hpd_api.h Source File</title>
+<title>HomePort: example/demo/demo_application.c Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -23,7 +23,7 @@
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Homeport Documentation
+   <div id="projectname">HomePort
    </div>
   </td>
  </tr>
@@ -81,12 +81,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_ab00a9b86cff89a0b86b44294c0aada6.html">hpd</a></li><li class="navelem"><a class="el" href="dir_aba8a382290fd93b3200a2cfbb5130ed.html">include</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_cfafba98a580ce4b62f8a6fa96d7cbb0.html">example</a></li><li class="navelem"><a class="el" href="dir_6ca2dda541dd7f06e7e7dc7dd0524cb8.html">demo</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">hpd_api.h</div>  </div>
+<div class="title">demo_application.c</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a00053.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
@@ -116,21 +116,61 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * authors and should not be interpreted as representing official policies, either expressed</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#ifndef HOMEPORT_HPD_API_H</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#define HOMEPORT_HPD_API_H</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00052.html">hpd_adapter_api.h</a>&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00054.html">hpd_application_api.h</a>&quot;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00055.html">hpd_daemon_api.h</a>&quot;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#endif //HOMEPORT_HPD_API_H</span></div>
-<div class="ttc" id="a00055_html"><div class="ttname"><a href="a00055.html">hpd_daemon_api.h</a></div></div>
-<div class="ttc" id="a00054_html"><div class="ttname"><a href="a00054.html">hpd_application_api.h</a></div></div>
-<div class="ttc" id="a00052_html"><div class="ttname"><a href="a00052.html">hpd_adapter_api.h</a></div></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00054.html">demo_application.h</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00058.html">hpd_application_api.h</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="a00053.html#ac45f734e48655bad4111b526425b8dec">   32</a></span>&#160;<span class="keyword">static</span> <a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00053.html#ac45f734e48655bad4111b526425b8dec">hpd_demo_app_create</a>(<span class="keywordtype">void</span> **<a class="code" href="a00006.html#a00090">data</a>, <a class="code" href="a00020.html">hpd_module_t</a> *context)</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;}</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="a00053.html#a076dbe1121066cbd30c60346cd082581">   37</a></span>&#160;<span class="keyword">static</span> <a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00053.html#a076dbe1121066cbd30c60346cd082581">hpd_demo_app_destroy</a>(<span class="keywordtype">void</span> *<a class="code" href="a00006.html#a00090">data</a>)</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;{</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="a00053.html#ae70670bc0a8aa6ad5e86f3eeb3dfa94f">   42</a></span>&#160;<span class="keyword">static</span> <a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00053.html#ae70670bc0a8aa6ad5e86f3eeb3dfa94f">hpd_demo_app_start</a>(<span class="keywordtype">void</span> *<a class="code" href="a00006.html#a00090">data</a>, <a class="code" href="a00009.html#a00093">hpd_t</a> *<a class="code" href="a00009.html#a00093">hpd</a>)</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="a00053.html#a7c9604d2be019ab2e7672135b421b20f">   47</a></span>&#160;<span class="keyword">static</span> <a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00053.html#a7c9604d2be019ab2e7672135b421b20f">hpd_demo_app_stop</a>(<span class="keywordtype">void</span> *<a class="code" href="a00006.html#a00090">data</a>, <a class="code" href="a00009.html#a00093">hpd_t</a> *<a class="code" href="a00009.html#a00093">hpd</a>)</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="a00053.html#a8095106ecfb9e16837934b1836f32010">   52</a></span>&#160;<span class="keyword">static</span> <a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00053.html#a8095106ecfb9e16837934b1836f32010">hpd_demo_app_parse_opt</a>(<span class="keywordtype">void</span> *<a class="code" href="a00006.html#a00090">data</a>, <span class="keyword">const</span> <span class="keywordtype">char</span> *name, <span class="keyword">const</span> <span class="keywordtype">char</span> *arg)</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    printf(<span class="stringliteral">&quot;Got &lt;%s, %s&gt;\n&quot;</span>, name, arg); <span class="comment">// TODO Wrong!</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="a00054.html#a38e48bd519f1c75ba6e4dd9d42d92b7f">   58</a></span>&#160;<span class="keyword">struct </span><a class="code" href="a00021.html#a00106">hpd_module_def</a> <a class="code" href="a00053.html#a38e48bd519f1c75ba6e4dd9d42d92b7f">hpd_demo_app_def</a> = {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <a class="code" href="a00053.html#ac45f734e48655bad4111b526425b8dec">hpd_demo_app_create</a>,</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <a class="code" href="a00053.html#a076dbe1121066cbd30c60346cd082581">hpd_demo_app_destroy</a>,</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <a class="code" href="a00053.html#ae70670bc0a8aa6ad5e86f3eeb3dfa94f">hpd_demo_app_start</a>,</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <a class="code" href="a00053.html#a7c9604d2be019ab2e7672135b421b20f">hpd_demo_app_stop</a>,</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        <a class="code" href="a00053.html#a8095106ecfb9e16837934b1836f32010">hpd_demo_app_parse_opt</a>,</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;};</div>
+<div class="ttc" id="a00053_html_a8095106ecfb9e16837934b1836f32010"><div class="ttname"><a href="a00053.html#a8095106ecfb9e16837934b1836f32010">hpd_demo_app_parse_opt</a></div><div class="ttdeci">static hpd_error_t hpd_demo_app_parse_opt(void *data, const char *name, const char *arg)</div><div class="ttdef"><b>Definition:</b> <a href="a00053_source.html#l00052">demo_application.c:52</a></div></div>
+<div class="ttc" id="a00021_html_a00106"><div class="ttname"><a href="a00021.html#a00106">hpd_module_def</a></div><div class="ttdoc">[Application API Callbacks] </div><div class="ttdef"><b>Definition:</b> <a href="a00021_source.html#l00201">hpd_types.h:201</a></div></div>
+<div class="ttc" id="a00053_html_a38e48bd519f1c75ba6e4dd9d42d92b7f"><div class="ttname"><a href="a00053.html#a38e48bd519f1c75ba6e4dd9d42d92b7f">hpd_demo_app_def</a></div><div class="ttdeci">struct hpd_module_def hpd_demo_app_def</div><div class="ttdef"><b>Definition:</b> <a href="a00053_source.html#l00058">demo_application.c:58</a></div></div>
+<div class="ttc" id="a00053_html_ae70670bc0a8aa6ad5e86f3eeb3dfa94f"><div class="ttname"><a href="a00053.html#ae70670bc0a8aa6ad5e86f3eeb3dfa94f">hpd_demo_app_start</a></div><div class="ttdeci">static hpd_error_t hpd_demo_app_start(void *data, hpd_t *hpd)</div><div class="ttdef"><b>Definition:</b> <a href="a00053_source.html#l00042">demo_application.c:42</a></div></div>
+<div class="ttc" id="a00021_html_a3f117b297a535788094c22da826c2c94"><div class="ttname"><a href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a></div><div class="ttdeci">enum hpd_error hpd_error_t</div><div class="ttdef"><b>Definition:</b> <a href="a00021_source.html#l00167">hpd_types.h:167</a></div></div>
+<div class="ttc" id="a00021_html_af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940"><div class="ttname"><a href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a></div><div class="ttdef"><b>Definition:</b> <a href="a00021_source.html#l00070">hpd_types.h:70</a></div></div>
+<div class="ttc" id="a00053_html_a7c9604d2be019ab2e7672135b421b20f"><div class="ttname"><a href="a00053.html#a7c9604d2be019ab2e7672135b421b20f">hpd_demo_app_stop</a></div><div class="ttdeci">static hpd_error_t hpd_demo_app_stop(void *data, hpd_t *hpd)</div><div class="ttdef"><b>Definition:</b> <a href="a00053_source.html#l00047">demo_application.c:47</a></div></div>
+<div class="ttc" id="a00009_html_a00093"><div class="ttname"><a href="a00009.html#a00093">hpd</a></div><div class="ttdef"><b>Definition:</b> <a href="a00009_source.html#l00050">daemon.h:50</a></div></div>
+<div class="ttc" id="a00058_html"><div class="ttname"><a href="a00058.html">hpd_application_api.h</a></div></div>
+<div class="ttc" id="a00053_html_a076dbe1121066cbd30c60346cd082581"><div class="ttname"><a href="a00053.html#a076dbe1121066cbd30c60346cd082581">hpd_demo_app_destroy</a></div><div class="ttdeci">static hpd_error_t hpd_demo_app_destroy(void *data)</div><div class="ttdef"><b>Definition:</b> <a href="a00053_source.html#l00037">demo_application.c:37</a></div></div>
+<div class="ttc" id="a00020_html"><div class="ttname"><a href="a00020.html">hpd_module</a></div><div class="ttdef"><b>Definition:</b> <a href="a00009_source.html#l00086">daemon.h:86</a></div></div>
+<div class="ttc" id="a00054_html"><div class="ttname"><a href="a00054.html">demo_application.h</a></div></div>
+<div class="ttc" id="a00053_html_ac45f734e48655bad4111b526425b8dec"><div class="ttname"><a href="a00053.html#ac45f734e48655bad4111b526425b8dec">hpd_demo_app_create</a></div><div class="ttdeci">static hpd_error_t hpd_demo_app_create(void **data, hpd_module_t *context)</div><div class="ttdef"><b>Definition:</b> <a href="a00053_source.html#l00032">demo_application.c:32</a></div></div>
+<div class="ttc" id="a00006_html_a00090"><div class="ttname"><a href="a00006.html#a00090">data</a></div><div class="ttdef"><b>Definition:</b> <a href="a00042_source.html#l00032">header_parser_test.c:32</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu May 26 2016 15:14:20 for Homeport Documentation by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jun 1 2016 12:43:23 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>
