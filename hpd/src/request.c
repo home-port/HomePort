@@ -244,9 +244,7 @@ static void on_respond(hpd_ev_loop_t *loop, ev_async *w, int revents)
     ev_async_stop(loop, w);
     free(async);
 
-    if (request->on_response && (rc = request->on_response(response))) {
-        // TODO What can I do with rc here ? just printf...
-    }
+    if (request->on_response) request->on_response(response);
 
     if ((rc = request_free_response(response))) {
         // TODO What can I do with rc here ? just printf...

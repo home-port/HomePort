@@ -470,20 +470,23 @@ static hpd_httpd_return_t on_req_destroy(hpd_httpd_t *ins, hpd_httpd_request_t *
     }
 }
 
-static hpd_error_t on_response(const hpd_response_t *res)
+static void on_response(const hpd_response_t *res)
 {
     hpd_error_t rc, rc2;
 
     // Get rest request
     hpd_rest_req_t *rest_req;
-    if ((rc = hpd_response_get_request_data(res, (void **) &rest_req))) return rc;
+    if ((rc = hpd_response_get_request_data(res, (void **) &rest_req))) {
+        // TODO Cannot print here!
+        return;
+    }
     
     // Make life easier
     hpd_httpd_request_t *http_req = rest_req->http_req;
     const hpd_module_t *context = rest_req->rest->context;
     
     // Check if closed from downstairs
-    if (!http_req) return HPD_E_SUCCESS;
+    if (!http_req) return;
 
     // Get data from hpd
     const hpd_value_t *value;
@@ -496,7 +499,8 @@ static hpd_error_t on_response(const hpd_response_t *res)
         if ((rc2 = reply_internal_server_error(http_req, rest_req, context))) {
             HPD_LOG_ERROR(context, "Failed to send internal server error response (code: %d).", rc2);
         }
-        return rc;
+        HPD_LOG_ERROR(context, "Failed to get data (code: %d).", rc);
+        return;
     }
     
     // Check val from hpd
@@ -504,7 +508,8 @@ static hpd_error_t on_response(const hpd_response_t *res)
         if ((rc2 = reply(http_req, status, rest_req, context))) {
             HPD_LOG_ERROR(context, "Failed to send status response (code: %d).", rc2);
         }
-        return HPD_E_ARGUMENT;
+        HPD_LOG_WARN(context, "No value in response.");
+        return ;
     }
 
     // Get data from httpd
@@ -520,7 +525,8 @@ static hpd_error_t on_response(const hpd_response_t *res)
             if ((rc2 = reply_internal_server_error(http_req, rest_req, context))) {
                 HPD_LOG_ERROR(context, "Failed to send internal server error response (code: %d).", rc2);
             }
-            return rc;
+            HPD_LOG_ERROR(context, "Map error (code: %d).", rc);
+            return;
     }
     switch ((accept_type = media_type_to_enum(accept))) {
         case CONTENT_NONE:
@@ -532,7 +538,7 @@ static hpd_error_t on_response(const hpd_response_t *res)
             if ((rc2 = reply_unsupported_media_type(http_req, rest_req, context))) {
                 HPD_LOG_ERROR(context, "Failed to send unsupport1ed media type response (code: %d).", rc2);
             }
-            return HPD_E_SUCCESS;
+            return;
     }
 
     // Null terminate val
@@ -542,7 +548,8 @@ static hpd_error_t on_response(const hpd_response_t *res)
         if ((rc2 = reply_internal_server_error(http_req, rest_req, context))) {
             HPD_LOG_ERROR(context, "Failed to send internal server error response (code: %d).", rc2);
         }
-        HPD_LOG_RETURN_E_ALLOC(context);
+        HPD_LOG_ERROR(context, "Failed to allocate memory.");
+        return;
     }
     strncpy(body, val, len);
     body[len] = '\0';
@@ -582,7 +589,7 @@ static hpd_error_t on_response(const hpd_response_t *res)
     free(state);
     free(body);
 
-    return rc;
+    return;
 
     error_free_state:
         free(state);
@@ -597,7 +604,8 @@ static hpd_error_t on_response(const hpd_response_t *res)
         }
     error_free_body:
         free(body);
-        return rc;
+        HPD_LOG_ERROR(context, "on_response failed (code: %i).", rc);
+        return;
 }
 
 static hpd_httpd_return_t on_req_begin(hpd_httpd_t *httpd, hpd_httpd_request_t *req, void* httpd_ctx, void** req_data)
