@@ -125,9 +125,7 @@ static void on_changed(hpd_ev_loop_t *loop, ev_async *w, int revents)
 
     hpd_listener_t *listener;
     HPD_TAILQ_FOREACH(listener, &hpd->configuration->listeners) {
-        if (listener->on_change && (rc = listener->on_change(listener->data, id, value))) {
-            // TODO How to handle this ???
-        }
+        if (listener->on_change) listener->on_change(listener->data, id, value);
     }
 
     if ((rc = discovery_free_sid(id))) {
@@ -152,9 +150,7 @@ static void on_attached(hpd_ev_loop_t *loop, ev_async *w, int revents)
 
     hpd_listener_t *listener;
     HPD_TAILQ_FOREACH(listener, &hpd->configuration->listeners) {
-        if (listener->on_attach && (rc = listener->on_attach(listener->data, id))) {
-            // TODO How to handle this ???
-        }
+        if (listener->on_attach) listener->on_attach(listener->data, id);
     }
 
     if ((rc = discovery_free_did(id))) {
@@ -175,9 +171,7 @@ static void on_detached(hpd_ev_loop_t *loop, ev_async *w, int revents)
 
     hpd_listener_t *listener;
     HPD_TAILQ_FOREACH(listener, &hpd->configuration->listeners) {
-        if (listener->on_attach && (rc = listener->on_attach(listener->data, id))) {
-            // TODO How to handle this ???
-        }
+        if (listener->on_detach) listener->on_detach(listener->data, id);
     }
 
     if ((rc = discovery_free_did(id))) {

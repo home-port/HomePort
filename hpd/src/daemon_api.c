@@ -51,11 +51,13 @@ hpd_error_t hpd_get_loop(hpd_t *hpd, hpd_ev_loop_t **loop)
 
 hpd_error_t hpd_module(hpd_t *hpd, const char *id, const hpd_module_def_t *module_def)
 {
-    // TODO Reserve module names hpd and log? (maybe even create them as modules)
     hpd_module_t *module;
     if (!hpd || !id || !module_def) LOG_RETURN_E_NULL();
     if (hpd->configuration) LOG_RETURN(HPD_E_STATE, "Cannot add module while hpd is running.");
     if (strchr(id, '-')) LOG_RETURN(HPD_E_ARGUMENT, "Module ids may not contain '-'.");
+    // TODO Create hpd and log as modules ?
+    if (strcmp(id, "hpd") == 0) LOG_RETURN(HPD_E_ARGUMENT, "Module ids cannot be 'hpd'.");
+    if (strcmp(id, "log") == 0) LOG_RETURN(HPD_E_ARGUMENT, "Module ids cannot be 'log'.");
     HPD_TAILQ_FOREACH(module, &hpd->modules)
         if (strcmp(module->id, id) == 0)
             LOG_RETURN(HPD_E_NOT_UNIQUE, "Module ids must be unique.");

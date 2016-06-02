@@ -191,9 +191,9 @@ typedef hpd_error_t (*hpd_free_f) (void *data); //< Free function, used to free 
 /// [Application API Callbacks]
 typedef hpd_error_t (*hpd_response_f) (const hpd_response_t *res);
 /// Value callback for listeners
-typedef hpd_error_t (*hpd_value_f) (void *data, const hpd_service_id_t *service, const hpd_value_t *val);
+typedef void (*hpd_value_f) (void *data, const hpd_service_id_t *service, const hpd_value_t *val);
 /// Device callback for listeners
-typedef hpd_error_t (*hpd_device_f) (void *data, const hpd_device_id_t *device);
+typedef void (*hpd_device_f) (void *data, const hpd_device_id_t *device);
 /// [Application API Callbacks]
 
 /// [hpd_module_def_t]
