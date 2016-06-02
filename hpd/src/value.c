@@ -31,8 +31,6 @@
 #include "comm.h"
 #include "log.h"
 
-// TODO No printing on hpd_map_*() (All files...)
-
 hpd_error_t value_alloc(hpd_value_t **value, const char *body, int len)
 {
     hpd_error_t rc;

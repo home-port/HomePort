@@ -228,7 +228,8 @@ static void on_request(hpd_ev_loop_t *loop, ev_async *w, int revents)
         request_free_response(response);
     error_free_request:
         request_free_request(request);
-        // TODO This is crap: Cannot return code here, need to do printf
+        LOG_ERROR("on_request() failed [code: %i].", rc);
+        return;
 }
 
 static void on_respond(hpd_ev_loop_t *loop, ev_async *w, int revents)
@@ -247,7 +248,7 @@ static void on_respond(hpd_ev_loop_t *loop, ev_async *w, int revents)
     if (request->on_response) request->on_response(response);
 
     if ((rc = request_free_response(response))) {
-        // TODO What can I do with rc here ? just printf...
+        LOG_ERROR("Free function failed [code: %i].", rc);
     }
 }
 

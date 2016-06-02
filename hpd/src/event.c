@@ -129,11 +129,11 @@ static void on_changed(hpd_ev_loop_t *loop, ev_async *w, int revents)
     }
 
     if ((rc = discovery_free_sid(id))) {
-        // TODO How to handle this ???
+        LOG_ERROR("free function failed [code: %i].", rc);
     }
 
     if ((rc = value_free(value))) {
-        // TODO How to handle this ???
+        LOG_ERROR("free function failed [code: %i].", rc);
     }
 }
 
@@ -154,7 +154,7 @@ static void on_attached(hpd_ev_loop_t *loop, ev_async *w, int revents)
     }
 
     if ((rc = discovery_free_did(id))) {
-        // TODO How to handle this ???
+        LOG_ERROR("free function failed [code: %i].", rc);
     }
 }
 
@@ -175,7 +175,7 @@ static void on_detached(hpd_ev_loop_t *loop, ev_async *w, int revents)
     }
 
     if ((rc = discovery_free_did(id))) {
-        // TODO How to handle this ???
+        LOG_ERROR("free function failed [code: %i].", rc);
     }
 }
 
@@ -213,7 +213,9 @@ hpd_error_t event_inform_adapter_attached(hpd_adapter_t *adapter)
     hpd_error_t rc;
     hpd_device_t *device;
     HPD_TAILQ_FOREACH(device, adapter->devices) {
-        if ((rc = event_inform_device_attached(device))) return rc; // TODO Half done on errors
+        // TODO Could alternatively remove the attached watchers and return an error
+        if ((rc = event_inform_device_attached(device)))
+            LOG_ERROR("event_inform_device_attached() [code: %i].", rc);
     }
     return HPD_E_SUCCESS;
 }
@@ -223,7 +225,9 @@ hpd_error_t event_inform_adapter_detached(hpd_adapter_t *adapter)
     hpd_error_t rc;
     hpd_device_t *device;
     HPD_TAILQ_FOREACH(device, adapter->devices) {
-        if ((rc = event_inform_device_detached(device))) return rc; // TODO Half done on errors
+        // TODO Could alternatively remove the attached watchers and return an error
+        if ((rc = event_inform_device_detached(device)))
+            LOG_ERROR("event_inform_device_detached() [code: %i].", rc);
     }
     return HPD_E_SUCCESS;
 }

@@ -34,7 +34,7 @@
 
 static const char * const XML_VERSION = "1.0";
 
-// TODO Ugly hack to get context through mxml
+// TODO Fix ugly hack to get context through mxml ?
 static const hpd_module_t *global_context = NULL;
 
 static void on_mxml_error(const char *msg)
