@@ -438,8 +438,7 @@ hpd_error_t discovery_get_action_method(const hpd_action_t *action, hpd_method_t
 
 hpd_error_t discovery_set_adapter_data(hpd_adapter_t *adapter, void *data, hpd_free_f on_free)
 {
-    hpd_error_t rc;
-    if (adapter->on_free && (rc = adapter->on_free(adapter->data))) return rc;
+    if (adapter->on_free) adapter->on_free(adapter->data);
     adapter->data = data;
     adapter->on_free = on_free;
     return HPD_E_SUCCESS;
@@ -447,8 +446,7 @@ hpd_error_t discovery_set_adapter_data(hpd_adapter_t *adapter, void *data, hpd_f
 
 hpd_error_t discovery_set_device_data(hpd_device_t *device, void *data, hpd_free_f on_free)
 {
-    hpd_error_t rc;
-    if (device->on_free && (rc = device->on_free(device->data))) return rc;
+    if (device->on_free) device->on_free(device->data);
     device->data = data;
     device->on_free = on_free;
     return HPD_E_SUCCESS;
@@ -456,8 +454,7 @@ hpd_error_t discovery_set_device_data(hpd_device_t *device, void *data, hpd_free
 
 hpd_error_t discovery_set_service_data(hpd_service_t *service, void *data, hpd_free_f on_free)
 {
-    hpd_error_t rc;
-    if (service->on_free && (rc = service->on_free(service->data))) return rc;
+    if (service->on_free) service->on_free(service->data);
     service->data = data;
     service->on_free = on_free;
     return HPD_E_SUCCESS;
