@@ -75,6 +75,9 @@ static void on_io(hpd_ev_loop_t *loop, ev_io *w, int revents)
 
 static void on_timeout(hpd_ev_loop_t *loop, ev_timer *w, int revents)
 {
+    // TODO This is called ALOT - maybe I should check if everything does it right ?
+    // TODO Maybe this need to cancel the timer again ?
+    // HPD_LOG_VERBOSE(curl_ev->context, "%s()", __FUNCTION__);
     CURLMcode cmc;
     if ((cmc = curl_ev_socket_action(CURL_SOCKET_TIMEOUT)))
         HPD_LOG_ERROR(curl_ev->context, "curl_ev_socket_action() failed [code: %i]", cmc);
@@ -93,6 +96,7 @@ static CURLMcode on_update_socket(CURL *easy, curl_socket_t s, int what, void *u
         case CURL_POLL_INOUT:
             if (socketp) {
                 w = socketp;
+                ev_io_stop(curl_ev->loop, &w->watcher);
             } else {
                 HPD_CALLOC(w, 1, curl_ev_io_t);
                 if ((cmc = curl_multi_assign(curl_ev->mult_handle, s, w))) {
@@ -172,7 +176,7 @@ static hpd_error_t curl_ev_add_next()
     const hpd_module_t *context = curl_ev->context;
 
     if (!curl_ev->mult_handle) {
-        HPD_LOG_VERBOSE(context, "Not starting, saving handle for later...");
+        HPD_LOG_VERBOSE(context, "Not started, saving handle for later...");
         return HPD_E_SUCCESS;
     }
 
