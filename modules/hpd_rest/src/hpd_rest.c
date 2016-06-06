@@ -489,6 +489,7 @@ static void on_response(const hpd_response_t *res)
     if (!http_req) return;
 
     // Get data from hpd
+    // TODO Need to send value into xml/json to get headers too !!!
     const hpd_value_t *value;
     const char *val;
     size_t len;
