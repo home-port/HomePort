@@ -71,7 +71,7 @@ hpd_error_t hpd_module_add_option(const hpd_module_t *context, const char *name,
     hpd_t *hpd = context->hpd;
     if (!hpd->options) LOG_RETURN(HPD_E_STATE, "Can only add options during on_create().");
     size_t name_index = strlen(context->id)+1;
-    for (int i = 0; i < hpd->options_count; i++) {
+    for (int i = 0; i < hpd->module_options_count; i++) {
         if (name_index < strlen(hpd->options[i].name) && strcmp(&hpd->options[i].name[name_index], name) == 0)
             LOG_RETURN(HPD_E_NOT_UNIQUE, "Option names must be unique within the module.");
     }
