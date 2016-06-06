@@ -30,6 +30,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #define HTTP_VERSION "HTTP/1.1 "
 #define CRLF "\r\n"
@@ -127,7 +128,9 @@ hpd_error_t hpd_httpd_response_create(hpd_httpd_response_t **response, hpd_httpd
     // Calculate msg length
     len = 1;
     len += strlen(HTTP_VERSION);
+    // TODO Problem if this if is NULL !
     if (status_str) len += strlen(status_str);
+    len += 4;
     len += strlen(CRLF);
 
     // Allocate space
@@ -147,6 +150,7 @@ hpd_error_t hpd_httpd_response_create(hpd_httpd_response_t **response, hpd_httpd
 
     // Construct msg
     strcpy((*response)->msg, HTTP_VERSION);
+    sprintf(&(*response)->msg[strlen(HTTP_VERSION)], "%i ", status);
     if (status_str) strcat((*response)->msg, status_str);
     strcat((*response)->msg, CRLF);
 
