@@ -75,9 +75,7 @@ static void on_io(hpd_ev_loop_t *loop, ev_io *w, int revents)
 
 static void on_timeout(hpd_ev_loop_t *loop, ev_timer *w, int revents)
 {
-    // TODO This is called ALOT - maybe I should check if everything does it right ?
-    // TODO Maybe this need to cancel the timer again ?
-    // HPD_LOG_VERBOSE(curl_ev->context, "%s()", __FUNCTION__);
+    ev_timer_stop(loop, w);
     CURLMcode cmc;
     if ((cmc = curl_ev_socket_action(CURL_SOCKET_TIMEOUT)))
         HPD_LOG_ERROR(curl_ev->context, "curl_ev_socket_action() failed [code: %i]", cmc);

@@ -72,7 +72,7 @@ static hpd_error_t on_create_add_options(void **data, const hpd_module_t *contex
     if ((module_data->add_option2 = hpd_module_add_option(context, "opt2", NULL, 0, "Option 2")) != HPD_E_SUCCESS)
         return module_data->add_option2;
 
-    if (hpd->options_count != 2) module_data->option_errors[0] = 1;
+    if (hpd->module_options_count != 2) module_data->option_errors[0] = 1;
     option = &hpd->options[0];
     if (strcmp(option->name, "mod-opt1")) module_data->option_errors[1] = 1;
     if (option->key != 0xff+0) module_data->option_errors[2] = 1;
@@ -145,7 +145,7 @@ TEST(CASE, hpd_allocation) {
     ASSERT_EQ(hpd->loop, nullptr);
     ASSERT_EQ(hpd->configuration, nullptr);
     ASSERT_TRUE(TAILQ_EMPTY(&hpd->modules));
-    ASSERT_EQ(hpd->options_count, 0);
+    ASSERT_EQ(hpd->module_options_count, 0);
     ASSERT_EQ(hpd->options, nullptr);
     ASSERT_EQ(hpd->option2module, nullptr);
     ASSERT_EQ(hpd_free(hpd), HPD_E_SUCCESS);

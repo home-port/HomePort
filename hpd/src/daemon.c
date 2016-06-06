@@ -33,6 +33,8 @@
 #include "log.h"
 #include "model.h"
 
+static hpd_error_t options_parse(hpd_t *hpd, int argc, char **argv);
+
 static void on_signal(hpd_ev_loop_t *loop, ev_signal *w, int revents)
 {
     ev_break(loop, EVBREAK_ALL);
@@ -43,7 +45,7 @@ static int on_parse_opt(int key, char *arg, struct argp_state *state)
     hpd_error_t rc;
     hpd_t *hpd = state->input;
 
-    if (key >= 0xff && (key - 0xff) < hpd->options_count) {
+    if (key >= 0xff && (key - 0xff) < hpd->module_options_count) {
         const hpd_module_t *module = hpd->option2module[key-0xff];
         const char *name = hpd->options[key - 0xff].name;
         while ((name++)[0] != '-');
@@ -54,11 +56,78 @@ static int on_parse_opt(int key, char *arg, struct argp_state *state)
                 LOG_DEBUG("Module '%s' did not recognise the option '%s'.", module->id, name);
                 return ARGP_ERR_UNKNOWN;
             default:
+                // TODO Wrong return type
                 return rc;
         }
     }
 
-    return 0;
+    switch (key) {
+        case 'c': {
+            // TODO Skipping some checks here...
+            LOG_WARN("Configuration files are still very much in an early alpha state.");
+            char *buffer = NULL;
+            FILE *fp = fopen(arg, "rb");
+            if (fp) {
+                fseek(fp, 0, SEEK_END);
+                // TODO Puts a limit on file size (recheck the casting bit)
+                size_t len = (size_t) ftell(fp);
+                fseek(fp, 0, SEEK_SET);
+                HPD_CALLOC(buffer, len, char);
+                fread(buffer, 1, len, fp);
+                fclose(fp);
+            }
+            if (buffer) {
+                int argc = 1;
+                char **argv = NULL;
+                HPD_REALLOC(argv, argc, char *);
+                argv[0] = hpd->argv0;
+                for (char *a = strtok(buffer, " \n\t"); a; a = strtok(NULL, " ")) {
+                    HPD_REALLOC(argv, argc + 1, char *);
+                    argv[argc] = a;
+                    argc++;
+                }
+                options_parse(hpd, argc, argv); // TODO Check error
+                free(argv);
+            }
+            return 0;
+        }
+        default:
+            return ARGP_ERR_UNKNOWN;
+    }
+
+    alloc_error:
+        // TODO What ?
+        // TODO Free up a lot of stuff...
+        return 0;
+}
+
+static hpd_error_t add_option(hpd_t *hpd, const char *name, int key, const char *arg, int flags, const char *doc)
+{
+    char *name_alloc = NULL, *arg_alloc = NULL, *doc_alloc = NULL;
+    argp_option_t option = { 0 };
+    argp_option_t empty = { 0 };
+
+    if (name) HPD_STR_CPY(name_alloc, name);
+    if (arg) HPD_STR_CPY(arg_alloc, arg);
+    if (doc) HPD_STR_CPY(doc_alloc, doc);
+    option.name = name_alloc;
+    option.key = key;
+    option.arg = arg_alloc;
+    option.flags = flags;
+    option.doc = doc_alloc;
+
+    HPD_REALLOC(hpd->options, hpd->options_count+2, argp_option_t);
+    hpd->options[hpd->options_count] = option;
+    hpd->options[hpd->options_count+1] = empty;
+    hpd->options_count++;
+
+    return HPD_E_SUCCESS;
+
+    alloc_error:
+    free(name_alloc);
+    free(arg_alloc);
+    free(doc_alloc);
+    LOG_RETURN_E_ALLOC();
 }
 
 static hpd_error_t loop_create(hpd_t *hpd)
@@ -166,11 +235,20 @@ static hpd_error_t modules_stop(hpd_t *hpd)
 
 static hpd_error_t options_create(hpd_t *hpd)
 {
+    hpd_error_t rc;
+
     HPD_CALLOC(hpd->options, 1, argp_option_t);
+    if ((rc = add_option(hpd, "conf", 'c', "file", 0, "Load arguments from configuration file"))) goto error;
+
     return HPD_E_SUCCESS;
 
     alloc_error:
     LOG_RETURN_E_ALLOC();
+
+    error:
+    free(hpd->options);
+    hpd->options = NULL;
+    return rc;
 }
 
 static void options_destroy(hpd_t *hpd)
@@ -329,43 +407,41 @@ hpd_error_t daemon_add_module(hpd_t *hpd, const char *id, const hpd_module_def_t
 hpd_error_t daemon_add_option(const hpd_module_t *context, const char *name, const char *arg, int flags,
                               const char *doc)
 {
+    hpd_error_t rc;
     hpd_t *hpd = context->hpd;
-    argp_option_t option = { 0 };
-    argp_option_t empty = { 0 };
-    char *name_alloc, *arg_alloc = NULL, *doc_alloc = NULL;
+    
+    char *name_cat;
+    HPD_CALLOC(name_cat, strlen(name)+strlen(context->id)+2, char);
+    strcpy(name_cat, context->id);
+    strcat(name_cat, "-");
+    strcat(name_cat, name);
 
-    HPD_CALLOC(name_alloc, strlen(name)+strlen(context->id)+2, char);
-    strcpy(name_alloc, context->id);
-    strcat(name_alloc, "-");
-    strcat(name_alloc, name);
-    if (arg) HPD_STR_CPY(arg_alloc, arg);
-    if (doc) HPD_STR_CPY(doc_alloc, doc);
-    option.name = name_alloc;
-    option.key = 0xff + hpd->options_count;
-    option.arg = arg_alloc;
-    option.flags = flags;
-    option.doc = doc_alloc;
+    int key = 0xff + hpd->module_options_count;
 
-    HPD_REALLOC(hpd->options, hpd->options_count+2, argp_option_t);
-    HPD_REALLOC(hpd->option2module, hpd->options_count+1, const hpd_module_t *);
+    if ((rc = add_option(hpd, name_cat, key, arg, flags, doc))) goto error;
 
-    hpd->option2module[hpd->options_count] = context;
-    hpd->options[hpd->options_count] = option;
-    hpd->options[hpd->options_count+1] = empty;
-    hpd->options_count++;
+    HPD_REALLOC(hpd->option2module, hpd->module_options_count+1, const hpd_module_t *);
+    hpd->option2module[hpd->module_options_count] = context;
+    hpd->module_options_count++;
 
+    free(name_cat);
     return HPD_E_SUCCESS;
 
+    error:
+    free(name_cat);
+    return rc;
+
     alloc_error:
-        if (name_alloc) free(name_alloc);
-    if (arg_alloc) free(arg_alloc);
-    if (doc_alloc) free(doc_alloc);
+    // TODO This leaves everything in a bit of a weird state
+    free(name_cat);
     LOG_RETURN_E_ALLOC();
 }
 
 hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[])
 {
     hpd_error_t rc, rc2;
+
+    hpd->argv0 = argv[0];
 
     // Allocate run-time and option memory
     if ((rc = runtime_create(hpd))) goto runtime_create_error;

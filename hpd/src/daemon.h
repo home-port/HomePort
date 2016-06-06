@@ -53,6 +53,7 @@ struct hpd {
     ev_signal sigint_watcher;
     ev_signal sigterm_watcher;
     modules_t modules;
+    int module_options_count;
     int options_count;
     argp_option_t *options;
     const hpd_module_t **option2module;
@@ -61,6 +62,7 @@ struct hpd {
     hpd_ev_asyncs_t changed_watchers;
     hpd_ev_asyncs_t attached_watchers;
     hpd_ev_asyncs_t detached_watchers;
+    char *argv0;
 };
 
 struct hpd_ev_async {

@@ -227,7 +227,7 @@
  *         hpd_ev_loop_t *loop
  *         ev_signal sigint_watcher
  *         ev_signal sigterm_watcher
- *         int options_count
+ *         int module_options_count
  *         argp_option_t *options
  *         hpd_module_t **option2module
  *         hpd_ev_asyncs_t request_watchers
