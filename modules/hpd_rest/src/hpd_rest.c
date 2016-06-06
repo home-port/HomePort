@@ -432,22 +432,22 @@ static hpd_error_t reply_options(hpd_rest_req_t *rest_req)
 }
 #endif
 
-static hpd_error_t on_free(void *data)
+static void on_free(void *data)
 {
-    hpd_error_t rc = HPD_E_SUCCESS;
+    hpd_error_t rc;
     hpd_rest_req_t *rest_req = data;
 
     if (rest_req->http_req) {
         if (!rest_req->http_res) {
-            rc = reply_internal_server_error(rest_req->http_req, rest_req, rest_req->rest->context);
+            if ((rc = reply_internal_server_error(rest_req->http_req, rest_req, rest_req->rest->context)))
+                HPD_LOG_ERROR(rest_req->rest->context, "Reply failed [code: %i]", rc);
         }
         rest_req->hpd_request = NULL;
-        return rc;
     } else {
-        rc = hpd_service_id_free(rest_req->service);
+        if ((rc = hpd_service_id_free(rest_req->service)))
+            HPD_LOG_ERROR(rest_req->rest->context, "Free function failed [code: %i]", rc);
         free(rest_req->body);
         free(rest_req);
-        return rc;
     }
 }
 
@@ -489,6 +489,7 @@ static void on_response(const hpd_response_t *res)
     if (!http_req) return;
 
     // Get data from hpd
+    // TODO Need to send value into xml/json to get headers too !!!
     const hpd_value_t *value;
     const char *val;
     size_t len;

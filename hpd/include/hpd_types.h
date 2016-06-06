@@ -184,7 +184,7 @@ typedef hpd_status_t (*hpd_action_f) (hpd_request_t *req); //< Action function f
 /// [hpd_action_f]
 
 /// [hpd_free_f]
-typedef hpd_error_t (*hpd_free_f) (void *data); //< Free function, used to free user supplied data.
+typedef void (*hpd_free_f) (void *data); //< Free function, used to free user supplied data.
 /// [hpd_free_f]
 
 /// Response function for handing responses on requests.

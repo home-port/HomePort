@@ -25,62 +25,21 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_HPD_COMMON_H
-#define HOMEPORT_HPD_COMMON_H
+#ifndef HOMEPORT_HPD_JANSSON_H
+#define HOMEPORT_HPD_JANSSON_H
 
-#include <stdlib.h>
+#include <jansson.h>
+
+// JANSSON Backward compatibility
+#if JANSSON_VERSION_HEX < 0x020700
 #include <string.h>
-#include <stdio.h>
-
-#ifdef __cplusplus
-extern "C" {
+#define json_string_length(JSON) strlen(json_string_value(JSON))
+#endif
+#if JANSSON_VERSION_HEX < 0x020500
+#define json_array_foreach(array, index, value) \
+    for(index = 0; \
+    index < json_array_size(array) && (value = json_array_get(array, index)); \
+    index++)
 #endif
 
-/**
- * Allocates and zeros a structure.
- *
- * CAST is for c++ compatibility (tests).
- */
-#define HPD_CALLOC(PTR, NUM, CAST) do { \
-    (PTR) = (CAST *) calloc((NUM), sizeof(CAST)); \
-    if(!(PTR)) goto alloc_error; \
-} while(0)
-
-/**
- * CAST is for c++ compatibility (tests).
- */
-#define HPD_REALLOC(PTR, NUM, CAST) do { \
-    void *_tmp = realloc((PTR), (NUM)*sizeof(CAST)); \
-    if(!_tmp) goto alloc_error; \
-    (PTR) = (CAST *) _tmp; \
-} while(0)
-
-#define HPD_CPY_ALLOC(DST, SRC, CAST) do { \
-    (DST) = (CAST *) malloc(sizeof(CAST)); \
-    if(!(DST)) goto alloc_error; \
-    memcpy((DST), (SRC), sizeof(CAST)); \
-} while(0)
-
-#define HPD_STR_CPY(DST, SRC) do { \
-    HPD_REALLOC((DST), (strlen((SRC))+1), char); \
-    strcpy((DST), (SRC)); \
-} while(0)
-
-#define HPD_STR_N_CPY(DST, SRC, LEN) do { \
-    HPD_REALLOC((DST), ((LEN)+1), char); \
-    strncpy((DST), (SRC), (LEN)); \
-    (DST)[LEN] = '\0'; \
-} while(0)
-
-#define HPD_SPRINTF_ALLOC(DST, FMT, ...) do { \
-    size_t _len; \
-    if ((_len = snprintf(NULL, 0, (FMT), ##__VA_ARGS__)) < 0) goto nsprintf_error; \
-    if (!((DST) = calloc(_len+1, sizeof(char)))) goto alloc_error; \
-    if (snprintf((DST), _len+1, (FMT), ##__VA_ARGS__) < 0) { free((DST)); goto nsprintf_error; } \
-} while (0)
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif //HOMEPORT_HPD_COMMON_H
+#endif //HOMEPORT_HPD_JANSSON_H

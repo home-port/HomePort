@@ -154,6 +154,7 @@ hpd_error_t curl_ev_set_verbose(curl_ev_handle_t *handle, long int bool)
     CURLcode cc;
     if ((cc = curl_easy_setopt(handle->handle, CURLOPT_VERBOSE, bool)))
         HPD_LOG_RETURN(handle->context, HPD_E_UNKNOWN, "Curl failed [code: %i]", cc);
+
     return HPD_E_SUCCESS;
 }
 

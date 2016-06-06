@@ -26,14 +26,9 @@
  */
 
 #include "json.h"
-#include <jansson.h>
+#include "hpd_jansson.h"
 #include "hpd_application_api.h"
 #include <string.h>
-
-// For backward compatibility
-#if JANSSON_VERSION_HEX < 0x020700
-#define json_string_length(JSON) strlen(json_string_value(JSON))
-#endif
 
 #define RETURN_JSON_ERROR(CONTEXT) HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Json error")
 
