@@ -94,7 +94,7 @@ static CURLMcode curl_ev_get_stopped_watcher(curl_ev_io_t **w, curl_socket_t s, 
     if ((*w)) {
         ev_io_stop(curl_ev->loop, &(*w)->watcher);
     } else {
-        HPD_CALLOC(w, 1, curl_ev_io_t);
+        HPD_CALLOC((*w), 1, curl_ev_io_t);
         if ((cmc = curl_multi_assign(curl_ev->mult_handle, s, (*w)))) {
             HPD_LOG_ERROR(context, "Curl multi return an error [code: %i]", cmc);
             free((*w));
@@ -109,7 +109,7 @@ static CURLMcode curl_ev_get_stopped_watcher(curl_ev_io_t **w, curl_socket_t s, 
     return CURLM_OUT_OF_MEMORY;
 }
 
-static CURLMcode curl_ev_start_watcher(const curl_ev_io_t *w, curl_socket_t s, int what, const hpd_module_t *context)
+static CURLMcode curl_ev_start_watcher(curl_ev_io_t *w, curl_socket_t s, int what, const hpd_module_t *context)
 {
     switch (what) {
         case CURL_POLL_IN:
@@ -130,7 +130,7 @@ static CURLMcode curl_ev_start_watcher(const curl_ev_io_t *w, curl_socket_t s, i
     return CURLM_OK;
 }
 
-void curl_ev_stop_watcher(const curl_ev_io_t *w)
+static void curl_ev_stop_watcher(curl_ev_io_t *w)
 {
     ev_io_stop(curl_ev->loop, &w->watcher);
     TAILQ_REMOVE(&curl_ev->io_watchers, w, HPD_TAILQ_FIELD);
