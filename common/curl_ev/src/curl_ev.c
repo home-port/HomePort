@@ -31,19 +31,19 @@
 
 static size_t curl_ev_on_header(char *buffer, size_t size, size_t nmemb, void *userdata)
 {
-    curl_ev_handle_t *handle = userdata;
+    hpd_curl_ev_handle_t *handle = userdata;
     if (handle->on_header) return handle->on_header(buffer, size, nmemb, handle->data);
     else return size*nmemb;
 }
 
 static size_t curl_ev_on_body(char *buffer, size_t size, size_t nmemb, void *userdata)
 {
-    curl_ev_handle_t *handle = userdata;
+    hpd_curl_ev_handle_t *handle = userdata;
     if (handle->on_body) return handle->on_body(buffer, size, nmemb, handle->data);
     else return size*nmemb;
 }
 
-hpd_error_t curl_ev_init(curl_ev_handle_t **handle, const hpd_module_t *context)
+hpd_error_t hpd_curl_ev_init(hpd_curl_ev_handle_t **handle, const hpd_module_t *context)
 {
     if (!context) return HPD_E_NULL;
     if (!handle) HPD_LOG_RETURN_E_NULL(context);
@@ -74,7 +74,7 @@ hpd_error_t curl_ev_init(curl_ev_handle_t **handle, const hpd_module_t *context)
         HPD_LOG_RETURN_E_ALLOC(context);
 }
 
-hpd_error_t curl_ev_cleanup(curl_ev_handle_t *handle)
+hpd_error_t hpd_curl_ev_cleanup(hpd_curl_ev_handle_t *handle)
 {
     if (!handle) return HPD_E_NULL;
     if (handle->curl_ev) HPD_LOG_RETURN(handle->context, HPD_E_STATE, "Handle is still attached");
@@ -87,28 +87,28 @@ hpd_error_t curl_ev_cleanup(curl_ev_handle_t *handle)
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t curl_ev_set_header_callback(curl_ev_handle_t *handle, curl_ev_f on_header)
+hpd_error_t hpd_curl_ev_set_header_callback(hpd_curl_ev_handle_t *handle, hpd_curl_ev_f on_header)
 {
     if (!handle) return HPD_E_NULL;
     handle->on_header = on_header;
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t curl_ev_set_body_callback(curl_ev_handle_t *handle, curl_ev_f on_body)
+hpd_error_t hpd_curl_ev_set_body_callback(hpd_curl_ev_handle_t *handle, hpd_curl_ev_f on_body)
 {
     if (!handle) return HPD_E_NULL;
     handle->on_body = on_body;
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t curl_ev_set_done_callback(curl_ev_handle_t *handle, curl_ev_done_f on_done)
+hpd_error_t hpd_curl_ev_set_done_callback(hpd_curl_ev_handle_t *handle, hpd_curl_ev_done_f on_done)
 {
     if (!handle) return HPD_E_NULL;
     handle->on_done = on_done;
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t curl_ev_set_custom_request(curl_ev_handle_t *handle, const char *request)
+hpd_error_t hpd_curl_ev_set_custom_request(hpd_curl_ev_handle_t *handle, const char *request)
 {
     if (!handle) return HPD_E_NULL;
     CURLcode cc;
@@ -117,7 +117,7 @@ hpd_error_t curl_ev_set_custom_request(curl_ev_handle_t *handle, const char *req
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t curl_ev_set_data(curl_ev_handle_t *handle, void *data, curl_ev_free_f on_free)
+hpd_error_t hpd_curl_ev_set_data(hpd_curl_ev_handle_t *handle, void *data, hpd_curl_ev_free_f on_free)
 {
     if (!handle) return HPD_E_NULL;
     handle->data = data;
@@ -128,7 +128,7 @@ hpd_error_t curl_ev_set_data(curl_ev_handle_t *handle, void *data, curl_ev_free_
 /**
  * HPD_E_UNKNOWN: handle may be in an inconsistent state, and should not be added before a call to this function succeded.
  */
-hpd_error_t curl_ev_set_postfields(curl_ev_handle_t *handle, const void *data, size_t len)
+hpd_error_t hpd_curl_ev_set_postfields(hpd_curl_ev_handle_t *handle, const void *data, size_t len)
 {
     if (!handle) return HPD_E_NULL;
     CURLcode cc;
@@ -139,7 +139,7 @@ hpd_error_t curl_ev_set_postfields(curl_ev_handle_t *handle, const void *data, s
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t curl_ev_set_url(curl_ev_handle_t *handle, const char *url)
+hpd_error_t hpd_curl_ev_set_url(hpd_curl_ev_handle_t *handle, const char *url)
 {
     if (!handle) return HPD_E_NULL;
     CURLcode cc;
@@ -148,7 +148,7 @@ hpd_error_t curl_ev_set_url(curl_ev_handle_t *handle, const char *url)
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t curl_ev_set_verbose(curl_ev_handle_t *handle, long int bool)
+hpd_error_t hpd_curl_ev_set_verbose(hpd_curl_ev_handle_t *handle, long int bool)
 {
     if (!handle) return HPD_E_NULL;
     CURLcode cc;
@@ -161,7 +161,7 @@ hpd_error_t curl_ev_set_verbose(curl_ev_handle_t *handle, long int bool)
 /**
  * HPD_E_UNKNOWN: handle may be in an inconsistent state, and should not be added before a call to this function succeded.
  */
-hpd_error_t curl_ev_add_header(curl_ev_handle_t *handle, const char *header)
+hpd_error_t hpd_curl_ev_add_header(hpd_curl_ev_handle_t *handle, const char *header)
 {
     if (!handle) return HPD_E_NULL;
     CURLcode cc;

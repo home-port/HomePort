@@ -31,28 +31,28 @@
 #include <stddef.h>
 #include "hpd_types.h"
 
-typedef struct curl_ev_handle curl_ev_handle_t;
+typedef struct hpd_curl_ev_handle hpd_curl_ev_handle_t;
 
-typedef size_t (*curl_ev_f)(char *buffer, size_t size, size_t nmemb, void *userdata);
-typedef void (*curl_ev_free_f)(void *userdata);
-typedef void (*curl_ev_done_f)(void *userdata, int curl_code);
+typedef size_t (*hpd_curl_ev_f)(char *buffer, size_t size, size_t nmemb, void *userdata);
+typedef void (*hpd_curl_ev_free_f)(void *userdata);
+typedef void (*hpd_curl_ev_done_f)(void *userdata, int curl_code);
 
-hpd_error_t curl_ev_init(curl_ev_handle_t **handle, const hpd_module_t *context);
-hpd_error_t curl_ev_cleanup(curl_ev_handle_t *handle);
+hpd_error_t hpd_curl_ev_init(hpd_curl_ev_handle_t **handle, const hpd_module_t *context);
+hpd_error_t hpd_curl_ev_cleanup(hpd_curl_ev_handle_t *handle);
 
-hpd_error_t curl_ev_add_handle(curl_ev_handle_t *handle);
-hpd_error_t curl_ev_remove_handle(curl_ev_handle_t *handle);
+hpd_error_t hpd_curl_ev_add_handle(hpd_curl_ev_handle_t *handle);
+hpd_error_t hpd_curl_ev_remove_handle(hpd_curl_ev_handle_t *handle);
 
-hpd_error_t curl_ev_set_header_callback(curl_ev_handle_t *handle, curl_ev_f on_header);
-hpd_error_t curl_ev_set_body_callback(curl_ev_handle_t *handle, curl_ev_f on_body);
-hpd_error_t curl_ev_set_done_callback(curl_ev_handle_t *handle, curl_ev_done_f on_done);
+hpd_error_t hpd_curl_ev_set_header_callback(hpd_curl_ev_handle_t *handle, hpd_curl_ev_f on_header);
+hpd_error_t hpd_curl_ev_set_body_callback(hpd_curl_ev_handle_t *handle, hpd_curl_ev_f on_body);
+hpd_error_t hpd_curl_ev_set_done_callback(hpd_curl_ev_handle_t *handle, hpd_curl_ev_done_f on_done);
 
-hpd_error_t curl_ev_set_custom_request(curl_ev_handle_t *handle, const char *request);
-hpd_error_t curl_ev_set_data(curl_ev_handle_t *handle, void *data, curl_ev_free_f on_free);
-hpd_error_t curl_ev_set_postfields(curl_ev_handle_t *handle, const void *data, size_t len);
-hpd_error_t curl_ev_set_url(curl_ev_handle_t *handle, const char *url);
-hpd_error_t curl_ev_set_verbose(curl_ev_handle_t *handle, long int bool);
+hpd_error_t hpd_curl_ev_set_custom_request(hpd_curl_ev_handle_t *handle, const char *request);
+hpd_error_t hpd_curl_ev_set_data(hpd_curl_ev_handle_t *handle, void *data, hpd_curl_ev_free_f on_free);
+hpd_error_t hpd_curl_ev_set_postfields(hpd_curl_ev_handle_t *handle, const void *data, size_t len);
+hpd_error_t hpd_curl_ev_set_url(hpd_curl_ev_handle_t *handle, const char *url);
+hpd_error_t hpd_curl_ev_set_verbose(hpd_curl_ev_handle_t *handle, long int bool);
 
-hpd_error_t curl_ev_add_header(curl_ev_handle_t *handle, const char *header);
+hpd_error_t hpd_curl_ev_add_header(hpd_curl_ev_handle_t *handle, const char *header);
 
 #endif

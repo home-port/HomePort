@@ -34,17 +34,17 @@
 
 typedef struct curl_ev curl_ev_t;
 
-struct curl_ev_handle {
+struct hpd_curl_ev_handle {
     curl_ev_t *curl_ev;
     TAILQ_ENTRY(curl_ev_handle) HPD_TAILQ_FIELD;
     const hpd_module_t *context;
     struct curl_slist *headers;
     CURL *handle;
     void *data;
-    curl_ev_free_f on_free;
-    curl_ev_f on_header;
-    curl_ev_f on_body;
-    curl_ev_done_f on_done;
+    hpd_curl_ev_free_f on_free;
+    hpd_curl_ev_f on_header;
+    hpd_curl_ev_f on_body;
+    hpd_curl_ev_done_f on_done;
 };
 
 #endif //HOMEPORT_CURL_EV_INTERN_H

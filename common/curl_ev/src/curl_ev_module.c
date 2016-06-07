@@ -184,7 +184,7 @@ static hpd_error_t curl_ev_add_next()
         return HPD_E_SUCCESS;
     }
 
-    curl_ev_handle_t *handle = TAILQ_FIRST(&curl_ev->handles);
+    hpd_curl_ev_handle_t *handle = TAILQ_FIRST(&curl_ev->handles);
     if (handle) {
         if ((cmc = curl_multi_add_handle(curl_ev->mult_handle, handle->handle))) goto add_error;
         if ((cmc = curl_ev_socket_action(CURL_SOCKET_TIMEOUT))) goto action_error;
@@ -217,7 +217,7 @@ static CURLMcode curl_ev_socket_action(int sockfd)
             }
             case CURLMSG_DONE: {
                 CURL *easy_handle = m->easy_handle;
-                curl_ev_handle_t *handle;
+                hpd_curl_ev_handle_t *handle;
                 TAILQ_FOREACH(handle, &curl_ev->handles, HPD_TAILQ_FIELD) {
                     if (handle->handle == easy_handle) {
                         CURLcode cc = m->data.result;
@@ -225,11 +225,11 @@ static CURLMcode curl_ev_socket_action(int sockfd)
                             HPD_LOG_WARN(context, "Curl handle error: %s [code: %i]", curl_easy_strerror(cc), cc);
                         if (handle->on_done)
                             handle->on_done(handle->data, cc);
-                        if ((rc = curl_ev_remove_handle(handle))) {
+                        if ((rc = hpd_curl_ev_remove_handle(handle))) {
                             HPD_LOG_ERROR(context, "Failed to remove handle [code: %i]", rc);
                             return CURLM_INTERNAL_ERROR;
                         }
-                        if ((rc = curl_ev_cleanup(handle))) {
+                        if ((rc = hpd_curl_ev_cleanup(handle))) {
                             HPD_LOG_ERROR(context, "Failed to remove handle [code: %i]", rc);
                             return CURLM_INTERNAL_ERROR;
                         }
@@ -248,14 +248,14 @@ static CURLMcode curl_ev_socket_action(int sockfd)
     return CURLM_OK;
 }
 
-hpd_error_t curl_ev_add_handle(curl_ev_handle_t *handle)
+hpd_error_t hpd_curl_ev_add_handle(hpd_curl_ev_handle_t *handle)
 {
     if (!handle) HPD_LOG_RETURN_E_NULL(curl_ev->context);
     CURL_EV_CHECK();
 
     hpd_error_t rc;
     
-    curl_ev_handle_t *h;
+    hpd_curl_ev_handle_t *h;
     TAILQ_FOREACH(h, &curl_ev->handles, HPD_TAILQ_FIELD)
         if (h == handle)
             HPD_LOG_RETURN(curl_ev->context, HPD_E_ARGUMENT, "Cannot add handle more than once");
@@ -273,7 +273,7 @@ hpd_error_t curl_ev_add_handle(curl_ev_handle_t *handle)
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t curl_ev_remove_handle(curl_ev_handle_t *handle)
+hpd_error_t hpd_curl_ev_remove_handle(hpd_curl_ev_handle_t *handle)
 {
     if (!handle) HPD_LOG_RETURN_E_NULL(curl_ev->context);
     CURL_EV_CHECK();
@@ -323,10 +323,10 @@ static hpd_error_t curl_ev_on_destroy(void *data)
     hpd_error_t rc;
 
     while (!TAILQ_EMPTY(&curl_ev->handles)) {
-        curl_ev_handle_t *handle = TAILQ_LAST(&curl_ev->handles, curl_ev_handles);
+        hpd_curl_ev_handle_t *handle = TAILQ_LAST(&curl_ev->handles, curl_ev_handles);
         TAILQ_REMOVE(&curl_ev->handles, handle, HPD_TAILQ_FIELD);
         handle->curl_ev = NULL;
-        if ((rc = curl_ev_cleanup(handle))) {
+        if ((rc = hpd_curl_ev_cleanup(handle))) {
             HPD_LOG_ERROR(curl_ev->context, "Failed to remove handle [code: %i]", rc);
             return rc;
         }
@@ -387,7 +387,7 @@ static hpd_error_t curl_ev_on_stop(void *data, hpd_t *hpd)
     const hpd_module_t *context = curl_ev->context;
 
     // Stop current handle
-    curl_ev_handle_t *handle = TAILQ_FIRST(&curl_ev->handles);
+    hpd_curl_ev_handle_t *handle = TAILQ_FIRST(&curl_ev->handles);
     if (handle && (cmc = curl_multi_remove_handle(curl_ev->mult_handle, handle->handle)))
         HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Curl multi return an error [code: %i]", cmc);
     
