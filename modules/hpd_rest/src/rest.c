@@ -25,14 +25,14 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "hpd_rest_intern.h"
+#include "rest_intern.h"
 #include "hpd_rest.h"
 #include "hpd_application_api.h"
 #include "hpd_common.h"
 #include "hpd_httpd.h"
 #include <curl/curl.h>
-#include "json.h"
-#include "xml.h"
+#include "rest_json.h"
+#include "rest_xml.h"
 
 static hpd_error_t rest_on_create(void **data, const hpd_module_t *context);
 static hpd_error_t rest_on_destroy(void *data);

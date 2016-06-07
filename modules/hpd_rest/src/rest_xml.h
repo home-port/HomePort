@@ -25,29 +25,14 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_HEADER_PARSER_H
-#define HOMEPORT_HEADER_PARSER_H
+#ifndef HOMEPORT_REST_XML_H
+#define HOMEPORT_REST_XML_H
 
 #include "hpd_types.h"
+#include "rest_intern.h"
 
-typedef hpd_error_t (*hp_string_cb)(void* data, const char* field, size_t field_length, const char* value, size_t value_length);
-
-struct hp;
-
-struct hp_settings {
-	hp_string_cb on_field_value_pair;
-	void* data;
-};
-
-#define HP_SETTINGS_DEFAULT {\
-	.on_field_value_pair = NULL, \
-	.data = NULL }
-
-hpd_error_t hp_create(struct hp **instance, struct hp_settings *settings, const hpd_module_t *context);
-hpd_error_t hp_destroy(struct hp*);
-
-hpd_error_t hp_on_header_field(struct hp *instance, const char *field_chunk, size_t length);
-hpd_error_t hp_on_header_value(struct hp *instance, const char *value_chunk, size_t length);
-hpd_error_t hp_on_header_complete(struct hp *instance);
+hpd_error_t hpd_rest_xml_get_configuration(hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context, char **out);
+hpd_error_t hpd_rest_xml_get_value(char *value, const hpd_module_t *context, char **out);
+hpd_error_t hpd_rest_xml_parse_value(const char *in, const hpd_module_t *context, char **out);
 
 #endif

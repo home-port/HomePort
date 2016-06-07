@@ -25,8 +25,8 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_URL_PARSER_H
-#define HOMEPORT_URL_PARSER_H
+#ifndef HOMEPORT_HTTPD_URL_PARSER_H
+#define HOMEPORT_HTTPD_URL_PARSER_H
 
 #include "hpd_types.h"
 

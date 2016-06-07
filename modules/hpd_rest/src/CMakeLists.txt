@@ -31,10 +31,10 @@
 # Main library
 add_library(hpd-rest SHARED
         ../include/hpd_rest.h
-        hpd_rest_intern.h
-        hpd_rest.c
-        json.c
-        xml.c
+        rest_intern.h
+        rest.c
+        rest_json.c
+        rest_xml.c
         )
 target_link_libraries(hpd-rest hpd-httpd jansson mxml curl)
 install(TARGETS hpd-rest DESTINATION lib)

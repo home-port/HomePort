@@ -27,8 +27,8 @@
 
 #include "httpd_request.h"
 #include "http_parser.h"
-#include "url_parser.h"
-#include "header_parser.h"
+#include "httpd_url_parser.h"
+#include "httpd_header_parser.h"
 #include "hpd_shared_api.h"
 #include <string.h>
 #include <stdlib.h>

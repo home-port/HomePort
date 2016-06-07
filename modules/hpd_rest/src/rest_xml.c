@@ -25,7 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "xml.h"
+#include "rest_xml.h"
 #include <time.h>
 #include <mxml.h>
 #include <hpd_common.h>

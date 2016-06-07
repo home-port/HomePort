@@ -25,11 +25,11 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_JSON_H
-#define HOMEPORT_JSON_H
+#ifndef HOMEPORT_REST_JSON_H
+#define HOMEPORT_REST_JSON_H
 
 #include "hpd_types.h"
-#include "hpd_rest_intern.h"
+#include "rest_intern.h"
 
 hpd_error_t hpd_rest_json_get_configuration(hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context, char **out);
 hpd_error_t hpd_rest_json_get_value(char *value, const hpd_module_t *context, char **out);

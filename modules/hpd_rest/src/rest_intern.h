@@ -25,14 +25,31 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_XML_H
-#define HOMEPORT_XML_H
+#ifndef HOMEPORT_REST_INTERN_H
+#define HOMEPORT_REST_INTERN_H
 
 #include "hpd_types.h"
-#include "hpd_rest_intern.h"
 
-hpd_error_t hpd_rest_xml_get_configuration(hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context, char **out);
-hpd_error_t hpd_rest_xml_get_value(char *value, const hpd_module_t *context, char **out);
-hpd_error_t hpd_rest_xml_parse_value(const char *in, const hpd_module_t *context, char **out);
+typedef struct hpd_rest hpd_rest_t;
 
-#endif
+hpd_error_t hpd_rest_url_create(hpd_rest_t *rest, hpd_service_id_t *service, char **url);
+hpd_error_t hpd_rest_get_timestamp(const hpd_module_t *context, char *str);
+
+// ALL keys starts with _ to avoid conflicts with adapter provided ones..
+static const char * const HPD_REST_KEY_ID = "_id";
+static const char * const HPD_REST_KEY_URI = "_uri";
+static const char * const HPD_REST_KEY_GET = "_get";
+static const char * const HPD_REST_KEY_PUT = "_put";
+static const char * const HPD_REST_KEY_PARAMETER = "_parameter";
+static const char * const HPD_REST_KEY_SERVICE = "_service";
+static const char * const HPD_REST_KEY_DEVICE = "_device";
+static const char * const HPD_REST_KEY_URL_ENCODED_CHARSET = "_urlEncodedCharset";
+static const char * const HPD_REST_KEY_ADAPTER = "_adapter";
+static const char * const HPD_REST_KEY_VALUE = "_value";
+static const char * const HPD_REST_KEY_CONFIGURATION = "_configuration";
+static const char * const HPD_REST_KEY_TIMESTAMP = "_timestamp";
+
+static const char * const HPD_REST_VAL_TRUE = "1";
+static const char * const HPD_REST_VAL_ASCII = "ASCII";
+
+#endif //HOMEPORT_HPD_REST_INTERN_H

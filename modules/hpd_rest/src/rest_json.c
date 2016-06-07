@@ -25,7 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "json.h"
+#include "rest_json.h"
 #include "hpd_jansson.h"
 #include "hpd_application_api.h"
 #include <string.h>

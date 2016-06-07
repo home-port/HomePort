@@ -33,8 +33,8 @@ add_library(hpd-httpd SHARED
         ../include/hpd_httpd_types.h
         httpd.c
         httpd_request.c
-        url_parser.c
-        header_parser.c
+        httpd_url_parser.c
+        httpd_header_parser.c
         httpd_response.c
         )
 set_target_properties(hpd-httpd PROPERTIES VERSION 0.0.0 SOVERSION 0)

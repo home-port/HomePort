@@ -28,7 +28,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "url_parser.h"
+#include "httpd_url_parser.h"
 #include "hpd_shared_api.h"
 
 /// The possible states of the URL Parser

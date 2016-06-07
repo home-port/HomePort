@@ -25,31 +25,29 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_HPD_REST_INTERN_H
-#define HOMEPORT_HPD_REST_INTERN_H
+#ifndef HOMEPORT_HTTPD_HEADER_PARSER_H
+#define HOMEPORT_HTTPD_HEADER_PARSER_H
 
 #include "hpd_types.h"
 
-typedef struct hpd_rest hpd_rest_t;
+typedef hpd_error_t (*hp_string_cb)(void* data, const char* field, size_t field_length, const char* value, size_t value_length);
 
-hpd_error_t hpd_rest_url_create(hpd_rest_t *rest, hpd_service_id_t *service, char **url);
-hpd_error_t hpd_rest_get_timestamp(const hpd_module_t *context, char *str);
+struct hp;
 
-// ALL keys starts with _ to avoid conflicts with adapter provided ones..
-static const char * const HPD_REST_KEY_ID = "_id";
-static const char * const HPD_REST_KEY_URI = "_uri";
-static const char * const HPD_REST_KEY_GET = "_get";
-static const char * const HPD_REST_KEY_PUT = "_put";
-static const char * const HPD_REST_KEY_PARAMETER = "_parameter";
-static const char * const HPD_REST_KEY_SERVICE = "_service";
-static const char * const HPD_REST_KEY_DEVICE = "_device";
-static const char * const HPD_REST_KEY_URL_ENCODED_CHARSET = "_urlEncodedCharset";
-static const char * const HPD_REST_KEY_ADAPTER = "_adapter";
-static const char * const HPD_REST_KEY_VALUE = "_value";
-static const char * const HPD_REST_KEY_CONFIGURATION = "_configuration";
-static const char * const HPD_REST_KEY_TIMESTAMP = "_timestamp";
+struct hp_settings {
+	hp_string_cb on_field_value_pair;
+	void* data;
+};
 
-static const char * const HPD_REST_VAL_TRUE = "1";
-static const char * const HPD_REST_VAL_ASCII = "ASCII";
+#define HP_SETTINGS_DEFAULT {\
+	.on_field_value_pair = NULL, \
+	.data = NULL }
 
-#endif //HOMEPORT_HPD_REST_INTERN_H
+hpd_error_t hp_create(struct hp **instance, struct hp_settings *settings, const hpd_module_t *context);
+hpd_error_t hp_destroy(struct hp*);
+
+hpd_error_t hp_on_header_field(struct hp *instance, const char *field_chunk, size_t length);
+hpd_error_t hp_on_header_value(struct hp *instance, const char *value_chunk, size_t length);
+hpd_error_t hp_on_header_complete(struct hp *instance);
+
+#endif

@@ -29,7 +29,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "header_parser.h"
+#include "httpd_header_parser.h"
 #include "hpd_shared_api.h"
 
 enum hp_state {
