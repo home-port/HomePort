@@ -50,7 +50,7 @@ hpd_error_t hpd_curl_ev_init(hpd_curl_ev_handle_t **handle, const hpd_module_t *
 
     CURLcode cc;
 
-    HPD_CALLOC(*handle, 1, curl_ev_handle_t);
+    HPD_CALLOC(*handle, 1, hpd_curl_ev_handle_t);
 
     (*handle)->context = context;
     if (!((*handle)->handle = curl_easy_init())) goto init_error;

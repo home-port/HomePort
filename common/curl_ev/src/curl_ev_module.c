@@ -42,7 +42,7 @@ struct curl_ev {
     CURLM *mult_handle;
     ev_timer timer;
     TAILQ_HEAD(, curl_ev_io) io_watchers;
-    TAILQ_HEAD(curl_ev_handles, curl_ev_handle) handles;
+    TAILQ_HEAD(curl_ev_handles, hpd_curl_ev_handle) handles;
     hpd_ev_loop_t *loop;
     const hpd_module_t *context;
 };

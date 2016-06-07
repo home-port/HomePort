@@ -36,7 +36,7 @@ typedef struct curl_ev curl_ev_t;
 
 struct hpd_curl_ev_handle {
     curl_ev_t *curl_ev;
-    TAILQ_ENTRY(curl_ev_handle) HPD_TAILQ_FIELD;
+    TAILQ_ENTRY(hpd_curl_ev_handle) HPD_TAILQ_FIELD;
     const hpd_module_t *context;
     struct curl_slist *headers;
     CURL *handle;
