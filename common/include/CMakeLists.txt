@@ -28,9 +28,9 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-install(FILES hpd_queue.h DESTINATION include/hpd)
-install(FILES hpd_common.h DESTINATION include/hpd)
-install(FILES hpd_jansson.h DESTINATION include/hpd)
+install(FILES hpd_queue.h DESTINATION include/hpd/common)
+install(FILES hpd_common.h DESTINATION include/hpd/common)
+install(FILES hpd_jansson.h DESTINATION include/hpd/common)
 
 add_library(hpd_common SHARED
         ../include/hpd_common.h
