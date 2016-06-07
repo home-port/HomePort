@@ -29,7 +29,6 @@
 #include "model.h"
 #include "discovery.h"
 #include "daemon.h"
-#include "hpd_common.h"
 #include "log.h"
 
 hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const char *id)

@@ -30,7 +30,6 @@
 #include <mxml.h>
 #include <hpd_common.h>
 #include "hpd_application_api.h"
-#include "hpd_rest_intern.h"
 
 static const char * const XML_VERSION = "1.0";
 

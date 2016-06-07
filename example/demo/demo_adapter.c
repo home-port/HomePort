@@ -28,9 +28,6 @@
 #include "demo_adapter.h"
 #include "hpd_adapter_api.h"
 #include "hpd_common.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 struct hpd_demo_adapter {
     int num_lamps;

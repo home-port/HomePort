@@ -28,7 +28,6 @@
 #include "tcpd.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <ev.h>
 
 // A tcpd instance

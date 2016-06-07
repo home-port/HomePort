@@ -33,7 +33,6 @@
 #include <curl/curl.h>
 #include "json.h"
 #include "xml.h"
-#include <time.h>
 
 static hpd_error_t on_create(void **data, const hpd_module_t *context);
 static hpd_error_t on_destroy(void *data);
@@ -470,16 +469,12 @@ static hpd_httpd_return_t on_req_destroy(hpd_httpd_t *ins, hpd_httpd_request_t *
     }
 }
 
-static void on_response(const hpd_response_t *res)
+static void on_response(void *data, const hpd_response_t *res)
 {
     hpd_error_t rc, rc2;
 
     // Get rest request
-    hpd_rest_req_t *rest_req;
-    if ((rc = hpd_response_get_request_data(res, (void **) &rest_req))) {
-        // TODO Cannot print here!
-        return;
-    }
+    hpd_rest_req_t *rest_req = data;
     
     // Make life easier
     hpd_httpd_request_t *http_req = rest_req->http_req;
@@ -589,6 +584,8 @@ static void on_response(const hpd_response_t *res)
     // Clean up
     free(state);
     free(body);
+
+    if (rc) HPD_LOG_ERROR(context, "Failed to destroy httpd response [code: %i].", rc);
 
     return;
 

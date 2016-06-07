@@ -26,7 +26,6 @@
  */
 
 #include "demo_application.h"
-#include "hpd_application_api.h"
 #include <stdio.h>
 
 static hpd_error_t hpd_demo_app_create(void **data, const hpd_module_t *context)

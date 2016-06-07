@@ -228,6 +228,7 @@
  *         ev_signal sigint_watcher
  *         ev_signal sigterm_watcher
  *         int module_options_count
+ *         int options_count
  *         argp_option_t *options
  *         hpd_module_t **option2module
  *         hpd_ev_asyncs_t request_watchers
@@ -235,6 +236,7 @@
  *         hpd_ev_asyncs_t changed_watchers
  *         hpd_ev_asyncs_t attached_watchers
  *         hpd_ev_asyncs_t detached_watchers
+ *         char *argv0;
  *     }
  *     
  *     class hpd_ev_async_t {

@@ -180,7 +180,7 @@ typedef hpd_error_t (*hpd_parse_opt_f) (void *data, const char *name, const char
 /// [hpd_module_def_t functions]
 
 /// [hpd_action_f]
-typedef hpd_status_t (*hpd_action_f) (hpd_request_t *req); //< Action function for handling requests on services.
+typedef hpd_status_t (*hpd_action_f) (void *data, hpd_request_t *req); //< Action function for handling requests on services.
 /// [hpd_action_f]
 
 /// [hpd_free_f]
@@ -189,7 +189,7 @@ typedef void (*hpd_free_f) (void *data); //< Free function, used to free user su
 
 /// Response function for handing responses on requests.
 /// [Application API Callbacks]
-typedef void (*hpd_response_f) (const hpd_response_t *res);
+typedef void (*hpd_response_f) (void *data, const hpd_response_t *res);
 /// Value callback for listeners
 typedef void (*hpd_value_f) (void *data, const hpd_service_id_t *service, const hpd_value_t *val);
 /// Device callback for listeners

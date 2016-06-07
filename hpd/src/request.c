@@ -216,7 +216,7 @@ static void on_request(hpd_ev_loop_t *loop, ev_async *w, int revents)
     }
 
     hpd_status_t status;
-    if ((status = action(request)) != HPD_S_NONE) {
+    if ((status = action(service->data, request)) != HPD_S_NONE) {
         if ((rc = request_alloc_response(&response, request, status))) goto error_free_request;
         if ((rc = request_respond(response))) goto error_free_response;
         return;
@@ -245,7 +245,7 @@ static void on_respond(hpd_ev_loop_t *loop, ev_async *w, int revents)
     ev_async_stop(loop, w);
     free(async);
 
-    if (request->on_response) request->on_response(response);
+    if (request->on_response) request->on_response(request->data, response);
 
     if ((rc = request_free_response(response))) {
         LOG_ERROR("Free function failed [code: %i].", rc);

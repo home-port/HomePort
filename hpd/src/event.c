@@ -27,7 +27,6 @@
 
 #include "daemon.h"
 #include "event.h"
-#include "hpd_common.h"
 #include "discovery.h"
 #include "value.h"
 #include "log.h"

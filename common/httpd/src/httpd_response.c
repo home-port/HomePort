@@ -327,7 +327,7 @@ hpd_error_t hpd_httpd_response_vsendf(hpd_httpd_response_t *res, const char *fmt
     if (res->msg) {
         const char *ip;
         if ((rc = hpd_tcpd_conn_get_ip(res->conn, &ip))) {
-            HPD_LOG_WARN(res->context, "Failed to get ip.");
+            HPD_LOG_WARN(res->context, "Failed to get ip [code: %i].", rc);
             ip = "(unknown)";
         }
         HPD_LOG_VERBOSE(res->context, "Sending response to %s: %i %s.", ip, res->status, http_status_codes_to_str(res->status));
