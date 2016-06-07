@@ -204,7 +204,7 @@ hpd_error_t discovery_free_pid(hpd_parameter_id_t *id)
 
 #define FIND_ADAPTER(ID, ADAPTER) do { \
     (ADAPTER) = NULL; \
-    HPD_TAILQ_FOREACH((ADAPTER), &(ID)->hpd->configuration->adapters) \
+    TAILQ_FOREACH((ADAPTER), &(ID)->hpd->configuration->adapters, HPD_TAILQ_FIELD) \
         if (strcmp((ADAPTER)->id, (ID)->aid) == 0) break; \
     if (!(ADAPTER)) return HPD_E_NOT_FOUND; \
 } while (0)
@@ -213,7 +213,7 @@ hpd_error_t discovery_free_pid(hpd_parameter_id_t *id)
     hpd_adapter_t *a = NULL; \
     FIND_ADAPTER(&(ID)->adapter, a); \
     (DEVICE) = NULL; \
-    HPD_TAILQ_FOREACH((DEVICE), a->devices) \
+    TAILQ_FOREACH((DEVICE), a->devices, HPD_TAILQ_FIELD) \
         if (strcmp((DEVICE)->id, (ID)->did) == 0) break; \
     if (!(DEVICE)) return HPD_E_NOT_FOUND; \
 } while (0)
@@ -222,7 +222,7 @@ hpd_error_t discovery_free_pid(hpd_parameter_id_t *id)
     hpd_device_t *d = NULL; \
     FIND_DEVICE(&(ID)->device, d); \
     (SERVICE) = NULL; \
-    HPD_TAILQ_FOREACH((SERVICE), d->services) \
+    TAILQ_FOREACH((SERVICE), d->services, HPD_TAILQ_FIELD) \
         if (strcmp((SERVICE)->id, (ID)->sid) == 0) break; \
     if (!(SERVICE)) return HPD_E_NOT_FOUND; \
 } while (0)
@@ -231,7 +231,7 @@ hpd_error_t discovery_free_pid(hpd_parameter_id_t *id)
     hpd_service_t *s = NULL; \
     FIND_SERVICE(&(ID)->service, s); \
     (PARAMETER) = NULL; \
-    HPD_TAILQ_FOREACH((PARAMETER), s->parameters) \
+    TAILQ_FOREACH((PARAMETER), s->parameters, HPD_TAILQ_FIELD) \
         if (strcmp((PARAMETER)->id, (ID)->pid) == 0) break; \
     if (!(PARAMETER)) return HPD_E_NOT_FOUND; \
 } while (0)

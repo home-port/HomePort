@@ -82,7 +82,7 @@ hpd_error_t hpd_map_free(hpd_map_t *map)
 
     hpd_error_t rc = HPD_E_SUCCESS;
     hpd_pair_t *pair, *tmp;
-    HPD_TAILQ_FOREACH_SAFE(pair, map, tmp) {
+    TAILQ_FOREACH_SAFE(pair, map, HPD_TAILQ_FIELD, tmp) {
         rc = hpd_map_remove(map, pair);
     }
     free(map);
@@ -95,7 +95,7 @@ hpd_error_t hpd_map_get(hpd_map_t *map, const char *k, const char **v)
     
     hpd_pair_t *attr;
     (*v) = NULL;
-    HPD_TAILQ_FOREACH(attr, map) {
+    TAILQ_FOREACH(attr, map, HPD_TAILQ_FIELD) {
         if (strcmp(attr->k, k) == 0) {
             (*v) = attr->v;
             return HPD_E_SUCCESS;
@@ -110,7 +110,7 @@ hpd_error_t hpd_map_get_n(hpd_map_t *map, const char *k, size_t k_len, const cha
 
     hpd_pair_t *attr;
     (*v) = NULL;
-    HPD_TAILQ_FOREACH(attr, map) {
+    TAILQ_FOREACH(attr, map, HPD_TAILQ_FIELD) {
         if (strncmp(attr->k, k, k_len) == 0) {
             (*v) = attr->v;
             return HPD_E_SUCCESS;
@@ -178,7 +178,7 @@ hpd_error_t hpd_map_set(hpd_map_t *map, const char *k, const char *v)
 
     hpd_error_t rc;
     hpd_pair_t *attr = NULL;
-    HPD_TAILQ_FOREACH(attr, map)
+    TAILQ_FOREACH(attr, map, HPD_TAILQ_FIELD)
         if (strcmp(attr->k, k) == 0)
             break;
 
@@ -198,7 +198,7 @@ hpd_error_t hpd_map_set_n(hpd_map_t *map, const char *k, size_t k_len, const cha
 
     hpd_error_t rc;
     hpd_pair_t *attr = NULL;
-    HPD_TAILQ_FOREACH(attr, map)
+    TAILQ_FOREACH(attr, map, HPD_TAILQ_FIELD)
         if (strncmp(attr->k, k, k_len) == 0)
             break;
     

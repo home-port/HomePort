@@ -436,7 +436,7 @@ hpd_error_t hpd_tcpd_stop(hpd_tcpd_t *tcpd)
     ev_io_stop(tcpd->loop, &tcpd->watcher);
 
     // Kill all connections
-    HPD_TAILQ_FOREACH_SAFE(conn, &tcpd->conns, tmp)
+    TAILQ_FOREACH_SAFE(conn, &tcpd->conns, HPD_TAILQ_FIELD, tmp)
         if (hpd_tcpd_conn_kill(conn)) HPD_LOG_ERROR(context, "Failed to kill connection.");
 
     // Close socket

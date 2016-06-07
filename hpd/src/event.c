@@ -99,8 +99,8 @@ hpd_error_t event_foreach_attached(const hpd_listener_t *listener)
     configuration_t *configuration = listener->hpd->configuration;
     hpd_adapter_t *adapter;
     hpd_device_t *device;
-    HPD_TAILQ_FOREACH(adapter, &configuration->adapters) {
-        HPD_TAILQ_FOREACH(device, adapter->devices) {
+    TAILQ_FOREACH(adapter, &configuration->adapters, HPD_TAILQ_FIELD) {
+        TAILQ_FOREACH(device, adapter->devices, HPD_TAILQ_FIELD) {
             hpd_device_id_t *did;
             if ((rc = discovery_alloc_did(&did, configuration->hpd, adapter->id, device->id))) return rc;
             listener->on_attach(listener->data, did);
@@ -123,7 +123,7 @@ static void on_changed(hpd_ev_loop_t *loop, ev_async *w, int revents)
     free(async);
 
     hpd_listener_t *listener;
-    HPD_TAILQ_FOREACH(listener, &hpd->configuration->listeners) {
+    TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
         if (listener->on_change) listener->on_change(listener->data, id, value);
     }
 
@@ -148,7 +148,7 @@ static void on_attached(hpd_ev_loop_t *loop, ev_async *w, int revents)
     free(async);
 
     hpd_listener_t *listener;
-    HPD_TAILQ_FOREACH(listener, &hpd->configuration->listeners) {
+    TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
         if (listener->on_attach) listener->on_attach(listener->data, id);
     }
 
@@ -169,7 +169,7 @@ static void on_detached(hpd_ev_loop_t *loop, ev_async *w, int revents)
     free(async);
 
     hpd_listener_t *listener;
-    HPD_TAILQ_FOREACH(listener, &hpd->configuration->listeners) {
+    TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
         if (listener->on_detach) listener->on_detach(listener->data, id);
     }
 
@@ -211,7 +211,7 @@ hpd_error_t event_inform_adapter_attached(hpd_adapter_t *adapter)
 {
     hpd_error_t rc;
     hpd_device_t *device;
-    HPD_TAILQ_FOREACH(device, adapter->devices) {
+    TAILQ_FOREACH(device, adapter->devices, HPD_TAILQ_FIELD) {
         // TODO Could alternatively remove the attached watchers and return an error
         if ((rc = event_inform_device_attached(device)))
             LOG_ERROR("event_inform_device_attached() [code: %i].", rc);
@@ -223,7 +223,7 @@ hpd_error_t event_inform_adapter_detached(hpd_adapter_t *adapter)
 {
     hpd_error_t rc;
     hpd_device_t *device;
-    HPD_TAILQ_FOREACH(device, adapter->devices) {
+    TAILQ_FOREACH(device, adapter->devices, HPD_TAILQ_FIELD) {
         // TODO Could alternatively remove the attached watchers and return an error
         if ((rc = event_inform_device_detached(device)))
             LOG_ERROR("event_inform_device_detached() [code: %i].", rc);

@@ -165,7 +165,7 @@ static hpd_error_t modules_create(const hpd_t *hpd)
     // Call on_create() on modules
     hpd_error_t rc;
     hpd_module_t *module;
-    HPD_TAILQ_FOREACH(module, &hpd->modules)
+    TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD)
         if ((rc = module->def.on_create(&module->data, module)) != HPD_E_SUCCESS)
             goto module_create_error;
     return HPD_E_SUCCESS;
@@ -201,7 +201,7 @@ static hpd_error_t modules_start(hpd_t *hpd)
     hpd_module_t *module;
 
     // Call on_start() on modules
-    HPD_TAILQ_FOREACH(module, &hpd->modules)
+    TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD)
         if ((rc = module->def.on_start(module->data, hpd)) != HPD_E_SUCCESS)
             goto module_error;
 
@@ -308,7 +308,7 @@ static hpd_error_t watchers_stop(hpd_t *hpd)
 
     // Stop other watchers
     hpd_ev_async_t *async, *async_tmp;
-    HPD_TAILQ_FOREACH_SAFE(async, &hpd->request_watchers, async_tmp) {
+    TAILQ_FOREACH_SAFE(async, &hpd->request_watchers, HPD_TAILQ_FIELD, async_tmp) {
         TAILQ_REMOVE(&hpd->request_watchers, async, HPD_TAILQ_FIELD);
         ev_async_stop(hpd->loop, &async->watcher);
         tmp = request_free_request(async->request);
@@ -316,7 +316,7 @@ static hpd_error_t watchers_stop(hpd_t *hpd)
         else LOG_ERROR("free function failed [code: %i]", tmp);
         free(async);
     }
-    HPD_TAILQ_FOREACH_SAFE(async, &hpd->respond_watchers, async_tmp) {
+    TAILQ_FOREACH_SAFE(async, &hpd->respond_watchers, HPD_TAILQ_FIELD, async_tmp) {
         TAILQ_REMOVE(&hpd->respond_watchers, async, HPD_TAILQ_FIELD);
         ev_async_stop(hpd->loop, &async->watcher);
         tmp = request_free_response(async->response);
@@ -324,7 +324,7 @@ static hpd_error_t watchers_stop(hpd_t *hpd)
         else LOG_ERROR("free function failed [code: %i]", tmp);
         free(async);
     }
-    HPD_TAILQ_FOREACH_SAFE(async, &hpd->changed_watchers, async_tmp) {
+    TAILQ_FOREACH_SAFE(async, &hpd->changed_watchers, HPD_TAILQ_FIELD, async_tmp) {
         TAILQ_REMOVE(&hpd->changed_watchers, async, HPD_TAILQ_FIELD);
         ev_async_stop(hpd->loop, &async->watcher);
         tmp = discovery_free_sid(async->service);
@@ -335,7 +335,7 @@ static hpd_error_t watchers_stop(hpd_t *hpd)
         else LOG_ERROR("free function failed [code: %i]", tmp);
         free(async);
     }
-    HPD_TAILQ_FOREACH_SAFE(async, &hpd->attached_watchers, async_tmp) {
+    TAILQ_FOREACH_SAFE(async, &hpd->attached_watchers, HPD_TAILQ_FIELD, async_tmp) {
         TAILQ_REMOVE(&hpd->attached_watchers, async, HPD_TAILQ_FIELD);
         ev_async_stop(hpd->loop, &async->watcher);
         tmp = discovery_free_did(async->device);
@@ -343,7 +343,7 @@ static hpd_error_t watchers_stop(hpd_t *hpd)
         else LOG_ERROR("free function failed [code: %i]", tmp);
         free(async);
     }
-    HPD_TAILQ_FOREACH_SAFE(async, &hpd->detached_watchers, async_tmp) {
+    TAILQ_FOREACH_SAFE(async, &hpd->detached_watchers, HPD_TAILQ_FIELD, async_tmp) {
         TAILQ_REMOVE(&hpd->detached_watchers, async, HPD_TAILQ_FIELD);
         ev_async_stop(hpd->loop, &async->watcher);
         tmp = discovery_free_did(async->device);if (!rc) rc = tmp;
@@ -380,7 +380,7 @@ hpd_error_t daemon_alloc(hpd_t **hpd)
 hpd_error_t daemon_free(hpd_t *hpd)
 {
     hpd_module_t *module, *module_tmp;
-    HPD_TAILQ_FOREACH_SAFE(module, &hpd->modules, module_tmp) {
+    TAILQ_FOREACH_SAFE(module, &hpd->modules, HPD_TAILQ_FIELD, module_tmp) {
         TAILQ_REMOVE(&hpd->modules, module, HPD_TAILQ_FIELD);
         free(module->id);
         free(module);

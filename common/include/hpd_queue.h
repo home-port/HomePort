@@ -36,17 +36,11 @@ extern "C" {
 
 #define HPD_TAILQ_FIELD tailq
 
-#define HPD_TAILQ_FOREACH(VAR, HEAD) \
-    TAILQ_FOREACH(VAR, HEAD, HPD_TAILQ_FIELD)
-
-#define HPD_TAILQ_FOREACH_SAFE(VAR, HEAD, TMP) \
-    TAILQ_FOREACH_SAFE(VAR, HEAD, HPD_TAILQ_FIELD, TMP)
-
 #define HPD_TAILQ_MAP_REMOVE(LIST, FUNC, TYPE, RC) do { \
-    TYPE *obj, *tmp; \
-    HPD_TAILQ_FOREACH_SAFE(obj, (LIST), tmp) { \
-        TAILQ_REMOVE((LIST), obj, HPD_TAILQ_FIELD); \
-        if (((RC) = (FUNC)(obj))) goto map_error; \
+    TYPE *_obj, *_tmp; \
+    TAILQ_FOREACH_SAFE(_obj, (LIST), HPD_TAILQ_FIELD, _tmp) { \
+        TAILQ_REMOVE((LIST), _obj, HPD_TAILQ_FIELD); \
+        if (((RC) = (FUNC)(_obj))) goto map_error; \
     } \
 } while(0)
 
