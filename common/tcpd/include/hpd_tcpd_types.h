@@ -25,8 +25,8 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_TCPD_TYPES_H
-#define HOMEPORT_TCPD_TYPES_H
+#ifndef HOMEPORT_HPD_TCPD_TYPES_H
+#define HOMEPORT_HPD_TCPD_TYPES_H
 
 // Port numbers are assigned according to
 // http://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xml

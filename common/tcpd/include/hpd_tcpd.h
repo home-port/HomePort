@@ -25,13 +25,13 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_TCPD_H
-#define HOMEPORT_TCPD_H
+#ifndef HOMEPORT_HPD_TCPD_H
+#define HOMEPORT_HPD_TCPD_H
 
 #include <stddef.h>
 #include <stdarg.h>
 #include "hpd_types.h"
-#include "tcpd_types.h"
+#include "hpd_tcpd_types.h"
 
 #ifdef __cplusplus
 extern "C" {

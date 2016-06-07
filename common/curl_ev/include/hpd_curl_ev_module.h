@@ -25,34 +25,11 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_CURL_EV_H
-#define HOMEPORT_CURL_EV_H
+#ifndef HOMEPORT_HPD_CURL_EV_MODULE_H
+#define HOMEPORT_HPD_CURL_EV_MODULE_H
 
-#include <stddef.h>
 #include "hpd_types.h"
 
-typedef struct curl_ev_handle curl_ev_handle_t;
+extern hpd_module_def_t hpd_curl_ev;
 
-typedef size_t (*curl_ev_f)(char *buffer, size_t size, size_t nmemb, void *userdata);
-typedef void (*curl_ev_free_f)(void *userdata);
-typedef void (*curl_ev_done_f)(void *userdata, int curl_code);
-
-hpd_error_t curl_ev_init(curl_ev_handle_t **handle, const hpd_module_t *context);
-hpd_error_t curl_ev_cleanup(curl_ev_handle_t *handle);
-
-hpd_error_t curl_ev_add_handle(curl_ev_handle_t *handle);
-hpd_error_t curl_ev_remove_handle(curl_ev_handle_t *handle);
-
-hpd_error_t curl_ev_set_header_callback(curl_ev_handle_t *handle, curl_ev_f on_header);
-hpd_error_t curl_ev_set_body_callback(curl_ev_handle_t *handle, curl_ev_f on_body);
-hpd_error_t curl_ev_set_done_callback(curl_ev_handle_t *handle, curl_ev_done_f on_done);
-
-hpd_error_t curl_ev_set_custom_request(curl_ev_handle_t *handle, const char *request);
-hpd_error_t curl_ev_set_data(curl_ev_handle_t *handle, void *data, curl_ev_free_f on_free);
-hpd_error_t curl_ev_set_postfields(curl_ev_handle_t *handle, const void *data, size_t len);
-hpd_error_t curl_ev_set_url(curl_ev_handle_t *handle, const char *url);
-hpd_error_t curl_ev_set_verbose(curl_ev_handle_t *handle, long int bool);
-
-hpd_error_t curl_ev_add_header(curl_ev_handle_t *handle, const char *header);
-
-#endif //HOMEPORT_CURL_EV_H
+#endif

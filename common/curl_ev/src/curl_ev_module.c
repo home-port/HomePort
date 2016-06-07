@@ -25,7 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "hpd_curl_ev.h"
+#include "hpd_curl_ev_module.h"
 #include "curl_ev_intern.h"
 #include "hpd_shared_api.h"
 #include "hpd_common.h"

@@ -25,8 +25,8 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "httpd.h"
-#include "tcpd.h"
+#include "hpd_httpd.h"
+#include "hpd_tcpd.h"
 #include "httpd_request.h"
 #include "hpd_shared_api.h"
 

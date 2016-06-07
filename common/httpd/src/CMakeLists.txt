@@ -29,8 +29,8 @@
 # as representing official policies, either expressed.
 
 add_library(hpd-httpd SHARED
-        ../include/httpd.h
-        ../include/httpd_types.h
+        ../include/hpd_httpd.h
+        ../include/hpd_httpd_types.h
         httpd.c
         httpd_request.c
         url_parser.c

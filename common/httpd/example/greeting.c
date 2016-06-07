@@ -25,7 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "httpd.h"
+#include "hpd_httpd.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

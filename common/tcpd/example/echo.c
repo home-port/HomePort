@@ -25,7 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "tcpd.h"
+#include "hpd_tcpd.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ev.h>

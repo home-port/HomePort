@@ -25,14 +25,14 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_HTTPD_H
-#define HOMEPORT_HTTPD_H
+#ifndef HOMEPORT_HPD_HTTPD_H
+#define HOMEPORT_HPD_HTTPD_H
 
 #include "hpd_map.h"
 #include <stddef.h>
 #include <stdarg.h>
 #include "hpd_types.h"
-#include "httpd_types.h"
+#include "hpd_httpd_types.h"
 
 // Structs
 typedef struct hpd_httpd hpd_httpd_t;

@@ -28,7 +28,7 @@
 #ifndef HOMEPORT_CURL_EV_INTERN_H
 #define HOMEPORT_CURL_EV_INTERN_H
 
-#include "curl_ev.h"
+#include "hpd_curl_ev.h"
 #include <curl/curl.h>
 #include "hpd_queue.h"
 

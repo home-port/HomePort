@@ -28,5 +28,5 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-install(FILES httpd.h DESTINATION include/hpd/common)
-install(FILES httpd_types.h DESTINATION include/hpd/common)
+install(FILES hpd_httpd.h DESTINATION include/hpd/common)
+install(FILES hpd_httpd_types.h DESTINATION include/hpd/common)

@@ -29,7 +29,7 @@
 #include "hpd_rest.h"
 #include "hpd_application_api.h"
 #include "hpd_common.h"
-#include "httpd.h"
+#include "hpd_httpd.h"
 #include <curl/curl.h>
 #include "json.h"
 #include "xml.h"

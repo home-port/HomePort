@@ -25,10 +25,10 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_HTTPD_TYPES_H
-#define HOMEPORT_HTTPD_TYPES_H
+#ifndef HOMEPORT_HPD_HTTPD_TYPES_H
+#define HOMEPORT_HPD_HTTPD_TYPES_H
 
-#include "tcpd_types.h"
+#include "hpd_tcpd_types.h"
 
 typedef enum hpd_httpd_method
 {
