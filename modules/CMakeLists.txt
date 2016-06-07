@@ -28,4 +28,7 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
+include_directories(${PROJECT_SOURCE_DIR}/common/tcpd/include)
+include_directories(${PROJECT_SOURCE_DIR}/common/httpd/include)
+
 add_subdirectory(hpd_rest)

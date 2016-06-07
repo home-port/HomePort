@@ -28,9 +28,9 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-add_subdirectory(include)
 include_directories(include)
 
+add_subdirectory(include)
 add_subdirectory(src)
 add_subdirectory(test)
 

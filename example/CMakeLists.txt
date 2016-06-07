@@ -28,4 +28,6 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
+include_directories(${PROJECT_SOURCE_DIR}/modules/hpd_rest/include)
+
 add_subdirectory(demo)
