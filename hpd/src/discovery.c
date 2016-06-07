@@ -36,7 +36,7 @@ hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const char *id)
     hpd_error_t rc;
 
     HPD_CALLOC((*adapter), 1, hpd_adapter_t);
-    HPD_CALLOC((*adapter)->devices, 1, devices_t);
+    HPD_CALLOC((*adapter)->devices, 1, hpd_devices_t);
     TAILQ_INIT((*adapter)->devices);
     if ((rc = hpd_map_alloc(&(*adapter)->attributes))) {
         discovery_free_adapter(*adapter);
@@ -57,7 +57,7 @@ hpd_error_t discovery_alloc_device(hpd_device_t **device, const char *id)
     hpd_error_t rc;
 
     HPD_CALLOC((*device), 1, hpd_device_t);
-    HPD_CALLOC((*device)->services, 1, services_t);
+    HPD_CALLOC((*device)->services, 1, hpd_services_t);
     TAILQ_INIT((*device)->services);
     if ((rc = hpd_map_alloc(&(*device)->attributes))) {
         discovery_free_device(*device);
@@ -78,7 +78,7 @@ hpd_error_t discovery_alloc_service(hpd_service_t **service, const char *id)
     hpd_error_t rc;
 
     HPD_CALLOC((*service), 1, hpd_service_t);
-    HPD_CALLOC((*service)->parameters, 1, parameters_t);
+    HPD_CALLOC((*service)->parameters, 1, hpd_parameters_t);
     TAILQ_INIT((*service)->parameters);
     if ((rc = hpd_map_alloc(&(*service)->attributes))) {
         discovery_free_service(*service);

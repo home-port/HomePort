@@ -202,34 +202,34 @@ hpd_error_t discovery_free_pid(hpd_parameter_id_t *id)
     return HPD_E_SUCCESS;
 }
 
-#define FIND_ADAPTER(ID, ADAPTER) do { \
+#define DISCOVERY_FIND_ADAPTER(ID, ADAPTER) do { \
     (ADAPTER) = NULL; \
     TAILQ_FOREACH((ADAPTER), &(ID)->hpd->configuration->adapters, HPD_TAILQ_FIELD) \
         if (strcmp((ADAPTER)->id, (ID)->aid) == 0) break; \
     if (!(ADAPTER)) return HPD_E_NOT_FOUND; \
 } while (0)
 
-#define FIND_DEVICE(ID, DEVICE) do { \
+#define DISCOVERY_FIND_DEVICE(ID, DEVICE) do { \
     hpd_adapter_t *a = NULL; \
-    FIND_ADAPTER(&(ID)->adapter, a); \
+    DISCOVERY_FIND_ADAPTER(&(ID)->adapter, a); \
     (DEVICE) = NULL; \
     TAILQ_FOREACH((DEVICE), a->devices, HPD_TAILQ_FIELD) \
         if (strcmp((DEVICE)->id, (ID)->did) == 0) break; \
     if (!(DEVICE)) return HPD_E_NOT_FOUND; \
 } while (0)
 
-#define FIND_SERVICE(ID, SERVICE) do { \
+#define DISCOVERY_FIND_SERVICE(ID, SERVICE) do { \
     hpd_device_t *d = NULL; \
-    FIND_DEVICE(&(ID)->device, d); \
+    DISCOVERY_FIND_DEVICE(&(ID)->device, d); \
     (SERVICE) = NULL; \
     TAILQ_FOREACH((SERVICE), d->services, HPD_TAILQ_FIELD) \
         if (strcmp((SERVICE)->id, (ID)->sid) == 0) break; \
     if (!(SERVICE)) return HPD_E_NOT_FOUND; \
 } while (0)
 
-#define FIND_PARAMETER(ID, PARAMETER) do { \
+#define DISCOVERY_FIND_PARAMETER(ID, PARAMETER) do { \
     hpd_service_t *s = NULL; \
-    FIND_SERVICE(&(ID)->service, s); \
+    DISCOVERY_FIND_SERVICE(&(ID)->service, s); \
     (PARAMETER) = NULL; \
     TAILQ_FOREACH((PARAMETER), s->parameters, HPD_TAILQ_FIELD) \
         if (strcmp((PARAMETER)->id, (ID)->pid) == 0) break; \
@@ -238,25 +238,25 @@ hpd_error_t discovery_free_pid(hpd_parameter_id_t *id)
 
 hpd_error_t discovery_find_adapter(const hpd_adapter_id_t *id, hpd_adapter_t **adapter)
 {
-    FIND_ADAPTER(id, *adapter);
+    DISCOVERY_FIND_ADAPTER(id, *adapter);
     return HPD_E_SUCCESS;
 }
 
 hpd_error_t discovery_find_device(const hpd_device_id_t *id, hpd_device_t **device)
 {
-    FIND_DEVICE(id, *device);
+    DISCOVERY_FIND_DEVICE(id, *device);
     return HPD_E_SUCCESS;
 }
 
 hpd_error_t discovery_find_service(const hpd_service_id_t *id, hpd_service_t **service)
 {
-    FIND_SERVICE(id, *service);
+    DISCOVERY_FIND_SERVICE(id, *service);
     return HPD_E_SUCCESS;
 }
 
 hpd_error_t discovery_find_parameter(const hpd_parameter_id_t *id, hpd_parameter_t **parameter)
 {
-    FIND_PARAMETER(id, *parameter);
+    DISCOVERY_FIND_PARAMETER(id, *parameter);
     return HPD_E_SUCCESS;
 }
 

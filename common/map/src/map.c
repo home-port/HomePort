@@ -120,7 +120,7 @@ hpd_error_t hpd_map_get_n(hpd_map_t *map, const char *k, size_t k_len, const cha
     return HPD_E_NOT_FOUND;
 }
 
-static hpd_error_t insert(hpd_map_t *map, const char *k, const char *v)
+static hpd_error_t map_insert(hpd_map_t *map, const char *k, const char *v)
 {
     hpd_pair_t *attr = NULL;
     HPD_CALLOC(attr, 1, hpd_pair_t);
@@ -138,7 +138,7 @@ static hpd_error_t insert(hpd_map_t *map, const char *k, const char *v)
     return HPD_E_ALLOC;
 }
 
-static hpd_error_t replace(hpd_pair_t *attr, const char *v) {
+static hpd_error_t map_replace(hpd_pair_t *attr, const char *v) {
     HPD_STR_CPY(attr->v, v);
     return HPD_E_SUCCESS;
 
@@ -146,7 +146,7 @@ static hpd_error_t replace(hpd_pair_t *attr, const char *v) {
         return HPD_E_ALLOC;
 }
 
-static hpd_error_t insert_n(hpd_map_t *map, const char *k, size_t k_len, const char *v, size_t v_len)
+static hpd_error_t map_insert_n(hpd_map_t *map, const char *k, size_t k_len, const char *v, size_t v_len)
 {
     hpd_pair_t *attr = NULL;
     HPD_CALLOC(attr, 1, hpd_pair_t);
@@ -164,7 +164,7 @@ static hpd_error_t insert_n(hpd_map_t *map, const char *k, size_t k_len, const c
     return HPD_E_ALLOC;
 }
 
-static hpd_error_t replace_n(hpd_pair_t *attr, const char *v, size_t v_len) {
+static hpd_error_t map_replace_n(hpd_pair_t *attr, const char *v, size_t v_len) {
     HPD_STR_N_CPY(attr->v, v, v_len);
     return HPD_E_SUCCESS;
 
@@ -186,9 +186,9 @@ hpd_error_t hpd_map_set(hpd_map_t *map, const char *k, const char *v)
         if (attr && (rc = hpd_map_remove(map, attr))) return rc;
         return HPD_E_SUCCESS;
     } else if (!attr) {
-        return insert(map, k, v);
+        return map_insert(map, k, v);
     } else {
-        return replace(attr, v);
+        return map_replace(attr, v);
     }
 }
 
@@ -206,9 +206,9 @@ hpd_error_t hpd_map_set_n(hpd_map_t *map, const char *k, size_t k_len, const cha
         if (attr && (rc = hpd_map_remove(map, attr))) return rc;
         return HPD_E_SUCCESS;
     } else if (!attr) {
-        return insert_n(map, k, k_len, v, v_len);
+        return map_insert_n(map, k, k_len, v, v_len);
     } else {
-        return replace_n(attr, v, v_len);
+        return map_replace_n(attr, v, v_len);
     }
 }
 

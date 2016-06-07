@@ -52,7 +52,7 @@ struct hp {
 	size_t value_buffer_size;
 };
 
-static void reset_buffers(struct hp *instance)
+static void hp_reset_buffers(struct hp *instance)
 {
 		if(instance->field_buffer) free(instance->field_buffer);
 		if(instance->value_buffer) free(instance->value_buffer);
@@ -106,7 +106,7 @@ hpd_error_t hp_on_header_field(struct hp *instance, const char *field_chunk, siz
                         instance->state = S_ERROR;
                         return rc;
                     }
-            reset_buffers(instance);
+            hp_reset_buffers(instance);
             old_buffer_size = 0;
             instance->state = S_FIELD;
         }
@@ -183,8 +183,8 @@ hpd_error_t hp_on_header_complete(struct hp *instance)
 hpd_error_t hp_destroy(struct hp *instance)
 {
     if (!instance) return HPD_E_NULL;
-    
-    reset_buffers(instance);
+
+    hp_reset_buffers(instance);
     free(instance);
 
     return HPD_E_SUCCESS;

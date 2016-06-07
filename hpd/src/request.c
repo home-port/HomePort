@@ -180,7 +180,7 @@ hpd_error_t request_get_response_request_value(const hpd_response_t *response, c
     return HPD_E_SUCCESS;
 }
 
-static void on_request(hpd_ev_loop_t *loop, ev_async *w, int revents)
+static void request_on_request(hpd_ev_loop_t *loop, ev_async *w, int revents)
 {
     hpd_error_t rc;
     hpd_ev_async_t *async = w->data;
@@ -232,7 +232,7 @@ static void on_request(hpd_ev_loop_t *loop, ev_async *w, int revents)
         return;
 }
 
-static void on_respond(hpd_ev_loop_t *loop, ev_async *w, int revents)
+static void request_on_respond(hpd_ev_loop_t *loop, ev_async *w, int revents)
 {
     hpd_error_t rc;
     hpd_ev_async_t *async = w->data;
@@ -257,7 +257,7 @@ hpd_error_t request_request(hpd_request_t *request)
     hpd_ev_async_t *async;
     HPD_CALLOC(async, 1, hpd_ev_async_t);
     HPD_CPY_ALLOC(async->request, request, hpd_request_t);
-    ev_async_init(&async->watcher, on_request);
+    ev_async_init(&async->watcher, request_on_request);
     async->watcher.data = async;
     hpd_t *hpd = request->service->device.adapter.hpd;
     ev_async_start(hpd->loop, &async->watcher);
@@ -276,7 +276,7 @@ hpd_error_t request_respond(hpd_response_t *response)
     hpd_ev_async_t *async;
     HPD_CALLOC(async, 1, hpd_ev_async_t);
     HPD_CPY_ALLOC(async->response, response, hpd_response_t);
-    ev_async_init(&async->watcher, on_respond);
+    ev_async_init(&async->watcher, request_on_respond);
     async->watcher.data = async;
     hpd_t *hpd = response->request->service->device.adapter.hpd;
     ev_async_start(hpd->loop, &async->watcher);

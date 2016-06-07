@@ -169,7 +169,7 @@ hpd_error_t up_destroy(struct up *instance)
  *  @param  c A char to check
  *  @return 1 if the char is valid in an URL, 0 otherwise
  */
-static int isLegalURLChar(char c)
+static int up_isLegalURLChar(char c)
 {
     if ((c >= '0' && c <= '9') ||
         (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
@@ -183,7 +183,7 @@ static int isLegalURLChar(char c)
     return 0;
 }
 
-#define CALL(X, ...) do { \
+#define UP_CALL(X, ...) do { \
     hpd_error_t rc; \
     if (settings->X != NULL) { \
         if ((rc = settings->X(instance->data, ##__VA_ARGS__))) { \
@@ -232,7 +232,7 @@ hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t len)
 
         // Check if it is a valid URL char. If not, print an error message
         // and set parser to error state
-        if (!isLegalURLChar(c))
+        if (!up_isLegalURLChar(c))
         {
             instance->state = S_ERROR;
             HPD_LOG_RETURN(instance->context, HPD_E_ARGUMENT, "Invalid character ('%c') in URL.", c);
@@ -241,7 +241,7 @@ hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t len)
         switch(instance->state)
         {
             case S_START:
-                CALL(on_begin);
+                UP_CALL(on_begin);
                 if (c == '/') {
                     instance->state = S_SEGMENT;
                     instance->path = instance->parser;
@@ -255,7 +255,7 @@ hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t len)
                 break;
             case S_PROTOCOL:
                 if (c == ':') {
-                    CALL(on_protocol, &instance->buffer[instance->protocol], instance->parser - instance->protocol);
+                    UP_CALL(on_protocol, &instance->buffer[instance->protocol], instance->parser - instance->protocol);
                     instance->state = S_SLASH1;
                 } else {
                     instance->protocol_l++;
@@ -280,7 +280,7 @@ hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t len)
                 break;
             case S_HOST:
                 if(c == ':' || c == '/') {
-                    CALL(on_host, &instance->buffer[instance->host], instance->host_l);
+                    UP_CALL(on_host, &instance->buffer[instance->host], instance->host_l);
                     if (c == ':') instance->state = S_PREPORT;
                     if (c == '/') {
                         instance->state = S_SEGMENT;
@@ -305,7 +305,7 @@ hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t len)
             case S_PORT:
                 if (c == '/')
                 {
-                    CALL(on_port, &instance->buffer[instance->port], instance->port_l);
+                    UP_CALL(on_port, &instance->buffer[instance->port], instance->port_l);
                     instance->state = S_SEGMENT;
                     instance->path = instance->parser;
                     instance->path_l++;
@@ -316,14 +316,14 @@ hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t len)
                 break;
             case S_SEGMENT:
                 if (c == '/' || c == '?') {
-                    CALL(on_path_segment, &instance->buffer[instance->last_path], instance->last_path_l);
+                    UP_CALL(on_path_segment, &instance->buffer[instance->last_path], instance->last_path_l);
                     instance->last_path = instance->parser + 1;
                     instance->last_path_l = 0;
                 } else {
                     instance->last_path_l++;
                 }
                 if (c == '?') {
-                    CALL(on_path_complete, &instance->buffer[instance->path], instance->path_l);
+                    UP_CALL(on_path_complete, &instance->buffer[instance->path], instance->path_l);
                     instance->state = S_KEY;
                     instance->key_value = instance->parser + 1;
                     instance->last_key = instance->parser + 1;
@@ -342,7 +342,7 @@ hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t len)
                 break;
             case S_VALUE:
                 if (c == '&') {
-                    CALL (on_key_value, &instance->buffer[instance->last_key], instance->last_key_l, &instance->buffer[instance->last_value], instance->last_value_l);
+                    UP_CALL (on_key_value, &instance->buffer[instance->last_key], instance->last_key_l, &instance->buffer[instance->last_value], instance->last_value_l);
                     instance->state = S_KEY;
                     instance->last_key = instance->parser + 1;
                     instance->last_key_l = 0;
@@ -385,23 +385,23 @@ hpd_error_t up_complete(struct up *instance)
     switch(instance->state)
     {
         case S_SEGMENT:
-            CALL(on_path_segment, &instance->buffer[instance->last_path], instance->last_path_l);
-            CALL (on_path_complete, &instance->buffer[instance->path], instance->path_l);
+            UP_CALL(on_path_segment, &instance->buffer[instance->last_path], instance->last_path_l);
+            UP_CALL (on_path_complete, &instance->buffer[instance->path], instance->path_l);
             break;
         case S_VALUE:
-            CALL (on_key_value, &instance->buffer[instance->last_key], instance->last_key_l, &instance->buffer[instance->last_value], instance->last_value_l);
+            UP_CALL (on_key_value, &instance->buffer[instance->last_key], instance->last_key_l, &instance->buffer[instance->last_value], instance->last_value_l);
             break;
         case S_HOST:
-            CALL(on_host, &instance->buffer[instance->host], instance->host_l);
+            UP_CALL(on_host, &instance->buffer[instance->host], instance->host_l);
             break;
         case S_PORT:
-            CALL(on_port, &instance->buffer[instance->port], instance->port_l);
+            UP_CALL(on_port, &instance->buffer[instance->port], instance->port_l);
             break;
         default:
             HPD_LOG_RETURN(instance->context, HPD_E_STATE, "Unexpected state.");
     }
 
-    CALL(on_complete, instance->buffer, instance->parser);
+    UP_CALL(on_complete, instance->buffer, instance->parser);
     return HPD_E_SUCCESS;
 }
 

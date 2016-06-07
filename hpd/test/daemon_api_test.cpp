@@ -62,7 +62,7 @@ static hpd_error_t on_create(void **data, const hpd_module_t *)
 static hpd_error_t on_create_add_options(void **data, const hpd_module_t *context)
 {
     hpd_t *hpd = context->hpd;
-    argp_option_t *option;
+    hpd_argp_option_t *option;
     hpd_error_t rc;
     if ((rc = on_create(data, context)) != HPD_E_SUCCESS) return rc;
 

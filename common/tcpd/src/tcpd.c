@@ -49,7 +49,7 @@
  *
  *  \return An in_addr or in6_addr depending on the protocol.
  */
-static void *get_in_addr(struct sockaddr *sa)
+static void *tcpd_get_in_addr(struct sockaddr *sa)
 {
     if (sa->sa_family == AF_INET) {
         // IPv4
@@ -71,7 +71,7 @@ static void *get_in_addr(struct sockaddr *sa)
  * \param  watcher  The io watcher causing the call
  * \param  revents  Not used
  */
-static void on_ev_recv(hpd_ev_loop_t *loop, struct ev_io *watcher, int revents)
+static void tcpd_on_ev_recv(hpd_ev_loop_t *loop, struct ev_io *watcher, int revents)
 {
     ssize_t received;
     hpd_tcpd_conn_t *conn = watcher->data;
@@ -125,7 +125,7 @@ static void on_ev_recv(hpd_ev_loop_t *loop, struct ev_io *watcher, int revents)
  * \param  watcher  The io watcher causing the call
  * \param  revents  Not used
  */
-static void on_ev_send(hpd_ev_loop_t *loop, struct ev_io *watcher, int revents)
+static void tcpd_on_ev_send(hpd_ev_loop_t *loop, struct ev_io *watcher, int revents)
 {
     hpd_tcpd_conn_t *conn = watcher->data;
     ssize_t sent;
@@ -168,7 +168,7 @@ static void on_ev_send(hpd_ev_loop_t *loop, struct ev_io *watcher, int revents)
  * \param  watcher  The io watcher causing the call
  * \param  revents  Not used
  */
-static void on_ev_timeout(hpd_ev_loop_t *loop, struct ev_timer *watcher, int revents)
+static void tcpd_on_ev_timeout(hpd_ev_loop_t *loop, struct ev_timer *watcher, int revents)
 {
     hpd_tcpd_conn_t *conn = watcher->data;
     const hpd_module_t *context = conn->tcpd->context;
@@ -190,7 +190,7 @@ static void on_ev_timeout(hpd_ev_loop_t *loop, struct ev_timer *watcher, int rev
  *  \param watcher The watcher that was tiggered on the connection.
  *  \param revents Not used.
  */
-static void on_ev_conn(hpd_ev_loop_t *loop, struct ev_io *watcher, int revents)
+static void tcpd_on_ev_conn(hpd_ev_loop_t *loop, struct ev_io *watcher, int revents)
 {
     char ip_string[INET6_ADDRSTRLEN];
     int in_fd;
@@ -211,7 +211,7 @@ static void on_ev_conn(hpd_ev_loop_t *loop, struct ev_io *watcher, int revents)
     }
 
     // Print a nice message
-    inet_ntop(in_addr_storage.ss_family, get_in_addr(in_addr), ip_string, sizeof ip_string);
+    inet_ntop(in_addr_storage.ss_family, tcpd_get_in_addr(in_addr), ip_string, sizeof ip_string);
     HPD_LOG_INFO(context, "Got connection from %s.", ip_string);
 
     // Create conn and parser
@@ -245,10 +245,10 @@ static void on_ev_conn(hpd_ev_loop_t *loop, struct ev_io *watcher, int revents)
     }
 
     // Start timeout and io watcher
-    ev_io_init(&conn->recv_watcher, on_ev_recv, in_fd, EV_READ);
-    ev_io_init(&conn->send_watcher, on_ev_send, in_fd, EV_WRITE);
+    ev_io_init(&conn->recv_watcher, tcpd_on_ev_recv, in_fd, EV_READ);
+    ev_io_init(&conn->send_watcher, tcpd_on_ev_send, in_fd, EV_WRITE);
     ev_io_start(loop, &conn->recv_watcher);
-    ev_init(&conn->timeout_watcher, on_ev_timeout);
+    ev_init(&conn->timeout_watcher, tcpd_on_ev_timeout);
     conn->timeout_watcher.repeat = settings->timeout;
     if (conn->timeout)
         ev_timer_again(loop, &conn->timeout_watcher);
@@ -407,7 +407,7 @@ hpd_error_t hpd_tcpd_start(hpd_tcpd_t *tcpd)
 
     // Set listener on libev
     tcpd->watcher.data = tcpd;
-    ev_io_init(&tcpd->watcher, on_ev_conn, tcpd->sockfd, EV_READ);
+    ev_io_init(&tcpd->watcher, tcpd_on_ev_conn, tcpd->sockfd, EV_READ);
     ev_io_start(tcpd->loop, &tcpd->watcher);
 
     return HPD_E_SUCCESS;

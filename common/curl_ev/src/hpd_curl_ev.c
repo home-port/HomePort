@@ -47,15 +47,21 @@ struct curl_ev {
     const hpd_module_t *context;
 };
 
-static hpd_error_t on_create(void **data, const hpd_module_t *context);
-static hpd_error_t on_destroy(void *data);
-static hpd_error_t on_start(void *data, hpd_t *hpd);
-static hpd_error_t on_stop(void *data, hpd_t *hpd);
-static hpd_error_t on_parse_opt(void *data, const char *name, const char *arg);
+static hpd_error_t curl_ev_on_create(void **data, const hpd_module_t *context);
+static hpd_error_t curl_ev_on_destroy(void *data);
+static hpd_error_t curl_ev_on_start(void *data, hpd_t *hpd);
+static hpd_error_t curl_ev_on_stop(void *data, hpd_t *hpd);
+static hpd_error_t curl_ev_on_parse_opt(void *data, const char *name, const char *arg);
 
 static CURLMcode curl_ev_socket_action(int sockfd);
 
-hpd_module_def_t hpd_curl_ev = { on_create, on_destroy, on_start, on_stop, on_parse_opt };
+hpd_module_def_t hpd_curl_ev = {
+        curl_ev_on_create,
+        curl_ev_on_destroy,
+        curl_ev_on_start,
+        curl_ev_on_stop,
+        curl_ev_on_parse_opt
+};
 
 static curl_ev_t *curl_ev = NULL;
 
@@ -66,14 +72,14 @@ static curl_ev_t *curl_ev = NULL;
     } \
 } while(0)
 
-static void on_io(hpd_ev_loop_t *loop, ev_io *w, int revents)
+static void curl_ev_on_io(hpd_ev_loop_t *loop, ev_io *w, int revents)
 {
     CURLMcode cmc;
     if ((cmc = curl_ev_socket_action(w->fd)))
         HPD_LOG_ERROR(curl_ev->context, "curl_ev_socket_action() failed [code: %i]", cmc);
 }
 
-static void on_timeout(hpd_ev_loop_t *loop, ev_timer *w, int revents)
+static void curl_ev_on_timeout(hpd_ev_loop_t *loop, ev_timer *w, int revents)
 {
     ev_timer_stop(loop, w);
     CURLMcode cmc;
@@ -81,7 +87,7 @@ static void on_timeout(hpd_ev_loop_t *loop, ev_timer *w, int revents)
         HPD_LOG_ERROR(curl_ev->context, "curl_ev_socket_action() failed [code: %i]", cmc);
 }
 
-static CURLMcode on_update_socket(CURL *easy, curl_socket_t s, int what, void *userp, void *socketp)
+static CURLMcode curl_ev_on_update_socket(CURL *easy, curl_socket_t s, int what, void *userp, void *socketp)
 {
     CURLMcode cmc;
     const hpd_module_t *context = curl_ev->context;
@@ -103,7 +109,7 @@ static CURLMcode on_update_socket(CURL *easy, curl_socket_t s, int what, void *u
                     return cmc;
                 }
                 TAILQ_INSERT_TAIL(&curl_ev->io_watchers, w, HPD_TAILQ_FIELD);
-                ev_init(&w->watcher, on_io);
+                ev_init(&w->watcher, curl_ev_on_io);
             }
             break;
         case CURL_POLL_REMOVE:
@@ -149,7 +155,7 @@ static CURLMcode on_update_socket(CURL *easy, curl_socket_t s, int what, void *u
         return CURLM_OUT_OF_MEMORY;
 }
 
-static CURLMcode on_update_timer(CURLM *multi, long timeout_ms, void *userp)
+static CURLMcode curl_ev_on_update_timer(CURLM *multi, long timeout_ms, void *userp)
 {
     CURLMcode cmc;
     
@@ -289,7 +295,7 @@ hpd_error_t curl_ev_remove_handle(curl_ev_handle_t *handle)
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t on_create(void **data, const hpd_module_t *context)
+static hpd_error_t curl_ev_on_create(void **data, const hpd_module_t *context)
 {
     if (!context) return HPD_E_NULL;
     if (curl_ev)
@@ -301,7 +307,7 @@ static hpd_error_t on_create(void **data, const hpd_module_t *context)
     TAILQ_INIT(&curl_ev->handles);
     TAILQ_INIT(&curl_ev->io_watchers);
 
-    ev_init(&curl_ev->timer, on_timeout);
+    ev_init(&curl_ev->timer, curl_ev_on_timeout);
     
     return HPD_E_SUCCESS;
     
@@ -310,7 +316,7 @@ static hpd_error_t on_create(void **data, const hpd_module_t *context)
         HPD_LOG_RETURN_E_ALLOC(context);
 }
 
-static hpd_error_t on_destroy(void *data)
+static hpd_error_t curl_ev_on_destroy(void *data)
 {
     if (!curl_ev) return HPD_E_NULL;
 
@@ -332,7 +338,7 @@ static hpd_error_t on_destroy(void *data)
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t on_start(void *data, hpd_t *hpd)
+static hpd_error_t curl_ev_on_start(void *data, hpd_t *hpd)
 {
     if (!curl_ev) return HPD_E_NULL;
     if (!hpd) HPD_LOG_RETURN_E_NULL(curl_ev->context);
@@ -351,9 +357,9 @@ static hpd_error_t on_start(void *data, hpd_t *hpd)
 
     CURLMcode cmc;
     curl_ev->mult_handle = curl_multi_init();
-    if ((cmc = curl_multi_setopt(curl_ev->mult_handle, CURLMOPT_SOCKETFUNCTION, on_update_socket))) goto curl_m_error;
+    if ((cmc = curl_multi_setopt(curl_ev->mult_handle, CURLMOPT_SOCKETFUNCTION, curl_ev_on_update_socket))) goto curl_m_error;
     if ((cmc = curl_multi_setopt(curl_ev->mult_handle, CURLMOPT_SOCKETDATA, curl_ev))) goto curl_m_error;
-    if ((cmc = curl_multi_setopt(curl_ev->mult_handle, CURLMOPT_TIMERFUNCTION, on_update_timer))) goto curl_m_error;
+    if ((cmc = curl_multi_setopt(curl_ev->mult_handle, CURLMOPT_TIMERFUNCTION, curl_ev_on_update_timer))) goto curl_m_error;
     if ((cmc = curl_multi_setopt(curl_ev->mult_handle, CURLMOPT_TIMERDATA, curl_ev))) goto curl_m_error;
 
     if ((rc = curl_ev_add_next())) goto next_error;
@@ -373,7 +379,7 @@ static hpd_error_t on_start(void *data, hpd_t *hpd)
         return rc;
 }
 
-static hpd_error_t on_stop(void *data, hpd_t *hpd)
+static hpd_error_t curl_ev_on_stop(void *data, hpd_t *hpd)
 {
     if (!curl_ev) return HPD_E_NULL;
     
@@ -401,7 +407,7 @@ static hpd_error_t on_stop(void *data, hpd_t *hpd)
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t on_parse_opt(void *data, const char *name, const char *arg)
+static hpd_error_t curl_ev_on_parse_opt(void *data, const char *name, const char *arg)
 {
     if (!curl_ev) return HPD_E_NULL;
     

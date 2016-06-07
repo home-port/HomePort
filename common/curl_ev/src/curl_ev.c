@@ -29,14 +29,14 @@
 #include "hpd_common.h"
 #include "hpd_shared_api.h"
 
-static size_t on_header(char *buffer, size_t size, size_t nmemb, void *userdata)
+static size_t curl_ev_on_header(char *buffer, size_t size, size_t nmemb, void *userdata)
 {
     curl_ev_handle_t *handle = userdata;
     if (handle->on_header) return handle->on_header(buffer, size, nmemb, handle->data);
     else return size*nmemb;
 }
 
-static size_t on_body(char *buffer, size_t size, size_t nmemb, void *userdata)
+static size_t curl_ev_on_body(char *buffer, size_t size, size_t nmemb, void *userdata)
 {
     curl_ev_handle_t *handle = userdata;
     if (handle->on_body) return handle->on_body(buffer, size, nmemb, handle->data);
@@ -54,9 +54,9 @@ hpd_error_t curl_ev_init(curl_ev_handle_t **handle, const hpd_module_t *context)
 
     (*handle)->context = context;
     if (!((*handle)->handle = curl_easy_init())) goto init_error;
-    if ((cc = curl_easy_setopt((*handle)->handle, CURLOPT_HEADERFUNCTION, on_header))) goto curl_error;
+    if ((cc = curl_easy_setopt((*handle)->handle, CURLOPT_HEADERFUNCTION, curl_ev_on_header))) goto curl_error;
     if ((cc = curl_easy_setopt((*handle)->handle, CURLOPT_HEADERDATA, *handle))) goto curl_error;
-    if ((cc = curl_easy_setopt((*handle)->handle, CURLOPT_WRITEFUNCTION, on_body))) goto curl_error;
+    if ((cc = curl_easy_setopt((*handle)->handle, CURLOPT_WRITEFUNCTION, curl_ev_on_body))) goto curl_error;
     if ((cc = curl_easy_setopt((*handle)->handle, CURLOPT_WRITEDATA, *handle))) goto curl_error;
 
     return HPD_E_SUCCESS;

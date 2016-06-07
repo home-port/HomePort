@@ -32,8 +32,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define HTTP_VERSION "HTTP/1.1 "
-#define CRLF "\r\n"
+#define HTTPD_HTTP_VERSION "HTTP/1.1 "
+#define HTTPD_CRLF "\r\n"
 
 /**
  * A http response.
@@ -67,7 +67,7 @@ struct hpd_httpd_response
  *
  *  \return The status code as text
  */
-static char* http_status_codes_to_str(hpd_status_t status)
+static char* httpd_status_codes_to_str(hpd_status_t status)
 {
 #define XX(num, str) if(status == num) {return #str;}
     HPD_HTTP_STATUS_CODE_MAP(XX)
@@ -123,15 +123,15 @@ hpd_error_t hpd_httpd_response_create(hpd_httpd_response_t **response, hpd_httpd
     int len;
 
     // Get data
-    char *status_str = http_status_codes_to_str(status);
+    char *status_str = httpd_status_codes_to_str(status);
 
     // Calculate msg length
     len = 1;
-    len += strlen(HTTP_VERSION);
+    len += strlen(HTTPD_HTTP_VERSION);
     // TODO Problem if this if is NULL !
     if (status_str) len += strlen(status_str);
     len += 4;
-    len += strlen(CRLF);
+    len += strlen(HTTPD_CRLF);
 
     // Allocate space
     (*response) = malloc(sizeof(hpd_httpd_response_t));
@@ -149,10 +149,10 @@ hpd_error_t hpd_httpd_response_create(hpd_httpd_response_t **response, hpd_httpd
     if ((rc = http_request_get_connection(req, &(*response)->conn))) return rc;
 
     // Construct msg
-    strcpy((*response)->msg, HTTP_VERSION);
-    sprintf(&(*response)->msg[strlen(HTTP_VERSION)], "%i ", status);
+    strcpy((*response)->msg, HTTPD_HTTP_VERSION);
+    sprintf(&(*response)->msg[strlen(HTTPD_HTTP_VERSION)], "%i ", status);
     if (status_str) strcat((*response)->msg, status_str);
-    strcat((*response)->msg, CRLF);
+    strcat((*response)->msg, HTTPD_CRLF);
 
     // Real persistent connections is not supported, so tell client that we close connection after response has been sent
     rc = hpd_httpd_response_add_header((*response), "Connection", "close");
@@ -185,7 +185,7 @@ hpd_error_t hpd_httpd_response_add_header(hpd_httpd_response_t *res, const char 
         HPD_LOG_RETURN(res->context, HPD_E_STATE, "Cannot add header, they have already been sent to client.");
 
     char *msg;
-    size_t msg_len = strlen(res->msg)+strlen(field)+2+strlen(value)+strlen(CRLF)+1;
+    size_t msg_len = strlen(res->msg)+strlen(field)+2+strlen(value)+strlen(HTTPD_CRLF)+1;
 
     msg = realloc(res->msg, msg_len*sizeof(char));
     if (!msg) HPD_LOG_RETURN_E_ALLOC(res->context);
@@ -194,7 +194,7 @@ hpd_error_t hpd_httpd_response_add_header(hpd_httpd_response_t *res, const char 
     strcat(res->msg, field);
     strcat(res->msg, ": ");
     strcat(res->msg, value);
-    strcat(res->msg, CRLF);
+    strcat(res->msg, HTTPD_CRLF);
 
     return HPD_E_SUCCESS;
 }
@@ -233,7 +233,7 @@ hpd_error_t hpd_httpd_response_add_cookie(hpd_httpd_response_t *res,
     if (!res->msg) return HPD_E_STATE;
 
     char *msg;
-    size_t msg_len = strlen(res->msg) + 12 + strlen(field) + 1 + strlen(value) + strlen(CRLF) + 1;
+    size_t msg_len = strlen(res->msg) + 12 + strlen(field) + 1 + strlen(value) + strlen(HTTPD_CRLF) + 1;
 
     // Calculate length
     if (expires)   msg_len += 10 + strlen(expires);
@@ -254,7 +254,7 @@ hpd_error_t hpd_httpd_response_add_cookie(hpd_httpd_response_t *res,
     strcat(res->msg, field);
     strcat(res->msg, "=");
     strcat(res->msg, value);
-    strcat(res->msg, CRLF);
+    strcat(res->msg, HTTPD_CRLF);
     if (expires) {
         strcat(res->msg, "; Expires=");
         strcat(res->msg, expires);
@@ -330,8 +330,8 @@ hpd_error_t hpd_httpd_response_vsendf(hpd_httpd_response_t *res, const char *fmt
             HPD_LOG_WARN(res->context, "Failed to get ip [code: %i].", rc);
             ip = "(unknown)";
         }
-        HPD_LOG_VERBOSE(res->context, "Sending response to %s: %i %s.", ip, res->status, http_status_codes_to_str(res->status));
-        if ((rc = hpd_tcpd_conn_sendf(res->conn, "%s%s", res->msg, CRLF))) return rc;
+        HPD_LOG_VERBOSE(res->context, "Sending response to %s: %i %s.", ip, res->status, httpd_status_codes_to_str(res->status));
+        if ((rc = hpd_tcpd_conn_sendf(res->conn, "%s%s", res->msg, HTTPD_CRLF))) return rc;
         free(res->msg);
         res->msg = NULL;
     }

@@ -38,24 +38,24 @@
 extern "C" {
 #endif
 
-typedef struct configuration configuration_t;
-typedef struct modules modules_t;
-typedef struct argp_option argp_option_t;
+typedef struct hpd_configuration hpd_configuration_t;
+typedef struct hpd_modules hpd_modules_t;
+typedef struct argp_option hpd_argp_option_t;
 typedef struct hpd_ev_async hpd_ev_async_t;
 typedef struct hpd_ev_asyncs hpd_ev_asyncs_t;
 
-TAILQ_HEAD(modules, hpd_module);
+TAILQ_HEAD(hpd_modules, hpd_module);
 TAILQ_HEAD(hpd_ev_asyncs, hpd_ev_async);
 
 struct hpd {
     hpd_ev_loop_t *loop;
-    configuration_t *configuration;
+    hpd_configuration_t *configuration;
     ev_signal sigint_watcher;
     ev_signal sigterm_watcher;
-    modules_t modules;
+    hpd_modules_t modules;
     int module_options_count;
     int options_count;
-    argp_option_t *options;
+    hpd_argp_option_t *options;
     const hpd_module_t **option2module;
     hpd_ev_asyncs_t request_watchers;
     hpd_ev_asyncs_t respond_watchers;

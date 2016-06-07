@@ -37,16 +37,16 @@
 extern "C" {
 #endif
 
-typedef struct configuration configuration_t;
-typedef struct adapters adapters_t;
-typedef struct devices devices_t;
-typedef struct services services_t;
-typedef struct parameters parameters_t;
+typedef struct hpd_configuration hpd_configuration_t;
+typedef struct hpd_adapters hpd_adapters_t;
+typedef struct hpd_devices hpd_devices_t;
+typedef struct hpd_services hpd_services_t;
+typedef struct hpd_parameters hpd_parameters_t;
 
-TAILQ_HEAD(adapters, hpd_adapter);
-TAILQ_HEAD(devices, hpd_device);
-TAILQ_HEAD(services, hpd_service);
-TAILQ_HEAD(parameters, hpd_parameter);
+TAILQ_HEAD(hpd_adapters, hpd_adapter);
+TAILQ_HEAD(hpd_devices, hpd_device);
+TAILQ_HEAD(hpd_services, hpd_service);
+TAILQ_HEAD(hpd_parameters, hpd_parameter);
 
 struct hpd_action {
     hpd_service_t *service;
@@ -54,18 +54,18 @@ struct hpd_action {
     hpd_action_f action;           //< Action
 };
 
-struct configuration {
+struct hpd_configuration {
     // Navigational members
-    adapters_t  adapters;
-    listeners_t listeners;
+    hpd_adapters_t  adapters;
+    hpd_listeners_t listeners;
     hpd_t *hpd;
 };
 
 struct hpd_adapter {
     // Navigational members
-    configuration_t *configuration;
+    hpd_configuration_t *configuration;
     TAILQ_ENTRY(hpd_adapter) HPD_TAILQ_FIELD;
-    devices_t *devices;
+    hpd_devices_t *devices;
     // Data members
     char *id;
     hpd_map_t *attributes;
@@ -78,7 +78,7 @@ struct hpd_device {
     // Navigational members
     hpd_adapter_t *adapter;
     TAILQ_ENTRY(hpd_device) HPD_TAILQ_FIELD;
-    services_t *services;
+    hpd_services_t *services;
     // Data members
     char *id;
     hpd_map_t *attributes;
@@ -91,7 +91,7 @@ struct hpd_service {
     // Navigational members
     hpd_device_t *device;
     TAILQ_ENTRY(hpd_service) HPD_TAILQ_FIELD;
-    parameters_t *parameters;
+    hpd_parameters_t *parameters;
     // Data members
     char *id;
     hpd_map_t *attributes;

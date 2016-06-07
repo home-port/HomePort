@@ -53,7 +53,7 @@ struct hpd_httpd {
  *
  *  \return 0 on success, 1 on error
  */
-static hpd_tcpd_return_t on_connect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx)
+static hpd_tcpd_return_t httpd_on_connect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx)
 {
     hpd_error_t rc;
     hpd_httpd_t *httpd = ws_ctx;
@@ -79,7 +79,7 @@ static hpd_tcpd_return_t on_connect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn,
  *
  *  \return 0 on success, 1 on error
  */
-static hpd_tcpd_return_t on_receive(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx, const char *buf, size_t len)
+static hpd_tcpd_return_t httpd_on_receive(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx, const char *buf, size_t len)
 {
     hpd_error_t rc;
     hpd_httpd_t *httpd = ws_ctx;
@@ -104,7 +104,7 @@ static hpd_tcpd_return_t on_receive(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn,
  *
  *  \return 0 on success, 1 on error
  */
-static hpd_tcpd_return_t on_disconnect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx)
+static hpd_tcpd_return_t httpd_on_disconnect(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ws_ctx, void **conn_ctx)
 {
     hpd_error_t rc;
     hpd_httpd_t *httpd = ws_ctx;
@@ -152,9 +152,9 @@ hpd_error_t hpd_httpd_create(hpd_httpd_t **httpd, hpd_httpd_settings_t *settings
     hpd_tcpd_settings_t ws_settings = HPD_TCPD_SETTINGS_DEFAULT;
     ws_settings.port          = settings->port;
     ws_settings.timeout       = settings->timeout;
-    ws_settings.on_connect    = on_connect;
-    ws_settings.on_receive    = on_receive;
-    ws_settings.on_disconnect = on_disconnect;
+    ws_settings.on_connect    = httpd_on_connect;
+    ws_settings.on_receive    = httpd_on_receive;
+    ws_settings.on_disconnect = httpd_on_disconnect;
     ws_settings.tcpd_ctx      = (*httpd);
 
     // Create tcpd

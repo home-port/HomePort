@@ -96,7 +96,7 @@ hpd_error_t event_get_listener_data(const hpd_listener_t *listener, void **data)
 hpd_error_t event_foreach_attached(const hpd_listener_t *listener)
 {
     hpd_error_t rc;
-    configuration_t *configuration = listener->hpd->configuration;
+    hpd_configuration_t *configuration = listener->hpd->configuration;
     hpd_adapter_t *adapter;
     hpd_device_t *device;
     TAILQ_FOREACH(adapter, &configuration->adapters, HPD_TAILQ_FIELD) {
@@ -110,7 +110,7 @@ hpd_error_t event_foreach_attached(const hpd_listener_t *listener)
     return HPD_E_SUCCESS;
 }
 
-static void on_changed(hpd_ev_loop_t *loop, ev_async *w, int revents)
+static void event_on_changed(hpd_ev_loop_t *loop, ev_async *w, int revents)
 {
     hpd_error_t rc;
     hpd_ev_async_t *async = w->data;
@@ -136,7 +136,7 @@ static void on_changed(hpd_ev_loop_t *loop, ev_async *w, int revents)
     }
 }
 
-static void on_attached(hpd_ev_loop_t *loop, ev_async *w, int revents)
+static void event_on_attached(hpd_ev_loop_t *loop, ev_async *w, int revents)
 {
     hpd_error_t rc;
     hpd_ev_async_t *async = w->data;
@@ -157,7 +157,7 @@ static void on_attached(hpd_ev_loop_t *loop, ev_async *w, int revents)
     }
 }
 
-static void on_detached(hpd_ev_loop_t *loop, ev_async *w, int revents)
+static void event_on_detached(hpd_ev_loop_t *loop, ev_async *w, int revents)
 {
     hpd_error_t rc;
     hpd_ev_async_t *async = w->data;
@@ -187,7 +187,7 @@ hpd_error_t event_changed(const hpd_service_id_t *id, hpd_value_t *val)
     if ((rc = discovery_copy_sid(&async->service, id))) goto copy_sid_error;
     hpd_t *hpd = id->device.adapter.hpd;
     async->hpd = hpd;
-    ev_async_init(&async->watcher, on_changed);
+    ev_async_init(&async->watcher, event_on_changed);
     async->watcher.data = async;
     ev_async_start(hpd->loop, &async->watcher);
     ev_async_send(hpd->loop, &async->watcher);
@@ -240,7 +240,7 @@ hpd_error_t event_inform_device_attached(hpd_device_t *device)
     hpd_t *hpd = adapter->configuration->hpd;
     if ((rc = discovery_alloc_did(&async->device, hpd, adapter->id, device->id))) goto did_error;
     async->hpd = hpd;
-    ev_async_init(&async->watcher, on_attached);
+    ev_async_init(&async->watcher, event_on_attached);
     async->watcher.data = async;
     ev_async_start(hpd->loop, &async->watcher);
     ev_async_send(hpd->loop, &async->watcher);
@@ -267,7 +267,7 @@ hpd_error_t event_inform_device_detached(hpd_device_t *device)
     hpd_t *hpd = adapter->configuration->hpd;
     if ((rc = discovery_alloc_did(&async->device, hpd, adapter->id, device->id))) goto did_error;
     async->hpd = hpd;
-    ev_async_init(&async->watcher, on_detached);
+    ev_async_init(&async->watcher, event_on_detached);
     async->watcher.data = async;
     ev_async_start(hpd->loop, &async->watcher);
     ev_async_send(hpd->loop, &async->watcher);

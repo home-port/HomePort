@@ -229,7 +229,7 @@
  *         ev_signal sigterm_watcher
  *         int module_options_count
  *         int options_count
- *         argp_option_t *options
+ *         hpd_argp_option_t *options
  *         hpd_module_t **option2module
  *         hpd_ev_asyncs_t request_watchers
  *         hpd_ev_asyncs_t respond_watchers
@@ -280,7 +280,7 @@
  *         hpd_action_f action
  *     }
  *     
- *     class configuration_t {
+ *     class hpd_configuration_t {
  *     }
  *     
  *     class hpd_adapter_t {
@@ -315,15 +315,15 @@
  *     hpd_request_t "1" <- "-" hpd_response_t
  *     hpd_response_t "-" *-- "1" hpd_value_t
  *     hpd_request_t "-" *-- "1" hpd_value_t
- *     hpd_t "1" *-- "1" configuration_t
+ *     hpd_t "1" *-- "1" hpd_configuration_t
  *     hpd_t "1" *- "*" hpd_module_t
  *     hpd_module_t "-" *- "1" hpd_module_def_t
  *     hpd_action_t "*" -* "1" hpd_service_t
- *     configuration_t "1" *-- "*" hpd_adapter_t
+ *     hpd_configuration_t "1" *-- "*" hpd_adapter_t
  *     hpd_adapter_t "1" *-- "*" hpd_device_t
  *     hpd_device_t "1" *-- "*" hpd_service_t
  *     hpd_service_t "1" *-- "*" hpd_parameter_t
- *     configuration_t "-" *- "*" hpd_listener_t
+ *     hpd_configuration_t "-" *- "*" hpd_listener_t
  * }
  *
  * @enduml
