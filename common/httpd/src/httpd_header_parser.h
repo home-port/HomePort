@@ -28,7 +28,7 @@
 #ifndef HOMEPORT_HTTPD_HEADER_PARSER_H
 #define HOMEPORT_HTTPD_HEADER_PARSER_H
 
-#include "hpd_types.h"
+#include "hpd/hpd_types.h"
 
 typedef hpd_error_t (*hp_string_cb)(void* data, const char* field, size_t field_length, const char* value, size_t value_length);
 

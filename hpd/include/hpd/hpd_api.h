@@ -25,40 +25,11 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_HPD_MAP_H
-#define HOMEPORT_HPD_MAP_H
+#ifndef HOMEPORT_HPD_API_H
+#define HOMEPORT_HPD_API_H
 
-#include "hpd_types.h"
-#include "hpd_queue.h"
-#include <stddef.h>
-#include <stdarg.h>
+#include <hpd/hpd_adapter_api.h>
+#include <hpd/hpd_application_api.h>
+#include <hpd/hpd_daemon_api.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct hpd_map hpd_map_t;
-typedef struct hpd_pair hpd_pair_t;
-
-hpd_error_t hpd_map_alloc(hpd_map_t **map);
-hpd_error_t hpd_map_first(hpd_map_t *map, hpd_pair_t **pair);
-hpd_error_t hpd_map_next(hpd_pair_t **pair);
-hpd_error_t hpd_map_remove(hpd_map_t *map, hpd_pair_t *pair);
-hpd_error_t hpd_map_free(hpd_map_t *map);
-hpd_error_t hpd_map_get(hpd_map_t *map, const char *k, const char **v);
-hpd_error_t hpd_map_get_n(hpd_map_t *map, const char *k, size_t k_len, const char **v);
-hpd_error_t hpd_map_set(hpd_map_t *map, const char *k, const char *v);
-hpd_error_t hpd_map_set_n(hpd_map_t *map, const char *k, size_t k_len, const char *v, size_t v_len);
-hpd_error_t hpd_map_v_matches(hpd_map_t *map, va_list vp);
-hpd_error_t hpd_pair_get(const hpd_pair_t *pair, const char **key, const char **value);
-
-#define hpd_map_foreach(RC, PAIR, MAP) for ( \
-    (RC) = hpd_map_first((MAP), &(PAIR)); \
-    !(RC) && (PAIR); \
-    (RC) = hpd_map_next(&(PAIR)))
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif //HOMEPORT_HPD_MAP_H
+#endif //HOMEPORT_HPD_API_H

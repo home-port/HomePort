@@ -29,7 +29,7 @@
 #include <stdlib.h>
 
 #include "httpd_url_parser.h"
-#include "hpd_shared_api.h"
+#include "hpd/hpd_shared_api.h"
 
 /// The possible states of the URL Parser
 enum up_state {

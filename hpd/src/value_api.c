@@ -25,7 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "hpd_api.h"
+#include "hpd/hpd_api.h"
 #include "value.h"
 #include "log.h"
 

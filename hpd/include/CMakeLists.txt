@@ -28,9 +28,5 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-install(FILES hpd_shared_api.h DESTINATION include/hpd)
-install(FILES hpd_daemon_api.h DESTINATION include/hpd)
-install(FILES hpd_application_api.h DESTINATION include/hpd)
-install(FILES hpd_api.h DESTINATION include/hpd)
-install(FILES hpd_types.h DESTINATION include/hpd)
-install(FILES hpd_adapter_api.h DESTINATION include/hpd)
+add_subdirectory(hpd)
+

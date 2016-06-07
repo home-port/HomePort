@@ -28,8 +28,8 @@
 #ifndef HOMEPORT_HTTPD_REQUEST_H
 #define HOMEPORT_HTTPD_REQUEST_H
 
-#include "hpd_httpd.h"
-#include "hpd_tcpd.h"
+#include "hpd/common/hpd_httpd.h"
+#include "hpd/common/hpd_tcpd.h"
 #include <stddef.h>
 
 hpd_error_t http_request_create(hpd_httpd_request_t **req, hpd_httpd_t *httpd, hpd_httpd_settings_t *settings,

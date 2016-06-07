@@ -28,7 +28,7 @@
 #ifndef HOMEPORT_HPD_APPLICATION_API_H
 #define HOMEPORT_HPD_APPLICATION_API_H
 
-#include "hpd_shared_api.h"
+#include <hpd/hpd_shared_api.h>
 
 #ifdef __cplusplus
 extern "C" {

@@ -74,12 +74,12 @@ add_library(hpd SHARED
         $<TARGET_OBJECTS:log>
         model.h
         comm.h
-        ../include/hpd_adapter_api.h
-        ../include/hpd_api.h
-        ../include/hpd_application_api.h
-        ../include/hpd_daemon_api.h
-        ../include/hpd_shared_api.h
-        ../include/hpd_types.h
+        ../include/hpd/hpd_adapter_api.h
+        ../include/hpd/hpd_api.h
+        ../include/hpd/hpd_application_api.h
+        ../include/hpd/hpd_daemon_api.h
+        ../include/hpd/hpd_shared_api.h
+        ../include/hpd/hpd_types.h
         ../api.dox
 )
 set_target_properties(hpd PROPERTIES LINKER_LANGUAGE C)

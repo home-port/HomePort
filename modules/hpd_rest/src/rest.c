@@ -26,10 +26,10 @@
  */
 
 #include "rest_intern.h"
-#include "hpd_rest.h"
-#include "hpd_application_api.h"
-#include "hpd_common.h"
-#include "hpd_httpd.h"
+#include "hpd/modules/hpd_rest.h"
+#include "hpd/hpd_application_api.h"
+#include "hpd/common/hpd_common.h"
+#include "hpd/common/hpd_httpd.h"
 #include <curl/curl.h>
 #include "rest_json.h"
 #include "rest_xml.h"

@@ -28,11 +28,11 @@
 #ifndef HOMEPORT_HPD_HTTPD_H
 #define HOMEPORT_HPD_HTTPD_H
 
-#include "hpd_map.h"
+#include <hpd/common/hpd_map.h>
 #include <stddef.h>
 #include <stdarg.h>
-#include "hpd_types.h"
-#include "hpd_httpd_types.h"
+#include <hpd/hpd_types.h>
+#include <hpd/common/hpd_httpd_types.h>
 
 // Structs
 typedef struct hpd_httpd hpd_httpd_t;

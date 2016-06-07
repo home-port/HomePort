@@ -25,10 +25,10 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "hpd_httpd.h"
-#include "hpd_tcpd.h"
+#include "hpd/common/hpd_httpd.h"
+#include "hpd/common/hpd_tcpd.h"
 #include "httpd_request.h"
-#include "hpd_shared_api.h"
+#include "hpd/hpd_shared_api.h"
 
 #include <stdlib.h>
 #include <stdio.h>

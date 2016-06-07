@@ -30,8 +30,8 @@
 
 #include <stddef.h>
 #include <stdarg.h>
-#include "hpd_types.h"
-#include "hpd_tcpd_types.h"
+#include <hpd/hpd_types.h>
+#include <hpd/common/hpd_tcpd_types.h>
 
 #ifdef __cplusplus
 extern "C" {

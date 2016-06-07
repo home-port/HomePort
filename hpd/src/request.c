@@ -28,7 +28,7 @@
 #include "value.h"
 #include "discovery.h"
 #include "request.h"
-#include "hpd_common.h"
+#include "hpd/common/hpd_common.h"
 #include <ev.h>
 #include "daemon.h"
 #include "log.h"

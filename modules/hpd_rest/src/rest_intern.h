@@ -28,7 +28,7 @@
 #ifndef HOMEPORT_REST_INTERN_H
 #define HOMEPORT_REST_INTERN_H
 
-#include "hpd_types.h"
+#include "hpd/hpd_types.h"
 
 typedef struct hpd_rest hpd_rest_t;
 

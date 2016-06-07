@@ -26,8 +26,8 @@
  */
 
 #include "rest_json.h"
-#include "hpd_jansson.h"
-#include "hpd_application_api.h"
+#include "hpd/common/hpd_jansson.h"
+#include "hpd/hpd_application_api.h"
 #include <string.h>
 
 #define REST_JSON_RETURN_JSON_ERROR(CONTEXT) HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Json error")

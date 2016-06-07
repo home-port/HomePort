@@ -25,11 +25,25 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_HPD_CURL_EV_MODULE_H
-#define HOMEPORT_HPD_CURL_EV_MODULE_H
+#ifndef HOMEPORT_HPD_DAEMON_API_H
+#define HOMEPORT_HPD_DAEMON_API_H
 
-#include "hpd_types.h"
+#include <hpd/hpd_types.h>
 
-extern hpd_module_def_t hpd_curl_ev;
-
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+/// [hpd_t functions]
+hpd_error_t hpd_alloc(hpd_t **hpd);
+hpd_error_t hpd_free(hpd_t *hpd);
+hpd_error_t hpd_module(hpd_t *hpd, const char *id, const hpd_module_def_t *module_def);
+hpd_error_t hpd_start(hpd_t *hpd, int argc, char *argv[]);
+hpd_error_t hpd_stop(hpd_t *hpd);
+/// [hpd_t functions]
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif //HOMEPORT_HPD_DAEMON_API_H

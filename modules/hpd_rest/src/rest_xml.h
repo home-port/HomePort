@@ -28,7 +28,7 @@
 #ifndef HOMEPORT_REST_XML_H
 #define HOMEPORT_REST_XML_H
 
-#include "hpd_types.h"
+#include "hpd/hpd_types.h"
 #include "rest_intern.h"
 
 hpd_error_t hpd_rest_xml_get_configuration(hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context, char **out);

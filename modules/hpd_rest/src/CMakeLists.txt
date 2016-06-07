@@ -30,7 +30,7 @@
 
 # Main library
 add_library(hpd-rest SHARED
-        ../include/hpd_rest.h
+        ../include/hpd/modules/hpd_rest.h
         rest_intern.h
         rest.c
         rest_json.c

@@ -30,7 +30,7 @@
 #include <stdio.h>
 
 #include "httpd_header_parser.h"
-#include "hpd_shared_api.h"
+#include "hpd/hpd_shared_api.h"
 
 enum hp_state {
 	S_ERROR = -1,

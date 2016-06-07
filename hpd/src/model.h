@@ -28,9 +28,9 @@
 #ifndef HOMEPORT_MODEL_H
 #define HOMEPORT_MODEL_H
 
-#include "hpd_types.h"
-#include "hpd_queue.h"
-#include "hpd_map.h"
+#include "hpd/hpd_types.h"
+#include "hpd/common/hpd_queue.h"
+#include "hpd/common/hpd_map.h"
 #include "comm.h"
 
 #ifdef __cplusplus

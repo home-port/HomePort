@@ -26,7 +26,7 @@
  */
 
 #include "discovery.h"
-#include "hpd_common.h"
+#include "hpd/common/hpd_common.h"
 #include "daemon.h"
 #include "log.h"
 #include "model.h"

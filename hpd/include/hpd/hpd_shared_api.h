@@ -28,7 +28,7 @@
 #ifndef HOMEPORT_HPD_SHARED_API_H
 #define HOMEPORT_HPD_SHARED_API_H
 
-#include "hpd_types.h"
+#include <hpd/hpd_types.h>
 
 #include <stddef.h>
 #include <stdarg.h>

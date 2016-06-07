@@ -32,7 +32,7 @@
 extern "C" {
 #endif
 
-#include "hpd_map.h"
+#include "hpd/common/hpd_map.h"
 
 typedef struct hpd_listeners hpd_listeners_t;
 

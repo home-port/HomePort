@@ -26,7 +26,7 @@
  */
 
 #include <gtest/gtest.h>
-#include "hpd_api.h"
+#include "hpd/hpd_api.h"
 #include "daemon.h"
 
 #define CASE hpd_daemon_api

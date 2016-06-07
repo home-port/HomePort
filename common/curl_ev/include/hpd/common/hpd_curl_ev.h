@@ -25,17 +25,34 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_HPD_HTTPD_TYPES_H
-#define HOMEPORT_HPD_HTTPD_TYPES_H
+#ifndef HOMEPORT_HPD_CURL_EV_H
+#define HOMEPORT_HPD_CURL_EV_H
 
-#include "hpd_tcpd_types.h"
+#include <stddef.h>
+#include <hpd/hpd_types.h>
 
-typedef enum hpd_httpd_method
-{
-    HPD_HTTPD_M_UNKNOWN = -1,
-    HPD_HTTPD_M_GET,
-    HPD_HTTPD_M_PUT,
-    HPD_HTTPD_M_OPTIONS
-} hpd_httpd_method_t;
+typedef struct hpd_curl_ev_handle hpd_curl_ev_handle_t;
 
-#endif //HOMEPORT_HTTPD_TYPES_H
+typedef size_t (*hpd_curl_ev_f)(char *buffer, size_t size, size_t nmemb, void *userdata);
+typedef void (*hpd_curl_ev_free_f)(void *userdata);
+typedef void (*hpd_curl_ev_done_f)(void *userdata, int curl_code);
+
+hpd_error_t hpd_curl_ev_init(hpd_curl_ev_handle_t **handle, const hpd_module_t *context);
+hpd_error_t hpd_curl_ev_cleanup(hpd_curl_ev_handle_t *handle);
+
+hpd_error_t hpd_curl_ev_add_handle(hpd_curl_ev_handle_t *handle);
+hpd_error_t hpd_curl_ev_remove_handle(hpd_curl_ev_handle_t *handle);
+
+hpd_error_t hpd_curl_ev_set_header_callback(hpd_curl_ev_handle_t *handle, hpd_curl_ev_f on_header);
+hpd_error_t hpd_curl_ev_set_body_callback(hpd_curl_ev_handle_t *handle, hpd_curl_ev_f on_body);
+hpd_error_t hpd_curl_ev_set_done_callback(hpd_curl_ev_handle_t *handle, hpd_curl_ev_done_f on_done);
+
+hpd_error_t hpd_curl_ev_set_custom_request(hpd_curl_ev_handle_t *handle, const char *request);
+hpd_error_t hpd_curl_ev_set_data(hpd_curl_ev_handle_t *handle, void *data, hpd_curl_ev_free_f on_free);
+hpd_error_t hpd_curl_ev_set_postfields(hpd_curl_ev_handle_t *handle, const void *data, size_t len);
+hpd_error_t hpd_curl_ev_set_url(hpd_curl_ev_handle_t *handle, const char *url);
+hpd_error_t hpd_curl_ev_set_verbose(hpd_curl_ev_handle_t *handle, long int bool);
+
+hpd_error_t hpd_curl_ev_add_header(hpd_curl_ev_handle_t *handle, const char *header);
+
+#endif

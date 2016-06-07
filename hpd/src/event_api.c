@@ -27,7 +27,7 @@
 
 #include "discovery.h"
 #include "daemon.h"
-#include "hpd_api.h"
+#include "hpd/hpd_api.h"
 #include "event.h"
 #include "log.h"
 #include "comm.h"

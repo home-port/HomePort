@@ -31,8 +31,8 @@
 find_package(CURL)
 if (CURL_FOUND)
     add_library(hpd-curl-ev SHARED
-            ../include/hpd_curl_ev_module.h
-            ../include/hpd_curl_ev.h
+            ../include/hpd/common/hpd_curl_ev_module.h
+            ../include/hpd/common/hpd_curl_ev.h
             curl_ev_intern.h
             curl_ev_module.c
             curl_ev.c

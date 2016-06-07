@@ -25,11 +25,11 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_HPD_API_H
-#define HOMEPORT_HPD_API_H
+#ifndef HOMEPORT_HPD_REST_H
+#define HOMEPORT_HPD_REST_H
 
-#include "hpd_adapter_api.h"
-#include "hpd_application_api.h"
-#include "hpd_daemon_api.h"
+#include <hpd/hpd_types.h>
 
-#endif //HOMEPORT_HPD_API_H
+extern hpd_module_def_t hpd_rest;
+
+#endif //HOMEPORT_HPD_REST_H

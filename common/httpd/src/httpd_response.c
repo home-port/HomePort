@@ -26,7 +26,7 @@
  */
 
 #include "httpd_request.h"
-#include "hpd_shared_api.h"
+#include "hpd/hpd_shared_api.h"
 
 #include <string.h>
 #include <stdlib.h>
