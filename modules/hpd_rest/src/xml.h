@@ -25,9 +25,14 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
+#ifndef HOMEPORT_XML_H
+#define HOMEPORT_XML_H
+
 #include "hpd_types.h"
 #include "hpd_rest_intern.h"
 
 hpd_error_t hpd_rest_xml_get_configuration(hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context, char **out);
 hpd_error_t hpd_rest_xml_get_value(char *value, const hpd_module_t *context, char **out);
 hpd_error_t hpd_rest_xml_parse_value(const char *in, const hpd_module_t *context, char **out);
+
+#endif

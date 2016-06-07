@@ -25,8 +25,8 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HEADER_PARSER_H
-#define HEADER_PARSER_H
+#ifndef HOMEPORT_HEADER_PARSER_H
+#define HOMEPORT_HEADER_PARSER_H
 
 #include "hpd_types.h"
 

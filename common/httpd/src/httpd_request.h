@@ -25,8 +25,8 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef HOMEPORT_HTTPD_REQUEST_H
+#define HOMEPORT_HTTPD_REQUEST_H
 
 #include "httpd.h"
 #include "tcpd.h"
