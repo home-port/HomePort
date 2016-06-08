@@ -57,6 +57,7 @@ struct hpd {
     int options_count;
     hpd_argp_option_t *options;
     const hpd_module_t **option2module;
+    const char **option2name;
     hpd_ev_asyncs_t request_watchers;
     hpd_ev_asyncs_t respond_watchers;
     hpd_ev_asyncs_t changed_watchers;

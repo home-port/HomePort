@@ -47,7 +47,7 @@ static int daemon_on_parse_opt(int key, char *arg, struct argp_state *state)
 
     if (key >= 0xff && (key - 0xff) < hpd->module_options_count) {
         const hpd_module_t *module = hpd->option2module[key-0xff];
-        const char *name = hpd->options[key - 0xff].name;
+        const char *name = hpd->option2name[key - 0xff];
         while ((name++)[0] != '-');
         switch ((rc = module->def.on_parse_opt(module->data, name, arg))) {
             case HPD_E_SUCCESS:
@@ -264,6 +264,8 @@ static void daemon_options_destroy(hpd_t *hpd)
     hpd->options = NULL;
     free(hpd->option2module);
     hpd->option2module = NULL;
+    free(hpd->option2name);
+    hpd->option2name = NULL;
 }
 
 static hpd_error_t daemon_options_parse(hpd_t *hpd, int argc, char **argv)
@@ -422,6 +424,10 @@ hpd_error_t daemon_add_option(const hpd_module_t *context, const char *name, con
 
     HPD_REALLOC(hpd->option2module, hpd->module_options_count+1, const hpd_module_t *);
     hpd->option2module[hpd->module_options_count] = context;
+
+    HPD_REALLOC(hpd->option2name, hpd->module_options_count+1, const char *);
+    hpd->option2name[hpd->module_options_count] = hpd->options[hpd->options_count-1].name;
+
     hpd->module_options_count++;
 
     free(name_cat);
