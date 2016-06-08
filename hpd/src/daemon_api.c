@@ -25,12 +25,10 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "hpd_api.h"
+#include "hpd/hpd_api.h"
 #include "daemon.h"
-#include <string.h>
 #include "log.h"
 // Not the same as other queue.h
-#include <bsd/sys/queue.h>
 
 hpd_error_t hpd_alloc(hpd_t **hpd) {
     if (!hpd) LOG_RETURN_E_NULL();
@@ -58,7 +56,7 @@ hpd_error_t hpd_module(hpd_t *hpd, const char *id, const hpd_module_def_t *modul
     // TODO Create hpd and log as modules ?
     if (strcmp(id, "hpd") == 0) LOG_RETURN(HPD_E_ARGUMENT, "Module ids cannot be 'hpd'.");
     if (strcmp(id, "log") == 0) LOG_RETURN(HPD_E_ARGUMENT, "Module ids cannot be 'log'.");
-    HPD_TAILQ_FOREACH(module, &hpd->modules)
+    TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD)
         if (strcmp(module->id, id) == 0)
             LOG_RETURN(HPD_E_NOT_UNIQUE, "Module ids must be unique.");
     return daemon_add_module(hpd, id, module_def);

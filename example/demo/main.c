@@ -25,8 +25,8 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "hpd_daemon_api.h"
-#include "hpd_rest.h"
+#include "hpd/hpd_daemon_api.h"
+#include "hpd/modules/hpd_rest.h"
 #include "demo_adapter.h"
 #include "demo_application.h"
 

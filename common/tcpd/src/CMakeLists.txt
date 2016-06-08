@@ -29,8 +29,8 @@
 # as representing official policies, either expressed.
 
 add_library(hpd-tcpd SHARED
-        ../include/tcpd.h
-        ../include/tcpd_types.h
+        ../include/hpd/common/hpd_tcpd.h
+        ../include/hpd/common/hpd_tcpd_types.h
         tcpd_intern.h
         tcpd.c
         )

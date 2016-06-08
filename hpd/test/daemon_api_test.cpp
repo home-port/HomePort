@@ -26,7 +26,7 @@
  */
 
 #include <gtest/gtest.h>
-#include "hpd_api.h"
+#include "hpd/hpd_api.h"
 #include "daemon.h"
 
 #define CASE hpd_daemon_api
@@ -62,7 +62,7 @@ static hpd_error_t on_create(void **data, const hpd_module_t *)
 static hpd_error_t on_create_add_options(void **data, const hpd_module_t *context)
 {
     hpd_t *hpd = context->hpd;
-    argp_option_t *option;
+    hpd_argp_option_t *option;
     hpd_error_t rc;
     if ((rc = on_create(data, context)) != HPD_E_SUCCESS) return rc;
 
@@ -197,7 +197,7 @@ TEST(CASE, module_allocation) {
     ASSERT_NE((module = TAILQ_FIRST(&hpd->modules)), nullptr);
     ASSERT_EQ(module->hpd, hpd);
     ASSERT_EQ(TAILQ_NEXT(module, HPD_TAILQ_FIELD), nullptr);
-    ASSERT_EQ(TAILQ_PREV(module, modules, HPD_TAILQ_FIELD), nullptr);
+    ASSERT_EQ(TAILQ_PREV(module, hpd_modules, HPD_TAILQ_FIELD), nullptr);
     ASSERT_EQ(module->def.on_create, module_def.on_create);
     ASSERT_EQ(module->def.on_destroy, module_def.on_destroy);
     ASSERT_EQ(module->def.on_start, module_def.on_start);

@@ -32,7 +32,7 @@
 extern "C" {
 #endif
 
-#include "hpd_types.h"
+#include "hpd/hpd_types.h"
 #include <stdarg.h>
 
 typedef struct hpd_adapter_id {

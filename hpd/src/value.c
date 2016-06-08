@@ -26,8 +26,8 @@
  */
 
 #include "value.h"
-#include "hpd_common.h"
-#include "hpd_map.h"
+#include "hpd/common/hpd_common.h"
+#include "hpd/common/hpd_map.h"
 #include "comm.h"
 #include "log.h"
 

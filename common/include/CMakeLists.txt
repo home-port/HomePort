@@ -28,13 +28,5 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-install(FILES hpd_queue.h DESTINATION include/hpd)
-install(FILES hpd_common.h DESTINATION include/hpd)
-install(FILES hpd_jansson.h DESTINATION include/hpd)
+add_subdirectory(hpd)
 
-add_library(hpd_common SHARED
-        ../include/hpd_common.h
-        ../include/hpd_queue.h
-        ../include/hpd_jansson.h
-        )
-set_target_properties(hpd_common PROPERTIES LINKER_LANGUAGE C)

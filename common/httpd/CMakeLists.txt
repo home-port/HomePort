@@ -29,7 +29,7 @@
 # as representing official policies, either expressed.
 
 include_directories(${PROJECT_SOURCE_DIR}/common/tcpd/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(include)
 
 add_subdirectory(include)
 add_subdirectory(src)

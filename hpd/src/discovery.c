@@ -29,7 +29,6 @@
 #include "model.h"
 #include "discovery.h"
 #include "daemon.h"
-#include "hpd_common.h"
 #include "log.h"
 
 hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const char *id)
@@ -37,7 +36,7 @@ hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const char *id)
     hpd_error_t rc;
 
     HPD_CALLOC((*adapter), 1, hpd_adapter_t);
-    HPD_CALLOC((*adapter)->devices, 1, devices_t);
+    HPD_CALLOC((*adapter)->devices, 1, hpd_devices_t);
     TAILQ_INIT((*adapter)->devices);
     if ((rc = hpd_map_alloc(&(*adapter)->attributes))) {
         discovery_free_adapter(*adapter);
@@ -58,7 +57,7 @@ hpd_error_t discovery_alloc_device(hpd_device_t **device, const char *id)
     hpd_error_t rc;
 
     HPD_CALLOC((*device), 1, hpd_device_t);
-    HPD_CALLOC((*device)->services, 1, services_t);
+    HPD_CALLOC((*device)->services, 1, hpd_services_t);
     TAILQ_INIT((*device)->services);
     if ((rc = hpd_map_alloc(&(*device)->attributes))) {
         discovery_free_device(*device);
@@ -79,7 +78,7 @@ hpd_error_t discovery_alloc_service(hpd_service_t **service, const char *id)
     hpd_error_t rc;
 
     HPD_CALLOC((*service), 1, hpd_service_t);
-    HPD_CALLOC((*service)->parameters, 1, parameters_t);
+    HPD_CALLOC((*service)->parameters, 1, hpd_parameters_t);
     TAILQ_INIT((*service)->parameters);
     if ((rc = hpd_map_alloc(&(*service)->attributes))) {
         discovery_free_service(*service);
@@ -195,7 +194,7 @@ hpd_error_t discovery_attach_adapter(hpd_t *hpd, hpd_adapter_t *adapter)
     }
 
     hpd_device_t *device;
-    HPD_TAILQ_FOREACH(device, adapter->devices) {
+    TAILQ_FOREACH(device, adapter->devices, HPD_TAILQ_FIELD) {
         device->adapter = copy;
     }
 
@@ -222,7 +221,7 @@ hpd_error_t discovery_attach_device(hpd_adapter_t *adapter, hpd_device_t *device
     }
 
     hpd_service_t *service;
-    HPD_TAILQ_FOREACH(service, device->services) {
+    TAILQ_FOREACH(service, device->services, HPD_TAILQ_FIELD) {
         service->device = copy;
     }
 
@@ -242,7 +241,7 @@ hpd_error_t discovery_attach_service(hpd_device_t *device, hpd_service_t *servic
     copy->device = device;
 
     hpd_parameter_t *parameter;
-    HPD_TAILQ_FOREACH(parameter, service->parameters) {
+    TAILQ_FOREACH(parameter, service->parameters, HPD_TAILQ_FIELD) {
         parameter->service = copy;
     }
 
@@ -592,7 +591,7 @@ hpd_error_t discovery_first_hpd_adapter(hpd_t *hpd, hpd_adapter_t **adapter)
 hpd_error_t discovery_first_hpd_device(hpd_t *hpd, hpd_device_t **device)
 {
     hpd_adapter_t *adapter;
-    HPD_TAILQ_FOREACH(adapter, &hpd->configuration->adapters) {
+    TAILQ_FOREACH(adapter, &hpd->configuration->adapters, HPD_TAILQ_FIELD) {
         *device = TAILQ_FIRST(adapter->devices);
         if (*device) return HPD_E_SUCCESS;
     }
@@ -604,9 +603,9 @@ hpd_error_t discovery_first_hpd_device(hpd_t *hpd, hpd_device_t **device)
 hpd_error_t discovery_first_hpd_service(hpd_t *hpd, hpd_service_t **service)
 {
     hpd_adapter_t *adapter;
-    HPD_TAILQ_FOREACH(adapter, &hpd->configuration->adapters) {
+    TAILQ_FOREACH(adapter, &hpd->configuration->adapters, HPD_TAILQ_FIELD) {
         hpd_device_t *device;
-        HPD_TAILQ_FOREACH(device, adapter->devices) {
+        TAILQ_FOREACH(device, adapter->devices, HPD_TAILQ_FIELD) {
             *service = TAILQ_FIRST(device->services);
             if (*service) return HPD_E_SUCCESS;
         }
@@ -625,7 +624,7 @@ hpd_error_t discovery_first_adapter_device(hpd_adapter_t *adapter, hpd_device_t 
 hpd_error_t discovery_first_adapter_service(hpd_adapter_t *adapter, hpd_service_t **service)
 {
     hpd_device_t *device;
-    HPD_TAILQ_FOREACH(device, adapter->devices) {
+    TAILQ_FOREACH(device, adapter->devices, HPD_TAILQ_FIELD) {
         *service = TAILQ_FIRST(device->services);
         if (*service) return HPD_E_SUCCESS;
     }
@@ -774,7 +773,7 @@ hpd_bool_t discovery_has_service_action(hpd_service_t *service, const hpd_method
 hpd_bool_t discovery_is_adapter_id_unique(hpd_t *hpd, hpd_adapter_t *adapter)
 {
     hpd_adapter_t *a;
-    HPD_TAILQ_FOREACH(a, &hpd->configuration->adapters)
+    TAILQ_FOREACH(a, &hpd->configuration->adapters, HPD_TAILQ_FIELD)
         if (strcmp(a->id, adapter->id) == 0) return HPD_FALSE;
     return HPD_TRUE;
 }
@@ -782,7 +781,7 @@ hpd_bool_t discovery_is_adapter_id_unique(hpd_t *hpd, hpd_adapter_t *adapter)
 hpd_bool_t discovery_is_device_id_unique(hpd_adapter_t *adapter, hpd_device_t *device)
 {
     hpd_device_t *d;
-    HPD_TAILQ_FOREACH(d, adapter->devices)
+    TAILQ_FOREACH(d, adapter->devices, HPD_TAILQ_FIELD)
         if (strcmp(d->id, device->id) == 0) return HPD_FALSE;
     return HPD_TRUE;
 }
@@ -790,7 +789,7 @@ hpd_bool_t discovery_is_device_id_unique(hpd_adapter_t *adapter, hpd_device_t *d
 hpd_bool_t discovery_is_service_id_unique(hpd_device_t *device, hpd_service_t *service)
 {
     hpd_service_t *s;
-    HPD_TAILQ_FOREACH(s, device->services)
+    TAILQ_FOREACH(s, device->services, HPD_TAILQ_FIELD)
         if (strcmp(s->id, service->id) == 0) return HPD_FALSE;
     return HPD_TRUE;
 }
@@ -798,7 +797,7 @@ hpd_bool_t discovery_is_service_id_unique(hpd_device_t *device, hpd_service_t *s
 hpd_bool_t discovery_is_parameter_id_unique(hpd_service_t *service, hpd_parameter_t *parameter)
 {
     hpd_parameter_t *p;
-    HPD_TAILQ_FOREACH(p, service->parameters)
+    TAILQ_FOREACH(p, service->parameters, HPD_TAILQ_FIELD)
         if (strcmp(p->id, parameter->id) == 0) return HPD_FALSE;
     return HPD_TRUE;
 }

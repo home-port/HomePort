@@ -25,7 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef RESPONSE_H
-#define RESPONSE_H
+#ifndef HOMEPORT_HTTPD_RESPONSE_H
+#define HOMEPORT_HTTPD_RESPONSE_H
 
 #endif

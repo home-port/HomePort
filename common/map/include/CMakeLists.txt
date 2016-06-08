@@ -28,4 +28,5 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-install(FILES hpd_map.h DESTINATION include/hpd)
+add_subdirectory(hpd)
+

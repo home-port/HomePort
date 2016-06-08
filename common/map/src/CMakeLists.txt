@@ -29,7 +29,7 @@
 # as representing official policies, either expressed.
 
 add_library(hpd-map SHARED
-        ../include/hpd_map.h
+        ../include/hpd/common/hpd_map.h
         map.c
         )
 set_target_properties(hpd-map PROPERTIES VERSION 0.0.0 SOVERSION 0)

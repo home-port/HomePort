@@ -28,5 +28,5 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-install(FILES tcpd.h DESTINATION include/hpd)
-install(FILES tcpd_types.h DESTINATION include/hpd)
+add_subdirectory(hpd)
+

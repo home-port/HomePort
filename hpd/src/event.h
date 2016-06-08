@@ -32,7 +32,7 @@
 extern "C" {
 #endif
 
-#include "hpd_types.h"
+#include "hpd/hpd_types.h"
 
 hpd_error_t event_alloc_listener(hpd_listener_t **listener, hpd_t *hpd);
 hpd_error_t event_free_listener(hpd_listener_t *listener);

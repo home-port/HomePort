@@ -25,9 +25,9 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "hpd_types.h"
-#include "hpd_map.h"
-#include "hpd_common.h"
+#include "hpd/hpd_types.h"
+#include "hpd/common/hpd_map.h"
+#include "hpd/common/hpd_common.h"
 
 TAILQ_HEAD(hpd_map, hpd_pair);
 
@@ -82,7 +82,7 @@ hpd_error_t hpd_map_free(hpd_map_t *map)
 
     hpd_error_t rc = HPD_E_SUCCESS;
     hpd_pair_t *pair, *tmp;
-    HPD_TAILQ_FOREACH_SAFE(pair, map, tmp) {
+    TAILQ_FOREACH_SAFE(pair, map, HPD_TAILQ_FIELD, tmp) {
         rc = hpd_map_remove(map, pair);
     }
     free(map);
@@ -95,7 +95,7 @@ hpd_error_t hpd_map_get(hpd_map_t *map, const char *k, const char **v)
     
     hpd_pair_t *attr;
     (*v) = NULL;
-    HPD_TAILQ_FOREACH(attr, map) {
+    TAILQ_FOREACH(attr, map, HPD_TAILQ_FIELD) {
         if (strcmp(attr->k, k) == 0) {
             (*v) = attr->v;
             return HPD_E_SUCCESS;
@@ -110,7 +110,7 @@ hpd_error_t hpd_map_get_n(hpd_map_t *map, const char *k, size_t k_len, const cha
 
     hpd_pair_t *attr;
     (*v) = NULL;
-    HPD_TAILQ_FOREACH(attr, map) {
+    TAILQ_FOREACH(attr, map, HPD_TAILQ_FIELD) {
         if (strncmp(attr->k, k, k_len) == 0) {
             (*v) = attr->v;
             return HPD_E_SUCCESS;
@@ -120,7 +120,7 @@ hpd_error_t hpd_map_get_n(hpd_map_t *map, const char *k, size_t k_len, const cha
     return HPD_E_NOT_FOUND;
 }
 
-static hpd_error_t insert(hpd_map_t *map, const char *k, const char *v)
+static hpd_error_t map_insert(hpd_map_t *map, const char *k, const char *v)
 {
     hpd_pair_t *attr = NULL;
     HPD_CALLOC(attr, 1, hpd_pair_t);
@@ -138,7 +138,7 @@ static hpd_error_t insert(hpd_map_t *map, const char *k, const char *v)
     return HPD_E_ALLOC;
 }
 
-static hpd_error_t replace(hpd_pair_t *attr, const char *v) {
+static hpd_error_t map_replace(hpd_pair_t *attr, const char *v) {
     HPD_STR_CPY(attr->v, v);
     return HPD_E_SUCCESS;
 
@@ -146,7 +146,7 @@ static hpd_error_t replace(hpd_pair_t *attr, const char *v) {
         return HPD_E_ALLOC;
 }
 
-static hpd_error_t insert_n(hpd_map_t *map, const char *k, size_t k_len, const char *v, size_t v_len)
+static hpd_error_t map_insert_n(hpd_map_t *map, const char *k, size_t k_len, const char *v, size_t v_len)
 {
     hpd_pair_t *attr = NULL;
     HPD_CALLOC(attr, 1, hpd_pair_t);
@@ -164,7 +164,7 @@ static hpd_error_t insert_n(hpd_map_t *map, const char *k, size_t k_len, const c
     return HPD_E_ALLOC;
 }
 
-static hpd_error_t replace_n(hpd_pair_t *attr, const char *v, size_t v_len) {
+static hpd_error_t map_replace_n(hpd_pair_t *attr, const char *v, size_t v_len) {
     HPD_STR_N_CPY(attr->v, v, v_len);
     return HPD_E_SUCCESS;
 
@@ -178,7 +178,7 @@ hpd_error_t hpd_map_set(hpd_map_t *map, const char *k, const char *v)
 
     hpd_error_t rc;
     hpd_pair_t *attr = NULL;
-    HPD_TAILQ_FOREACH(attr, map)
+    TAILQ_FOREACH(attr, map, HPD_TAILQ_FIELD)
         if (strcmp(attr->k, k) == 0)
             break;
 
@@ -186,9 +186,9 @@ hpd_error_t hpd_map_set(hpd_map_t *map, const char *k, const char *v)
         if (attr && (rc = hpd_map_remove(map, attr))) return rc;
         return HPD_E_SUCCESS;
     } else if (!attr) {
-        return insert(map, k, v);
+        return map_insert(map, k, v);
     } else {
-        return replace(attr, v);
+        return map_replace(attr, v);
     }
 }
 
@@ -198,7 +198,7 @@ hpd_error_t hpd_map_set_n(hpd_map_t *map, const char *k, size_t k_len, const cha
 
     hpd_error_t rc;
     hpd_pair_t *attr = NULL;
-    HPD_TAILQ_FOREACH(attr, map)
+    TAILQ_FOREACH(attr, map, HPD_TAILQ_FIELD)
         if (strncmp(attr->k, k, k_len) == 0)
             break;
     
@@ -206,9 +206,9 @@ hpd_error_t hpd_map_set_n(hpd_map_t *map, const char *k, size_t k_len, const cha
         if (attr && (rc = hpd_map_remove(map, attr))) return rc;
         return HPD_E_SUCCESS;
     } else if (!attr) {
-        return insert_n(map, k, k_len, v, v_len);
+        return map_insert_n(map, k, k_len, v, v_len);
     } else {
-        return replace_n(attr, v, v_len);
+        return map_replace_n(attr, v, v_len);
     }
 }
 

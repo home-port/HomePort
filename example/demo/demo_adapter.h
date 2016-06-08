@@ -28,7 +28,7 @@
 #ifndef HOMEPORT_DEMO_ADAPTER_H
 #define HOMEPORT_DEMO_ADAPTER_H
 
-#include "hpd_types.h"
+#include "hpd/hpd_types.h"
 
 extern struct hpd_module_def hpd_demo_adapter_def;
 

@@ -32,11 +32,11 @@
 extern "C" {
 #endif
 
-#include "hpd_map.h"
+#include "hpd/common/hpd_map.h"
 
-typedef struct listeners listeners_t;
+typedef struct hpd_listeners hpd_listeners_t;
 
-TAILQ_HEAD(listeners, hpd_listener);
+TAILQ_HEAD(hpd_listeners, hpd_listener);
 
 struct hpd_listener {
     // Navigational members
