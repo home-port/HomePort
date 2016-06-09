@@ -30,7 +30,6 @@
 #include "demo_adapter.h"
 #include "demo_application.h"
 
-// TODO Using simple error handling (Switches would be better, when documentation is written)
 int main(int argc, char *argv[])
 {
     hpd_error_t rc;

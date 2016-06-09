@@ -35,7 +35,63 @@ struct hpd_demo_adapter {
     hpd_adapter_id_t *adapter_id;
 };
 
-static hpd_error_t hpd_demo_adapter_create(void **data, const hpd_module_t *context)
+static hpd_error_t demo_adapter_on_create(void **data, const hpd_module_t *context);
+static hpd_error_t demo_adapter_on_destroy(void *data);
+static hpd_error_t demo_adapter_on_start(void *data, hpd_t *hpd);
+static hpd_error_t demo_adapter_on_stop(void *data, hpd_t *hpd);
+static hpd_error_t demo_adapter_on_parse_opt(void *data, const char *name, const char *arg);
+
+struct hpd_module_def hpd_demo_adapter_def = {
+        demo_adapter_on_create,
+        demo_adapter_on_destroy,
+        demo_adapter_on_start,
+        demo_adapter_on_stop,
+        demo_adapter_on_parse_opt,
+};
+
+static hpd_status_t demo_adapter_on_get(void *data, hpd_request_t *req)
+{
+    hpd_error_t rc;
+    int *state = data;
+
+    // TODO Clean up on errors !
+
+    const hpd_service_id_t *sid;
+    if ((rc = hpd_request_get_service(req, &sid))) return HPD_S_500;
+
+    const char *id;
+    if ((rc = hpd_service_get_id(sid, &id))) return HPD_S_500;
+
+    hpd_value_t *val;
+    if ((rc = hpd_value_alloc(&val, id, HPD_NULL_TERMINATED))) return HPD_S_500;
+
+    hpd_response_t *res;
+    if ((rc = hpd_response_alloc(&res, req, HPD_S_200))) return HPD_S_500;
+    if ((rc = hpd_response_set_value(res, val))) return HPD_S_500;
+    if ((rc = hpd_respond(res))) return HPD_S_500;
+
+    return HPD_S_NONE;
+}
+
+// TODO Has changed signature !
+// TODO Just a quick hack for testing - lots of fixes needed
+static hpd_status_t demo_adapter_on_put(void *data, hpd_request_t *req)
+{
+    const hpd_value_t *val_in;
+    hpd_value_t *val_out;
+    hpd_request_get_value(req, &val_in);
+    hpd_value_copy(&val_out, val_in);
+
+    hpd_error_t rc;
+    hpd_response_t *res;
+    if ((rc = hpd_response_alloc(&res, req, HPD_S_200))) return rc;
+    if ((rc = hpd_response_set_value(res, val_out))) return rc;
+    if ((rc = hpd_respond(res))) return rc;
+
+    return HPD_E_SUCCESS;
+}
+
+static hpd_error_t demo_adapter_on_create(void **data, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -52,57 +108,14 @@ static hpd_error_t hpd_demo_adapter_create(void **data, const hpd_module_t *cont
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t hpd_demo_adapter_destroy(void *data)
+static hpd_error_t demo_adapter_on_destroy(void *data)
 {
     struct hpd_demo_adapter *demo_adapter = data;
     free(demo_adapter);
     return HPD_E_SUCCESS;
 }
 
-// TODO Has changed signature !
-static hpd_error_t hpd_demo_on_get(hpd_request_t *req)
-{
-    hpd_error_t rc;
-
-    // TODO Clean up on errors !
-    // TODO What about sending responses on errors?
-
-    const hpd_service_id_t *sid;
-    if ((rc = hpd_request_get_service(req, &sid))) return rc;
-
-    const char *id;
-    if ((rc = hpd_service_get_id(sid, &id))) return rc;
-
-    hpd_value_t *val;
-    if ((rc = hpd_value_alloc(&val, id, HPD_NULL_TERMINATED))) return rc;
-
-    hpd_response_t *res;
-    if ((rc = hpd_response_alloc(&res, req, HPD_S_200))) return rc;
-    if ((rc = hpd_response_set_value(res, val))) return rc;
-    if ((rc = hpd_respond(res))) return rc;
-
-    return HPD_E_SUCCESS;
-}
-
-// TODO Has changed signature !
-// TODO Just a quick hack for testing - lots of fixes needed
-static hpd_error_t hpd_demo_on_put(hpd_request_t *req)
-{
-    const hpd_value_t *val_in;
-    hpd_value_t *val_out;
-    hpd_request_get_value(req, &val_in);
-    hpd_value_copy(&val_out, val_in);
-
-    hpd_error_t rc;
-    hpd_response_t *res;
-    if ((rc = hpd_response_alloc(&res, req, HPD_S_200))) return rc;
-    if ((rc = hpd_response_set_value(res, val_out))) return rc;
-    if ((rc = hpd_respond(res))) return rc;
-
-    return HPD_E_SUCCESS;
-}
-
-static hpd_error_t hpd_demo_adapter_start(void *data, hpd_t *hpd)
+static hpd_error_t demo_adapter_on_start(void *data, hpd_t *hpd)
 {
     struct hpd_demo_adapter *demo_adapter = data;
     hpd_error_t rc;
@@ -135,9 +148,12 @@ static hpd_error_t hpd_demo_adapter_start(void *data, hpd_t *hpd)
         hpd_service_t *service;
         if ((rc = hpd_service_alloc(&service, "srv0"))) return rc;
         if ((rc = hpd_service_set_actions(service,
-                                          HPD_M_GET, hpd_demo_on_get,
-                                          HPD_M_PUT, hpd_demo_on_put,
+                                          HPD_M_GET, demo_adapter_on_get,
+                                          HPD_M_PUT, demo_adapter_on_put,
                                           HPD_M_NONE))) return rc;
+        int *state;
+        HPD_CALLOC(state, 1, int);
+        if ((rc = hpd_service_set_data(service, state, free))) return rc;
         hpd_parameter_t *parameter;
         if ((rc = hpd_parameter_alloc(&parameter, "param0"))) return rc;
         if ((rc = hpd_parameter_attach(service, parameter))) return rc;
@@ -155,7 +171,7 @@ static hpd_error_t hpd_demo_adapter_start(void *data, hpd_t *hpd)
         return HPD_E_UNKNOWN;
 }
 
-static hpd_error_t hpd_demo_adapter_stop(void *data, hpd_t *hpd)
+static hpd_error_t demo_adapter_on_stop(void *data, hpd_t *hpd)
 {
     struct hpd_demo_adapter *demo_adapter = data;
 
@@ -173,11 +189,11 @@ static hpd_error_t hpd_demo_adapter_stop(void *data, hpd_t *hpd)
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t hpd_demo_adapter_parse_opt(void *data, const char *name, const char *arg)
+static hpd_error_t demo_adapter_on_parse_opt(void *data, const char *name, const char *arg)
 {
     struct hpd_demo_adapter *demo_adapter = data;
 
-    // Handle the options we defined in hpd_demo_adapter_create
+    // Handle the options we defined in demo_adapter_on_create
     if (strcmp(name, "num-lamps") == 0)
         demo_adapter->num_lamps = atoi(arg);
     else
@@ -185,12 +201,3 @@ static hpd_error_t hpd_demo_adapter_parse_opt(void *data, const char *name, cons
 
     return HPD_E_SUCCESS;
 }
-
-// The module def structure defining our module
-struct hpd_module_def hpd_demo_adapter_def = {
-        hpd_demo_adapter_create,
-        hpd_demo_adapter_destroy,
-        hpd_demo_adapter_start,
-        hpd_demo_adapter_stop,
-        hpd_demo_adapter_parse_opt,
-};
