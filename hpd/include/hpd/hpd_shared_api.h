@@ -56,6 +56,8 @@ hpd_error_t hpd_vlogf(const hpd_module_t *context, hpd_log_level_t level, const 
 #define HPD_LOG_RETURN(CONTEXT, E, FMT, ...) do { HPD_LOG_DEBUG((CONTEXT), (FMT), ##__VA_ARGS__); return (E); } while(0)
 #define HPD_LOG_RETURN_E_NULL(CONTEXT)  HPD_LOG_RETURN((CONTEXT), HPD_E_NULL,  "Unexpected null pointer.")
 #define HPD_LOG_RETURN_E_ALLOC(CONTEXT) HPD_LOG_RETURN((CONTEXT), HPD_E_ALLOC, "Unable to allocate memory.")
+// TODO New function, check if it can be used elsewhere
+#define HPD_LOG_RETURN_E_SNPRINTF(CONTEXT) HPD_LOG_RETURN((CONTEXT), HPD_E_UNKNOWN, "snprintf failed.")
 /// [log functions]
 
 /// [id_t functions]
@@ -205,6 +207,7 @@ hpd_error_t hpd_service_next_parameter(hpd_parameter_id_t **parameter_id);
 
 /// [hpd_value_t functions]
 hpd_error_t hpd_value_alloc(hpd_value_t **value, const char *body, int len);
+// TODO New function, check if it can be used elsewhere
 hpd_error_t hpd_value_allocf(hpd_value_t **value, const char *fmt, ...);
 hpd_error_t hpd_value_vallocf(hpd_value_t **value, const char *fmt, va_list vp);
 hpd_error_t hpd_value_copy(hpd_value_t **dst, const hpd_value_t *src);
