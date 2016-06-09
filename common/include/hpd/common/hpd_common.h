@@ -81,7 +81,13 @@ extern "C" {
 
 #define HPD_VSPRINTF_ALLOC(DST, FMT, VP) do { \
     size_t _len; \
-    if ((_len = vsnprintf(NULL, 0, (FMT), (VP))) < 0) goto vsnprintf_error; \
+    va_list _vp; \
+    va_copy(_vp, (VP)); \
+    if ((_len = vsnprintf(NULL, 0, (FMT), _vp)) < 0) { \
+        va_end(_vp); \
+        goto vsnprintf_error; \
+    } \
+    va_end(_vp); \
     if (!((DST) = calloc(_len+1, sizeof(char)))) goto alloc_error; \
     if (vsnprintf((DST), _len+1, (FMT), (VP)) < 0) { free((DST)); goto vsnprintf_error; } \
 } while (0)
