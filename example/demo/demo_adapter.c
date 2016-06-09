@@ -167,7 +167,7 @@ static hpd_error_t demo_adapter_on_start(void *data, hpd_t *hpd)
 
     alloc_error:
         return HPD_E_ALLOC;
-    nsprintf_error:
+    snprintf_error:
         return HPD_E_UNKNOWN;
 }
 

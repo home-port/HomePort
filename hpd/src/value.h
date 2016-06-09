@@ -37,6 +37,7 @@ extern "C" {
 #endif
 
 hpd_error_t value_alloc(hpd_value_t **value, const char *body, int len);
+hpd_error_t value_vallocf(hpd_value_t **value, const char *fmt, va_list vp);
 hpd_error_t value_copy(hpd_value_t **dst, const hpd_value_t *src);
 hpd_error_t value_free(hpd_value_t *value);
 hpd_error_t value_set_header(hpd_value_t *value, const char *key, const char *val);

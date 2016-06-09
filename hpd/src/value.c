@@ -52,6 +52,31 @@ hpd_error_t value_alloc(hpd_value_t **value, const char *body, int len)
         LOG_RETURN_E_ALLOC();
 }
 
+hpd_error_t value_vallocf(hpd_value_t **value, const char *fmt, va_list vp)
+{
+    hpd_error_t rc;
+    HPD_CALLOC((*value), 1, hpd_value_t);
+    if ((rc = hpd_map_alloc(&(*value)->headers))) {
+        free(*value);
+        return rc;
+    }
+    if (fmt) {
+        HPD_VSPRINTF_ALLOC((*value)->body, fmt, vp);
+        (*value)->len = strlen((*value)->body);
+    }
+    return HPD_E_SUCCESS;
+
+    alloc_error:
+    value_free(*value);
+    (*value) = NULL;
+    LOG_RETURN_E_ALLOC();
+
+    vsnprintf_error:
+    value_free(*value);
+    free((*value)->body);
+    LOG_RETURN(HPD_E_UNKNOWN, "vsnprintf error.");
+}
+
 hpd_error_t value_copy(hpd_value_t **dst, const hpd_value_t *src)
 {
     hpd_error_t rc;

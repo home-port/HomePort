@@ -28,6 +28,7 @@
 #include "hpd/hpd_api.h"
 #include "value.h"
 #include "log.h"
+#include <stdarg.h>
 
 hpd_error_t hpd_value_alloc(hpd_value_t **value, const char *body, int len)
 {
@@ -35,6 +36,21 @@ hpd_error_t hpd_value_alloc(hpd_value_t **value, const char *body, int len)
     if (len < 0 && len != HPD_NULL_TERMINATED)
         LOG_RETURN(HPD_E_ARGUMENT, "len must be >= 0 or HPD_NULL_TERMINATED.", __func__);
     return value_alloc(value, body, len);
+}
+
+hpd_error_t hpd_value_allocf(hpd_value_t **value, const char *fmt, ...)
+{
+    if (!value) LOG_RETURN_E_NULL();
+    va_list vp;
+    va_start(vp, fmt);
+    return value_vallocf(value, fmt, vp);
+    va_end(vp);
+}
+
+hpd_error_t hpd_value_vallocf(hpd_value_t **value, const char *fmt, va_list vp)
+{
+    if (!value) LOG_RETURN_E_NULL();
+    return value_vallocf(value, fmt, vp);
 }
 
 hpd_error_t hpd_value_copy(hpd_value_t **dst, const hpd_value_t *src)

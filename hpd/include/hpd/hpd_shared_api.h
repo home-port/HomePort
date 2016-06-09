@@ -205,6 +205,8 @@ hpd_error_t hpd_service_next_parameter(hpd_parameter_id_t **parameter_id);
 
 /// [hpd_value_t functions]
 hpd_error_t hpd_value_alloc(hpd_value_t **value, const char *body, int len);
+hpd_error_t hpd_value_allocf(hpd_value_t **value, const char *fmt, ...);
+hpd_error_t hpd_value_vallocf(hpd_value_t **value, const char *fmt, va_list vp);
 hpd_error_t hpd_value_copy(hpd_value_t **dst, const hpd_value_t *src);
 hpd_error_t hpd_value_free(hpd_value_t *value);
 hpd_error_t hpd_value_set_header(hpd_value_t *value, const char *key, const char *val);
