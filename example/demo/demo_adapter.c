@@ -29,10 +29,19 @@
 #include "hpd/hpd_adapter_api.h"
 #include "hpd/common/hpd_common.h"
 
-struct hpd_demo_adapter {
+typedef struct demo_adapter demo_adapter_t;
+typedef struct demo_adapter_srv demo_adapter_srv_t;
+
+struct demo_adapter {
     int num_lamps;
     const char *module_id;
     hpd_adapter_id_t *adapter_id;
+    const hpd_module_t *context;
+};
+
+struct demo_adapter_srv {
+    int state;
+    demo_adapter_t *demo_adapter;
 };
 
 static hpd_error_t demo_adapter_on_create(void **data, const hpd_module_t *context);
@@ -49,46 +58,77 @@ struct hpd_module_def hpd_demo_adapter_def = {
         demo_adapter_on_parse_opt,
 };
 
-static hpd_status_t demo_adapter_on_get(void *data, hpd_request_t *req)
+static hpd_status_t demo_adapter_send_value(hpd_request_t *req, demo_adapter_srv_t *srv_data)
 {
-    hpd_error_t rc;
-    int *state = data;
+    hpd_error_t rc, rc2;
 
-    // TODO Clean up on errors !
-
-    const hpd_service_id_t *sid;
-    if ((rc = hpd_request_get_service(req, &sid))) return HPD_S_500;
-
-    const char *id;
-    if ((rc = hpd_service_get_id(sid, &id))) return HPD_S_500;
-
-    hpd_value_t *val;
-    if ((rc = hpd_value_alloc(&val, id, HPD_NULL_TERMINATED))) return HPD_S_500;
-
+    // Allocate response
     hpd_response_t *res;
-    if ((rc = hpd_response_alloc(&res, req, HPD_S_200))) return HPD_S_500;
-    if ((rc = hpd_response_set_value(res, val))) return HPD_S_500;
-    if ((rc = hpd_respond(res))) return HPD_S_500;
+    if ((rc = hpd_response_alloc(&res, req, HPD_S_200))) goto error_return;
+
+    // Create and set value
+    hpd_value_t *val;
+    if ((rc = hpd_value_allocf(&val, "%i", srv_data->state))) goto error_free_res;
+    if ((rc = hpd_response_set_value(res, val))) goto error_free_val;
+
+    // Send response
+    if ((rc = hpd_respond(res))) goto error_free_res;
 
     return HPD_S_NONE;
+
+    error_free_val:
+    if ((rc2 = hpd_value_free(val)))
+        HPD_LOG_ERROR(srv_data->demo_adapter->context, "Free function failed [code: %i].", rc2);
+
+    error_free_res:
+    if ((rc2 = hpd_response_free(res)))
+        HPD_LOG_ERROR(srv_data->demo_adapter->context, "Free function failed [code: %i].", rc2);
+
+    error_return:
+    HPD_LOG_ERROR(srv_data->demo_adapter->context, "%s() failed [code: %i].", __FUNCTION__, rc);
+    return HPD_S_500;
 }
 
-// TODO Has changed signature !
-// TODO Just a quick hack for testing - lots of fixes needed
+static hpd_status_t demo_adapter_set_value(hpd_request_t *req, demo_adapter_srv_t *srv_data)
+{
+    hpd_error_t rc;
+
+    // Get value
+    const hpd_value_t *val;
+    if ((rc = hpd_request_get_value(req, &val))) goto error_return;
+
+    // Get body from value
+    const char *body;
+    size_t len;
+    if ((rc = hpd_value_get_body(val, &body, &len))) goto error_return;
+
+    // Set new state
+    char *nul_term = NULL;
+    HPD_STR_N_CPY(nul_term, body, len);
+    srv_data->state = atoi(nul_term);
+    free(nul_term);
+
+    return HPD_S_NONE;
+
+    alloc_error:
+    HPD_LOG_ERROR(srv_data->demo_adapter->context, "%s() failed.", __FUNCTION__);
+    return HPD_S_500;
+
+    error_return:
+    HPD_LOG_ERROR(srv_data->demo_adapter->context, "%s() failed [code: %i].", __FUNCTION__, rc);
+    return HPD_S_500;
+}
+
+static hpd_status_t demo_adapter_on_get(void *data, hpd_request_t *req)
+{
+    return demo_adapter_send_value(req, data);
+}
+
 static hpd_status_t demo_adapter_on_put(void *data, hpd_request_t *req)
 {
-    const hpd_value_t *val_in;
-    hpd_value_t *val_out;
-    hpd_request_get_value(req, &val_in);
-    hpd_value_copy(&val_out, val_in);
-
-    hpd_error_t rc;
-    hpd_response_t *res;
-    if ((rc = hpd_response_alloc(&res, req, HPD_S_200))) return rc;
-    if ((rc = hpd_response_set_value(res, val_out))) return rc;
-    if ((rc = hpd_respond(res))) return rc;
-
-    return HPD_E_SUCCESS;
+    hpd_status_t status;
+    if ((status = demo_adapter_set_value(req, data)) != HPD_S_NONE) return status;
+    return demo_adapter_send_value(req, data);
 }
 
 static hpd_error_t demo_adapter_on_create(void **data, const hpd_module_t *context)
@@ -96,8 +136,9 @@ static hpd_error_t demo_adapter_on_create(void **data, const hpd_module_t *conte
     hpd_error_t rc;
 
     // Create struct with custom data
-    struct hpd_demo_adapter *demo_adapter = calloc(1, sizeof(struct hpd_demo_adapter));
+    demo_adapter_t *demo_adapter = calloc(1, sizeof(demo_adapter_t));
     demo_adapter->num_lamps = 1;
+    demo_adapter->context = context;
     if ((rc = hpd_module_get_id(context, &demo_adapter->module_id))) return rc;
 
     // Add supported options
@@ -110,94 +151,188 @@ static hpd_error_t demo_adapter_on_create(void **data, const hpd_module_t *conte
 
 static hpd_error_t demo_adapter_on_destroy(void *data)
 {
-    struct hpd_demo_adapter *demo_adapter = data;
+    demo_adapter_t *demo_adapter = data;
     free(demo_adapter);
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t demo_adapter_on_start(void *data, hpd_t *hpd)
+static hpd_error_t demo_adapter_create_adapter(hpd_t *hpd, demo_adapter_t *demo_adapter)
 {
-    struct hpd_demo_adapter *demo_adapter = data;
-    hpd_error_t rc;
-
-    printf("[adapter] Starting with %i lamps...\n", demo_adapter->num_lamps); // TODO Wrong!
-
-    // TODO Clean up on errors !
-
-    // Create adapter structure
-    // Using module_id as id, because we are only creating one adapter per module in this scenario,
-    // and we don't have a more informal id from the underlying device.
-    hpd_adapter_t *adapter;
-    if ((rc = hpd_adapter_alloc(&adapter, demo_adapter->module_id))) return rc;
-    if ((rc = hpd_adapter_set_attr(adapter, HPD_ATTR_TYPE, "demo_adapter"))) return rc;
-    // Hand it over to hpd
-    // Hereafter the pointer should not be used, only references by id
-    if ((rc = hpd_adapter_attach(hpd, adapter))) return rc;
+    hpd_error_t rc, rc2;
 
     // Create id structure to reference our adapter
-    hpd_adapter_id_alloc(&demo_adapter->adapter_id, hpd, demo_adapter->module_id);
+    if ((rc = hpd_adapter_id_alloc(&demo_adapter->adapter_id, hpd, demo_adapter->module_id))) goto error_return;
+
+    // Create adapter structure (using module_id as id)
+    hpd_adapter_t *adapter;
+    if ((rc = hpd_adapter_alloc(&adapter, demo_adapter->module_id))) goto error_free_id;
+    if ((rc = hpd_adapter_set_attr(adapter, HPD_ATTR_TYPE, "demo_adapter"))) goto error_free_adapter;
+    if ((rc = hpd_adapter_attach(hpd, adapter))) goto error_free_adapter;
+
+    return HPD_E_SUCCESS;
+
+    error_free_adapter:
+    if ((rc2 = hpd_adapter_free(adapter)))
+        HPD_LOG_ERROR(demo_adapter->context, "Free function failed [code: %i].", rc2);
+
+    error_free_id:
+    if ((rc2 = hpd_adapter_id_free(demo_adapter->adapter_id)))
+        HPD_LOG_ERROR(demo_adapter->context, "Free function failed [code: %i].", rc2);
+    demo_adapter->adapter_id = NULL;
+
+    error_return:
+    return rc;
+}
+
+static hpd_error_t demo_adapter_create_parameter(demo_adapter_t *demo_adapter, hpd_service_t *service)
+{
+    hpd_error_t rc, rc2;
+
+    hpd_parameter_t *parameter;
+    if ((rc = hpd_parameter_alloc(&parameter, "param0"))) goto error_return;
+    if ((rc = hpd_parameter_attach(service, parameter))) goto error_free;
+
+    return HPD_E_SUCCESS;
+
+    error_free:
+    if ((rc2 = hpd_parameter_free(parameter)))
+        HPD_LOG_ERROR(demo_adapter->context, "Free function failed [code: %i].", rc2);
+
+    error_return:
+        return rc;
+}
+
+static hpd_error_t demo_adapter_create_service(demo_adapter_t *demo_adapter, hpd_device_t *device)
+{
+    hpd_error_t rc, rc2;
+
+    hpd_service_t *service;
+    if ((rc = hpd_service_alloc(&service, "srv0"))) goto error_return;
+    if ((rc = hpd_service_set_actions(service,
+                                      HPD_M_GET, demo_adapter_on_get,
+                                      HPD_M_PUT, demo_adapter_on_put,
+                                      HPD_M_NONE))) goto error_free_service;
+
+    demo_adapter_srv_t *srv_data;
+    HPD_CALLOC(srv_data, 1, demo_adapter_srv_t);
+    srv_data->demo_adapter = demo_adapter;
+    if ((rc = hpd_service_set_data(service, srv_data, free))) goto error_free_data;
+
+    if ((rc = demo_adapter_create_parameter(demo_adapter, service))) goto error_free_service;
+    if ((rc = hpd_service_attach(device, service))) goto error_free_service;
+
+    return HPD_E_SUCCESS;
+
+    alloc_error:
+    if ((rc2 = hpd_service_free(service)))
+        HPD_LOG_ERROR(demo_adapter->context, "Free function failed [code: %i].", rc2);
+    HPD_LOG_RETURN_E_ALLOC(demo_adapter->context);
+
+    error_free_data:
+        free(srv_data);
+
+    error_free_service:
+    if ((rc2 = hpd_service_free(service)))
+        HPD_LOG_ERROR(demo_adapter->context, "Free function failed [code: %i].", rc2);
+
+    error_return:
+    return rc;
+}
+
+static hpd_error_t demo_adapter_create_lamp(demo_adapter_t *demo_adapter, const char *id)
+{
+    hpd_error_t rc, rc2;
+
+    hpd_device_t *device;
+    if ((rc = hpd_device_alloc(&device, id))) goto error_return;
+    if ((rc = hpd_device_set_attr(device, HPD_ATTR_TYPE, "demo_lamp"))) goto error_free;
+    if ((rc = demo_adapter_create_service(demo_adapter, device))) goto error_free;
+    if ((rc = hpd_device_attach(demo_adapter->adapter_id, device))) goto error_free;
+
+    return HPD_E_SUCCESS;
+
+    error_free:
+    if ((rc2 = hpd_device_free(device)))
+        HPD_LOG_ERROR(demo_adapter->context, "Free function failed [code: %i].", rc2);
+
+    error_return:
+    return rc;
+}
+
+static hpd_error_t demo_adapter_on_start(void *data, hpd_t *hpd)
+{
+    demo_adapter_t *demo_adapter = data;
+    hpd_error_t rc, rc2;
+
+    HPD_LOG_INFO(demo_adapter->context, "Starting with %i lamps...", demo_adapter->num_lamps);
+
+    if ((rc = demo_adapter_create_adapter(hpd, demo_adapter))) goto error_return;
 
     // Create device structures
-    for (size_t i = 0; i < demo_adapter->num_lamps; i++) {
-        char *id = NULL;
-        HPD_SPRINTF_ALLOC(id, "dev%zu", i);
-
-        hpd_device_t *device;
-        if ((rc = hpd_device_alloc(&device, id))) return rc;
-        if ((rc = hpd_device_set_attr(device, HPD_ATTR_TYPE, "demo_lamp"))) return rc;
-        hpd_service_t *service;
-        if ((rc = hpd_service_alloc(&service, "srv0"))) return rc;
-        if ((rc = hpd_service_set_actions(service,
-                                          HPD_M_GET, demo_adapter_on_get,
-                                          HPD_M_PUT, demo_adapter_on_put,
-                                          HPD_M_NONE))) return rc;
-        int *state;
-        HPD_CALLOC(state, 1, int);
-        if ((rc = hpd_service_set_data(service, state, free))) return rc;
-        hpd_parameter_t *parameter;
-        if ((rc = hpd_parameter_alloc(&parameter, "param0"))) return rc;
-        if ((rc = hpd_parameter_attach(service, parameter))) return rc;
-        if ((rc = hpd_service_attach(device, service))) return rc;
-        if ((rc = hpd_device_attach(demo_adapter->adapter_id, device))) return rc;
-
+    char *id = NULL;
+    for (int i = 0; i < demo_adapter->num_lamps; i++) {
+        HPD_SPRINTF_ALLOC(id, "dev%i", i);
+        if ((rc = demo_adapter_create_lamp(demo_adapter, id))) goto error_free_id;
         free(id);
     }
 
     return HPD_E_SUCCESS;
 
     alloc_error:
-        return HPD_E_ALLOC;
+    free(id);
+    if ((rc2 = demo_adapter_on_stop(demo_adapter, hpd)))
+        HPD_LOG_ERROR(demo_adapter->context, "on_stop() failed [code: %i].", rc2);
+    HPD_LOG_RETURN_E_ALLOC(demo_adapter->context);
+
     snprintf_error:
-        return HPD_E_UNKNOWN;
+    free(id);
+    if ((rc2 = demo_adapter_on_stop(demo_adapter, hpd)))
+        HPD_LOG_ERROR(demo_adapter->context, "on_stop() failed [code: %i].", rc2);
+    HPD_LOG_RETURN_E_SNPRINTF(demo_adapter->context);
+
+    error_free_id:
+    free(id);
+    if ((rc2 = demo_adapter_on_stop(demo_adapter, hpd)))
+        HPD_LOG_ERROR(demo_adapter->context, "on_stop() failed [code: %i].", rc2);
+
+    error_return:
+    return rc;
 }
 
 static hpd_error_t demo_adapter_on_stop(void *data, hpd_t *hpd)
 {
-    struct hpd_demo_adapter *demo_adapter = data;
+    hpd_error_t rc, rc2;
 
-    printf("[adapter] Stopping...\n"); // TODO Wrong!
+    demo_adapter_t *demo_adapter = data;
 
-    // Detach our adapter from hpd
-    // It is now in our control again, hpd does no longer know about it
+    HPD_LOG_INFO(demo_adapter->context, "Stopping...");
+
+    // Detach adapter from hpd
     hpd_adapter_t *adapter;
-    hpd_adapter_detach(demo_adapter->adapter_id, &adapter);
+    if ((rc = hpd_adapter_detach(demo_adapter->adapter_id, &adapter))) goto error_free_id;
 
     // Clean up nicely
-    hpd_adapter_free(adapter);
-    hpd_adapter_id_free(demo_adapter->adapter_id);
+    if ((rc = hpd_adapter_free(adapter))) goto error_free_id;
+    if ((rc = hpd_adapter_id_free(demo_adapter->adapter_id))) goto error_return;
 
     return HPD_E_SUCCESS;
+
+    error_free_id:
+    if ((rc2 = hpd_adapter_id_free(demo_adapter->adapter_id)))
+        HPD_LOG_ERROR(demo_adapter->context, "Free function failed [code: %i].", rc2);
+
+    error_return:
+    return rc;
 }
 
 static hpd_error_t demo_adapter_on_parse_opt(void *data, const char *name, const char *arg)
 {
-    struct hpd_demo_adapter *demo_adapter = data;
+    demo_adapter_t *demo_adapter = data;
 
-    // Handle the options we defined in demo_adapter_on_create
-    if (strcmp(name, "num-lamps") == 0)
+    if (strcmp(name, "num-lamps") == 0) {
         demo_adapter->num_lamps = atoi(arg);
-    else
-        return HPD_E_ARGUMENT; // We should return this when we do not recognise the option
+        return HPD_E_SUCCESS;
+    }
 
-    return HPD_E_SUCCESS;
+    return HPD_E_ARGUMENT;
 }
