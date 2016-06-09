@@ -50,71 +50,82 @@ struct hpd_module_def hpd_demo_app_def = {
         demo_app_on_parse_opt,
 };
 
-// TODO Error handling (entire file)
+static void demo_app_on_device(demo_app_t *demo_app, const hpd_device_id_t *device, const char *msg)
+{
+    hpd_error_t rc, rc2;
+
+    hpd_adapter_id_t *adapter;
+    if ((rc = hpd_device_get_adapter(device, &adapter))) goto error_return;
+
+    const char *aid;
+    if ((rc = hpd_adapter_get_id(adapter, &aid))) goto error_free_id;
+
+    const char *did;
+    if ((rc = hpd_device_get_id(device, &did))) goto error_free_id;
+
+    HPD_LOG_INFO(demo_app->context, msg, aid, did);
+
+    if ((rc = hpd_adapter_id_free(adapter))) goto error_return;
+    return;
+
+    error_free_id:
+    if ((rc2 = hpd_adapter_id_free(adapter)))
+        HPD_LOG_ERROR(demo_app->context, "Free function failed [code: %i].", rc2);
+
+    error_return:
+    HPD_LOG_ERROR(demo_app->context, "%s() failed [code: %i].", __FUNCTION__, rc);
+}
 
 void demo_app_on_attach(void *data, const hpd_device_id_t *device)
 {
-    demo_app_t *demo_app = data;
-
-    hpd_adapter_id_t *adapter;
-    hpd_device_get_adapter(device, &adapter);
-
-    const char *aid;
-    hpd_adapter_get_id(adapter, &aid);
-
-    const char *did;
-    hpd_device_get_id(device, &did);
-    
-    HPD_LOG_INFO(demo_app->context, "%s/%s attached", aid, did);
-    
-    hpd_adapter_id_free(adapter);
+    demo_app_on_device(data, device, "%s/%s attached");
 }
 
 void demo_app_on_detach(void *data, const hpd_device_id_t *device)
 {
-    demo_app_t *demo_app = data;
-
-    hpd_adapter_id_t *adapter;
-    hpd_device_get_adapter(device, &adapter);
-
-    const char *aid;
-    hpd_adapter_get_id(adapter, &aid);
-
-    const char *did;
-    hpd_device_get_id(device, &did);
-
-    HPD_LOG_INFO(demo_app->context, "%s/%s detached", aid, did);
-
-    hpd_adapter_id_free(adapter);
+    demo_app_on_device(data, device, "%s/%s detached");
 }
 
 void demo_app_on_change(void *data, const hpd_service_id_t *service, const hpd_value_t *val)
 {
+    hpd_error_t rc, rc2;
     demo_app_t *demo_app = data;
 
     hpd_adapter_id_t *adapter;
-    hpd_service_get_adapter(service, &adapter);
+    if ((rc = hpd_service_get_adapter(service, &adapter))) goto error_return;
 
     hpd_device_id_t *device;
-    hpd_service_get_device(service, &device);
+    if ((rc = hpd_service_get_device(service, &device))) goto error_free_adapter;
 
     const char *aid;
-    hpd_adapter_get_id(adapter, &aid);
+    if ((rc = hpd_adapter_get_id(adapter, &aid))) goto error_free_device;
 
     const char *did;
-    hpd_device_get_id(device, &did);
+    if ((rc = hpd_device_get_id(device, &did))) goto error_free_device;
 
     const char *sid;
-    hpd_service_get_id(service, &sid);
+    if ((rc = hpd_service_get_id(service, &sid))) goto error_free_device;
 
     const char *v;
     size_t len;
-    hpd_value_get_body(val, &v, &len);
+    if ((rc = hpd_value_get_body(val, &v, &len))) goto error_free_device;
 
     HPD_LOG_INFO(demo_app->context, "%s/%s/%s changed to %.*s", aid, did, sid, len, v);
 
-    hpd_adapter_id_free(adapter);
-    hpd_device_id_free(device);
+    if ((rc = hpd_device_id_free(device))) goto error_free_adapter;
+    if ((rc = hpd_adapter_id_free(adapter))) goto error_return;
+    return;
+
+    error_free_device:
+    if ((rc2 = hpd_device_id_free(device)))
+        HPD_LOG_ERROR(demo_app->context, "Free function failed [code: %i].", rc2);
+
+    error_free_adapter:
+    if ((rc2 = hpd_adapter_id_free(adapter)))
+        HPD_LOG_ERROR(demo_app->context, "Free function failed [code: %i].", rc2);
+
+    error_return:
+    HPD_LOG_ERROR(demo_app->context, "%s() failed [code: %i].", __FUNCTION__, rc);
 }
 
 static hpd_error_t demo_app_on_create(void **data, const hpd_module_t *context)
@@ -138,25 +149,40 @@ static hpd_error_t demo_app_on_destroy(void *data)
 
 static hpd_error_t demo_app_on_start(void *data, hpd_t *hpd)
 {
+    hpd_error_t rc, rc2;
+
     demo_app_t *demo_app = data;
 
-    hpd_listener_alloc(&demo_app->listener, hpd);
-    hpd_listener_set_data(demo_app->listener, demo_app, NULL);
-    hpd_listener_set_device_callback(demo_app->listener, demo_app_on_attach, demo_app_on_detach);
-    hpd_listener_set_value_callback(demo_app->listener, demo_app_on_change);
-    hpd_subscribe(demo_app->listener);
-    hpd_foreach_attached(demo_app->listener);
+    if ((rc = hpd_listener_alloc(&demo_app->listener, hpd)))
+        goto error_return;
+    if ((rc = hpd_listener_set_data(demo_app->listener, demo_app, NULL)))
+        goto error_free;
+    if ((rc = hpd_listener_set_device_callback(demo_app->listener, demo_app_on_attach, demo_app_on_detach)))
+        goto error_free;
+    if ((rc = hpd_listener_set_value_callback(demo_app->listener, demo_app_on_change)))
+        goto error_free;
+    if ((rc = hpd_foreach_attached(demo_app->listener)))
+        goto error_free;
+    if ((rc = hpd_subscribe(demo_app->listener)))
+        goto error_free;
 
     return HPD_E_SUCCESS;
+
+    error_free:
+    if ((rc2 = hpd_listener_free(demo_app->listener)))
+        HPD_LOG_ERROR(demo_app->context, "Free function failed [code: %i].", rc2);
+    else
+        demo_app->listener = NULL;
+
+    error_return:
+    return rc;
 }
 
 static hpd_error_t demo_app_on_stop(void *data, hpd_t *hpd)
 {
     demo_app_t *demo_app = data;
 
-    hpd_listener_free(demo_app->listener);
-
-    return HPD_E_SUCCESS;
+    return hpd_listener_free(demo_app->listener);
 }
 
 static hpd_error_t demo_app_on_parse_opt(void *data, const char *name, const char *arg)
