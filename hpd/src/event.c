@@ -148,6 +148,7 @@ static void event_on_attached(hpd_ev_loop_t *loop, ev_async *w, int revents)
     free(async);
 
     hpd_listener_t *listener;
+    // TODO With this loop delayed, hpd_foreach_attached() is likely to provide duplicated calls for the same devices
     TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
         if (listener->on_attach) listener->on_attach(listener->data, id);
     }
