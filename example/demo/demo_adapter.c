@@ -89,6 +89,17 @@ static hpd_status_t demo_adapter_send_value(hpd_request_t *req, demo_adapter_srv
     return HPD_S_500;
 }
 
+static hpd_error_t demo_adapter_send_changed(const hpd_service_id_t *service_id, demo_adapter_srv_t *srv_data)
+{
+    hpd_error_t rc;
+
+    hpd_value_t *value;
+    if ((rc = hpd_value_allocf(&value, "%i", srv_data->state))) return rc;
+
+    if ((rc = hpd_changed(service_id, value))) hpd_value_free(value);
+    return rc;
+}
+
 static hpd_status_t demo_adapter_set_value(hpd_request_t *req, demo_adapter_srv_t *srv_data)
 {
     hpd_error_t rc;
@@ -101,12 +112,22 @@ static hpd_status_t demo_adapter_set_value(hpd_request_t *req, demo_adapter_srv_
     const char *body;
     size_t len;
     if ((rc = hpd_value_get_body(val, &body, &len))) goto error_return;
+    
+    // Get service id
+    const hpd_service_id_t *service_id;
+    if ((rc = hpd_request_get_service(req, &service_id))) goto error_return;
 
-    // Set new state
+    // Get new state
     char *nul_term = NULL;
     HPD_STR_N_CPY(nul_term, body, len);
-    srv_data->state = atoi(nul_term);
+    int state = atoi(nul_term);
     free(nul_term);
+    
+    if (state != srv_data->state) {
+        srv_data->state = state;
+        if ((rc = demo_adapter_send_changed(service_id, srv_data)))
+            HPD_LOG_ERROR(srv_data->demo_adapter->context, "Failed to send changed value [code: %i].", rc); 
+    }
 
     return HPD_S_NONE;
 
@@ -215,6 +236,7 @@ static hpd_error_t demo_adapter_create_service(demo_adapter_t *demo_adapter, hpd
 
     demo_adapter_srv_t *srv_data;
     HPD_CALLOC(srv_data, 1, demo_adapter_srv_t);
+    srv_data->state = 0;
     srv_data->demo_adapter = demo_adapter;
     if ((rc = hpd_service_set_data(service, srv_data, free))) goto error_free_data;
 
