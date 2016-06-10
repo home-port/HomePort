@@ -48,8 +48,8 @@ struct hpd_httpd {
  *
  *  \param  instance  Webserver instance
  *  \param  conn      Connection
- *  \param  tcpd_ctx  The http webserver instance
- *  \param  req       The http request
+ *  \param  ws_ctx    The http webserver context
+ *  \param  conn_ctx  Can be set to a connection context
  *
  *  \return 0 on success, 1 on error
  */
@@ -74,8 +74,10 @@ static hpd_tcpd_return_t httpd_on_connect(hpd_tcpd_t *instance, hpd_tcpd_conn_t 
  *
  *  \param  instance  Webserver instance
  *  \param  conn      Connection
- *  \param  tcpd_ctx  The http webserver instance
- *  \param  req       The http request
+ *  \param  ws_ctx    The http webserver instance
+ *  \param  conn_ctx  The connection context, if set in previous callbacks
+ *  \param  buf       Data received.
+ *  \param  len       Length of data received.
  *
  *  \return 0 on success, 1 on error
  */
@@ -99,8 +101,8 @@ static hpd_tcpd_return_t httpd_on_receive(hpd_tcpd_t *instance, hpd_tcpd_conn_t 
  *
  *  \param  instance  Webserver instance
  *  \param  conn      Connection
- *  \param  tcpd_ctx  The http webserver instance
- *  \param  req       The http request
+ *  \param  ws_ctx    The http webserver instance
+ *  \param  conn_ctx  The connection context, if set in previous callbacks
  *
  *  \return 0 on success, 1 on error
  */
@@ -127,10 +129,10 @@ static hpd_tcpd_return_t httpd_on_disconnect(hpd_tcpd_t *instance, hpd_tcpd_conn
  *  The settings is copied to the instance and a webserver instance is
  *  created for it.
  *
+ *  \param  httpd     The newly created instance will be stored here.
  *  \param  settings  The settings for the httpd.
+ *  \param  context   HPD module context.
  *  \param  loop      The event loop to start the server on.
- *
- *  \returns  The newly created instance.
  */
 hpd_error_t hpd_httpd_create(hpd_httpd_t **httpd, hpd_httpd_settings_t *settings, const hpd_module_t *context,
                              hpd_ev_loop_t *loop)
@@ -173,7 +175,7 @@ hpd_error_t hpd_httpd_create(hpd_httpd_t **httpd, hpd_httpd_settings_t *settings
  *  Destroy a httpd instance created with hpd_httpd_create(). If
  *  the server is started it should be stopped first by hpd_httpd_stop().
  *
- *  \param  instance  The httpd instance to destroy.
+ *  \param  httpd  The httpd instance to destroy.
  */
 hpd_error_t hpd_httpd_destroy(hpd_httpd_t *httpd)
 {
@@ -189,7 +191,7 @@ hpd_error_t hpd_httpd_destroy(hpd_httpd_t *httpd)
  *
  *  Starts a created httpd.
  *
- *  \param  instance  The instance to start.
+ *  \param  httpd  The instance to start.
  *
  *  \return The error code of hpd_tcpd_start()
  */
@@ -206,7 +208,7 @@ hpd_error_t hpd_httpd_start(hpd_httpd_t *httpd)
  *  Stops an already started httpd instance. All open connections will
  *  be killed without notifying clients, nor sending remaining data.
  *
- *  \param  instance  Instance to stop.
+ *  \param  httpd  Instance to stop.
  */
 hpd_error_t hpd_httpd_stop(hpd_httpd_t *httpd)
 {

@@ -165,7 +165,7 @@ static http_parser_settings parser_settings =
  *  in the url field of the request.
  *
  *  \param  data            The HTTP Request
- *  \param  parsendSegment  Full path, not null-terminated.
+ *  \param  parsedSegment   Full path, not null-terminated.
  *  \param  segment_length  Length of path in characters
  */
 static hpd_error_t url_parser_path_complete(void *data, const char* parsedSegment, size_t segment_length)
@@ -589,14 +589,14 @@ static int parser_msg_cmpl(http_parser *parser)
  *  ws_reqeust_parse(), and it should be freed using
  *  ws_request_destroy() to avoid memory leaks.
  *
- *  @param  webserver  The httpd creating the request
+ *  @param  req        Will point to the newly created request on success.
+ *  @param  httpd      The httpd creating the request
  *  @param  settings   The settings for the webserver receiving the
  *                     request. This will determine which callbacks to
  *                     call on events.
  *  @param  conn       The connection on which the request is being
  *                     received
- *
- *  @return The newly create ws_request.
+ *  @param  context    HPD module context.
  */
 hpd_error_t http_request_create(hpd_httpd_request_t **req, hpd_httpd_t *httpd, hpd_httpd_settings_t *settings,
                                 hpd_tcpd_conn_t *conn, const hpd_module_t *context)
@@ -752,9 +752,8 @@ hpd_error_t http_request_parse(hpd_httpd_request_t *req, const char *buf, size_t
 /**
  * Get the method of the http request.
  *
- *  \param  req  http request
- *
- *  \return The method as a enum http_method
+ *  \param  req     http request
+ *  \param  method  Will be set to the method on success
  */
 hpd_error_t hpd_httpd_request_get_method(hpd_httpd_request_t *req, hpd_httpd_method_t *method)
 {
@@ -769,8 +768,7 @@ hpd_error_t hpd_httpd_request_get_method(hpd_httpd_request_t *req, hpd_httpd_met
  * Get the URL of this request.
  *
  *  \param  req  http request
- *
- *  \return URL as a string
+ *  \param  url  will point to the url on success.
  */
 hpd_error_t hpd_httpd_request_get_url(hpd_httpd_request_t *req, const char **url)
 {
@@ -784,9 +782,8 @@ hpd_error_t hpd_httpd_request_get_url(hpd_httpd_request_t *req, const char **url
 /**
  * Get a linked map of all headers for a request.
  *
- *  \param  req  http request
- *
- *  \return Headers as a linkedmap (struct lm)
+ *  \param  req      http request
+ *  \param  headers  Will be set to the headers.
  */
 hpd_error_t hpd_httpd_request_get_headers(hpd_httpd_request_t *req, hpd_map_t **headers)
 {
@@ -800,11 +797,9 @@ hpd_error_t hpd_httpd_request_get_headers(hpd_httpd_request_t *req, hpd_map_t **
 /**
  * Get a specific header of a request.
  *
- *  \param  req  http request
- *  \param  key  Key for the header to get
- *
- *  \return The value of the header with the specified key, or NULL if
- *          not found
+ *  \param  req    http request
+ *  \param  key    Key for the header to get
+ *  \param  value  Will be set to the value of the header with the specified key
  */
 hpd_error_t hpd_httpd_request_get_header(hpd_httpd_request_t *req, const char *key, const char **value)
 {
@@ -817,9 +812,8 @@ hpd_error_t hpd_httpd_request_get_header(hpd_httpd_request_t *req, const char *k
 /**
  * Get a linked map of all URL arguements for a request.
  *
- *  \param  req  http request
- *
- *  \return Arguments as a linkedmap (struct lm)
+ *  \param  req       http request
+ *  \param  arguments Arguments will be stored here
  */
 hpd_error_t hpd_httpd_request_get_arguments(hpd_httpd_request_t *req, hpd_map_t **arguments)
 {
@@ -835,8 +829,7 @@ hpd_error_t hpd_httpd_request_get_arguments(hpd_httpd_request_t *req, hpd_map_t 
  *
  *  \param  req  http request
  *  \param  key  Key value of argument to get
- *
- *  \return Value of argument as string, or NULL if not found
+ *  \param  val  Value of argument will be stored here
  */
 hpd_error_t hpd_httpd_request_get_argument(hpd_httpd_request_t *req, const char *key, const char **val)
 {
@@ -849,9 +842,8 @@ hpd_error_t hpd_httpd_request_get_argument(hpd_httpd_request_t *req, const char 
 /**
  * Get a all cookies for a request.
  *
- *  \param  req  http request
- *
- *  \return Cookies as a linkedmap (struct lm)
+ *  \param  req      http request
+ *  \param  cookies  Will be set to point to the cookies
  */
 hpd_error_t hpd_httpd_request_get_cookies(hpd_httpd_request_t *req, hpd_map_t **cookies)
 {
@@ -867,9 +859,7 @@ hpd_error_t hpd_httpd_request_get_cookies(hpd_httpd_request_t *req, hpd_map_t **
  *
  *  \param  req  http request
  *  \param  key  Key of cookie to get
- *
- *  \return The value of the cookie as String, or NULL if cookie was not
- *          found
+ *  \param  val  The value will be stored here.
  */
 hpd_error_t hpd_httpd_request_get_cookie(hpd_httpd_request_t *req, const char *key, const char **val)
 {
@@ -882,7 +872,8 @@ hpd_error_t hpd_httpd_request_get_cookie(hpd_httpd_request_t *req, const char *k
 /**
  * Get the connection of a request.
  *
- *  \param  req  http request
+ *  \param  req   http request
+ *  \param  conn  Will point to the connection on success.
  *
  *  \return The connection
  */
@@ -899,8 +890,7 @@ hpd_error_t http_request_get_connection(hpd_httpd_request_t *req, hpd_tcpd_conn_
  * Get the IP of a request.
  *
  *  \param  req  http request
- *
- *  \return IP as a string
+ *  \param  ip   Will point to the ip on success.
  */
 hpd_error_t hpd_httpd_request_get_ip(hpd_httpd_request_t *req, const char **ip)
 {

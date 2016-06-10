@@ -29,14 +29,14 @@
  *
  * \tableofcontents
  *
- * \section sec_intro Introduction
+ * \section sec_t01_intro Introduction
  *
  * In this tutorial, we will briefly cover the required elements of the main program, an adapter, and an application.
  * See the other examples for more in depth guidance on how to implement this required functions.
  *
  * The full files can be found in the example/template folder, and can be compiled with `make template`.
  *
- * \section sec_main Main Program Template
+ * \section sec_t01_main Main Program Template
  *
  * The includes part of the main program (template_main.c) will need to include hpd_daemon_api.h for all hpd daemon
  * related functions, and include the header files of all the modules (adapters and applications) that it starts:
@@ -49,7 +49,7 @@
  *
  * \snippet template_main.c main
  *
- * \section sec_adapter Adapter Template
+ * \section sec_t01_adapter Adapter Template
  *
  * A module consists of two files; a header file and a source file. The header file of a module should only need to contain a single struct, which is the module definition of said
  * module:
@@ -112,7 +112,7 @@
  *
  * \snippet template_adapter.c on_parse_opt
  *
- * \section sec_application Application Template
+ * \section sec_t01_application Application Template
  *
  * The application template is almost identical with just one exception; the source file includes hpd_application_api.h
  * instead of hpd_adapter_api.h. First the header file (template_application.h):
