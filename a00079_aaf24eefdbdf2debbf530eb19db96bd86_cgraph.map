@@ -1,0 +1,6 @@
+<map id="hpd_adapter_id_alloc" name="hpd_adapter_id_alloc">
+<area shape="rect" id="node2" href="$a00020.html#a1915dc6bbbb6b1a2a587723caa22069d" title="discovery_alloc_aid" alt="" coords="197,31,333,57"/>
+<area shape="rect" id="node3" href="$a00080.html#af2f553cfc3af4678b87a8fc75f35a5c6" title="HPD_E_ALLOC: id might be partially updated. " alt="" coords="383,5,510,32"/>
+<area shape="rect" id="node4" href="$a00080.html#a2bd026e829a41663810ae68fa3797987" title="discovery_free_aid" alt="" coords="381,56,512,83"/>
+<area shape="rect" id="node5" href="$a00012.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="560,56,604,83"/>
+</map>

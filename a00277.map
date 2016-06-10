@@ -1,0 +1,10 @@
+<map id="hpd_rest" name="hpd_rest">
+<area shape="rect" id="node2" href="$a00027.html#a00122" title="Settings struct for webserver. " alt="" coords="430,543,562,620"/>
+<area shape="rect" id="node5" href="$a00024.html#a00119" title="httpd instance struct " alt="" coords="950,800,1029,877"/>
+<area shape="rect" id="node9" href="$a00017.html#a00110" title="{hpd\n||}" alt="" coords="1363,543,1405,620"/>
+<area shape="rect" id="node21" href="$a00036.html#a00131" title="Instance of a tcpd. " alt="" coords="735,543,809,620"/>
+<area shape="rect" id="node23" href="$a00038.html#a00132" title="Settings struct for tcpd. " alt="" coords="247,800,375,877"/>
+<area shape="rect" id="node6" href="$a00029.html" title="{hpd_module\n||+ TAILQ_ENTRY()\l}" alt="" coords="1475,344,1608,421"/>
+<area shape="rect" id="node7" href="$a00030.html#a00123" title="[Application API Callbacks] " alt="" coords="1565,204,1683,281"/>
+<area shape="rect" id="node13" href="$a00018.html#a00113" title="{hpd_configuration\n||}" alt="" coords="1527,800,1651,877"/>
+</map>

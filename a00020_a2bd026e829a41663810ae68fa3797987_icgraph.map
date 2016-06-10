@@ -1,0 +1,40 @@
+<map id="discovery_free_aid" name="discovery_free_aid">
+<area shape="rect" id="node2" href="$a00079.html#a6dfca5e2723ca3a11d12fe545e69923e" title="hpd_adapter_id_free" alt="" coords="606,155,745,181"/>
+<area shape="rect" id="node28" href="$a00079.html#a460c1d013092f65b4bf7d7ece3ff7efc" title="hpd_next_adapter" alt="" coords="189,315,315,341"/>
+<area shape="rect" id="node29" href="$a00080.html#a1915dc6bbbb6b1a2a587723caa22069d" title="discovery_alloc_aid" alt="" coords="184,264,320,291"/>
+<area shape="rect" id="node3" href="$a00013.html#a1a305bf3b6bebda2ca16c8adcdb95239" title="[on_destroy] " alt="" coords="820,206,967,247"/>
+<area shape="rect" id="node5" href="$a00013.html#aa30316159e7cdc14f2f035f0949b6680" title="[on_start] " alt="" coords="815,155,972,181"/>
+<area shape="rect" id="node6" href="$a00014.html#a47420cd34ff6783c48a215b947bca110" title="demo_app_on_device" alt="" coords="819,272,967,299"/>
+<area shape="rect" id="node10" href="$a00014.html#add890f355b0e61ee1bcdd4f47a8964a1" title="demo_app_on_change" alt="" coords="817,104,969,131"/>
+<area shape="rect" id="node11" href="$a00095.html#ae30c92f3bb2ebffcbb82054ad60c1ac5" title="hpd_rest_url_create" alt="" coords="825,53,961,80"/>
+<area shape="rect" id="node4" href="$a00013.html#a9f84d5de2ac16bde89480bd48efdff51" title="[create_lamp] " alt="" coords="1020,163,1179,189"/>
+<area shape="rect" id="node7" href="$a00014.html#a192157935b7f185b56921b919e981f3a" title="demo_app_on_attach" alt="" coords="1026,272,1173,299"/>
+<area shape="rect" id="node9" href="$a00014.html#a5bac6eb6e610cdc6e322879ee4eaf514" title="demo_app_on_detach" alt="" coords="1025,221,1174,248"/>
+<area shape="rect" id="node8" href="$a00014.html#aa8f03492cc097968d466bb5ea9a043d1" title="demo_app_on_start" alt="" coords="1238,221,1374,248"/>
+<area shape="rect" id="node12" href="$a00096.html#aa6c7dd70ed7b9b3a371a58ed6122b940" title="rest_json_add_service" alt="" coords="1023,5,1175,32"/>
+<area shape="rect" id="node23" href="$a00098.html#a8a91d98306eb64c151d1c19465421c0c" title="rest_xml_add_service" alt="" coords="1231,56,1381,83"/>
+<area shape="rect" id="node13" href="$a00096.html#acedf1d82686baa037179bbc8eff51293" title="rest_json_add_services" alt="" coords="1227,5,1385,32"/>
+<area shape="rect" id="node14" href="$a00096.html#a41c2f37e46c89b97a3b4f5bb4e8ede49" title="rest_json_add_device" alt="" coords="1433,5,1581,32"/>
+<area shape="rect" id="node15" href="$a00096.html#ad6d08cc22d78268f5dc0b229af37c54c" title="rest_json_add_devices" alt="" coords="1629,5,1784,32"/>
+<area shape="rect" id="node16" href="$a00096.html#a640b87b4cf374466c27940092542bbec" title="rest_json_add_adapter" alt="" coords="1846,5,1999,32"/>
+<area shape="rect" id="node17" href="$a00096.html#a99b3728ca81ef813ed208afd6de9a9b3" title="rest_json_add_adapters" alt="" coords="2085,5,2245,32"/>
+<area shape="rect" id="node18" href="$a00096.html#a28e31077cb0239c2f21c335da42223e2" title="rest_json_add_configuration" alt="" coords="2316,5,2500,32"/>
+<area shape="rect" id="node19" href="$a00097.html#aeb80ec3253d248a129513864cdc53817" title="hpd_rest_json_get_configuration" alt="" coords="2548,5,2757,32"/>
+<area shape="rect" id="node20" href="$a00034.html#ac0f2724b4617f1adb53492f1a57a4e4b" title="rest_reply_devices" alt="" coords="2805,31,2936,57"/>
+<area shape="rect" id="node21" href="$a00034.html#a2731aca6e6807e771bcf9c94dbec968c" title="rest_on_req_hdr_cmpl" alt="" coords="2984,31,3135,57"/>
+<area shape="rect" id="node22" href="$a00034.html#a02090c3feb19ea4c6e1fa9b5e6392752" title="rest_on_create" alt="" coords="3183,31,3291,57"/>
+<area shape="rect" id="node24" href="$a00098.html#a1225e8ad884c053761d73179e1ee1855" title="rest_xml_add_device" alt="" coords="1435,56,1580,83"/>
+<area shape="rect" id="node25" href="$a00098.html#a8a0a8fd989454b355fdaf3da1f129187" title="rest_xml_add_adapter" alt="" coords="1631,56,1782,83"/>
+<area shape="rect" id="node26" href="$a00098.html#aca121ba7e7fc75cee1159bd654566d5e" title="rest_xml_add_configuration" alt="" coords="1832,56,2013,83"/>
+<area shape="rect" id="node27" href="$a00099.html#a5f45c0580c596d22c41495ecc83e6e85" title="hpd_rest_xml_get_configuration" alt="" coords="2061,56,2268,83"/>
+<area shape="rect" id="node30" href="$a00079.html#aaf24eefdbdf2debbf530eb19db96bd86" title="[log functions] " alt="" coords="380,205,524,232"/>
+<area shape="rect" id="node31" href="$a00079.html#a35bf26228e2c725f300412ef59eecf4b" title="hpd_first_adapter" alt="" coords="391,323,513,349"/>
+<area shape="rect" id="node32" href="$a00080.html#a55d0d49af4d1f6e1cf8dfc09c7f51e5b" title="discovery_copy_aid" alt="" coords="383,373,521,400"/>
+<area shape="rect" id="node34" href="$a00080.html#aaa80ffa4633419e13e8c122748daf203" title="discovery_get_device\l_adapter" alt="" coords="378,425,526,466"/>
+<area shape="rect" id="node36" href="$a00080.html#a6f562c4265080ac8d026ac15e9d042b1" title="discovery_get_service\l_adapter" alt="" coords="376,139,528,181"/>
+<area shape="rect" id="node38" href="$a00080.html#aecb6f07e883439fcc3306362c4a6b63f" title="discovery_get_parameter\l_adapter" alt="" coords="368,257,536,298"/>
+<area shape="rect" id="node33" href="$a00079.html#aadb695833d05d754f6c240200556e3ba" title="hpd_adapter_id_copy" alt="" coords="603,373,748,400"/>
+<area shape="rect" id="node35" href="$a00079.html#a50b0521e638f13c35f0d7f4860d8064d" title="hpd_device_get_adapter" alt="" coords="594,428,757,455"/>
+<area shape="rect" id="node37" href="$a00079.html#a43dfdac4b9fea4a35e2709a22778250e" title="hpd_service_get_adapter" alt="" coords="592,104,759,131"/>
+<area shape="rect" id="node39" href="$a00079.html#a63a138dc6d530f46e5babb509d329155" title="hpd_parameter_get_adapter" alt="" coords="584,264,767,291"/>
+</map>

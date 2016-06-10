@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: hpd/include/hpd_api.h Source File</title>
+<title>HomePort: common/tcpd/example/echo.c Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,12 +81,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_ab00a9b86cff89a0b86b44294c0aada6.html">hpd</a></li><li class="navelem"><a class="el" href="dir_aba8a382290fd93b3200a2cfbb5130ed.html">include</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_82dcf8865025af0993941f3b37463150.html">tcpd</a></li><li class="navelem"><a class="el" href="dir_4702acf43357d1a4a60ee76805d8520d.html">example</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">hpd_api.h</div>  </div>
+<div class="title">echo.c</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a00057.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
@@ -102,7 +102,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> * of conditions and the following disclaimer in the documentation and/or other materials</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> * provided with the distribution.</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * THIS SOFTWARE IS PROVidED BY Aalborg University &#39;&#39;AS IS&#39;&#39; AND ANY EXPRESS OR IMPLIED</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * THIS SOFTWARE IS PROVIDED BY Aalborg University &#39;&#39;AS IS&#39;&#39; AND ANY EXPRESS OR IMPLIED</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span></div>
@@ -116,21 +116,92 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * authors and should not be interpreted as representing official policies, either expressed</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#ifndef HOMEPORT_HPD_API_H</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#define HOMEPORT_HPD_API_H</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00056.html">hpd_adapter_api.h</a>&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00058.html">hpd_application_api.h</a>&quot;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00059.html">hpd_daemon_api.h</a>&quot;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#endif //HOMEPORT_HPD_API_H</span></div>
-<div class="ttc" id="a00056_html"><div class="ttname"><a href="a00056.html">hpd_adapter_api.h</a></div></div>
-<div class="ttc" id="a00059_html"><div class="ttname"><a href="a00059.html">hpd_daemon_api.h</a></div></div>
-<div class="ttc" id="a00058_html"><div class="ttname"><a href="a00058.html">hpd_application_api.h</a></div></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00038.html">hpd_tcpd.h</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;ev.h&gt;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// A tcpd instance</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a00057.html#a049f846d6feb0118e9988d936f0bee86">   34</a></span>&#160;<span class="keyword">static</span> <a class="code" href="a00036.html#a00131">hpd_tcpd_t</a> *<a class="code" href="a00057.html#a049f846d6feb0118e9988d936f0bee86">ws</a> = NULL;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// Receive messages</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="a00057.html#ae30200b9a3a68eb2d06ddbaa38a49ce6">   37</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="a00057.html#ae30200b9a3a68eb2d06ddbaa38a49ce6">on_receive</a>(<a class="code" href="a00036.html#a00131">hpd_tcpd_t</a> *<a class="code" href="a00012.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>, <a class="code" href="a00037.html">hpd_tcpd_conn_t</a> *conn, <span class="keywordtype">void</span> *ctx, <span class="keywordtype">void</span> **<a class="code" href="a00012.html#a00104">data</a>,</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;                      <span class="keyword">const</span> <span class="keywordtype">char</span> *buf, <span class="keywordtype">size_t</span> len)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;   <a class="code" href="a00038.html#af1d6e9cdd63ecfa1ff92ab0e38122100">hpd_tcpd_conn_sendf</a>(conn, <span class="stringliteral">&quot;%.*s&quot;</span>, (<span class="keywordtype">int</span>) len, buf);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;   <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;}</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// Handle correct exiting</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="a00057.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">   45</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a00057.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">exit_handler</a>(<span class="keywordtype">int</span> sig)</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;   <span class="comment">// Stop tcpd</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;   <span class="keywordflow">if</span> (hpd_ws != NULL) {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      <a class="code" href="a00038.html#ae1b6a900f62d2b677480abfb7163b0d0">hpd_tcpd_stop</a>(hpd_ws);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      <a class="code" href="a00038.html#a32fa9556e05236c856f7bdd08a47f5e4">hpd_tcpd_destroy</a>(hpd_ws);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;   }</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;   <span class="comment">// Exit</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;   printf(<span class="stringliteral">&quot;Exiting....\n&quot;</span>);</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;   exit(sig);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">// Main function</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="a00057.html#a0ddf1224851353fc92bfbff6f499fa97">   59</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="a00057.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;{</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;   <span class="comment">// The event loop for the tcpd to run on</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;   <a class="code" href="a00030.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *<a class="code" href="a00052.html#a855923b555731173d3509ecb645de0e0">loop</a> = EV_DEFAULT;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;   <span class="comment">// Settings for the tcpd</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;   <a class="code" href="a00038.html#a00132">hpd_tcpd_settings_t</a> <a class="code" href="a00051.html#a418c751a61f0272a6fef8a19a4173342">settings</a> = <a class="code" href="a00038.html#a6555f4ed8200e5e1150dad5ba1f203e4">HPD_TCPD_SETTINGS_DEFAULT</a>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;   settings.<a class="code" href="a00038.html#accaff98dc4c211d34988c32ea092ff60">port</a> = HPD_TCPD_P_HTTP_ALT;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;   settings.<a class="code" href="a00038.html#a57b24643d2efb73fbf2509bfd29c9a04">on_receive</a> = <a class="code" href="a00057.html#ae30200b9a3a68eb2d06ddbaa38a49ce6">on_receive</a>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;   <span class="comment">// Inform if we have been built with debug flag</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;   printf(<span class="stringliteral">&quot;Debugging is set\n&quot;</span>);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;   <span class="comment">// Register signals for correctly exiting</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;   signal(SIGINT, <a class="code" href="a00057.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">exit_handler</a>);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;   signal(SIGTERM, <a class="code" href="a00057.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">exit_handler</a>);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;   <span class="comment">// Create tcpd</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;   hpd_ws = <a class="code" href="a00038.html#af9b115d7e78545361343a4fd535d79ac">hpd_tcpd_create</a>(NULL, &amp;settings, NULL, NULL);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;   <a class="code" href="a00038.html#ae77def0ed256affe27ea6ce37bf0ebf7">hpd_tcpd_start</a>(hpd_ws);</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;   <span class="comment">// Start the event loop and tcpd</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;   ev_run(loop, 0);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;   <span class="comment">// Exit</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;   <a class="code" href="a00057.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">exit_handler</a>(0);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;   <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
+<div class="ttc" id="a00036_html_a00131"><div class="ttname"><a href="a00036.html#a00131">hpd_tcpd</a></div><div class="ttdoc">Instance of a tcpd. </div><div class="ttdef"><b>Definition:</b> <a href="a00036_source.html#l00045">tcpd_intern.h:45</a></div></div>
+<div class="ttc" id="a00012_html_a50e95e721b7d8a15c3a184649c98b284"><div class="ttname"><a href="a00012.html#a50e95e721b7d8a15c3a184649c98b284">instance</a></div><div class="ttdeci">struct up * instance</div><div class="ttdef"><b>Definition:</b> <a href="a00012_source.html#l00210">url_parser_test.c:210</a></div></div>
+<div class="ttc" id="a00038_html_af9b115d7e78545361343a4fd535d79ac"><div class="ttname"><a href="a00038.html#af9b115d7e78545361343a4fd535d79ac">hpd_tcpd_create</a></div><div class="ttdeci">hpd_error_t hpd_tcpd_create(hpd_tcpd_t **tcpd, hpd_tcpd_settings_t *settings, const hpd_module_t *context, hpd_ev_loop_t *loop)</div><div class="ttdoc">Create new tcpd instance. </div><div class="ttdef"><b>Definition:</b> <a href="a00059_source.html#l00269">tcpd.c:269</a></div></div>
+<div class="ttc" id="a00038_html_accaff98dc4c211d34988c32ea092ff60"><div class="ttname"><a href="a00038.html#accaff98dc4c211d34988c32ea092ff60">hpd_tcpd_settings::port</a></div><div class="ttdeci">hpd_tcpd_port_t port</div><div class="ttdoc">Port number. </div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00095">hpd_tcpd.h:95</a></div></div>
+<div class="ttc" id="a00051_html_a418c751a61f0272a6fef8a19a4173342"><div class="ttname"><a href="a00051.html#a418c751a61f0272a6fef8a19a4173342">settings</a></div><div class="ttdeci">struct hp_settings settings</div><div class="ttdef"><b>Definition:</b> <a href="a00051_source.html#l00060">header_parser_test.c:60</a></div></div>
+<div class="ttc" id="a00038_html_ae1b6a900f62d2b677480abfb7163b0d0"><div class="ttname"><a href="a00038.html#ae1b6a900f62d2b677480abfb7163b0d0">hpd_tcpd_stop</a></div><div class="ttdeci">hpd_error_t hpd_tcpd_stop(hpd_tcpd_t *tcpd)</div><div class="ttdoc">Stop an already running tcpd. </div><div class="ttdef"><b>Definition:</b> <a href="a00059_source.html#l00428">tcpd.c:428</a></div></div>
+<div class="ttc" id="a00038_html"><div class="ttname"><a href="a00038.html">hpd_tcpd.h</a></div></div>
+<div class="ttc" id="a00038_html_ae77def0ed256affe27ea6ce37bf0ebf7"><div class="ttname"><a href="a00038.html#ae77def0ed256affe27ea6ce37bf0ebf7">hpd_tcpd_start</a></div><div class="ttdeci">hpd_error_t hpd_tcpd_start(hpd_tcpd_t *tcpd)</div><div class="ttdoc">Start the tcpd. </div><div class="ttdef"><b>Definition:</b> <a href="a00059_source.html#l00318">tcpd.c:318</a></div></div>
+<div class="ttc" id="a00037_html"><div class="ttname"><a href="a00037.html">hpd_tcpd_conn</a></div><div class="ttdoc">All data to represent a connection. </div><div class="ttdef"><b>Definition:</b> <a href="a00036_source.html#l00056">tcpd_intern.h:56</a></div></div>
+<div class="ttc" id="a00038_html_af1d6e9cdd63ecfa1ff92ab0e38122100"><div class="ttname"><a href="a00038.html#af1d6e9cdd63ecfa1ff92ab0e38122100">hpd_tcpd_conn_sendf</a></div><div class="ttdeci">hpd_error_t hpd_tcpd_conn_sendf(hpd_tcpd_conn_t *conn, const char *fmt,...)</div><div class="ttdoc">Send message on connection. </div><div class="ttdef"><b>Definition:</b> <a href="a00059_source.html#l00503">tcpd.c:503</a></div></div>
+<div class="ttc" id="a00052_html_a855923b555731173d3509ecb645de0e0"><div class="ttname"><a href="a00052.html#a855923b555731173d3509ecb645de0e0">loop</a></div><div class="ttdeci">static struct ev_loop * loop</div><div class="ttdef"><b>Definition:</b> <a href="a00052_source.html#l00054">http-webserver_test.c:54</a></div></div>
+<div class="ttc" id="a00057_html_a0ddf1224851353fc92bfbff6f499fa97"><div class="ttname"><a href="a00057.html#a0ddf1224851353fc92bfbff6f499fa97">main</a></div><div class="ttdeci">int main(int argc, char *argv[])</div><div class="ttdef"><b>Definition:</b> <a href="a00057_source.html#l00059">echo.c:59</a></div></div>
+<div class="ttc" id="a00038_html_a57b24643d2efb73fbf2509bfd29c9a04"><div class="ttname"><a href="a00038.html#a57b24643d2efb73fbf2509bfd29c9a04">hpd_tcpd_settings::on_receive</a></div><div class="ttdeci">hpd_tcpd_data_f on_receive</div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00100">hpd_tcpd.h:100</a></div></div>
+<div class="ttc" id="a00057_html_a049f846d6feb0118e9988d936f0bee86"><div class="ttname"><a href="a00057.html#a049f846d6feb0118e9988d936f0bee86">ws</a></div><div class="ttdeci">static hpd_tcpd_t * ws</div><div class="ttdef"><b>Definition:</b> <a href="a00057_source.html#l00034">echo.c:34</a></div></div>
+<div class="ttc" id="a00012_html_a00104"><div class="ttname"><a href="a00012.html#a00104">data</a></div><div class="ttdef"><b>Definition:</b> <a href="a00051_source.html#l00032">header_parser_test.c:32</a></div></div>
+<div class="ttc" id="a00057_html_a49f6d3bb9d22d5b9cf5c7eb6175318d1"><div class="ttname"><a href="a00057.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">exit_handler</a></div><div class="ttdeci">static void exit_handler(int sig)</div><div class="ttdef"><b>Definition:</b> <a href="a00057_source.html#l00045">echo.c:45</a></div></div>
+<div class="ttc" id="a00030_html_a8b9d6b16dbb9ccaf08497a11cc0b1d29"><div class="ttname"><a href="a00030.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a></div><div class="ttdeci">struct ev_loop hpd_ev_loop_t</div><div class="ttdef"><b>Definition:</b> <a href="a00030_source.html#l00051">hpd_types.h:51</a></div></div>
+<div class="ttc" id="a00038_html_a32fa9556e05236c856f7bdd08a47f5e4"><div class="ttname"><a href="a00038.html#a32fa9556e05236c856f7bdd08a47f5e4">hpd_tcpd_destroy</a></div><div class="ttdeci">hpd_error_t hpd_tcpd_destroy(hpd_tcpd_t *tcpd)</div><div class="ttdoc">Destroy tcpd and free used memory. </div><div class="ttdef"><b>Definition:</b> <a href="a00059_source.html#l00297">tcpd.c:297</a></div></div>
+<div class="ttc" id="a00038_html_a00132"><div class="ttname"><a href="a00038.html#a00132">hpd_tcpd_settings</a></div><div class="ttdoc">Settings struct for tcpd. </div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00094">hpd_tcpd.h:94</a></div></div>
+<div class="ttc" id="a00038_html_a6555f4ed8200e5e1150dad5ba1f203e4"><div class="ttname"><a href="a00038.html#a6555f4ed8200e5e1150dad5ba1f203e4">HPD_TCPD_SETTINGS_DEFAULT</a></div><div class="ttdeci">#define HPD_TCPD_SETTINGS_DEFAULT</div><div class="ttdoc">Default settings for tcpd. </div><div class="ttdef"><b>Definition:</b> <a href="a00038_source.html#l00113">hpd_tcpd.h:113</a></div></div>
+<div class="ttc" id="a00057_html_ae30200b9a3a68eb2d06ddbaa38a49ce6"><div class="ttname"><a href="a00057.html#ae30200b9a3a68eb2d06ddbaa38a49ce6">on_receive</a></div><div class="ttdeci">static int on_receive(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ctx, void **data, const char *buf, size_t len)</div><div class="ttdef"><b>Definition:</b> <a href="a00057_source.html#l00037">echo.c:37</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:23 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:24 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: hpd/src/request.h File Reference</title>
+<title>HomePort: hpd/include/hpd/hpd_application_api.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,26 +81,26 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_ab00a9b86cff89a0b86b44294c0aada6.html">hpd</a></li><li class="navelem"><a class="el" href="dir_3128ee3f19d8356fe970e43f9e882e44.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_ab00a9b86cff89a0b86b44294c0aada6.html">hpd</a></li><li class="navelem"><a class="el" href="dir_aba8a382290fd93b3200a2cfbb5130ed.html">include</a></li><li class="navelem"><a class="el" href="dir_87c8f650a499095cc68ae8b35f96213f.html">hpd</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">request.h File Reference</div>  </div>
+<div class="title">hpd_application_api.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><div class="dynheader">
-Include dependency graph for request.h:</div>
+Include dependency graph for hpd_application_api.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00239.svg" width="134" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00221.svg" width="318" height="202"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00240.svg" width="456" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00222.svg" width="100%" height="473"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </div>
@@ -108,70 +108,404 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:afaa1866a860b3fe73641de3548d66f66"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#afaa1866a860b3fe73641de3548d66f66">request_alloc_request</a> (<a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> **request, const <a class="el" href="a00021.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> *id, <a class="el" href="a00021.html#a48b1bff2ed83cd824c21df91b2d74e01">hpd_method_t</a> method, <a class="el" href="a00021.html#a0d8f64601cfb69c9ba46470a414f13e6">hpd_response_f</a> <a class="el" href="a00025.html#abccd0d79ed3acf405337a07b4572d223">on_response</a>)</td></tr>
-<tr class="separator:afaa1866a860b3fe73641de3548d66f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6bf78b6455bffb23cdea87114d97b5c0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a6bf78b6455bffb23cdea87114d97b5c0">request_alloc_response</a> (<a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> **response, <a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *request, <a class="el" href="a00021.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a> status)</td></tr>
-<tr class="separator:a6bf78b6455bffb23cdea87114d97b5c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc90843b331f5522a8d08d6e4219e126"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#adc90843b331f5522a8d08d6e4219e126">request_free_request</a> (<a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *request)</td></tr>
-<tr class="separator:adc90843b331f5522a8d08d6e4219e126"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2477fb8cf085cc2b61dbfacdcdc54b82"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a2477fb8cf085cc2b61dbfacdcdc54b82">request_free_response</a> (<a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *response)</td></tr>
-<tr class="separator:a2477fb8cf085cc2b61dbfacdcdc54b82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3d3a810e68b6911c634d7b3bf338d25b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a3d3a810e68b6911c634d7b3bf338d25b">request_get_request_method</a> (const <a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *req, <a class="el" href="a00021.html#a48b1bff2ed83cd824c21df91b2d74e01">hpd_method_t</a> *method)</td></tr>
-<tr class="separator:a3d3a810e68b6911c634d7b3bf338d25b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8805ee9add6ca3590ea27d723ab12c17"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a8805ee9add6ca3590ea27d723ab12c17">request_get_request_service</a> (const <a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *req, const <a class="el" href="a00021.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> **id)</td></tr>
-<tr class="separator:a8805ee9add6ca3590ea27d723ab12c17"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af691c8f5c5437cea04c9be07adc9ea2e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#af691c8f5c5437cea04c9be07adc9ea2e">request_get_request_value</a> (const <a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *req, <a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> **<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>)</td></tr>
-<tr class="separator:af691c8f5c5437cea04c9be07adc9ea2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfc412dec35fae3b81a84ca0ed120d04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#abfc412dec35fae3b81a84ca0ed120d04">request_get_response_request_data</a> (const <a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *response, void **<a class="el" href="a00006.html#a00090">data</a>)</td></tr>
-<tr class="separator:abfc412dec35fae3b81a84ca0ed120d04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e8ffc18249bd1de23d0dfcca64e2fb4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a6e8ffc18249bd1de23d0dfcca64e2fb4">request_get_response_request_method</a> (const <a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *response, <a class="el" href="a00021.html#a48b1bff2ed83cd824c21df91b2d74e01">hpd_method_t</a> *method)</td></tr>
-<tr class="separator:a6e8ffc18249bd1de23d0dfcca64e2fb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a849046a578beef7ee1c6fb04bab8bdcd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a849046a578beef7ee1c6fb04bab8bdcd">request_get_response_request_service</a> (const <a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *response, const <a class="el" href="a00021.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> **service)</td></tr>
-<tr class="separator:a849046a578beef7ee1c6fb04bab8bdcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a670860ca6bd41494ea8e70691fa523bf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a670860ca6bd41494ea8e70691fa523bf">request_get_response_request_value</a> (const <a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *response, <a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> **<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>)</td></tr>
-<tr class="separator:a670860ca6bd41494ea8e70691fa523bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d93933113a085a86976166d63471582"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a8d93933113a085a86976166d63471582">request_get_response_status</a> (<a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *response, <a class="el" href="a00021.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a> *status)</td></tr>
-<tr class="separator:a8d93933113a085a86976166d63471582"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64ff807503e29891f9cec69c95529f95"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a64ff807503e29891f9cec69c95529f95">request_get_response_value</a> (<a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *response, <a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> **<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>)</td></tr>
-<tr class="separator:a64ff807503e29891f9cec69c95529f95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49ae36dd88ac39bfa09a7cfc34323872"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a49ae36dd88ac39bfa09a7cfc34323872">request_request</a> (<a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *request)</td></tr>
-<tr class="separator:a49ae36dd88ac39bfa09a7cfc34323872"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9377ab613a971acb84c487a139736d4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#af9377ab613a971acb84c487a139736d4">request_respond</a> (<a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *response)</td></tr>
-<tr class="separator:af9377ab613a971acb84c487a139736d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af2e70ea5267e6e806be3509474d049e0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#af2e70ea5267e6e806be3509474d049e0">request_set_request_data</a> (<a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *request, void *<a class="el" href="a00006.html#a00090">data</a>, <a class="el" href="a00021.html#aed058b74824064628a0bf3d07ef9ab02">hpd_free_f</a> <a class="el" href="a00025.html#a65f3fe01ba50f1473cad1a4418cfdf09">on_free</a>)</td></tr>
-<tr class="separator:af2e70ea5267e6e806be3509474d049e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12445e4337da47f3a741748f20c1736e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a12445e4337da47f3a741748f20c1736e">request_set_request_value</a> (<a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *request, <a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>)</td></tr>
-<tr class="separator:a12445e4337da47f3a741748f20c1736e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e2a34ba3b39d7bebfd5971943c4df25"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a2e2a34ba3b39d7bebfd5971943c4df25">request_set_response_value</a> (<a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *response, <a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>)</td></tr>
-<tr class="separator:a2e2a34ba3b39d7bebfd5971943c4df25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3578ba442766650f37f8b769950e63a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a3578ba442766650f37f8b769950e63a3">hpd_foreach_attached</a> (const <a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> *listener)</td></tr>
+<tr class="separator:a3578ba442766650f37f8b769950e63a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49f0552ce2f504f4769612ac6cac6933"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a49f0552ce2f504f4769612ac6cac6933">hpd_listener_alloc</a> (<a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> **listener, <a class="el" href="a00030.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *<a class="el" href="a00017.html#a00110">hpd</a>)</td></tr>
+<tr class="memdesc:a49f0552ce2f504f4769612ac6cac6933"><td class="mdescLeft">&#160;</td><td class="mdescRight">[hpd_response_t functions]  <a href="#a49f0552ce2f504f4769612ac6cac6933">More...</a><br /></td></tr>
+<tr class="separator:a49f0552ce2f504f4769612ac6cac6933"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96236544de2ed9cacdc03b5dedeb6d4e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a96236544de2ed9cacdc03b5dedeb6d4e">hpd_listener_free</a> (<a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> *listener)</td></tr>
+<tr class="separator:a96236544de2ed9cacdc03b5dedeb6d4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a977ca101a6df1484a39eeb195e5a047d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a977ca101a6df1484a39eeb195e5a047d">hpd_listener_get_data</a> (const <a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> *listener, void **<a class="el" href="a00012.html#a00104">data</a>)</td></tr>
+<tr class="separator:a977ca101a6df1484a39eeb195e5a047d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ed81ad49352be61e2a8710624396e93"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a6ed81ad49352be61e2a8710624396e93">hpd_listener_set_data</a> (<a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> *listener, void *<a class="el" href="a00012.html#a00104">data</a>, <a class="el" href="a00030.html#a48ae026294e911f802713816b5abd57f">hpd_free_f</a> on_free)</td></tr>
+<tr class="separator:a6ed81ad49352be61e2a8710624396e93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b21c4186d69cad1bc1eee041ce4c220"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a5b21c4186d69cad1bc1eee041ce4c220">hpd_listener_set_device_callback</a> (<a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> *listener, <a class="el" href="a00030.html#a1ccb530f148c41890c45396b906b8b8b">hpd_device_f</a> on_attach, <a class="el" href="a00030.html#a1ccb530f148c41890c45396b906b8b8b">hpd_device_f</a> on_detach)</td></tr>
+<tr class="separator:a5b21c4186d69cad1bc1eee041ce4c220"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf1e38cf565af096ee9baf39f4e6bba8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#aaf1e38cf565af096ee9baf39f4e6bba8">hpd_listener_set_value_callback</a> (<a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> *listener, <a class="el" href="a00030.html#a68fdc3cf3d04dc731dda2702445ee878">hpd_value_f</a> on_change)</td></tr>
+<tr class="separator:aaf1e38cf565af096ee9baf39f4e6bba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a077adc41aa1c0f7270a995ff42420424"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a077adc41aa1c0f7270a995ff42420424">hpd_request</a> (<a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *request)</td></tr>
+<tr class="separator:a077adc41aa1c0f7270a995ff42420424"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6d853067ae916b9213cd0c936c201c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#aa6d853067ae916b9213cd0c936c201c2">hpd_request_alloc</a> (<a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> **request, const <a class="el" href="a00030.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> *id, <a class="el" href="a00030.html#a48b1bff2ed83cd824c21df91b2d74e01">hpd_method_t</a> method, <a class="el" href="a00030.html#ac82f1adb334b52cc66fa6112d367d07a">hpd_response_f</a> on_response)</td></tr>
+<tr class="memdesc:aa6d853067ae916b9213cd0c936c201c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">[hpd_request_t functions]  <a href="#aa6d853067ae916b9213cd0c936c201c2">More...</a><br /></td></tr>
+<tr class="separator:aa6d853067ae916b9213cd0c936c201c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70445c0ba17e60a009c9557ec0dd7d3b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a70445c0ba17e60a009c9557ec0dd7d3b">hpd_request_free</a> (<a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *request)</td></tr>
+<tr class="separator:a70445c0ba17e60a009c9557ec0dd7d3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9eeff8f3e494a62942c2ebed8f05cd9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#ac9eeff8f3e494a62942c2ebed8f05cd9">hpd_request_set_data</a> (<a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *request, void *<a class="el" href="a00012.html#a00104">data</a>, <a class="el" href="a00030.html#a48ae026294e911f802713816b5abd57f">hpd_free_f</a> on_free)</td></tr>
+<tr class="separator:ac9eeff8f3e494a62942c2ebed8f05cd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0e001de59db25ddc4a3df544e14c490"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#af0e001de59db25ddc4a3df544e14c490">hpd_request_set_value</a> (<a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *request, <a class="el" href="a00030.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *<a class="el" href="a00012.html#aee53bdc848584e095375d0d39aa400b8">value</a>)</td></tr>
+<tr class="separator:af0e001de59db25ddc4a3df544e14c490"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc5f0ce6e069361330a20015760e5968"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#acc5f0ce6e069361330a20015760e5968">hpd_response_get_request_data</a> (const <a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *response, void **<a class="el" href="a00012.html#a00104">data</a>)</td></tr>
+<tr class="separator:acc5f0ce6e069361330a20015760e5968"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1011e309216eeb47ef204a18535d6cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#ad1011e309216eeb47ef204a18535d6cf">hpd_response_get_request_method</a> (const <a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *response, <a class="el" href="a00030.html#a48b1bff2ed83cd824c21df91b2d74e01">hpd_method_t</a> *method)</td></tr>
+<tr class="separator:ad1011e309216eeb47ef204a18535d6cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73a25c0e072cf8a27a18c17c179b4c19"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a73a25c0e072cf8a27a18c17c179b4c19">hpd_response_get_request_service</a> (const <a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *response, const <a class="el" href="a00030.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> **service)</td></tr>
+<tr class="separator:a73a25c0e072cf8a27a18c17c179b4c19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a631ed991bdffb1e1527d5f075ccf2e19"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a631ed991bdffb1e1527d5f075ccf2e19">hpd_response_get_request_value</a> (const <a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *response, const <a class="el" href="a00030.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> **<a class="el" href="a00012.html#aee53bdc848584e095375d0d39aa400b8">value</a>)</td></tr>
+<tr class="separator:a631ed991bdffb1e1527d5f075ccf2e19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1769890612720a141ca4b8e46e6841f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a1769890612720a141ca4b8e46e6841f9">hpd_response_get_status</a> (const <a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *response, <a class="el" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a> *status)</td></tr>
+<tr class="memdesc:a1769890612720a141ca4b8e46e6841f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">[hpd_request_t functions]  <a href="#a1769890612720a141ca4b8e46e6841f9">More...</a><br /></td></tr>
+<tr class="separator:a1769890612720a141ca4b8e46e6841f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c98cef4689f6ba3a7debc96b43a9dac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#a7c98cef4689f6ba3a7debc96b43a9dac">hpd_response_get_value</a> (const <a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *response, const <a class="el" href="a00030.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> **<a class="el" href="a00012.html#aee53bdc848584e095375d0d39aa400b8">value</a>)</td></tr>
+<tr class="separator:a7c98cef4689f6ba3a7debc96b43a9dac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac154bd8740424c2a5488b54cbd75f524"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00073.html#ac154bd8740424c2a5488b54cbd75f524">hpd_subscribe</a> (<a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> *listener)</td></tr>
+<tr class="separator:ac154bd8740424c2a5488b54cbd75f524"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="afaa1866a860b3fe73641de3548d66f66"></a>
+<a class="anchor" id="a3578ba442766650f37f8b769950e63a3"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_alloc_request </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_foreach_attached </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> **&#160;</td>
+          <td class="paramtype">const <a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> *&#160;</td>
+          <td class="paramname"><em>listener</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00083_source.html#l00086">86</a> of file <a class="el" href="a00083_source.html">event_api.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a3578ba442766650f37f8b769950e63a3_cgraph.svg" width="100%" height="404"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a3578ba442766650f37f8b769950e63a3_icgraph.svg" width="346" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a49f0552ce2f504f4769612ac6cac6933"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_listener_alloc </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> **&#160;</td>
+          <td class="paramname"><em>listener</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00030.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *&#160;</td>
+          <td class="paramname"><em>hpd</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>[hpd_response_t functions] </p>
+<p>[hpd_listener_t functions] </p>
+
+<p>Definition at line <a class="el" href="a00083_source.html#l00042">42</a> of file <a class="el" href="a00083_source.html">event_api.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a49f0552ce2f504f4769612ac6cac6933_cgraph.svg" width="323" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a49f0552ce2f504f4769612ac6cac6933_icgraph.svg" width="322" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a96236544de2ed9cacdc03b5dedeb6d4e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_listener_free </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> *&#160;</td>
+          <td class="paramname"><em>listener</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00083_source.html#l00074">74</a> of file <a class="el" href="a00083_source.html">event_api.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a96236544de2ed9cacdc03b5dedeb6d4e_cgraph.svg" width="403" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a96236544de2ed9cacdc03b5dedeb6d4e_icgraph.svg" width="316" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a977ca101a6df1484a39eeb195e5a047d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_listener_get_data </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> *&#160;</td>
+          <td class="paramname"><em>listener</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void **&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00083_source.html#l00080">80</a> of file <a class="el" href="a00083_source.html">event_api.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a977ca101a6df1484a39eeb195e5a047d_cgraph.svg" width="368" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a6ed81ad49352be61e2a8710624396e93"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_listener_set_data </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> *&#160;</td>
+          <td class="paramname"><em>listener</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00030.html#a48ae026294e911f802713816b5abd57f">hpd_free_f</a>&#160;</td>
+          <td class="paramname"><em>on_free</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00083_source.html#l00048">48</a> of file <a class="el" href="a00083_source.html">event_api.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a6ed81ad49352be61e2a8710624396e93_cgraph.svg" width="368" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a6ed81ad49352be61e2a8710624396e93_icgraph.svg" width="344" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a5b21c4186d69cad1bc1eee041ce4c220"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_listener_set_device_callback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> *&#160;</td>
+          <td class="paramname"><em>listener</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00030.html#a1ccb530f148c41890c45396b906b8b8b">hpd_device_f</a>&#160;</td>
+          <td class="paramname"><em>on_attach</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00030.html#a1ccb530f148c41890c45396b906b8b8b">hpd_device_f</a>&#160;</td>
+          <td class="paramname"><em>on_detach</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00083_source.html#l00059">59</a> of file <a class="el" href="a00083_source.html">event_api.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a5b21c4186d69cad1bc1eee041ce4c220_cgraph.svg" width="400" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a5b21c4186d69cad1bc1eee041ce4c220_icgraph.svg" width="358" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="aaf1e38cf565af096ee9baf39f4e6bba8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_listener_set_value_callback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> *&#160;</td>
+          <td class="paramname"><em>listener</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00030.html#a68fdc3cf3d04dc731dda2702445ee878">hpd_value_f</a>&#160;</td>
+          <td class="paramname"><em>on_change</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00083_source.html#l00054">54</a> of file <a class="el" href="a00083_source.html">event_api.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_aaf1e38cf565af096ee9baf39f4e6bba8_cgraph.svg" width="386" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_aaf1e38cf565af096ee9baf39f4e6bba8_icgraph.svg" width="350" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a077adc41aa1c0f7270a995ff42420424"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="el" href="a00033.html#a00126">hpd_request</a> </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *&#160;</td>
+          <td class="paramname"><em>request</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00089_source.html#l00062">62</a> of file <a class="el" href="a00089_source.html">request_api.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a077adc41aa1c0f7270a995ff42420424_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a077adc41aa1c0f7270a995ff42420424_icgraph.svg" width="434" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="aa6d853067ae916b9213cd0c936c201c2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_request_alloc </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> **&#160;</td>
           <td class="paramname"><em>request</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="a00021.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="a00030.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> *&#160;</td>
           <td class="paramname"><em>id</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a48b1bff2ed83cd824c21df91b2d74e01">hpd_method_t</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="a00030.html#a48b1bff2ed83cd824c21df91b2d74e01">hpd_method_t</a>&#160;</td>
           <td class="paramname"><em>method</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a0d8f64601cfb69c9ba46470a414f13e6">hpd_response_f</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="a00030.html#ac82f1adb334b52cc66fa6112d367d07a">hpd_response_f</a>&#160;</td>
           <td class="paramname"><em>on_response</em>&#160;</td>
         </tr>
         <tr>
@@ -182,12 +516,14 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00072_source.html#l00038">38</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
+<p>[hpd_request_t functions] </p>
+
+<p>Definition at line <a class="el" href="a00089_source.html#l00035">35</a> of file <a class="el" href="a00089_source.html">request_api.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_afaa1866a860b3fe73641de3548d66f66_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_aa6d853067ae916b9213cd0c936c201c2_cgraph.svg" width="100%" height="556"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </p>
@@ -195,83 +531,33 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_afaa1866a860b3fe73641de3548d66f66_icgraph.svg" width="606" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_aa6d853067ae916b9213cd0c936c201c2_icgraph.svg" width="467" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a6bf78b6455bffb23cdea87114d97b5c0"></a>
+<a class="anchor" id="a70445c0ba17e60a009c9557ec0dd7d3b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_alloc_response </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_request_free </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> **&#160;</td>
-          <td class="paramname"><em>response</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *&#160;</td>
-          <td class="paramname"><em>request</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a>&#160;</td>
-          <td class="paramname"><em>status</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00072_source.html#l00109">109</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a6bf78b6455bffb23cdea87114d97b5c0_cgraph.svg" width="100%" height="546"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a6bf78b6455bffb23cdea87114d97b5c0_icgraph.svg" width="100%" height="404"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="adc90843b331f5522a8d08d6e4219e126"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_free_request </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *&#160;</td>
           <td class="paramname"><em>request</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00072_source.html#l00058">58</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
+<p>Definition at line <a class="el" href="a00089_source.html#l00044">44</a> of file <a class="el" href="a00089_source.html">request_api.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_adc90843b331f5522a8d08d6e4219e126_cgraph.svg" width="100%" height="480"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a70445c0ba17e60a009c9557ec0dd7d3b_cgraph.svg" width="100%" height="480"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </p>
@@ -279,62 +565,34 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_adc90843b331f5522a8d08d6e4219e126_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a70445c0ba17e60a009c9557ec0dd7d3b_icgraph.svg" width="463" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a2477fb8cf085cc2b61dbfacdcdc54b82"></a>
+<a class="anchor" id="ac9eeff8f3e494a62942c2ebed8f05cd9"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_free_response </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_request_set_data </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td>
-          <td class="paramname"><em>response</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00072_source.html#l00122">122</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a2477fb8cf085cc2b61dbfacdcdc54b82_cgraph.svg" width="100%" height="514"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a2477fb8cf085cc2b61dbfacdcdc54b82_icgraph.svg" width="100%" height="518"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a3d3a810e68b6911c634d7b3bf338d25b"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_get_request_method </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *&#160;</td>
-          <td class="paramname"><em>req</em>, </td>
+          <td class="paramtype"><a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a48b1bff2ed83cd824c21df91b2d74e01">hpd_method_t</a> *&#160;</td>
-          <td class="paramname"><em>method</em>&#160;</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00030.html#a48ae026294e911f802713816b5abd57f">hpd_free_f</a>&#160;</td>
+          <td class="paramname"><em>on_free</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -344,68 +602,40 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00072_source.html#l00097">97</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
+<p>Definition at line <a class="el" href="a00089_source.html#l00056">56</a> of file <a class="el" href="a00089_source.html">request_api.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_ac9eeff8f3e494a62942c2ebed8f05cd9_cgraph.svg" width="382" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a3d3a810e68b6911c634d7b3bf338d25b_icgraph.svg" width="367" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_ac9eeff8f3e494a62942c2ebed8f05cd9_icgraph.svg" width="491" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a8805ee9add6ca3590ea27d723ab12c17"></a>
+<a class="anchor" id="af0e001de59db25ddc4a3df544e14c490"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_get_request_service </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_request_set_value </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *&#160;</td>
-          <td class="paramname"><em>req</em>, </td>
+          <td class="paramtype"><a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *&#160;</td>
+          <td class="paramname"><em>request</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="a00021.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> **&#160;</td>
-          <td class="paramname"><em>id</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00072_source.html#l00091">91</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a8805ee9add6ca3590ea27d723ab12c17_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="af691c8f5c5437cea04c9be07adc9ea2e"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_get_request_value </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *&#160;</td>
-          <td class="paramname"><em>req</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> **&#160;</td>
+          <td class="paramtype"><a class="el" href="a00030.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *&#160;</td>
           <td class="paramname"><em>value</em>&#160;</td>
         </tr>
         <tr>
@@ -416,26 +646,34 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00072_source.html#l00103">103</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
+<p>Definition at line <a class="el" href="a00089_source.html#l00050">50</a> of file <a class="el" href="a00089_source.html">request_api.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_af0e001de59db25ddc4a3df544e14c490_cgraph.svg" width="100%" height="429"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_af691c8f5c5437cea04c9be07adc9ea2e_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_af0e001de59db25ddc4a3df544e14c490_icgraph.svg" width="496" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="abfc412dec35fae3b81a84ca0ed120d04"></a>
+<a class="anchor" id="acc5f0ce6e069361330a20015760e5968"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_get_response_request_data </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_response_get_request_data </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td>
           <td class="paramname"><em>response</em>, </td>
         </tr>
         <tr>
@@ -452,32 +690,32 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00072_source.html#l00159">159</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
+<p>Definition at line <a class="el" href="a00089_source.html#l00169">169</a> of file <a class="el" href="a00089_source.html">request_api.c</a>.</p>
 
 <p><div class="dynheader">
-Here is the caller graph for this function:</div>
+Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_abfc412dec35fae3b81a84ca0ed120d04_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_acc5f0ce6e069361330a20015760e5968_cgraph.svg" width="420" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a6e8ffc18249bd1de23d0dfcca64e2fb4"></a>
+<a class="anchor" id="ad1011e309216eeb47ef204a18535d6cf"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_get_response_request_method </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_response_get_request_method </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td>
           <td class="paramname"><em>response</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a48b1bff2ed83cd824c21df91b2d74e01">hpd_method_t</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="a00030.html#a48b1bff2ed83cd824c21df91b2d74e01">hpd_method_t</a> *&#160;</td>
           <td class="paramname"><em>method</em>&#160;</td>
         </tr>
         <tr>
@@ -488,32 +726,32 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00072_source.html#l00171">171</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
+<p>Definition at line <a class="el" href="a00089_source.html#l00181">181</a> of file <a class="el" href="a00089_source.html">request_api.c</a>.</p>
 
 <p><div class="dynheader">
-Here is the caller graph for this function:</div>
+Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a6e8ffc18249bd1de23d0dfcca64e2fb4_icgraph.svg" width="388" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_ad1011e309216eeb47ef204a18535d6cf_cgraph.svg" width="388" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a849046a578beef7ee1c6fb04bab8bdcd"></a>
+<a class="anchor" id="a73a25c0e072cf8a27a18c17c179b4c19"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_get_response_request_service </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_response_get_request_service </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td>
           <td class="paramname"><em>response</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="a00021.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> **&#160;</td>
+          <td class="paramtype">const <a class="el" href="a00030.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> **&#160;</td>
           <td class="paramname"><em>service</em>&#160;</td>
         </tr>
         <tr>
@@ -524,32 +762,32 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00072_source.html#l00165">165</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
+<p>Definition at line <a class="el" href="a00089_source.html#l00175">175</a> of file <a class="el" href="a00089_source.html">request_api.c</a>.</p>
 
 <p><div class="dynheader">
-Here is the caller graph for this function:</div>
+Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a849046a578beef7ee1c6fb04bab8bdcd_icgraph.svg" width="388" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a73a25c0e072cf8a27a18c17c179b4c19_cgraph.svg" width="388" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a670860ca6bd41494ea8e70691fa523bf"></a>
+<a class="anchor" id="a631ed991bdffb1e1527d5f075ccf2e19"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_get_response_request_value </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_response_get_request_value </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td>
           <td class="paramname"><em>response</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> **&#160;</td>
+          <td class="paramtype">const <a class="el" href="a00030.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> **&#160;</td>
           <td class="paramname"><em>value</em>&#160;</td>
         </tr>
         <tr>
@@ -560,32 +798,32 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00072_source.html#l00177">177</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
+<p>Definition at line <a class="el" href="a00089_source.html#l00187">187</a> of file <a class="el" href="a00089_source.html">request_api.c</a>.</p>
 
 <p><div class="dynheader">
-Here is the caller graph for this function:</div>
+Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a670860ca6bd41494ea8e70691fa523bf_icgraph.svg" width="388" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a631ed991bdffb1e1527d5f075ccf2e19_cgraph.svg" width="388" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a8d93933113a085a86976166d63471582"></a>
+<a class="anchor" id="a1769890612720a141ca4b8e46e6841f9"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_get_response_status </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_response_get_status </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td>
           <td class="paramname"><em>response</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a> *&#160;</td>
+          <td class="paramtype"><a class="el" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a> *&#160;</td>
           <td class="paramname"><em>status</em>&#160;</td>
         </tr>
         <tr>
@@ -596,32 +834,43 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00072_source.html#l00147">147</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
+<p>[hpd_request_t functions] </p>
+<p>[hpd_response_t functions] </p>
+
+<p>Definition at line <a class="el" href="a00089_source.html#l00157">157</a> of file <a class="el" href="a00089_source.html">request_api.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a1769890612720a141ca4b8e46e6841f9_cgraph.svg" width="380" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a8d93933113a085a86976166d63471582_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a1769890612720a141ca4b8e46e6841f9_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a64ff807503e29891f9cec69c95529f95"></a>
+<a class="anchor" id="a7c98cef4689f6ba3a7debc96b43a9dac"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_get_response_value </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_response_get_value </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td>
+          <td class="paramtype">const <a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td>
           <td class="paramname"><em>response</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> **&#160;</td>
+          <td class="paramtype">const <a class="el" href="a00030.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> **&#160;</td>
           <td class="paramname"><em>value</em>&#160;</td>
         </tr>
         <tr>
@@ -632,38 +881,46 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00072_source.html#l00153">153</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
+<p>Definition at line <a class="el" href="a00089_source.html#l00163">163</a> of file <a class="el" href="a00089_source.html">request_api.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a7c98cef4689f6ba3a7debc96b43a9dac_cgraph.svg" width="376" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a64ff807503e29891f9cec69c95529f95_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a7c98cef4689f6ba3a7debc96b43a9dac_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a49ae36dd88ac39bfa09a7cfc34323872"></a>
+<a class="anchor" id="ac154bd8740424c2a5488b54cbd75f524"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_request </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_subscribe </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *&#160;</td>
-          <td class="paramname"><em>request</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a> *&#160;</td>
+          <td class="paramname"><em>listener</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00072_source.html#l00256">256</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
+<p>Definition at line <a class="el" href="a00083_source.html#l00065">65</a> of file <a class="el" href="a00083_source.html">event_api.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a49ae36dd88ac39bfa09a7cfc34323872_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_ac154bd8740424c2a5488b54cbd75f524_cgraph.svg" width="283" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
@@ -671,179 +928,7 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a49ae36dd88ac39bfa09a7cfc34323872_icgraph.svg" width="538" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="af9377ab613a971acb84c487a139736d4"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_respond </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td>
-          <td class="paramname"><em>response</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00072_source.html#l00275">275</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_af9377ab613a971acb84c487a139736d4_cgraph.svg" width="100%" height="582"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_af9377ab613a971acb84c487a139736d4_icgraph.svg" width="100%" height="404"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="af2e70ea5267e6e806be3509474d049e0"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_set_request_data </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *&#160;</td>
-          <td class="paramname"><em>request</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#aed058b74824064628a0bf3d07ef9ab02">hpd_free_f</a>&#160;</td>
-          <td class="paramname"><em>on_free</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00072_source.html#l00084">84</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_af2e70ea5267e6e806be3509474d049e0_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_af2e70ea5267e6e806be3509474d049e0_icgraph.svg" width="652" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a12445e4337da47f3a741748f20c1736e"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_set_request_value </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *&#160;</td>
-          <td class="paramname"><em>request</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *&#160;</td>
-          <td class="paramname"><em>value</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00072_source.html#l00069">69</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a12445e4337da47f3a741748f20c1736e_cgraph.svg" width="100%" height="429"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_a12445e4337da47f3a741748f20c1736e_icgraph.svg" width="626" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a2e2a34ba3b39d7bebfd5971943c4df25"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> request_set_response_value </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td>
-          <td class="paramname"><em>response</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *&#160;</td>
-          <td class="paramname"><em>value</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00072_source.html#l00132">132</a> of file <a class="el" href="a00072_source.html">request.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a2e2a34ba3b39d7bebfd5971943c4df25_cgraph.svg" width="100%" height="429"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00073_a2e2a34ba3b39d7bebfd5971943c4df25_icgraph.svg" width="100%" height="366"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00073_ac154bd8740424c2a5488b54cbd75f524_icgraph.svg" width="302" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
@@ -853,7 +938,7 @@ Here is the caller graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:24 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:25 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

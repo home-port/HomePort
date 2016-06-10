@@ -1,7 +1,0 @@
-<map id="get_mt_loop" name="get_mt_loop">
-<area shape="rect" id="node2" href="$a00031.html#ad1803275aed905051c4d618367423cc9" title="basic_get_contains_test" alt="" coords="147,31,309,57"/>
-<area shape="rect" id="node6" href="$a00031.html#a8261f9c3d2b399387668421b4db70342" title="set_bad_multithreaded\l_result" alt="" coords="151,82,305,123"/>
-<area shape="rect" id="node3" href="$a00031.html#adee3ed193c880b748e304af40508a8f9" title="simple_get_request" alt="" coords="357,5,492,32"/>
-<area shape="rect" id="node5" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="403,56,447,83"/>
-<area shape="rect" id="node4" href="$a00031.html#a7f408e810f259536ad88eb6544321c97" title="data_from_curl" alt="" coords="540,5,648,32"/>
-</map>

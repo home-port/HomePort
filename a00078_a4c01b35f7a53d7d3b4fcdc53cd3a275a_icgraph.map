@@ -1,0 +1,6 @@
+<map id="discovery_set_service_data" name="discovery_set_service_data">
+<area shape="rect" id="node2" href="$a00079.html#a3974326e212a829eef3dc2a4f554ccf0" title="hpd_service_set_data" alt="" coords="237,13,387,39"/>
+<area shape="rect" id="node3" href="$a00013.html#aca3f96055b6405843c652ef5efd1c3e8" title="[create_parameter] " alt="" coords="435,5,581,47"/>
+<area shape="rect" id="node4" href="$a00013.html#abfc239c18fce4bcc601e14074ddfabf8" title="[create_service] " alt="" coords="629,13,812,39"/>
+<area shape="rect" id="node5" href="$a00013.html#a9f84d5de2ac16bde89480bd48efdff51" title="[create_lamp] " alt="" coords="860,13,1019,39"/>
+</map>

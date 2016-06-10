@@ -1,0 +1,20 @@
+<map id="http_request_get_connection" name="http_request_get_connection">
+<area shape="rect" id="node2" href="$a00026.html#a3b100e8d7e1214067cf1b90ad577745c" title="Create the reponse and constructs the status line. " alt="" coords="243,203,381,244"/>
+<area shape="rect" id="node3" href="$a00047.html#a2eb873ac7e610c2dff8e49d216d3aff8" title="handle_request" alt="" coords="429,79,540,106"/>
+<area shape="rect" id="node5" href="$a00034.html#a18db249df9c6c163ca09c0d7fadc3c75" title="rest_reply" alt="" coords="445,265,524,291"/>
+<area shape="rect" id="node7" href="$a00034.html#ac0f2724b4617f1adb53492f1a57a4e4b" title="rest_reply_devices" alt="" coords="805,154,936,181"/>
+<area shape="rect" id="node12" href="$a00034.html#abddef3c3a26e983041c0a09be164cb1b" title="rest_on_response" alt="" coords="808,509,933,535"/>
+<area shape="rect" id="node4" href="$a00047.html#a0ddf1224851353fc92bfbff6f499fa97" title="main" alt="" coords="641,21,692,47"/>
+<area shape="rect" id="node6" href="$a00034.html#a362db74b5ebb509cd4c0032f5704148f" title="rest_reply_internal\l_server_error" alt="" coords="603,257,731,299"/>
+<area shape="rect" id="node16" href="$a00034.html#a937794ed7b34e2fa7c387dee33514c50" title="rest_reply_not_found" alt="" coords="595,71,738,98"/>
+<area shape="rect" id="node17" href="$a00034.html#a463d2bdadd3f81404991033401807537" title="rest_reply_unsupported\l_media_type" alt="" coords="588,324,745,365"/>
+<area shape="rect" id="node18" href="$a00034.html#a84fea4d27b81d8ec1426196dc58d4351" title="rest_reply_bad_request" alt="" coords="588,449,745,475"/>
+<area shape="rect" id="node19" href="$a00034.html#aacbd35e3827023f6cef47ee2b866d2d9" title="rest_reply_method_not\l_allowed" alt="" coords="793,88,948,129"/>
+<area shape="rect" id="node8" href="$a00034.html#a2731aca6e6807e771bcf9c94dbec968c" title="rest_on_req_hdr_cmpl" alt="" coords="996,154,1147,181"/>
+<area shape="rect" id="node10" href="$a00034.html#a5b0ee1ed2f7ec4f1d37f392419f9fdf8" title="rest_on_free" alt="" coords="823,407,918,434"/>
+<area shape="rect" id="node11" href="$a00034.html#a1ef7ff8e866ae31ab0edb443eb4777a1" title="rest_on_req_cmpl" alt="" coords="1009,433,1134,459"/>
+<area shape="rect" id="node13" href="$a00034.html#a29f312bafc931ecd8a0209f0dd3d7e60" title="rest_on_req_begin" alt="" coords="1007,255,1135,282"/>
+<area shape="rect" id="node14" href="$a00034.html#a79a1a85df1eb4e5247b27938ee73e32c" title="rest_on_req_url_cmpl" alt="" coords="797,37,944,63"/>
+<area shape="rect" id="node15" href="$a00034.html#aa7a4e350f3f59e6410ba02d06b1e125f" title="rest_on_req_body" alt="" coords="1009,306,1134,333"/>
+<area shape="rect" id="node9" href="$a00034.html#a02090c3feb19ea4c6e1fa9b5e6392752" title="rest_on_create" alt="" coords="1195,255,1303,282"/>
+</map>

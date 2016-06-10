@@ -1,0 +1,7 @@
+<map id="hpd_curl_ev_handle" name="hpd_curl_ev_handle">
+<area shape="rect" id="node4" href="$a00011.html#a00102" title="{curl_ev\n||}" alt="" coords="273,344,337,421"/>
+<area shape="rect" id="node13" href="$a00017.html#a00110" title="{hpd\n||}" alt="" coords="1017,204,1059,281"/>
+<area shape="rect" id="node10" href="$a00029.html" title="{hpd_module\n||+ TAILQ_ENTRY()\l}" alt="" coords="766,344,899,421"/>
+<area shape="rect" id="node11" href="$a00030.html#a00123" title="[Application API Callbacks] " alt="" coords="726,204,843,281"/>
+<area shape="rect" id="node17" href="$a00018.html#a00113" title="{hpd_configuration\n||}" alt="" coords="1188,344,1312,421"/>
+</map>

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: hpd/include/hpd_daemon_api.h File Reference</title>
+<title>HomePort: common/tcpd/src/tcpd.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,26 +81,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_ab00a9b86cff89a0b86b44294c0aada6.html">hpd</a></li><li class="navelem"><a class="el" href="dir_aba8a382290fd93b3200a2cfbb5130ed.html">include</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_82dcf8865025af0993941f3b37463150.html">tcpd</a></li><li class="navelem"><a class="el" href="dir_710051fa12c48af044e9488b5b409844.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">hpd_daemon_api.h File Reference</div>  </div>
+<div class="title">tcpd.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><div class="dynheader">
-Include dependency graph for hpd_daemon_api.h:</div>
+Include dependency graph for tcpd.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00197.svg" width="178" height="127"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00198.svg" width="100%" height="462"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00192.svg" width="100%" height="507"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </div>
@@ -108,41 +102,82 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3d879947af1cc338c9bb9cf68fcce672"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#a3d879947af1cc338c9bb9cf68fcce672">hpd_alloc</a> (<a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> **<a class="el" href="a00009.html#a00093">hpd</a>)</td></tr>
-<tr class="memdesc:a3d879947af1cc338c9bb9cf68fcce672"><td class="mdescLeft">&#160;</td><td class="mdescRight">[hpd_t functions]  <a href="#a3d879947af1cc338c9bb9cf68fcce672">More...</a><br /></td></tr>
-<tr class="separator:a3d879947af1cc338c9bb9cf68fcce672"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa833627ad45d82173c0caf687cd30126"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#aa833627ad45d82173c0caf687cd30126">hpd_free</a> (<a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *<a class="el" href="a00009.html#a00093">hpd</a>)</td></tr>
-<tr class="separator:aa833627ad45d82173c0caf687cd30126"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6539e14b83acd08c031e8c8813d2b13e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#a6539e14b83acd08c031e8c8813d2b13e">hpd_module</a> (<a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *<a class="el" href="a00009.html#a00093">hpd</a>, const char *id, <a class="el" href="a00021.html#a901efba3ccce913035a8dfbd35f4733d">hpd_module_def_t</a> *module_def)</td></tr>
-<tr class="separator:a6539e14b83acd08c031e8c8813d2b13e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a5e670df4a5790a7955aaef5483c08a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#a4a5e670df4a5790a7955aaef5483c08a">hpd_start</a> (<a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *<a class="el" href="a00009.html#a00093">hpd</a>, int argc, char *argv[])</td></tr>
-<tr class="separator:a4a5e670df4a5790a7955aaef5483c08a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad279f4f771e132927c09bd599fbe2b1b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#ad279f4f771e132927c09bd599fbe2b1b">hpd_stop</a> (<a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *<a class="el" href="a00009.html#a00093">hpd</a>)</td></tr>
-<tr class="separator:ad279f4f771e132927c09bd599fbe2b1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a494a1841a6c8963c10f5d3a6b662f014"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#a494a1841a6c8963c10f5d3a6b662f014">hpd_tcpd_conn_close</a> (<a class="el" href="a00038.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *conn)</td></tr>
+<tr class="memdesc:a494a1841a6c8963c10f5d3a6b662f014"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close a connection, after the remaining data has been sent.  <a href="#a494a1841a6c8963c10f5d3a6b662f014">More...</a><br /></td></tr>
+<tr class="separator:a494a1841a6c8963c10f5d3a6b662f014"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ccd6d1acb1660ec22322af9b6349a40"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#a1ccd6d1acb1660ec22322af9b6349a40">hpd_tcpd_conn_get_ip</a> (<a class="el" href="a00038.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *conn, const char **ip)</td></tr>
+<tr class="memdesc:a1ccd6d1acb1660ec22322af9b6349a40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the IP address of the client.  <a href="#a1ccd6d1acb1660ec22322af9b6349a40">More...</a><br /></td></tr>
+<tr class="separator:a1ccd6d1acb1660ec22322af9b6349a40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6dd6c2cbce932bd1f030098637ab0940"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#a6dd6c2cbce932bd1f030098637ab0940">hpd_tcpd_conn_keep_open</a> (<a class="el" href="a00038.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *conn)</td></tr>
+<tr class="memdesc:a6dd6c2cbce932bd1f030098637ab0940"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable timeout on connection.  <a href="#a6dd6c2cbce932bd1f030098637ab0940">More...</a><br /></td></tr>
+<tr class="separator:a6dd6c2cbce932bd1f030098637ab0940"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58068e1a4c60b401bc6fc99c25e9a3f6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#a58068e1a4c60b401bc6fc99c25e9a3f6">hpd_tcpd_conn_kill</a> (<a class="el" href="a00038.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *conn)</td></tr>
+<tr class="memdesc:a58068e1a4c60b401bc6fc99c25e9a3f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kill and clean up after a connection.  <a href="#a58068e1a4c60b401bc6fc99c25e9a3f6">More...</a><br /></td></tr>
+<tr class="separator:a58068e1a4c60b401bc6fc99c25e9a3f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1d6e9cdd63ecfa1ff92ab0e38122100"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#af1d6e9cdd63ecfa1ff92ab0e38122100">hpd_tcpd_conn_sendf</a> (<a class="el" href="a00038.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *conn, const char *fmt,...)</td></tr>
+<tr class="memdesc:af1d6e9cdd63ecfa1ff92ab0e38122100"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send message on connection.  <a href="#af1d6e9cdd63ecfa1ff92ab0e38122100">More...</a><br /></td></tr>
+<tr class="separator:af1d6e9cdd63ecfa1ff92ab0e38122100"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a222b05aa1f3416a31ddb08b5e2bfbff8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#a222b05aa1f3416a31ddb08b5e2bfbff8">hpd_tcpd_conn_vsendf</a> (<a class="el" href="a00038.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *conn, const char *fmt, va_list vp)</td></tr>
+<tr class="memdesc:a222b05aa1f3416a31ddb08b5e2bfbff8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send message on connection.  <a href="#a222b05aa1f3416a31ddb08b5e2bfbff8">More...</a><br /></td></tr>
+<tr class="separator:a222b05aa1f3416a31ddb08b5e2bfbff8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9b115d7e78545361343a4fd535d79ac"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#af9b115d7e78545361343a4fd535d79ac">hpd_tcpd_create</a> (<a class="el" href="a00038.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> **tcpd, <a class="el" href="a00038.html#aa882aad4fdfe35b24e5d73f956f916dd">hpd_tcpd_settings_t</a> *<a class="el" href="a00012.html#af199db15de773bb97002d69856cd55c0">settings</a>, const <a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *context, <a class="el" href="a00030.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *<a class="el" href="a00040.html#a855923b555731173d3509ecb645de0e0">loop</a>)</td></tr>
+<tr class="memdesc:af9b115d7e78545361343a4fd535d79ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create new tcpd instance.  <a href="#af9b115d7e78545361343a4fd535d79ac">More...</a><br /></td></tr>
+<tr class="separator:af9b115d7e78545361343a4fd535d79ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32fa9556e05236c856f7bdd08a47f5e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#a32fa9556e05236c856f7bdd08a47f5e4">hpd_tcpd_destroy</a> (<a class="el" href="a00038.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> *tcpd)</td></tr>
+<tr class="memdesc:a32fa9556e05236c856f7bdd08a47f5e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy tcpd and free used memory.  <a href="#a32fa9556e05236c856f7bdd08a47f5e4">More...</a><br /></td></tr>
+<tr class="separator:a32fa9556e05236c856f7bdd08a47f5e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae77def0ed256affe27ea6ce37bf0ebf7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#ae77def0ed256affe27ea6ce37bf0ebf7">hpd_tcpd_start</a> (<a class="el" href="a00038.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> *tcpd)</td></tr>
+<tr class="memdesc:ae77def0ed256affe27ea6ce37bf0ebf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start the tcpd.  <a href="#ae77def0ed256affe27ea6ce37bf0ebf7">More...</a><br /></td></tr>
+<tr class="separator:ae77def0ed256affe27ea6ce37bf0ebf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1b6a900f62d2b677480abfb7163b0d0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#ae1b6a900f62d2b677480abfb7163b0d0">hpd_tcpd_stop</a> (<a class="el" href="a00038.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> *tcpd)</td></tr>
+<tr class="memdesc:ae1b6a900f62d2b677480abfb7163b0d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop an already running tcpd.  <a href="#ae1b6a900f62d2b677480abfb7163b0d0">More...</a><br /></td></tr>
+<tr class="separator:ae1b6a900f62d2b677480abfb7163b0d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a531c9877cd100d9f41193324071b20"><td class="memItemLeft" align="right" valign="top">static void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#a3a531c9877cd100d9f41193324071b20">tcpd_get_in_addr</a> (struct sockaddr *sa)</td></tr>
+<tr class="memdesc:a3a531c9877cd100d9f41193324071b20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the in_addr from a sockaddr (IPv4 or IPv6)  <a href="#a3a531c9877cd100d9f41193324071b20">More...</a><br /></td></tr>
+<tr class="separator:a3a531c9877cd100d9f41193324071b20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb961e40817da63331e90988b5ac71db"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#abb961e40817da63331e90988b5ac71db">tcpd_on_ev_conn</a> (<a class="el" href="a00030.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *<a class="el" href="a00040.html#a855923b555731173d3509ecb645de0e0">loop</a>, struct ev_io *watcher, int revents)</td></tr>
+<tr class="memdesc:abb961e40817da63331e90988b5ac71db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise and accept connection.  <a href="#abb961e40817da63331e90988b5ac71db">More...</a><br /></td></tr>
+<tr class="separator:abb961e40817da63331e90988b5ac71db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf33f6d087797ec03366e58ff1dd3b10"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#adf33f6d087797ec03366e58ff1dd3b10">tcpd_on_ev_recv</a> (<a class="el" href="a00030.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *<a class="el" href="a00040.html#a855923b555731173d3509ecb645de0e0">loop</a>, struct ev_io *watcher, int revents)</td></tr>
+<tr class="memdesc:adf33f6d087797ec03366e58ff1dd3b10"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recieve callback for io-watcher.  <a href="#adf33f6d087797ec03366e58ff1dd3b10">More...</a><br /></td></tr>
+<tr class="separator:adf33f6d087797ec03366e58ff1dd3b10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a315426573cd6d02c940c3af0e9444962"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#a315426573cd6d02c940c3af0e9444962">tcpd_on_ev_send</a> (<a class="el" href="a00030.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *<a class="el" href="a00040.html#a855923b555731173d3509ecb645de0e0">loop</a>, struct ev_io *watcher, int revents)</td></tr>
+<tr class="memdesc:a315426573cd6d02c940c3af0e9444962"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send callback for io-watcher.  <a href="#a315426573cd6d02c940c3af0e9444962">More...</a><br /></td></tr>
+<tr class="separator:a315426573cd6d02c940c3af0e9444962"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a238701c30010d2d01945727348f6ad1c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00059.html#a238701c30010d2d01945727348f6ad1c">tcpd_on_ev_timeout</a> (<a class="el" href="a00030.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *<a class="el" href="a00040.html#a855923b555731173d3509ecb645de0e0">loop</a>, struct ev_timer *watcher, int revents)</td></tr>
+<tr class="memdesc:a238701c30010d2d01945727348f6ad1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timeout callback for timeout watcher.  <a href="#a238701c30010d2d01945727348f6ad1c">More...</a><br /></td></tr>
+<tr class="separator:a238701c30010d2d01945727348f6ad1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a3d879947af1cc338c9bb9cf68fcce672"></a>
+<a class="anchor" id="a494a1841a6c8963c10f5d3a6b662f014"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_alloc </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_tcpd_conn_close </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> **&#160;</td>
-          <td class="paramname"><em>hpd</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="a00038.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *&#160;</td>
+          <td class="paramname"><em>conn</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>[hpd_t functions] </p>
+<p>Close a connection, after the remaining data has been sent. </p>
+<p>This sets the close flag on a connection. The connection will be closed after the remaining messages has been sent. If there is no waiting messages the connection will be closed instantly.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">conn</td><td>The connection to close </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p>Definition at line <a class="el" href="a00062_source.html#l00035">35</a> of file <a class="el" href="a00062_source.html">daemon_api.c</a>.</p>
+<p>Definition at line <a class="el" href="a00059_source.html#l00581">581</a> of file <a class="el" href="a00059_source.html">tcpd.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_a3d879947af1cc338c9bb9cf68fcce672_cgraph.svg" width="347" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_a494a1841a6c8963c10f5d3a6b662f014_cgraph.svg" width="432" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
@@ -150,33 +185,123 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_a3d879947af1cc338c9bb9cf68fcce672_icgraph.svg" width="192" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00059_a494a1841a6c8963c10f5d3a6b662f014_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="aa833627ad45d82173c0caf687cd30126"></a>
+<a class="anchor" id="a1ccd6d1acb1660ec22322af9b6349a40"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_free </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_tcpd_conn_get_ip </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *&#160;</td>
-          <td class="paramname"><em>hpd</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="a00038.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *&#160;</td>
+          <td class="paramname"><em>conn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char **&#160;</td>
+          <td class="paramname"><em>ip</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the IP address of the client. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">conn</td><td>The connection on which the client is connected.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The IP address in a string. </dd></dl>
+
+<p>Definition at line <a class="el" href="a00059_source.html#l00459">459</a> of file <a class="el" href="a00059_source.html">tcpd.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00059_a1ccd6d1acb1660ec22322af9b6349a40_icgraph.svg" width="100%" height="410"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a6dd6c2cbce932bd1f030098637ab0940"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_tcpd_conn_keep_open </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00038.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *&#160;</td>
+          <td class="paramname"><em>conn</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00062_source.html#l00040">40</a> of file <a class="el" href="a00062_source.html">daemon_api.c</a>.</p>
+<p>Disable timeout on connection. </p>
+<p>Every connection have per default a timeout value, which is set in hpd_tcpd_settings_t. If there is no activity on the connection before the timeout run out the connection is killed. This function disables the timeout, so connections will stay open. A connection will still be killed when the client closes the connection, or kill/close is called.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">conn</td><td>The connection to keep open </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="a00059_source.html#l00479">479</a> of file <a class="el" href="a00059_source.html">tcpd.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00059_a6dd6c2cbce932bd1f030098637ab0940_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a58068e1a4c60b401bc6fc99c25e9a3f6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_tcpd_conn_kill </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00038.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *&#160;</td>
+          <td class="paramname"><em>conn</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Kill and clean up after a connection. </p>
+<p>This function stops the LibEV watchers, closes the socket, and frees the data structures used by a connection.</p>
+<p>Note that you should use hpd_tcpd_conn_close for a graceful closure of the connection, where the remaining data is sent.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">conn</td><td>The connection to kill. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="a00059_source.html#l00608">608</a> of file <a class="el" href="a00059_source.html">tcpd.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_aa833627ad45d82173c0caf687cd30126_cgraph.svg" width="320" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_a58068e1a4c60b401bc6fc99c25e9a3f6_cgraph.svg" width="236" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
@@ -184,34 +309,34 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_aa833627ad45d82173c0caf687cd30126_icgraph.svg" width="187" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00059_a58068e1a4c60b401bc6fc99c25e9a3f6_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a6539e14b83acd08c031e8c8813d2b13e"></a>
+<a class="anchor" id="af1d6e9cdd63ecfa1ff92ab0e38122100"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="el" href="a00020.html">hpd_module</a> </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_tcpd_conn_sendf </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *&#160;</td>
-          <td class="paramname"><em>hpd</em>, </td>
+          <td class="paramtype"><a class="el" href="a00038.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *&#160;</td>
+          <td class="paramname"><em>conn</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>id</em>, </td>
+          <td class="paramname"><em>fmt</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a901efba3ccce913035a8dfbd35f4733d">hpd_module_def_t</a> *&#160;</td>
-          <td class="paramname"><em>module_def</em>&#160;</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -221,12 +346,24 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00062_source.html#l00052">52</a> of file <a class="el" href="a00062_source.html">daemon_api.c</a>.</p>
+<p>Send message on connection. </p>
+<p>This function is used similary to the standard printf function, with a format string and variable arguments. It calls <a class="el" href="a00059.html#a222b05aa1f3416a31ddb08b5e2bfbff8" title="Send message on connection. ">hpd_tcpd_conn_vsendf()</a> to handle the actually sending, see this for more information.</p>
+<p>Connection is kept open for further communication, use hpd_tcpd_conn_close to close it.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">conn</td><td>Connection to send on </td></tr>
+    <tr><td class="paramname">fmt</td><td>Format string</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The same as <a class="el" href="a00059.html#a222b05aa1f3416a31ddb08b5e2bfbff8" title="Send message on connection. ">hpd_tcpd_conn_vsendf()</a> </dd></dl>
+
+<p>Definition at line <a class="el" href="a00059_source.html#l00503">503</a> of file <a class="el" href="a00059_source.html">tcpd.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_a6539e14b83acd08c031e8c8813d2b13e_cgraph.svg" width="388" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_af1d6e9cdd63ecfa1ff92ab0e38122100_cgraph.svg" width="364" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
@@ -234,34 +371,328 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_a6539e14b83acd08c031e8c8813d2b13e_icgraph.svg" width="207" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00059_af1d6e9cdd63ecfa1ff92ab0e38122100_icgraph.svg" width="100%" height="448"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a4a5e670df4a5790a7955aaef5483c08a"></a>
+<a class="anchor" id="a222b05aa1f3416a31ddb08b5e2bfbff8"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_start </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_tcpd_conn_vsendf </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *&#160;</td>
-          <td class="paramname"><em>hpd</em>, </td>
+          <td class="paramtype"><a class="el" href="a00038.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *&#160;</td>
+          <td class="paramname"><em>conn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fmt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">va_list&#160;</td>
+          <td class="paramname"><em>vp</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Send message on connection. </p>
+<p>This function is simiar to the standard vprintf function, with a format string and a list of variable arguments.</p>
+<p>Note that this function only schedules the message to be send. A send watcher on the event loop will trigger the actual sending, when the connection is ready for it.</p>
+<p>Connection is kept open for further communication, use hpd_tcpd_conn_close to close it.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">conn</td><td>Connection to send on </td></tr>
+    <tr><td class="paramname">fmt</td><td>Format string </td></tr>
+    <tr><td class="paramname">arg</td><td>List of arguments</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>zero on success, -1 or the return value of vsprintf on failure </dd></dl>
+
+<p>Definition at line <a class="el" href="a00059_source.html#l00534">534</a> of file <a class="el" href="a00059_source.html">tcpd.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00059_a222b05aa1f3416a31ddb08b5e2bfbff8_icgraph.svg" width="100%" height="448"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="af9b115d7e78545361343a4fd535d79ac"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_tcpd_create </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00038.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> **&#160;</td>
+          <td class="paramname"><em>tcpd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00038.html#aa882aad4fdfe35b24e5d73f956f916dd">hpd_tcpd_settings_t</a> *&#160;</td>
+          <td class="paramname"><em>settings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00030.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *&#160;</td>
+          <td class="paramname"><em>loop</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create new tcpd instance. </p>
+<p>This creates a new tcpd instances, that can be started with <a class="el" href="a00059.html#ae77def0ed256affe27ea6ce37bf0ebf7" title="Start the tcpd. ">hpd_tcpd_start()</a> and stopped with <a class="el" href="a00059.html#ae1b6a900f62d2b677480abfb7163b0d0" title="Stop an already running tcpd. ">hpd_tcpd_stop()</a>. The instance should be destroyed with hpd_tcpd_destroy when not longer needed.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">settings</td><td>The settings for the tcpd. </td></tr>
+    <tr><td class="paramname">loop</td><td>The event loop to run tcpd on.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The new tcpd instance. </dd></dl>
+
+<p>Definition at line <a class="el" href="a00059_source.html#l00269">269</a> of file <a class="el" href="a00059_source.html">tcpd.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_af9b115d7e78545361343a4fd535d79ac_icgraph.svg" width="447" height="114"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a32fa9556e05236c856f7bdd08a47f5e4"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_tcpd_destroy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00038.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> *&#160;</td>
+          <td class="paramname"><em>tcpd</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Destroy tcpd and free used memory. </p>
+<p>This function destroys and frees all connections are instances. The tcpd should be stopped before destroy to properly close all connections and sockets first.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>The tcpd instance to destroy </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="a00059_source.html#l00297">297</a> of file <a class="el" href="a00059_source.html">tcpd.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_a32fa9556e05236c856f7bdd08a47f5e4_cgraph.svg" width="228" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_a32fa9556e05236c856f7bdd08a47f5e4_icgraph.svg" width="631" height="240"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="ae77def0ed256affe27ea6ce37bf0ebf7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_tcpd_start </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00038.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> *&#160;</td>
+          <td class="paramname"><em>tcpd</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Start the tcpd. </p>
+<p>The libev-based tcpd is added to an event loop by a call to this function. It is the caller's resposibility to start the event loop.</p>
+<p>To stop the tcpd again, one may call <a class="el" href="a00059.html#ae1b6a900f62d2b677480abfb7163b0d0" title="Stop an already running tcpd. ">hpd_tcpd_stop()</a>.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>The tcpd instance to start. Created with <a class="el" href="a00059.html#af9b115d7e78545361343a4fd535d79ac" title="Create new tcpd instance. ">hpd_tcpd_create()</a>;</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success, 1 on error. </dd></dl>
+
+<p>Definition at line <a class="el" href="a00059_source.html#l00318">318</a> of file <a class="el" href="a00059_source.html">tcpd.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00059_ae77def0ed256affe27ea6ce37bf0ebf7_cgraph.svg" width="100%" height="480"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_ae77def0ed256affe27ea6ce37bf0ebf7_icgraph.svg" width="426" height="114"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="ae1b6a900f62d2b677480abfb7163b0d0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_tcpd_stop </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00038.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> *&#160;</td>
+          <td class="paramname"><em>tcpd</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Stop an already running tcpd. </p>
+<p>The tcpd, started with <a class="el" href="a00059.html#ae77def0ed256affe27ea6ce37bf0ebf7" title="Start the tcpd. ">hpd_tcpd_start()</a>, may be stopped by calling this function. It will take the tcpd off the event loop and clean up after it.</p>
+<p>This includes killing all connections without waiting for remaining data to be sent.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>The tcpd instance to stop. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="a00059_source.html#l00428">428</a> of file <a class="el" href="a00059_source.html">tcpd.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_ae1b6a900f62d2b677480abfb7163b0d0_cgraph.svg" width="391" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_ae1b6a900f62d2b677480abfb7163b0d0_icgraph.svg" width="520" height="139"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a3a531c9877cd100d9f41193324071b20"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void* tcpd_get_in_addr </td>
+          <td>(</td>
+          <td class="paramtype">struct sockaddr *&#160;</td>
+          <td class="paramname"><em>sa</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the in_addr from a sockaddr (IPv4 or IPv6) </p>
+<p>Get the in_addr for either IPv4 or IPv6. The type depends on the protocal, which is why this returns a void pointer. It works nicely to pass the result of this function as the second argument to inet_ntop().</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sa</td><td>The sockaddr</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An in_addr or in6_addr depending on the protocol. </dd></dl>
+
+<p>Definition at line <a class="el" href="a00059_source.html#l00052">52</a> of file <a class="el" href="a00059_source.html">tcpd.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00059_a3a531c9877cd100d9f41193324071b20_icgraph.svg" width="100%" height="385"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="abb961e40817da63331e90988b5ac71db"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void tcpd_on_ev_conn </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00030.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *&#160;</td>
+          <td class="paramname"><em>loop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct ev_io *&#160;</td>
+          <td class="paramname"><em>watcher</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>argc</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>argv</em>[]&#160;</td>
+          <td class="paramname"><em>revents</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -269,14 +700,30 @@ Here is the caller graph for this function:</div>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00062_source.html#l00084">84</a> of file <a class="el" href="a00062_source.html">daemon_api.c</a>.</p>
+<p>Initialise and accept connection. </p>
+<p>This function is designed to be used as a callback function within LibEV. It will accept the conncetion as described inside the file descripter within the watcher. It will also add timeout and io watchers to the loop, which will handle the further communication with the connection.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loop</td><td>The running event loop. </td></tr>
+    <tr><td class="paramname">watcher</td><td>The watcher that was tiggered on the connection. </td></tr>
+    <tr><td class="paramname">revents</td><td>Not used. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="a00059_source.html#l00193">193</a> of file <a class="el" href="a00059_source.html">tcpd.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00059_a4a5e670df4a5790a7955aaef5483c08a_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_abb961e40817da63331e90988b5ac71db_cgraph.svg" width="595" height="240"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
@@ -284,33 +731,68 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_a4a5e670df4a5790a7955aaef5483c08a_icgraph.svg" width="191" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_abb961e40817da63331e90988b5ac71db_icgraph.svg" width="598" height="114"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="ad279f4f771e132927c09bd599fbe2b1b"></a>
+<a class="anchor" id="adf33f6d087797ec03366e58ff1dd3b10"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_stop </td>
+          <td class="memname">static void tcpd_on_ev_recv </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *&#160;</td>
-          <td class="paramname"><em>hpd</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="a00030.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *&#160;</td>
+          <td class="paramname"><em>loop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">struct ev_io *&#160;</td>
+          <td class="paramname"><em>watcher</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>revents</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00062_source.html#l00090">90</a> of file <a class="el" href="a00062_source.html">daemon_api.c</a>.</p>
+<p>Recieve callback for io-watcher. </p>
+<p>Recieves up to max_data_size (from hpd_tcpd_settings_t) of data from a connection and calls on_recieve with it. Also resets the timeout for the connection, if one.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loop</td><td>The event loop </td></tr>
+    <tr><td class="paramname">watcher</td><td>The io watcher causing the call </td></tr>
+    <tr><td class="paramname">revents</td><td>Not used </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="a00059_source.html#l00074">74</a> of file <a class="el" href="a00059_source.html">tcpd.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_ad279f4f771e132927c09bd599fbe2b1b_cgraph.svg" width="234" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_adf33f6d087797ec03366e58ff1dd3b10_cgraph.svg" width="406" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
@@ -318,7 +800,145 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_ad279f4f771e132927c09bd599fbe2b1b_icgraph.svg" width="312" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00059_adf33f6d087797ec03366e58ff1dd3b10_icgraph.svg" width="100%" height="385"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a315426573cd6d02c940c3af0e9444962"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void tcpd_on_ev_send </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00030.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *&#160;</td>
+          <td class="paramname"><em>loop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct ev_io *&#160;</td>
+          <td class="paramname"><em>watcher</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>revents</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Send callback for io-watcher. </p>
+<p>Sends message stored in send_msg on the connection. If not all the data could be sent at once, the remainer is store in send_msg again and the watcher is not stopped. If a connection is flaggted with close, the connection is closed when all the data has been sent.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loop</td><td>The event loop </td></tr>
+    <tr><td class="paramname">watcher</td><td>The io watcher causing the call </td></tr>
+    <tr><td class="paramname">revents</td><td>Not used </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="a00059_source.html#l00128">128</a> of file <a class="el" href="a00059_source.html">tcpd.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_a315426573cd6d02c940c3af0e9444962_cgraph.svg" width="408" height="63"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00059_a315426573cd6d02c940c3af0e9444962_icgraph.svg" width="100%" height="385"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a238701c30010d2d01945727348f6ad1c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void tcpd_on_ev_timeout </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00030.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *&#160;</td>
+          <td class="paramname"><em>loop</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct ev_timer *&#160;</td>
+          <td class="paramname"><em>watcher</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>revents</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Timeout callback for timeout watcher. </p>
+<p>Kills the connection on timeout</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">loop</td><td>The event loop </td></tr>
+    <tr><td class="paramname">watcher</td><td>The io watcher causing the call </td></tr>
+    <tr><td class="paramname">revents</td><td>Not used </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="a00059_source.html#l00171">171</a> of file <a class="el" href="a00059_source.html">tcpd.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00059_a238701c30010d2d01945727348f6ad1c_cgraph.svg" width="423" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00059_a238701c30010d2d01945727348f6ad1c_icgraph.svg" width="100%" height="385"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </p>
@@ -328,7 +948,7 @@ Here is the caller graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:24 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:25 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

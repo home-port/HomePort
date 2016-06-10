@@ -1,5 +1,8 @@
-<map id="common/httpd/src/httpd_request.h" name="common/httpd/src/httpd_request.h">
-<area shape="rect" id="node2" href="$a00015.html" title="common/httpd/src/httpd.c" alt="" coords="5,102,176,129"/>
-<area shape="rect" id="node3" href="$a00016.html" title="common/httpd/src/httpd\l_request.c" alt="" coords="200,95,360,136"/>
-<area shape="rect" id="node4" href="$a00017.html" title="common/httpd/src/httpd\l_response.c" alt="" coords="384,95,544,136"/>
+<map id="common/httpd/example/greeting.c" name="common/httpd/example/greeting.c">
+<area shape="rect" id="node2" href="$a00027.html" title="hpd_httpd.h" alt="" coords="345,95,435,121"/>
+<area shape="rect" id="node3" href="$a00056.html" title="hpd/common/hpd_map.h" alt="" coords="187,177,353,203"/>
+<area shape="rect" id="node4" href="$a00030.html" title="hpd/hpd_types.h" alt="" coords="5,266,124,293"/>
+<area shape="rect" id="node9" href="$a00048.html" title="hpd/common/hpd_httpd\l_types.h" alt="" coords="524,169,683,211"/>
+<area shape="rect" id="node5" href="$a00055.html" title="hpd/common/hpd_queue.h" alt="" coords="148,266,323,293"/>
+<area shape="rect" id="node10" href="$a00058.html" title="hpd/common/hpd_tcpd\l_types.h" alt="" coords="534,259,689,300"/>
 </map>

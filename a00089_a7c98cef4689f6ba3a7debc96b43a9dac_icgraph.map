@@ -1,0 +1,5 @@
+<map id="hpd_response_get_value" name="hpd_response_get_value">
+<area shape="rect" id="node2" href="$a00034.html#abddef3c3a26e983041c0a09be164cb1b" title="rest_on_response" alt="" coords="220,5,345,32"/>
+<area shape="rect" id="node3" href="$a00034.html#a1ef7ff8e866ae31ab0edb443eb4777a1" title="rest_on_req_cmpl" alt="" coords="393,5,519,32"/>
+<area shape="rect" id="node4" href="$a00034.html#a02090c3feb19ea4c6e1fa9b5e6392752" title="rest_on_create" alt="" coords="567,5,675,32"/>
+</map>

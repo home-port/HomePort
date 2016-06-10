@@ -1,17 +1,51 @@
 <map id="main" name="main">
-<area shape="rect" id="node2" href="$a00047.html#ae30200b9a3a68eb2d06ddbaa38a49ce6" title="on_receive" alt="" coords="121,31,206,57"/>
-<area shape="rect" id="node5" href="$a00047.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1" title="exit_handler" alt="" coords="299,95,391,121"/>
-<area shape="rect" id="node10" href="$a00029.html#af8b7d38067f51f7ee570cb998b92e665" title="Create new tcpd instance. " alt="" coords="104,145,223,172"/>
-<area shape="rect" id="node11" href="$a00029.html#ae77def0ed256affe27ea6ce37bf0ebf7" title="Start the tcpd. " alt="" coords="109,221,217,248"/>
-<area shape="rect" id="node3" href="$a00029.html#af1d6e9cdd63ecfa1ff92ab0e38122100" title="Send message on connection. " alt="" coords="271,19,420,45"/>
-<area shape="rect" id="node4" href="$a00049.html#a222b05aa1f3416a31ddb08b5e2bfbff8" title="Send message on connection. " alt="" coords="468,5,624,32"/>
-<area shape="rect" id="node6" href="$a00029.html#ae1b6a900f62d2b677480abfb7163b0d0" title="Stop an already running tcpd. " alt="" coords="493,107,599,133"/>
-<area shape="rect" id="node9" href="$a00029.html#a32fa9556e05236c856f7bdd08a47f5e4" title="Destroy tcpd and free used memory. " alt="" coords="676,132,801,159"/>
-<area shape="rect" id="node7" href="$a00049.html#a58068e1a4c60b401bc6fc99c25e9a3f6" title="Kill and clean up after a connection. " alt="" coords="672,259,805,285"/>
-<area shape="rect" id="node8" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="853,259,897,285"/>
-<area shape="rect" id="node12" href="$a00049.html#ab4a4e8ef0831797b20bdb331abf9f316" title="Initialise and accept connection. " alt="" coords="299,240,391,267"/>
-<area shape="rect" id="node13" href="$a00049.html#a67d03b167f8adca86cde7eeed5850982" title="Get the in_addr from a sockaddr (IPv4 or IPv6) " alt="" coords="501,208,591,235"/>
-<area shape="rect" id="node14" href="$a00049.html#a40658d68fcbff9425c35176b188f0191" title="Recieve callback for io&#45;watcher. " alt="" coords="501,259,591,285"/>
-<area shape="rect" id="node15" href="$a00049.html#ac92de38ee89f3dac24453a2d8b2f4027" title="Send callback for io&#45;watcher. " alt="" coords="500,360,592,387"/>
-<area shape="rect" id="node16" href="$a00049.html#a00be9f92695597655a179e6f581e5350" title="Timeout callback for timeout watcher. " alt="" coords="493,309,599,336"/>
+<area shape="rect" id="node2" href="$a00047.html#a2eb873ac7e610c2dff8e49d216d3aff8" title="handle_request" alt="" coords="110,214,221,241"/>
+<area shape="rect" id="node21" href="$a00047.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1" title="exit_handler" alt="" coords="316,987,408,1014"/>
+<area shape="rect" id="node26" href="$a00027.html#a1c01ae677a68d0a11edfd93c4aae4929" title="Create a new httpd instance. " alt="" coords="104,1114,227,1141"/>
+<area shape="rect" id="node44" href="$a00027.html#ab26dd9acbd2ec17e5863a50f01e70e65" title="Start a httpd instance. " alt="" coords="109,918,221,945"/>
+<area shape="rect" id="node3" href="$a00027.html#a52623947d02344728eab0b54b56cb623" title="Get the method of the http request. " alt="" coords="285,5,439,47"/>
+<area shape="rect" id="node4" href="$a00027.html#ae55ff43648523d2d14e378f3fce33890" title="Get the URL of this request. " alt="" coords="275,71,449,98"/>
+<area shape="rect" id="node5" href="$a00027.html#a22e218d575f4b42004377a401c38812d" title="Get a linked map of all headers for a request. " alt="" coords="285,123,439,164"/>
+<area shape="rect" id="node6" href="$a00047.html#a11c86e94a014c07292d3d4515ba35245" title="header_printer" alt="" coords="310,189,414,215"/>
+<area shape="rect" id="node7" href="$a00027.html#a3b100e8d7e1214067cf1b90ad577745c" title="Create the reponse and constructs the status line. " alt="" coords="293,375,431,416"/>
+<area shape="rect" id="node13" href="$a00012.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="1149,1013,1193,1039"/>
+<area shape="rect" id="node16" href="$a00027.html#a38a5c180c63086c4c55a595ad3750cf1" title="Send response to client. " alt="" coords="293,507,431,548"/>
+<area shape="rect" id="node8" href="$a00025.html#a4a16719295f2a18fa4e8d08e6afb80f0" title="http_request_get_context" alt="" coords="507,290,677,317"/>
+<area shape="rect" id="node9" href="$a00026.html#ab55da21d4573c8d9c22fa3797f579628" title="Convert a status code to string. " alt="" coords="752,465,888,507"/>
+<area shape="rect" id="node10" href="$a00026.html#a36a5feca39485163b3ef446c9e3171a3" title="Destroy a hpd_httpd_response. " alt="" coords="523,407,661,448"/>
+<area shape="rect" id="node14" href="$a00025.html#a1568fdba259271965551fb5aa1f07006" title="Get the connection of a request. " alt="" coords="497,523,687,550"/>
+<area shape="rect" id="node15" href="$a00026.html#a3aabea0eb8be381d54ece47fa1fd6a75" title="Add header to a response. " alt="" coords="523,341,661,383"/>
+<area shape="rect" id="node11" href="$a00038.html#a494a1841a6c8963c10f5d3a6b662f014" title="Close a connection, after the remaining data has been sent. " alt="" coords="746,414,894,441"/>
+<area shape="rect" id="node12" href="$a00059.html#a58068e1a4c60b401bc6fc99c25e9a3f6" title="Kill and clean up after a connection. " alt="" coords="961,835,1094,862"/>
+<area shape="rect" id="node17" href="$a00026.html#ab770a06a1cbfdebf49acdefe64b115b8" title="Send response to client. " alt="" coords="523,575,661,616"/>
+<area shape="rect" id="node18" href="$a00038.html#a1ccd6d1acb1660ec22322af9b6349a40" title="Get the IP address of the client. " alt="" coords="744,531,896,558"/>
+<area shape="rect" id="node19" href="$a00038.html#af1d6e9cdd63ecfa1ff92ab0e38122100" title="Send message on connection. " alt="" coords="745,582,895,609"/>
+<area shape="rect" id="node20" href="$a00038.html#a222b05aa1f3416a31ddb08b5e2bfbff8" title="Send message on connection. " alt="" coords="742,633,898,659"/>
+<area shape="rect" id="node22" href="$a00027.html#a4404f8d3cbdf72597c7cc5ce8ee96a6a" title="Stop a httpd instance. " alt="" coords="537,987,647,1014"/>
+<area shape="rect" id="node24" href="$a00027.html#a5b2691e281b72e90f2aa231db8368e89" title="Destroy a httpd instance. " alt="" coords="755,1038,885,1065"/>
+<area shape="rect" id="node23" href="$a00038.html#ae1b6a900f62d2b677480abfb7163b0d0" title="Stop an already running tcpd. " alt="" coords="767,987,873,1014"/>
+<area shape="rect" id="node25" href="$a00038.html#a32fa9556e05236c856f7bdd08a47f5e4" title="Destroy tcpd and free used memory. " alt="" coords="965,987,1090,1014"/>
+<area shape="rect" id="node27" href="$a00024.html#a117b36b86e1c36650012fe6224aadead" title="Callback for tcpd library. " alt="" coords="299,1203,425,1230"/>
+<area shape="rect" id="node39" href="$a00024.html#a73c9944cccec5706452946dfe70ffe34" title="Callback for tcpd library. " alt="" coords="301,1279,423,1306"/>
+<area shape="rect" id="node41" href="$a00024.html#ae4d4180d5b5dbc0a54bc3f5fddc0daee" title="Callback for tcpd library. " alt="" coords="521,1139,663,1166"/>
+<area shape="rect" id="node42" href="$a00038.html#af9b115d7e78545361343a4fd535d79ac" title="Create new tcpd instance. " alt="" coords="303,1038,421,1065"/>
+<area shape="rect" id="node43" href="$a00024.html#a5b2691e281b72e90f2aa231db8368e89" title="Destroy a httpd instance. " alt="" coords="755,1089,885,1115"/>
+<area shape="rect" id="node28" href="$a00025.html#a2b7dc9cb81835f2befb01fda20cc484c" title="Create a new ws_request. " alt="" coords="523,1241,661,1267"/>
+<area shape="rect" id="node29" href="$a00025.html#a11fcfe717335f583e23d524563c334b1" title="Callback for URL parser. " alt="" coords="735,1291,905,1318"/>
+<area shape="rect" id="node30" href="$a00025.html#aa1a343cae2ed36c50eb1052da871a9ad" title="Callback for URL parser. " alt="" coords="747,1342,893,1369"/>
+<area shape="rect" id="node31" href="$a00041.html#a0f2a1aab5956dfd017eec281492780e2" title="Create URL parser instance. " alt="" coords="988,1401,1067,1427"/>
+<area shape="rect" id="node32" href="$a00025.html#abdc31e7d6e3800ddd79939673452f59c" title="Callback for the header parser. " alt="" coords="953,1292,1101,1333"/>
+<area shape="rect" id="node33" href="$a00015.html#a9d47fcb8466bd141a4c89e37a6bc561b" title="hp_create" alt="" coords="781,1393,859,1419"/>
+<area shape="rect" id="node34" href="$a00056.html#a8d23b888fb4bb3f951c7d48f1928ee9a" title="hpd_map_alloc" alt="" coords="765,1241,875,1267"/>
+<area shape="rect" id="node35" href="$a00025.html#aa1cd13c07d2d143d8a989a651a57e497" title="Destroy a ws_request. " alt="" coords="748,1139,892,1166"/>
+<area shape="rect" id="node36" href="$a00041.html#ab65667fa4439ff9bc0623991404a31bd" title="Destroy URL parser instance. " alt="" coords="984,1241,1071,1267"/>
+<area shape="rect" id="node37" href="$a00056.html#a195d511a075f2349200563af1c5d1fd7" title="hpd_map_free" alt="" coords="975,1089,1079,1115"/>
+<area shape="rect" id="node38" href="$a00015.html#a44d5834ea8c85b0b95edacc546a4267d" title="hp_destroy" alt="" coords="984,1139,1071,1166"/>
+<area shape="rect" id="node40" href="$a00025.html#afdaa7923045461457ad9c7aa725de09b" title="Parse a new chunk of the message. " alt="" coords="525,1291,659,1318"/>
+<area shape="rect" id="node45" href="$a00038.html#ae77def0ed256affe27ea6ce37bf0ebf7" title="Start the tcpd. " alt="" coords="308,893,416,919"/>
+<area shape="rect" id="node46" href="$a00059.html#abb961e40817da63331e90988b5ac71db" title="Initialise and accept connection. " alt="" coords="530,842,654,869"/>
+<area shape="rect" id="node47" href="$a00059.html#a3a531c9877cd100d9f41193324071b20" title="Get the in_addr from a sockaddr (IPv4 or IPv6) " alt="" coords="759,937,881,963"/>
+<area shape="rect" id="node48" href="$a00059.html#adf33f6d087797ec03366e58ff1dd3b10" title="Recieve callback for io&#45;watcher. " alt="" coords="759,835,881,862"/>
+<area shape="rect" id="node49" href="$a00059.html#a315426573cd6d02c940c3af0e9444962" title="Send callback for io&#45;watcher. " alt="" coords="758,886,882,913"/>
+<area shape="rect" id="node50" href="$a00059.html#a238701c30010d2d01945727348f6ad1c" title="Timeout callback for timeout watcher. " alt="" coords="751,734,889,761"/>
 </map>

@@ -1,7 +1,0 @@
-<map id="url_parser_key_value" name="url_parser_key_value">
-<area shape="rect" id="node2" href="$a00040.html#a64ce145f4bd2b212ac9494fb18b43615" title="Create a new ws_request. " alt="" coords="199,31,336,57"/>
-<area shape="rect" id="node3" href="$a00015.html#acbf369331509bd9760bf346f6292376a" title="Callback for tcpd library. " alt="" coords="384,31,473,57"/>
-<area shape="rect" id="node4" href="$a00015.html#a8287f77cb41a94d39f282b607616df70" title="Create a new httpd instance. " alt="" coords="521,31,644,57"/>
-<area shape="rect" id="node5" href="$a00038.html#a0ddf1224851353fc92bfbff6f499fa97" title="main" alt="" coords="701,5,752,32"/>
-<area shape="rect" id="node6" href="$a00025.html#a665691f420dff4eebb8f4b4af62d7a49" title="on_start" alt="" coords="692,56,761,83"/>
-</map>

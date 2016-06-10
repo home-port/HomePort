@@ -1,0 +1,5 @@
+<map id="hpd_rest_json_get_configuration" name="hpd_rest_json_get_configuration">
+<area shape="rect" id="node2" href="$a00034.html#ac0f2724b4617f1adb53492f1a57a4e4b" title="rest_reply_devices" alt="" coords="263,5,393,32"/>
+<area shape="rect" id="node3" href="$a00034.html#a2731aca6e6807e771bcf9c94dbec968c" title="rest_on_req_hdr_cmpl" alt="" coords="441,5,592,32"/>
+<area shape="rect" id="node4" href="$a00034.html#a02090c3feb19ea4c6e1fa9b5e6392752" title="rest_on_create" alt="" coords="640,5,748,32"/>
+</map>

@@ -1,8 +1,0 @@
-<map id="on_update_socket" name="on_update_socket">
-<area shape="rect" id="node2" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="729,10,773,37"/>
-<area shape="rect" id="node3" href="$a00004.html#ad3467032c766584c58cfcb260904b537" title="on_io" alt="" coords="181,47,235,74"/>
-<area shape="rect" id="node4" href="$a00004.html#a30f7e7259072d4e929092bf994dd0f7e" title="curl_ev_socket_action" alt="" coords="283,61,435,87"/>
-<area shape="rect" id="node5" href="$a00004.html#a17434db8bd6d65f28a654b2ae3708b9b" title="curl_ev_remove_handle" alt="" coords="483,73,641,99"/>
-<area shape="rect" id="node7" href="$a00034.html#a0441303fd5902ddc69a099b8bb8762b5" title="curl_ev_cleanup" alt="" coords="504,22,620,49"/>
-<area shape="rect" id="node6" href="$a00004.html#a3f36a139b8cf22a41850235ce3a3c88c" title="curl_ev_add_next" alt="" coords="689,86,813,113"/>
-</map>

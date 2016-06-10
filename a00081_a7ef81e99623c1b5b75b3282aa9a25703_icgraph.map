@@ -1,0 +1,6 @@
+<map id="event_inform_adapter_attached" name="event_inform_adapter_attached">
+<area shape="rect" id="node2" href="$a00020.html#afa5616fcf36352f0af085bb5f1ac3686" title="discovery_attach_adapter" alt="" coords="200,13,371,39"/>
+<area shape="rect" id="node3" href="$a00079.html#a247f5a01789cd6bd85a2f1238d36c29c" title="hpd_adapter_attach" alt="" coords="419,13,555,39"/>
+<area shape="rect" id="node4" href="$a00013.html#a1a305bf3b6bebda2ca16c8adcdb95239" title="[on_destroy] " alt="" coords="603,5,749,47"/>
+<area shape="rect" id="node5" href="$a00013.html#a9f84d5de2ac16bde89480bd48efdff51" title="[create_lamp] " alt="" coords="797,13,956,39"/>
+</map>

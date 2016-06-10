@@ -1,4 +1,10 @@
-<map id="example/demo/demo_application.h" name="example/demo/demo_application.h">
-<area shape="rect" id="node2" href="$a00053.html" title="example/demo/demo_application.c" alt="" coords="5,80,228,107"/>
-<area shape="rect" id="node3" href="$a00055.html" title="example/demo/main.c" alt="" coords="252,80,403,107"/>
+<map id="common/tcpd/include/hpd/common/hpd_tcpd.h" name="common/tcpd/include/hpd/common/hpd_tcpd.h">
+<area shape="rect" id="node2" href="$a00024.html" title="common/httpd/src/httpd.c" alt="" coords="5,191,176,218"/>
+<area shape="rect" id="node3" href="$a00049.html" title="common/httpd/src/httpd\l_request.h" alt="" coords="200,95,360,136"/>
+<area shape="rect" id="node6" href="$a00057.html" title="common/tcpd/example\l/echo.c" alt="" coords="384,95,539,136"/>
+<area shape="rect" id="node7" href="$a00036.html" title="common/tcpd/src/tcpd\l_intern.h" alt="" coords="573,95,725,136"/>
+<area shape="rect" id="node4" href="$a00025.html" title="common/httpd/src/httpd\l_request.c" alt="" coords="200,184,360,225"/>
+<area shape="rect" id="node5" href="$a00026.html" title="common/httpd/src/httpd\l_response.c" alt="" coords="384,184,544,225"/>
+<area shape="rect" id="node8" href="$a00059.html" title="common/tcpd/src/tcpd.c" alt="" coords="568,191,731,218"/>
+<area shape="rect" id="node9" href="$a00061.html" title="common/tcpd/test/webserver\l_test.cpp" alt="" coords="755,184,946,225"/>
 </map>

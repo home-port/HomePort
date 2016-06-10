@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: hpd_service Struct Reference</title>
+<title>HomePort: common/httpd/src/httpd_response.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -39,8 +39,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
-      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -61,9 +61,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   </div>
   <div id="navrow2" class="tabs2">
     <ul class="tablist">
-      <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
-      <li><a href="classes.html"><span>Data&#160;Structure&#160;Index</span></a></li>
-      <li><a href="functions.html"><span>Data&#160;Fields</span></a></li>
+      <li><a href="files.html"><span>File&#160;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
     </ul>
   </div>
 <!-- window showing the filter options -->
@@ -80,170 +79,603 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_de836088bc1383ea19051eab00d43ec5.html">httpd</a></li><li class="navelem"><a class="el" href="dir_3eb06dbdb8c6f8b7c2db8db660fe1677.html">src</a></li>  </ul>
+</div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Data Fields</a>  </div>
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#define-members">Macros</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">hpd_service Struct Reference</div>  </div>
+<div class="title">httpd_response.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Collaboration diagram for hpd_service:</div>
+<div class="textblock"><div class="dynheader">
+Include dependency graph for httpd_response.c:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00271.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00166.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
+</div>
+<p><a href="a00026_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a375ae6dcf539c0a21b011db501d863f1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#a375ae6dcf539c0a21b011db501d863f1">TAILQ_ENTRY</a> (<a class="el" href="a00026.html">hpd_service</a>) <a class="el" href="a00045.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a></td></tr>
-<tr class="separator:a375ae6dcf539c0a21b011db501d863f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:a00121"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#a00121">hpd_httpd_response</a></td></tr>
+<tr class="memdesc:a00121"><td class="mdescLeft">&#160;</td><td class="mdescRight">A http response.  <a href="a00026.html#a00121">More...</a><br /></td></tr>
+<tr class="separator:a00121"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Data Fields</h2></td></tr>
-<tr class="memitem:a8041826646847ecbff0c0a9342f04a0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a7c26fc93b73c3313d059949298b50359">hpd_action_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#a8041826646847ecbff0c0a9342f04a0d">actions</a> [<a class="el" href="a00021.html#ae5973cb13ba680422f6381e98b783dd1aa248a39ea7ed1f64d1b3fc38009c1924">HPD_M_COUNT</a>]</td></tr>
-<tr class="separator:a8041826646847ecbff0c0a9342f04a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00c66cf4880478c4c5ed578bda9d9d52"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00046.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#a00c66cf4880478c4c5ed578bda9d9d52">attributes</a></td></tr>
-<tr class="separator:a00c66cf4880478c4c5ed578bda9d9d52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5139a8ac55b29a93b582f2fc5b48757"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#af5139a8ac55b29a93b582f2fc5b48757">data</a></td></tr>
-<tr class="separator:af5139a8ac55b29a93b582f2fc5b48757"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af072b8a5af2dc6ca0e3ef4e4b8d75bd5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ac57b7d11418a3c7f1eeaeb3828b33895">hpd_device_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#af072b8a5af2dc6ca0e3ef4e4b8d75bd5">device</a></td></tr>
-<tr class="separator:af072b8a5af2dc6ca0e3ef4e4b8d75bd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32a6ca716a05251aaeb724fa1adea630"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#a32a6ca716a05251aaeb724fa1adea630">id</a></td></tr>
-<tr class="separator:a32a6ca716a05251aaeb724fa1adea630"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a49e1aaa1f56004edfb90ab9089c383f7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#aed058b74824064628a0bf3d07ef9ab02">hpd_free_f</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#a49e1aaa1f56004edfb90ab9089c383f7">on_free</a></td></tr>
-<tr class="separator:a49e1aaa1f56004edfb90ab9089c383f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5cd7c2e24ebc30ddfc9d4c4789df71e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00003.html#a14bd51ff5b11b6cdccfae5f0a9ee046a">parameters_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#aa5cd7c2e24ebc30ddfc9d4c4789df71e">parameters</a></td></tr>
-<tr class="separator:aa5cd7c2e24ebc30ddfc9d4c4789df71e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:aa0a15d8d26d1f45c87370a0f9a080eff"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#aa0a15d8d26d1f45c87370a0f9a080eff">HTTPD_CRLF</a>&#160;&#160;&#160;&quot;\r\n&quot;</td></tr>
+<tr class="separator:aa0a15d8d26d1f45c87370a0f9a080eff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b6a9e29072086fe852d2264c5b3af43"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#a2b6a9e29072086fe852d2264c5b3af43">HTTPD_HTTP_VERSION</a>&#160;&#160;&#160;&quot;HTTP/1.1 &quot;</td></tr>
+<tr class="separator:a2b6a9e29072086fe852d2264c5b3af43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3a6c0d2c0459b52d11d4abe39beec21"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#ad3a6c0d2c0459b52d11d4abe39beec21">XX</a>(num,  str)&#160;&#160;&#160;if(status == num) {return #str;}</td></tr>
+<tr class="separator:ad3a6c0d2c0459b52d11d4abe39beec21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a77d151f684c138f7ecafcd2e1a621ab8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#a77d151f684c138f7ecafcd2e1a621ab8">hpd_httpd_response_add_cookie</a> (<a class="el" href="a00027.html#ae03a2fe34f3ab3d715783d82a5fb9292">hpd_httpd_response_t</a> *res, const char *<a class="el" href="a00051.html#a4618b601e2463984c3c5702ce654053f">field</a>, const char *<a class="el" href="a00012.html#aee53bdc848584e095375d0d39aa400b8">value</a>, const char *expires, const char *max_age, const char *domain, const char *<a class="el" href="a00012.html#a39224cba0b0d8c26394bfc9bd4ad9710">path</a>, int secure, int http_only, const char *extension)</td></tr>
+<tr class="memdesc:a77d151f684c138f7ecafcd2e1a621ab8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add cookie header to response.  <a href="#a77d151f684c138f7ecafcd2e1a621ab8">More...</a><br /></td></tr>
+<tr class="separator:a77d151f684c138f7ecafcd2e1a621ab8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3aabea0eb8be381d54ece47fa1fd6a75"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#a3aabea0eb8be381d54ece47fa1fd6a75">hpd_httpd_response_add_header</a> (<a class="el" href="a00027.html#ae03a2fe34f3ab3d715783d82a5fb9292">hpd_httpd_response_t</a> *res, const char *<a class="el" href="a00051.html#a4618b601e2463984c3c5702ce654053f">field</a>, const char *<a class="el" href="a00012.html#aee53bdc848584e095375d0d39aa400b8">value</a>)</td></tr>
+<tr class="memdesc:a3aabea0eb8be381d54ece47fa1fd6a75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add header to a response.  <a href="#a3aabea0eb8be381d54ece47fa1fd6a75">More...</a><br /></td></tr>
+<tr class="separator:a3aabea0eb8be381d54ece47fa1fd6a75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b100e8d7e1214067cf1b90ad577745c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#a3b100e8d7e1214067cf1b90ad577745c">hpd_httpd_response_create</a> (<a class="el" href="a00027.html#ae03a2fe34f3ab3d715783d82a5fb9292">hpd_httpd_response_t</a> **response, <a class="el" href="a00027.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *req, <a class="el" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a> status)</td></tr>
+<tr class="memdesc:a3b100e8d7e1214067cf1b90ad577745c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the reponse and constructs the status line.  <a href="#a3b100e8d7e1214067cf1b90ad577745c">More...</a><br /></td></tr>
+<tr class="separator:a3b100e8d7e1214067cf1b90ad577745c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36a5feca39485163b3ef446c9e3171a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#a36a5feca39485163b3ef446c9e3171a3">hpd_httpd_response_destroy</a> (<a class="el" href="a00027.html#ae03a2fe34f3ab3d715783d82a5fb9292">hpd_httpd_response_t</a> *res)</td></tr>
+<tr class="memdesc:a36a5feca39485163b3ef446c9e3171a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy a <a class="el" href="a00026.html#a00121" title="A http response. ">hpd_httpd_response</a>.  <a href="#a36a5feca39485163b3ef446c9e3171a3">More...</a><br /></td></tr>
+<tr class="separator:a36a5feca39485163b3ef446c9e3171a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38a5c180c63086c4c55a595ad3750cf1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#a38a5c180c63086c4c55a595ad3750cf1">hpd_httpd_response_sendf</a> (<a class="el" href="a00027.html#ae03a2fe34f3ab3d715783d82a5fb9292">hpd_httpd_response_t</a> *res, const char *fmt,...)</td></tr>
+<tr class="memdesc:a38a5c180c63086c4c55a595ad3750cf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send response to client.  <a href="#a38a5c180c63086c4c55a595ad3750cf1">More...</a><br /></td></tr>
+<tr class="separator:a38a5c180c63086c4c55a595ad3750cf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab770a06a1cbfdebf49acdefe64b115b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#ab770a06a1cbfdebf49acdefe64b115b8">hpd_httpd_response_vsendf</a> (<a class="el" href="a00027.html#ae03a2fe34f3ab3d715783d82a5fb9292">hpd_httpd_response_t</a> *res, const char *fmt, va_list arg)</td></tr>
+<tr class="memdesc:ab770a06a1cbfdebf49acdefe64b115b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send response to client.  <a href="#ab770a06a1cbfdebf49acdefe64b115b8">More...</a><br /></td></tr>
+<tr class="separator:ab770a06a1cbfdebf49acdefe64b115b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab55da21d4573c8d9c22fa3797f579628"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00026.html#ab55da21d4573c8d9c22fa3797f579628">httpd_status_codes_to_str</a> (<a class="el" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a> status)</td></tr>
+<tr class="memdesc:ab55da21d4573c8d9c22fa3797f579628"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a status code to string.  <a href="#ab55da21d4573c8d9c22fa3797f579628">More...</a><br /></td></tr>
+<tr class="separator:ab55da21d4573c8d9c22fa3797f579628"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock">
-<p>Definition at line <a class="el" href="a00003_source.html#l00090">90</a> of file <a class="el" href="a00003_source.html">model.h</a>.</p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a375ae6dcf539c0a21b011db501d863f1"></a>
+<hr/><h2 class="groupheader">Data Structure Documentation</h2>
+<a name="a00121" id="a00121"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">hpd_service::TAILQ_ENTRY </td>
+          <td class="memname">struct hpd_httpd_response</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"><p>A http response. </p>
+<p>A response should be created to an already existing request with <a class="el" href="a00027.html#a3b100e8d7e1214067cf1b90ad577745c" title="Create the reponse and constructs the status line. ">hpd_httpd_response_create()</a>, sent with http_response_sendf() or <a class="el" href="a00027.html#ab770a06a1cbfdebf49acdefe64b115b8" title="Send response to client. ">hpd_httpd_response_vsendf()</a>, and freed with <a class="el" href="a00027.html#a36a5feca39485163b3ef446c9e3171a3" title="Destroy a hpd_httpd_response. ">hpd_httpd_response_destroy()</a>.</p>
+<p>Headers are added with <a class="el" href="a00027.html#a3aabea0eb8be381d54ece47fa1fd6a75" title="Add header to a response. ">hpd_httpd_response_add_header()</a>, if the header is a cookie it can also be added with <a class="el" href="a00027.html#a77d151f684c138f7ecafcd2e1a621ab8" title="Add cookie header to response. ">hpd_httpd_response_add_cookie()</a>.</p>
+<p>The body is sent in chunks by repeating the calls to <a class="el" href="a00027.html#a38a5c180c63086c4c55a595ad3750cf1" title="Send response to client. ">hpd_httpd_response_sendf()</a> and http_response_vsentf(). The status and headers will be sent on the first call. </p>
+
+<p>Definition at line <a class="el" href="a00026_source.html#l00052">52</a> of file <a class="el" href="a00026_source.html">httpd_response.c</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for hpd_httpd_response:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00167.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+<table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a class="anchor" id="a040bdf38a26cc04ab0af6f90e0bf9eb4"></a><a class="el" href="a00038.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *</td>
+<td class="fieldname">
+conn</td>
+<td class="fielddoc">
+The connection to send on. </td></tr>
+<tr><td class="fieldtype">
+<a class="anchor" id="a55d2cabe59fc02946b9461b31a277b81"></a>const <a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *</td>
+<td class="fieldname">
+context</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a class="anchor" id="abdffd44fbf2be33dcf67a032ab78ef59"></a>char *</td>
+<td class="fieldname">
+msg</td>
+<td class="fielddoc">
+Status/headers to send. </td></tr>
+<tr><td class="fieldtype">
+<a class="anchor" id="a34db4b11ab945e8fa9a7f438f25efb8e"></a><a class="el" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a></td>
+<td class="fieldname">
+status</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="aa0a15d8d26d1f45c87370a0f9a080eff"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define HTTPD_CRLF&#160;&#160;&#160;&quot;\r\n&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00026_source.html#l00036">36</a> of file <a class="el" href="a00026_source.html">httpd_response.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2b6a9e29072086fe852d2264c5b3af43"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define HTTPD_HTTP_VERSION&#160;&#160;&#160;&quot;HTTP/1.1 &quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00026_source.html#l00035">35</a> of file <a class="el" href="a00026_source.html">httpd_response.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad3a6c0d2c0459b52d11d4abe39beec21"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define XX</td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00026.html">hpd_service</a>&#160;</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">num, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">str&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td>&#160;&#160;&#160;if(status == num) {return #str;}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a77d151f684c138f7ecafcd2e1a621ab8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_httpd_response_add_cookie </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00027.html#ae03a2fe34f3ab3d715783d82a5fb9292">hpd_httpd_response_t</a> *&#160;</td>
+          <td class="paramname"><em>res</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>field</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>expires</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>max_age</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>domain</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>path</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>secure</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>http_only</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>extension</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add cookie header to response. </p>
+<p>Works similarily to <a class="el" href="a00026.html#a3aabea0eb8be381d54ece47fa1fd6a75" title="Add header to a response. ">hpd_httpd_response_add_header()</a>, but constructs a cookie header based on the details in RFC 6265. Refer to this for the correct syntax of the parameters.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">res</td><td>Http reponse to add cookie to </td></tr>
+    <tr><td class="paramname">field</td><td>The field of the cookie </td></tr>
+    <tr><td class="paramname">value</td><td>The value of the cookie </td></tr>
+    <tr><td class="paramname">expires</td><td>The expiring time as string or NULL to avoid </td></tr>
+    <tr><td class="paramname">max_age</td><td>The maximum age as string or NULL to avoid </td></tr>
+    <tr><td class="paramname">domain</td><td>The domain as string or NULL to avoid </td></tr>
+    <tr><td class="paramname">path</td><td>The path as string or NULL to avoid </td></tr>
+    <tr><td class="paramname">secure</td><td>0 to avoid, any other to add the keyword </td></tr>
+    <tr><td class="paramname">http_only</td><td>0 to avoid, any other to add the keyword </td></tr>
+    <tr><td class="paramname">extension</td><td>The extension as string or NULL to avoid</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success and 1 otherwise </dd></dl>
+
+<p>Definition at line <a class="el" href="a00026_source.html#l00222">222</a> of file <a class="el" href="a00026_source.html">httpd_response.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3aabea0eb8be381d54ece47fa1fd6a75"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_httpd_response_add_header </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00027.html#ae03a2fe34f3ab3d715783d82a5fb9292">hpd_httpd_response_t</a> *&#160;</td>
+          <td class="paramname"><em>res</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>field</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add header to a response. </p>
+<p>This returns an error if any of the send functions has already been called.</p>
+<p>The field/value pair is stored internally in the response.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">res</td><td>The response to add headers to </td></tr>
+    <tr><td class="paramname">field</td><td>The field of the header </td></tr>
+    <tr><td class="paramname">value</td><td>The value of the header</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>0 on success and 1 on failure </dd></dl>
+
+<p>Definition at line <a class="el" href="a00026_source.html#l00178">178</a> of file <a class="el" href="a00026_source.html">httpd_response.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00026_a3aabea0eb8be381d54ece47fa1fd6a75_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a3b100e8d7e1214067cf1b90ad577745c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_httpd_response_create </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00027.html#ae03a2fe34f3ab3d715783d82a5fb9292">hpd_httpd_response_t</a> **&#160;</td>
+          <td class="paramname"><em>response</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00027.html#a04b8577e0552d5fc767484da0f6efefe">hpd_httpd_request_t</a> *&#160;</td>
+          <td class="paramname"><em>req</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a>&#160;</td>
+          <td class="paramname"><em>status</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Create the reponse and constructs the status line. </p>
+<p>Currently it also adds the header "Connection: close", because it do not yet support persistant connections. That is, connection where status and headers are sent multiple times.</p>
+<p>The response is not send before one of the send functions are called, it is possible to call these with a NULL body to send messages without it.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">req</td><td>The http request to repond to </td></tr>
+    <tr><td class="paramname">status</td><td>The status code to respond with</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The http respond created </dd></dl>
+
+<p>Definition at line <a class="el" href="a00026_source.html#l00115">115</a> of file <a class="el" href="a00026_source.html">httpd_response.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00026_a3b100e8d7e1214067cf1b90ad577745c_cgraph.svg" width="100%" height="515"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00026_a3b100e8d7e1214067cf1b90ad577745c_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a36a5feca39485163b3ef446c9e3171a3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_httpd_response_destroy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00027.html#ae03a2fe34f3ab3d715783d82a5fb9292">hpd_httpd_response_t</a> *&#160;</td>
+          <td class="paramname"><em>res</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
+<p>Destroy a <a class="el" href="a00026.html#a00121" title="A http response. ">hpd_httpd_response</a>. </p>
+<p>The will close the connection and free up any memory used by the response.</p>
+<p>Any data sent with <a class="el" href="a00026.html#a38a5c180c63086c4c55a595ad3750cf1" title="Send response to client. ">hpd_httpd_response_sendf()</a> and http_reponse_vsendf() will be sent before the connection is closed.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">res</td><td>The HTTP Response to destroy </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="a00026_source.html#l00089">89</a> of file <a class="el" href="a00026_source.html">httpd_response.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00026_a36a5feca39485163b3ef446c9e3171a3_cgraph.svg" width="619" height="71"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
-<h2 class="groupheader">Field Documentation</h2>
-<a class="anchor" id="a8041826646847ecbff0c0a9342f04a0d"></a>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00026_a36a5feca39485163b3ef446c9e3171a3_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a38a5c180c63086c4c55a595ad3750cf1"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a7c26fc93b73c3313d059949298b50359">hpd_action_t</a> hpd_service::actions[<a class="el" href="a00021.html#ae5973cb13ba680422f6381e98b783dd1aa248a39ea7ed1f64d1b3fc38009c1924">HPD_M_COUNT</a>]</td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_httpd_response_sendf </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00027.html#ae03a2fe34f3ab3d715783d82a5fb9292">hpd_httpd_response_t</a> *&#160;</td>
+          <td class="paramname"><em>res</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fmt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>...</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00003_source.html#l00098">98</a> of file <a class="el" href="a00003_source.html">model.h</a>.</p>
+<p>Send response to client. </p>
+<p>Similar to the standard printf function. See <a class="el" href="a00026.html#ab770a06a1cbfdebf49acdefe64b115b8" title="Send response to client. ">hpd_httpd_response_vsendf()</a> for details.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">res</td><td>The respond to sent </td></tr>
+    <tr><td class="paramname">fmt</td><td>The format string for the body </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="a00026_source.html#l00293">293</a> of file <a class="el" href="a00026_source.html">httpd_response.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00026_a38a5c180c63086c4c55a595ad3750cf1_cgraph.svg" width="100%" height="492"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00026_a38a5c180c63086c4c55a595ad3750cf1_icgraph.svg" width="100%" height="404"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
 
 </div>
 </div>
-<a class="anchor" id="a00c66cf4880478c4c5ed578bda9d9d52"></a>
+<a class="anchor" id="ab770a06a1cbfdebf49acdefe64b115b8"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00046.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a>* hpd_service::attributes</td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_httpd_response_vsendf </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00027.html#ae03a2fe34f3ab3d715783d82a5fb9292">hpd_httpd_response_t</a> *&#160;</td>
+          <td class="paramname"><em>res</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>fmt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">va_list&#160;</td>
+          <td class="paramname"><em>arg</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00003_source.html#l00097">97</a> of file <a class="el" href="a00003_source.html">model.h</a>.</p>
+<p>Send response to client. </p>
+<p>Similar to the standard vprintf functions</p>
+<p>First it sends the status and header lines, if these haven't been sent yet. Then it sends the body as given in the format string and variable arguments.</p>
+<p>If NULL is given as format no body is sent.</p>
+<p>The response is sent delayed, when the connection is ready for it. Likewise the connection is kept open afterwards for further messages.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">res</td><td>The http response to send. </td></tr>
+    <tr><td class="paramname">fmt</td><td>The format string for the body </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="a00026_source.html#l00321">321</a> of file <a class="el" href="a00026_source.html">httpd_response.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00026_ab770a06a1cbfdebf49acdefe64b115b8_cgraph.svg" width="558" height="256"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00026_ab770a06a1cbfdebf49acdefe64b115b8_icgraph.svg" width="100%" height="404"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
 
 </div>
 </div>
-<a class="anchor" id="af5139a8ac55b29a93b582f2fc5b48757"></a>
+<a class="anchor" id="ab55da21d4573c8d9c22fa3797f579628"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void* hpd_service::data</td>
+          <td class="memname">static char* httpd_status_codes_to_str </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a>&#160;</td>
+          <td class="paramname"><em>status</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00003_source.html#l00101">101</a> of file <a class="el" href="a00003_source.html">model.h</a>.</p>
+<p>Convert a status code to string. </p>
+<p>The result is constructed to match the textual status code in the first line in a http response, according to RFC 2616.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Status</td><td>code as enum</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The status code as text </dd></dl>
+
+<p>Definition at line <a class="el" href="a00026_source.html#l00070">70</a> of file <a class="el" href="a00026_source.html">httpd_response.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00026_ab55da21d4573c8d9c22fa3797f579628_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
 
 </div>
 </div>
-<a class="anchor" id="af072b8a5af2dc6ca0e3ef4e4b8d75bd5"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#ac57b7d11418a3c7f1eeaeb3828b33895">hpd_device_t</a>* hpd_service::device</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00003_source.html#l00092">92</a> of file <a class="el" href="a00003_source.html">model.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a32a6ca716a05251aaeb724fa1adea630"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char* hpd_service::id</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00003_source.html#l00096">96</a> of file <a class="el" href="a00003_source.html">model.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a49e1aaa1f56004edfb90ab9089c383f7"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#aed058b74824064628a0bf3d07ef9ab02">hpd_free_f</a> hpd_service::on_free</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00003_source.html#l00100">100</a> of file <a class="el" href="a00003_source.html">model.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aa5cd7c2e24ebc30ddfc9d4c4789df71e"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00003.html#a14bd51ff5b11b6cdccfae5f0a9ee046a">parameters_t</a>* hpd_service::parameters</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00003_source.html#l00094">94</a> of file <a class="el" href="a00003_source.html">model.h</a>.</p>
-
-</div>
-</div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
-<li>hpd/src/<a class="el" href="a00003_source.html">model.h</a></li>
-</ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:33 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:25 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: common/include/hpd_queue.h File Reference</title>
+<title>HomePort: common/curl_ev/src/curl_ev.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,146 +81,288 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_11fbc4217d50ab21044e5ad6614aede5.html">include</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_6dfd4494962228c0e294eec4d0b1c98e.html">curl_ev</a></li><li class="navelem"><a class="el" href="dir_eacbe4268e59df3584cbe4ba0da150d0.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">hpd_queue.h File Reference</div>  </div>
+<div class="title">curl_ev.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><div class="dynheader">
-Include dependency graph for hpd_queue.h:</div>
+Include dependency graph for curl_ev.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00164.svg" width="154" height="127"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00165.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00143.svg" width="100%" height="507"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </div>
 <p><a href="a00045_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:a3e439c9f930e0132d45bdcd720e55aea"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a>&#160;&#160;&#160;tailq</td></tr>
-<tr class="separator:a3e439c9f930e0132d45bdcd720e55aea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af75ae5db28ba4270446d5fa37a38bed2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#af75ae5db28ba4270446d5fa37a38bed2">HPD_TAILQ_FOREACH</a>(VAR,  HEAD)&#160;&#160;&#160;TAILQ_FOREACH(VAR, HEAD, <a class="el" href="a00045.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a>)</td></tr>
-<tr class="separator:af75ae5db28ba4270446d5fa37a38bed2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e835cb54b1fdd221231e2a3294edc6f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#a4e835cb54b1fdd221231e2a3294edc6f">HPD_TAILQ_FOREACH_SAFE</a>(VAR,  HEAD,  TMP)&#160;&#160;&#160;TAILQ_FOREACH_SAFE(VAR, HEAD, <a class="el" href="a00045.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a>, TMP)</td></tr>
-<tr class="separator:a4e835cb54b1fdd221231e2a3294edc6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32b34a6e2544b0eccf9e3134a0bdae2d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#a32b34a6e2544b0eccf9e3134a0bdae2d">HPD_TAILQ_MAP_REMOVE</a>(LIST,  FUNC,  TYPE,  RC)</td></tr>
-<tr class="separator:a32b34a6e2544b0eccf9e3134a0bdae2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:afe0856695882e6b306e8979ff0f6fe2d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#afe0856695882e6b306e8979ff0f6fe2d">curl_ev_create_curl_handle</a> (<a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *handle)</td></tr>
+<tr class="separator:afe0856695882e6b306e8979ff0f6fe2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b9f50b8e3238511c2245847c4ae3a59"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#a0b9f50b8e3238511c2245847c4ae3a59">curl_ev_init_curl_handle</a> (CURL *handle, const <a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *context, void *<a class="el" href="a00012.html#a00104">data</a>)</td></tr>
+<tr class="separator:a0b9f50b8e3238511c2245847c4ae3a59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87b1ef1482263495bc6743746b5730cd"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#a87b1ef1482263495bc6743746b5730cd">curl_ev_on_body</a> (char *buffer, size_t size, size_t nmemb, void *userdata)</td></tr>
+<tr class="separator:a87b1ef1482263495bc6743746b5730cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ced84a42ddb41730c1bd167909740ed"><td class="memItemLeft" align="right" valign="top">static size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#a0ced84a42ddb41730c1bd167909740ed">curl_ev_on_header</a> (char *buffer, size_t size, size_t nmemb, void *userdata)</td></tr>
+<tr class="separator:a0ced84a42ddb41730c1bd167909740ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a944dbf0c1033db3dd6859a34ea58858c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#a944dbf0c1033db3dd6859a34ea58858c">hpd_curl_ev_add_header</a> (<a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *handle, const char *header)</td></tr>
+<tr class="memdesc:a944dbf0c1033db3dd6859a34ea58858c"><td class="mdescLeft">&#160;</td><td class="mdescRight">HPD_E_UNKNOWN: handle may be in an inconsistent state, and should not be added before a call to this function succeeded.  <a href="#a944dbf0c1033db3dd6859a34ea58858c">More...</a><br /></td></tr>
+<tr class="separator:a944dbf0c1033db3dd6859a34ea58858c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad3ddbb29440b4b7b4f1266c0432c60c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#aad3ddbb29440b4b7b4f1266c0432c60c">hpd_curl_ev_cleanup</a> (<a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *handle)</td></tr>
+<tr class="separator:aad3ddbb29440b4b7b4f1266c0432c60c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad789f949e04b88c6f1557a74ee0f2e91"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#ad789f949e04b88c6f1557a74ee0f2e91">hpd_curl_ev_init</a> (<a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> **handle, const <a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *context)</td></tr>
+<tr class="separator:ad789f949e04b88c6f1557a74ee0f2e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac70d723281ab9ce25b60fa74ec86d3ca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#ac70d723281ab9ce25b60fa74ec86d3ca">hpd_curl_ev_set_body_callback</a> (<a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *handle, <a class="el" href="a00043.html#ab10c8c7802a511ded0bd88d6dbb20030">hpd_curl_ev_f</a> on_body)</td></tr>
+<tr class="separator:ac70d723281ab9ce25b60fa74ec86d3ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81fec8ba562eeca1067ad2fdd65738e0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#a81fec8ba562eeca1067ad2fdd65738e0">hpd_curl_ev_set_custom_request</a> (<a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *handle, const char *request)</td></tr>
+<tr class="separator:a81fec8ba562eeca1067ad2fdd65738e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7415ce346390f90593e3ff27a8bd2d4e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#a7415ce346390f90593e3ff27a8bd2d4e">hpd_curl_ev_set_data</a> (<a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *handle, void *<a class="el" href="a00012.html#a00104">data</a>, <a class="el" href="a00043.html#af468f1e2401e99b9e797d10ffda127d8">hpd_curl_ev_free_f</a> on_free)</td></tr>
+<tr class="separator:a7415ce346390f90593e3ff27a8bd2d4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a13479dfe05ea92202cb6ebf3b0bb76ad"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#a13479dfe05ea92202cb6ebf3b0bb76ad">hpd_curl_ev_set_done_callback</a> (<a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *handle, <a class="el" href="a00043.html#af6fb4d7648e868a25f841f44a7b58b9e">hpd_curl_ev_done_f</a> on_done)</td></tr>
+<tr class="separator:a13479dfe05ea92202cb6ebf3b0bb76ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a0a76f2fb00925c9c38682e4edf3e05"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#a0a0a76f2fb00925c9c38682e4edf3e05">hpd_curl_ev_set_header_callback</a> (<a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *handle, <a class="el" href="a00043.html#ab10c8c7802a511ded0bd88d6dbb20030">hpd_curl_ev_f</a> on_header)</td></tr>
+<tr class="separator:a0a0a76f2fb00925c9c38682e4edf3e05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c5bb6cc5c916f01bf2f2d1ef402b2ff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#a5c5bb6cc5c916f01bf2f2d1ef402b2ff">hpd_curl_ev_set_postfields</a> (<a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *handle, const void *<a class="el" href="a00012.html#a00104">data</a>, size_t len)</td></tr>
+<tr class="memdesc:a5c5bb6cc5c916f01bf2f2d1ef402b2ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">HPD_E_UNKNOWN: handle may be in an inconsistent state, and should not be added before a call to this function succeeded.  <a href="#a5c5bb6cc5c916f01bf2f2d1ef402b2ff">More...</a><br /></td></tr>
+<tr class="separator:a5c5bb6cc5c916f01bf2f2d1ef402b2ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fc40e2368ca995b855f490f9a783def"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#a1fc40e2368ca995b855f490f9a783def">hpd_curl_ev_set_url</a> (<a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *handle, const char *<a class="el" href="a00012.html#a8887c2fa1e081a4df18dff878d9ce142">url</a>)</td></tr>
+<tr class="separator:a1fc40e2368ca995b855f490f9a783def"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a76c54ce41dc904a7ed1acf951e3afb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00045.html#a8a76c54ce41dc904a7ed1acf951e3afb">hpd_curl_ev_set_verbose</a> (<a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *handle, long int bool)</td></tr>
+<tr class="separator:a8a76c54ce41dc904a7ed1acf951e3afb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a class="anchor" id="a3e439c9f930e0132d45bdcd720e55aea"></a>
+<h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="afe0856695882e6b306e8979ff0f6fe2d"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">#define HPD_TAILQ_FIELD&#160;&#160;&#160;tailq</td>
+          <td class="memname">static <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_create_curl_handle </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00045_source.html#l00037">37</a> of file <a class="el" href="a00045_source.html">hpd_queue.h</a>.</p>
+<p>Definition at line <a class="el" href="a00045_source.html#l00058">58</a> of file <a class="el" href="a00045_source.html">curl_ev.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00045_afe0856695882e6b306e8979ff0f6fe2d_cgraph.svg" width="534" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00045_afe0856695882e6b306e8979ff0f6fe2d_icgraph.svg" width="310" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
 
 </div>
 </div>
-<a class="anchor" id="af75ae5db28ba4270446d5fa37a38bed2"></a>
+<a class="anchor" id="a0b9f50b8e3238511c2245847c4ae3a59"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">#define HPD_TAILQ_FOREACH</td>
+          <td class="memname">static <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_init_curl_handle </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">VAR, </td>
+          <td class="paramtype">CURL *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">HEAD&#160;</td>
+          <td class="paramtype">const <a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;TAILQ_FOREACH(VAR, HEAD, <a class="el" href="a00045.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a>)</td>
+          <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00045_source.html#l00039">39</a> of file <a class="el" href="a00045_source.html">hpd_queue.h</a>.</p>
+<p>Definition at line <a class="el" href="a00045_source.html#l00046">46</a> of file <a class="el" href="a00045_source.html">curl_ev.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00045_a0b9f50b8e3238511c2245847c4ae3a59_cgraph.svg" width="351" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00045_a0b9f50b8e3238511c2245847c4ae3a59_icgraph.svg" width="519" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
 
 </div>
 </div>
-<a class="anchor" id="a4e835cb54b1fdd221231e2a3294edc6f"></a>
+<a class="anchor" id="a87b1ef1482263495bc6743746b5730cd"></a>
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">#define HPD_TAILQ_FOREACH_SAFE</td>
+          <td class="memname">static size_t curl_ev_on_body </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">VAR, </td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">HEAD, </td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">TMP&#160;</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>nmemb</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>userdata</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td>&#160;&#160;&#160;TAILQ_FOREACH_SAFE(VAR, HEAD, <a class="el" href="a00045.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a>, TMP)</td>
+          <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00045_source.html#l00042">42</a> of file <a class="el" href="a00045_source.html">hpd_queue.h</a>.</p>
+<p>Definition at line <a class="el" href="a00045_source.html#l00039">39</a> of file <a class="el" href="a00045_source.html">curl_ev.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00045_a87b1ef1482263495bc6743746b5730cd_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
 
 </div>
 </div>
-<a class="anchor" id="a32b34a6e2544b0eccf9e3134a0bdae2d"></a>
+<a class="anchor" id="a0ced84a42ddb41730c1bd167909740ed"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static size_t curl_ev_on_header </td>
+          <td>(</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>nmemb</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>userdata</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00045_source.html#l00032">32</a> of file <a class="el" href="a00045_source.html">curl_ev.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00045_a0ced84a42ddb41730c1bd167909740ed_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a944dbf0c1033db3dd6859a34ea58858c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define HPD_TAILQ_MAP_REMOVE</td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_curl_ev_add_header </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">LIST, </td>
+          <td class="paramtype"><a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">FUNC, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">TYPE, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">RC&#160;</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>header</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -229,24 +371,325 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span> { \</div>
-<div class="line">    TYPE *obj, *tmp; <a class="code" href="a00045.html#a4e835cb54b1fdd221231e2a3294edc6f">\</a></div>
-<div class="line"><a class="code" href="a00045.html#a4e835cb54b1fdd221231e2a3294edc6f">    HPD_TAILQ_FOREACH_SAFE</a>(obj, (LIST), tmp) { \</div>
-<div class="line">        TAILQ_REMOVE((LIST), obj, <a class="code" href="a00045.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a>); \</div>
-<div class="line">        if (((RC) = (FUNC)(obj))) goto map_error; \</div>
-<div class="line">    } \</div>
-<div class="line">} while(0)</div>
-<div class="ttc" id="a00045_html_a3e439c9f930e0132d45bdcd720e55aea"><div class="ttname"><a href="a00045.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a></div><div class="ttdeci">#define HPD_TAILQ_FIELD</div><div class="ttdef"><b>Definition:</b> <a href="a00045_source.html#l00037">hpd_queue.h:37</a></div></div>
-<div class="ttc" id="a00045_html_a4e835cb54b1fdd221231e2a3294edc6f"><div class="ttname"><a href="a00045.html#a4e835cb54b1fdd221231e2a3294edc6f">HPD_TAILQ_FOREACH_SAFE</a></div><div class="ttdeci">#define HPD_TAILQ_FOREACH_SAFE(VAR, HEAD, TMP)</div><div class="ttdef"><b>Definition:</b> <a href="a00045_source.html#l00042">hpd_queue.h:42</a></div></div>
-</div><!-- fragment -->
-<p>Definition at line <a class="el" href="a00045_source.html#l00045">45</a> of file <a class="el" href="a00045_source.html">hpd_queue.h</a>.</p>
+
+<p>HPD_E_UNKNOWN: handle may be in an inconsistent state, and should not be added before a call to this function succeeded. </p>
+
+<p>Definition at line <a class="el" href="a00045_source.html#l00178">178</a> of file <a class="el" href="a00045_source.html">curl_ev.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aad3ddbb29440b4b7b4f1266c0432c60c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_curl_ev_cleanup </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00045_source.html#l00090">90</a> of file <a class="el" href="a00045_source.html">curl_ev.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00045_aad3ddbb29440b4b7b4f1266c0432c60c_cgraph.svg" width="247" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00045_aad3ddbb29440b4b7b4f1266c0432c60c_icgraph.svg" width="100%" height="541"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="ad789f949e04b88c6f1557a74ee0f2e91"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_curl_ev_init </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> **&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00045_source.html#l00071">71</a> of file <a class="el" href="a00045_source.html">curl_ev.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00045_ad789f949e04b88c6f1557a74ee0f2e91_cgraph.svg" width="100%" height="391"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="ac70d723281ab9ce25b60fa74ec86d3ca"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_curl_ev_set_body_callback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00043.html#ab10c8c7802a511ded0bd88d6dbb20030">hpd_curl_ev_f</a>&#160;</td>
+          <td class="paramname"><em>on_body</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00045_source.html#l00110">110</a> of file <a class="el" href="a00045_source.html">curl_ev.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a81fec8ba562eeca1067ad2fdd65738e0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_curl_ev_set_custom_request </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>request</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00045_source.html#l00124">124</a> of file <a class="el" href="a00045_source.html">curl_ev.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7415ce346390f90593e3ff27a8bd2d4e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_curl_ev_set_data </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00043.html#af468f1e2401e99b9e797d10ffda127d8">hpd_curl_ev_free_f</a>&#160;</td>
+          <td class="paramname"><em>on_free</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00045_source.html#l00133">133</a> of file <a class="el" href="a00045_source.html">curl_ev.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a13479dfe05ea92202cb6ebf3b0bb76ad"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_curl_ev_set_done_callback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00043.html#af6fb4d7648e868a25f841f44a7b58b9e">hpd_curl_ev_done_f</a>&#160;</td>
+          <td class="paramname"><em>on_done</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00045_source.html#l00117">117</a> of file <a class="el" href="a00045_source.html">curl_ev.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0a0a76f2fb00925c9c38682e4edf3e05"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_curl_ev_set_header_callback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="a00043.html#ab10c8c7802a511ded0bd88d6dbb20030">hpd_curl_ev_f</a>&#160;</td>
+          <td class="paramname"><em>on_header</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00045_source.html#l00103">103</a> of file <a class="el" href="a00045_source.html">curl_ev.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5c5bb6cc5c916f01bf2f2d1ef402b2ff"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_curl_ev_set_postfields </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>HPD_E_UNKNOWN: handle may be in an inconsistent state, and should not be added before a call to this function succeeded. </p>
+
+<p>Definition at line <a class="el" href="a00045_source.html#l00145">145</a> of file <a class="el" href="a00045_source.html">curl_ev.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1fc40e2368ca995b855f490f9a783def"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_curl_ev_set_url </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>url</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00045_source.html#l00155">155</a> of file <a class="el" href="a00045_source.html">curl_ev.c</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8a76c54ce41dc904a7ed1acf951e3afb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_curl_ev_set_verbose </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="a00043.html#aa4f57cfeca8531b1071afb9e70f2d9d5">hpd_curl_ev_handle_t</a> *&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">long int&#160;</td>
+          <td class="paramname"><em>bool</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00045_source.html#l00164">164</a> of file <a class="el" href="a00045_source.html">curl_ev.c</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:23 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:24 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

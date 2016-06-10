@@ -1,0 +1,7 @@
+<map id="hp_create" name="hp_create">
+<area shape="rect" id="node2" href="$a00049.html#a2b7dc9cb81835f2befb01fda20cc484c" title="Create a new ws_request. " alt="" coords="132,31,269,57"/>
+<area shape="rect" id="node3" href="$a00024.html#a117b36b86e1c36650012fe6224aadead" title="Callback for tcpd library. " alt="" coords="317,31,443,57"/>
+<area shape="rect" id="node4" href="$a00024.html#a1c01ae677a68d0a11edfd93c4aae4929" title="Create a new httpd instance. " alt="" coords="491,31,613,57"/>
+<area shape="rect" id="node5" href="$a00047.html#a0ddf1224851353fc92bfbff6f499fa97" title="main" alt="" coords="685,5,736,32"/>
+<area shape="rect" id="node6" href="$a00034.html#afb0f14177aa99ed8b660835d80f0abff" title="rest_on_start" alt="" coords="661,56,760,83"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="curl_ev_on_update_socket" name="curl_ev_on_update_socket">
+<area shape="rect" id="node2" href="$a00011.html#a6347fddf364470dffa858a1c5f94b888" title="curl_ev_get_stopped\l_watcher" alt="" coords="235,107,377,148"/>
+<area shape="rect" id="node9" href="$a00011.html#a76ebc1922932cad58f35111d582da8ed" title="curl_ev_start_watcher" alt="" coords="231,173,381,199"/>
+<area shape="rect" id="node10" href="$a00011.html#ad9bd25d76647b2257fe6df8795afd9e7" title="curl_ev_stop_watcher" alt="" coords="429,223,579,250"/>
+<area shape="rect" id="node3" href="$a00012.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="1059,173,1103,199"/>
+<area shape="rect" id="node4" href="$a00011.html#a6397c61c42e9a1418c14c6e6a973a965" title="curl_ev_on_io" alt="" coords="453,93,555,119"/>
+<area shape="rect" id="node5" href="$a00011.html#a30f7e7259072d4e929092bf994dd0f7e" title="curl_ev_socket_action" alt="" coords="627,82,779,109"/>
+<area shape="rect" id="node6" href="$a00011.html#a51a40a6c8c1a8ecd90e288ab02687ad3" title="hpd_curl_ev_remove\l_handle" alt="" coords="827,5,970,47"/>
+<area shape="rect" id="node8" href="$a00043.html#aad3ddbb29440b4b7b4f1266c0432c60c" title="hpd_curl_ev_cleanup" alt="" coords="827,122,971,149"/>
+<area shape="rect" id="node7" href="$a00011.html#a3f36a139b8cf22a41850235ce3a3c88c" title="curl_ev_add_next" alt="" coords="1019,42,1143,69"/>
+</map>

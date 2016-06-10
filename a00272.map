@@ -1,8 +1,11 @@
-<map id="hpd_tcpd_conn" name="hpd_tcpd_conn">
-<area shape="rect" id="node8" href="$a00027.html#a00114" title="Instance of a tcpd. " alt="" coords="723,484,797,561"/>
-<area shape="rect" id="node11" href="$a00029.html#a00115" title="Settings struct for tcpd. " alt="" coords="760,653,888,731"/>
-<area shape="rect" id="node16" href="$a00009.html#a00093" title="{hpd\n||}" alt="" coords="1289,204,1332,281"/>
-<area shape="rect" id="node13" href="$a00020.html" title="{hpd_module\n||+ TAILQ_ENTRY()\l}" alt="" coords="839,344,972,421"/>
-<area shape="rect" id="node14" href="$a00021.html#a00106" title="[Application API Callbacks] " alt="" coords="845,204,963,281"/>
-<area shape="rect" id="node19" href="$a00003.html#a00087" title="{configuration\n||}" alt="" coords="1395,344,1491,421"/>
+<map id="hpd/test/daemon_api_test.cpp" name="hpd/test/daemon_api_test.cpp">
+<area shape="rect" id="node3" href="$a00072.html" title="hpd/hpd_api.h" alt="" coords="253,95,356,121"/>
+<area shape="rect" id="node11" href="$a00017.html" title="daemon.h" alt="" coords="648,95,727,121"/>
+<area shape="rect" id="node4" href="$a00071.html" title="hpd/hpd_adapter_api.h" alt="" coords="5,177,159,203"/>
+<area shape="rect" id="node9" href="$a00073.html" title="hpd/hpd_application\l_api.h" alt="" coords="183,169,320,211"/>
+<area shape="rect" id="node10" href="$a00074.html" title="hpd/hpd_daemon_api.h" alt="" coords="247,259,403,285"/>
+<area shape="rect" id="node5" href="$a00075.html" title="hpd/hpd_shared_api.h" alt="" coords="73,259,222,285"/>
+<area shape="rect" id="node6" href="$a00030.html" title="hpd/hpd_types.h" alt="" coords="265,333,384,360"/>
+<area shape="rect" id="node12" href="$a00053.html" title="hpd/common/hpd_common.h" alt="" coords="489,177,680,203"/>
+<area shape="rect" id="node16" href="$a00055.html" title="hpd/common/hpd_queue.h" alt="" coords="704,177,879,203"/>
 </map>

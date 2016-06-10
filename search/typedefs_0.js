@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['adapters_5ft',['adapters_t',['../a00003.html#acfd8972f658aae0a52a3428eb4b881fb',1,'model.h']]],
-  ['argp_5foption_5ft',['argp_option_t',['../a00009.html#a4598d9c07d95ae80d7b8323e0eaba637',1,'daemon.h']]]
+  ['curl_5fev_5fio_5ft',['curl_ev_io_t',['../a00011.html#af8acf137aa339e8738dd5c0c74bf937a',1,'curl_ev_module.c']]],
+  ['curl_5fev_5ft',['curl_ev_t',['../a00046.html#adc0ec940e8db6f92b7ef193825faba4e',1,'curl_ev_intern.h']]]
 ];

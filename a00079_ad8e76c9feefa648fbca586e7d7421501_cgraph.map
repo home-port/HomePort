@@ -1,0 +1,9 @@
+<map id="hpd_first_service" name="hpd_first_service">
+<area shape="rect" id="node2" href="$a00078.html#ab265f0bf4b83ba56c57c6a2ca494be4e" title="discovery_first_hpd\l_service" alt="" coords="175,5,310,47"/>
+<area shape="rect" id="node3" href="$a00020.html#ac0d919fcb7633d9bf5d99cc7ad39fe2e" title="discovery_alloc_sid" alt="" coords="175,71,311,98"/>
+<area shape="rect" id="node4" href="$a00080.html#a9788f216196637a4e9c0a0110e81bab1" title="HPD_E_ALLOC: id might be partially updated. " alt="" coords="361,46,487,73"/>
+<area shape="rect" id="node7" href="$a00080.html#a8922de7d42124afa8ab5fd339fe695ee" title="discovery_free_sid" alt="" coords="359,97,489,123"/>
+<area shape="rect" id="node5" href="$a00080.html#acd5e8c2bf3e761abc7e2fd2294238a74" title="HPD_E_ALLOC: id might be partially updated. " alt="" coords="537,46,664,73"/>
+<area shape="rect" id="node6" href="$a00080.html#af2f553cfc3af4678b87a8fc75f35a5c6" title="HPD_E_ALLOC: id might be partially updated. " alt="" coords="712,46,839,73"/>
+<area shape="rect" id="node8" href="$a00012.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="579,97,623,123"/>
+</map>

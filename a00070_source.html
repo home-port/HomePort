@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: hpd/src/log.h Source File</title>
+<title>HomePort: example/template/template_main.c Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,12 +81,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_ab00a9b86cff89a0b86b44294c0aada6.html">hpd</a></li><li class="navelem"><a class="el" href="dir_3128ee3f19d8356fe970e43f9e882e44.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_cfafba98a580ce4b62f8a6fa96d7cbb0.html">example</a></li><li class="navelem"><a class="el" href="dir_1ef88aeded6ac5f4d6081793163879de.html">template</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">log.h</div>  </div>
+<div class="title">template_main.c</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a00070.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
@@ -102,7 +102,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> * of conditions and the following disclaimer in the documentation and/or other materials</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> * provided with the distribution.</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * THIS SOFTWARE IS PROVidED BY Aalborg University &#39;&#39;AS IS&#39;&#39; AND ANY EXPRESS OR IMPLIED</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * THIS SOFTWARE IS PROVIDED BY Aalborg University &#39;&#39;AS IS&#39;&#39; AND ANY EXPRESS OR IMPLIED</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span></div>
@@ -116,47 +116,52 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * authors and should not be interpreted as representing official policies, either expressed</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#ifndef HOMEPORT_LOG_H</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#define HOMEPORT_LOG_H</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00021.html">hpd_types.h</a>&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;stdarg.h&gt;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="a00074.html">hpd/hpd_daemon_api.h</a>&gt;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00067.html">template_adapter.h</a>&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00069.html">template_application.h</a>&quot;</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="a00070.html#ac8afb3cb1b6299f3a75bec1912102128">   38</a></span>&#160;<span class="preprocessor">#define HPD_LOG_MODULE &quot;hpd&quot;</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="a00070.html#a0ddf1224851353fc92bfbff6f499fa97">   35</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="a00070.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> rc;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="a00017.html#a00110">hpd_t</a> *<a class="code" href="a00017.html#a00110">hpd</a>;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00070.html#a4157fdbde0bd4f1f113ae29cf9ca4aca">log_logf</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *module, <a class="code" href="a00021.html#afc656721774fec3607cb4a1f4c658469">hpd_log_level_t</a> level, <span class="keyword">const</span> <span class="keywordtype">char</span> *file, <span class="keywordtype">int</span> line, <span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00070.html#af3d821ecc912efc276dbc731d52b1bcc">log_vlogf</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *module, <a class="code" href="a00021.html#afc656721774fec3607cb4a1f4c658469">hpd_log_level_t</a> level, <span class="keyword">const</span> <span class="keywordtype">char</span> *file, <span class="keywordtype">int</span> line, <span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, va_list vp);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="comment">// Allocate hpd memory</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00074.html#a3d879947af1cc338c9bb9cf68fcce672">hpd_alloc</a>(&amp;hpd))) <span class="keywordflow">goto</span> error_return;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
-<div class="line"><a name="l00043"></a><span class="lineno"><a class="line" href="a00070.html#a80fcfbaed519c603db2265f2ba74e36a">   43</a></span>&#160;<span class="preprocessor">#define LOG_ERROR(FMT, ...) log_logf(HPD_LOG_MODULE, HPD_L_ERROR, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="a00070.html#aaca52608b133c0c8c876c12e25b27efd">   44</a></span>&#160;<span class="preprocessor">#define LOG_WARN(FMT, ...) log_logf(HPD_LOG_MODULE, HPD_L_WARN , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="a00070.html#aedf192dc33913c1775d2ae2578e7e750">   45</a></span>&#160;<span class="preprocessor">#define LOG_INFO(FMT, ...) log_logf(HPD_LOG_MODULE, HPD_L_INFO , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="a00070.html#acf40f4f753b82acdc1f1e311c9f6ea0e">   46</a></span>&#160;<span class="preprocessor">#define LOG_DEBUG(FMT, ...) log_logf(HPD_LOG_MODULE, HPD_L_DEBUG, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="a00070.html#adc24a43274023d11f6439c175c9c124d">   48</a></span>&#160;<span class="preprocessor">#define LOG_RETURN(E, FMT, ...) do { LOG_DEBUG((FMT), ##__VA_ARGS__); return (E); } while(0)</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="comment">// Add modules</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00074.html#a1360e4af1219978973e0afd4486c489e">hpd_module</a>(hpd, <span class="stringliteral">&quot;template_adapter&quot;</span>, &amp;<a class="code" href="a00066.html#aab404af7ffc41473410cd3d1f66c80da">template_adapter_def</a>))) <span class="keywordflow">goto</span> error_free;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00074.html#a1360e4af1219978973e0afd4486c489e">hpd_module</a>(hpd, <span class="stringliteral">&quot;template_application&quot;</span>, &amp;<a class="code" href="a00068.html#a5b20b028823e2d1b6cb3e36590a64e86">template_app_def</a>))) <span class="keywordflow">goto</span> error_free;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="comment">// Start hpd</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00074.html#a4a5e670df4a5790a7955aaef5483c08a">hpd_start</a>(hpd, argc, argv))) <span class="keywordflow">goto</span> error_free;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="a00070.html#a75936067d8534c3319d57d70fff18b8f">   50</a></span>&#160;<span class="preprocessor">#define LOG_RETURN_E_NULL()  LOG_RETURN(HPD_E_NULL,  &quot;Unexpected null pointer.&quot;)</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="a00070.html#aa3459e6f23717905b1d2e3ddff9bd0c4">   51</a></span>&#160;<span class="preprocessor">#define LOG_RETURN_E_ALLOC() LOG_RETURN(HPD_E_ALLOC, &quot;Unable to allocate memory.&quot;)</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="comment">// Clean up</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00074.html#aa833627ad45d82173c0caf687cd30126">hpd_free</a>(hpd))) <span class="keywordflow">goto</span> error_return;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno"><a class="line" href="a00070.html#ae08b127d02a6aaea19e9410a01558a5d">   53</a></span>&#160;<span class="preprocessor">#define LOG_RETURN_HPD_STOPPED() LOG_RETURN(HPD_E_STATE, &quot;Cannot perform %s() while hpd is stopped.&quot;, __func__)</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordflow">return</span> rc;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#endif //HOMEPORT_LOG_H</span></div>
-<div class="ttc" id="a00021_html_afc656721774fec3607cb4a1f4c658469"><div class="ttname"><a href="a00021.html#afc656721774fec3607cb4a1f4c658469">hpd_log_level_t</a></div><div class="ttdeci">enum hpd_log_level hpd_log_level_t</div><div class="ttdef"><b>Definition:</b> <a href="a00021_source.html#l00169">hpd_types.h:169</a></div></div>
-<div class="ttc" id="a00070_html_a4157fdbde0bd4f1f113ae29cf9ca4aca"><div class="ttname"><a href="a00070.html#a4157fdbde0bd4f1f113ae29cf9ca4aca">log_logf</a></div><div class="ttdeci">hpd_error_t log_logf(const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt,...)</div><div class="ttdef"><b>Definition:</b> <a href="a00069_source.html#l00031">log.c:31</a></div></div>
-<div class="ttc" id="a00021_html"><div class="ttname"><a href="a00021.html">hpd_types.h</a></div></div>
-<div class="ttc" id="a00021_html_a3f117b297a535788094c22da826c2c94"><div class="ttname"><a href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a></div><div class="ttdeci">enum hpd_error hpd_error_t</div><div class="ttdef"><b>Definition:</b> <a href="a00021_source.html#l00167">hpd_types.h:167</a></div></div>
-<div class="ttc" id="a00070_html_af3d821ecc912efc276dbc731d52b1bcc"><div class="ttname"><a href="a00070.html#af3d821ecc912efc276dbc731d52b1bcc">log_vlogf</a></div><div class="ttdeci">hpd_error_t log_vlogf(const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp)</div><div class="ttdef"><b>Definition:</b> <a href="a00069_source.html#l00041">log.c:41</a></div></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    error_free:</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <a class="code" href="a00074.html#aa833627ad45d82173c0caf687cd30126">hpd_free</a>(hpd);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    error_return:</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keywordflow">return</span> rc;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">/// [main]</span></div>
+<div class="ttc" id="a00074_html_a4a5e670df4a5790a7955aaef5483c08a"><div class="ttname"><a href="a00074.html#a4a5e670df4a5790a7955aaef5483c08a">hpd_start</a></div><div class="ttdeci">hpd_error_t hpd_start(hpd_t *hpd, int argc, char *argv[])</div><div class="ttdef"><b>Definition:</b> <a href="a00077_source.html#l00085">daemon_api.c:85</a></div></div>
+<div class="ttc" id="a00067_html"><div class="ttname"><a href="a00067.html">template_adapter.h</a></div></div>
+<div class="ttc" id="a00030_html_a3f117b297a535788094c22da826c2c94"><div class="ttname"><a href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a></div><div class="ttdeci">enum hpd_error hpd_error_t</div><div class="ttdef"><b>Definition:</b> <a href="a00030_source.html#l00167">hpd_types.h:167</a></div></div>
+<div class="ttc" id="a00074_html_a1360e4af1219978973e0afd4486c489e"><div class="ttname"><a href="a00074.html#a1360e4af1219978973e0afd4486c489e">hpd_module</a></div><div class="ttdeci">hpd_error_t hpd_module(hpd_t *hpd, const char *id, const hpd_module_def_t *module_def)</div><div class="ttdef"><b>Definition:</b> <a href="a00077_source.html#l00050">daemon_api.c:50</a></div></div>
+<div class="ttc" id="a00066_html_aab404af7ffc41473410cd3d1f66c80da"><div class="ttname"><a href="a00066.html#aab404af7ffc41473410cd3d1f66c80da">template_adapter_def</a></div><div class="ttdeci">struct hpd_module_def template_adapter_def</div><div class="ttdoc">[declarations] </div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00042">template_adapter.c:42</a></div></div>
+<div class="ttc" id="a00017_html_a00110"><div class="ttname"><a href="a00017.html#a00110">hpd</a></div><div class="ttdef"><b>Definition:</b> <a href="a00017_source.html#l00050">daemon.h:50</a></div></div>
+<div class="ttc" id="a00069_html"><div class="ttname"><a href="a00069.html">template_application.h</a></div></div>
+<div class="ttc" id="a00074_html"><div class="ttname"><a href="a00074.html">hpd_daemon_api.h</a></div></div>
+<div class="ttc" id="a00074_html_a3d879947af1cc338c9bb9cf68fcce672"><div class="ttname"><a href="a00074.html#a3d879947af1cc338c9bb9cf68fcce672">hpd_alloc</a></div><div class="ttdeci">hpd_error_t hpd_alloc(hpd_t **hpd)</div><div class="ttdoc">[hpd_t functions] </div><div class="ttdef"><b>Definition:</b> <a href="a00077_source.html#l00033">daemon_api.c:33</a></div></div>
+<div class="ttc" id="a00070_html_a0ddf1224851353fc92bfbff6f499fa97"><div class="ttname"><a href="a00070.html#a0ddf1224851353fc92bfbff6f499fa97">main</a></div><div class="ttdeci">int main(int argc, char *argv[])</div><div class="ttdoc">[includes] </div><div class="ttdef"><b>Definition:</b> <a href="a00070_source.html#l00035">template_main.c:35</a></div></div>
+<div class="ttc" id="a00074_html_aa833627ad45d82173c0caf687cd30126"><div class="ttname"><a href="a00074.html#aa833627ad45d82173c0caf687cd30126">hpd_free</a></div><div class="ttdeci">hpd_error_t hpd_free(hpd_t *hpd)</div><div class="ttdef"><b>Definition:</b> <a href="a00077_source.html#l00038">daemon_api.c:38</a></div></div>
+<div class="ttc" id="a00068_html_a5b20b028823e2d1b6cb3e36590a64e86"><div class="ttname"><a href="a00068.html#a5b20b028823e2d1b6cb3e36590a64e86">template_app_def</a></div><div class="ttdeci">struct hpd_module_def template_app_def</div><div class="ttdoc">[file] </div><div class="ttdef"><b>Definition:</b> <a href="a00068_source.html#l00038">template_application.c:38</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:23 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:24 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

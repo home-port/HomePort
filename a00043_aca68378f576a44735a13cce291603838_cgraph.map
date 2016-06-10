@@ -1,7 +1,0 @@
-<map id="test_thread" name="test_thread">
-<area shape="rect" id="node2" href="$a00043.html#a008c8f3c3591609617317922b8aa15c2" title="basic_get_test" alt="" coords="140,56,247,83"/>
-<area shape="rect" id="node3" href="$a00043.html#adee3ed193c880b748e304af40508a8f9" title="simple_get_request" alt="" coords="295,31,429,57"/>
-<area shape="rect" id="node6" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="340,81,384,108"/>
-<area shape="rect" id="node4" href="$a00043.html#a7f408e810f259536ad88eb6544321c97" title="data_from_curl" alt="" coords="477,5,585,32"/>
-<area shape="rect" id="node5" href="$a00043.html#a68f272ec552814c8ec9ccda720fe9869" title="data_to_curl" alt="" coords="485,56,578,83"/>
-</map>

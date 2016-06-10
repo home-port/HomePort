@@ -1,9 +1,0 @@
-<map id="hpd_response_free" name="hpd_response_free">
-<area shape="rect" id="node2" href="$a00072.html#a2477fb8cf085cc2b61dbfacdcdc54b82" title="request_free_response" alt="" coords="185,107,340,133"/>
-<area shape="rect" id="node3" href="$a00072.html#adc90843b331f5522a8d08d6e4219e126" title="request_free_request" alt="" coords="388,56,532,83"/>
-<area shape="rect" id="node5" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="1063,132,1107,159"/>
-<area shape="rect" id="node6" href="$a00075.html#a1ec3b1d4547e5080bcec544c877852da" title="value_free" alt="" coords="580,107,663,133"/>
-<area shape="rect" id="node4" href="$a00011.html#a8922de7d42124afa8ab5fd339fe695ee" title="discovery_free_sid" alt="" coords="711,5,841,32"/>
-<area shape="rect" id="node7" href="$a00046.html#a195d511a075f2349200563af1c5d1fd7" title="hpd_map_free" alt="" coords="724,157,828,184"/>
-<area shape="rect" id="node8" href="$a00022.html#ae1085dd4fd40466d18b02ec077ef4d6d" title="hpd_map_remove" alt="" coords="889,208,1015,235"/>
-</map>

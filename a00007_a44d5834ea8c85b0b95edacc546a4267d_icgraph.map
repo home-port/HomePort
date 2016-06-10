@@ -1,9 +1,0 @@
-<map id="hp_destroy" name="hp_destroy">
-<area shape="rect" id="node2" href="$a00040.html#aa1cd13c07d2d143d8a989a651a57e497" title="Destroy a ws_request. " alt="" coords="140,31,284,57"/>
-<area shape="rect" id="node3" href="$a00015.html#a42d99b2bf42ff8eedd6c276afad095e3" title="Callback for tcpd library. " alt="" coords="517,5,624,32"/>
-<area shape="rect" id="node7" href="$a00040.html#a64ce145f4bd2b212ac9494fb18b43615" title="Create a new ws_request. " alt="" coords="332,56,469,83"/>
-<area shape="rect" id="node4" href="$a00015.html#a8287f77cb41a94d39f282b607616df70" title="Create a new httpd instance. " alt="" coords="672,31,795,57"/>
-<area shape="rect" id="node5" href="$a00038.html#a0ddf1224851353fc92bfbff6f499fa97" title="main" alt="" coords="852,5,903,32"/>
-<area shape="rect" id="node6" href="$a00025.html#a665691f420dff4eebb8f4b4af62d7a49" title="on_start" alt="" coords="843,56,912,83"/>
-<area shape="rect" id="node8" href="$a00015.html#acbf369331509bd9760bf346f6292376a" title="Callback for tcpd library. " alt="" coords="526,56,615,83"/>
-</map>

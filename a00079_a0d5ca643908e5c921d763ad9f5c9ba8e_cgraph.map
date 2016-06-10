@@ -1,0 +1,8 @@
+<map id="hpd_adapter_set_attr" name="hpd_adapter_set_attr">
+<area shape="rect" id="node2" href="$a00078.html#a1ace8e13428ce953dc195ed8cf5105c7" title="discovery_set_adapter_attr" alt="" coords="197,56,376,83"/>
+<area shape="rect" id="node3" href="$a00056.html#a230c25a2f8e5de7ce61623a4ce8a809f" title="hpd_map_set" alt="" coords="424,56,524,83"/>
+<area shape="rect" id="node4" href="$a00031.html#ae1085dd4fd40466d18b02ec077ef4d6d" title="hpd_map_remove" alt="" coords="572,5,697,32"/>
+<area shape="rect" id="node6" href="$a00031.html#a68e8a71a4dc9b51ca36d2389ed89b336" title="map_insert" alt="" coords="591,56,678,83"/>
+<area shape="rect" id="node7" href="$a00031.html#ac16b47a5d68b6eaae2e709e1888982fd" title="map_replace" alt="" coords="587,107,683,133"/>
+<area shape="rect" id="node5" href="$a00012.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="745,31,789,57"/>
+</map>

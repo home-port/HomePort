@@ -1,0 +1,6 @@
+<map id="basic_get_test" name="basic_get_test">
+<area shape="rect" id="node2" href="$a00052.html#adee3ed193c880b748e304af40508a8f9" title="simple_get_request" alt="" coords="160,31,295,57"/>
+<area shape="rect" id="node5" href="$a00012.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="205,81,249,108"/>
+<area shape="rect" id="node3" href="$a00052.html#a7f408e810f259536ad88eb6544321c97" title="data_from_curl" alt="" coords="343,5,451,32"/>
+<area shape="rect" id="node4" href="$a00052.html#a68f272ec552814c8ec9ccda720fe9869" title="data_to_curl" alt="" coords="350,56,443,83"/>
+</map>

@@ -1,7 +1,4 @@
-<map id="hpd/include/hpd_api.h" name="hpd/include/hpd_api.h">
-<area shape="rect" id="node2" href="$a00062.html" title="hpd/src/daemon_api.c" alt="" coords="5,87,156,114"/>
-<area shape="rect" id="node3" href="$a00068.html" title="hpd/src/event_api.c" alt="" coords="181,87,317,114"/>
-<area shape="rect" id="node4" href="$a00074.html" title="hpd/src/request_api.c" alt="" coords="341,87,487,114"/>
-<area shape="rect" id="node5" href="$a00077.html" title="hpd/src/value_api.c" alt="" coords="512,87,647,114"/>
-<area shape="rect" id="node6" href="$a00030.html" title="hpd/test/daemon_api\l_test.cpp" alt="" coords="671,80,813,121"/>
+<map id="common/tcpd/src/tcpd_intern.h" name="common/tcpd/src/tcpd_intern.h">
+<area shape="rect" id="node2" href="$a00059.html" title="common/tcpd/src/tcpd.c" alt="" coords="5,102,168,129"/>
+<area shape="rect" id="node3" href="$a00061.html" title="common/tcpd/test/webserver\l_test.cpp" alt="" coords="193,95,383,136"/>
 </map>

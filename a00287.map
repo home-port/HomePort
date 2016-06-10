@@ -1,0 +1,7 @@
+<map id="hpd_adapter" name="hpd_adapter">
+<area shape="rect" id="node7" href="$a00017.html#a00110" title="{hpd\n||}" alt="" coords="730,299,773,377"/>
+<area shape="rect" id="node20" href="$a00012.html#a00104" title="{data\n|+ key\l+ path\l|}" alt="" coords="199,292,258,384"/>
+<area shape="rect" id="node5" href="$a00018.html#a00113" title="{hpd_configuration\n||}" alt="" coords="416,447,540,524"/>
+<area shape="rect" id="node14" href="$a00029.html" title="{hpd_module\n||+ TAILQ_ENTRY()\l}" alt="" coords="877,447,1010,524"/>
+<area shape="rect" id="node15" href="$a00030.html#a00123" title="[Application API Callbacks] " alt="" coords="843,299,961,377"/>
+</map>

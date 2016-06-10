@@ -1,0 +1,20 @@
+<map id="httpd_on_connect" name="httpd_on_connect">
+<area shape="rect" id="node2" href="$a00025.html#a2b7dc9cb81835f2befb01fda20cc484c" title="Create a new ws_request. " alt="" coords="179,216,316,243"/>
+<area shape="rect" id="node3" href="$a00025.html#a11fcfe717335f583e23d524563c334b1" title="Callback for URL parser. " alt="" coords="364,5,535,32"/>
+<area shape="rect" id="node4" href="$a00025.html#aa1a343cae2ed36c50eb1052da871a9ad" title="Callback for URL parser. " alt="" coords="377,216,522,243"/>
+<area shape="rect" id="node10" href="$a00041.html#a0f2a1aab5956dfd017eec281492780e2" title="Create URL parser instance. " alt="" coords="769,57,847,84"/>
+<area shape="rect" id="node11" href="$a00025.html#abdc31e7d6e3800ddd79939673452f59c" title="Callback for the header parser. " alt="" coords="375,150,523,191"/>
+<area shape="rect" id="node13" href="$a00015.html#a9d47fcb8466bd141a4c89e37a6bc561b" title="hp_create" alt="" coords="410,340,489,367"/>
+<area shape="rect" id="node14" href="$a00056.html#a8d23b888fb4bb3f951c7d48f1928ee9a" title="hpd_map_alloc" alt="" coords="395,391,504,417"/>
+<area shape="rect" id="node15" href="$a00025.html#aa1cd13c07d2d143d8a989a651a57e497" title="Destroy a ws_request. " alt="" coords="377,289,521,316"/>
+<area shape="rect" id="node5" href="$a00056.html#a6d8c24cdcb1535f26a772f00d90aecec" title="hpd_map_set_n" alt="" coords="583,212,697,239"/>
+<area shape="rect" id="node6" href="$a00031.html#ae1085dd4fd40466d18b02ec077ef4d6d" title="hpd_map_remove" alt="" coords="745,263,871,289"/>
+<area shape="rect" id="node8" href="$a00031.html#a3e69650cf0b005c3e69ae7787b529a2f" title="map_insert_n" alt="" coords="758,212,858,239"/>
+<area shape="rect" id="node9" href="$a00031.html#ae1f7c19b43bb77ef51958bc91b2910f7" title="map_replace_n" alt="" coords="753,161,863,188"/>
+<area shape="rect" id="node7" href="$a00012.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="919,313,963,340"/>
+<area shape="rect" id="node12" href="$a00056.html#a22cdd4d80a4d9bdccf15c63ff14c66f2" title="hpd_map_get_n" alt="" coords="583,107,697,133"/>
+<area shape="rect" id="node16" href="$a00041.html#ab65667fa4439ff9bc0623991404a31bd" title="Destroy URL parser instance. " alt="" coords="597,289,683,316"/>
+<area shape="rect" id="node17" href="$a00056.html#a195d511a075f2349200563af1c5d1fd7" title="hpd_map_free" alt="" coords="588,340,692,367"/>
+<area shape="rect" id="node18" href="$a00015.html#a44d5834ea8c85b0b95edacc546a4267d" title="hp_destroy" alt="" coords="597,415,683,441"/>
+<area shape="rect" id="node19" href="$a00015.html#a8c26a00f2618ee4901b5c34f15c63042" title="hp_reset_buffers" alt="" coords="749,465,867,492"/>
+</map>

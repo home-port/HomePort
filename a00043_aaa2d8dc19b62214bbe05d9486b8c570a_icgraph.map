@@ -1,7 +1,0 @@
-<map id="ncat" name="ncat">
-<area shape="rect" id="node2" href="$a00043.html#a8a19aec411eafeaa5b50b1223de6bf6a" title="on_req_method" alt="" coords="100,5,211,32"/>
-<area shape="rect" id="node5" href="$a00043.html#af32641ecbe14ee23031c772ef0c999ae" title="on_req_url" alt="" coords="114,56,197,83"/>
-<area shape="rect" id="node6" href="$a00043.html#adb3480370129be78baf7bde9b26866be" title="on_req_body" alt="" coords="107,107,203,133"/>
-<area shape="rect" id="node3" href="$a00043.html#acc5092ba6e99d5115efd06882999687f" title="Webserver thread. " alt="" coords="259,56,384,83"/>
-<area shape="rect" id="node4" href="$a00043.html#a0ddf1224851353fc92bfbff6f499fa97" title="Main function. " alt="" coords="432,56,483,83"/>
-</map>

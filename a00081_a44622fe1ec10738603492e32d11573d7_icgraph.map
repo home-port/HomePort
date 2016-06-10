@@ -1,0 +1,10 @@
+<map id="event_on_changed" name="event_on_changed">
+<area shape="rect" id="node2" href="$a00082.html#a297853e0fa2771380bdea7d2279f5e82" title="event_changed" alt="" coords="184,13,295,39"/>
+<area shape="rect" id="node3" href="$a00083.html#a07a10b83cf5554e81e5d80d0dfbe7215" title="[hpd_response_t functions] " alt="" coords="343,13,441,39"/>
+<area shape="rect" id="node4" href="$a00013.html#adbf1665143a378afa8da1fa998518b3d" title="[send] " alt="" coords="489,13,684,39"/>
+<area shape="rect" id="node5" href="$a00013.html#ace98565eb7d2f6a302873024f672b95f" title="[changed] " alt="" coords="732,13,899,39"/>
+<area shape="rect" id="node6" href="$a00013.html#a00981c2b16f03b852495746fb9ecb2c9" title="[on_get] " alt="" coords="947,13,1097,39"/>
+<area shape="rect" id="node7" href="$a00013.html#aca3f96055b6405843c652ef5efd1c3e8" title="[create_parameter] " alt="" coords="1145,5,1292,47"/>
+<area shape="rect" id="node8" href="$a00013.html#abfc239c18fce4bcc601e14074ddfabf8" title="[create_service] " alt="" coords="1340,13,1523,39"/>
+<area shape="rect" id="node9" href="$a00013.html#a9f84d5de2ac16bde89480bd48efdff51" title="[create_lamp] " alt="" coords="1571,13,1729,39"/>
+</map>

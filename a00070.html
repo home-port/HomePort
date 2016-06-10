@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: hpd/src/log.h File Reference</title>
+<title>HomePort: example/template/template_main.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,312 +81,47 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_ab00a9b86cff89a0b86b44294c0aada6.html">hpd</a></li><li class="navelem"><a class="el" href="dir_3128ee3f19d8356fe970e43f9e882e44.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_cfafba98a580ce4b62f8a6fa96d7cbb0.html">example</a></li><li class="navelem"><a class="el" href="dir_1ef88aeded6ac5f4d6081793163879de.html">template</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">log.h File Reference</div>  </div>
+<div class="title">template_main.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><div class="dynheader">
-Include dependency graph for log.h:</div>
+Include dependency graph for template_main.c:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00231.svg" width="198" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00232.svg" width="100%" height="384"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00216.svg" width="502" height="202"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </div>
 <p><a href="a00070_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:ac8afb3cb1b6299f3a75bec1912102128"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00070.html#ac8afb3cb1b6299f3a75bec1912102128">HPD_LOG_MODULE</a>&#160;&#160;&#160;&quot;hpd&quot;</td></tr>
-<tr class="separator:ac8afb3cb1b6299f3a75bec1912102128"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf40f4f753b82acdc1f1e311c9f6ea0e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00070.html#acf40f4f753b82acdc1f1e311c9f6ea0e">LOG_DEBUG</a>(FMT, ...)&#160;&#160;&#160;<a class="el" href="a00070.html#a4157fdbde0bd4f1f113ae29cf9ca4aca">log_logf</a>(<a class="el" href="a00070.html#ac8afb3cb1b6299f3a75bec1912102128">HPD_LOG_MODULE</a>, <a class="el" href="a00021.html#aa89d79ab2946861491c24c5a0868f6c2aeb426717209696ae37bb52aa0487326f">HPD_L_DEBUG</a>, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)</td></tr>
-<tr class="separator:acf40f4f753b82acdc1f1e311c9f6ea0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80fcfbaed519c603db2265f2ba74e36a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00070.html#a80fcfbaed519c603db2265f2ba74e36a">LOG_ERROR</a>(FMT, ...)&#160;&#160;&#160;<a class="el" href="a00070.html#a4157fdbde0bd4f1f113ae29cf9ca4aca">log_logf</a>(<a class="el" href="a00070.html#ac8afb3cb1b6299f3a75bec1912102128">HPD_LOG_MODULE</a>, <a class="el" href="a00021.html#aa89d79ab2946861491c24c5a0868f6c2ab809c83c0fac1decee6f5fa93faaa32c">HPD_L_ERROR</a>, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)</td></tr>
-<tr class="separator:a80fcfbaed519c603db2265f2ba74e36a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aedf192dc33913c1775d2ae2578e7e750"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00070.html#aedf192dc33913c1775d2ae2578e7e750">LOG_INFO</a>(FMT, ...)&#160;&#160;&#160;<a class="el" href="a00070.html#a4157fdbde0bd4f1f113ae29cf9ca4aca">log_logf</a>(<a class="el" href="a00070.html#ac8afb3cb1b6299f3a75bec1912102128">HPD_LOG_MODULE</a>, <a class="el" href="a00021.html#aa89d79ab2946861491c24c5a0868f6c2a46e3ea561c3d8cae140943f98754cfbf">HPD_L_INFO</a> , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)</td></tr>
-<tr class="separator:aedf192dc33913c1775d2ae2578e7e750"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc24a43274023d11f6439c175c9c124d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00070.html#adc24a43274023d11f6439c175c9c124d">LOG_RETURN</a>(E,  FMT, ...)&#160;&#160;&#160;do { <a class="el" href="a00070.html#acf40f4f753b82acdc1f1e311c9f6ea0e">LOG_DEBUG</a>((FMT), ##__VA_ARGS__); return (E); } while(0)</td></tr>
-<tr class="separator:adc24a43274023d11f6439c175c9c124d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3459e6f23717905b1d2e3ddff9bd0c4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00070.html#aa3459e6f23717905b1d2e3ddff9bd0c4">LOG_RETURN_E_ALLOC</a>()&#160;&#160;&#160;<a class="el" href="a00070.html#adc24a43274023d11f6439c175c9c124d">LOG_RETURN</a>(<a class="el" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da74be3b084dd73433942c30fe6b4dc37a">HPD_E_ALLOC</a>, &quot;Unable to allocate memory.&quot;)</td></tr>
-<tr class="separator:aa3459e6f23717905b1d2e3ddff9bd0c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75936067d8534c3319d57d70fff18b8f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00070.html#a75936067d8534c3319d57d70fff18b8f">LOG_RETURN_E_NULL</a>()&#160;&#160;&#160;<a class="el" href="a00070.html#adc24a43274023d11f6439c175c9c124d">LOG_RETURN</a>(<a class="el" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a>,  &quot;Unexpected null pointer.&quot;)</td></tr>
-<tr class="separator:a75936067d8534c3319d57d70fff18b8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae08b127d02a6aaea19e9410a01558a5d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00070.html#ae08b127d02a6aaea19e9410a01558a5d">LOG_RETURN_HPD_STOPPED</a>()&#160;&#160;&#160;<a class="el" href="a00070.html#adc24a43274023d11f6439c175c9c124d">LOG_RETURN</a>(<a class="el" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0dad314ace10a0f6198ba4007008d63af6c">HPD_E_STATE</a>, &quot;Cannot perform %s() while <a class="el" href="a00009.html#a00093">hpd</a> is stopped.&quot;, __func__)</td></tr>
-<tr class="separator:ae08b127d02a6aaea19e9410a01558a5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaca52608b133c0c8c876c12e25b27efd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00070.html#aaca52608b133c0c8c876c12e25b27efd">LOG_WARN</a>(FMT, ...)&#160;&#160;&#160;<a class="el" href="a00070.html#a4157fdbde0bd4f1f113ae29cf9ca4aca">log_logf</a>(<a class="el" href="a00070.html#ac8afb3cb1b6299f3a75bec1912102128">HPD_LOG_MODULE</a>, <a class="el" href="a00021.html#aa89d79ab2946861491c24c5a0868f6c2a27b5aeeb31289b21e4c73f79c983a33a">HPD_L_WARN</a> , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)</td></tr>
-<tr class="separator:aaca52608b133c0c8c876c12e25b27efd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4157fdbde0bd4f1f113ae29cf9ca4aca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00070.html#a4157fdbde0bd4f1f113ae29cf9ca4aca">log_logf</a> (const char *module, <a class="el" href="a00021.html#afc656721774fec3607cb4a1f4c658469">hpd_log_level_t</a> level, const char *file, int line, const char *fmt,...)</td></tr>
-<tr class="separator:a4157fdbde0bd4f1f113ae29cf9ca4aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3d821ecc912efc276dbc731d52b1bcc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00070.html#af3d821ecc912efc276dbc731d52b1bcc">log_vlogf</a> (const char *module, <a class="el" href="a00021.html#afc656721774fec3607cb4a1f4c658469">hpd_log_level_t</a> level, const char *file, int line, const char *fmt, va_list vp)</td></tr>
-<tr class="separator:af3d821ecc912efc276dbc731d52b1bcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ddf1224851353fc92bfbff6f499fa97"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00070.html#a0ddf1224851353fc92bfbff6f499fa97">main</a> (int argc, char *argv[])</td></tr>
+<tr class="memdesc:a0ddf1224851353fc92bfbff6f499fa97"><td class="mdescLeft">&#160;</td><td class="mdescRight">[includes]  <a href="#a0ddf1224851353fc92bfbff6f499fa97">More...</a><br /></td></tr>
+<tr class="separator:a0ddf1224851353fc92bfbff6f499fa97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a class="anchor" id="ac8afb3cb1b6299f3a75bec1912102128"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define HPD_LOG_MODULE&#160;&#160;&#160;&quot;hpd&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00070_source.html#l00038">38</a> of file <a class="el" href="a00070_source.html">log.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="acf40f4f753b82acdc1f1e311c9f6ea0e"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOG_DEBUG</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">FMT, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="a00070.html#a4157fdbde0bd4f1f113ae29cf9ca4aca">log_logf</a>(<a class="el" href="a00070.html#ac8afb3cb1b6299f3a75bec1912102128">HPD_LOG_MODULE</a>, <a class="el" href="a00021.html#aa89d79ab2946861491c24c5a0868f6c2aeb426717209696ae37bb52aa0487326f">HPD_L_DEBUG</a>, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00070_source.html#l00046">46</a> of file <a class="el" href="a00070_source.html">log.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a80fcfbaed519c603db2265f2ba74e36a"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOG_ERROR</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">FMT, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="a00070.html#a4157fdbde0bd4f1f113ae29cf9ca4aca">log_logf</a>(<a class="el" href="a00070.html#ac8afb3cb1b6299f3a75bec1912102128">HPD_LOG_MODULE</a>, <a class="el" href="a00021.html#aa89d79ab2946861491c24c5a0868f6c2ab809c83c0fac1decee6f5fa93faaa32c">HPD_L_ERROR</a>, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00070_source.html#l00043">43</a> of file <a class="el" href="a00070_source.html">log.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aedf192dc33913c1775d2ae2578e7e750"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOG_INFO</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">FMT, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="a00070.html#a4157fdbde0bd4f1f113ae29cf9ca4aca">log_logf</a>(<a class="el" href="a00070.html#ac8afb3cb1b6299f3a75bec1912102128">HPD_LOG_MODULE</a>, <a class="el" href="a00021.html#aa89d79ab2946861491c24c5a0868f6c2a46e3ea561c3d8cae140943f98754cfbf">HPD_L_INFO</a> , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00070_source.html#l00045">45</a> of file <a class="el" href="a00070_source.html">log.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="adc24a43274023d11f6439c175c9c124d"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOG_RETURN</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">E, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">FMT, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;do { <a class="el" href="a00070.html#acf40f4f753b82acdc1f1e311c9f6ea0e">LOG_DEBUG</a>((FMT), ##__VA_ARGS__); return (E); } while(0)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00070_source.html#l00048">48</a> of file <a class="el" href="a00070_source.html">log.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aa3459e6f23717905b1d2e3ddff9bd0c4"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOG_RETURN_E_ALLOC</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="a00070.html#adc24a43274023d11f6439c175c9c124d">LOG_RETURN</a>(<a class="el" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da74be3b084dd73433942c30fe6b4dc37a">HPD_E_ALLOC</a>, &quot;Unable to allocate memory.&quot;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00070_source.html#l00051">51</a> of file <a class="el" href="a00070_source.html">log.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a75936067d8534c3319d57d70fff18b8f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOG_RETURN_E_NULL</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="a00070.html#adc24a43274023d11f6439c175c9c124d">LOG_RETURN</a>(<a class="el" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a>,  &quot;Unexpected null pointer.&quot;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00070_source.html#l00050">50</a> of file <a class="el" href="a00070_source.html">log.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ae08b127d02a6aaea19e9410a01558a5d"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOG_RETURN_HPD_STOPPED</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;<a class="el" href="a00070.html#adc24a43274023d11f6439c175c9c124d">LOG_RETURN</a>(<a class="el" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0dad314ace10a0f6198ba4007008d63af6c">HPD_E_STATE</a>, &quot;Cannot perform %s() while <a class="el" href="a00009.html#a00093">hpd</a> is stopped.&quot;, __func__)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00070_source.html#l00053">53</a> of file <a class="el" href="a00070_source.html">log.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aaca52608b133c0c8c876c12e25b27efd"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOG_WARN</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">FMT, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="el" href="a00070.html#a4157fdbde0bd4f1f113ae29cf9ca4aca">log_logf</a>(<a class="el" href="a00070.html#ac8afb3cb1b6299f3a75bec1912102128">HPD_LOG_MODULE</a>, <a class="el" href="a00021.html#aa89d79ab2946861491c24c5a0868f6c2a27b5aeeb31289b21e4c73f79c983a33a">HPD_L_WARN</a> , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00070_source.html#l00044">44</a> of file <a class="el" href="a00070_source.html">log.h</a>.</p>
-
-</div>
-</div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a4157fdbde0bd4f1f113ae29cf9ca4aca"></a>
+<a class="anchor" id="a0ddf1224851353fc92bfbff6f499fa97"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> log_logf </td>
+          <td class="memname">int main </td>
           <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>module</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#afc656721774fec3607cb4a1f4c658469">hpd_log_level_t</a>&#160;</td>
-          <td class="paramname"><em>level</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>file</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>line</em>, </td>
+          <td class="paramname"><em>argc</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>fmt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>...</em>&#160;</td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>argv</em>[]&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -396,72 +131,15 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00069_source.html#l00031">31</a> of file <a class="el" href="a00069_source.html">log.c</a>.</p>
+<p>[includes] </p>
+<p>[includes] [main] </p>
+
+<p>Definition at line <a class="el" href="a00070_source.html#l00035">35</a> of file <a class="el" href="a00070_source.html">template_main.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00070_a4157fdbde0bd4f1f113ae29cf9ca4aca_cgraph.svg" width="200" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="af3d821ecc912efc276dbc731d52b1bcc"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> log_vlogf </td>
-          <td>(</td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>module</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#afc656721774fec3607cb4a1f4c658469">hpd_log_level_t</a>&#160;</td>
-          <td class="paramname"><em>level</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>file</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>line</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>fmt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">va_list&#160;</td>
-          <td class="paramname"><em>vp</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00069_source.html#l00041">41</a> of file <a class="el" href="a00069_source.html">log.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00070_af3d821ecc912efc276dbc731d52b1bcc_icgraph.svg" width="212" height="139"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00070_a0ddf1224851353fc92bfbff6f499fa97_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </p>
@@ -471,7 +149,7 @@ Here is the caller graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:24 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:25 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

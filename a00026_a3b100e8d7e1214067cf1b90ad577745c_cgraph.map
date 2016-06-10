@@ -1,0 +1,10 @@
+<map id="hpd_httpd_response_create" name="hpd_httpd_response_create">
+<area shape="rect" id="node2" href="$a00025.html#a4a16719295f2a18fa4e8d08e6afb80f0" title="http_request_get_context" alt="" coords="202,5,371,32"/>
+<area shape="rect" id="node3" href="$a00026.html#ab55da21d4573c8d9c22fa3797f579628" title="Convert a status code to string. " alt="" coords="219,57,355,98"/>
+<area shape="rect" id="node4" href="$a00026.html#a36a5feca39485163b3ef446c9e3171a3" title="Destroy a hpd_httpd_response. " alt="" coords="217,122,356,163"/>
+<area shape="rect" id="node8" href="$a00025.html#a1568fdba259271965551fb5aa1f07006" title="Get the connection of a request. " alt="" coords="192,188,381,215"/>
+<area shape="rect" id="node9" href="$a00026.html#a3aabea0eb8be381d54ece47fa1fd6a75" title="Add header to a response. " alt="" coords="217,239,356,281"/>
+<area shape="rect" id="node5" href="$a00038.html#a494a1841a6c8963c10f5d3a6b662f014" title="Close a connection, after the remaining data has been sent. " alt="" coords="429,104,577,131"/>
+<area shape="rect" id="node7" href="$a00012.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="807,129,851,156"/>
+<area shape="rect" id="node6" href="$a00059.html#a58068e1a4c60b401bc6fc99c25e9a3f6" title="Kill and clean up after a connection. " alt="" coords="625,104,759,131"/>
+</map>

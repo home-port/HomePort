@@ -1,2 +1,7 @@
-<map id="module_data_t" name="module_data_t">
+<map id="hpd_device_id" name="hpd_device_id">
+<area shape="rect" id="node3" href="$a00020.html#a00112" title="{hpd_adapter_id\n||}" alt="" coords="63,344,173,421"/>
+<area shape="rect" id="node4" href="$a00017.html#a00110" title="{hpd\n||}" alt="" coords="535,204,578,281"/>
+<area shape="rect" id="node7" href="$a00018.html#a00113" title="{hpd_configuration\n||}" alt="" coords="352,344,476,421"/>
+<area shape="rect" id="node14" href="$a00029.html" title="{hpd_module\n||+ TAILQ_ENTRY()\l}" alt="" coords="798,344,931,421"/>
+<area shape="rect" id="node15" href="$a00030.html#a00123" title="[Application API Callbacks] " alt="" coords="781,204,898,281"/>
 </map>

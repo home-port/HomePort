@@ -1,0 +1,8 @@
+<map id="http_request_destroy" name="http_request_destroy">
+<area shape="rect" id="node2" href="$a00041.html#ab65667fa4439ff9bc0623991404a31bd" title="Destroy URL parser instance. " alt="" coords="369,5,455,32"/>
+<area shape="rect" id="node3" href="$a00012.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="523,132,567,159"/>
+<area shape="rect" id="node4" href="$a00056.html#a195d511a075f2349200563af1c5d1fd7" title="hpd_map_free" alt="" coords="197,107,301,133"/>
+<area shape="rect" id="node6" href="$a00015.html#a44d5834ea8c85b0b95edacc546a4267d" title="hp_destroy" alt="" coords="206,208,293,235"/>
+<area shape="rect" id="node5" href="$a00031.html#ae1085dd4fd40466d18b02ec077ef4d6d" title="hpd_map_remove" alt="" coords="349,157,475,184"/>
+<area shape="rect" id="node7" href="$a00015.html#a8c26a00f2618ee4901b5c34f15c63042" title="hp_reset_buffers" alt="" coords="353,259,471,285"/>
+</map>

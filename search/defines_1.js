@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['call',['CALL',['../a00032.html#a4505479fa2bf7d4e4b60907c77a71428',1,'url_parser.c']]],
-  ['case',['CASE',['../a00051.html#af2b30344be261ffe1c5aad12ab1f6f07',1,'CASE():&#160;webserver_test.cpp'],['../a00030.html#af2b30344be261ffe1c5aad12ab1f6f07',1,'CASE():&#160;daemon_api_test.cpp']]],
-  ['crlf',['CRLF',['../a00017.html#a6cb23a858b0a21bdaa644b9181dc415f',1,'httpd_response.c']]],
-  ['curl_5fev_5fcheck',['CURL_EV_CHECK',['../a00004.html#a0e58f0eeb8358d95ae6cd543e78e70cb',1,'hpd_curl_ev.c']]]
+  ['discovery_5ffind_5fadapter',['DISCOVERY_FIND_ADAPTER',['../a00080.html#aa2c484179f1632e0c6510898503fea60',1,'discovery_id.c']]],
+  ['discovery_5ffind_5fdevice',['DISCOVERY_FIND_DEVICE',['../a00080.html#a54dc9472f5aa3008499ddca5914fe25a',1,'discovery_id.c']]],
+  ['discovery_5ffind_5fparameter',['DISCOVERY_FIND_PARAMETER',['../a00080.html#ab309f16d1158b4e9128bd2bd14c6bcad',1,'discovery_id.c']]],
+  ['discovery_5ffind_5fservice',['DISCOVERY_FIND_SERVICE',['../a00080.html#a39405ce146e7b13f1e8a3d9841fbfa87',1,'discovery_id.c']]]
 ];

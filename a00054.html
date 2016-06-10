@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: example/demo/demo_application.h File Reference</title>
+<title>HomePort: common/include/hpd/common/hpd_jansson.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,55 +81,99 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_cfafba98a580ce4b62f8a6fa96d7cbb0.html">example</a></li><li class="navelem"><a class="el" href="dir_6ca2dda541dd7f06e7e7dc7dd0524cb8.html">demo</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_11fbc4217d50ab21044e5ad6614aede5.html">include</a></li><li class="navelem"><a class="el" href="dir_b345c8d8575a4885f9ce2e72717880ad.html">hpd</a></li><li class="navelem"><a class="el" href="dir_0009a0374d058ad4303f4158b51ba0cc.html">common</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#var-members">Variables</a>  </div>
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle">
-<div class="title">demo_application.h File Reference</div>  </div>
+<div class="title">hpd_jansson.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><div class="dynheader">
-Include dependency graph for demo_application.h:</div>
+Include dependency graph for hpd_jansson.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00188.svg" width="234" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00179.svg" width="180" height="127"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00189.svg" width="408" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00180.svg" width="175" height="142"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </div>
 <p><a href="a00054_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a38e48bd519f1c75ba6e4dd9d42d92b7f"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="a00021.html#a00106">hpd_module_def</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00054.html#a38e48bd519f1c75ba6e4dd9d42d92b7f">hpd_demo_app_def</a></td></tr>
-<tr class="separator:a38e48bd519f1c75ba6e4dd9d42d92b7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a317ecf521b398f0ce01f08676989a62c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00054.html#a317ecf521b398f0ce01f08676989a62c">json_array_foreach</a>(array,  index,  <a class="el" href="a00012.html#aee53bdc848584e095375d0d39aa400b8">value</a>)</td></tr>
+<tr class="separator:a317ecf521b398f0ce01f08676989a62c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2044749626ba602e69fab145018cea73"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00054.html#a2044749626ba602e69fab145018cea73">json_string_length</a>(JSON)&#160;&#160;&#160;strlen(json_string_value(JSON))</td></tr>
+<tr class="separator:a2044749626ba602e69fab145018cea73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Variable Documentation</h2>
-<a class="anchor" id="a38e48bd519f1c75ba6e4dd9d42d92b7f"></a>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="a317ecf521b398f0ce01f08676989a62c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct <a class="el" href="a00021.html#a00106">hpd_module_def</a> hpd_demo_app_def</td>
+          <td class="memname">#define json_array_foreach</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">array, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">index, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><a class="el" href="a00012.html#aee53bdc848584e095375d0d39aa400b8">value</a>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">for</span>(index = 0; \</div>
+<div class="line">    index &lt; json_array_size(array) &amp;&amp; (<a class="code" href="a00051.html#aee53bdc848584e095375d0d39aa400b8">value</a> = json_array_get(array, index)); \</div>
+<div class="line">    index++)</div>
+<div class="ttc" id="a00051_html_aee53bdc848584e095375d0d39aa400b8"><div class="ttname"><a href="a00051.html#aee53bdc848584e095375d0d39aa400b8">value</a></div><div class="ttdeci">data value</div><div class="ttdef"><b>Definition:</b> <a href="a00051_source.html#l00067">header_parser_test.c:67</a></div></div>
+</div><!-- fragment -->
+<p>Definition at line <a class="el" href="a00054_source.html#l00039">39</a> of file <a class="el" href="a00054_source.html">hpd_jansson.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2044749626ba602e69fab145018cea73"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define json_string_length</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">JSON</td><td>)</td>
+          <td>&#160;&#160;&#160;strlen(json_string_value(JSON))</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00053_source.html#l00058">58</a> of file <a class="el" href="a00053_source.html">demo_application.c</a>.</p>
+<p>Definition at line <a class="el" href="a00054_source.html#l00036">36</a> of file <a class="el" href="a00054_source.html">hpd_jansson.h</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:24 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:25 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

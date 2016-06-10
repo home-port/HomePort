@@ -1,0 +1,23 @@
+<map id="discovery_free_service" name="discovery_free_service">
+<area shape="rect" id="node2" href="$a00020.html#a9ac69d02cab7b0cff5d24b6eed07ca8d" title="discovery_alloc_service" alt="" coords="209,5,371,32"/>
+<area shape="rect" id="node7" href="$a00020.html#a3c72fb9020b183238e0205b722d7ea95" title="discovery_free_device" alt="" coords="214,132,366,159"/>
+<area shape="rect" id="node22" href="$a00079.html#acebc47c8796cb46b14899df696fae147" title="hpd_service_free" alt="" coords="229,56,351,83"/>
+<area shape="rect" id="node3" href="$a00079.html#ae265c33796304a96d8a0e670e61e7a3a" title="[hpd_device_t functions] " alt="" coords="434,5,561,32"/>
+<area shape="rect" id="node4" href="$a00013.html#aca3f96055b6405843c652ef5efd1c3e8" title="[create_parameter] " alt="" coords="635,41,781,82"/>
+<area shape="rect" id="node5" href="$a00013.html#abfc239c18fce4bcc601e14074ddfabf8" title="[create_service] " alt="" coords="840,116,1023,143"/>
+<area shape="rect" id="node6" href="$a00013.html#a9f84d5de2ac16bde89480bd48efdff51" title="[create_lamp] " alt="" coords="1276,200,1435,227"/>
+<area shape="rect" id="node8" href="$a00020.html#a9f30460be089f53c8d995635aedc1097" title="discovery_alloc_device" alt="" coords="419,107,576,133"/>
+<area shape="rect" id="node10" href="$a00020.html#aec714553397f80039bf246b3b0800420" title="discovery_free_adapter" alt="" coords="419,233,576,260"/>
+<area shape="rect" id="node21" href="$a00079.html#a7b20f2cfe2e46cdbfe4112b95922446b" title="hpd_device_free" alt="" coords="439,157,556,184"/>
+<area shape="rect" id="node9" href="$a00079.html#a10a4b84cc7128e1900008dc1de4653a2" title="A note on reusing IDs: An other module or remote client may have outstanding references to the old ID..." alt="" coords="647,107,769,133"/>
+<area shape="rect" id="node11" href="$a00076.html#a015919d95dc08af72eaa0663e65eaf2e" title="daemon_runtime_destroy" alt="" coords="624,309,792,336"/>
+<area shape="rect" id="node16" href="$a00020.html#a3c736bc96933454ab82040c3617275a3" title="discovery_alloc_adapter" alt="" coords="627,208,789,235"/>
+<area shape="rect" id="node19" href="$a00079.html#a0a2b0d9eef603396a0171d5b0c67bbbf" title="hpd_adapter_free" alt="" coords="870,259,993,285"/>
+<area shape="rect" id="node12" href="$a00017.html#affd72e7fb83ddd29450361c75672ddd4" title="daemon_start" alt="" coords="881,309,982,336"/>
+<area shape="rect" id="node13" href="$a00077.html#a4a5e670df4a5790a7955aaef5483c08a" title="hpd_start" alt="" coords="1111,309,1187,336"/>
+<area shape="rect" id="node14" href="$a00065.html#a0ddf1224851353fc92bfbff6f499fa97" title="[file] " alt="" coords="1330,284,1381,311"/>
+<area shape="rect" id="node15" href="$a00039.html#a5de92b31931f2f5155c682379a06da32" title="TEST" alt="" coords="1327,335,1383,361"/>
+<area shape="rect" id="node17" href="$a00079.html#aec51fa5c17a707a90a1634358ae1a9b4" title="[hpd_adapter_t functions] " alt="" coords="868,204,995,231"/>
+<area shape="rect" id="node18" href="$a00013.html#a1a305bf3b6bebda2ca16c8adcdb95239" title="[on_destroy] " alt="" coords="1076,193,1223,234"/>
+<area shape="rect" id="node20" href="$a00013.html#aa30316159e7cdc14f2f035f0949b6680" title="[on_start] " alt="" coords="1071,259,1228,285"/>
+</map>
