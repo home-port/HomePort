@@ -921,13 +921,13 @@
  *
  * @enduml
  *
- * \todo Finish listener sequence chart
- *
  * @startuml "Lifetime of listener structures"
  *
  * participant Application as app
  * participant "Event Dispatch" as ev
  * entity hpd_listener_t as lt
+ * entity hpd_device_id_t as dit
+ * entity hpd_value_t as vt
  *
  * [-> app
  * activate app
@@ -961,14 +961,22 @@
  *
  * app -> ev: hpd_foreach_attached()
  * activate ev
+ * ev -> dit: alloc()
+ * activate dit
  * ev -> app: on_attach()
  * activate app
  * ev <-- app
  * deactivate app
+ * ev -> dit: free()
+ * destroy dit
+ * ev -> dit: alloc()
+ * activate dit
  * ev -> app: on_attach()
  * activate app
  * ev <-- app
  * deactivate app
+ * ev -> dit: free()
+ * destroy dit
  * app <-- ev
  * deactivate ev
  *
@@ -979,12 +987,16 @@
  *
  * [-> ev
  * activate ev
+ * activate dit
  *
  * ev -> app: on_attach()
  * activate app
  * ev <-- app
  * deactivate app
  *
+ * ev -> dit: free()
+ * destroy dit
+ *
  * [<-- ev
  * deactivate ev
  *
@@ -992,12 +1004,16 @@
  *
  * [-> ev
  * activate ev
+ * activate dit
  *
  * ev -> app: on_detach()
  * activate app
  * ev <-- app
  * deactivate app
  *
+ * ev -> dit: free()
+ * destroy dit
+ *
  * [<-- ev
  * deactivate ev
  *
@@ -1005,11 +1021,15 @@
  *
  * [-> ev
  * activate ev
+ * activate vt
  *
  * ev -> app: on_change()
  * activate app
  * ev <-- app
  * deactivate app
+ *
+ * ev -> vt: free()
+ * destroy vt
  *
  * [<-- ev
  * deactivate ev
