@@ -25,11 +25,13 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_DEMO_APPLICATION_H
-#define HOMEPORT_DEMO_APPLICATION_H
+/// [file]
+#ifndef HOMEPORT_TEMPLATE_ADAPTER_H
+#define HOMEPORT_TEMPLATE_ADAPTER_H
 
 #include <hpd/hpd_types.h>
 
-extern struct hpd_module_def hpd_demo_app_def;
+extern struct hpd_module_def template_adapter_def;
 
-#endif //HOMEPORT_DEMO_APPLICATION_H
+#endif //HOMEPORT_TEMPLATE_ADAPTER_H
+/// [file]

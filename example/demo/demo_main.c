@@ -11,7 +11,7 @@
  * of conditions and the following disclaimer in the documentation and/or other materials
  * provided with the distribution.
  *
- * THIS SOFTWARE IS PROVidED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
+ * THIS SOFTWARE IS PROVIDED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
@@ -25,12 +25,12 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "hpd/hpd_daemon_api.h"
-#include "hpd/modules/hpd_rest.h"
+/// [file]
+#include <hpd/hpd_daemon_api.h>
+#include <hpd/modules/hpd_rest.h>
 #include "demo_adapter.h"
 #include "demo_application.h"
 
-// TODO Using simple error handling (Switches would be better, when documentation is written)
 int main(int argc, char *argv[])
 {
     hpd_error_t rc;
@@ -57,3 +57,4 @@ int main(int argc, char *argv[])
     error_return:
         return rc;
 }
+/// [file]

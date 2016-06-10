@@ -28,7 +28,20 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(${PROJECT_SOURCE_DIR}/modules/hpd_rest/include)
+add_library(template_adapter
+        template_adapter.h
+        template_adapter.c
+        )
+target_link_libraries(template_adapter hpd)
 
-add_subdirectory(demo)
-add_subdirectory(template)
+add_library(template_application
+        template_application.h
+        template_application.c
+        )
+target_link_libraries(template_application hpd)
+
+add_executable(template
+        tutorial01.dox
+        template_main.c
+        )
+target_link_libraries(template template_adapter template_application)

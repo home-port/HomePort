@@ -25,11 +25,46 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_DEMO_APPLICATION_H
-#define HOMEPORT_DEMO_APPLICATION_H
+/// [file]
+#include "template_application.h"
+#include <hpd/hpd_application_api.h>
 
-#include <hpd/hpd_types.h>
+static hpd_error_t template_app_on_create(void **data, const hpd_module_t *context);
+static hpd_error_t template_app_on_destroy(void *data);
+static hpd_error_t template_app_on_start(void *data, hpd_t *hpd);
+static hpd_error_t template_app_on_stop(void *data, hpd_t *hpd);
+static hpd_error_t template_app_on_parse_opt(void *data, const char *name, const char *arg);
 
-extern struct hpd_module_def hpd_demo_app_def;
+struct hpd_module_def template_app_def = {
+        template_app_on_create,
+        template_app_on_destroy,
+        template_app_on_start,
+        template_app_on_stop,
+        template_app_on_parse_opt,
+};
 
-#endif //HOMEPORT_DEMO_APPLICATION_H
+static hpd_error_t template_app_on_create(void **data, const hpd_module_t *context)
+{
+    return HPD_E_SUCCESS;
+}
+
+static hpd_error_t template_app_on_destroy(void *data)
+{
+    return HPD_E_SUCCESS;
+}
+
+static hpd_error_t template_app_on_start(void *data, hpd_t *hpd)
+{
+    return HPD_E_SUCCESS;
+}
+
+static hpd_error_t template_app_on_stop(void *data, hpd_t *hpd)
+{
+    return HPD_E_SUCCESS;
+}
+
+static hpd_error_t template_app_on_parse_opt(void *data, const char *name, const char *arg)
+{
+    return HPD_E_ARGUMENT;
+}
+/// [file]

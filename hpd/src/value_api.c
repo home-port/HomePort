@@ -11,7 +11,7 @@
  * of conditions and the following disclaimer in the documentation and/or other materials
  * provided with the distribution.
  *
- * THIS SOFTWARE IS PROVidED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
+ * THIS SOFTWARE IS PROVIDED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
@@ -28,6 +28,7 @@
 #include "hpd/hpd_api.h"
 #include "value.h"
 #include "log.h"
+#include <stdarg.h>
 
 hpd_error_t hpd_value_alloc(hpd_value_t **value, const char *body, int len)
 {
@@ -35,6 +36,21 @@ hpd_error_t hpd_value_alloc(hpd_value_t **value, const char *body, int len)
     if (len < 0 && len != HPD_NULL_TERMINATED)
         LOG_RETURN(HPD_E_ARGUMENT, "len must be >= 0 or HPD_NULL_TERMINATED.", __func__);
     return value_alloc(value, body, len);
+}
+
+hpd_error_t hpd_value_allocf(hpd_value_t **value, const char *fmt, ...)
+{
+    if (!value) LOG_RETURN_E_NULL();
+    va_list vp;
+    va_start(vp, fmt);
+    return value_vallocf(value, fmt, vp);
+    va_end(vp);
+}
+
+hpd_error_t hpd_value_vallocf(hpd_value_t **value, const char *fmt, va_list vp)
+{
+    if (!value) LOG_RETURN_E_NULL();
+    return value_vallocf(value, fmt, vp);
 }
 
 hpd_error_t hpd_value_copy(hpd_value_t **dst, const hpd_value_t *src)

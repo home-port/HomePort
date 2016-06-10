@@ -25,11 +25,36 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_DEMO_APPLICATION_H
-#define HOMEPORT_DEMO_APPLICATION_H
+/// [includes]
+#include <hpd/hpd_daemon_api.h>
+#include "template_adapter.h"
+#include "template_application.h"
+/// [includes]
 
-#include <hpd/hpd_types.h>
+/// [main]
+int main(int argc, char *argv[])
+{
+    hpd_error_t rc;
+    hpd_t *hpd;
 
-extern struct hpd_module_def hpd_demo_app_def;
+    // Allocate hpd memory
+    if ((rc = hpd_alloc(&hpd))) goto error_return;
 
-#endif //HOMEPORT_DEMO_APPLICATION_H
+    // Add modules
+    if ((rc = hpd_module(hpd, "template_adapter", &template_adapter_def))) goto error_free;
+    if ((rc = hpd_module(hpd, "template_application", &template_app_def))) goto error_free;
+
+    // Start hpd
+    if ((rc = hpd_start(hpd, argc, argv))) goto error_free;
+
+    // Clean up
+    if ((rc = hpd_free(hpd))) goto error_return;
+
+    return rc;
+
+    error_free:
+        hpd_free(hpd);
+    error_return:
+        return rc;
+}
+/// [main]

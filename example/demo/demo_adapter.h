@@ -11,7 +11,7 @@
  * of conditions and the following disclaimer in the documentation and/or other materials
  * provided with the distribution.
  *
- * THIS SOFTWARE IS PROVidED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
+ * THIS SOFTWARE IS PROVIDED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
@@ -25,11 +25,13 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
+/// [file]
 #ifndef HOMEPORT_DEMO_ADAPTER_H
 #define HOMEPORT_DEMO_ADAPTER_H
 
-#include "hpd/hpd_types.h"
+#include <hpd/hpd_types.h>
 
 extern struct hpd_module_def hpd_demo_adapter_def;
 
 #endif //HOMEPORT_DEMO_ADAPTER_H
+/// [file]

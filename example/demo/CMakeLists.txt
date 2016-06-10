@@ -41,6 +41,7 @@ add_library(example_demo_application
 target_link_libraries(example_demo_application hpd)
 
 add_executable(example_demo
-        main.c
+        demo_main.c
+        tutorial02.dox
         )
 target_link_libraries(example_demo example_demo_adapter example_demo_application hpd-rest)

@@ -1,0 +1,126 @@
+/*
+ * Copyright 2011 Aalborg University. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification, are
+ * permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this list of
+ * conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice, this list
+ * of conditions and the following disclaimer in the documentation and/or other materials
+ * provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The views and conclusions contained in the software and documentation are those of the
+ * authors and should not be interpreted as representing official policies, either expressed
+ */
+
+/*! \page tutorial01.dox Tutorial 01: Template
+ *
+ * \tableofcontents
+ *
+ * \section sec_intro Introduction
+ *
+ * In this tutorial, we will briefly cover the required elements of the main program, an adapter, and an application.
+ * See the other examples for more in depth guidance on how to implement this required functions.
+ *
+ * The full files can be found in the example/template folder, and can be compiled with `make template`.
+ *
+ * \section sec_main Main Program Template
+ *
+ * The includes part of the main program (template_main.c) will need to include hpd_daemon_api.h for all hpd daemon
+ * related functions, and include the header files of all the modules (adapters and applications) that it starts:
+ *
+ * \snippet template_main.c includes
+ *
+ * The main program should allocate memory for hpd, add each module (with a unique id), start hpd, and finally clean up
+ * to avoid memory leaks. You will most likely only have to change the add modules part of this template to provide a
+ * main program for your project.
+ *
+ * \snippet template_main.c main
+ *
+ * \section sec_adapter Adapter Template
+ *
+ * A module consists of two files; a header file and a source file. The header file of a module should only need to contain a single struct, which is the module definition of said
+ * module:
+ *
+ * \snippet template_adapter.h file
+ *
+ * The source file should include hpd_adapter_api.h, which contains all the required functions to create an
+ * adapter.
+ *
+ * \snippet template_adapter.c includes
+ *
+ * To instantiate this struct, the source file needs to implement five functions:
+ *
+ * \snippet template_adapter.c declarations
+ *
+ * This can be expected to be called in the sequence:
+ *
+ * @startuml "sequence"
+ * (*) --> "on_create()"
+ * "on_create()" --> "on_start()"
+ * "on_start()" --> "on_stop()"
+ * "on_stop()" --> "on_destroy()"
+ * "on_destroy()" --> (*)
+ * "on_stop()" --> "on_start()"
+ * "on_create()" --> "on_destroy()"
+ * "on_destroy()" --> "on_create()"
+ * "on_create()" --> "on_parse_opt()"
+ * "on_parse_opt()" --> "on_parse_opt()"
+ * "on_parse_opt()" --> "on_start()"
+ * @enduml
+ *
+ * The the struct defining our module become:
+ *
+ * \snippet template_adapter.c definition
+ *
+ * on_create() generally have two tasks. First, it should allocate the memory we need for our module, and store this
+ * within the given data pointer. Secondly, it should add the supported command-line arguments to hpd. See the other
+ * examples for more in-depth guidance on the contents of these functions.
+ *
+ * \snippet template_adapter.c on_create
+ *
+ * on_destroy() should clean up the memory allocated by on_create() (and in other places of our module), to avoid any
+ * memory leaks.
+ *
+ * \snippet template_adapter.c on_destroy
+ *
+ * on_start() is where you would most likely open a connection to an underlying network, and add the required objects
+ * (adapters, devices, services, and parameters) to hpd. Note as many of these probably depends on asynchronous
+ * responses from the network, it is perfectly fine to add/remove objects during the entire runtime (that is between
+ * calls to on_start() and on_stop()).
+ *
+ * \snippet template_adapter.c on_start
+ *
+ * on_stop() should stop everything that was started during runtime.
+ *
+ * \snippet template_adapter.c on_stop
+ *
+ * Finally, on_parse_opt() will be called for each command-line argument given to your module. Note, this should return
+ * HPD_E_ARGUMENT if it does not understand the given argument:
+ *
+ * \snippet template_adapter.c on_parse_opt
+ *
+ * \section sec_application Application Template
+ *
+ * The application template is almost identical with just one exception; the source file includes hpd_application_api.h
+ * instead of hpd_adapter_api.h. First the header file (template_application.h):
+ *
+ * \snippet template_application.h file
+ *
+ * Then the source file (template_application.c):
+ *
+ * \snippet template_application.c file
+ *
+ */

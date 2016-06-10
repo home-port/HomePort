@@ -11,7 +11,7 @@
  * of conditions and the following disclaimer in the documentation and/or other materials
  * provided with the distribution.
  *
- * THIS SOFTWARE IS PROVidED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
+ * THIS SOFTWARE IS PROVIDED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
@@ -74,9 +74,22 @@ extern "C" {
 
 #define HPD_SPRINTF_ALLOC(DST, FMT, ...) do { \
     size_t _len; \
-    if ((_len = snprintf(NULL, 0, (FMT), ##__VA_ARGS__)) < 0) goto nsprintf_error; \
+    if ((_len = snprintf(NULL, 0, (FMT), ##__VA_ARGS__)) < 0) goto snprintf_error; \
     if (!((DST) = calloc(_len+1, sizeof(char)))) goto alloc_error; \
-    if (snprintf((DST), _len+1, (FMT), ##__VA_ARGS__) < 0) { free((DST)); goto nsprintf_error; } \
+    if (snprintf((DST), _len+1, (FMT), ##__VA_ARGS__) < 0) { free((DST)); goto snprintf_error; } \
+} while (0)
+
+#define HPD_VSPRINTF_ALLOC(DST, FMT, VP) do { \
+    size_t _len; \
+    va_list _vp; \
+    va_copy(_vp, (VP)); \
+    if ((_len = vsnprintf(NULL, 0, (FMT), _vp)) < 0) { \
+        va_end(_vp); \
+        goto vsnprintf_error; \
+    } \
+    va_end(_vp); \
+    if (!((DST) = calloc(_len+1, sizeof(char)))) goto alloc_error; \
+    if (vsnprintf((DST), _len+1, (FMT), (VP)) < 0) { free((DST)); goto vsnprintf_error; } \
 } while (0)
 
 #ifdef __cplusplus

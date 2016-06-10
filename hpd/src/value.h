@@ -11,7 +11,7 @@
  * of conditions and the following disclaimer in the documentation and/or other materials
  * provided with the distribution.
  *
- * THIS SOFTWARE IS PROVidED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
+ * THIS SOFTWARE IS PROVIDED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
@@ -37,6 +37,7 @@ extern "C" {
 #endif
 
 hpd_error_t value_alloc(hpd_value_t **value, const char *body, int len);
+hpd_error_t value_vallocf(hpd_value_t **value, const char *fmt, va_list vp);
 hpd_error_t value_copy(hpd_value_t **dst, const hpd_value_t *src);
 hpd_error_t value_free(hpd_value_t *value);
 hpd_error_t value_set_header(hpd_value_t *value, const char *key, const char *val);

@@ -11,7 +11,7 @@
  * of conditions and the following disclaimer in the documentation and/or other materials
  * provided with the distribution.
  *
- * THIS SOFTWARE IS PROVidED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
+ * THIS SOFTWARE IS PROVIDED BY Aalborg University ''AS IS'' AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
@@ -29,53 +29,7 @@
  *
  * \tableofcontents
  *
- * \section sec_arch Overall architecture
- *
- * @startuml "A HomePort Executable"
- * node "Main Executable" {
- *     [Adapter] - [HomePort Library]
- *     [HomePort Library] - [Application]
- * }
- * @enduml
- *
- * In general, a HomePort installation consists of the HomePort library, one or more adapters and applications, and a
- * main program that combines everything into one executable.
- * - Adapter: A module that provides a connection to one or more devices.
- * - Application: A module that utilises this data, typically by providing an interface to a cloud.
- *
- * \subsection sec_headers Public header files
- *
- * The header files provided by HomePort (excluding the common utilities) are structured in the following way:
- *
- * @startuml
- *     hide empty fields
- *     hide empty method
- *     interface "hpd_adapter_api" as adapter
- *     interface "hpd_api" as hpd
- *     interface "hpd_application_api" as application
- *     interface "hpd_daemon_api" as daemon
- *     interface "hpd_shared_api" as shared
- *     interface "hpd_types" as types
- *     types <|-- shared : includes
- *     types <|-- daemon : includes
- *     shared <|-- adapter : includes
- *     shared <|-- application : includes
- *     daemon <|-- hpd : includes
- *     adapter <|-- hpd : includes
- *     application <|-- hpd : includes
- * @enduml
- *
- * Their purpose:
- * - hpd_types.h: Only type definitions, can be used in header files to obtain the types without the functions.
- * - hpd_shared_api.h: Functionality shared between adapters and applications, used in libraries that may be used for
- * both.
- * - hpd_adapter_api.h: Adapter functionality, should only be included by adapters.
- * - hpd_application_api.h: Application functionality, should only be included by applications.
- * - hpd_daemon_api.h: Daemon functionality, should only be included in file defining main().
- * - hpd_api.h: Everything in one file for the lazy, sometimes used inside HomePort when it is not possible to separate
- * between adapter and application functionality.
- *
- * \subsection sec_internal_arch Internal architecture
+ * \section sec_internal_arch Internal architecture
  *
  * - Data Model:
  *     - model.h
@@ -107,75 +61,7 @@
  *     - value.h
  *     - value_api.c
  *
- * \section sec_use_cases Use cases covered by the API
- *
- * Actors involved:
- * - Configurator: Collects a set of modules into an executable file with a main function.
- * - Adapter developer.
- * - Application developer.
- *
- * \subsection sec_configurator Configurator
- *
- * Functionality provided by: hpd_daemon_api.h
- *
- * Tasks:
- * - Start and stop HomePort [\ref sec_main].
- * - Add modules to HomePort [\ref sec_main].
- *
- * In addition, the configurator needs the module definitions (hpd_module_def_t) as provided by the adapters and
- * applications to add them to HomePort.
- *
- * \subsection sec_adapter_dev Adapter Developer
- *
- * Functionality provided by: hpd_adapter_api.h
- *
- * Tasks:
- * - Define a HomePort module for the configurator [\ref sec_modules].
- * - Manage the appropriate models in HomePort (adapters, devices, ...) [\ref sec_adapter_api].
- * - Answer to a request for a value [\ref sec_adapter_comm].
- *     - Read contents of PUT value [\ref sec_value].
- *     - Construct the value [\ref sec_value].
- * - Report that a service have changed value [\ref sec_adapter_comm].
- *     - Construct the value [\ref sec_value].
- *
- * In addition, the adapter developer may need to browse the models provided by the adapter, when communicating with
- * the underlying network (as they can store data within these models) [\ref sec_shared_api_cont].
- *
- * \subsection sec_application_dev Application Developer
- *
- * Functionality provided by: hpd_application_api.h
- *
- * Tasks:
- * - Define a HomePort module for the configurator [\ref sec_modules].
- * - Browsing available services in HomePort [\ref sec_shared_api_cont].
- * - Request a value [\ref sec_application_api].
- *      - Construct the value for PUT request [\ref sec_value].
- *      - Read the response [\ref sec_value].
- * - Listen to events [\ref sec_application_api].
- *
- * \subsection sec_sub_task Sub-tasks
- *
- * The following tasks may be a sub-component for those mentioned above:
- *
- * - Functions for logging (error) messages [\ref sec_logging].
- * - Functions for managing indirect references [\ref sec_indirect_refs].
- *
  * \section sec_data_mode HomePort data model
- *
- * The model layer in HomePort remains consistent with previous version, and from the outside looks like this:
- *
- * @startuml "HomePort Data Model"
- *     hide empty members
- *     class hpd_t
- *     class adapter_t
- *     class device_t
- *     class service_t
- *     class parameter_t
- *     hpd_t o-- adapter_t
- *     adapter_t o-- device_t
- *     device_t o-- service_t
- *     service_t o-- parameter_t
- * @enduml
  *
  * The internal class diagram for reference, most but not all types are available to the outside through references
  * (direct access to members are generally not possible):
@@ -333,12 +219,12 @@
  * All functions in the API returns hpd_err_t, which is:
  * \todo Should really reconsider whether to have errors on free functions - really difficult to handle (there's a reason you're not suppose to throw in destructors!)
  *
- * \snippet include/hpd_types.h hpd_error_t
+ * \snippet include/hpd/hpd_types.h hpd_error_t
  *
  * For the request-response relationships HomePort continues to use HTTP status codes to describe errors, as many
  * modules relies on HTTP connections. From the HTTP protocol, these are:
  *
- * \snippet include/hpd_types.h hpd_status_t
+ * \snippet include/hpd/hpd_types.h hpd_status_t
  *
  * \subsection sec_attrs Attribute default keys
  *
@@ -346,14 +232,14 @@
  * be chosen freely. However, we do define the following default keys for consistencies between modules:
  * \todo As with default keys, we could add default values as well; Type = Temperature, Unit = C, etc. Seluxit and Zigbee can be used for inspiration (Rene’s work).
  *
- * \snippet include/hpd_types.h Default keys
+ * \snippet include/hpd/hpd_types.h Default keys
  *
  * \subsection sec_methods Method and Port enumeration
  *
  * Services have a set of actions, currently for get and put only, but these are define in a enumeration, thus can
  * easily be expanded later:
  *
- * \snippet include/hpd_types.h hpd_method_t
+ * \snippet include/hpd/hpd_types.h hpd_method_t
  *
  * \subsection sec_custom_data Custom user data and free functions
  *
@@ -363,11 +249,11 @@
  * used by the module developer to ensure that the custom data is free'd as well. The function pointer can be NULL, if
  * it is not necessary to free the data.
  *
- * \snippet include/hpd_types.h hpd_free_f
+ * \snippet include/hpd/hpd_types.h hpd_free_f
  *
  * \section sec_main Daemon API
  *
- * \snippet include/hpd_daemon_api.h hpd_t functions
+ * \snippet include/hpd/hpd_daemon_api.h hpd_t functions
  *
  * First, the main program allocates memory for HomePort (hpd_t) with hpd_alloc(). Then it tells HomePort of all
  * modules that it wishes to include with hpd_module(). We shall use the term module for both adapters and applications.
@@ -425,10 +311,10 @@
  * A module will provide an instance of the module_def structure along with implementations of the five included
  * functions. module_def is a structure where the members are publicly available.
  *
- * \snippet include/hpd_types.h hpd_module_def_t
+ * \snippet include/hpd/hpd_types.h hpd_module_def_t
  *
  * The five functions:
- * \snippet include/hpd_types.h hpd_module_def_t functions
+ * \snippet include/hpd/hpd_types.h hpd_module_def_t functions
  *
  * In here, on_create and on_destroy are used to allocate/deallocate globally available memory in data, which can be
  * used freely. on_start and on_stop are used to initialise/stop the underlying connection and add watchers to the event
@@ -507,7 +393,7 @@
  * @enduml
  *
  * The following three functions are shared between adapters and applications:
- * \snippet include/hpd_shared_api.h hpd_t functions
+ * \snippet include/hpd/hpd_shared_api.h hpd_t functions
  *
  * For arguments to work, the module will have to add any options using hpd_module_add_option() during on_create.
  * Options will be named --id-name, where id is the module identifier, as given by the main program. The module can call
@@ -521,9 +407,9 @@
  *
  * \subsection sec_logging Logging
  *
- * \snippet include/hpd_types.h hpd_log_level_t
+ * \snippet include/hpd/hpd_types.h hpd_log_level_t
  *
- * \snippet include/hpd_shared_api.h log functions
+ * \snippet include/hpd/hpd_shared_api.h log functions
  *
  * \subsection sec_indirect_refs Indirect references
  *
@@ -531,7 +417,7 @@
  * services, parameters). These prevent module developers from keeping pointers to objects that eventually will be
  * free'd, thus making these pointers invalid. To allocate and free these references:
  *
- * \snippet include/hpd_shared_api.h id_t functions
+ * \snippet include/hpd/hpd_shared_api.h id_t functions
  *
  * If a module developers explicitly call *_id_alloc(), they are also responsible for calling *_id_free().
  *
@@ -544,7 +430,7 @@
  * To maintain adapter structures in the data model:
  * \todo Maybe change name of the structure from “adapter” to “network” to highlight the differences between modules and adapters. A module can make multiple networks of devices.
  *
- * \snippet include/hpd_adapter_api.h hpd_adapter_t functions
+ * \snippet include/hpd/hpd_adapter_api.h hpd_adapter_t functions
  *
  * alloc/free are used to manage memory. attach/detach are used to hand the object to HomePort. If an object is
  * attached, it will be visibly through the navigation functions (shown later) and HomePort will ensure that the memory
@@ -658,55 +544,55 @@
  * \subsection sec_hpd_device_t Device structure (hpd_device_t)
  *
  * Devices are managed in a similar manner:
- * \snippet include/hpd_adapter_api.h hpd_device_t functions
+ * \snippet include/hpd/hpd_adapter_api.h hpd_device_t functions
  *
  * \subsection sec_hpd_service_t Service structure (hpd_service_t)
  *
  * Services furthermore allow setting an action, which is a method and a function pointer. Currently only get and put
  * is support, but it could theoretically be expanded to others:
- * \snippet include/hpd_adapter_api.h hpd_service_t functions
- * \snippet include/hpd_types.h hpd_action_f
+ * \snippet include/hpd/hpd_adapter_api.h hpd_service_t functions
+ * \snippet include/hpd/hpd_types.h hpd_action_f
  *
  * \subsection sec_hpd_parameter_t Parameter structure (hpd_parameter_t)
  *
  * Finally, functions to manage parameters:
- * \snippet include/hpd_adapter_api.h hpd_parameter_t functions
+ * \snippet include/hpd/hpd_adapter_api.h hpd_parameter_t functions
  *
  * \section sec_shared_api_cont Shared API (Adapters and Applications) - Part II
  *
  * \subsection sec_data_model_get Data model getters
  *
  * To get members from the objects, created by an adapter, applications have the following functions:
- * \snippet include/hpd_shared_api.h hpd_adapter_t functions
- * \snippet include/hpd_shared_api.h hpd_device_t functions
- * \snippet include/hpd_shared_api.h hpd_service_t functions
- * \snippet include/hpd_shared_api.h hpd_parameter_t functions
- * \snippet include/hpd_shared_api.h hpd_action_t functions
- * \snippet include/hpd_shared_api.h hpd_pair_t functions
+ * \snippet include/hpd/hpd_shared_api.h hpd_adapter_t functions
+ * \snippet include/hpd/hpd_shared_api.h hpd_device_t functions
+ * \snippet include/hpd/hpd_shared_api.h hpd_service_t functions
+ * \snippet include/hpd/hpd_shared_api.h hpd_parameter_t functions
+ * \snippet include/hpd/hpd_shared_api.h hpd_action_t functions
+ * \snippet include/hpd/hpd_shared_api.h hpd_pair_t functions
  *
  * Again, we have defines to ease foreach loops:
- * \snippet include/hpd_shared_api.h model foreach loops
+ * \snippet include/hpd/hpd_shared_api.h model foreach loops
  *
  * \subsection sec_data_model_nav Data model navigation
  *
  * The HomePort data model can be navigated by both adapters and applications, thus only the later will find use for
  * browsing through models created by another module. To do so, the following functions are available:
- * \snippet include/hpd_shared_api.h Browsing functions
+ * \snippet include/hpd/hpd_shared_api.h Browsing functions
  *
  * In brief: Get functions will navigate upwards in the hierarchy, first functions will get the first object in the list
  * under the given object, next will give the next one.
  *
  * Because first-next function are a bit complicated to use, the following defines are also available to create simple
  * foreach loops (based on the same principle from libev):
- * \snippet include/hpd_shared_api.h Browsing foreach loops
+ * \snippet include/hpd/hpd_shared_api.h Browsing foreach loops
  *
  * \section sec_comm Communication
  *
  * \subsection sec_value Shared API - Value structure
  *
  * The value structure is used in both get and put requests and thus is available for both adapters and applications:
- * \snippet include/hpd_shared_api.h hpd_value_t functions
- * \snippet include/hpd_shared_api.h hpd_value_t foreach loops
+ * \snippet include/hpd/hpd_shared_api.h hpd_value_t functions
+ * \snippet include/hpd/hpd_shared_api.h hpd_value_t foreach loops
  *
  * The body of a value is the actual value, where the headers are additional attributes, which are currently unused but
  * will be used to indicate time-to-live for caching, but are defined generic so they can easily be expanded without
@@ -715,18 +601,18 @@
  *
  * The len in hpd_value_alloc can be set to HPD_NULL_TERMINATED if body is a \\0 terminated string:
  *
- * \snippet include/hpd_types.h HPD_NULL_TERMINATED
+ * \snippet include/hpd/hpd_types.h HPD_NULL_TERMINATED
  *
  * \subsection sec_adapter_comm Adapter API - Communication
  *
  * Action functions will need functions related to requests/responses to manage these (functions to manage values are
  * shared with applications and will be shown later):
- * \snippet include/hpd_adapter_api.h hpd_request_t functions
- * \snippet include/hpd_adapter_api.h hpd_response_t functions
+ * \snippet include/hpd/hpd_adapter_api.h hpd_request_t functions
+ * \snippet include/hpd/hpd_adapter_api.h hpd_response_t functions
  *
  * And when, we are considering communication, an adapter should call the following function, whenever a service has
  * changed value:
- * \snippet include/hpd_adapter_api.h hpd_changed
+ * \snippet include/hpd/hpd_adapter_api.h hpd_changed
  *
  * @startuml "Lifetime of request/response structures"
  *
@@ -880,18 +766,18 @@
  * The functions in the Application API are only available for applications.
  *
  * For hpd_request_t, hpd_response_t and hpd_listener_t functions we need the following callbacks:
- * \snippet include/hpd_types.h Application API Callbacks
+ * \snippet include/hpd/hpd_types.h Application API Callbacks
  *
  * The functions for requests and response are the reverse of an adapter (an application can create requests and read
  * the values of a response):
- * \snippet include/hpd_application_api.h hpd_request_t functions
- * \snippet include/hpd_application_api.h hpd_response_t functions
+ * \snippet include/hpd/hpd_application_api.h hpd_request_t functions
+ * \snippet include/hpd/hpd_application_api.h hpd_response_t functions
  *
  * In addition, an application can also create listeners. Listeners can be created on any object (HomePort, adapter,
  * device, and service) and will be called for that object and everything below if the conditions are met. E.g., a
  * listener with a value callback on an adapter will be called if any service under that adapter changes value. Function
  * to manage listeners:
- * \snippet include/hpd_application_api.h hpd_listener_t functions
+ * \snippet include/hpd/hpd_application_api.h hpd_listener_t functions
  *
  * The foreach function will cause the given listener to be called for each device that is already attached.
  *
