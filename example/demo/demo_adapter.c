@@ -25,10 +25,13 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
+/// [includes]
 #include "demo_adapter.h"
-#include "hpd/hpd_adapter_api.h"
-#include "hpd/common/hpd_common.h"
+#include <hpd/hpd_adapter_api.h>
+#include <hpd/common/hpd_common.h>
+/// [includes]
 
+/// [types]
 typedef struct demo_adapter demo_adapter_t;
 typedef struct demo_adapter_srv demo_adapter_srv_t;
 
@@ -43,7 +46,9 @@ struct demo_adapter_srv {
     int state;
     demo_adapter_t *demo_adapter;
 };
+/// [types]
 
+/// [definition]
 static hpd_error_t demo_adapter_on_create(void **data, const hpd_module_t *context);
 static hpd_error_t demo_adapter_on_destroy(void *data);
 static hpd_error_t demo_adapter_on_start(void *data, hpd_t *hpd);
@@ -57,7 +62,9 @@ struct hpd_module_def hpd_demo_adapter_def = {
         demo_adapter_on_stop,
         demo_adapter_on_parse_opt,
 };
+/// [definition]
 
+/// [send]
 static hpd_status_t demo_adapter_send_value(hpd_request_t *req, demo_adapter_srv_t *srv_data)
 {
     hpd_error_t rc, rc2;
@@ -88,7 +95,9 @@ static hpd_status_t demo_adapter_send_value(hpd_request_t *req, demo_adapter_srv
     HPD_LOG_ERROR(srv_data->demo_adapter->context, "%s() failed [code: %i].", __FUNCTION__, rc);
     return HPD_S_500;
 }
+/// [send]
 
+/// [changed]
 static hpd_error_t demo_adapter_send_changed(const hpd_service_id_t *service_id, demo_adapter_srv_t *srv_data)
 {
     hpd_error_t rc;
@@ -99,7 +108,9 @@ static hpd_error_t demo_adapter_send_changed(const hpd_service_id_t *service_id,
     if ((rc = hpd_changed(service_id, value))) hpd_value_free(value);
     return rc;
 }
+/// [changed]
 
+/// [set]
 static hpd_status_t demo_adapter_set_value(hpd_request_t *req, demo_adapter_srv_t *srv_data)
 {
     hpd_error_t rc;
@@ -112,7 +123,7 @@ static hpd_status_t demo_adapter_set_value(hpd_request_t *req, demo_adapter_srv_
     const char *body;
     size_t len;
     if ((rc = hpd_value_get_body(val, &body, &len))) goto error_return;
-    
+
     // Get service id
     const hpd_service_id_t *service_id;
     if ((rc = hpd_request_get_service(req, &service_id))) goto error_return;
@@ -122,11 +133,11 @@ static hpd_status_t demo_adapter_set_value(hpd_request_t *req, demo_adapter_srv_
     HPD_STR_N_CPY(nul_term, body, len);
     int state = atoi(nul_term);
     free(nul_term);
-    
+
     if (state != srv_data->state) {
         srv_data->state = state;
         if ((rc = demo_adapter_send_changed(service_id, srv_data)))
-            HPD_LOG_ERROR(srv_data->demo_adapter->context, "Failed to send changed value [code: %i].", rc); 
+            HPD_LOG_ERROR(srv_data->demo_adapter->context, "Failed to send changed value [code: %i].", rc);
     }
 
     return HPD_S_NONE;
@@ -139,44 +150,63 @@ static hpd_status_t demo_adapter_set_value(hpd_request_t *req, demo_adapter_srv_
     HPD_LOG_ERROR(srv_data->demo_adapter->context, "%s() failed [code: %i].", __FUNCTION__, rc);
     return HPD_S_500;
 }
+/// [set]
 
+/// [on_get]
 static hpd_status_t demo_adapter_on_get(void *data, hpd_request_t *req)
 {
     return demo_adapter_send_value(req, data);
 }
+/// [on_get]
 
+/// [on_put]
 static hpd_status_t demo_adapter_on_put(void *data, hpd_request_t *req)
 {
     hpd_status_t status;
     if ((status = demo_adapter_set_value(req, data)) != HPD_S_NONE) return status;
     return demo_adapter_send_value(req, data);
 }
+/// [on_put]
 
+/// [on_create]
 static hpd_error_t demo_adapter_on_create(void **data, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
     // Create struct with custom data
-    demo_adapter_t *demo_adapter = calloc(1, sizeof(demo_adapter_t));
+    demo_adapter_t *demo_adapter;
+    HPD_CALLOC(demo_adapter, 1, demo_adapter_t);
     demo_adapter->num_lamps = 1;
     demo_adapter->context = context;
-    if ((rc = hpd_module_get_id(context, &demo_adapter->module_id))) return rc;
+    if ((rc = hpd_module_get_id(context, &demo_adapter->module_id)))
+        goto error_free;
 
     // Add supported options
-    if ((rc = hpd_module_add_option(context, "num-lamps", "count", 0, "Number of lamps to create. Default 1."))) return rc;
+    if ((rc = hpd_module_add_option(context, "num-lamps", "count", 0, "Number of lamps to create. Default 1.")))
+        goto error_free;
 
-    // Return
     *data = demo_adapter;
     return HPD_E_SUCCESS;
-}
 
+    alloc_error:
+    HPD_LOG_RETURN_E_ALLOC(context);
+
+    error_free:
+    free(demo_adapter);
+    return rc;
+}
+/// [on_create]
+
+/// [on_destroy]
 static hpd_error_t demo_adapter_on_destroy(void *data)
 {
     demo_adapter_t *demo_adapter = data;
     free(demo_adapter);
     return HPD_E_SUCCESS;
 }
+/// [on_destroy]
 
+/// [create_adapter]
 static hpd_error_t demo_adapter_create_adapter(hpd_t *hpd, demo_adapter_t *demo_adapter)
 {
     hpd_error_t rc, rc2;
@@ -204,7 +234,9 @@ static hpd_error_t demo_adapter_create_adapter(hpd_t *hpd, demo_adapter_t *demo_
     error_return:
     return rc;
 }
+/// [create_adapter]
 
+/// [create_parameter]
 static hpd_error_t demo_adapter_create_parameter(demo_adapter_t *demo_adapter, hpd_service_t *service)
 {
     hpd_error_t rc, rc2;
@@ -220,9 +252,11 @@ static hpd_error_t demo_adapter_create_parameter(demo_adapter_t *demo_adapter, h
         HPD_LOG_ERROR(demo_adapter->context, "Free function failed [code: %i].", rc2);
 
     error_return:
-        return rc;
+    return rc;
 }
+/// [create_parameter]
 
+/// [create_service]
 static hpd_error_t demo_adapter_create_service(demo_adapter_t *demo_adapter, hpd_device_t *device)
 {
     hpd_error_t rc, rc2;
@@ -251,7 +285,7 @@ static hpd_error_t demo_adapter_create_service(demo_adapter_t *demo_adapter, hpd
     HPD_LOG_RETURN_E_ALLOC(demo_adapter->context);
 
     error_free_data:
-        free(srv_data);
+    free(srv_data);
 
     error_free_service:
     if ((rc2 = hpd_service_free(service)))
@@ -260,7 +294,9 @@ static hpd_error_t demo_adapter_create_service(demo_adapter_t *demo_adapter, hpd
     error_return:
     return rc;
 }
+/// [create_service]
 
+/// [create_lamp]
 static hpd_error_t demo_adapter_create_lamp(demo_adapter_t *demo_adapter, const char *id)
 {
     hpd_error_t rc, rc2;
@@ -280,7 +316,9 @@ static hpd_error_t demo_adapter_create_lamp(demo_adapter_t *demo_adapter, const 
     error_return:
     return rc;
 }
+/// [create_lamp]
 
+/// [on_start]
 static hpd_error_t demo_adapter_on_start(void *data, hpd_t *hpd)
 {
     demo_adapter_t *demo_adapter = data;
@@ -320,7 +358,9 @@ static hpd_error_t demo_adapter_on_start(void *data, hpd_t *hpd)
     error_return:
     return rc;
 }
+/// [on_start]
 
+/// [on_stop]
 static hpd_error_t demo_adapter_on_stop(void *data, hpd_t *hpd)
 {
     hpd_error_t rc, rc2;
@@ -346,7 +386,9 @@ static hpd_error_t demo_adapter_on_stop(void *data, hpd_t *hpd)
     error_return:
     return rc;
 }
+/// [on_stop]
 
+/// [on_parse_opt]
 static hpd_error_t demo_adapter_on_parse_opt(void *data, const char *name, const char *arg)
 {
     demo_adapter_t *demo_adapter = data;
@@ -358,3 +400,4 @@ static hpd_error_t demo_adapter_on_parse_opt(void *data, const char *name, const
 
     return HPD_E_ARGUMENT;
 }
+/// [on_parse_opt]

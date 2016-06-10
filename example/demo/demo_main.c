@@ -25,9 +25,11 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
+/// [file]
 #include <hpd/hpd_daemon_api.h>
-#include "template_adapter.h"
-#include "template_application.h"
+#include <hpd/modules/hpd_rest.h>
+#include "demo_adapter.h"
+#include "demo_application.h"
 
 int main(int argc, char *argv[])
 {
@@ -38,8 +40,9 @@ int main(int argc, char *argv[])
     if ((rc = hpd_alloc(&hpd))) goto error_return;
 
     // Add modules
-    if ((rc = hpd_module(hpd, "template_adapter", &template_adapter_def))) goto error_free;
-    if ((rc = hpd_module(hpd, "template_application", &template_app_def))) goto error_free;
+    if ((rc = hpd_module(hpd, "rest", &hpd_rest))) goto error_free;
+    if ((rc = hpd_module(hpd, "demo_adapter", &hpd_demo_adapter_def))) goto error_free;
+    if ((rc = hpd_module(hpd, "demo_application", &hpd_demo_app_def))) goto error_free;
 
     // Start hpd
     if ((rc = hpd_start(hpd, argc, argv))) goto error_free;
@@ -54,3 +57,4 @@ int main(int argc, char *argv[])
     error_return:
         return rc;
 }
+/// [file]

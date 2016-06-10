@@ -25,15 +25,20 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
+/// [includes]
 #include "template_adapter.h"
 #include <hpd/hpd_adapter_api.h>
+/// [includes]
 
+/// [declarations]
 static hpd_error_t template_adapter_on_create(void **data, const hpd_module_t *context);
 static hpd_error_t template_adapter_on_destroy(void *data);
 static hpd_error_t template_adapter_on_start(void *data, hpd_t *hpd);
 static hpd_error_t template_adapter_on_stop(void *data, hpd_t *hpd);
 static hpd_error_t template_adapter_on_parse_opt(void *data, const char *name, const char *arg);
+/// [declarations]
 
+/// [definition]
 struct hpd_module_def template_adapter_def = {
         template_adapter_on_create,
         template_adapter_on_destroy,
@@ -41,28 +46,39 @@ struct hpd_module_def template_adapter_def = {
         template_adapter_on_stop,
         template_adapter_on_parse_opt,
 };
+/// [definition]
 
+/// [on_create]
 static hpd_error_t template_adapter_on_create(void **data, const hpd_module_t *context)
 {
     return HPD_E_SUCCESS;
 }
+/// [on_create]
 
+/// [on_destroy]
 static hpd_error_t template_adapter_on_destroy(void *data)
 {
     return HPD_E_SUCCESS;
 }
+/// [on_destroy]
 
+/// [on_start]
 static hpd_error_t template_adapter_on_start(void *data, hpd_t *hpd)
 {
     return HPD_E_SUCCESS;
 }
+/// [on_start]
 
+/// [on_stop]
 static hpd_error_t template_adapter_on_stop(void *data, hpd_t *hpd)
 {
     return HPD_E_SUCCESS;
 }
+/// [on_stop]
 
+/// [on_parse_opt]
 static hpd_error_t template_adapter_on_parse_opt(void *data, const char *name, const char *arg)
 {
     return HPD_E_ARGUMENT;
 }
+/// [on_parse_opt]

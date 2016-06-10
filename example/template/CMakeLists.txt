@@ -41,6 +41,7 @@ add_library(template_application
 target_link_libraries(template_application hpd)
 
 add_executable(template
-        main.c
+        tutorial01.dox
+        template_main.c
         )
 target_link_libraries(template template_adapter template_application)

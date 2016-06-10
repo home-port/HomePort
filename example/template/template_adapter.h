@@ -25,6 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
+/// [file]
 #ifndef HOMEPORT_TEMPLATE_ADAPTER_H
 #define HOMEPORT_TEMPLATE_ADAPTER_H
 
@@ -33,3 +34,4 @@
 extern struct hpd_module_def template_adapter_def;
 
 #endif //HOMEPORT_TEMPLATE_ADAPTER_H
+/// [file]

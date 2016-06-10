@@ -25,6 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
+/// [file]
 #include "template_application.h"
 #include <hpd/hpd_application_api.h>
 
@@ -66,3 +67,4 @@ static hpd_error_t template_app_on_parse_opt(void *data, const char *name, const
 {
     return HPD_E_ARGUMENT;
 }
+/// [file]
