@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['get_5fin_5faddr',['get_in_addr',['../a00049.html#a67d03b167f8adca86cde7eeed5850982',1,'tcpd.c']]],
-  ['get_5fmt_5floop',['get_mt_loop',['../a00031.html#a46e90a73cf2ceec5920442647a8cabec',1,'load_test.c']]],
-  ['global_5fcontext',['global_context',['../a00082.html#a0f5be233e5a6b787b2bf14bf843bf602',1,'xml.c']]],
-  ['greeting_2ec',['greeting.c',['../a00038.html',1,'']]]
+  ['get_5fmt_5floop',['get_mt_loop',['../a00040.html#a46e90a73cf2ceec5920442647a8cabec',1,'load_test.c']]],
+  ['greeting_2ec',['greeting.c',['../a00047.html',1,'']]]
 ];

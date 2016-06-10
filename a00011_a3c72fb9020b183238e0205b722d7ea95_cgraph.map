@@ -1,7 +1,0 @@
-<map id="discovery_free_device" name="discovery_free_device">
-<area shape="rect" id="node2" href="$a00063.html#a562bd655fd329da0289d21ec36973322" title="discovery_free_service" alt="" coords="205,72,361,99"/>
-<area shape="rect" id="node4" href="$a00046.html#a195d511a075f2349200563af1c5d1fd7" title="hpd_map_free" alt="" coords="629,97,733,124"/>
-<area shape="rect" id="node6" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="955,97,999,124"/>
-<area shape="rect" id="node3" href="$a00063.html#ad18143d06649d9220e4fd8d74dbdec79" title="discovery_free_parameter" alt="" coords="409,47,581,73"/>
-<area shape="rect" id="node5" href="$a00022.html#ae1085dd4fd40466d18b02ec077ef4d6d" title="hpd_map_remove" alt="" coords="781,148,907,175"/>
-</map>

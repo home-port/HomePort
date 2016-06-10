@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: hpd_tcpd_conn Struct Reference</title>
+<title>HomePort: hpd_listener Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -86,70 +86,48 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
-<div class="title">hpd_tcpd_conn Struct Reference</div>  </div>
+<div class="title">hpd_listener Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p>All data to represent a connection.  
- <a href="a00028.html#details">More...</a></p>
 <div class="dynheader">
-Collaboration diagram for hpd_tcpd_conn:</div>
+Collaboration diagram for hpd_listener:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00272.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00294.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a743e73a20f227e5ba7cace6943cb3a9c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a743e73a20f227e5ba7cace6943cb3a9c">TAILQ_ENTRY</a> (<a class="el" href="a00028.html">hpd_tcpd_conn</a>) <a class="el" href="a00045.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a></td></tr>
-<tr class="separator:a743e73a20f227e5ba7cace6943cb3a9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c9a2c1cded381271081385357d66f5d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a2c9a2c1cded381271081385357d66f5d">TAILQ_ENTRY</a> (<a class="el" href="a00028.html">hpd_listener</a>) <a class="el" href="a00055.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a></td></tr>
+<tr class="separator:a2c9a2c1cded381271081385357d66f5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a1903de4a0d84d0abe0c9713f2648fa6c"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a1903de4a0d84d0abe0c9713f2648fa6c">ctx</a></td></tr>
-<tr class="memdesc:a1903de4a0d84d0abe0c9713f2648fa6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connection context.  <a href="#a1903de4a0d84d0abe0c9713f2648fa6c">More...</a><br /></td></tr>
-<tr class="separator:a1903de4a0d84d0abe0c9713f2648fa6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a679d84f85343139676ee5520e18b593b"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a679d84f85343139676ee5520e18b593b">ip</a> [INET6_ADDRSTRLEN]</td></tr>
-<tr class="memdesc:a679d84f85343139676ee5520e18b593b"><td class="mdescLeft">&#160;</td><td class="mdescRight">IP address of client.  <a href="#a679d84f85343139676ee5520e18b593b">More...</a><br /></td></tr>
-<tr class="separator:a679d84f85343139676ee5520e18b593b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a58e0cbddc445eab9cd89ea235d116076"><td class="memItemLeft" align="right" valign="top">ev_io&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a58e0cbddc445eab9cd89ea235d116076">recv_watcher</a></td></tr>
-<tr class="memdesc:a58e0cbddc445eab9cd89ea235d116076"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recieve watcher.  <a href="#a58e0cbddc445eab9cd89ea235d116076">More...</a><br /></td></tr>
-<tr class="separator:a58e0cbddc445eab9cd89ea235d116076"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69f44575a6ea4a7b070cb9bfcdc718fc"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a69f44575a6ea4a7b070cb9bfcdc718fc">send_close</a></td></tr>
-<tr class="memdesc:a69f44575a6ea4a7b070cb9bfcdc718fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close socket after send ?  <a href="#a69f44575a6ea4a7b070cb9bfcdc718fc">More...</a><br /></td></tr>
-<tr class="separator:a69f44575a6ea4a7b070cb9bfcdc718fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c2b9450001ccd93a6d1df246b2d8c44"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a6c2b9450001ccd93a6d1df246b2d8c44">send_len</a></td></tr>
-<tr class="memdesc:a6c2b9450001ccd93a6d1df246b2d8c44"><td class="mdescLeft">&#160;</td><td class="mdescRight">Length of data to send.  <a href="#a6c2b9450001ccd93a6d1df246b2d8c44">More...</a><br /></td></tr>
-<tr class="separator:a6c2b9450001ccd93a6d1df246b2d8c44"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6403253765e3192583aacd0b676290b8"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a6403253765e3192583aacd0b676290b8">send_msg</a></td></tr>
-<tr class="memdesc:a6403253765e3192583aacd0b676290b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data to send.  <a href="#a6403253765e3192583aacd0b676290b8">More...</a><br /></td></tr>
-<tr class="separator:a6403253765e3192583aacd0b676290b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a5cc97dd198c1d604eea49b2ea4a7b2"><td class="memItemLeft" align="right" valign="top">ev_io&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a5a5cc97dd198c1d604eea49b2ea4a7b2">send_watcher</a></td></tr>
-<tr class="memdesc:a5a5cc97dd198c1d604eea49b2ea4a7b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send watcher.  <a href="#a5a5cc97dd198c1d604eea49b2ea4a7b2">More...</a><br /></td></tr>
-<tr class="separator:a5a5cc97dd198c1d604eea49b2ea4a7b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe93091f288b85316008f27e24283edc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00029.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#afe93091f288b85316008f27e24283edc">tcpd</a></td></tr>
-<tr class="memdesc:afe93091f288b85316008f27e24283edc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Webserver instance.  <a href="#afe93091f288b85316008f27e24283edc">More...</a><br /></td></tr>
-<tr class="separator:afe93091f288b85316008f27e24283edc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5eb1239ec43cad58b55dc9776ffe3589"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a5eb1239ec43cad58b55dc9776ffe3589">timeout</a></td></tr>
-<tr class="memdesc:a5eb1239ec43cad58b55dc9776ffe3589"><td class="mdescLeft">&#160;</td><td class="mdescRight">Restart timeout watcher ?  <a href="#a5eb1239ec43cad58b55dc9776ffe3589">More...</a><br /></td></tr>
-<tr class="separator:a5eb1239ec43cad58b55dc9776ffe3589"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84014247c14c84d5b48102d09141079c"><td class="memItemLeft" align="right" valign="top">ev_timer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a84014247c14c84d5b48102d09141079c">timeout_watcher</a></td></tr>
-<tr class="memdesc:a84014247c14c84d5b48102d09141079c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timeout watcher.  <a href="#a84014247c14c84d5b48102d09141079c">More...</a><br /></td></tr>
-<tr class="separator:a84014247c14c84d5b48102d09141079c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3be28f520c1e872a4f0f185787ebb807"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a3be28f520c1e872a4f0f185787ebb807">data</a></td></tr>
+<tr class="separator:a3be28f520c1e872a4f0f185787ebb807"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76ca6df18034020c25ff3edf86554e66"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a76ca6df18034020c25ff3edf86554e66">hpd</a></td></tr>
+<tr class="separator:a76ca6df18034020c25ff3edf86554e66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f396415aa47db6e33dddc6e354d1f9a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a1ccb530f148c41890c45396b906b8b8b">hpd_device_f</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a0f396415aa47db6e33dddc6e354d1f9a">on_attach</a></td></tr>
+<tr class="separator:a0f396415aa47db6e33dddc6e354d1f9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ecfaa4343bacb16d6c07d24bad0d17a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a68fdc3cf3d04dc731dda2702445ee878">hpd_value_f</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a4ecfaa4343bacb16d6c07d24bad0d17a">on_change</a></td></tr>
+<tr class="separator:a4ecfaa4343bacb16d6c07d24bad0d17a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0f23755e8693d7aefc142cb0176229c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a1ccb530f148c41890c45396b906b8b8b">hpd_device_f</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#ac0f23755e8693d7aefc142cb0176229c">on_detach</a></td></tr>
+<tr class="separator:ac0f23755e8693d7aefc142cb0176229c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82dfc6aff1dea8e618e67e41c6e3f29c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a48ae026294e911f802713816b5abd57f">hpd_free_f</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html#a82dfc6aff1dea8e618e67e41c6e3f29c">on_free</a></td></tr>
+<tr class="separator:a82dfc6aff1dea8e618e67e41c6e3f29c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>All data to represent a connection. </p>
-
-<p>Definition at line <a class="el" href="a00027_source.html#l00056">56</a> of file <a class="el" href="a00027_source.html">tcpd_intern.h</a>.</p>
+<div class="textblock">
+<p>Definition at line <a class="el" href="a00033_source.html#l00041">41</a> of file <a class="el" href="a00033_source.html">comm.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a743e73a20f227e5ba7cace6943cb3a9c"></a>
+<a class="anchor" id="a2c9a2c1cded381271081385357d66f5d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">hpd_tcpd_conn::TAILQ_ENTRY </td>
+          <td class="memname">hpd_listener::TAILQ_ENTRY </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00028.html">hpd_tcpd_conn</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="a00028.html">hpd_listener</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -159,173 +137,97 @@ Data Fields</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Field Documentation</h2>
-<a class="anchor" id="a1903de4a0d84d0abe0c9713f2648fa6c"></a>
+<a class="anchor" id="a3be28f520c1e872a4f0f185787ebb807"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void* hpd_tcpd_conn::ctx</td>
+          <td class="memname">void* hpd_listener::data</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Connection context. </p>
-
-<p>Definition at line <a class="el" href="a00027_source.html#l00067">67</a> of file <a class="el" href="a00027_source.html">tcpd_intern.h</a>.</p>
+<p>Definition at line <a class="el" href="a00033_source.html#l00050">50</a> of file <a class="el" href="a00033_source.html">comm.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a679d84f85343139676ee5520e18b593b"></a>
+<a class="anchor" id="a76ca6df18034020c25ff3edf86554e66"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char hpd_tcpd_conn::ip[INET6_ADDRSTRLEN]</td>
+          <td class="memname"><a class="el" href="a00030.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a>* hpd_listener::hpd</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>IP address of client. </p>
-
-<p>Definition at line <a class="el" href="a00027_source.html#l00059">59</a> of file <a class="el" href="a00027_source.html">tcpd_intern.h</a>.</p>
+<p>Definition at line <a class="el" href="a00033_source.html#l00044">44</a> of file <a class="el" href="a00033_source.html">comm.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a58e0cbddc445eab9cd89ea235d116076"></a>
+<a class="anchor" id="a0f396415aa47db6e33dddc6e354d1f9a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ev_io hpd_tcpd_conn::recv_watcher</td>
+          <td class="memname"><a class="el" href="a00030.html#a1ccb530f148c41890c45396b906b8b8b">hpd_device_f</a> hpd_listener::on_attach</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Recieve watcher. </p>
-
-<p>Definition at line <a class="el" href="a00027_source.html#l00062">62</a> of file <a class="el" href="a00027_source.html">tcpd_intern.h</a>.</p>
+<p>Definition at line <a class="el" href="a00033_source.html#l00047">47</a> of file <a class="el" href="a00033_source.html">comm.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a69f44575a6ea4a7b070cb9bfcdc718fc"></a>
+<a class="anchor" id="a4ecfaa4343bacb16d6c07d24bad0d17a"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int hpd_tcpd_conn::send_close</td>
+          <td class="memname"><a class="el" href="a00030.html#a68fdc3cf3d04dc731dda2702445ee878">hpd_value_f</a> hpd_listener::on_change</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Close socket after send ? </p>
-
-<p>Definition at line <a class="el" href="a00027_source.html#l00066">66</a> of file <a class="el" href="a00027_source.html">tcpd_intern.h</a>.</p>
+<p>Definition at line <a class="el" href="a00033_source.html#l00046">46</a> of file <a class="el" href="a00033_source.html">comm.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a6c2b9450001ccd93a6d1df246b2d8c44"></a>
+<a class="anchor" id="ac0f23755e8693d7aefc142cb0176229c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t hpd_tcpd_conn::send_len</td>
+          <td class="memname"><a class="el" href="a00030.html#a1ccb530f148c41890c45396b906b8b8b">hpd_device_f</a> hpd_listener::on_detach</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Length of data to send. </p>
-
-<p>Definition at line <a class="el" href="a00027_source.html#l00065">65</a> of file <a class="el" href="a00027_source.html">tcpd_intern.h</a>.</p>
+<p>Definition at line <a class="el" href="a00033_source.html#l00048">48</a> of file <a class="el" href="a00033_source.html">comm.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a6403253765e3192583aacd0b676290b8"></a>
+<a class="anchor" id="a82dfc6aff1dea8e618e67e41c6e3f29c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char* hpd_tcpd_conn::send_msg</td>
+          <td class="memname"><a class="el" href="a00030.html#a48ae026294e911f802713816b5abd57f">hpd_free_f</a> hpd_listener::on_free</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Data to send. </p>
-
-<p>Definition at line <a class="el" href="a00027_source.html#l00064">64</a> of file <a class="el" href="a00027_source.html">tcpd_intern.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a5a5cc97dd198c1d604eea49b2ea4a7b2"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ev_io hpd_tcpd_conn::send_watcher</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Send watcher. </p>
-
-<p>Definition at line <a class="el" href="a00027_source.html#l00063">63</a> of file <a class="el" href="a00027_source.html">tcpd_intern.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="afe93091f288b85316008f27e24283edc"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00029.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a>* hpd_tcpd_conn::tcpd</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Webserver instance. </p>
-
-<p>Definition at line <a class="el" href="a00027_source.html#l00058">58</a> of file <a class="el" href="a00027_source.html">tcpd_intern.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a5eb1239ec43cad58b55dc9776ffe3589"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int hpd_tcpd_conn::timeout</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Restart timeout watcher ? </p>
-
-<p>Definition at line <a class="el" href="a00027_source.html#l00061">61</a> of file <a class="el" href="a00027_source.html">tcpd_intern.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a84014247c14c84d5b48102d09141079c"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">ev_timer hpd_tcpd_conn::timeout_watcher</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Timeout watcher. </p>
-
-<p>Definition at line <a class="el" href="a00027_source.html#l00060">60</a> of file <a class="el" href="a00027_source.html">tcpd_intern.h</a>.</p>
+<p>Definition at line <a class="el" href="a00033_source.html#l00051">51</a> of file <a class="el" href="a00033_source.html">comm.h</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>common/tcpd/src/<a class="el" href="a00027_source.html">tcpd_intern.h</a></li>
+<li>hpd/src/<a class="el" href="a00033_source.html">comm.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:33 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:34 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

@@ -1,0 +1,7 @@
+<map id="discovery_get_device_adapter" name="discovery_get_device_adapter">
+<area shape="rect" id="node2" href="$a00079.html#a50b0521e638f13c35f0d7f4860d8064d" title="hpd_device_get_adapter" alt="" coords="201,31,364,57"/>
+<area shape="rect" id="node3" href="$a00014.html#a47420cd34ff6783c48a215b947bca110" title="demo_app_on_device" alt="" coords="412,31,560,57"/>
+<area shape="rect" id="node4" href="$a00014.html#a192157935b7f185b56921b919e981f3a" title="demo_app_on_attach" alt="" coords="609,5,756,32"/>
+<area shape="rect" id="node6" href="$a00014.html#a5bac6eb6e610cdc6e322879ee4eaf514" title="demo_app_on_detach" alt="" coords="608,56,757,83"/>
+<area shape="rect" id="node5" href="$a00014.html#aa8f03492cc097968d466bb5ea9a043d1" title="demo_app_on_start" alt="" coords="805,31,941,57"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="event_on_detached" name="event_on_detached">
+<area shape="rect" id="node2" href="$a00082.html#a38f3fa1f45b7832adcbdd3f1af2bd9a4" title="event_inform_device\l_detached" alt="" coords="188,27,331,69"/>
+<area shape="rect" id="node3" href="$a00020.html#a8d6472e9a8006949786f5975d5b02648" title="discovery_detach_device" alt="" coords="379,5,548,32"/>
+<area shape="rect" id="node5" href="$a00082.html#ab3279e57e3faeb9689b5b60283103ef2" title="event_inform_adapter\l_detached" alt="" coords="390,57,537,98"/>
+<area shape="rect" id="node4" href="$a00079.html#ab8bd71524a42feb4064a3f3787e455e7" title="hpd_device_detach" alt="" coords="616,5,751,32"/>
+<area shape="rect" id="node6" href="$a00020.html#adb9f3d73fc28b0ec1c15d72b03db7239" title="discovery_detach_adapter" alt="" coords="596,64,771,91"/>
+<area shape="rect" id="node7" href="$a00079.html#a66c7a7a288fb2be658fcab815bd274e2" title="hpd_adapter_detach" alt="" coords="819,64,957,91"/>
+<area shape="rect" id="node8" href="$a00013.html#aa30316159e7cdc14f2f035f0949b6680" title="[on_start] " alt="" coords="1005,64,1163,91"/>
+<area shape="rect" id="node9" href="$a00013.html#a9f84d5de2ac16bde89480bd48efdff51" title="[create_lamp] " alt="" coords="1211,64,1369,91"/>
+</map>

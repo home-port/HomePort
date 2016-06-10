@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: common/httpd/src/url_parser.h File Reference</title>
+<title>HomePort: hpd/src/comm.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,29 +81,28 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_de836088bc1383ea19051eab00d43ec5.html">httpd</a></li><li class="navelem"><a class="el" href="dir_3eb06dbdb8c6f8b7c2db8db660fe1677.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_ab00a9b86cff89a0b86b44294c0aada6.html">hpd</a></li><li class="navelem"><a class="el" href="dir_3128ee3f19d8356fe970e43f9e882e44.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
-<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">url_parser.h File Reference</div>  </div>
+<div class="title">comm.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><div class="dynheader">
-Include dependency graph for url_parser.h:</div>
+Include dependency graph for comm.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00155.svg" width="156" height="127"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00229.svg" width="516" height="262"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00156.svg" width="343" height="231"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00230.svg" width="100%" height="440"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </div>
@@ -111,198 +110,198 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:a00120"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00033.html#a00120">up_settings</a></td></tr>
-<tr class="memdesc:a00120"><td class="mdescLeft">&#160;</td><td class="mdescRight">Settings struct for the URL Parser.  <a href="a00033.html#a00120">More...</a><br /></td></tr>
-<tr class="separator:a00120"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:a993405f31c2a01b4d8234ede5451d8a8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00033.html#a993405f31c2a01b4d8234ede5451d8a8">UP_SETTINGS_DEFAULT</a></td></tr>
-<tr class="separator:a993405f31c2a01b4d8234ede5451d8a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00028.html">hpd_listener</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00126"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00033.html#a00126">hpd_request</a></td></tr>
+<tr class="separator:a00126"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00127"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00033.html#a00127">hpd_response</a></td></tr>
+<tr class="separator:a00127"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00133"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00033.html#a00133">hpd_value</a></td></tr>
+<tr class="separator:a00133"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ac6488cedd12d3dc315f14476efc66d5b"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00033.html#ac6488cedd12d3dc315f14476efc66d5b">up_pair_cb</a>) (void *<a class="el" href="a00006.html#a00090">data</a>, const char *<a class="el" href="a00006.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a>, size_t key_length, const char *<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>, size_t value_length)</td></tr>
-<tr class="separator:ac6488cedd12d3dc315f14476efc66d5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0bec97ec819530be6f694c1aa362c2fe"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00033.html#a0bec97ec819530be6f694c1aa362c2fe">up_string_cb</a>) (void *<a class="el" href="a00006.html#a00090">data</a>, const char *parsedSegment, size_t segment_length)</td></tr>
-<tr class="separator:a0bec97ec819530be6f694c1aa362c2fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa058504eb5a3b0d314de7a2c50bfc6b5"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00033.html#aa058504eb5a3b0d314de7a2c50bfc6b5">up_void_cb</a>) (void *<a class="el" href="a00006.html#a00090">data</a>)</td></tr>
-<tr class="separator:aa058504eb5a3b0d314de7a2c50bfc6b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aced6490e350bf85afe3f905db21c24c5"><td class="memItemLeft" align="right" valign="top">typedef struct hpd_listeners&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00033.html#aced6490e350bf85afe3f905db21c24c5">hpd_listeners_t</a></td></tr>
+<tr class="separator:aced6490e350bf85afe3f905db21c24c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aecaf185c0e094f848260daba330301ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00033.html#aecaf185c0e094f848260daba330301ed">up_add_chunk</a> (struct <a class="el" href="a00032.html#a00119">up</a> *<a class="el" href="a00006.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>, const char *chunk, size_t chunk_size)</td></tr>
-<tr class="memdesc:aecaf185c0e094f848260daba330301ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a chunk of an URL.  <a href="#aecaf185c0e094f848260daba330301ed">More...</a><br /></td></tr>
-<tr class="separator:aecaf185c0e094f848260daba330301ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2cf7cc000201a1b2ab1b421af7bd80f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00033.html#ac2cf7cc000201a1b2ab1b421af7bd80f">up_complete</a> (struct <a class="el" href="a00032.html#a00119">up</a> *<a class="el" href="a00006.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>)</td></tr>
-<tr class="memdesc:ac2cf7cc000201a1b2ab1b421af7bd80f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Informs the parser that the URL is complete.  <a href="#ac2cf7cc000201a1b2ab1b421af7bd80f">More...</a><br /></td></tr>
-<tr class="separator:ac2cf7cc000201a1b2ab1b421af7bd80f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade00903911200eca472bafd938317f03"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00033.html#ade00903911200eca472bafd938317f03">up_create</a> (struct <a class="el" href="a00032.html#a00119">up</a> **<a class="el" href="a00006.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>, struct <a class="el" href="a00033.html#a00120">up_settings</a> *<a class="el" href="a00006.html#af199db15de773bb97002d69856cd55c0">settings</a>, <a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *context, void *<a class="el" href="a00006.html#a00090">data</a>)</td></tr>
-<tr class="memdesc:ade00903911200eca472bafd938317f03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create URL parser instance.  <a href="#ade00903911200eca472bafd938317f03">More...</a><br /></td></tr>
-<tr class="separator:ade00903911200eca472bafd938317f03"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab65667fa4439ff9bc0623991404a31bd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00033.html#ab65667fa4439ff9bc0623991404a31bd">up_destroy</a> (struct <a class="el" href="a00032.html#a00119">up</a> *<a class="el" href="a00006.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>)</td></tr>
-<tr class="memdesc:ab65667fa4439ff9bc0623991404a31bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy URL parser instance.  <a href="#ab65667fa4439ff9bc0623991404a31bd">More...</a><br /></td></tr>
-<tr class="separator:ab65667fa4439ff9bc0623991404a31bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c557343b6bf5ff560e09b87968422a6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00033.html#a3c557343b6bf5ff560e09b87968422a6">TAILQ_HEAD</a> (hpd_listeners, <a class="el" href="a00028.html">hpd_listener</a>)</td></tr>
+<tr class="separator:a3c557343b6bf5ff560e09b87968422a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/><h2 class="groupheader">Data Structure Documentation</h2>
-<a name="a00120" id="a00120"></a>
+<a name="a00126" id="a00126"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct up_settings</td>
+          <td class="memname">struct hpd_request</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="textblock"><p>Settings struct for the URL Parser. </p>
-<p>Please initialise this struct as following, to ensure that all settings have acceptable default values: </p><div class="fragment"><div class="line"><span class="keyword">struct </span>url_parser_settings *<a class="code" href="a00042.html#a418c751a61f0272a6fef8a19a4173342">settings</a> = URL_PARSER_SETTINGS_DEFAULT;</div>
-</div><!-- fragment --><p>The settings hold a series of callbacks of type either up_string_cb, up_pair_cb or up_void_cb. Strings received in up_pair_cb and up_string_cb are never null-terminated, and they always have a length. The callbacks are called when the URL parser finishes parsing a specific chunk. The callback with the last part of a segment (e.g. the c in /a/b/c) might first be called when up_complete has been called, as it cannot know if c is the last character of the segment unless it terminates with a /. </p>
-
-<p>Definition at line <a class="el" href="a00033_source.html#l00059">59</a> of file <a class="el" href="a00033_source.html">url_parser.h</a>.</p>
+<div class="textblock">
+<p>Definition at line <a class="el" href="a00033_source.html#l00054">54</a> of file <a class="el" href="a00033_source.html">comm.h</a>.</p>
 </div><div class="dynheader">
-Collaboration diagram for up_settings:</div>
+Collaboration diagram for hpd_request:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00157.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00231.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="a47a7d232a6bd403a04db0e7a31d0aa3c"></a><a class="el" href="a00033.html#aa058504eb5a3b0d314de7a2c50bfc6b5">up_void_cb</a></td>
+<a class="anchor" id="a79fd77f6b451bd6377ff4cbffeb68998"></a>void *</td>
 <td class="fieldname">
-on_begin</td>
+data</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="ab375f44272551037743d0d2388b1ad4c"></a><a class="el" href="a00033.html#a0bec97ec819530be6f694c1aa362c2fe">up_string_cb</a></td>
+<a class="anchor" id="a3a5e8a5f8b89a760bc2a35a6a91faf68"></a><a class="el" href="a00030.html#a48b1bff2ed83cd824c21df91b2d74e01">hpd_method_t</a></td>
 <td class="fieldname">
-on_complete</td>
+method</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="a7b22248d1fbe7b77bfdccd27d687e7c1"></a><a class="el" href="a00033.html#a0bec97ec819530be6f694c1aa362c2fe">up_string_cb</a></td>
+<a class="anchor" id="a7e5298a58c6aba6de39e8fd0c10d9a44"></a><a class="el" href="a00030.html#a48ae026294e911f802713816b5abd57f">hpd_free_f</a></td>
 <td class="fieldname">
-on_host</td>
+on_free</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="ab38b6e662a1cb2b712f3a439026de37e"></a><a class="el" href="a00033.html#ac6488cedd12d3dc315f14476efc66d5b">up_pair_cb</a></td>
+<a class="anchor" id="aa7766ef26dbbfa19ac37396b2b8103ac"></a><a class="el" href="a00030.html#ac82f1adb334b52cc66fa6112d367d07a">hpd_response_f</a></td>
 <td class="fieldname">
-on_key_value</td>
+on_response</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="a11f894362111818639cd6f3428ffb67b"></a><a class="el" href="a00033.html#a0bec97ec819530be6f694c1aa362c2fe">up_string_cb</a></td>
+<a class="anchor" id="a33b5d5a97d96f60468e5b970aff1506a"></a><a class="el" href="a00030.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> *</td>
 <td class="fieldname">
-on_path_complete</td>
+service</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="a88e4139160e289d5a67cc32deb4e0022"></a><a class="el" href="a00033.html#a0bec97ec819530be6f694c1aa362c2fe">up_string_cb</a></td>
+<a class="anchor" id="a0a7f2196fbac2240764a73475fc607d3"></a><a class="el" href="a00030.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *</td>
 <td class="fieldname">
-on_path_segment</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="a6b7ace359fd32d8d076ae8b7f12f5de7"></a><a class="el" href="a00033.html#a0bec97ec819530be6f694c1aa362c2fe">up_string_cb</a></td>
-<td class="fieldname">
-on_port</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="a585a65352934f36b92ba7a37a7a3617f"></a><a class="el" href="a00033.html#a0bec97ec819530be6f694c1aa362c2fe">up_string_cb</a></td>
-<td class="fieldname">
-on_protocol</td>
+value</td>
 <td class="fielddoc">
 </td></tr>
 </table>
 
 </div>
 </div>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a class="anchor" id="a993405f31c2a01b4d8234ede5451d8a8"></a>
+<a name="a00127" id="a00127"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define UP_SETTINGS_DEFAULT</td>
+          <td class="memname">struct hpd_response</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">{\</div>
-<div class="line">   .on_begin = NULL, .on_protocol = NULL, .on_host = NULL, \</div>
-<div class="line">   .on_port = NULL, .on_path_segment = NULL, .on_path_complete = NULL, \</div>
-<div class="line">   .on_key_value = NULL, .on_complete = NULL }</div>
-</div><!-- fragment -->
-<p>Definition at line <a class="el" href="a00033_source.html#l00070">70</a> of file <a class="el" href="a00033_source.html">url_parser.h</a>.</p>
+<div class="textblock">
+<p>Definition at line <a class="el" href="a00033_source.html#l00064">64</a> of file <a class="el" href="a00033_source.html">comm.h</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for hpd_response:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00232.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+<table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a class="anchor" id="ae93223883266a683e8479486ff460812"></a><a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *</td>
+<td class="fieldname">
+request</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a class="anchor" id="a9bd71f8522bcb1f186188106460c98ee"></a><a class="el" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a></td>
+<td class="fieldname">
+status</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a class="anchor" id="a1699faa0b62f8eddc2583639935f4b42"></a><a class="el" href="a00030.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *</td>
+<td class="fieldname">
+value</td>
+<td class="fielddoc">
+</td></tr>
+</table>
+
+</div>
+</div>
+<a name="a00133" id="a00133"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct hpd_value</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock">
+<p>Definition at line <a class="el" href="a00033_source.html#l00070">70</a> of file <a class="el" href="a00033_source.html">comm.h</a>.</p>
+</div><div class="dynheader">
+Collaboration diagram for hpd_value:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00233.svg" width="258" height="228"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+<table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a class="anchor" id="a7b511c06c4222b6fd0a3b8e769016099"></a>char *</td>
+<td class="fieldname">
+body</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a class="anchor" id="a74dbf5094ab20a05bf059b204b9775bd"></a><a class="el" href="a00056.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a> *</td>
+<td class="fieldname">
+headers</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a class="anchor" id="a7469be7389c3f462a14a5f864641e996"></a>size_t</td>
+<td class="fieldname">
+len</td>
+<td class="fielddoc">
+</td></tr>
+</table>
 
 </div>
 </div>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a class="anchor" id="ac6488cedd12d3dc315f14476efc66d5b"></a>
+<a class="anchor" id="aced6490e350bf85afe3f905db21c24c5"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(* up_pair_cb) (void *<a class="el" href="a00006.html#a00090">data</a>, const char *<a class="el" href="a00006.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a>, size_t key_length, const char *<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>, size_t value_length)</td>
+          <td class="memname">typedef struct hpd_listeners <a class="el" href="a00033.html#aced6490e350bf85afe3f905db21c24c5">hpd_listeners_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00033_source.html#l00034">34</a> of file <a class="el" href="a00033_source.html">url_parser.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a0bec97ec819530be6f694c1aa362c2fe"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(* up_string_cb) (void *<a class="el" href="a00006.html#a00090">data</a>, const char *parsedSegment, size_t segment_length)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00033_source.html#l00033">33</a> of file <a class="el" href="a00033_source.html">url_parser.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aa058504eb5a3b0d314de7a2c50bfc6b5"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(* up_void_cb) (void *<a class="el" href="a00006.html#a00090">data</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00033_source.html#l00035">35</a> of file <a class="el" href="a00033_source.html">url_parser.h</a>.</p>
+<p>Definition at line <a class="el" href="a00033_source.html#l00037">37</a> of file <a class="el" href="a00033_source.html">comm.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="aecaf185c0e094f848260daba330301ed"></a>
+<a class="anchor" id="a3c557343b6bf5ff560e09b87968422a6"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> up_add_chunk </td>
+          <td class="memname">TAILQ_HEAD </td>
           <td>(</td>
-          <td class="paramtype">struct <a class="el" href="a00032.html#a00119">up</a> *&#160;</td>
-          <td class="paramname"><em>instance</em>, </td>
+          <td class="paramtype">hpd_listeners&#160;</td>
+          <td class="paramname">, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>chunk</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>len</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="a00028.html">hpd_listener</a>&#160;</td>
+          <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -311,188 +310,13 @@ on_protocol</td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Parse a chunk of an URL. </p>
-<p>This method receives a chunk of an URL, and calls the appropriate callbacks. It increases the size of buffer, copies the new chunk to it and then parses each character and changes state accordingly. A chunk may of course be a complete URL, all of which will be parsed immediately.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">instance</td><td>A pointer to an URL Parser instance </td></tr>
-    <tr><td class="paramname">chunk</td><td>A pointer to the chunk (non zero terminated) </td></tr>
-    <tr><td class="paramname">chunk_size</td><td>The size of the chunk </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Definition at line <a class="el" href="a00032_source.html#l00209">209</a> of file <a class="el" href="a00032_source.html">url_parser.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00033_aecaf185c0e094f848260daba330301ed_cgraph.svg" width="284" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00033_aecaf185c0e094f848260daba330301ed_icgraph.svg" width="244" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="ac2cf7cc000201a1b2ab1b421af7bd80f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> up_complete </td>
-          <td>(</td>
-          <td class="paramtype">struct <a class="el" href="a00032.html#a00119">up</a> *&#160;</td>
-          <td class="paramname"><em>instance</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Informs the parser that the URL is complete. </p>
-<p>This method will let the parser know that the URL is complete. This always results in the on_complete callback being called, but it may also inflict two others: on_path_segment and on_key_value. This is due to the nature of the URL parser being able to receive in chunks: it can simply now know if an URL path is complete without a slash at the end. It also cannot know if a value part of a key is done before being told.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">instance</td><td>A pointer to an URL Parser instance </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Definition at line <a class="el" href="a00032_source.html#l00377">377</a> of file <a class="el" href="a00032_source.html">url_parser.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00033_ac2cf7cc000201a1b2ab1b421af7bd80f_icgraph.svg" width="274" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="ade00903911200eca472bafd938317f03"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> up_create </td>
-          <td>(</td>
-          <td class="paramtype">struct <a class="el" href="a00032.html#a00119">up</a> **&#160;</td>
-          <td class="paramname"><em>instance</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">struct <a class="el" href="a00033.html#a00120">up_settings</a> *&#160;</td>
-          <td class="paramname"><em>settings</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *&#160;</td>
-          <td class="paramname"><em>context</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>data</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Create URL parser instance. </p>
-<p>This method creates an URL Parser instance. It allocates memory for itself and copy the settings struct. It also sets all values to default.</p>
-<p>The instance should be destroyed using up_destroy when it is no longer needed.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">settings</td><td>A pointer to a url_parser_settings struct </td></tr>
-    <tr><td class="paramname">data</td><td>Pointer to user data, will be supplied to callbacks</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>a pointer to the newly created instance </dd></dl>
-
-<p>Definition at line <a class="el" href="a00032_source.html#l00096">96</a> of file <a class="el" href="a00032_source.html">url_parser.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00033_ade00903911200eca472bafd938317f03_cgraph.svg" width="182" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00033_ade00903911200eca472bafd938317f03_icgraph.svg" width="100%" height="366"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="ab65667fa4439ff9bc0623991404a31bd"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> up_destroy </td>
-          <td>(</td>
-          <td class="paramtype">struct <a class="el" href="a00032.html#a00119">up</a> *&#160;</td>
-          <td class="paramname"><em>instance</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Destroy URL parser instance. </p>
-<p>This method destroys an URL Parser instance, including the buffer and settings struct.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">instance</td><td>A pointer to an url_parser_instance to destroy </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Definition at line <a class="el" href="a00032_source.html#l00152">152</a> of file <a class="el" href="a00032_source.html">url_parser.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00033_ab65667fa4439ff9bc0623991404a31bd_cgraph.svg" width="190" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00033_ab65667fa4439ff9bc0623991404a31bd_icgraph.svg" width="100%" height="366"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:23 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:25 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

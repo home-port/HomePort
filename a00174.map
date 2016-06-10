@@ -1,15 +1,2 @@
-<map id="common/tcpd/include/tcpd_types.h" name="common/tcpd/include/tcpd_types.h">
-<area shape="rect" id="node2" href="$a00039.html" title="common/httpd/include\l/httpd_types.h" alt="" coords="377,95,527,136"/>
-<area shape="rect" id="node10" href="$a00029.html" title="common/tcpd/include\l/tcpd.h" alt="" coords="537,184,684,225"/>
-<area shape="rect" id="node3" href="$a00018.html" title="common/httpd/include\l/httpd.h" alt="" coords="362,184,513,225"/>
-<area shape="rect" id="node4" href="$a00038.html" title="common/httpd/example\l/greeting.c" alt="" coords="177,273,335,315"/>
-<area shape="rect" id="node5" href="$a00015.html" title="common/httpd/src/httpd.c" alt="" coords="523,370,693,397"/>
-<area shape="rect" id="node6" href="$a00040.html" title="common/httpd/src/httpd\l_request.h" alt="" coords="360,273,520,315"/>
-<area shape="rect" id="node9" href="$a00025.html" title="modules/hpd_rest/src\l/hpd_rest.c" alt="" coords="5,273,152,315"/>
-<area shape="rect" id="node7" href="$a00016.html" title="common/httpd/src/httpd\l_request.c" alt="" coords="155,363,315,404"/>
-<area shape="rect" id="node8" href="$a00017.html" title="common/httpd/src/httpd\l_response.c" alt="" coords="339,363,499,404"/>
-<area shape="rect" id="node11" href="$a00047.html" title="common/tcpd/example\l/echo.c" alt="" coords="645,273,800,315"/>
-<area shape="rect" id="node12" href="$a00027.html" title="common/tcpd/src/tcpd\l_intern.h" alt="" coords="824,273,976,315"/>
-<area shape="rect" id="node13" href="$a00049.html" title="common/tcpd/src/tcpd.c" alt="" coords="976,370,1139,397"/>
-<area shape="rect" id="node14" href="$a00051.html" title="common/tcpd/test/webserver\l_test.cpp" alt="" coords="761,363,951,404"/>
+<map id="data" name="data">
 </map>

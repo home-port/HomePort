@@ -1,0 +1,8 @@
+<map id="demo_adapter_on_create" name="demo_adapter_on_create">
+<area shape="rect" id="node2" href="$a00075.html#a22c32e717ccc176ad124a3ebcc1c9e7b" title="hpd_module_get_id" alt="" coords="235,5,370,32"/>
+<area shape="rect" id="node4" href="$a00075.html#ae5288c3d07fdd00ff0b0a03f2d26961f" title="[hpd_t functions] " alt="" coords="221,56,384,83"/>
+<area shape="rect" id="node7" href="$a00012.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="845,56,889,83"/>
+<area shape="rect" id="node3" href="$a00076.html#a6a958d01d404117e078cb3728c6feef2" title="daemon_get_id" alt="" coords="446,5,557,32"/>
+<area shape="rect" id="node5" href="$a00076.html#aa28ce93ac8eee4dcd694433efbf62e82" title="daemon_add_option" alt="" coords="432,56,571,83"/>
+<area shape="rect" id="node6" href="$a00076.html#a3da1c288975f0004839f81c07ad3bec2" title="daemon_add_global_option" alt="" coords="619,5,797,32"/>
+</map>

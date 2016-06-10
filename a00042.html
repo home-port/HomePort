@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: common/httpd/test/header_parser_test.c File Reference</title>
+<title>HomePort: common/httpd/src/httpd_url_parser.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,22 +81,29 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_de836088bc1383ea19051eab00d43ec5.html">httpd</a></li><li class="navelem"><a class="el" href="dir_2e94e98e180a6c5e43b770bfbc8691b2.html">test</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_de836088bc1383ea19051eab00d43ec5.html">httpd</a></li><li class="navelem"><a class="el" href="dir_3eb06dbdb8c6f8b7c2db8db660fe1677.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">header_parser_test.c File Reference</div>  </div>
+<div class="title">httpd_url_parser.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><div class="dynheader">
-Include dependency graph for header_parser_test.c:</div>
+Include dependency graph for httpd_url_parser.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00158.svg" width="539" height="276"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00170.svg" width="171" height="127"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</div><div class="textblock"><div class="dynheader">
+This graph shows which files directly or indirectly include this file:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00171.svg" width="355" height="142"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </div>
@@ -104,473 +111,198 @@ Include dependency graph for header_parser_test.c:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:a00090"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00006.html#a00090">data</a></td></tr>
-<tr class="separator:a00090"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00137"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#a00137">up_settings</a></td></tr>
+<tr class="memdesc:a00137"><td class="mdescLeft">&#160;</td><td class="mdescRight">Settings struct for the URL Parser.  <a href="a00042.html#a00137">More...</a><br /></td></tr>
+<tr class="separator:a00137"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a993405f31c2a01b4d8234ede5451d8a8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#a993405f31c2a01b4d8234ede5451d8a8">UP_SETTINGS_DEFAULT</a></td></tr>
+<tr class="separator:a993405f31c2a01b4d8234ede5451d8a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ac6488cedd12d3dc315f14476efc66d5b"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#ac6488cedd12d3dc315f14476efc66d5b">up_pair_cb</a>) (void *<a class="el" href="a00012.html#a00104">data</a>, const char *<a class="el" href="a00012.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a>, size_t key_length, const char *<a class="el" href="a00012.html#aee53bdc848584e095375d0d39aa400b8">value</a>, size_t value_length)</td></tr>
+<tr class="separator:ac6488cedd12d3dc315f14476efc66d5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bec97ec819530be6f694c1aa362c2fe"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#a0bec97ec819530be6f694c1aa362c2fe">up_string_cb</a>) (void *<a class="el" href="a00012.html#a00104">data</a>, const char *parsedSegment, size_t segment_length)</td></tr>
+<tr class="separator:a0bec97ec819530be6f694c1aa362c2fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa058504eb5a3b0d314de7a2c50bfc6b5"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#aa058504eb5a3b0d314de7a2c50bfc6b5">up_void_cb</a>) (void *<a class="el" href="a00012.html#a00104">data</a>)</td></tr>
+<tr class="separator:aa058504eb5a3b0d314de7a2c50bfc6b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3e22da197083e90a2456a4ccd8a374d0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#a3e22da197083e90a2456a4ccd8a374d0">ASSERT_EQUAL</a> (<a class="el" href="a00006.html#a7892a9c6964754ba99fa712061cebc8b">data.count</a>, 2)</td></tr>
-<tr class="separator:a3e22da197083e90a2456a4ccd8a374d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4db214b9849dac754a88fa696264be6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#ac4db214b9849dac754a88fa696264be6">hp_destroy</a> (<a class="el" href="a00007.html#a00091">hp</a>)</td></tr>
-<tr class="separator:ac4db214b9849dac754a88fa696264be6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9607ed3d8c9ea72a99ab850336cd4ee"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#ab9607ed3d8c9ea72a99ab850336cd4ee">hp_on_header_complete</a> (<a class="el" href="a00007.html#a00091">hp</a>)</td></tr>
-<tr class="separator:ab9607ed3d8c9ea72a99ab850336cd4ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8562052f079d603577dafaad936921c5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#a8562052f079d603577dafaad936921c5">hp_on_header_field</a> (<a class="el" href="a00007.html#a00091">hp</a>,&quot;cat&quot;, 3)</td></tr>
-<tr class="separator:a8562052f079d603577dafaad936921c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27df4497833ce252bc4e208d6cc5c1f5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#a27df4497833ce252bc4e208d6cc5c1f5">hp_on_header_field</a> (<a class="el" href="a00007.html#a00091">hp</a>,&quot;dog&quot;, 3)</td></tr>
-<tr class="separator:a27df4497833ce252bc4e208d6cc5c1f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:affc17ce882f26ac0c90a90c678d4cd3f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#affc17ce882f26ac0c90a90c678d4cd3f">hp_on_header_value</a> (<a class="el" href="a00007.html#a00091">hp</a>,&quot;yes&quot;, 3)</td></tr>
-<tr class="separator:affc17ce882f26ac0c90a90c678d4cd3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e459a65e63bfedcaaf2976973615f18"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#a2e459a65e63bfedcaaf2976973615f18">hp_on_header_value</a> (<a class="el" href="a00007.html#a00091">hp</a>,&quot;yes, thi&quot;, 8)</td></tr>
-<tr class="separator:a2e459a65e63bfedcaaf2976973615f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c70f78d79fffd384ca6e39c3bc71061"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#a6c70f78d79fffd384ca6e39c3bc71061">hp_on_header_value</a> (<a class="el" href="a00007.html#a00091">hp</a>,&quot;s is dog&quot;, 8)</td></tr>
-<tr class="separator:a6c70f78d79fffd384ca6e39c3bc71061"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c3a4b438bfb98afcf582fbfb841819b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#a4c3a4b438bfb98afcf582fbfb841819b">on_field_value</a> (void *_data, const char *<a class="el" href="a00042.html#a4618b601e2463984c3c5702ce654053f">field</a>, size_t field_length, const char *<a class="el" href="a00006.html#aee53bdc848584e095375d0d39aa400b8">value</a>, size_t value_length)</td></tr>
-<tr class="separator:a4c3a4b438bfb98afcf582fbfb841819b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:ae4d68f7885f6ff0e6b643e8bfc056a34"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#ae4d68f7885f6ff0e6b643e8bfc056a34">_errors</a> = <a class="el" href="a00006.html#ab12920c68955e93a61ee2c5829fd69a9">data.errors</a></td></tr>
-<tr class="separator:ae4d68f7885f6ff0e6b643e8bfc056a34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9cc5551919abb9b1130445edd4c35c2a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00006.html#a00090">data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#a9cc5551919abb9b1130445edd4c35c2a">count</a> = 0</td></tr>
-<tr class="separator:a9cc5551919abb9b1130445edd4c35c2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7eeea53acac92b2cc17084963282fc11"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="a00006.html#a00090">data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#a7eeea53acac92b2cc17084963282fc11">data</a> = &amp;<a class="el" href="a00006.html#a00090">data</a></td></tr>
-<tr class="separator:a7eeea53acac92b2cc17084963282fc11"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2067e44d4acde43a80005346dc1f449"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00006.html#a00090">data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#ac2067e44d4acde43a80005346dc1f449">errors</a> = 0</td></tr>
-<tr class="separator:ac2067e44d4acde43a80005346dc1f449"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4618b601e2463984c3c5702ce654053f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00006.html#a00090">data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#a4618b601e2463984c3c5702ce654053f">field</a> = &quot;cat\0dog&quot;</td></tr>
-<tr class="separator:a4618b601e2463984c3c5702ce654053f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75d115a8690aabe8bfb8a547bcaa220f"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="a00007.html#a00091">hp</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#a75d115a8690aabe8bfb8a547bcaa220f">hp</a> = <a class="el" href="a00008.html#aeb32296963a29ccb5a15e1f152c6d2fd">hp_create</a>(&amp;<a class="el" href="a00006.html#af199db15de773bb97002d69856cd55c0">settings</a>)</td></tr>
-<tr class="separator:a75d115a8690aabe8bfb8a547bcaa220f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec76163b9a779bf013191c836a7ae039"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00006.html#af199db15de773bb97002d69856cd55c0">settings</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#aec76163b9a779bf013191c836a7ae039">on_field_value_pair</a> = &amp;<a class="el" href="a00042.html#a4c3a4b438bfb98afcf582fbfb841819b">on_field_value</a></td></tr>
-<tr class="separator:aec76163b9a779bf013191c836a7ae039"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a418c751a61f0272a6fef8a19a4173342"><td class="memItemLeft" align="right" valign="top">struct <a class="el" href="a00008.html#a00092">hp_settings</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#a418c751a61f0272a6fef8a19a4173342">settings</a> = <a class="el" href="a00008.html#a6247175add148b35e976352658acd514">HP_SETTINGS_DEFAULT</a></td></tr>
-<tr class="separator:a418c751a61f0272a6fef8a19a4173342"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee53bdc848584e095375d0d39aa400b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00006.html#a00090">data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#aee53bdc848584e095375d0d39aa400b8">value</a> = &quot;yes\0yes, this is dog&quot;</td></tr>
-<tr class="separator:aee53bdc848584e095375d0d39aa400b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecaf185c0e094f848260daba330301ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#aecaf185c0e094f848260daba330301ed">up_add_chunk</a> (struct <a class="el" href="a00041.html#a00136">up</a> *<a class="el" href="a00012.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>, const char *chunk, size_t chunk_size)</td></tr>
+<tr class="memdesc:aecaf185c0e094f848260daba330301ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a chunk of an URL.  <a href="#aecaf185c0e094f848260daba330301ed">More...</a><br /></td></tr>
+<tr class="separator:aecaf185c0e094f848260daba330301ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2cf7cc000201a1b2ab1b421af7bd80f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#ac2cf7cc000201a1b2ab1b421af7bd80f">up_complete</a> (struct <a class="el" href="a00041.html#a00136">up</a> *<a class="el" href="a00012.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>)</td></tr>
+<tr class="memdesc:ac2cf7cc000201a1b2ab1b421af7bd80f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Informs the parser that the URL is complete.  <a href="#ac2cf7cc000201a1b2ab1b421af7bd80f">More...</a><br /></td></tr>
+<tr class="separator:ac2cf7cc000201a1b2ab1b421af7bd80f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0f2a1aab5956dfd017eec281492780e2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#a0f2a1aab5956dfd017eec281492780e2">up_create</a> (struct <a class="el" href="a00041.html#a00136">up</a> **<a class="el" href="a00012.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>, struct <a class="el" href="a00042.html#a00137">up_settings</a> *<a class="el" href="a00012.html#af199db15de773bb97002d69856cd55c0">settings</a>, const <a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *context, void *<a class="el" href="a00012.html#a00104">data</a>)</td></tr>
+<tr class="memdesc:a0f2a1aab5956dfd017eec281492780e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create URL parser instance.  <a href="#a0f2a1aab5956dfd017eec281492780e2">More...</a><br /></td></tr>
+<tr class="separator:a0f2a1aab5956dfd017eec281492780e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab65667fa4439ff9bc0623991404a31bd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00042.html#ab65667fa4439ff9bc0623991404a31bd">up_destroy</a> (struct <a class="el" href="a00041.html#a00136">up</a> *<a class="el" href="a00012.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>)</td></tr>
+<tr class="memdesc:ab65667fa4439ff9bc0623991404a31bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy URL parser instance.  <a href="#ab65667fa4439ff9bc0623991404a31bd">More...</a><br /></td></tr>
+<tr class="separator:ab65667fa4439ff9bc0623991404a31bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/><h2 class="groupheader">Data Structure Documentation</h2>
-<a name="a00090" id="a00090"></a>
+<a name="a00137" id="a00137"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct data</td>
+          <td class="memname">struct up_settings</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="textblock">
-<p>Definition at line <a class="el" href="a00042_source.html#l00032">32</a> of file <a class="el" href="a00042_source.html">header_parser_test.c</a>.</p>
+<div class="textblock"><p>Settings struct for the URL Parser. </p>
+<p>Please initialise this struct as following, to ensure that all settings have acceptable default values: </p><div class="fragment"><div class="line"><span class="keyword">struct </span>url_parser_settings *<a class="code" href="a00051.html#a418c751a61f0272a6fef8a19a4173342">settings</a> = URL_PARSER_SETTINGS_DEFAULT;</div>
+</div><!-- fragment --><p>The settings hold a series of callbacks of type either up_string_cb, up_pair_cb or up_void_cb. Strings received in up_pair_cb and up_string_cb are never null-terminated, and they always have a length. The callbacks are called when the URL parser finishes parsing a specific chunk. The callback with the last part of a segment (e.g. the c in /a/b/c) might first be called when up_complete has been called, as it cannot know if c is the last character of the segment unless it terminates with a /. </p>
+
+<p>Definition at line <a class="el" href="a00042_source.html#l00059">59</a> of file <a class="el" href="a00042_source.html">httpd_url_parser.h</a>.</p>
 </div><div class="dynheader">
-Collaboration diagram for data:</div>
+Collaboration diagram for up_settings:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00159.svg" width="218" height="390"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00172.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="acf8130f135e56f9a8b443587ac30419b"></a>int</td>
+<a class="anchor" id="a47a7d232a6bd403a04db0e7a31d0aa3c"></a><a class="el" href="a00042.html#aa058504eb5a3b0d314de7a2c50bfc6b5">up_void_cb</a></td>
 <td class="fieldname">
-_errors</td>
+on_begin</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="af4310ef0f28a7de8463304e8af24baa3"></a>char *</td>
+<a class="anchor" id="ab375f44272551037743d0d2388b1ad4c"></a><a class="el" href="a00042.html#a0bec97ec819530be6f694c1aa362c2fe">up_string_cb</a></td>
 <td class="fieldname">
-body</td>
+on_complete</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="a4b7c0cb3aa44248fb43a9e2c6ac3eaf7"></a>int</td>
+<a class="anchor" id="a7b22248d1fbe7b77bfdccd27d687e7c1"></a><a class="el" href="a00042.html#a0bec97ec819530be6f694c1aa362c2fe">up_string_cb</a></td>
 <td class="fieldname">
-call_order</td>
+on_host</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="a7892a9c6964754ba99fa712061cebc8b"></a>int</td>
+<a class="anchor" id="ab38b6e662a1cb2b712f3a439026de37e"></a><a class="el" href="a00042.html#ac6488cedd12d3dc315f14476efc66d5b">up_pair_cb</a></td>
 <td class="fieldname">
-count</td>
+on_key_value</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="a45cc76d77b438eb221452f8967379e88"></a>int</td>
+<a class="anchor" id="a11f894362111818639cd6f3428ffb67b"></a><a class="el" href="a00042.html#a0bec97ec819530be6f694c1aa362c2fe">up_string_cb</a></td>
 <td class="fieldname">
-cur_key_value</td>
+on_path_complete</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="a8d37a3f66c82b162e2fc6b275fd12999"></a>int</td>
+<a class="anchor" id="a88e4139160e289d5a67cc32deb4e0022"></a><a class="el" href="a00042.html#a0bec97ec819530be6f694c1aa362c2fe">up_string_cb</a></td>
 <td class="fieldname">
-cur_path</td>
+on_path_segment</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="ab12920c68955e93a61ee2c5829fd69a9"></a>int</td>
+<a class="anchor" id="a6b7ace359fd32d8d076ae8b7f12f5de7"></a><a class="el" href="a00042.html#a0bec97ec819530be6f694c1aa362c2fe">up_string_cb</a></td>
 <td class="fieldname">
-errors</td>
+on_port</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="ac4380a90deb0ee29a62bbbf2f2cb0014"></a>char *</td>
+<a class="anchor" id="a585a65352934f36b92ba7a37a7a3617f"></a><a class="el" href="a00042.html#a0bec97ec819530be6f694c1aa362c2fe">up_string_cb</a></td>
 <td class="fieldname">
-field</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="ae4f0534868b6b2b93b61eeffceee191c"></a>int</td>
-<td class="fieldname">
-hdr_count</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="ad49f484407bfdf1749f6b2bea334ef50"></a>char *</td>
-<td class="fieldname">
-hdr_field</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="ab7b783732010e3f0f71b15489e05e7be"></a>int</td>
-<td class="fieldname">
-hdr_field_l</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="ab37c8d3e9306951abb124b2ee15811a1"></a>char *</td>
-<td class="fieldname">
-hdr_value</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="a1abcfdbd1cb6768b8b8798d35feb37f8"></a>int</td>
-<td class="fieldname">
-hdr_value_l</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="a17d2f9a1d90a64f998210017a7c10f02"></a>char *</td>
-<td class="fieldname">
-host</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="aaca6e8e4062e0cf02fcff6c6451590a0"></a>char *</td>
-<td class="fieldname">
-key</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="a70eff6243d69a1c76dced51bf960aceb"></a>char *</td>
-<td class="fieldname">
-method</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="aff19f7abb938a015801e7fd5eb97ddd4"></a>char *</td>
-<td class="fieldname">
-path</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="a5753184bc878c4249dde1e32fcaae3f3"></a>char *</td>
-<td class="fieldname">
-port</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="a4565f642a2e97b4ec48742ac14df1327"></a>char *</td>
-<td class="fieldname">
-protocol</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="af9f50a2630812e88487c6ab8bc727b95"></a>int</td>
-<td class="fieldname">
-state</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="aabe31720a58a05de7d958b358fc1a880"></a>char *</td>
-<td class="fieldname">
-url</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="abf8750f63285d3c5f402fad45c34ed6d"></a>char *</td>
-<td class="fieldname">
-value</td>
+on_protocol</td>
 <td class="fielddoc">
 </td></tr>
 </table>
 
 </div>
 </div>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a class="anchor" id="a993405f31c2a01b4d8234ede5451d8a8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define UP_SETTINGS_DEFAULT</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">{\</div>
+<div class="line">   .on_begin = NULL, .on_protocol = NULL, .on_host = NULL, \</div>
+<div class="line">   .on_port = NULL, .on_path_segment = NULL, .on_path_complete = NULL, \</div>
+<div class="line">   .on_key_value = NULL, .on_complete = NULL }</div>
+</div><!-- fragment -->
+<p>Definition at line <a class="el" href="a00042_source.html#l00070">70</a> of file <a class="el" href="a00042_source.html">httpd_url_parser.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a class="anchor" id="ac6488cedd12d3dc315f14476efc66d5b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(* up_pair_cb) (void *<a class="el" href="a00012.html#a00104">data</a>, const char *<a class="el" href="a00012.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a>, size_t key_length, const char *<a class="el" href="a00012.html#aee53bdc848584e095375d0d39aa400b8">value</a>, size_t value_length)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00042_source.html#l00034">34</a> of file <a class="el" href="a00042_source.html">httpd_url_parser.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0bec97ec819530be6f694c1aa362c2fe"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(* up_string_cb) (void *<a class="el" href="a00012.html#a00104">data</a>, const char *parsedSegment, size_t segment_length)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00042_source.html#l00033">33</a> of file <a class="el" href="a00042_source.html">httpd_url_parser.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa058504eb5a3b0d314de7a2c50bfc6b5"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(* up_void_cb) (void *<a class="el" href="a00012.html#a00104">data</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00042_source.html#l00035">35</a> of file <a class="el" href="a00042_source.html">httpd_url_parser.h</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a3e22da197083e90a2456a4ccd8a374d0"></a>
+<a class="anchor" id="aecaf185c0e094f848260daba330301ed"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">ASSERT_EQUAL </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> up_add_chunk </td>
           <td>(</td>
-          <td class="paramtype">data.&#160;</td>
-          <td class="paramname"><em>count</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">2&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00042_a3e22da197083e90a2456a4ccd8a374d0_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="ac4db214b9849dac754a88fa696264be6"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">hp_destroy </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00007.html#a00091">hp</a>&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="ab9607ed3d8c9ea72a99ab850336cd4ee"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">hp_on_header_complete </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00007.html#a00091">hp</a>&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a8562052f079d603577dafaad936921c5"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">hp_on_header_field </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00007.html#a00091">hp</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&quot;cat&quot;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">3&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a27df4497833ce252bc4e208d6cc5c1f5"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">hp_on_header_field </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00007.html#a00091">hp</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&quot;dog&quot;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">3&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="affc17ce882f26ac0c90a90c678d4cd3f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">hp_on_header_value </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00007.html#a00091">hp</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&quot;yes&quot;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">3&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a2e459a65e63bfedcaaf2976973615f18"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">hp_on_header_value </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00007.html#a00091">hp</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&quot;&#160;</td>
-          <td class="paramname"><em>yes</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">thi&quot;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">8&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a6c70f78d79fffd384ca6e39c3bc71061"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">hp_on_header_value </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00007.html#a00091">hp</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&quot;s is dog&quot;&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">8&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a class="anchor" id="a4c3a4b438bfb98afcf582fbfb841819b"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void on_field_value </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>_data</em>, </td>
+          <td class="paramtype">struct <a class="el" href="a00041.html#a00136">up</a> *&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>field</em>, </td>
+          <td class="paramname"><em>chunk</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>field_length</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>value</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>value_length</em>&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -580,149 +312,187 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00042_source.html#l00039">39</a> of file <a class="el" href="a00042_source.html">header_parser_test.c</a>.</p>
+<p>Parse a chunk of an URL. </p>
+<p>This method receives a chunk of an URL, and calls the appropriate callbacks. It increases the size of buffer, copies the new chunk to it and then parses each character and changes state accordingly. A chunk may of course be a complete URL, all of which will be parsed immediately.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>A pointer to an URL Parser instance </td></tr>
+    <tr><td class="paramname">chunk</td><td>A pointer to the chunk (non zero terminated) </td></tr>
+    <tr><td class="paramname">chunk_size</td><td>The size of the chunk </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="a00041_source.html#l00209">209</a> of file <a class="el" href="a00041_source.html">httpd_url_parser.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00042_a4c3a4b438bfb98afcf582fbfb841819b_cgraph.svg" width="292" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00042_aecaf185c0e094f848260daba330301ed_cgraph.svg" width="304" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00042_aecaf185c0e094f848260daba330301ed_icgraph.svg" width="244" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a class="anchor" id="ae4d68f7885f6ff0e6b643e8bfc056a34"></a>
+<a class="anchor" id="ac2cf7cc000201a1b2ab1b421af7bd80f"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">_errors = <a class="el" href="a00006.html#ab12920c68955e93a61ee2c5829fd69a9">data.errors</a></td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> up_complete </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="a00041.html#a00136">up</a> *&#160;</td>
+          <td class="paramname"><em>instance</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00042_source.html#l00085">85</a> of file <a class="el" href="a00042_source.html">header_parser_test.c</a>.</p>
+<p>Informs the parser that the URL is complete. </p>
+<p>This method will let the parser know that the URL is complete. This always results in the on_complete callback being called, but it may also inflict two others: on_path_segment and on_key_value. This is due to the nature of the URL parser being able to receive in chunks: it can simply now know if an URL path is complete without a slash at the end. It also cannot know if a value part of a key is done before being told.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>A pointer to an URL Parser instance </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="a00041_source.html#l00377">377</a> of file <a class="el" href="a00041_source.html">httpd_url_parser.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00042_ac2cf7cc000201a1b2ab1b421af7bd80f_icgraph.svg" width="274" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
 
 </div>
 </div>
-<a class="anchor" id="a9cc5551919abb9b1130445edd4c35c2a"></a>
+<a class="anchor" id="a0f2a1aab5956dfd017eec281492780e2"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00006.html#a00090">data</a> count = 0</td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> up_create </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="a00041.html#a00136">up</a> **&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">struct <a class="el" href="a00042.html#a00137">up_settings</a> *&#160;</td>
+          <td class="paramname"><em>settings</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00042_source.html#l00068">68</a> of file <a class="el" href="a00042_source.html">header_parser_test.c</a>.</p>
+<p>Create URL parser instance. </p>
+<p>This method creates an URL Parser instance. It allocates memory for itself and copy the settings struct. It also sets all values to default.</p>
+<p>The instance should be destroyed using up_destroy when it is no longer needed.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">settings</td><td>A pointer to a url_parser_settings struct </td></tr>
+    <tr><td class="paramname">data</td><td>Pointer to user data, will be supplied to callbacks</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>a pointer to the newly created instance </dd></dl>
+
+<p>Definition at line <a class="el" href="a00041_source.html#l00096">96</a> of file <a class="el" href="a00041_source.html">httpd_url_parser.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00042_a0f2a1aab5956dfd017eec281492780e2_cgraph.svg" width="182" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00042_a0f2a1aab5956dfd017eec281492780e2_icgraph.svg" width="100%" height="366"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+</div>
+</p>
 
 </div>
 </div>
-<a class="anchor" id="a7eeea53acac92b2cc17084963282fc11"></a>
+<a class="anchor" id="ab65667fa4439ff9bc0623991404a31bd"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct <a class="el" href="a00006.html#a00090">data</a> <a class="el" href="a00006.html#a00090">data</a> = &amp;<a class="el" href="a00006.html#a00090">data</a></td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> up_destroy </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="a00041.html#a00136">up</a> *&#160;</td>
+          <td class="paramname"><em>instance</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00042_source.html#l00065">65</a> of file <a class="el" href="a00042_source.html">header_parser_test.c</a>.</p>
+<p>Destroy URL parser instance. </p>
+<p>This method destroys an URL Parser instance, including the buffer and settings struct.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">instance</td><td>A pointer to an url_parser_instance to destroy </td></tr>
+  </table>
+  </dd>
+</dl>
 
+<p>Definition at line <a class="el" href="a00041_source.html#l00152">152</a> of file <a class="el" href="a00041_source.html">httpd_url_parser.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00042_ab65667fa4439ff9bc0623991404a31bd_cgraph.svg" width="190" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
-<a class="anchor" id="ac2067e44d4acde43a80005346dc1f449"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00006.html#a00090">data</a> errors = 0</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+</p>
 
-<p>Definition at line <a class="el" href="a00042_source.html#l00069">69</a> of file <a class="el" href="a00042_source.html">header_parser_test.c</a>.</p>
-
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00042_ab65667fa4439ff9bc0623991404a31bd_icgraph.svg" width="100%" height="366"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
-<a class="anchor" id="a4618b601e2463984c3c5702ce654053f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00006.html#a00090">data</a> field = &quot;cat\0dog&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00042_source.html#l00066">66</a> of file <a class="el" href="a00042_source.html">header_parser_test.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a75d115a8690aabe8bfb8a547bcaa220f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct <a class="el" href="a00007.html#a00091">hp</a>* <a class="el" href="a00007.html#a00091">hp</a> = <a class="el" href="a00008.html#aeb32296963a29ccb5a15e1f152c6d2fd">hp_create</a>(&amp;<a class="el" href="a00006.html#af199db15de773bb97002d69856cd55c0">settings</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00042_source.html#l00072">72</a> of file <a class="el" href="a00042_source.html">header_parser_test.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aec76163b9a779bf013191c836a7ae039"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00006.html#af199db15de773bb97002d69856cd55c0">settings</a> on_field_value_pair = &amp;<a class="el" href="a00042.html#a4c3a4b438bfb98afcf582fbfb841819b">on_field_value</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00042_source.html#l00061">61</a> of file <a class="el" href="a00042_source.html">header_parser_test.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a418c751a61f0272a6fef8a19a4173342"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct <a class="el" href="a00008.html#a00092">hp_settings</a> settings = <a class="el" href="a00008.html#a6247175add148b35e976352658acd514">HP_SETTINGS_DEFAULT</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00042_source.html#l00060">60</a> of file <a class="el" href="a00042_source.html">header_parser_test.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aee53bdc848584e095375d0d39aa400b8"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00006.html#a00090">data</a> value = &quot;yes\0yes, this is dog&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00042_source.html#l00067">67</a> of file <a class="el" href="a00042_source.html">header_parser_test.c</a>.</p>
+</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:23 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:25 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

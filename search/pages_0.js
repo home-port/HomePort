@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['homeport_20api_20specification',['HomePort API Specification',['../a00002.html',1,'']]]
+  ['download_20and_20install_20homeport',['Download and install HomePort',['../a00002.html',1,'']]]
 ];

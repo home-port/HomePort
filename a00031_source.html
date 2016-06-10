@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: common/tcpd/test/load_test.c Source File</title>
+<title>HomePort: common/map/src/map.c Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,12 +81,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_82dcf8865025af0993941f3b37463150.html">tcpd</a></li><li class="navelem"><a class="el" href="dir_a23ea110040762ab39a2e2273a789013.html">test</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_92f05f95fbe0269de6fcdae1822ddb36.html">map</a></li><li class="navelem"><a class="el" href="dir_cfbedc255bfa99a2f0fc49291b1bb7c9.html">src</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">load_test.c</div>  </div>
+<div class="title">map.c</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a00031.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
@@ -102,7 +102,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> * of conditions and the following disclaimer in the documentation and/or other materials</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> * provided with the distribution.</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * THIS SOFTWARE IS PROVidED BY Aalborg University &#39;&#39;AS IS&#39;&#39; AND ANY EXPRESS OR IMPLIED</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * THIS SOFTWARE IS PROVIDED BY Aalborg University &#39;&#39;AS IS&#39;&#39; AND ANY EXPRESS OR IMPLIED</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span></div>
@@ -116,306 +116,252 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * authors and should not be interpreted as representing official policies, either expressed</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;webserver.h&quot;</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;stdio.h&gt;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &lt;string.h&gt;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;ev.h&gt;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &lt;curl/curl.h&gt;</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#include &lt;pthread.h&gt;</span> </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="a00031.html#a51ca9914034cd3e92903476fd4eebbd6">   36</a></span>&#160;<span class="preprocessor">#define NTHREADS 16</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="a00031.html">   38</a></span>&#160;<span class="keyword">struct </span><a class="code" href="a00031.html#a00118">mt_args</a> {</div>
-<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="a00031.html#acfbefb98ebac6187054e91de3f40b43e">   39</a></span>&#160;    <span class="keywordtype">char</span> *<a class="code" href="a00031.html#acfbefb98ebac6187054e91de3f40b43e">url</a>;</div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="a00031.html#aca33d2cce250ad8c64b6436b8b8fd090">   40</a></span>&#160;    <span class="keywordtype">char</span>* <a class="code" href="a00031.html#aca33d2cce250ad8c64b6436b8b8fd090">contains</a>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="a00031.html#a914f33a13060573fc65547d32ed96eba">   41</a></span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <a class="code" href="a00031.html#a914f33a13060573fc65547d32ed96eba">assaults</a>;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;};</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00030.html">hpd/hpd_types.h</a>&quot;</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00056.html">hpd/common/hpd_map.h</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00053.html">hpd/common/hpd_common.h</a>&quot;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<a class="code" href="a00031.html#a2adc61113de9598894f43366ce6b61ea">TAILQ_HEAD</a>(hpd_map, <a class="code" href="a00031.html#a00124">hpd_pair</a>);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="a00031.html">   34</a></span>&#160;<span class="keyword">struct </span><a class="code" href="a00031.html#a00124">hpd_pair</a> {</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    TAILQ_ENTRY(<a class="code" href="a00031.html#a00124">hpd_pair</a>) <a class="code" href="a00055.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a>; <span class="comment">//&lt; Tailq members</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordtype">char</span> *k; <span class="comment">//&lt; Key (not null)</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">char</span> *v; <span class="comment">//&lt; Value</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;};</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="a00031.html#a8d23b888fb4bb3f951c7d48f1928ee9a">   40</a></span>&#160;<a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00031.html#a8d23b888fb4bb3f951c7d48f1928ee9a">hpd_map_alloc</a>(<a class="code" href="a00056.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a> **map)</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;{</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">if</span> (!map) <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a>;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="a00031.html#a9112fba1a3ac321f3999e5c513943e05">   44</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="a00031.html#a9112fba1a3ac321f3999e5c513943e05">multithreaded_results</a>;</div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="a00031.html#a0abaf4b5d42c4e5d19190035fade3599">   45</a></span>&#160;<span class="keyword">static</span> pthread_mutex_t <a class="code" href="a00031.html#a0abaf4b5d42c4e5d19190035fade3599">lock</a>;</div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="a00031.html#aa1401c9a2a0473a021170fbe5716bfd3">   46</a></span>&#160;<span class="keyword">static</span> pthread_t <a class="code" href="a00031.html#aa1401c9a2a0473a021170fbe5716bfd3">threadID</a>[<a class="code" href="a00031.html#a51ca9914034cd3e92903476fd4eebbd6">NTHREADS</a>];</div>
-<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="a00031.html#abfafc640452d742a5a404a158ce4737a">   47</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="a00031.html#abfafc640452d742a5a404a158ce4737a">started</a> = 0;</div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="a00031.html#aecab1ca7418c4a3a477f1f95877e0ddb">   48</a></span>&#160;<span class="keyword">static</span> hpd_ws_t *<a class="code" href="a00031.html#aecab1ca7418c4a3a477f1f95877e0ddb">ws</a> = NULL;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="a00031.html#ae8b5578ab3bcd3462c02b2ef71e27569">   50</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a00031.html#ae8b5578ab3bcd3462c02b2ef71e27569">init_libcurl</a>()</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;   curl_global_init(CURL_GLOBAL_ALL);</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
-<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="a00031.html#a760df61e2fc9a4512c5b257d55636625">   55</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a00031.html#a760df61e2fc9a4512c5b257d55636625">cleanup_libcurl</a>()</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;{</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;   curl_global_cleanup();</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="a00053.html#a3845681e01afcaa2d65abc4c62dc34de">HPD_CALLOC</a>(*map, 1, <a class="code" href="a00056.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a>);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    TAILQ_INIT(*map);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    alloc_error:</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da74be3b084dd73433942c30fe6b4dc37a">HPD_E_ALLOC</a>;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="a00031.html#add245d9f3bd8d51960f62e547a5cec7c">   52</a></span>&#160;<a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00031.html#add245d9f3bd8d51960f62e547a5cec7c">hpd_map_first</a>(<a class="code" href="a00056.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a> *map, <a class="code" href="a00031.html#a00124">hpd_pair_t</a> **pair)</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;{</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">if</span> (!map || !pair) <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a>;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    (*pair) = TAILQ_FIRST(map);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;}</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
-<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="a00031.html#a7f408e810f259536ad88eb6544321c97">   60</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code" href="a00031.html#a7f408e810f259536ad88eb6544321c97">data_from_curl</a>(<span class="keywordtype">char</span> *buffer, <span class="keywordtype">size_t</span> buffer_size, <span class="keywordtype">size_t</span> nmemb, <span class="keywordtype">char</span> **userdata)</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="a00031.html#af695ac28accfa977234c1a554db94bb0">   60</a></span>&#160;<a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00031.html#af695ac28accfa977234c1a554db94bb0">hpd_map_next</a>(<a class="code" href="a00031.html#a00124">hpd_pair_t</a> **pair)</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;   *userdata = malloc(buffer_size*nmemb + 1);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;   memcpy(*userdata, buffer, buffer_size*nmemb);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;   (*userdata)[buffer_size*nmemb] = <span class="charliteral">&#39;\0&#39;</span>;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;   <span class="keywordflow">return</span> buffer_size*nmemb;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
-<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="a00031.html#adee3ed193c880b748e304af40508a8f9">   69</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">char</span>* <a class="code" href="a00031.html#adee3ed193c880b748e304af40508a8f9">simple_get_request</a>(<span class="keywordtype">char</span>* <a class="code" href="a00006.html#a8887c2fa1e081a4df18dff878d9ce142">url</a>)</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;{</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;   CURL *handle = curl_easy_init();</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;   CURLcode c;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;   <span class="keywordtype">char</span>* userdata = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;   <span class="keywordflow">if</span>(handle != NULL)</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;   {</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;      curl_easy_setopt(handle, CURLOPT_URL, url);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, &amp;<a class="code" href="a00031.html#a7f408e810f259536ad88eb6544321c97">data_from_curl</a>);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      curl_easy_setopt(handle, CURLOPT_WRITEDATA, &amp;userdata);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;      <span class="keywordflow">if</span>((c = curl_easy_perform(handle)) != CURLE_OK)</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;      {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;         fprintf(stderr, <span class="stringliteral">&quot;curl_easy_perform failed: %s\n&quot;</span>, curl_easy_strerror(c));</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;         <span class="keywordflow">return</span> <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      curl_easy_cleanup(handle);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      <span class="keywordflow">return</span> userdata;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;   }</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;   <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;   {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;      perror(<span class="stringliteral">&quot;Could not initialize curl: &quot;</span>);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;      <span class="keywordflow">return</span> <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;   }</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;}</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno"><a class="line" href="a00031.html#a8eeb8848cf93f86bd7b674b721100f2e">   97</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a00031.html#a8eeb8848cf93f86bd7b674b721100f2e">init_tests</a>()</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;{</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;   <a class="code" href="a00031.html#ae8b5578ab3bcd3462c02b2ef71e27569">init_libcurl</a>();</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="a00031.html#a08657d01c87a7dad84b36bb62953c2db">  102</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a00031.html#a08657d01c87a7dad84b36bb62953c2db">cleanup_tests</a>()</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;{</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;   <a class="code" href="a00031.html#a760df61e2fc9a4512c5b257d55636625">cleanup_libcurl</a>();</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordflow">if</span> (!pair || !(*pair)) <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    (*pair) = TAILQ_NEXT(*pair, <a class="code" href="a00055.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a>);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="a00031.html#ae1085dd4fd40466d18b02ec077ef4d6d">   68</a></span>&#160;<a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00031.html#ae1085dd4fd40466d18b02ec077ef4d6d">hpd_map_remove</a>(<a class="code" href="a00056.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a> *map, <a class="code" href="a00031.html#a00124">hpd_pair_t</a> *pair)</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;{</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">if</span> (!map || !pair) <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a>;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    TAILQ_REMOVE(map, pair, <a class="code" href="a00055.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a>);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(pair-&gt;k);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(pair-&gt;v);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(pair);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;}</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno"><a class="line" href="a00031.html#a195d511a075f2349200563af1c5d1fd7">   79</a></span>&#160;<a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00031.html#a195d511a075f2349200563af1c5d1fd7">hpd_map_free</a>(<a class="code" href="a00056.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a> *map)</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;{</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">if</span> (!map) <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a>;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> rc = <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="a00031.html#a00124">hpd_pair_t</a> *pair, *tmp;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    TAILQ_FOREACH_SAFE(pair, map, <a class="code" href="a00055.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a>, tmp) {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        rc = <a class="code" href="a00031.html#ae1085dd4fd40466d18b02ec077ef4d6d">hpd_map_remove</a>(map, pair);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(map);</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">return</span> rc;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;}</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="a00031.html#a3eb33be000f845d28ec16639f235ceb2">   92</a></span>&#160;<a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00031.html#a3eb33be000f845d28ec16639f235ceb2">hpd_map_get</a>(<a class="code" href="a00056.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a> *map, <span class="keyword">const</span> <span class="keywordtype">char</span> *k, <span class="keyword">const</span> <span class="keywordtype">char</span> **v)</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;{</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordflow">if</span> (!map || !k || !v) <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a>;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <a class="code" href="a00031.html#a00124">hpd_pair_t</a> *attr;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    (*v) = NULL;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    TAILQ_FOREACH(attr, map, <a class="code" href="a00055.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a>) {</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordflow">if</span> (strcmp(attr-&gt;k, k) == 0) {</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            (*v) = attr-&gt;v;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        }</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    }</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3856d98f8e3b56ef9a5e8c8b5d7cdfb5">HPD_E_NOT_FOUND</a>;</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;}</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;</div>
-<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="a00031.html#ad1803275aed905051c4d618367423cc9">  107</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="a00031.html#ad1803275aed905051c4d618367423cc9">basic_get_contains_test</a>(<span class="keywordtype">char</span>* <a class="code" href="a00006.html#a8887c2fa1e081a4df18dff878d9ce142">url</a>, <span class="keywordtype">char</span>* contains)</div>
+<div class="line"><a name="l00107"></a><span class="lineno"><a class="line" href="a00031.html#a22cdd4d80a4d9bdccf15c63ff14c66f2">  107</a></span>&#160;<a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00031.html#a22cdd4d80a4d9bdccf15c63ff14c66f2">hpd_map_get_n</a>(<a class="code" href="a00056.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a> *map, <span class="keyword">const</span> <span class="keywordtype">char</span> *k, <span class="keywordtype">size_t</span> k_len, <span class="keyword">const</span> <span class="keywordtype">char</span> **v)</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;{</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;   <span class="keywordtype">char</span> *received = <a class="code" href="a00031.html#adee3ed193c880b748e304af40508a8f9">simple_get_request</a>(url);</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;   <span class="keywordtype">int</span> result = 0;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;   <span class="keywordflow">if</span>(strstr(received, contains) != NULL)</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;   {</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;      result = 1;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;   }</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;   <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;   {</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;      printf(<span class="stringliteral">&quot;The following bad string was received: %s\n&quot;</span>, received);</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;   }</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;   <a class="code" href="a00006.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(received);</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;   <span class="keywordflow">return</span> result;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;}</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
-<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="a00031.html#a8261f9c3d2b399387668421b4db70342">  125</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a00031.html#a8261f9c3d2b399387668421b4db70342">set_bad_multithreaded_result</a>()</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;{</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;   pthread_mutex_lock(&amp;<a class="code" href="a00031.html#a0abaf4b5d42c4e5d19190035fade3599">lock</a>);</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;   <a class="code" href="a00031.html#a9112fba1a3ac321f3999e5c513943e05">multithreaded_results</a> = 0;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;   pthread_mutex_unlock(&amp;<a class="code" href="a00031.html#a0abaf4b5d42c4e5d19190035fade3599">lock</a>);</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;}</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">if</span> (!map || !k || !v) <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a>;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <a class="code" href="a00031.html#a00124">hpd_pair_t</a> *attr;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    (*v) = NULL;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    TAILQ_FOREACH(attr, map, <a class="code" href="a00055.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a>) {</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="keywordflow">if</span> (strncmp(attr-&gt;k, k, k_len) == 0) {</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            (*v) = attr-&gt;v;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        }</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    }</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    (*v) = NULL;</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3856d98f8e3b56ef9a5e8c8b5d7cdfb5">HPD_E_NOT_FOUND</a>;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;}</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
+<div class="line"><a name="l00123"></a><span class="lineno"><a class="line" href="a00031.html#a68e8a71a4dc9b51ca36d2389ed89b336">  123</a></span>&#160;<span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00031.html#a68e8a71a4dc9b51ca36d2389ed89b336">map_insert</a>(<a class="code" href="a00056.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a> *map, <span class="keyword">const</span> <span class="keywordtype">char</span> *k, <span class="keyword">const</span> <span class="keywordtype">char</span> *v)</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;{</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <a class="code" href="a00031.html#a00124">hpd_pair_t</a> *attr = NULL;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <a class="code" href="a00053.html#a3845681e01afcaa2d65abc4c62dc34de">HPD_CALLOC</a>(attr, 1, <a class="code" href="a00031.html#a00124">hpd_pair_t</a>);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <a class="code" href="a00053.html#aeb54026c07aa12169c4ddf82b92fab17">HPD_STR_CPY</a>(attr-&gt;k, k);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <a class="code" href="a00053.html#aeb54026c07aa12169c4ddf82b92fab17">HPD_STR_CPY</a>(attr-&gt;v, v);</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    TAILQ_INSERT_TAIL(map, attr, tailq);</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;</div>
-<div class="line"><a name="l00132"></a><span class="lineno"><a class="line" href="a00031.html#a46e90a73cf2ceec5920442647a8cabec">  132</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> *<a class="code" href="a00031.html#a46e90a73cf2ceec5920442647a8cabec">get_mt_loop</a>(<span class="keywordtype">void</span> *args)</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;{</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;   <span class="keyword">struct </span><a class="code" href="a00031.html#a00118">mt_args</a> *arguments = (<span class="keyword">struct </span><a class="code" href="a00031.html#a00118">mt_args</a> *)args;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;   <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> i;</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;   <span class="keywordflow">for</span>(i = 0; i&lt;arguments-&gt;<a class="code" href="a00031.html#a914f33a13060573fc65547d32ed96eba">assaults</a>; i++)</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;   {</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;      <span class="keywordflow">if</span>(<a class="code" href="a00031.html#ad1803275aed905051c4d618367423cc9">basic_get_contains_test</a>(arguments-&gt;<a class="code" href="a00031.html#acfbefb98ebac6187054e91de3f40b43e">url</a>,arguments-&gt;<a class="code" href="a00031.html#aca33d2cce250ad8c64b6436b8b8fd090">contains</a>) == 0)</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;      {</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;         <a class="code" href="a00031.html#a8261f9c3d2b399387668421b4db70342">set_bad_multithreaded_result</a>();</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;         <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;      }</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;   }</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    alloc_error:</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <span class="keywordflow">if</span> (attr) {</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(attr-&gt;k);</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(attr-&gt;v);</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(attr);</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        }</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da74be3b084dd73433942c30fe6b4dc37a">HPD_E_ALLOC</a>;</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;}</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
+<div class="line"><a name="l00141"></a><span class="lineno"><a class="line" href="a00031.html#ac16b47a5d68b6eaae2e709e1888982fd">  141</a></span>&#160;<span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00031.html#ac16b47a5d68b6eaae2e709e1888982fd">map_replace</a>(<a class="code" href="a00031.html#a00124">hpd_pair_t</a> *attr, <span class="keyword">const</span> <span class="keywordtype">char</span> *v) {</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <a class="code" href="a00053.html#aeb54026c07aa12169c4ddf82b92fab17">HPD_STR_CPY</a>(attr-&gt;v, v);</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;   <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;}</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
-<div class="line"><a name="l00148"></a><span class="lineno"><a class="line" href="a00031.html#ae6951d531f2b616ec2d687c980bc0fae">  148</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="a00031.html#ae6951d531f2b616ec2d687c980bc0fae">basic_get_multithreaded_stress_test</a>(<span class="keywordtype">char</span>* <a class="code" href="a00006.html#a8887c2fa1e081a4df18dff878d9ce142">url</a>, <span class="keywordtype">char</span>* <a class="code" href="a00031.html#aca33d2cce250ad8c64b6436b8b8fd090">contains</a>)</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;{</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;   <span class="keywordtype">int</span> threads = 0;</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;   <span class="keywordtype">int</span> err = 0;</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;   <a class="code" href="a00031.html#a9112fba1a3ac321f3999e5c513943e05">multithreaded_results</a> = 1;</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;   <span class="keyword">struct </span><a class="code" href="a00031.html#a00118">mt_args</a> *args = malloc(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> <a class="code" href="a00031.html#a00118">mt_args</a>));</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;   args-&gt;<a class="code" href="a00031.html#acfbefb98ebac6187054e91de3f40b43e">url</a> = <a class="code" href="a00006.html#a8887c2fa1e081a4df18dff878d9ce142">url</a>;</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;   args-&gt;<a class="code" href="a00031.html#aca33d2cce250ad8c64b6436b8b8fd090">contains</a> = <a class="code" href="a00031.html#aca33d2cce250ad8c64b6436b8b8fd090">contains</a>;</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;   args-&gt;<a class="code" href="a00031.html#a914f33a13060573fc65547d32ed96eba">assaults</a> = 500;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;   <span class="keywordflow">while</span>(threads &lt; <a class="code" href="a00031.html#a51ca9914034cd3e92903476fd4eebbd6">NTHREADS</a>)</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;   {</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;       err=pthread_create(&amp;(<a class="code" href="a00031.html#aa1401c9a2a0473a021170fbe5716bfd3">threadID</a>[threads]), NULL, &amp;<a class="code" href="a00031.html#a46e90a73cf2ceec5920442647a8cabec">get_mt_loop</a>, (<span class="keywordtype">void</span>*)args);</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;       <span class="keywordflow">if</span>(err != 0)</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;           printf(<span class="stringliteral">&quot;\nError creating thread: %i %i %s&quot;</span>,threads, err,strerror(err));</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;       threads++;</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;   }</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    alloc_error:</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da74be3b084dd73433942c30fe6b4dc37a">HPD_E_ALLOC</a>;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;}</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
+<div class="line"><a name="l00149"></a><span class="lineno"><a class="line" href="a00031.html#a3e69650cf0b005c3e69ae7787b529a2f">  149</a></span>&#160;<span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00031.html#a3e69650cf0b005c3e69ae7787b529a2f">map_insert_n</a>(<a class="code" href="a00056.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a> *map, <span class="keyword">const</span> <span class="keywordtype">char</span> *k, <span class="keywordtype">size_t</span> k_len, <span class="keyword">const</span> <span class="keywordtype">char</span> *v, <span class="keywordtype">size_t</span> v_len)</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;{</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <a class="code" href="a00031.html#a00124">hpd_pair_t</a> *attr = NULL;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <a class="code" href="a00053.html#a3845681e01afcaa2d65abc4c62dc34de">HPD_CALLOC</a>(attr, 1, <a class="code" href="a00031.html#a00124">hpd_pair_t</a>);</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <a class="code" href="a00053.html#af16aa8e101575e88940a1cd9eff5d8f3">HPD_STR_N_CPY</a>(attr-&gt;k, k, k_len);</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <a class="code" href="a00053.html#af16aa8e101575e88940a1cd9eff5d8f3">HPD_STR_N_CPY</a>(attr-&gt;v, v, v_len);</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    TAILQ_INSERT_TAIL(map, attr, tailq);</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    alloc_error:</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordflow">if</span> (attr) {</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(attr-&gt;k);</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(attr-&gt;v);</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(attr);</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    }</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da74be3b084dd73433942c30fe6b4dc37a">HPD_E_ALLOC</a>;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;}</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;   threads = 0;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;   <span class="keywordflow">while</span>(threads &lt; <a class="code" href="a00031.html#a51ca9914034cd3e92903476fd4eebbd6">NTHREADS</a>)</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;   {</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;      pthread_join((<a class="code" href="a00031.html#aa1401c9a2a0473a021170fbe5716bfd3">threadID</a>[threads]), NULL);</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;      threads++;</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;   }</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;   <a class="code" href="a00006.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(args);</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;   <span class="keywordflow">return</span> <a class="code" href="a00031.html#a9112fba1a3ac321f3999e5c513943e05">multithreaded_results</a>;</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;}</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;</div>
-<div class="line"><a name="l00178"></a><span class="lineno"><a class="line" href="a00031.html#aca68378f576a44735a13cce291603838">  178</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="a00031.html#aca68378f576a44735a13cce291603838">test_thread</a>()</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;{</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;   <span class="keywordtype">int</span> testresult;</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;   <span class="keywordtype">int</span> ret =1;</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;   <a class="code" href="a00031.html#a8eeb8848cf93f86bd7b674b721100f2e">init_tests</a>();</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;   printf(<span class="stringliteral">&quot;Running tcpd tests:\n&quot;</span>);</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;   printf(<span class="stringliteral">&quot;\tBasic connection test: &quot;</span>);</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;   testresult = <a class="code" href="a00031.html#ad1803275aed905051c4d618367423cc9">basic_get_contains_test</a>(<span class="stringliteral">&quot;http://localhost:8080&quot;</span>, <span class="stringliteral">&quot;Hello&quot;</span>);</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;   <span class="keywordflow">if</span>(testresult == 1)</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;      printf(<span class="stringliteral">&quot;Success\n&quot;</span>);</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;   <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;      printf(<span class="stringliteral">&quot;Failed\n&quot;</span>);</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;   ret += testresult;</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;   </div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;   printf(<span class="stringliteral">&quot;\tBasic multithreaded stress test: &quot;</span>);</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;   testresult = <a class="code" href="a00031.html#ae6951d531f2b616ec2d687c980bc0fae">basic_get_multithreaded_stress_test</a>(<span class="stringliteral">&quot;http://localhost:8080&quot;</span>, <span class="stringliteral">&quot;Hello&quot;</span>);</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;   <span class="keywordflow">if</span>(testresult == 1)</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;      printf(<span class="stringliteral">&quot;Sucess\n&quot;</span>);</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;   <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;      printf(<span class="stringliteral">&quot;Failed\n&quot;</span>);</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;   ret += testresult;</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;   </div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;   <a class="code" href="a00031.html#a08657d01c87a7dad84b36bb62953c2db">cleanup_tests</a>();</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;   printf(<span class="stringliteral">&quot;\nDone.\n&quot;</span>);</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;   <span class="keywordflow">return</span> ret;</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;}</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;</div>
-<div class="line"><a name="l00210"></a><span class="lineno"><a class="line" href="a00031.html#aa41ac98c8a83183736f4c237f5792b70">  210</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">int</span> <a class="code" href="a00031.html#aa41ac98c8a83183736f4c237f5792b70">on_receive</a>(hpd_ws_t *<a class="code" href="a00006.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>, hpd_ws_conn_t *conn, <span class="keywordtype">void</span> *ctx, <span class="keywordtype">void</span> **<a class="code" href="a00006.html#a00090">data</a>,</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;                      <span class="keyword">const</span> <span class="keywordtype">char</span> *buf, <span class="keywordtype">size_t</span> len)</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;{</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;   ws_conn_sendf(conn, <span class="stringliteral">&quot;HTTP/1.1 200 OK\r\n\r\nHello&quot;</span>);</div>
-<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;   ws_conn_close(conn);</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;   <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;}</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;<span class="comment">// TODO Move this up to top of file</span></div>
-<div class="line"><a name="l00219"></a><span class="lineno"><a class="line" href="a00031.html#a855923b555731173d3509ecb645de0e0">  219</a></span>&#160;<span class="keyword">static</span> <span class="keyword">struct </span>ev_loop *<a class="code" href="a00031.html#a855923b555731173d3509ecb645de0e0">loop</a>;</div>
-<div class="line"><a name="l00220"></a><span class="lineno"><a class="line" href="a00031.html#a5363b9ac4cdc96f8e9cb3261b558a43b">  220</a></span>&#160;<span class="keyword">static</span> <span class="keyword">struct </span>ev_async <a class="code" href="a00031.html#a5363b9ac4cdc96f8e9cb3261b558a43b">exit_watcher</a>;</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="comment">// Handle correct exiting</span></div>
-<div class="line"><a name="l00223"></a><span class="lineno"><a class="line" href="a00031.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">  223</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a00031.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">exit_handler</a>(<span class="keywordtype">int</span> sig)</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;{</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;   fprintf(stderr, <span class="stringliteral">&quot;Sending stop signal\n&quot;</span>);</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;   ev_async_send(<a class="code" href="a00031.html#a855923b555731173d3509ecb645de0e0">loop</a>, &amp;<a class="code" href="a00031.html#a5363b9ac4cdc96f8e9cb3261b558a43b">exit_watcher</a>);</div>
+<div class="line"><a name="l00167"></a><span class="lineno"><a class="line" href="a00031.html#ae1f7c19b43bb77ef51958bc91b2910f7">  167</a></span>&#160;<span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00031.html#ae1f7c19b43bb77ef51958bc91b2910f7">map_replace_n</a>(<a class="code" href="a00031.html#a00124">hpd_pair_t</a> *attr, <span class="keyword">const</span> <span class="keywordtype">char</span> *v, <span class="keywordtype">size_t</span> v_len) {</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <a class="code" href="a00053.html#af16aa8e101575e88940a1cd9eff5d8f3">HPD_STR_N_CPY</a>(attr-&gt;v, v, v_len);</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    alloc_error:</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da74be3b084dd73433942c30fe6b4dc37a">HPD_E_ALLOC</a>;</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;}</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
+<div class="line"><a name="l00175"></a><span class="lineno"><a class="line" href="a00031.html#a230c25a2f8e5de7ce61623a4ce8a809f">  175</a></span>&#160;<a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00031.html#a230c25a2f8e5de7ce61623a4ce8a809f">hpd_map_set</a>(<a class="code" href="a00056.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a> *map, <span class="keyword">const</span> <span class="keywordtype">char</span> *k, <span class="keyword">const</span> <span class="keywordtype">char</span> *v)</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;{</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="keywordflow">if</span> (!map || !k) <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a>;</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> rc;</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    <a class="code" href="a00031.html#a00124">hpd_pair_t</a> *attr = NULL;</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    TAILQ_FOREACH(attr, map, <a class="code" href="a00055.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a>)</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        <span class="keywordflow">if</span> (strcmp(attr-&gt;k, k) == 0)</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <span class="keywordflow">if</span> (v == NULL) {</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        <span class="keywordflow">if</span> (attr &amp;&amp; (rc = <a class="code" href="a00031.html#ae1085dd4fd40466d18b02ec077ef4d6d">hpd_map_remove</a>(map, attr))) <span class="keywordflow">return</span> rc;</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!attr) {</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a00031.html#a68e8a71a4dc9b51ca36d2389ed89b336">map_insert</a>(map, k, v);</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a00031.html#ac16b47a5d68b6eaae2e709e1888982fd">map_replace</a>(attr, v);</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    }</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;}</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;</div>
+<div class="line"><a name="l00195"></a><span class="lineno"><a class="line" href="a00031.html#a6d8c24cdcb1535f26a772f00d90aecec">  195</a></span>&#160;<a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00031.html#a6d8c24cdcb1535f26a772f00d90aecec">hpd_map_set_n</a>(<a class="code" href="a00056.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a> *map, <span class="keyword">const</span> <span class="keywordtype">char</span> *k, <span class="keywordtype">size_t</span> k_len, <span class="keyword">const</span> <span class="keywordtype">char</span> *v, <span class="keywordtype">size_t</span> v_len)</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;{</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <span class="keywordflow">if</span> (!map || !k) <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a>;</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> rc;</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <a class="code" href="a00031.html#a00124">hpd_pair_t</a> *attr = NULL;</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    TAILQ_FOREACH(attr, map, <a class="code" href="a00055.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a>)</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;        <span class="keywordflow">if</span> (strncmp(attr-&gt;k, k, k_len) == 0)</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    </div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;    <span class="keywordflow">if</span> (v == NULL) {</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        <span class="keywordflow">if</span> (attr &amp;&amp; (rc = <a class="code" href="a00031.html#ae1085dd4fd40466d18b02ec077ef4d6d">hpd_map_remove</a>(map, attr))) <span class="keywordflow">return</span> rc;</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!attr) {</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a00031.html#a3e69650cf0b005c3e69ae7787b529a2f">map_insert_n</a>(map, k, k_len, v, v_len);</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="a00031.html#ae1f7c19b43bb77ef51958bc91b2910f7">map_replace_n</a>(attr, v, v_len);</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    }</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;}</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;</div>
+<div class="line"><a name="l00215"></a><span class="lineno"><a class="line" href="a00031.html#a87dfe6b5dcd15e1a10ed235f9c467a6a">  215</a></span>&#160;<a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00031.html#a87dfe6b5dcd15e1a10ed235f9c467a6a">hpd_map_v_matches</a>(<a class="code" href="a00056.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a> *map, va_list vp)</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;{</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    <span class="keywordflow">if</span> (!map) <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a>;</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="a00012.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a>, *val, *val2;</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <span class="keywordflow">while</span> ((key = va_arg(vp, <span class="keyword">const</span> <span class="keywordtype">char</span> *))) {</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;        val = va_arg(vp, <span class="keyword">const</span> <span class="keywordtype">char</span> *);</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;        <span class="keywordflow">if</span> (!val) <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a>;</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;        <a class="code" href="a00031.html#a3eb33be000f845d28ec16639f235ceb2">hpd_map_get</a>(map, key, &amp;val2);</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;        <span class="keywordflow">if</span> (!val2 || strcmp(val, val2) != 0) <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3856d98f8e3b56ef9a5e8c8b5d7cdfb5">HPD_E_NOT_FOUND</a>;</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    }</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
 <div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;}</div>
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;</div>
-<div class="line"><a name="l00229"></a><span class="lineno"><a class="line" href="a00031.html#a22f172d0eb285a1fe7fba2c0a30a1b65">  229</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code" href="a00031.html#a22f172d0eb285a1fe7fba2c0a30a1b65">exit_cb</a>(EV_P_ ev_async *watcher, <span class="keywordtype">int</span> revents)</div>
+<div class="line"><a name="l00229"></a><span class="lineno"><a class="line" href="a00075.html#a234fa0db60fda58722702273bf7e82a2">  229</a></span>&#160;<a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00031.html#a234fa0db60fda58722702273bf7e82a2">hpd_pair_get</a>(<span class="keyword">const</span> <a class="code" href="a00031.html#a00124">hpd_pair_t</a> *pair, <span class="keyword">const</span> <span class="keywordtype">char</span> **<a class="code" href="a00012.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a>, <span class="keyword">const</span> <span class="keywordtype">char</span> **<a class="code" href="a00051.html#aee53bdc848584e095375d0d39aa400b8">value</a>)</div>
 <div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;{</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;   fprintf(stderr, <span class="stringliteral">&quot;Stopping tcpd\n&quot;</span>);</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;   <span class="comment">// Stop tcpd</span></div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;   <span class="keywordflow">if</span> (<a class="code" href="a00031.html#aecab1ca7418c4a3a477f1f95877e0ddb">ws</a> != NULL) {</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;      ws_stop(<a class="code" href="a00031.html#aecab1ca7418c4a3a477f1f95877e0ddb">ws</a>);</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;      ws_destroy(<a class="code" href="a00031.html#aecab1ca7418c4a3a477f1f95877e0ddb">ws</a>);</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;   }</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;   ev_break(<a class="code" href="a00031.html#a855923b555731173d3509ecb645de0e0">loop</a>, EVBREAK_ALL);</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;}</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;</div>
-<div class="line"><a name="l00241"></a><span class="lineno"><a class="line" href="a00031.html#acc5092ba6e99d5115efd06882999687f">  241</a></span>&#160;<span class="keyword">static</span> <span class="keywordtype">void</span> *<a class="code" href="a00031.html#acc5092ba6e99d5115efd06882999687f">webserver_thread</a>(<span class="keywordtype">void</span> *arg)</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;{</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;   <span class="comment">// The event loop for the tcpd to run on</span></div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;   <a class="code" href="a00031.html#a855923b555731173d3509ecb645de0e0">loop</a> = EV_DEFAULT;</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;   <span class="comment">// Add a watcher to stop it again</span></div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;   ev_async_init(&amp;<a class="code" href="a00031.html#a5363b9ac4cdc96f8e9cb3261b558a43b">exit_watcher</a>, <a class="code" href="a00031.html#a22f172d0eb285a1fe7fba2c0a30a1b65">exit_cb</a>);</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;   ev_async_start(<a class="code" href="a00031.html#a855923b555731173d3509ecb645de0e0">loop</a>, &amp;<a class="code" href="a00031.html#a5363b9ac4cdc96f8e9cb3261b558a43b">exit_watcher</a>);</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;   <span class="comment">// Settings for the tcpd</span></div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;   <span class="keyword">struct </span>ws_settings settings = WS_SETTINGS_DEFAULT;</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;   settings.port = HPD_TCPD_P_HTTP_ALT;</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;   settings.on_receive = <a class="code" href="a00031.html#aa41ac98c8a83183736f4c237f5792b70">on_receive</a>;</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;   <span class="comment">// Inform if we have been built with debug flag</span></div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;<span class="preprocessor">#ifdef DEBUG</span></div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;   printf(<span class="stringliteral">&quot;Debugging is set\n&quot;</span>);</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;   <span class="comment">// Register signals for correctly exiting</span></div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;   signal(SIGINT, <a class="code" href="a00031.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">exit_handler</a>);</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;   signal(SIGTERM, <a class="code" href="a00031.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">exit_handler</a>);</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;   <span class="comment">// Create tcpd</span></div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;   <a class="code" href="a00031.html#aecab1ca7418c4a3a477f1f95877e0ddb">ws</a> = ws_create(&amp;settings, <a class="code" href="a00031.html#a855923b555731173d3509ecb645de0e0">loop</a>);</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;   ws_start(<a class="code" href="a00031.html#aecab1ca7418c4a3a477f1f95877e0ddb">ws</a>);</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;   <span class="comment">// Start the event loop and tcpd</span></div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;   <a class="code" href="a00031.html#abfafc640452d742a5a404a158ce4737a">started</a> = 1;</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;   ev_run(<a class="code" href="a00031.html#a855923b555731173d3509ecb645de0e0">loop</a>, 0);</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;   <span class="keywordflow">return</span> NULL;</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;}</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;</div>
-<div class="line"><a name="l00275"></a><span class="lineno"><a class="line" href="a00031.html#a0ddf1224851353fc92bfbff6f499fa97">  275</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="a00031.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;{</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;   <span class="keywordtype">int</span> stat;</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;   pthread_t server_thread;</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;   pthread_create(&amp;server_thread, NULL, <a class="code" href="a00031.html#acc5092ba6e99d5115efd06882999687f">webserver_thread</a>, NULL);</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;   <span class="comment">// TODO Someone needs too add a timeout here...</span></div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;   <span class="keywordflow">while</span> (!<a class="code" href="a00031.html#abfafc640452d742a5a404a158ce4737a">started</a>);</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;   stat = <a class="code" href="a00031.html#aca68378f576a44735a13cce291603838">test_thread</a>();</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;   <a class="code" href="a00031.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">exit_handler</a>(0);</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;   pthread_join(server_thread, NULL);</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;   <span class="keywordflow">if</span> (stat == 0) <span class="keywordflow">return</span> 1;</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;   <span class="keywordflow">else</span> <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;}</div>
-<div class="ttc" id="a00031_html_aca33d2cce250ad8c64b6436b8b8fd090"><div class="ttname"><a href="a00031.html#aca33d2cce250ad8c64b6436b8b8fd090">mt_args::contains</a></div><div class="ttdeci">char * contains</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00040">load_test.c:40</a></div></div>
-<div class="ttc" id="a00031_html_a0ddf1224851353fc92bfbff6f499fa97"><div class="ttname"><a href="a00031.html#a0ddf1224851353fc92bfbff6f499fa97">main</a></div><div class="ttdeci">int main(int argc, char *argv[])</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00275">load_test.c:275</a></div></div>
-<div class="ttc" id="a00031_html_adee3ed193c880b748e304af40508a8f9"><div class="ttname"><a href="a00031.html#adee3ed193c880b748e304af40508a8f9">simple_get_request</a></div><div class="ttdeci">static char * simple_get_request(char *url)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00069">load_test.c:69</a></div></div>
-<div class="ttc" id="a00031_html_ad1803275aed905051c4d618367423cc9"><div class="ttname"><a href="a00031.html#ad1803275aed905051c4d618367423cc9">basic_get_contains_test</a></div><div class="ttdeci">static int basic_get_contains_test(char *url, char *contains)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00107">load_test.c:107</a></div></div>
-<div class="ttc" id="a00031_html_a855923b555731173d3509ecb645de0e0"><div class="ttname"><a href="a00031.html#a855923b555731173d3509ecb645de0e0">loop</a></div><div class="ttdeci">static struct ev_loop * loop</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00219">load_test.c:219</a></div></div>
-<div class="ttc" id="a00031_html_a00118"><div class="ttname"><a href="a00031.html#a00118">mt_args</a></div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00038">load_test.c:38</a></div></div>
-<div class="ttc" id="a00031_html_ae6951d531f2b616ec2d687c980bc0fae"><div class="ttname"><a href="a00031.html#ae6951d531f2b616ec2d687c980bc0fae">basic_get_multithreaded_stress_test</a></div><div class="ttdeci">static int basic_get_multithreaded_stress_test(char *url, char *contains)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00148">load_test.c:148</a></div></div>
-<div class="ttc" id="a00031_html_abfafc640452d742a5a404a158ce4737a"><div class="ttname"><a href="a00031.html#abfafc640452d742a5a404a158ce4737a">started</a></div><div class="ttdeci">static int started</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00047">load_test.c:47</a></div></div>
-<div class="ttc" id="a00006_html_a8887c2fa1e081a4df18dff878d9ce142"><div class="ttname"><a href="a00006.html#a8887c2fa1e081a4df18dff878d9ce142">url</a></div><div class="ttdeci">char * url</div><div class="ttdef"><b>Definition:</b> <a href="a00006_source.html#l00194">url_parser_test.c:194</a></div></div>
-<div class="ttc" id="a00031_html_a51ca9914034cd3e92903476fd4eebbd6"><div class="ttname"><a href="a00031.html#a51ca9914034cd3e92903476fd4eebbd6">NTHREADS</a></div><div class="ttdeci">#define NTHREADS</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00036">load_test.c:36</a></div></div>
-<div class="ttc" id="a00031_html_aca68378f576a44735a13cce291603838"><div class="ttname"><a href="a00031.html#aca68378f576a44735a13cce291603838">test_thread</a></div><div class="ttdeci">static int test_thread()</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00178">load_test.c:178</a></div></div>
-<div class="ttc" id="a00031_html_a22f172d0eb285a1fe7fba2c0a30a1b65"><div class="ttname"><a href="a00031.html#a22f172d0eb285a1fe7fba2c0a30a1b65">exit_cb</a></div><div class="ttdeci">static void exit_cb(EV_P_ ev_async *watcher, int revents)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00229">load_test.c:229</a></div></div>
-<div class="ttc" id="a00031_html_a7f408e810f259536ad88eb6544321c97"><div class="ttname"><a href="a00031.html#a7f408e810f259536ad88eb6544321c97">data_from_curl</a></div><div class="ttdeci">static size_t data_from_curl(char *buffer, size_t buffer_size, size_t nmemb, char **userdata)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00060">load_test.c:60</a></div></div>
-<div class="ttc" id="a00031_html_a760df61e2fc9a4512c5b257d55636625"><div class="ttname"><a href="a00031.html#a760df61e2fc9a4512c5b257d55636625">cleanup_libcurl</a></div><div class="ttdeci">static void cleanup_libcurl()</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00055">load_test.c:55</a></div></div>
-<div class="ttc" id="a00031_html_a9112fba1a3ac321f3999e5c513943e05"><div class="ttname"><a href="a00031.html#a9112fba1a3ac321f3999e5c513943e05">multithreaded_results</a></div><div class="ttdeci">static int multithreaded_results</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00044">load_test.c:44</a></div></div>
-<div class="ttc" id="a00031_html_a8eeb8848cf93f86bd7b674b721100f2e"><div class="ttname"><a href="a00031.html#a8eeb8848cf93f86bd7b674b721100f2e">init_tests</a></div><div class="ttdeci">static void init_tests()</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00097">load_test.c:97</a></div></div>
-<div class="ttc" id="a00006_html_adf46370d9c211c3be22966b4606ba9b0"><div class="ttname"><a href="a00006.html#adf46370d9c211c3be22966b4606ba9b0">free</a></div><div class="ttdeci">free(data.url)</div></div>
-<div class="ttc" id="a00031_html_ae8b5578ab3bcd3462c02b2ef71e27569"><div class="ttname"><a href="a00031.html#ae8b5578ab3bcd3462c02b2ef71e27569">init_libcurl</a></div><div class="ttdeci">static void init_libcurl()</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00050">load_test.c:50</a></div></div>
-<div class="ttc" id="a00031_html_aa41ac98c8a83183736f4c237f5792b70"><div class="ttname"><a href="a00031.html#aa41ac98c8a83183736f4c237f5792b70">on_receive</a></div><div class="ttdeci">static int on_receive(hpd_ws_t *instance, hpd_ws_conn_t *conn, void *ctx, void **data, const char *buf, size_t len)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00210">load_test.c:210</a></div></div>
-<div class="ttc" id="a00006_html_a50e95e721b7d8a15c3a184649c98b284"><div class="ttname"><a href="a00006.html#a50e95e721b7d8a15c3a184649c98b284">instance</a></div><div class="ttdeci">struct up * instance</div><div class="ttdef"><b>Definition:</b> <a href="a00006_source.html#l00210">url_parser_test.c:210</a></div></div>
-<div class="ttc" id="a00031_html_acc5092ba6e99d5115efd06882999687f"><div class="ttname"><a href="a00031.html#acc5092ba6e99d5115efd06882999687f">webserver_thread</a></div><div class="ttdeci">static void * webserver_thread(void *arg)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00241">load_test.c:241</a></div></div>
-<div class="ttc" id="a00031_html_aa1401c9a2a0473a021170fbe5716bfd3"><div class="ttname"><a href="a00031.html#aa1401c9a2a0473a021170fbe5716bfd3">threadID</a></div><div class="ttdeci">static pthread_t threadID[NTHREADS]</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00046">load_test.c:46</a></div></div>
-<div class="ttc" id="a00031_html_a914f33a13060573fc65547d32ed96eba"><div class="ttname"><a href="a00031.html#a914f33a13060573fc65547d32ed96eba">mt_args::assaults</a></div><div class="ttdeci">unsigned long assaults</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00041">load_test.c:41</a></div></div>
-<div class="ttc" id="a00031_html_aecab1ca7418c4a3a477f1f95877e0ddb"><div class="ttname"><a href="a00031.html#aecab1ca7418c4a3a477f1f95877e0ddb">ws</a></div><div class="ttdeci">static hpd_ws_t * ws</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00048">load_test.c:48</a></div></div>
-<div class="ttc" id="a00031_html_a49f6d3bb9d22d5b9cf5c7eb6175318d1"><div class="ttname"><a href="a00031.html#a49f6d3bb9d22d5b9cf5c7eb6175318d1">exit_handler</a></div><div class="ttdeci">static void exit_handler(int sig)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00223">load_test.c:223</a></div></div>
-<div class="ttc" id="a00031_html_a08657d01c87a7dad84b36bb62953c2db"><div class="ttname"><a href="a00031.html#a08657d01c87a7dad84b36bb62953c2db">cleanup_tests</a></div><div class="ttdeci">static void cleanup_tests()</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00102">load_test.c:102</a></div></div>
-<div class="ttc" id="a00031_html_a46e90a73cf2ceec5920442647a8cabec"><div class="ttname"><a href="a00031.html#a46e90a73cf2ceec5920442647a8cabec">get_mt_loop</a></div><div class="ttdeci">static void * get_mt_loop(void *args)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00132">load_test.c:132</a></div></div>
-<div class="ttc" id="a00031_html_a5363b9ac4cdc96f8e9cb3261b558a43b"><div class="ttname"><a href="a00031.html#a5363b9ac4cdc96f8e9cb3261b558a43b">exit_watcher</a></div><div class="ttdeci">static struct ev_async exit_watcher</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00220">load_test.c:220</a></div></div>
-<div class="ttc" id="a00031_html_a0abaf4b5d42c4e5d19190035fade3599"><div class="ttname"><a href="a00031.html#a0abaf4b5d42c4e5d19190035fade3599">lock</a></div><div class="ttdeci">static pthread_mutex_t lock</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00045">load_test.c:45</a></div></div>
-<div class="ttc" id="a00031_html_a8261f9c3d2b399387668421b4db70342"><div class="ttname"><a href="a00031.html#a8261f9c3d2b399387668421b4db70342">set_bad_multithreaded_result</a></div><div class="ttdeci">static void set_bad_multithreaded_result()</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00125">load_test.c:125</a></div></div>
-<div class="ttc" id="a00006_html_a00090"><div class="ttname"><a href="a00006.html#a00090">data</a></div><div class="ttdef"><b>Definition:</b> <a href="a00042_source.html#l00032">header_parser_test.c:32</a></div></div>
-<div class="ttc" id="a00031_html_acfbefb98ebac6187054e91de3f40b43e"><div class="ttname"><a href="a00031.html#acfbefb98ebac6187054e91de3f40b43e">mt_args::url</a></div><div class="ttdeci">char * url</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00039">load_test.c:39</a></div></div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordflow">if</span> (!pair || (!key &amp;&amp; !value)) <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a>;</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    <span class="keywordflow">if</span> (key) (*key) = pair-&gt;k;</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    <span class="keywordflow">if</span> (value) (*value) = pair-&gt;v;</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;}</div>
+<div class="ttc" id="a00031_html_a87dfe6b5dcd15e1a10ed235f9c467a6a"><div class="ttname"><a href="a00031.html#a87dfe6b5dcd15e1a10ed235f9c467a6a">hpd_map_v_matches</a></div><div class="ttdeci">hpd_error_t hpd_map_v_matches(hpd_map_t *map, va_list vp)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00215">map.c:215</a></div></div>
+<div class="ttc" id="a00031_html_a3e69650cf0b005c3e69ae7787b529a2f"><div class="ttname"><a href="a00031.html#a3e69650cf0b005c3e69ae7787b529a2f">map_insert_n</a></div><div class="ttdeci">static hpd_error_t map_insert_n(hpd_map_t *map, const char *k, size_t k_len, const char *v, size_t v_len)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00149">map.c:149</a></div></div>
+<div class="ttc" id="a00056_html"><div class="ttname"><a href="a00056.html">hpd_map.h</a></div></div>
+<div class="ttc" id="a00053_html_aeb54026c07aa12169c4ddf82b92fab17"><div class="ttname"><a href="a00053.html#aeb54026c07aa12169c4ddf82b92fab17">HPD_STR_CPY</a></div><div class="ttdeci">#define HPD_STR_CPY(DST, SRC)</div><div class="ttdef"><b>Definition:</b> <a href="a00053_source.html#l00064">hpd_common.h:64</a></div></div>
+<div class="ttc" id="a00031_html_ae1085dd4fd40466d18b02ec077ef4d6d"><div class="ttname"><a href="a00031.html#ae1085dd4fd40466d18b02ec077ef4d6d">hpd_map_remove</a></div><div class="ttdeci">hpd_error_t hpd_map_remove(hpd_map_t *map, hpd_pair_t *pair)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00068">map.c:68</a></div></div>
+<div class="ttc" id="a00031_html_a68e8a71a4dc9b51ca36d2389ed89b336"><div class="ttname"><a href="a00031.html#a68e8a71a4dc9b51ca36d2389ed89b336">map_insert</a></div><div class="ttdeci">static hpd_error_t map_insert(hpd_map_t *map, const char *k, const char *v)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00123">map.c:123</a></div></div>
+<div class="ttc" id="a00030_html"><div class="ttname"><a href="a00030.html">hpd_types.h</a></div></div>
+<div class="ttc" id="a00031_html_a234fa0db60fda58722702273bf7e82a2"><div class="ttname"><a href="a00031.html#a234fa0db60fda58722702273bf7e82a2">hpd_pair_get</a></div><div class="ttdeci">hpd_error_t hpd_pair_get(const hpd_pair_t *pair, const char **key, const char **value)</div><div class="ttdoc">[hpd_action_t functions] </div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00229">map.c:229</a></div></div>
+<div class="ttc" id="a00051_html_aee53bdc848584e095375d0d39aa400b8"><div class="ttname"><a href="a00051.html#aee53bdc848584e095375d0d39aa400b8">value</a></div><div class="ttdeci">data value</div><div class="ttdef"><b>Definition:</b> <a href="a00051_source.html#l00067">header_parser_test.c:67</a></div></div>
+<div class="ttc" id="a00031_html_a00124"><div class="ttname"><a href="a00031.html#a00124">hpd_pair</a></div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00034">map.c:34</a></div></div>
+<div class="ttc" id="a00030_html_af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182"><div class="ttname"><a href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a></div><div class="ttdef"><b>Definition:</b> <a href="a00030_source.html#l00072">hpd_types.h:72</a></div></div>
+<div class="ttc" id="a00012_html_adf46370d9c211c3be22966b4606ba9b0"><div class="ttname"><a href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a></div><div class="ttdeci">free(data.url)</div></div>
+<div class="ttc" id="a00053_html_af16aa8e101575e88940a1cd9eff5d8f3"><div class="ttname"><a href="a00053.html#af16aa8e101575e88940a1cd9eff5d8f3">HPD_STR_N_CPY</a></div><div class="ttdeci">#define HPD_STR_N_CPY(DST, SRC, LEN)</div><div class="ttdef"><b>Definition:</b> <a href="a00053_source.html#l00069">hpd_common.h:69</a></div></div>
+<div class="ttc" id="a00055_html_a3e439c9f930e0132d45bdcd720e55aea"><div class="ttname"><a href="a00055.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a></div><div class="ttdeci">#define HPD_TAILQ_FIELD</div><div class="ttdef"><b>Definition:</b> <a href="a00055_source.html#l00037">hpd_queue.h:37</a></div></div>
+<div class="ttc" id="a00053_html_a3845681e01afcaa2d65abc4c62dc34de"><div class="ttname"><a href="a00053.html#a3845681e01afcaa2d65abc4c62dc34de">HPD_CALLOC</a></div><div class="ttdeci">#define HPD_CALLOC(PTR, NUM, CAST)</div><div class="ttdoc">Allocates and zeros a structure. </div><div class="ttdef"><b>Definition:</b> <a href="a00053_source.html#l00044">hpd_common.h:44</a></div></div>
+<div class="ttc" id="a00031_html_a8d23b888fb4bb3f951c7d48f1928ee9a"><div class="ttname"><a href="a00031.html#a8d23b888fb4bb3f951c7d48f1928ee9a">hpd_map_alloc</a></div><div class="ttdeci">hpd_error_t hpd_map_alloc(hpd_map_t **map)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00040">map.c:40</a></div></div>
+<div class="ttc" id="a00031_html_a2adc61113de9598894f43366ce6b61ea"><div class="ttname"><a href="a00031.html#a2adc61113de9598894f43366ce6b61ea">TAILQ_HEAD</a></div><div class="ttdeci">TAILQ_HEAD(hpd_map, hpd_pair)</div></div>
+<div class="ttc" id="a00012_html_ad0ed575d03a4dca41d2d38d4fa19a442"><div class="ttname"><a href="a00012.html#ad0ed575d03a4dca41d2d38d4fa19a442">key</a></div><div class="ttdeci">data key</div><div class="ttdef"><b>Definition:</b> <a href="a00012_source.html#l00202">url_parser_test.c:202</a></div></div>
+<div class="ttc" id="a00031_html_a230c25a2f8e5de7ce61623a4ce8a809f"><div class="ttname"><a href="a00031.html#a230c25a2f8e5de7ce61623a4ce8a809f">hpd_map_set</a></div><div class="ttdeci">hpd_error_t hpd_map_set(hpd_map_t *map, const char *k, const char *v)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00175">map.c:175</a></div></div>
+<div class="ttc" id="a00030_html_a3f117b297a535788094c22da826c2c94"><div class="ttname"><a href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a></div><div class="ttdeci">enum hpd_error hpd_error_t</div><div class="ttdef"><b>Definition:</b> <a href="a00030_source.html#l00167">hpd_types.h:167</a></div></div>
+<div class="ttc" id="a00030_html_af2d90ea316126f626dd4bcd587cdfb0da3856d98f8e3b56ef9a5e8c8b5d7cdfb5"><div class="ttname"><a href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3856d98f8e3b56ef9a5e8c8b5d7cdfb5">HPD_E_NOT_FOUND</a></div><div class="ttdef"><b>Definition:</b> <a href="a00030_source.html#l00077">hpd_types.h:77</a></div></div>
+<div class="ttc" id="a00031_html_a3eb33be000f845d28ec16639f235ceb2"><div class="ttname"><a href="a00031.html#a3eb33be000f845d28ec16639f235ceb2">hpd_map_get</a></div><div class="ttdeci">hpd_error_t hpd_map_get(hpd_map_t *map, const char *k, const char **v)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00092">map.c:92</a></div></div>
+<div class="ttc" id="a00031_html_af695ac28accfa977234c1a554db94bb0"><div class="ttname"><a href="a00031.html#af695ac28accfa977234c1a554db94bb0">hpd_map_next</a></div><div class="ttdeci">hpd_error_t hpd_map_next(hpd_pair_t **pair)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00060">map.c:60</a></div></div>
+<div class="ttc" id="a00030_html_af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940"><div class="ttname"><a href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a></div><div class="ttdef"><b>Definition:</b> <a href="a00030_source.html#l00070">hpd_types.h:70</a></div></div>
+<div class="ttc" id="a00030_html_af2d90ea316126f626dd4bcd587cdfb0da74be3b084dd73433942c30fe6b4dc37a"><div class="ttname"><a href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da74be3b084dd73433942c30fe6b4dc37a">HPD_E_ALLOC</a></div><div class="ttdef"><b>Definition:</b> <a href="a00030_source.html#l00073">hpd_types.h:73</a></div></div>
+<div class="ttc" id="a00053_html"><div class="ttname"><a href="a00053.html">hpd_common.h</a></div></div>
+<div class="ttc" id="a00031_html_ac16b47a5d68b6eaae2e709e1888982fd"><div class="ttname"><a href="a00031.html#ac16b47a5d68b6eaae2e709e1888982fd">map_replace</a></div><div class="ttdeci">static hpd_error_t map_replace(hpd_pair_t *attr, const char *v)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00141">map.c:141</a></div></div>
+<div class="ttc" id="a00031_html_add245d9f3bd8d51960f62e547a5cec7c"><div class="ttname"><a href="a00031.html#add245d9f3bd8d51960f62e547a5cec7c">hpd_map_first</a></div><div class="ttdeci">hpd_error_t hpd_map_first(hpd_map_t *map, hpd_pair_t **pair)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00052">map.c:52</a></div></div>
+<div class="ttc" id="a00031_html_a195d511a075f2349200563af1c5d1fd7"><div class="ttname"><a href="a00031.html#a195d511a075f2349200563af1c5d1fd7">hpd_map_free</a></div><div class="ttdeci">hpd_error_t hpd_map_free(hpd_map_t *map)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00079">map.c:79</a></div></div>
+<div class="ttc" id="a00031_html_ae1f7c19b43bb77ef51958bc91b2910f7"><div class="ttname"><a href="a00031.html#ae1f7c19b43bb77ef51958bc91b2910f7">map_replace_n</a></div><div class="ttdeci">static hpd_error_t map_replace_n(hpd_pair_t *attr, const char *v, size_t v_len)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00167">map.c:167</a></div></div>
+<div class="ttc" id="a00031_html_a22cdd4d80a4d9bdccf15c63ff14c66f2"><div class="ttname"><a href="a00031.html#a22cdd4d80a4d9bdccf15c63ff14c66f2">hpd_map_get_n</a></div><div class="ttdeci">hpd_error_t hpd_map_get_n(hpd_map_t *map, const char *k, size_t k_len, const char **v)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00107">map.c:107</a></div></div>
+<div class="ttc" id="a00056_html_a142f7548f82cd01073745dd2fd1524dd"><div class="ttname"><a href="a00056.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a></div><div class="ttdeci">struct hpd_map hpd_map_t</div><div class="ttdef"><b>Definition:</b> <a href="a00056_source.html#l00040">hpd_map.h:40</a></div></div>
+<div class="ttc" id="a00031_html_a6d8c24cdcb1535f26a772f00d90aecec"><div class="ttname"><a href="a00031.html#a6d8c24cdcb1535f26a772f00d90aecec">hpd_map_set_n</a></div><div class="ttdeci">hpd_error_t hpd_map_set_n(hpd_map_t *map, const char *k, size_t k_len, const char *v, size_t v_len)</div><div class="ttdef"><b>Definition:</b> <a href="a00031_source.html#l00195">map.c:195</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:23 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:24 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

@@ -1,0 +1,50 @@
+<map id="TEST" name="TEST">
+<area shape="rect" id="node2" href="$a00039.html#af9a96823001715850b136a514fd84ff0" title="on_create_add_options" alt="" coords="1047,56,1203,83"/>
+<area shape="rect" id="node7" href="$a00012.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="1911,613,1955,640"/>
+<area shape="rect" id="node8" href="$a00039.html#a2b2154654e3a71fc5cf31a82125b1aac" title="on_destroy" alt="" coords="116,411,203,437"/>
+<area shape="rect" id="node9" href="$a00039.html#a665691f420dff4eebb8f4b4af62d7a49" title="on_start" alt="" coords="125,461,194,488"/>
+<area shape="rect" id="node10" href="$a00039.html#a257c5aafa157f3902bec16554a5a80b2" title="on_stop" alt="" coords="125,512,193,539"/>
+<area shape="rect" id="node11" href="$a00039.html#ab55a802424a74ea32084eec69cd86281" title="on_parse_opt" alt="" coords="109,563,209,589"/>
+<area shape="rect" id="node12" href="$a00074.html#a3d879947af1cc338c9bb9cf68fcce672" title="[hpd_t functions] " alt="" coords="121,208,198,235"/>
+<area shape="rect" id="node15" href="$a00074.html#a1360e4af1219978973e0afd4486c489e" title="hpd_module" alt="" coords="870,259,962,285"/>
+<area shape="rect" id="node17" href="$a00039.html#a548a458ce737e269e9cf95bdbdcdc12e" title="stop_hpd" alt="" coords="122,784,197,811"/>
+<area shape="rect" id="node20" href="$a00074.html#a4a5e670df4a5790a7955aaef5483c08a" title="hpd_start" alt="" coords="121,309,197,336"/>
+<area shape="rect" id="node48" href="$a00074.html#aa833627ad45d82173c0caf687cd30126" title="hpd_free" alt="" coords="273,727,345,753"/>
+<area shape="rect" id="node3" href="$a00039.html#a297aa16bc7c7dcdadf2462323ec703f5" title="on_create" alt="" coords="1303,5,1381,32"/>
+<area shape="rect" id="node4" href="$a00075.html#ae5288c3d07fdd00ff0b0a03f2d26961f" title="[hpd_t functions] " alt="" coords="1261,56,1423,83"/>
+<area shape="rect" id="node5" href="$a00076.html#aa28ce93ac8eee4dcd694433efbf62e82" title="daemon_add_option" alt="" coords="1487,56,1625,83"/>
+<area shape="rect" id="node6" href="$a00076.html#a3da1c288975f0004839f81c07ad3bec2" title="daemon_add_global_option" alt="" coords="1684,157,1863,184"/>
+<area shape="rect" id="node13" href="$a00076.html#a9c4bde30e05010d189231e469da9336b" title="daemon_alloc" alt="" coords="257,208,360,235"/>
+<area shape="rect" id="node14" href="$a00076.html#ad479fe62c51adf8b2375d8c9761b8c85" title="daemon_on_signal" alt="" coords="430,208,561,235"/>
+<area shape="rect" id="node16" href="$a00076.html#a336c8598d2adac7b24a90cbef5b947bc" title="daemon_add_module" alt="" coords="1701,259,1846,285"/>
+<area shape="rect" id="node18" href="$a00074.html#ad279f4f771e132927c09bd599fbe2b1b" title="hpd_stop" alt="" coords="271,955,346,981"/>
+<area shape="rect" id="node19" href="$a00076.html#a47e709c904aab5ba86a017daddfc449c" title="daemon_stop" alt="" coords="445,1044,545,1071"/>
+<area shape="rect" id="node21" href="$a00076.html#affd72e7fb83ddd29450361c75672ddd4" title="daemon_start" alt="" coords="258,588,359,615"/>
+<area shape="rect" id="node22" href="$a00076.html#a16316b28a971751b813828bb51556a57" title="daemon_runtime_create" alt="" coords="415,943,576,969"/>
+<area shape="rect" id="node23" href="$a00076.html#af16c6e4d8cc87e68b39dfa10452d5df3" title="daemon_options_create" alt="" coords="1476,309,1636,336"/>
+<area shape="rect" id="node24" href="$a00076.html#a943c02597d0bbb8ff7ecd8f0f051b6b0" title="daemon_modules_create" alt="" coords="412,360,579,387"/>
+<area shape="rect" id="node25" href="$a00076.html#aefbeef30c7dcb9666a343d1a957e21fc" title="daemon_options_parse" alt="" coords="417,715,573,741"/>
+<area shape="rect" id="node27" href="$a00076.html#aa7d44da54b75b6a31f07ea8ad0b4f65f" title="daemon_options_destroy" alt="" coords="1041,411,1208,437"/>
+<area shape="rect" id="node28" href="$a00076.html#a6e8cf698ada187d76791384bc1747d94" title="daemon_loop_create" alt="" coords="424,411,567,437"/>
+<area shape="rect" id="node29" href="$a00076.html#a2564ffbc93aa1217cfc109745f4e5c84" title="daemon_modules_start" alt="" coords="417,461,574,488"/>
+<area shape="rect" id="node30" href="$a00076.html#aca062019146e64105bc4da23c0663c8d" title="daemon_loop_run" alt="" coords="433,512,557,539"/>
+<area shape="rect" id="node31" href="$a00076.html#a85c17095ef05bb19812b928638c69511" title="daemon_modules_stop" alt="" coords="417,563,573,589"/>
+<area shape="rect" id="node32" href="$a00076.html#a6d045a0ff8f14cb475c43d4fab3cc0a5" title="daemon_watchers_stop" alt="" coords="631,639,791,665"/>
+<area shape="rect" id="node40" href="$a00076.html#a1740a3c95341405e99d4c194bee51c81" title="daemon_loop_destroy" alt="" coords="421,613,570,640"/>
+<area shape="rect" id="node41" href="$a00076.html#ad8dc07c94965198283f5985dadab54a9" title="daemon_modules_destroy" alt="" coords="408,664,583,691"/>
+<area shape="rect" id="node42" href="$a00076.html#a015919d95dc08af72eaa0663e65eaf2e" title="daemon_runtime_destroy" alt="" coords="411,892,579,919"/>
+<area shape="rect" id="node26" href="$a00076.html#a6f9a94da2aa5d7ada29958566c6192f2" title="daemon_on_parse_opt" alt="" coords="634,537,787,564"/>
+<area shape="rect" id="node33" href="$a00087.html#adc90843b331f5522a8d08d6e4219e126" title="request_free_request" alt="" coords="1053,613,1197,640"/>
+<area shape="rect" id="node34" href="$a00020.html#a8922de7d42124afa8ab5fd339fe695ee" title="discovery_free_sid" alt="" coords="1277,563,1407,589"/>
+<area shape="rect" id="node35" href="$a00090.html#a1ec3b1d4547e5080bcec544c877852da" title="value_free" alt="" coords="1301,715,1383,741"/>
+<area shape="rect" id="node38" href="$a00087.html#a2477fb8cf085cc2b61dbfacdcdc54b82" title="request_free_response" alt="" coords="839,664,993,691"/>
+<area shape="rect" id="node39" href="$a00020.html#ae1a000b225c8b3f365c2cec8362b8483" title="discovery_free_did" alt="" coords="1708,461,1839,488"/>
+<area shape="rect" id="node36" href="$a00056.html#a195d511a075f2349200563af1c5d1fd7" title="hpd_map_free" alt="" coords="1504,867,1608,893"/>
+<area shape="rect" id="node37" href="$a00031.html#ae1085dd4fd40466d18b02ec077ef4d6d" title="hpd_map_remove" alt="" coords="1711,867,1836,893"/>
+<area shape="rect" id="node43" href="$a00078.html#aec714553397f80039bf246b3b0800420" title="discovery_free_adapter" alt="" coords="632,892,789,919"/>
+<area shape="rect" id="node47" href="$a00081.html#a4cc65f197e3ad3f70ea2559bc95a68e9" title="event_free_listener" alt="" coords="1490,1171,1622,1197"/>
+<area shape="rect" id="node44" href="$a00078.html#a3c72fb9020b183238e0205b722d7ea95" title="discovery_free_device" alt="" coords="840,867,992,893"/>
+<area shape="rect" id="node45" href="$a00078.html#a562bd655fd329da0289d21ec36973322" title="discovery_free_service" alt="" coords="1047,867,1203,893"/>
+<area shape="rect" id="node46" href="$a00078.html#ad18143d06649d9220e4fd8d74dbdec79" title="discovery_free_parameter" alt="" coords="1256,968,1428,995"/>
+<area shape="rect" id="node49" href="$a00076.html#a05bbc5573fc67fa53c2765cf7e5b1920" title="daemon_free" alt="" coords="662,1221,759,1248"/>
+</map>

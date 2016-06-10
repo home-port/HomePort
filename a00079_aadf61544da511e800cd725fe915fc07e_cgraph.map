@@ -1,0 +1,8 @@
+<map id="hpd_parameter_get_device" name="hpd_parameter_get_device">
+<area shape="rect" id="node2" href="$a00020.html#ae8689c0b6a6675a877392d103c4ee399" title="discovery_get_parameter\l_device" alt="" coords="232,23,400,65"/>
+<area shape="rect" id="node3" href="$a00080.html#aebd10ac1c18be51340c39d6d5a54e6d1" title="discovery_alloc_did" alt="" coords="448,31,584,57"/>
+<area shape="rect" id="node4" href="$a00080.html#acd5e8c2bf3e761abc7e2fd2294238a74" title="HPD_E_ALLOC: id might be partially updated. " alt="" coords="634,5,761,32"/>
+<area shape="rect" id="node6" href="$a00080.html#ae1a000b225c8b3f365c2cec8362b8483" title="discovery_free_did" alt="" coords="632,56,763,83"/>
+<area shape="rect" id="node5" href="$a00080.html#af2f553cfc3af4678b87a8fc75f35a5c6" title="HPD_E_ALLOC: id might be partially updated. " alt="" coords="811,5,937,32"/>
+<area shape="rect" id="node7" href="$a00012.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="852,56,896,83"/>
+</map>

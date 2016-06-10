@@ -1,5 +1,9 @@
-<map id="common/httpd/src/url_parser.h" name="common/httpd/src/url_parser.h">
-<area shape="rect" id="node2" href="$a00016.html" title="common/httpd/src/httpd\l_request.c" alt="" coords="5,95,165,136"/>
-<area shape="rect" id="node3" href="$a00032.html" title="common/httpd/src/url\l_parser.c" alt="" coords="190,95,335,136"/>
-<area shape="rect" id="node4" href="$a00006.html" title="common/httpd/test/url\l_parser_test.c" alt="" coords="188,184,337,225"/>
+<map id="hpd_httpd" name="hpd_httpd">
+<area shape="rect" id="node2" href="$a00027.html#a00122" title="Settings struct for webserver. " alt="" coords="162,911,294,988"/>
+<area shape="rect" id="node9" href="$a00017.html#a00110" title="{hpd\n||}" alt="" coords="1141,204,1184,281"/>
+<area shape="rect" id="node20" href="$a00036.html#a00131" title="Instance of a tcpd. " alt="" coords="656,484,731,561"/>
+<area shape="rect" id="node22" href="$a00038.html#a00132" title="Settings struct for tcpd. " alt="" coords="344,653,472,731"/>
+<area shape="rect" id="node6" href="$a00029.html" title="{hpd_module\n||+ TAILQ_ENTRY()\l}" alt="" coords="1181,344,1315,421"/>
+<area shape="rect" id="node7" href="$a00030.html#a00123" title="[Application API Callbacks] " alt="" coords="1547,204,1664,281"/>
+<area shape="rect" id="node13" href="$a00018.html#a00113" title="{hpd_configuration\n||}" alt="" coords="890,344,1014,421"/>
 </map>

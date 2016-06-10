@@ -1,7 +1,21 @@
-<map id="hpd_demo_adapter" name="hpd_demo_adapter">
-<area shape="rect" id="node4" href="$a00011.html#a00095" title="{hpd_adapter_id\n||}" alt="" coords="419,344,529,421"/>
-<area shape="rect" id="node5" href="$a00009.html#a00093" title="{hpd\n||}" alt="" coords="662,204,705,281"/>
-<area shape="rect" id="node8" href="$a00003.html#a00087" title="{configuration\n||}" alt="" coords="590,344,686,421"/>
-<area shape="rect" id="node14" href="$a00020.html" title="{hpd_module\n||+ TAILQ_ENTRY()\l}" alt="" coords="982,344,1115,421"/>
-<area shape="rect" id="node15" href="$a00021.html#a00106" title="[Application API Callbacks] " alt="" coords="1174,204,1291,281"/>
+<map id="common/map/include/hpd/common/hpd_map.h" name="common/map/include/hpd/common/hpd_map.h">
+<area shape="rect" id="node2" href="$a00027.html" title="common/httpd/include\l/hpd/common/hpd_httpd.h" alt="" coords="537,95,711,136"/>
+<area shape="rect" id="node9" href="$a00031.html" title="common/map/src/map.c" alt="" coords="872,102,1035,129"/>
+<area shape="rect" id="node10" href="$a00033.html" title="hpd/src/comm.h" alt="" coords="1219,102,1335,129"/>
+<area shape="rect" id="node11" href="$a00018.html" title="hpd/src/model.h" alt="" coords="905,191,1020,218"/>
+<area shape="rect" id="node20" href="$a00090.html" title="hpd/src/value.c" alt="" coords="1477,191,1587,218"/>
+<area shape="rect" id="node3" href="$a00047.html" title="common/httpd/example\l/greeting.c" alt="" coords="545,184,703,225"/>
+<area shape="rect" id="node4" href="$a00024.html" title="common/httpd/src/httpd.c" alt="" coords="373,281,544,307"/>
+<area shape="rect" id="node5" href="$a00049.html" title="common/httpd/src/httpd\l_request.h" alt="" coords="189,184,349,225"/>
+<area shape="rect" id="node8" href="$a00034.html" title="modules/hpd_rest/src\l/rest.c" alt="" coords="373,184,520,225"/>
+<area shape="rect" id="node6" href="$a00025.html" title="common/httpd/src/httpd\l_request.c" alt="" coords="189,273,349,315"/>
+<area shape="rect" id="node7" href="$a00026.html" title="common/httpd/src/httpd\l_response.c" alt="" coords="5,273,165,315"/>
+<area shape="rect" id="node16" href="$a00081.html" title="hpd/src/event.c" alt="" coords="1241,281,1353,307"/>
+<area shape="rect" id="node17" href="$a00087.html" title="hpd/src/request.c" alt="" coords="1377,281,1500,307"/>
+<area shape="rect" id="node18" href="$a00083.html" title="hpd/src/event_api.c" alt="" coords="1044,191,1180,218"/>
+<area shape="rect" id="node19" href="$a00089.html" title="hpd/src/request_api.c" alt="" coords="1204,191,1351,218"/>
+<area shape="rect" id="node12" href="$a00076.html" title="hpd/src/daemon.c" alt="" coords="746,281,873,307"/>
+<area shape="rect" id="node13" href="$a00078.html" title="hpd/src/discovery.c" alt="" coords="897,281,1033,307"/>
+<area shape="rect" id="node14" href="$a00079.html" title="hpd/src/discovery_api.c" alt="" coords="1057,281,1217,307"/>
+<area shape="rect" id="node15" href="$a00080.html" title="hpd/src/discovery_id.c" alt="" coords="569,281,722,307"/>
 </map>

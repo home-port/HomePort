@@ -1,2 +1,8 @@
-<map id="hpd_pair" name="hpd_pair">
+<map id="up" name="up">
+<area shape="rect" id="node6" href="$a00012.html#a00104" title="{data\n|+ key\l+ path\l|}" alt="" coords="220,292,278,384"/>
+<area shape="rect" id="node11" href="$a00017.html#a00110" title="{hpd\n||}" alt="" coords="793,299,836,377"/>
+<area shape="rect" id="node5" href="$a00042.html#a00137" title="Settings struct for the URL Parser. " alt="" coords="252,549,342,627"/>
+<area shape="rect" id="node8" href="$a00029.html" title="{hpd_module\n||+ TAILQ_ENTRY()\l}" alt="" coords="478,549,612,627"/>
+<area shape="rect" id="node9" href="$a00030.html#a00123" title="[Application API Callbacks] " alt="" coords="448,299,565,377"/>
+<area shape="rect" id="node14" href="$a00018.html#a00113" title="{hpd_configuration\n||}" alt="" coords="875,549,999,627"/>
 </map>

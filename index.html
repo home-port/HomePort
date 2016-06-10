@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: Main Page</title>
+<title>HomePort: HomePort Documentation</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -76,49 +76,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div class="header">
   <div class="headertitle">
-<div class="title">HomePort Documentation</div>  </div>
+<div class="title">HomePort Documentation </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h2>Download and install HomePort</h2>
-<p>This guide has been tested on Ubuntu Desktop 16.04, with the (as of writing) current version of HomePort.</p>
-<h2>Prerequisites</h2>
-<p>For checkout of sources (Alternatively zip-files can be downloaded through GitHub):</p>
-<p><code>sudo apt-get install git</code></p>
-<p>To compile in general:</p>
-<p><code>sudo apt-get install cmake gcc make g++ libbsd-dev libev-dev libcurl4-gnutls-dev libjansson-dev libmxml-dev</code></p>
-<p>If you want to build the documentation (Notice that plantuml may require a running X server):</p>
-<p><code>sudo apt-get install doxygen graphviz plantuml</code></p>
-<p>To build the LaTeX/PDF version of the documentation:</p>
-<p><code>sudo apt-get install doxygen-latex</code></p>
-<h2>Checkout</h2>
-<p>First we clone the repository. Shown URL is for the official GitHub project, you need to change this to use one of the unofficial/personal forks of the project.</p>
-<p>To get a single branch:</p>
-<p><code>git clone <a href="https://github.com/home-port/HomePort.git">https://github.com/home-port/HomePort.git</a> HomePort.git -b HomePortFunctionAPI</code></p>
-<p><code>cd HomePort.git</code></p>
-<p><code>git submodule init</code></p>
-<p><code>git submodule update</code></p>
-<h2>Configure</h2>
-<p><code>mkdir build &amp;&amp; cd build</code></p>
-<p>Normal builds:</p>
-<p><code>cmake ../</code></p>
-<p>Debug builds:</p>
-<p><code>cmake -DCMAKE_BUILD_TYPE=Debug ../</code></p>
-<h2>Compile and install HPD and modules</h2>
-<p><code>make</code></p>
-<p><code>sudo make install</code></p>
-<h2>Compile documentation</h2>
-<p>For regular HTML Doxygen documentation:</p>
-<p><code>make doc-html</code></p>
-<p>For LaTeX version:</p>
-<p><code>make doc-latex</code></p>
-<p>For PDF version:</p>
-<p><code>make doc-pdf</code></p>
-<p>For all:</p>
-<p><code>make doc-all</code> </p>
+<div class="textblock"><h1><a class="anchor" id="sec_toc"></a>
+Table of Contents</h1>
+<ul>
+<li><a class="el" href="a00010.html">HomePort Introduction</a></li>
+<li><a class="el" href="a00002.html">Download and install HomePort</a></li>
+<li><a class="el" href="a00006.html">Tutorial 01: Template</a></li>
+<li><a class="el" href="a00004.html">Tutorial 02: Demo Example</a></li>
+<li><a class="el" href="a00008.html">HomePort API Specification</a> </li>
+</ul>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:33 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:34 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

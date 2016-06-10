@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: hpd_parameter Struct Reference</title>
+<title>HomePort: hpd_ev_async Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -86,42 +86,62 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
-<div class="title">hpd_parameter Struct Reference</div>  </div>
+<div class="title">hpd_ev_async Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
-Collaboration diagram for hpd_parameter:</div>
+Collaboration diagram for hpd_ev_async:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00270.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00290.svg" width="159" height="230"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a866918f80195a8ca82fd9a10ace3da24"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00023.html#a866918f80195a8ca82fd9a10ace3da24">TAILQ_ENTRY</a> (<a class="el" href="a00023.html">hpd_parameter</a>) <a class="el" href="a00045.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a></td></tr>
-<tr class="separator:a866918f80195a8ca82fd9a10ace3da24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae04b5e1d9332d3211998061c21ab6a10"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00023.html#ae04b5e1d9332d3211998061c21ab6a10">TAILQ_ENTRY</a> (<a class="el" href="a00023.html">hpd_ev_async</a>) <a class="el" href="a00055.html#a3e439c9f930e0132d45bdcd720e55aea">HPD_TAILQ_FIELD</a></td></tr>
+<tr class="separator:ae04b5e1d9332d3211998061c21ab6a10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:a4ba4855a03f7a9445d677323d63f70a3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00046.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00023.html#a4ba4855a03f7a9445d677323d63f70a3">attributes</a></td></tr>
-<tr class="separator:a4ba4855a03f7a9445d677323d63f70a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31bd5a883a8d44b609e6846bf7e787f6"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00023.html#a31bd5a883a8d44b609e6846bf7e787f6">id</a></td></tr>
-<tr class="separator:a31bd5a883a8d44b609e6846bf7e787f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af87bca2e57b7dbce424464ac36c34a71"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#ace735b7ddde1abdd95263b4ac77f50d3">hpd_service_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00023.html#af87bca2e57b7dbce424464ac36c34a71">service</a></td></tr>
-<tr class="separator:af87bca2e57b7dbce424464ac36c34a71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a648f71fad63f626a4811917b222fa9da"><td class="memItemLeft" >union {</td></tr>
+<tr class="memitem:a7512df3ae378b82e8ef6c04b069d71d0"><td class="memItemLeft" >&#160;&#160;&#160;struct {</td></tr>
+<tr class="memitem:acc44efc42edcb5ffac1a5b9584585491"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;union {</td></tr>
+<tr class="memitem:aab79a43f19eb9157e35a41a7100eb96e"><td class="memItemLeft" >&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;struct {</td></tr>
+<tr class="memitem:ad91f2a38be8105057a545653dc0ae40a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>service</b></td></tr>
+<tr class="separator:ad91f2a38be8105057a545653dc0ae40a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31c64bbb7c1dbb31d94b1ef4249f46a6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>value</b></td></tr>
+<tr class="separator:a31c64bbb7c1dbb31d94b1ef4249f46a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab79a43f19eb9157e35a41a7100eb96e"><td class="memItemLeft" valign="top">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;}&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:aab79a43f19eb9157e35a41a7100eb96e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85db03bd1a3e238d50bf9a66da241df5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a6628ed0d0023af5bd344f29f2e4ce08c">hpd_device_id_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>device</b></td></tr>
+<tr class="separator:a85db03bd1a3e238d50bf9a66da241df5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc44efc42edcb5ffac1a5b9584585491"><td class="memItemLeft" valign="top">&#160;&#160;&#160;&#160;&#160;&#160;}&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:acc44efc42edcb5ffac1a5b9584585491"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa764bdd41b01063d1b99dff1cdaf6bf7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>hpd</b></td></tr>
+<tr class="separator:aa764bdd41b01063d1b99dff1cdaf6bf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7512df3ae378b82e8ef6c04b069d71d0"><td class="memItemLeft" valign="top">&#160;&#160;&#160;}&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:a7512df3ae378b82e8ef6c04b069d71d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8171f56632cf745e0cc02b196ce52f8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>request</b></td></tr>
+<tr class="separator:ad8171f56632cf745e0cc02b196ce52f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aceeea5f01169b9340d08fe00a80a340b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>response</b></td></tr>
+<tr class="separator:aceeea5f01169b9340d08fe00a80a340b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a648f71fad63f626a4811917b222fa9da"><td class="memItemLeft" valign="top">};&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
+<tr class="separator:a648f71fad63f626a4811917b222fa9da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab23139baedec223e8266e50ee1e17b2b"><td class="memItemLeft" align="right" valign="top">ev_async&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00023.html#ab23139baedec223e8266e50ee1e17b2b">watcher</a></td></tr>
+<tr class="separator:ab23139baedec223e8266e50ee1e17b2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p>Definition at line <a class="el" href="a00003_source.html#l00104">104</a> of file <a class="el" href="a00003_source.html">model.h</a>.</p>
+<p>Definition at line <a class="el" href="a00017_source.html#l00069">69</a> of file <a class="el" href="a00017_source.html">daemon.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a class="anchor" id="a866918f80195a8ca82fd9a10ace3da24"></a>
+<a class="anchor" id="ae04b5e1d9332d3211998061c21ab6a10"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">hpd_parameter::TAILQ_ENTRY </td>
+          <td class="memname">hpd_ev_async::TAILQ_ENTRY </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00023.html">hpd_parameter</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="a00023.html">hpd_ev_async</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -131,55 +151,39 @@ Data Fields</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Field Documentation</h2>
-<a class="anchor" id="a4ba4855a03f7a9445d677323d63f70a3"></a>
+<a class="anchor" id="a648f71fad63f626a4811917b222fa9da"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00046.html#a142f7548f82cd01073745dd2fd1524dd">hpd_map_t</a>* hpd_parameter::attributes</td>
+          <td class="memname">union { ... } </td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00003_source.html#l00108">108</a> of file <a class="el" href="a00003_source.html">model.h</a>.</p>
-
 </div>
 </div>
-<a class="anchor" id="a31bd5a883a8d44b609e6846bf7e787f6"></a>
+<a class="anchor" id="ab23139baedec223e8266e50ee1e17b2b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char* hpd_parameter::id</td>
+          <td class="memname">ev_async hpd_ev_async::watcher</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00003_source.html#l00107">107</a> of file <a class="el" href="a00003_source.html">model.h</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="af87bca2e57b7dbce424464ac36c34a71"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#ace735b7ddde1abdd95263b4ac77f50d3">hpd_service_t</a>* hpd_parameter::service</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00003_source.html#l00105">105</a> of file <a class="el" href="a00003_source.html">model.h</a>.</p>
+<p>Definition at line <a class="el" href="a00017_source.html#l00072">72</a> of file <a class="el" href="a00017_source.html">daemon.h</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>hpd/src/<a class="el" href="a00003_source.html">model.h</a></li>
+<li>hpd/src/<a class="el" href="a00017_source.html">daemon.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:33 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:34 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

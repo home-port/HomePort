@@ -1,8 +1,0 @@
-<map id="hpd_httpd_response_vsendf" name="hpd_httpd_response_vsendf">
-<area shape="rect" id="node2" href="$a00029.html#a1ccd6d1acb1660ec22322af9b6349a40" title="Get the IP address of the client. " alt="" coords="201,5,353,32"/>
-<area shape="rect" id="node3" href="$a00017.html#a867d6248acd2a1ad498594ec818cb718" title="Convert a status code to string. " alt="" coords="192,56,361,83"/>
-<area shape="rect" id="node4" href="$a00029.html#af1d6e9cdd63ecfa1ff92ab0e38122100" title="Send message on connection. " alt="" coords="202,107,351,133"/>
-<area shape="rect" id="node6" href="$a00006.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="255,157,299,184"/>
-<area shape="rect" id="node7" href="$a00029.html#a222b05aa1f3416a31ddb08b5e2bfbff8" title="Send message on connection. " alt="" coords="199,208,355,235"/>
-<area shape="rect" id="node5" href="$a00049.html#a222b05aa1f3416a31ddb08b5e2bfbff8" title="Send message on connection. " alt="" coords="409,107,565,133"/>
-</map>

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: hpd/test/daemon_api_test.cpp File Reference</title>
+<title>HomePort: hpd/include/hpd/hpd_types.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,23 +81,24 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_ab00a9b86cff89a0b86b44294c0aada6.html">hpd</a></li><li class="navelem"><a class="el" href="dir_c8b67b8ec08b29a99cff9703ce7947a1.html">test</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_ab00a9b86cff89a0b86b44294c0aada6.html">hpd</a></li><li class="navelem"><a class="el" href="dir_aba8a382290fd93b3200a2cfbb5130ed.html">include</a></li><li class="navelem"><a class="el" href="dir_87c8f650a499095cc68ae8b35f96213f.html">hpd</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
 <a href="#define-members">Macros</a> &#124;
-<a href="#func-members">Functions</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">daemon_api_test.cpp File Reference</div>  </div>
+<div class="title">hpd_types.h File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><div class="dynheader">
-Include dependency graph for daemon_api_test.cpp:</div>
+This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00246.svg" width="100%" height="563"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00227.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </div>
@@ -105,148 +106,236 @@ Include dependency graph for daemon_api_test.cpp:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:a00117"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a00117">module_data_t</a></td></tr>
-<tr class="separator:a00117"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00123"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a00123">hpd_module_def</a></td></tr>
+<tr class="memdesc:a00123"><td class="mdescLeft">&#160;</td><td class="mdescRight">[Application API Callbacks]  <a href="a00030.html#a00123">More...</a><br /></td></tr>
+<tr class="separator:a00123"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:af2b30344be261ffe1c5aad12ab1f6f07"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>&#160;&#160;&#160;hpd_daemon_api</td></tr>
-<tr class="separator:af2b30344be261ffe1c5aad12ab1f6f07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf5b46caeeb5a34080a5e3d6f020c1e6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#acf5b46caeeb5a34080a5e3d6f020c1e6">HPD_FALSE</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:acf5b46caeeb5a34080a5e3d6f020c1e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6a35195aed41ee7ef7387765e48eae9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#af6a35195aed41ee7ef7387765e48eae9">HPD_HTTP_STATUS_CODE_MAP</a>(<a class="el" href="a00034.html#a7cce914d4b7057977dc6a077b430183c">XX</a>)</td></tr>
+<tr class="memdesc:af6a35195aed41ee7ef7387765e48eae9"><td class="mdescLeft">&#160;</td><td class="mdescRight">[hpd_method_t]  <a href="#af6a35195aed41ee7ef7387765e48eae9">More...</a><br /></td></tr>
+<tr class="separator:af6a35195aed41ee7ef7387765e48eae9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f7dac4aa40064855557ca873911757a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a4f7dac4aa40064855557ca873911757a">HPD_NULL_TERMINATED</a>&#160;&#160;&#160;-1</td></tr>
+<tr class="memdesc:a4f7dac4aa40064855557ca873911757a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value to be used in len parameters on \0 terminated strings.  <a href="#a4f7dac4aa40064855557ca873911757a">More...</a><br /></td></tr>
+<tr class="separator:a4f7dac4aa40064855557ca873911757a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb7c70f616466544f031d28084aa44af"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#aeb7c70f616466544f031d28084aa44af">HPD_TRUE</a>&#160;&#160;&#160;1</td></tr>
+<tr class="separator:aeb7c70f616466544f031d28084aa44af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3a6c0d2c0459b52d11d4abe39beec21"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#ad3a6c0d2c0459b52d11d4abe39beec21">XX</a>(num,  str)&#160;&#160;&#160;HPD_S_##num = num,</td></tr>
+<tr class="separator:ad3a6c0d2c0459b52d11d4abe39beec21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:af4753a1c6fc6c6d064198a1f56fb4820"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#af4753a1c6fc6c6d064198a1f56fb4820">on_create</a> (void **<a class="el" href="a00006.html#a00090">data</a>, <a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *)</td></tr>
-<tr class="separator:af4753a1c6fc6c6d064198a1f56fb4820"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a462aee6a9e8e221141d4ead167805eb5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a462aee6a9e8e221141d4ead167805eb5">on_create_add_options</a> (void **<a class="el" href="a00006.html#a00090">data</a>, <a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *context)</td></tr>
-<tr class="separator:a462aee6a9e8e221141d4ead167805eb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b2154654e3a71fc5cf31a82125b1aac"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a2b2154654e3a71fc5cf31a82125b1aac">on_destroy</a> (void *<a class="el" href="a00006.html#a00090">data</a>)</td></tr>
-<tr class="separator:a2b2154654e3a71fc5cf31a82125b1aac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab55a802424a74ea32084eec69cd86281"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#ab55a802424a74ea32084eec69cd86281">on_parse_opt</a> (void *<a class="el" href="a00006.html#a00090">data</a>, const char *name, const char *)</td></tr>
-<tr class="separator:ab55a802424a74ea32084eec69cd86281"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a665691f420dff4eebb8f4b4af62d7a49"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a665691f420dff4eebb8f4b4af62d7a49">on_start</a> (void *<a class="el" href="a00006.html#a00090">data</a>, <a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *<a class="el" href="a00009.html#a00093">hpd</a>)</td></tr>
-<tr class="separator:a665691f420dff4eebb8f4b4af62d7a49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a257c5aafa157f3902bec16554a5a80b2"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a257c5aafa157f3902bec16554a5a80b2">on_stop</a> (void *<a class="el" href="a00006.html#a00090">data</a>, <a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *<a class="el" href="a00009.html#a00093">hpd</a>)</td></tr>
-<tr class="separator:a257c5aafa157f3902bec16554a5a80b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a548a458ce737e269e9cf95bdbdcdc12e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a548a458ce737e269e9cf95bdbdcdc12e">stop_hpd</a> (<a class="el" href="a00021.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *<a class="el" href="a00031.html#a855923b555731173d3509ecb645de0e0">loop</a>, ev_timer *w, int revents)</td></tr>
-<tr class="separator:a548a458ce737e269e9cf95bdbdcdc12e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2ad001cd2039527a6d248f70aaf3fc1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#aa2ad001cd2039527a6d248f70aaf3fc1">TEST</a> (<a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>, hpd_allocation)</td></tr>
-<tr class="separator:aa2ad001cd2039527a6d248f70aaf3fc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab8778354cab25c839b9b7911e5b521f0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#ab8778354cab25c839b9b7911e5b521f0">TEST</a> (<a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>, <a class="el" href="a00062.html#abb80916ac5990db56afd0fc309949f4c">hpd_get_loop</a>)</td></tr>
-<tr class="separator:ab8778354cab25c839b9b7911e5b521f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5de92b31931f2f5155c682379a06da32"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a5de92b31931f2f5155c682379a06da32">TEST</a> (<a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>, hpd_run_1sec)</td></tr>
-<tr class="separator:a5de92b31931f2f5155c682379a06da32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf6f5759c7be63784bfaffc8196e3941"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#abf6f5759c7be63784bfaffc8196e3941">TEST</a> (<a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>, module_allocation)</td></tr>
-<tr class="separator:abf6f5759c7be63784bfaffc8196e3941"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96e7234aaa49fde10e6d254495741c90"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a96e7234aaa49fde10e6d254495741c90">TEST</a> (<a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>, module_run_1sec)</td></tr>
-<tr class="separator:a96e7234aaa49fde10e6d254495741c90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb53c89b4687405791cefac08be987d4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#adb53c89b4687405791cefac08be987d4">TEST</a> (<a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>, option_no_call_1sec)</td></tr>
-<tr class="separator:adb53c89b4687405791cefac08be987d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b2617fbecf4f885aa07ac255be144f5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a3b2617fbecf4f885aa07ac255be144f5">TEST</a> (<a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>, option_call1_1sec)</td></tr>
-<tr class="separator:a3b2617fbecf4f885aa07ac255be144f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64a02d4aa490f55ae3382a7824201698"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a64a02d4aa490f55ae3382a7824201698">TEST</a> (<a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>, option_call2_1sec)</td></tr>
-<tr class="separator:a64a02d4aa490f55ae3382a7824201698"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a3f3da4470fa4c995abf27b874d142c97"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a3f3da4470fa4c995abf27b874d142c97">hpd_action_f</a>) (void *<a class="el" href="a00012.html#a00104">data</a>, <a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *req)</td></tr>
+<tr class="memdesc:a3f3da4470fa4c995abf27b874d142c97"><td class="mdescLeft">&#160;</td><td class="mdescRight">[hpd_module_def_t functions]  <a href="#a3f3da4470fa4c995abf27b874d142c97">More...</a><br /></td></tr>
+<tr class="separator:a3f3da4470fa4c995abf27b874d142c97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c26fc93b73c3313d059949298b50359"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00018.html#a00111">hpd_action</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a7c26fc93b73c3313d059949298b50359">hpd_action_t</a></td></tr>
+<tr class="separator:a7c26fc93b73c3313d059949298b50359"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f66589d94972997f09177b503de3a90"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00020.html#a00112">hpd_adapter_id</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a5f66589d94972997f09177b503de3a90">hpd_adapter_id_t</a></td></tr>
+<tr class="separator:a5f66589d94972997f09177b503de3a90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe9a0974edc24abd75d8eccb32dd37f9"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00019.html">hpd_adapter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#afe9a0974edc24abd75d8eccb32dd37f9">hpd_adapter_t</a></td></tr>
+<tr class="separator:afe9a0974edc24abd75d8eccb32dd37f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa552386fb82302e070499d850b2e8ca9"><td class="memItemLeft" align="right" valign="top">typedef char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#aa552386fb82302e070499d850b2e8ca9">hpd_bool_t</a></td></tr>
+<tr class="separator:aa552386fb82302e070499d850b2e8ca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e932ff646412a220b4459bdf5e6429e"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a2e932ff646412a220b4459bdf5e6429e">hpd_create_f</a>) (void **<a class="el" href="a00012.html#a00104">data</a>, const <a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *context)</td></tr>
+<tr class="memdesc:a2e932ff646412a220b4459bdf5e6429e"><td class="mdescLeft">&#160;</td><td class="mdescRight">On failure data should be left as NULL.  <a href="#a2e932ff646412a220b4459bdf5e6429e">More...</a><br /></td></tr>
+<tr class="separator:a2e932ff646412a220b4459bdf5e6429e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a206271176a15bb48166e0e5059d2e21f"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a206271176a15bb48166e0e5059d2e21f">hpd_destroy_f</a>) (void *<a class="el" href="a00012.html#a00104">data</a>)</td></tr>
+<tr class="separator:a206271176a15bb48166e0e5059d2e21f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ccb530f148c41890c45396b906b8b8b"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a1ccb530f148c41890c45396b906b8b8b">hpd_device_f</a>) (void *<a class="el" href="a00012.html#a00104">data</a>, const <a class="el" href="a00030.html#a6628ed0d0023af5bd344f29f2e4ce08c">hpd_device_id_t</a> *device)</td></tr>
+<tr class="memdesc:a1ccb530f148c41890c45396b906b8b8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Device callback for listeners.  <a href="#a1ccb530f148c41890c45396b906b8b8b">More...</a><br /></td></tr>
+<tr class="separator:a1ccb530f148c41890c45396b906b8b8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6628ed0d0023af5bd344f29f2e4ce08c"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00020.html#a00114">hpd_device_id</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a6628ed0d0023af5bd344f29f2e4ce08c">hpd_device_id_t</a></td></tr>
+<tr class="separator:a6628ed0d0023af5bd344f29f2e4ce08c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac57b7d11418a3c7f1eeaeb3828b33895"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00022.html">hpd_device</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#ac57b7d11418a3c7f1eeaeb3828b33895">hpd_device_t</a></td></tr>
+<tr class="separator:ac57b7d11418a3c7f1eeaeb3828b33895"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f117b297a535788094c22da826c2c94"><td class="memItemLeft" align="right" valign="top">typedef enum <a class="el" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0d">hpd_error</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a></td></tr>
+<tr class="separator:a3f117b297a535788094c22da826c2c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b9d6b16dbb9ccaf08497a11cc0b1d29"><td class="memItemLeft" align="right" valign="top">typedef struct ev_loop&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a></td></tr>
+<tr class="separator:a8b9d6b16dbb9ccaf08497a11cc0b1d29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48ae026294e911f802713816b5abd57f"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a48ae026294e911f802713816b5abd57f">hpd_free_f</a>) (void *<a class="el" href="a00012.html#a00104">data</a>)</td></tr>
+<tr class="memdesc:a48ae026294e911f802713816b5abd57f"><td class="mdescLeft">&#160;</td><td class="mdescRight">[hpd_action_f]  <a href="#a48ae026294e911f802713816b5abd57f">More...</a><br /></td></tr>
+<tr class="separator:a48ae026294e911f802713816b5abd57f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaca97676a9ad42f1aa03c29b677ae1de"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00028.html">hpd_listener</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a></td></tr>
+<tr class="separator:aaca97676a9ad42f1aa03c29b677ae1de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc656721774fec3607cb4a1f4c658469"><td class="memItemLeft" align="right" valign="top">typedef enum <a class="el" href="a00030.html#aa89d79ab2946861491c24c5a0868f6c2">hpd_log_level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#afc656721774fec3607cb4a1f4c658469">hpd_log_level_t</a></td></tr>
+<tr class="separator:afc656721774fec3607cb4a1f4c658469"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48b1bff2ed83cd824c21df91b2d74e01"><td class="memItemLeft" align="right" valign="top">typedef enum <a class="el" href="a00030.html#ae5973cb13ba680422f6381e98b783dd1">hpd_method</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a48b1bff2ed83cd824c21df91b2d74e01">hpd_method_t</a></td></tr>
+<tr class="memdesc:a48b1bff2ed83cd824c21df91b2d74e01"><td class="mdescLeft">&#160;</td><td class="mdescRight">[hpd_log_level_t]  <a href="#a48b1bff2ed83cd824c21df91b2d74e01">More...</a><br /></td></tr>
+<tr class="separator:a48b1bff2ed83cd824c21df91b2d74e01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a901efba3ccce913035a8dfbd35f4733d"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00030.html#a00123">hpd_module_def</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a901efba3ccce913035a8dfbd35f4733d">hpd_module_def_t</a></td></tr>
+<tr class="separator:a901efba3ccce913035a8dfbd35f4733d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78ef50baa49d382fb958e5519bcc876d"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00029.html">hpd_module</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a></td></tr>
+<tr class="separator:a78ef50baa49d382fb958e5519bcc876d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a614533cddb18d20146e2a10a79cd8cfe"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00031.html#a00124">hpd_pair</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a614533cddb18d20146e2a10a79cd8cfe">hpd_pair_t</a></td></tr>
+<tr class="separator:a614533cddb18d20146e2a10a79cd8cfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87f5d75019db3cf140c1f52e5b30c191"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00020.html#a00125">hpd_parameter_id</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a87f5d75019db3cf140c1f52e5b30c191">hpd_parameter_id_t</a></td></tr>
+<tr class="separator:a87f5d75019db3cf140c1f52e5b30c191"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2d31d3da75bbc807040f246f20460ae"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00032.html">hpd_parameter</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#ae2d31d3da75bbc807040f246f20460ae">hpd_parameter_t</a></td></tr>
+<tr class="separator:ae2d31d3da75bbc807040f246f20460ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad154f5de88f915a61a45ab0a08cb1d03"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#ad154f5de88f915a61a45ab0a08cb1d03">hpd_parse_opt_f</a>) (void *<a class="el" href="a00012.html#a00104">data</a>, const char *name, const char *arg)</td></tr>
+<tr class="separator:ad154f5de88f915a61a45ab0a08cb1d03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d0154f2f12810ad30570b1cdb23cbea"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00033.html#a00126">hpd_request</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a></td></tr>
+<tr class="separator:a5d0154f2f12810ad30570b1cdb23cbea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac82f1adb334b52cc66fa6112d367d07a"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#ac82f1adb334b52cc66fa6112d367d07a">hpd_response_f</a>) (void *<a class="el" href="a00012.html#a00104">data</a>, const <a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *res)</td></tr>
+<tr class="memdesc:ac82f1adb334b52cc66fa6112d367d07a"><td class="mdescLeft">&#160;</td><td class="mdescRight">[hpd_free_f]  <a href="#ac82f1adb334b52cc66fa6112d367d07a">More...</a><br /></td></tr>
+<tr class="separator:ac82f1adb334b52cc66fa6112d367d07a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1173c524f39354a0ad0a4c096804f964"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00033.html#a00127">hpd_response</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a></td></tr>
+<tr class="separator:a1173c524f39354a0ad0a4c096804f964"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5624e932f08d414c979ff114ed06518d"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00020.html#a00130">hpd_service_id</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a></td></tr>
+<tr class="separator:a5624e932f08d414c979ff114ed06518d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace735b7ddde1abdd95263b4ac77f50d3"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00035.html">hpd_service</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#ace735b7ddde1abdd95263b4ac77f50d3">hpd_service_t</a></td></tr>
+<tr class="separator:ace735b7ddde1abdd95263b4ac77f50d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3235cf0b8166f4a875daac55f5892766"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a3235cf0b8166f4a875daac55f5892766">hpd_start_f</a>) (void *<a class="el" href="a00012.html#a00104">data</a>, <a class="el" href="a00030.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *<a class="el" href="a00017.html#a00110">hpd</a>)</td></tr>
+<tr class="separator:a3235cf0b8166f4a875daac55f5892766"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60424f5506ab8db09a11ee78f2f980e6"><td class="memItemLeft" align="right" valign="top">typedef enum <a class="el" href="a00030.html#ae4a225ffa1d7c54da791fd9109d8b026">hpd_status</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a></td></tr>
+<tr class="separator:a60424f5506ab8db09a11ee78f2f980e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a609e923b2efa9d44a8450c815b2bbc74"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a609e923b2efa9d44a8450c815b2bbc74">hpd_stop_f</a>) (void *<a class="el" href="a00012.html#a00104">data</a>, <a class="el" href="a00030.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *<a class="el" href="a00017.html#a00110">hpd</a>)</td></tr>
+<tr class="separator:a609e923b2efa9d44a8450c815b2bbc74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affd657e45b1cd6bf50a5dd124b13a575"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00017.html#a00110">hpd</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a></td></tr>
+<tr class="separator:affd657e45b1cd6bf50a5dd124b13a575"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68fdc3cf3d04dc731dda2702445ee878"><td class="memItemLeft" align="right" valign="top">typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a68fdc3cf3d04dc731dda2702445ee878">hpd_value_f</a>) (void *<a class="el" href="a00012.html#a00104">data</a>, const <a class="el" href="a00030.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> *service, const <a class="el" href="a00030.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *val)</td></tr>
+<tr class="memdesc:a68fdc3cf3d04dc731dda2702445ee878"><td class="mdescLeft">&#160;</td><td class="mdescRight">Value callback for listeners.  <a href="#a68fdc3cf3d04dc731dda2702445ee878">More...</a><br /></td></tr>
+<tr class="separator:a68fdc3cf3d04dc731dda2702445ee878"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a046d68e225db045fb3858f521832b1"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00033.html#a00133">hpd_value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a></td></tr>
+<tr class="separator:a9a046d68e225db045fb3858f521832b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:af2d90ea316126f626dd4bcd587cdfb0d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0d">hpd_error</a> { <br />
+&#160;&#160;<a class="el" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a> = 0, 
+<a class="el" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da2f79bfa65b655d022e4c712ea08b05ef">HPD_E_UNKNOWN</a> = 1, 
+<a class="el" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182">HPD_E_NULL</a>, 
+<a class="el" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da74be3b084dd73433942c30fe6b4dc37a">HPD_E_ALLOC</a>, 
+<br />
+&#160;&#160;<a class="el" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0dad314ace10a0f6198ba4007008d63af6c">HPD_E_STATE</a>, 
+<a class="el" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4de1dbcac975eac38ddbde99d9b5f1fe">HPD_E_ARGUMENT</a>, 
+<a class="el" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da982739b885433cf1ae5f01874534cd5f">HPD_E_NOT_UNIQUE</a>, 
+<a class="el" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da3856d98f8e3b56ef9a5e8c8b5d7cdfb5">HPD_E_NOT_FOUND</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:af2d90ea316126f626dd4bcd587cdfb0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">[HPD_NULL_TERMINATED]  <a href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0d">More...</a><br /></td></tr>
+<tr class="separator:af2d90ea316126f626dd4bcd587cdfb0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa89d79ab2946861491c24c5a0868f6c2"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#aa89d79ab2946861491c24c5a0868f6c2">hpd_log_level</a> { <br />
+&#160;&#160;<a class="el" href="a00030.html#aa89d79ab2946861491c24c5a0868f6c2ab809c83c0fac1decee6f5fa93faaa32c">HPD_L_ERROR</a>, 
+<a class="el" href="a00030.html#aa89d79ab2946861491c24c5a0868f6c2a27b5aeeb31289b21e4c73f79c983a33a">HPD_L_WARN</a>, 
+<a class="el" href="a00030.html#aa89d79ab2946861491c24c5a0868f6c2a46e3ea561c3d8cae140943f98754cfbf">HPD_L_INFO</a>, 
+<a class="el" href="a00030.html#aa89d79ab2946861491c24c5a0868f6c2aeb426717209696ae37bb52aa0487326f">HPD_L_DEBUG</a>, 
+<br />
+&#160;&#160;<a class="el" href="a00030.html#aa89d79ab2946861491c24c5a0868f6c2abe65ad03e9a9c73a69619f994f71e345">HPD_L_VERBOSE</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:aa89d79ab2946861491c24c5a0868f6c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">[hpd_status_t]  <a href="a00030.html#aa89d79ab2946861491c24c5a0868f6c2">More...</a><br /></td></tr>
+<tr class="separator:aa89d79ab2946861491c24c5a0868f6c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5973cb13ba680422f6381e98b783dd1"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#ae5973cb13ba680422f6381e98b783dd1">hpd_method</a> { <a class="el" href="a00030.html#ae5973cb13ba680422f6381e98b783dd1a2c38a7f6fd4aea028bccace7aa2e5df4">HPD_M_NONE</a> = -1, 
+<a class="el" href="a00030.html#ae5973cb13ba680422f6381e98b783dd1a4aa1b1492e9715dc6214b6ebf1fa21f0">HPD_M_GET</a> = 0, 
+<a class="el" href="a00030.html#ae5973cb13ba680422f6381e98b783dd1abb3582c2747d9760897062694fa369a5">HPD_M_PUT</a>, 
+<a class="el" href="a00030.html#ae5973cb13ba680422f6381e98b783dd1aa248a39ea7ed1f64d1b3fc38009c1924">HPD_M_COUNT</a>
+ }</td></tr>
+<tr class="memdesc:ae5973cb13ba680422f6381e98b783dd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">[hpd_error_t]  <a href="a00030.html#ae5973cb13ba680422f6381e98b783dd1">More...</a><br /></td></tr>
+<tr class="separator:ae5973cb13ba680422f6381e98b783dd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4a225ffa1d7c54da791fd9109d8b026"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#ae4a225ffa1d7c54da791fd9109d8b026">hpd_status</a> { <a class="el" href="a00030.html#ae4a225ffa1d7c54da791fd9109d8b026ae721ddf4e6ed5344ca7c8eb2d8c76ec1">HPD_S_NONE</a> = 0
+ }</td></tr>
+<tr class="separator:ae4a225ffa1d7c54da791fd9109d8b026"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a7279c8b39e73923478eca49397c768b2"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00030.html#a00117">module_data_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a7279c8b39e73923478eca49397c768b2">last_module_data</a> = NULL</td></tr>
-<tr class="separator:a7279c8b39e73923478eca49397c768b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a540d22cb78f555a5f25b21ab607683be"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a540d22cb78f555a5f25b21ab607683be">HPD_ATTR_DESC</a> = &quot;description&quot;</td></tr>
+<tr class="memdesc:a540d22cb78f555a5f25b21ab607683be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default attribute key for descriptions.  <a href="#a540d22cb78f555a5f25b21ab607683be">More...</a><br /></td></tr>
+<tr class="separator:a540d22cb78f555a5f25b21ab607683be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab67af0a442b049e45daeb2d2af7271dd"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#ab67af0a442b049e45daeb2d2af7271dd">HPD_ATTR_LOCATION</a> = &quot;location&quot;</td></tr>
+<tr class="memdesc:ab67af0a442b049e45daeb2d2af7271dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default attribute key for locations.  <a href="#ab67af0a442b049e45daeb2d2af7271dd">More...</a><br /></td></tr>
+<tr class="separator:ab67af0a442b049e45daeb2d2af7271dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2401d47fd4f87fff5953edab5075157"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#ae2401d47fd4f87fff5953edab5075157">HPD_ATTR_MAX</a> = &quot;max&quot;</td></tr>
+<tr class="memdesc:ae2401d47fd4f87fff5953edab5075157"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default attribute key.  <a href="#ae2401d47fd4f87fff5953edab5075157">More...</a><br /></td></tr>
+<tr class="separator:ae2401d47fd4f87fff5953edab5075157"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addb02685571b0901d347a0b35146a0c2"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#addb02685571b0901d347a0b35146a0c2">HPD_ATTR_MIN</a> = &quot;min&quot;</td></tr>
+<tr class="memdesc:addb02685571b0901d347a0b35146a0c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default attribute key.  <a href="#addb02685571b0901d347a0b35146a0c2">More...</a><br /></td></tr>
+<tr class="separator:addb02685571b0901d347a0b35146a0c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accc5260134fba19813d32c7fbe3b5b1c"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#accc5260134fba19813d32c7fbe3b5b1c">HPD_ATTR_NAME</a> = &quot;name&quot;</td></tr>
+<tr class="memdesc:accc5260134fba19813d32c7fbe3b5b1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default attribute key for names.  <a href="#accc5260134fba19813d32c7fbe3b5b1c">More...</a><br /></td></tr>
+<tr class="separator:accc5260134fba19813d32c7fbe3b5b1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd063bef22bfdb7b0ad41f08b4861716"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#afd063bef22bfdb7b0ad41f08b4861716">HPD_ATTR_NETWORK</a> = &quot;network&quot;</td></tr>
+<tr class="memdesc:afd063bef22bfdb7b0ad41f08b4861716"><td class="mdescLeft">&#160;</td><td class="mdescRight">[hpd_module_def_t]  <a href="#afd063bef22bfdb7b0ad41f08b4861716">More...</a><br /></td></tr>
+<tr class="separator:afd063bef22bfdb7b0ad41f08b4861716"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2afb0aa6d46cf4601b73d8d08d6aea71"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a2afb0aa6d46cf4601b73d8d08d6aea71">HPD_ATTR_PRODUCT</a> = &quot;product&quot;</td></tr>
+<tr class="memdesc:a2afb0aa6d46cf4601b73d8d08d6aea71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default attribute key for product ids.  <a href="#a2afb0aa6d46cf4601b73d8d08d6aea71">More...</a><br /></td></tr>
+<tr class="separator:a2afb0aa6d46cf4601b73d8d08d6aea71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36b4cdb8060258ac029d6c44e02860f0"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a36b4cdb8060258ac029d6c44e02860f0">HPD_ATTR_PROTOCOL</a> = &quot;protocol&quot;</td></tr>
+<tr class="separator:a36b4cdb8060258ac029d6c44e02860f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a646f1a37ce12164a5460cdcc92e9ed42"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a646f1a37ce12164a5460cdcc92e9ed42">HPD_ATTR_SCALE</a> = &quot;scale&quot;</td></tr>
+<tr class="memdesc:a646f1a37ce12164a5460cdcc92e9ed42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default attribute key.  <a href="#a646f1a37ce12164a5460cdcc92e9ed42">More...</a><br /></td></tr>
+<tr class="separator:a646f1a37ce12164a5460cdcc92e9ed42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab6c6b8c13398bb014aec754799c6bb57"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#ab6c6b8c13398bb014aec754799c6bb57">HPD_ATTR_STEP</a> = &quot;step&quot;</td></tr>
+<tr class="memdesc:ab6c6b8c13398bb014aec754799c6bb57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default attribute key.  <a href="#ab6c6b8c13398bb014aec754799c6bb57">More...</a><br /></td></tr>
+<tr class="separator:ab6c6b8c13398bb014aec754799c6bb57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff4150f68e4fc6506adc361a2620b8fc"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#aff4150f68e4fc6506adc361a2620b8fc">HPD_ATTR_TYPE</a> = &quot;type&quot;</td></tr>
+<tr class="memdesc:aff4150f68e4fc6506adc361a2620b8fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default attribute key for types.  <a href="#aff4150f68e4fc6506adc361a2620b8fc">More...</a><br /></td></tr>
+<tr class="separator:aff4150f68e4fc6506adc361a2620b8fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a652841436839645120dbff5d24a8eecf"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a652841436839645120dbff5d24a8eecf">HPD_ATTR_UNIT</a> = &quot;unit&quot;</td></tr>
+<tr class="memdesc:a652841436839645120dbff5d24a8eecf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default attribute key for units.  <a href="#a652841436839645120dbff5d24a8eecf">More...</a><br /></td></tr>
+<tr class="separator:a652841436839645120dbff5d24a8eecf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a113290a892b3db5ebfa7f118b5728096"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a113290a892b3db5ebfa7f118b5728096">HPD_ATTR_VALUES</a> = &quot;values&quot;</td></tr>
+<tr class="memdesc:a113290a892b3db5ebfa7f118b5728096"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default attribute key.  <a href="#a113290a892b3db5ebfa7f118b5728096">More...</a><br /></td></tr>
+<tr class="separator:a113290a892b3db5ebfa7f118b5728096"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac948ba8992ec0a52b645f60d9b230097"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#ac948ba8992ec0a52b645f60d9b230097">HPD_ATTR_VENDOR</a> = &quot;vendor&quot;</td></tr>
+<tr class="memdesc:ac948ba8992ec0a52b645f60d9b230097"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default attribute key for vendor ids.  <a href="#ac948ba8992ec0a52b645f60d9b230097">More...</a><br /></td></tr>
+<tr class="separator:ac948ba8992ec0a52b645f60d9b230097"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a78daad1c7f876af6943bb6fe340f5c50"><td class="memItemLeft" align="right" valign="top">static const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00030.html#a78daad1c7f876af6943bb6fe340f5c50">HPD_ATTR_VERSION</a> = &quot;version&quot;</td></tr>
+<tr class="memdesc:a78daad1c7f876af6943bb6fe340f5c50"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default attribute key for versions.  <a href="#a78daad1c7f876af6943bb6fe340f5c50">More...</a><br /></td></tr>
+<tr class="separator:a78daad1c7f876af6943bb6fe340f5c50"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/><h2 class="groupheader">Data Structure Documentation</h2>
-<a name="a00117" id="a00117"></a>
+<a name="a00123" id="a00123"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct module_data_t</td>
+          <td class="memname">struct hpd_module_def</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="textblock">
-<p>Definition at line <a class="el" href="a00030_source.html#l00034">34</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
+<div class="textblock"><p>[Application API Callbacks] </p>
+<p>[hpd_module_def_t] </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00200">200</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
 </div><div class="dynheader">
-Collaboration diagram for module_data_t:</div>
+Collaboration diagram for hpd_module_def:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00247.svg" width="392" height="346"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00228.svg" width="156" height="287"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="ae939f27876640483e17bcd40eb612da0"></a><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a></td>
+<a class="anchor" id="ac5e987b98f2cb8f414920c7e7d254e31"></a><a class="el" href="a00030.html#a2e932ff646412a220b4459bdf5e6429e">hpd_create_f</a></td>
 <td class="fieldname">
-add_option1</td>
+on_create</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="a9a19105434426ac9129b57f32d83ffc3"></a><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a></td>
+<a class="anchor" id="a6f33b1825d892dadab69abc2d95d9c54"></a><a class="el" href="a00030.html#a206271176a15bb48166e0e5059d2e21f">hpd_destroy_f</a></td>
 <td class="fieldname">
-add_option2</td>
+on_destroy</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="a5dbba7e29f7a1ff36d843cf5256d74f0"></a>int</td>
+<a class="anchor" id="a6df5927a6ae5bea30b4f1f44898d3cb8"></a><a class="el" href="a00030.html#ad154f5de88f915a61a45ab0a08cb1d03">hpd_parse_opt_f</a></td>
 <td class="fieldname">
-create_called</td>
+on_parse_opt</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="a9f3e8bffd0bf7b6eba886e169da491da"></a>int</td>
+<a class="anchor" id="ab49d3704883a41920340d4bc8f9dff13"></a><a class="el" href="a00030.html#a3235cf0b8166f4a875daac55f5892766">hpd_start_f</a></td>
 <td class="fieldname">
-destroy_called</td>
+on_start</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="a1120bb775412f234bba71f05648c2b05"></a>int</td>
+<a class="anchor" id="afc46e3a02a31aa7c392901b395d2e882"></a><a class="el" href="a00030.html#a609e923b2efa9d44a8450c815b2bbc74">hpd_stop_f</a></td>
 <td class="fieldname">
-next</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="a1c85808b14307057cabe47a5b9bd806a"></a>int</td>
-<td class="fieldname">
-opt1_called</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="a89a957b188226309d17e3ab9846f82f6"></a>int</td>
-<td class="fieldname">
-opt2_called</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="af292d105ea490802884f031a2cc9cac1"></a>int</td>
-<td class="fieldname">
-option_errors[21]</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="a6e571e1e7e5f7c6b55b3abe4a0183033"></a>int</td>
-<td class="fieldname">
-parse_opt_called</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="a28c20262affeb65253021ab1c5bad1ef"></a>int</td>
-<td class="fieldname">
-start_called</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="a8b08312a2f49d335036f698a1e3104f1"></a><a class="el" href="a00021.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *</td>
-<td class="fieldname">
-start_loop</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="afee23b7c454383ac6499c726c745781a"></a>int</td>
-<td class="fieldname">
-stop_called</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="acb719b56a3179f0a73c6bf982a58bec4"></a><a class="el" href="a00021.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *</td>
-<td class="fieldname">
-stop_loop</td>
+on_stop</td>
 <td class="fielddoc">
 </td></tr>
 </table>
@@ -254,637 +343,694 @@ stop_loop</td>
 </div>
 </div>
 <h2 class="groupheader">Macro Definition Documentation</h2>
-<a class="anchor" id="af2b30344be261ffe1c5aad12ab1f6f07"></a>
+<a class="anchor" id="acf5b46caeeb5a34080a5e3d6f020c1e6"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define CASE&#160;&#160;&#160;hpd_daemon_api</td>
+          <td class="memname">#define HPD_FALSE&#160;&#160;&#160;0</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00030_source.html#l00032">32</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
+<p>Definition at line <a class="el" href="a00030_source.html#l00037">37</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
 
 </div>
 </div>
-<h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="af4753a1c6fc6c6d064198a1f56fb4820"></a>
+<a class="anchor" id="af6a35195aed41ee7ef7387765e48eae9"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> on_create </td>
+          <td class="memname">#define HPD_HTTP_STATUS_CODE_MAP</td>
           <td>(</td>
-          <td class="paramtype">void **&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><a class="el" href="a00034.html#a7cce914d4b7057977dc6a077b430183c">XX</a></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>[hpd_method_t] </p>
+<p>[hpd_status_t] HTTP status codes according to <a href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">http://www.w3.org/Protocols/rfc2616/rfc2616.html</a></p>
+<p>Categories: Informational 1xx Successful 2xx Redirection 3xx Client Error 4xx Server Error 5xx </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00105">105</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4f7dac4aa40064855557ca873911757a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define HPD_NULL_TERMINATED&#160;&#160;&#160;-1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Value to be used in len parameters on \0 terminated strings. </p>
+<p>[HPD_NULL_TERMINATED] </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00062">62</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aeb7c70f616466544f031d28084aa44af"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define HPD_TRUE&#160;&#160;&#160;1</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00036">36</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad3a6c0d2c0459b52d11d4abe39beec21"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define XX</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">num, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *&#160;</td>
-          <td class="paramname">&#160;</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">str&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td>
+          <td></td><td>&#160;&#160;&#160;HPD_S_##num = num,</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00150">150</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a class="anchor" id="a3f3da4470fa4c995abf27b874d142c97"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a>(* hpd_action_f) (void *<a class="el" href="a00012.html#a00104">data</a>, <a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a> *req)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>[hpd_module_def_t functions] </p>
+<p>[hpd_action_f] </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00183">183</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7c26fc93b73c3313d059949298b50359"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00018.html#a00111">hpd_action</a> <a class="el" href="a00030.html#a7c26fc93b73c3313d059949298b50359">hpd_action_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00041">41</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5f66589d94972997f09177b503de3a90"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00020.html#a00112">hpd_adapter_id</a> <a class="el" href="a00030.html#a5f66589d94972997f09177b503de3a90">hpd_adapter_id_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00052">52</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afe9a0974edc24abd75d8eccb32dd37f9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00019.html">hpd_adapter</a> <a class="el" href="a00030.html#afe9a0974edc24abd75d8eccb32dd37f9">hpd_adapter_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00043">43</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa552386fb82302e070499d850b2e8ca9"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef char <a class="el" href="a00030.html#aa552386fb82302e070499d850b2e8ca9">hpd_bool_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00035">35</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2e932ff646412a220b4459bdf5e6429e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(* hpd_create_f) (void **<a class="el" href="a00012.html#a00104">data</a>, const <a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *context)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>On failure data should be left as NULL. </p>
+<p>[hpd_module_def_t functions] </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00175">175</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a206271176a15bb48166e0e5059d2e21f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(* hpd_destroy_f) (void *<a class="el" href="a00012.html#a00104">data</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00176">176</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1ccb530f148c41890c45396b906b8b8b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef void(* hpd_device_f) (void *<a class="el" href="a00012.html#a00104">data</a>, const <a class="el" href="a00030.html#a6628ed0d0023af5bd344f29f2e4ce08c">hpd_device_id_t</a> *device)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Device callback for listeners. </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00196">196</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6628ed0d0023af5bd344f29f2e4ce08c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00020.html#a00114">hpd_device_id</a> <a class="el" href="a00030.html#a6628ed0d0023af5bd344f29f2e4ce08c">hpd_device_id_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00053">53</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac57b7d11418a3c7f1eeaeb3828b33895"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00022.html">hpd_device</a> <a class="el" href="a00030.html#ac57b7d11418a3c7f1eeaeb3828b33895">hpd_device_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00044">44</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3f117b297a535788094c22da826c2c94"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef enum <a class="el" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0d">hpd_error</a> <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00167">167</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8b9d6b16dbb9ccaf08497a11cc0b1d29"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct ev_loop <a class="el" href="a00030.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00051">51</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a48ae026294e911f802713816b5abd57f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef void(* hpd_free_f) (void *<a class="el" href="a00012.html#a00104">data</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>[hpd_action_f] </p>
+<p>[hpd_free_f] </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00187">187</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aaca97676a9ad42f1aa03c29b677ae1de"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00028.html">hpd_listener</a> <a class="el" href="a00030.html#aaca97676a9ad42f1aa03c29b677ae1de">hpd_listener_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00042">42</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afc656721774fec3607cb4a1f4c658469"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef enum <a class="el" href="a00030.html#aa89d79ab2946861491c24c5a0868f6c2">hpd_log_level</a> <a class="el" href="a00030.html#afc656721774fec3607cb4a1f4c658469">hpd_log_level_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00169">169</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a48b1bff2ed83cd824c21df91b2d74e01"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef enum <a class="el" href="a00030.html#ae5973cb13ba680422f6381e98b783dd1">hpd_method</a> <a class="el" href="a00030.html#a48b1bff2ed83cd824c21df91b2d74e01">hpd_method_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>[hpd_log_level_t] </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00166">166</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a901efba3ccce913035a8dfbd35f4733d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00030.html#a00123">hpd_module_def</a> <a class="el" href="a00030.html#a901efba3ccce913035a8dfbd35f4733d">hpd_module_def_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00056">56</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a78ef50baa49d382fb958e5519bcc876d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00029.html">hpd_module</a> <a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00040">40</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a614533cddb18d20146e2a10a79cd8cfe"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00031.html#a00124">hpd_pair</a> <a class="el" href="a00056.html#a614533cddb18d20146e2a10a79cd8cfe">hpd_pair_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00050">50</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a87f5d75019db3cf140c1f52e5b30c191"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00020.html#a00125">hpd_parameter_id</a> <a class="el" href="a00030.html#a87f5d75019db3cf140c1f52e5b30c191">hpd_parameter_id_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00055">55</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae2d31d3da75bbc807040f246f20460ae"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00032.html">hpd_parameter</a> <a class="el" href="a00030.html#ae2d31d3da75bbc807040f246f20460ae">hpd_parameter_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00046">46</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad154f5de88f915a61a45ab0a08cb1d03"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(* hpd_parse_opt_f) (void *<a class="el" href="a00012.html#a00104">data</a>, const char *name, const char *arg)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00179">179</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5d0154f2f12810ad30570b1cdb23cbea"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00033.html#a00126">hpd_request</a> <a class="el" href="a00030.html#a5d0154f2f12810ad30570b1cdb23cbea">hpd_request_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00047">47</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac82f1adb334b52cc66fa6112d367d07a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef void(* hpd_response_f) (void *<a class="el" href="a00012.html#a00104">data</a>, const <a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a> *res)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>[hpd_free_f] </p>
+<p>Response function for handing responses on requests. [Application API Callbacks] </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00192">192</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1173c524f39354a0ad0a4c096804f964"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00033.html#a00127">hpd_response</a> <a class="el" href="a00030.html#a1173c524f39354a0ad0a4c096804f964">hpd_response_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00048">48</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5624e932f08d414c979ff114ed06518d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00020.html#a00130">hpd_service_id</a> <a class="el" href="a00030.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00054">54</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ace735b7ddde1abdd95263b4ac77f50d3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00035.html">hpd_service</a> <a class="el" href="a00030.html#ace735b7ddde1abdd95263b4ac77f50d3">hpd_service_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00045">45</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3235cf0b8166f4a875daac55f5892766"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(* hpd_start_f) (void *<a class="el" href="a00012.html#a00104">data</a>, <a class="el" href="a00030.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *<a class="el" href="a00017.html#a00110">hpd</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00177">177</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a60424f5506ab8db09a11ee78f2f980e6"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef enum <a class="el" href="a00030.html#ae4a225ffa1d7c54da791fd9109d8b026">hpd_status</a> <a class="el" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00168">168</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a609e923b2efa9d44a8450c815b2bbc74"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>(* hpd_stop_f) (void *<a class="el" href="a00012.html#a00104">data</a>, <a class="el" href="a00030.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *<a class="el" href="a00017.html#a00110">hpd</a>)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00178">178</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="affd657e45b1cd6bf50a5dd124b13a575"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00017.html#a00110">hpd</a> <a class="el" href="a00030.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00039">39</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a68fdc3cf3d04dc731dda2702445ee878"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef void(* hpd_value_f) (void *<a class="el" href="a00012.html#a00104">data</a>, const <a class="el" href="a00030.html#a5624e932f08d414c979ff114ed06518d">hpd_service_id_t</a> *service, const <a class="el" href="a00030.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a> *val)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Value callback for listeners. </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00194">194</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9a046d68e225db045fb3858f521832b1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef struct <a class="el" href="a00033.html#a00133">hpd_value</a> <a class="el" href="a00030.html#a9a046d68e225db045fb3858f521832b1">hpd_value_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00049">49</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a class="anchor" id="af2d90ea316126f626dd4bcd587cdfb0d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0d">hpd_error</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>[HPD_NULL_TERMINATED] </p>
+<p>Errors that can be returned from functions.[hpd_error_t] </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940"></a>HPD_E_SUCCESS&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="af2d90ea316126f626dd4bcd587cdfb0da2f79bfa65b655d022e4c712ea08b05ef"></a>HPD_E_UNKNOWN&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="af2d90ea316126f626dd4bcd587cdfb0da3e44c22b887a9371a8cf59644c2ea182"></a>HPD_E_NULL&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="af2d90ea316126f626dd4bcd587cdfb0da74be3b084dd73433942c30fe6b4dc37a"></a>HPD_E_ALLOC&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="af2d90ea316126f626dd4bcd587cdfb0dad314ace10a0f6198ba4007008d63af6c"></a>HPD_E_STATE&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="af2d90ea316126f626dd4bcd587cdfb0da4de1dbcac975eac38ddbde99d9b5f1fe"></a>HPD_E_ARGUMENT&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="af2d90ea316126f626dd4bcd587cdfb0da982739b885433cf1ae5f01874534cd5f"></a>HPD_E_NOT_UNIQUE&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="af2d90ea316126f626dd4bcd587cdfb0da3856d98f8e3b56ef9a5e8c8b5d7cdfb5"></a>HPD_E_NOT_FOUND&#160;</td><td class="fielddoc">
+</td></tr>
 </table>
-</div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00030_source.html#l00052">52</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00030_af4753a1c6fc6c6d064198a1f56fb4820_icgraph.svg" width="398" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
+<p>Definition at line <a class="el" href="a00030_source.html#l00069">69</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a462aee6a9e8e221141d4ead167805eb5"></a>
+<a class="anchor" id="aa89d79ab2946861491c24c5a0868f6c2"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> on_create_add_options </td>
-          <td>(</td>
-          <td class="paramtype">void **&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *&#160;</td>
-          <td class="paramname"><em>context</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="memname">enum <a class="el" href="a00030.html#aa89d79ab2946861491c24c5a0868f6c2">hpd_log_level</a></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
+</div><div class="memdoc">
+
+<p>[hpd_status_t] </p>
+<p>[hpd_log_level_t] </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="aa89d79ab2946861491c24c5a0868f6c2ab809c83c0fac1decee6f5fa93faaa32c"></a>HPD_L_ERROR&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="aa89d79ab2946861491c24c5a0868f6c2a27b5aeeb31289b21e4c73f79c983a33a"></a>HPD_L_WARN&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="aa89d79ab2946861491c24c5a0868f6c2a46e3ea561c3d8cae140943f98754cfbf"></a>HPD_L_INFO&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="aa89d79ab2946861491c24c5a0868f6c2aeb426717209696ae37bb52aa0487326f"></a>HPD_L_DEBUG&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="aa89d79ab2946861491c24c5a0868f6c2abe65ad03e9a9c73a69619f994f71e345"></a>HPD_L_VERBOSE&#160;</td><td class="fielddoc">
+</td></tr>
 </table>
-</div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00030_source.html#l00062">62</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00030_a462aee6a9e8e221141d4ead167805eb5_cgraph.svg" width="656" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00030_a462aee6a9e8e221141d4ead167805eb5_icgraph.svg" width="271" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
+<p>Definition at line <a class="el" href="a00030_source.html#l00157">157</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a2b2154654e3a71fc5cf31a82125b1aac"></a>
+<a class="anchor" id="ae5973cb13ba680422f6381e98b783dd1"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> on_destroy </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>data</em></td><td>)</td>
-          <td></td>
+          <td class="memname">enum <a class="el" href="a00030.html#ae5973cb13ba680422f6381e98b783dd1">hpd_method</a></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
+</div><div class="memdoc">
+
+<p>[hpd_error_t] </p>
+<p>Methods that a service supports. Note that these should always start with zero and have increments of one (used as indices in arrays).[hpd_method_t] </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="ae5973cb13ba680422f6381e98b783dd1a2c38a7f6fd4aea028bccace7aa2e5df4"></a>HPD_M_NONE&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ae5973cb13ba680422f6381e98b783dd1a4aa1b1492e9715dc6214b6ebf1fa21f0"></a>HPD_M_GET&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ae5973cb13ba680422f6381e98b783dd1abb3582c2747d9760897062694fa369a5"></a>HPD_M_PUT&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="ae5973cb13ba680422f6381e98b783dd1aa248a39ea7ed1f64d1b3fc38009c1924"></a>HPD_M_COUNT&#160;</td><td class="fielddoc">
+</td></tr>
 </table>
-</div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00030_source.html#l00103">103</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00030_a2b2154654e3a71fc5cf31a82125b1aac_icgraph.svg" width="202" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
+<p>Definition at line <a class="el" href="a00030_source.html#l00086">86</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab55a802424a74ea32084eec69cd86281"></a>
+<a class="anchor" id="ae4a225ffa1d7c54da791fd9109d8b026"></a>
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> on_parse_opt </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="memname">enum <a class="el" href="a00030.html#ae4a225ffa1d7c54da791fd9109d8b026">hpd_status</a></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="ae4a225ffa1d7c54da791fd9109d8b026ae721ddf4e6ed5344ca7c8eb2d8c76ec1"></a>HPD_S_NONE&#160;</td><td class="fielddoc">
+</td></tr>
 </table>
-</div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00030_source.html#l00126">126</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00030_ab55a802424a74ea32084eec69cd86281_icgraph.svg" width="215" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a665691f420dff4eebb8f4b4af62d7a49"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> on_start </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *&#160;</td>
-          <td class="paramname"><em>hpd</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00030_source.html#l00110">110</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00030_a665691f420dff4eebb8f4b4af62d7a49_icgraph.svg" width="184" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a257c5aafa157f3902bec16554a5a80b2"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> on_stop </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *&#160;</td>
-          <td class="paramname"><em>hpd</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00030_source.html#l00118">118</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00030_a257c5aafa157f3902bec16554a5a80b2_icgraph.svg" width="183" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a548a458ce737e269e9cf95bdbdcdc12e"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void stop_hpd </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *&#160;</td>
-          <td class="paramname"><em>loop</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ev_timer *&#160;</td>
-          <td class="paramname"><em>w</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>revents</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00030_source.html#l00135">135</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00030_a548a458ce737e269e9cf95bdbdcdc12e_cgraph.svg" width="356" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00030_a548a458ce737e269e9cf95bdbdcdc12e_icgraph.svg" width="190" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="aa2ad001cd2039527a6d248f70aaf3fc1"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TEST </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">hpd_allocation&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00030_source.html#l00141">141</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00030_aa2ad001cd2039527a6d248f70aaf3fc1_cgraph.svg" width="451" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="ab8778354cab25c839b9b7911e5b521f0"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TEST </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00062.html#abb80916ac5990db56afd0fc309949f4c">hpd_get_loop</a>&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00030_source.html#l00154">154</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00030_ab8778354cab25c839b9b7911e5b521f0_cgraph.svg" width="494" height="139"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a5de92b31931f2f5155c682379a06da32"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TEST </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">hpd_run_1sec&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00030_source.html#l00164">164</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00030_a5de92b31931f2f5155c682379a06da32_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="abf6f5759c7be63784bfaffc8196e3941"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TEST </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">module_allocation&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00030_source.html#l00187">187</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00030_abf6f5759c7be63784bfaffc8196e3941_cgraph.svg" width="516" height="392"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a96e7234aaa49fde10e6d254495741c90"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TEST </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">module_run_1sec&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00030_source.html#l00213">213</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00030_a96e7234aaa49fde10e6d254495741c90_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="adb53c89b4687405791cefac08be987d4"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TEST </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">option_no_call_1sec&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00030_source.html#l00250">250</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00030_adb53c89b4687405791cefac08be987d4_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a3b2617fbecf4f885aa07ac255be144f5"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TEST </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">option_call1_1sec&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00030_source.html#l00291">291</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00030_a3b2617fbecf4f885aa07ac255be144f5_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a64a02d4aa490f55ae3382a7824201698"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">TEST </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00030.html#af2b30344be261ffe1c5aad12ab1f6f07">CASE</a>&#160;</td>
-          <td class="paramname">, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">option_call2_1sec&#160;</td>
-          <td class="paramname">&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00030_source.html#l00335">335</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00030_a64a02d4aa490f55ae3382a7824201698_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
+<p>Definition at line <a class="el" href="a00030_source.html#l00148">148</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a class="anchor" id="a7279c8b39e73923478eca49397c768b2"></a>
+<a class="anchor" id="a540d22cb78f555a5f25b21ab607683be"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -892,7 +1038,7 @@ Here is the call graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00030.html#a00117">module_data_t</a>* last_module_data = NULL</td>
+          <td class="memname">const char* const HPD_ATTR_DESC = &quot;description&quot;</td>
         </tr>
       </table>
   </td>
@@ -902,14 +1048,365 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="a00030_source.html#l00050">50</a> of file <a class="el" href="a00030_source.html">daemon_api_test.cpp</a>.</p>
+<p>Default attribute key for descriptions. </p>
+<p>Used as a human readable description of the adapter, device, service, or parameter. </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00222">222</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab67af0a442b049e45daeb2d2af7271dd"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_ATTR_LOCATION = &quot;location&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default attribute key for locations. </p>
+<p>Physical location of the object. Could be an address, the name of a room, or even more detailed. Typically only set on devices, when their location can be known by the adapter. </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00258">258</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae2401d47fd4f87fff5953edab5075157"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_ATTR_MAX = &quot;max&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default attribute key. </p>
+<p>Set on a parameter to indicate a maximum possible value where appropriate. </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00280">280</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="addb02685571b0901d347a0b35146a0c2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_ATTR_MIN = &quot;min&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default attribute key. </p>
+<p>Set on a parameter to indicate a minimum possible value where appropriate. </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00287">287</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="accc5260134fba19813d32c7fbe3b5b1c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_ATTR_NAME = &quot;name&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default attribute key for names. </p>
+<p>Short human readable name for the adapter, device, service, or parameter. </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00229">229</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afd063bef22bfdb7b0ad41f08b4861716"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_ATTR_NETWORK = &quot;network&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>[hpd_module_def_t] </p>
+<p>Default attribute key.</p>
+<p>Used in adapters to describe the network that they are connected to.[Default keys] </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00215">215</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2afb0aa6d46cf4601b73d8d08d6aea71"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_ATTR_PRODUCT = &quot;product&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default attribute key for product ids. </p>
+<p>Typically used on devices only. </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00243">243</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a36b4cdb8060258ac029d6c44e02860f0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_ATTR_PROTOCOL = &quot;protocol&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00312">312</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a646f1a37ce12164a5460cdcc92e9ed42"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_ATTR_SCALE = &quot;scale&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default attribute key. </p>
+<p>Set on a parameter to indicate a scale factor that have to be multiplied with the value to match the given unit. 1 is assumed when not given. </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00303">303</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab6c6b8c13398bb014aec754799c6bb57"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_ATTR_STEP = &quot;step&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default attribute key. </p>
+<p>Set on a parameter to indicate a increment between values, typically used for integers only. Step = 1 is assumed, if not set. </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00295">295</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aff4150f68e4fc6506adc361a2620b8fc"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_ATTR_TYPE = &quot;type&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default attribute key for types. </p>
+<p>On services it typically describes a category, e.g. temperature, lamp, etc. On parameters it typically describes the datatype, e.g. int16, float, string, enum. </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00266">266</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a652841436839645120dbff5d24a8eecf"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_ATTR_UNIT = &quot;unit&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default attribute key for units. </p>
+<p>The unit can both be set on services and parameters and describes the unit of the value, e.g. C, m, kg, m/s, etc. </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00273">273</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a113290a892b3db5ebfa7f118b5728096"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_ATTR_VALUES = &quot;values&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default attribute key. </p>
+<p>Set on a parameter to the list of possible values for enumeration types. </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00310">310</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac948ba8992ec0a52b645f60d9b230097"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_ATTR_VENDOR = &quot;vendor&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default attribute key for vendor ids. </p>
+<p>Usually set to a short vendor name for devices where appropriately. </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00236">236</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a78daad1c7f876af6943bb6fe340f5c50"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const HPD_ATTR_VERSION = &quot;version&quot;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default attribute key for versions. </p>
+<p>Example candidates for this attribute are product versions, firmware versions, and protocol versions. </p>
+
+<p>Definition at line <a class="el" href="a00030_source.html#l00250">250</a> of file <a class="el" href="a00030_source.html">hpd_types.h</a>.</p>
 
 </div>
 </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:24 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:25 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

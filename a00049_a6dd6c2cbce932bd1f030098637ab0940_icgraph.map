@@ -1,5 +1,0 @@
-<map id="hpd_tcpd_conn_keep_open" name="hpd_tcpd_conn_keep_open">
-<area shape="rect" id="node2" href="$a00016.html#a32fe36a1270ee5c401d2641fd80ed4b3" title="Keep the connection for a request open. " alt="" coords="233,5,432,32"/>
-<area shape="rect" id="node3" href="$a00025.html#a74ba52adbe4c46e9a9c33649e3b75243" title="on_req_cmpl" alt="" coords="480,5,576,32"/>
-<area shape="rect" id="node4" href="$a00025.html#ad079431c7eba97c5dd5e4e202cdf6102" title="on_create" alt="" coords="624,5,703,32"/>
-</map>

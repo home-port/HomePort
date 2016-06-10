@@ -1,4 +1,8 @@
-<map id="modules/hpd_rest/include/hpd_rest.h" name="modules/hpd_rest/include/hpd_rest.h">
-<area shape="rect" id="node2" href="$a00055.html" title="example/demo/main.c" alt="" coords="5,102,156,129"/>
-<area shape="rect" id="node3" href="$a00025.html" title="modules/hpd_rest/src\l/hpd_rest.c" alt="" coords="181,95,327,136"/>
+<map id="hpd_service_id" name="hpd_service_id">
+<area shape="rect" id="node3" href="$a00020.html#a00114" title="{hpd_device_id\n||}" alt="" coords="65,484,170,561"/>
+<area shape="rect" id="node4" href="$a00020.html#a00112" title="{hpd_adapter_id\n||}" alt="" coords="131,344,242,421"/>
+<area shape="rect" id="node5" href="$a00017.html#a00110" title="{hpd\n||}" alt="" coords="609,204,652,281"/>
+<area shape="rect" id="node8" href="$a00018.html#a00113" title="{hpd_configuration\n||}" alt="" coords="421,344,545,421"/>
+<area shape="rect" id="node15" href="$a00029.html" title="{hpd_module\n||+ TAILQ_ENTRY()\l}" alt="" coords="867,344,1000,421"/>
+<area shape="rect" id="node16" href="$a00030.html#a00123" title="[Application API Callbacks] " alt="" coords="849,204,967,281"/>
 </map>

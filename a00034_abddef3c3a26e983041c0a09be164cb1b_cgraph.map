@@ -1,0 +1,36 @@
+<map id="rest_on_response" name="rest_on_response">
+<area shape="rect" id="node2" href="$a00073.html#a7c98cef4689f6ba3a7debc96b43a9dac" title="hpd_response_get_value" alt="" coords="183,101,349,128"/>
+<area shape="rect" id="node4" href="$a00075.html#af797956501814440a1d9f3110b2b6fba" title="hpd_value_get_body" alt="" coords="195,160,337,187"/>
+<area shape="rect" id="node6" href="$a00073.html#a1769890612720a141ca4b8e46e6841f9" title="[hpd_request_t functions] " alt="" coords="181,219,351,245"/>
+<area shape="rect" id="node8" href="$a00034.html#a362db74b5ebb509cd4c0032f5704148f" title="rest_reply_internal\l_server_error" alt="" coords="202,493,330,534"/>
+<area shape="rect" id="node9" href="$a00034.html#a18db249df9c6c163ca09c0d7fadc3c75" title="rest_reply" alt="" coords="437,441,516,468"/>
+<area shape="rect" id="node10" href="$a00027.html#a3b100e8d7e1214067cf1b90ad577745c" title="Create the reponse and constructs the status line. " alt="" coords="613,174,752,215"/>
+<area shape="rect" id="node16" href="$a00012.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="1436,407,1480,433"/>
+<area shape="rect" id="node19" href="$a00027.html#a36a5feca39485163b3ef446c9e3171a3" title="Destroy a hpd_httpd_response. " alt="" coords="613,497,752,538"/>
+<area shape="rect" id="node20" href="$a00056.html#a3eb33be000f845d28ec16639f235ceb2" title="hpd_map_get" alt="" coords="216,660,316,687"/>
+<area shape="rect" id="node21" href="$a00034.html#ad18f343d67574c5a3482c9e1cbccc9d5" title="rest_media_type_to_enum" alt="" coords="179,711,353,737"/>
+<area shape="rect" id="node22" href="$a00034.html#a463d2bdadd3f81404991033401807537" title="rest_reply_unsupported\l_media_type" alt="" coords="187,375,345,417"/>
+<area shape="rect" id="node23" href="$a00098.html#a45c634d4351275674f38f1618d77567a" title="hpd_rest_xml_get_value" alt="" coords="185,761,347,788"/>
+<area shape="rect" id="node27" href="$a00027.html#a3aabea0eb8be381d54ece47fa1fd6a75" title="Add header to a response. " alt="" coords="197,863,335,905"/>
+<area shape="rect" id="node28" href="$a00096.html#a55f9d0e3050023518ad11a5f5516dbee" title="hpd_rest_json_get_value" alt="" coords="183,812,349,839"/>
+<area shape="rect" id="node30" href="$a00027.html#a38a5c180c63086c4c55a595ad3750cf1" title="Send response to client. " alt="" coords="407,337,546,378"/>
+<area shape="rect" id="node3" href="$a00087.html#ae5df7e29cafbcd6ce39f3583d15ed06c" title="request_get_response\l_value" alt="" coords="401,90,552,131"/>
+<area shape="rect" id="node5" href="$a00090.html#ae34600d73a9d88f118a129317bfea343" title="value_get_body" alt="" coords="420,156,533,183"/>
+<area shape="rect" id="node7" href="$a00087.html#ae25a33ce5c6fb0944d3bbf68af44dac7" title="request_get_response\l_status" alt="" coords="401,207,552,249"/>
+<area shape="rect" id="node11" href="$a00025.html#a4a16719295f2a18fa4e8d08e6afb80f0" title="http_request_get_context" alt="" coords="823,5,993,32"/>
+<area shape="rect" id="node12" href="$a00026.html#ab55da21d4573c8d9c22fa3797f579628" title="Convert a status code to string. " alt="" coords="840,239,976,281"/>
+<area shape="rect" id="node13" href="$a00026.html#a36a5feca39485163b3ef446c9e3171a3" title="Destroy a hpd_httpd_response. " alt="" coords="839,57,977,98"/>
+<area shape="rect" id="node17" href="$a00025.html#a1568fdba259271965551fb5aa1f07006" title="Get the connection of a request. " alt="" coords="813,123,1003,149"/>
+<area shape="rect" id="node18" href="$a00026.html#a3aabea0eb8be381d54ece47fa1fd6a75" title="Add header to a response. " alt="" coords="839,174,977,215"/>
+<area shape="rect" id="node14" href="$a00038.html#a494a1841a6c8963c10f5d3a6b662f014" title="Close a connection, after the remaining data has been sent. " alt="" coords="1055,356,1203,383"/>
+<area shape="rect" id="node15" href="$a00059.html#a58068e1a4c60b401bc6fc99c25e9a3f6" title="Kill and clean up after a connection. " alt="" coords="1255,356,1388,383"/>
+<area shape="rect" id="node24" href="$a00098.html#af94bffd4e36e7a7faeb8de14d15b886f" title="rest_xml_add_value" alt="" coords="407,761,546,788"/>
+<area shape="rect" id="node25" href="$a00034.html#af7aaf3a0becf32f4bd290d1b987b453f" title="hpd_rest_get_timestamp" alt="" coords="600,837,765,864"/>
+<area shape="rect" id="node26" href="$a00098.html#acf4f8323b5a197318d4d984ccae1a932" title="rest_xml_add" alt="" coords="633,761,733,788"/>
+<area shape="rect" id="node29" href="$a00096.html#ae4e968e97aed037e4fa91cd31ae27a42" title="rest_json_add" alt="" coords="425,812,528,839"/>
+<area shape="rect" id="node31" href="$a00026.html#ab770a06a1cbfdebf49acdefe64b115b8" title="Send response to client. " alt="" coords="613,343,752,385"/>
+<area shape="rect" id="node32" href="$a00038.html#a1ccd6d1acb1660ec22322af9b6349a40" title="Get the IP address of the client. " alt="" coords="832,305,984,332"/>
+<area shape="rect" id="node33" href="$a00038.html#af1d6e9cdd63ecfa1ff92ab0e38122100" title="Send message on connection. " alt="" coords="833,508,983,535"/>
+<area shape="rect" id="node35" href="$a00038.html#a222b05aa1f3416a31ddb08b5e2bfbff8" title="Send message on connection. " alt="" coords="830,356,986,383"/>
+<area shape="rect" id="node34" href="$a00059.html#a222b05aa1f3416a31ddb08b5e2bfbff8" title="Send message on connection. " alt="" coords="1051,508,1207,535"/>
+</map>

@@ -1,0 +1,12 @@
+<map id="hpd_device_detach" name="hpd_device_detach">
+<area shape="rect" id="node2" href="$a00020.html#af178de2e51304e31fefe0ae13d2481ab" title="discovery_find_device" alt="" coords="197,56,348,83"/>
+<area shape="rect" id="node3" href="$a00078.html#a8d6472e9a8006949786f5975d5b02648" title="discovery_detach_device" alt="" coords="188,107,357,133"/>
+<area shape="rect" id="node4" href="$a00081.html#a38f3fa1f45b7832adcbdd3f1af2bd9a4" title="event_inform_device\l_detached" alt="" coords="405,99,548,141"/>
+<area shape="rect" id="node5" href="$a00020.html#aebd10ac1c18be51340c39d6d5a54e6d1" title="discovery_alloc_did" alt="" coords="596,56,732,83"/>
+<area shape="rect" id="node9" href="$a00012.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="1000,132,1044,159"/>
+<area shape="rect" id="node10" href="$a00081.html#a6c353799b446d7c8d3008308c01a3f33" title="event_on_detached" alt="" coords="597,157,731,184"/>
+<area shape="rect" id="node6" href="$a00080.html#acd5e8c2bf3e761abc7e2fd2294238a74" title="HPD_E_ALLOC: id might be partially updated. " alt="" coords="782,5,909,32"/>
+<area shape="rect" id="node8" href="$a00080.html#ae1a000b225c8b3f365c2cec8362b8483" title="discovery_free_did" alt="" coords="780,56,911,83"/>
+<area shape="rect" id="node7" href="$a00080.html#af2f553cfc3af4678b87a8fc75f35a5c6" title="HPD_E_ALLOC: id might be partially updated. " alt="" coords="959,5,1085,32"/>
+<area shape="rect" id="node11" href="$a00020.html#ae1a000b225c8b3f365c2cec8362b8483" title="discovery_free_did" alt="" coords="780,208,911,235"/>
+</map>

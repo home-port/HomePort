@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: common/curl_ev/src/hpd_curl_ev.c File Reference</title>
+<title>HomePort: Tutorial 02: Demo Example</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -38,9 +38,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&#160;Structures</span></a></li>
-      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -59,12 +59,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
-  <div id="navrow2" class="tabs2">
-    <ul class="tablist">
-      <li><a href="files.html"><span>File&#160;List</span></a></li>
-      <li><a href="globals.html"><span>Globals</span></a></li>
-    </ul>
-  </div>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -79,820 +73,520 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<div id="nav-path" class="navpath">
-  <ul>
-<li class="navelem"><a class="el" href="dir_bdd9a5d540de89e9fe90efdfc6973a4f.html">common</a></li><li class="navelem"><a class="el" href="dir_6dfd4494962228c0e294eec4d0b1c98e.html">curl_ev</a></li><li class="navelem"><a class="el" href="dir_eacbe4268e59df3584cbe4ba0da150d0.html">src</a></li>  </ul>
-</div>
 </div><!-- top -->
 <div class="header">
-  <div class="summary">
-<a href="#nested-classes">Data Structures</a> &#124;
-<a href="#define-members">Macros</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
-<div class="title">hpd_curl_ev.c File Reference</div>  </div>
+<div class="title">Tutorial 02: Demo Example </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><div class="dynheader">
-Include dependency graph for hpd_curl_ev.c:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00129.svg" width="100%" height="507"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</div>
-<p><a href="a00004_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Data Structures</h2></td></tr>
-<tr class="memitem:a00088"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a00088">curl_ev</a></td></tr>
-<tr class="separator:a00088"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a00089"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a00089">curl_ev_io</a></td></tr>
-<tr class="separator:a00089"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:a0e58f0eeb8358d95ae6cd543e78e70cb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a0e58f0eeb8358d95ae6cd543e78e70cb">CURL_EV_CHECK</a>()</td></tr>
-<tr class="separator:a0e58f0eeb8358d95ae6cd543e78e70cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:af8acf137aa339e8738dd5c0c74bf937a"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="a00004.html#a00089">curl_ev_io</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#af8acf137aa339e8738dd5c0c74bf937a">curl_ev_io_t</a></td></tr>
-<tr class="separator:af8acf137aa339e8738dd5c0c74bf937a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:aac10c04a959a7def8f7ceabe2c46e77b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#aac10c04a959a7def8f7ceabe2c46e77b">curl_ev_add_handle</a> (<a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *handle)</td></tr>
-<tr class="separator:aac10c04a959a7def8f7ceabe2c46e77b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f36a139b8cf22a41850235ce3a3c88c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a3f36a139b8cf22a41850235ce3a3c88c">curl_ev_add_next</a> ()</td></tr>
-<tr class="separator:a3f36a139b8cf22a41850235ce3a3c88c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17434db8bd6d65f28a654b2ae3708b9b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a17434db8bd6d65f28a654b2ae3708b9b">curl_ev_remove_handle</a> (<a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *handle)</td></tr>
-<tr class="separator:a17434db8bd6d65f28a654b2ae3708b9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30f7e7259072d4e929092bf994dd0f7e"><td class="memItemLeft" align="right" valign="top">static CURLMcode&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a30f7e7259072d4e929092bf994dd0f7e">curl_ev_socket_action</a> (int sockfd)</td></tr>
-<tr class="separator:a30f7e7259072d4e929092bf994dd0f7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad079431c7eba97c5dd5e4e202cdf6102"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#ad079431c7eba97c5dd5e4e202cdf6102">on_create</a> (void **<a class="el" href="a00006.html#a00090">data</a>, <a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *context)</td></tr>
-<tr class="separator:ad079431c7eba97c5dd5e4e202cdf6102"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b2154654e3a71fc5cf31a82125b1aac"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a2b2154654e3a71fc5cf31a82125b1aac">on_destroy</a> (void *<a class="el" href="a00006.html#a00090">data</a>)</td></tr>
-<tr class="separator:a2b2154654e3a71fc5cf31a82125b1aac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3467032c766584c58cfcb260904b537"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#ad3467032c766584c58cfcb260904b537">on_io</a> (<a class="el" href="a00021.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *<a class="el" href="a00031.html#a855923b555731173d3509ecb645de0e0">loop</a>, ev_io *w, int revents)</td></tr>
-<tr class="separator:ad3467032c766584c58cfcb260904b537"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afb63488e3d1ec4aab05bb247cb756133"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#afb63488e3d1ec4aab05bb247cb756133">on_parse_opt</a> (void *<a class="el" href="a00006.html#a00090">data</a>, const char *name, const char *arg)</td></tr>
-<tr class="separator:afb63488e3d1ec4aab05bb247cb756133"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a665691f420dff4eebb8f4b4af62d7a49"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a665691f420dff4eebb8f4b4af62d7a49">on_start</a> (void *<a class="el" href="a00006.html#a00090">data</a>, <a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *<a class="el" href="a00009.html#a00093">hpd</a>)</td></tr>
-<tr class="separator:a665691f420dff4eebb8f4b4af62d7a49"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a257c5aafa157f3902bec16554a5a80b2"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a257c5aafa157f3902bec16554a5a80b2">on_stop</a> (void *<a class="el" href="a00006.html#a00090">data</a>, <a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *<a class="el" href="a00009.html#a00093">hpd</a>)</td></tr>
-<tr class="separator:a257c5aafa157f3902bec16554a5a80b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f1cba74d908da5b27db2338c6e222dc"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a2f1cba74d908da5b27db2338c6e222dc">on_timeout</a> (<a class="el" href="a00021.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *<a class="el" href="a00031.html#a855923b555731173d3509ecb645de0e0">loop</a>, ev_timer *w, int revents)</td></tr>
-<tr class="separator:a2f1cba74d908da5b27db2338c6e222dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ba2998e37246c16c9707e7e5c2730de"><td class="memItemLeft" align="right" valign="top">static CURLMcode&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a2ba2998e37246c16c9707e7e5c2730de">on_update_socket</a> (CURL *easy, curl_socket_t s, int what, void *userp, void *socketp)</td></tr>
-<tr class="separator:a2ba2998e37246c16c9707e7e5c2730de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a7791ffa0bda45533ca10f94c8183f1"><td class="memItemLeft" align="right" valign="top">static CURLMcode&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a9a7791ffa0bda45533ca10f94c8183f1">on_update_timer</a> (CURLM *multi, long timeout_ms, void *userp)</td></tr>
-<tr class="separator:a9a7791ffa0bda45533ca10f94c8183f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a1be9c6fa81c7f0d3bfc4e4d949fa9eca"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00037.html#adc0ec940e8db6f92b7ef193825faba4e">curl_ev_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a1be9c6fa81c7f0d3bfc4e4d949fa9eca">curl_ev</a> = NULL</td></tr>
-<tr class="separator:a1be9c6fa81c7f0d3bfc4e4d949fa9eca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6faa79cc895d1c880e63e052084b615d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a901efba3ccce913035a8dfbd35f4733d">hpd_module_def_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00004.html#a6faa79cc895d1c880e63e052084b615d">hpd_curl_ev</a> = { <a class="el" href="a00025.html#ad079431c7eba97c5dd5e4e202cdf6102">on_create</a>, <a class="el" href="a00025.html#a2b2154654e3a71fc5cf31a82125b1aac">on_destroy</a>, <a class="el" href="a00025.html#a665691f420dff4eebb8f4b4af62d7a49">on_start</a>, <a class="el" href="a00025.html#a257c5aafa157f3902bec16554a5a80b2">on_stop</a>, <a class="el" href="a00025.html#afb63488e3d1ec4aab05bb247cb756133">on_parse_opt</a> }</td></tr>
-<tr class="separator:a6faa79cc895d1c880e63e052084b615d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<hr/><h2 class="groupheader">Data Structure Documentation</h2>
-<a name="a00088" id="a00088"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct curl_ev</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<div class="textblock">
-<p>Definition at line <a class="el" href="a00004_source.html#l00041">41</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-</div><div class="dynheader">
-Collaboration diagram for curl_ev:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00130.svg" width="207" height="228"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-<table class="fieldtable">
-<tr><th colspan="3">Data Fields</th></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="a43cb5b754551d461a95628bd090cc232"></a>CURLM *</td>
-<td class="fieldname">
-mult_handle</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
-<a class="anchor" id="a15f5feaa78ab324d3cd50e8421ccc00e"></a>ev_timer</td>
-<td class="fieldname">
-timer</td>
-<td class="fielddoc">
-</td></tr>
-</table>
-
-</div>
-</div>
-<a name="a00089" id="a00089"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct curl_ev_io</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<div class="textblock">
-<p>Definition at line <a class="el" href="a00004_source.html#l00036">36</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-</div><div class="dynheader">
-Collaboration diagram for curl_ev_io:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00131.svg" width="92" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-
-</div>
-</div>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a class="anchor" id="a0e58f0eeb8358d95ae6cd543e78e70cb"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CURL_EV_CHECK</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">do</span> { \</div>
-<div class="line">    if (!<a class="code" href="a00004.html#a00088">curl_ev</a>) { <a class="code" href="a00060.html#ae0e846785d642ec279ebd1c5bc195b2d">\</a></div>
-<div class="line"><a class="code" href="a00060.html#ae0e846785d642ec279ebd1c5bc195b2d">        HPD_LOG_ERROR</a>(handle-&gt;context, <span class="stringliteral">&quot;Curl not initialised&quot;</span>); <a class="code" href="a00060.html#a90701323e2dcad01d497d4250812bb67">\</a></div>
-<div class="line"><a class="code" href="a00060.html#a90701323e2dcad01d497d4250812bb67">        HPD_LOG_RETURN</a>(handle-&gt;context, <a class="code" href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0dad314ace10a0f6198ba4007008d63af6c">HPD_E_STATE</a>, <span class="stringliteral">&quot;Did you remember to add the curl module to hpd?&quot;</span>); \</div>
-<div class="line">    } \</div>
-<div class="line">} <span class="keywordflow">while</span>(0)</div>
-<div class="ttc" id="a00060_html_ae0e846785d642ec279ebd1c5bc195b2d"><div class="ttname"><a href="a00060.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a></div><div class="ttdeci">#define HPD_LOG_ERROR(CONTEXT, FMT,...)</div><div class="ttdef"><b>Definition:</b> <a href="a00060_source.html#l00049">hpd_shared_api.h:49</a></div></div>
-<div class="ttc" id="a00060_html_a90701323e2dcad01d497d4250812bb67"><div class="ttname"><a href="a00060.html#a90701323e2dcad01d497d4250812bb67">HPD_LOG_RETURN</a></div><div class="ttdeci">#define HPD_LOG_RETURN(CONTEXT, E, FMT,...)</div><div class="ttdef"><b>Definition:</b> <a href="a00060_source.html#l00055">hpd_shared_api.h:55</a></div></div>
-<div class="ttc" id="a00004_html_a00088"><div class="ttname"><a href="a00004.html#a00088">curl_ev</a></div><div class="ttdef"><b>Definition:</b> <a href="a00004_source.html#l00041">hpd_curl_ev.c:41</a></div></div>
-<div class="ttc" id="a00021_html_af2d90ea316126f626dd4bcd587cdfb0dad314ace10a0f6198ba4007008d63af6c"><div class="ttname"><a href="a00021.html#af2d90ea316126f626dd4bcd587cdfb0dad314ace10a0f6198ba4007008d63af6c">HPD_E_STATE</a></div><div class="ttdef"><b>Definition:</b> <a href="a00021_source.html#l00074">hpd_types.h:74</a></div></div>
-</div><!-- fragment -->
-<p>Definition at line <a class="el" href="a00004_source.html#l00062">62</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Typedef Documentation</h2>
-<a class="anchor" id="af8acf137aa339e8738dd5c0c74bf937a"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef struct <a class="el" href="a00004.html#a00089">curl_ev_io</a> <a class="el" href="a00004.html#af8acf137aa339e8738dd5c0c74bf937a">curl_ev_io_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00034">34</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="aac10c04a959a7def8f7ceabe2c46e77b"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_add_handle </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *&#160;</td>
-          <td class="paramname"><em>handle</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00244">244</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00004_aac10c04a959a7def8f7ceabe2c46e77b_cgraph.svg" width="100%" height="366"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a3f36a139b8cf22a41850235ce3a3c88c"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_add_next </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00169">169</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00004_a3f36a139b8cf22a41850235ce3a3c88c_cgraph.svg" width="634" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00004_a3f36a139b8cf22a41850235ce3a3c88c_icgraph.svg" width="100%" height="432"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a17434db8bd6d65f28a654b2ae3708b9b"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> curl_ev_remove_handle </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00034.html#a2e36728672f1c61a8c041017e8ed4dc7">curl_ev_handle_t</a> *&#160;</td>
-          <td class="paramname"><em>handle</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00269">269</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00004_a17434db8bd6d65f28a654b2ae3708b9b_cgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00004_a17434db8bd6d65f28a654b2ae3708b9b_icgraph.svg" width="100%" height="480"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a30f7e7259072d4e929092bf994dd0f7e"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static CURLMcode curl_ev_socket_action </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>sockfd</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00194">194</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00004_a30f7e7259072d4e929092bf994dd0f7e_cgraph.svg" width="542" height="139"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00004_a30f7e7259072d4e929092bf994dd0f7e_icgraph.svg" width="659" height="291"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="ad079431c7eba97c5dd5e4e202cdf6102"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> on_create </td>
-          <td>(</td>
-          <td class="paramtype">void **&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *&#160;</td>
-          <td class="paramname"><em>context</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00293">293</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00004_ad079431c7eba97c5dd5e4e202cdf6102_cgraph.svg" width="100%" height="404"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a2b2154654e3a71fc5cf31a82125b1aac"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> on_destroy </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>data</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00314">314</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00004_a2b2154654e3a71fc5cf31a82125b1aac_cgraph.svg" width="354" height="63"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="ad3467032c766584c58cfcb260904b537"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void on_io </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *&#160;</td>
-          <td class="paramname"><em>loop</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ev_io *&#160;</td>
-          <td class="paramname"><em>w</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>revents</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00069">69</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00004_ad3467032c766584c58cfcb260904b537_cgraph.svg" width="643" height="139"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00004_ad3467032c766584c58cfcb260904b537_icgraph.svg" width="358" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="afb63488e3d1ec4aab05bb247cb756133"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> on_parse_opt </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>name</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>arg</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00405">405</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a665691f420dff4eebb8f4b4af62d7a49"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> on_start </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *&#160;</td>
-          <td class="paramname"><em>hpd</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00336">336</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00004_a665691f420dff4eebb8f4b4af62d7a49_cgraph.svg" width="100%" height="508"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a257c5aafa157f3902bec16554a5a80b2"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> on_stop </td>
-          <td>(</td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#affd657e45b1cd6bf50a5dd124b13a575">hpd_t</a> *&#160;</td>
-          <td class="paramname"><em>hpd</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00377">377</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00004_a257c5aafa157f3902bec16554a5a80b2_cgraph.svg" width="171" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a2f1cba74d908da5b27db2338c6e222dc"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void on_timeout </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00021.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *&#160;</td>
-          <td class="paramname"><em>loop</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ev_timer *&#160;</td>
-          <td class="paramname"><em>w</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>revents</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00076">76</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00004_a2f1cba74d908da5b27db2338c6e222dc_cgraph.svg" width="100%" height="404"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00004_a2f1cba74d908da5b27db2338c6e222dc_icgraph.svg" width="224" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a2ba2998e37246c16c9707e7e5c2730de"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static CURLMcode on_update_socket </td>
-          <td>(</td>
-          <td class="paramtype">CURL *&#160;</td>
-          <td class="paramname"><em>easy</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">curl_socket_t&#160;</td>
-          <td class="paramname"><em>s</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>what</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>userp</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>socketp</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00083">83</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00004_a2ba2998e37246c16c9707e7e5c2730de_cgraph.svg" width="100%" height="392"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00004_a2ba2998e37246c16c9707e7e5c2730de_icgraph.svg" width="256" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a9a7791ffa0bda45533ca10f94c8183f1"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static CURLMcode on_update_timer </td>
-          <td>(</td>
-          <td class="paramtype">CURLM *&#160;</td>
-          <td class="paramname"><em>multi</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>timeout_ms</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>userp</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00150">150</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00004_a9a7791ffa0bda45533ca10f94c8183f1_cgraph.svg" width="100%" height="404"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00004_a9a7791ffa0bda45533ca10f94c8183f1_icgraph.svg" width="247" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a class="anchor" id="a1be9c6fa81c7f0d3bfc4e4d949fa9eca"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00037.html#adc0ec940e8db6f92b7ef193825faba4e">curl_ev_t</a>* <a class="el" href="a00004.html#a00088">curl_ev</a> = NULL</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00060">60</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a6faa79cc895d1c880e63e052084b615d"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="a00021.html#a901efba3ccce913035a8dfbd35f4733d">hpd_module_def_t</a> hpd_curl_ev = { <a class="el" href="a00025.html#ad079431c7eba97c5dd5e4e202cdf6102">on_create</a>, <a class="el" href="a00025.html#a2b2154654e3a71fc5cf31a82125b1aac">on_destroy</a>, <a class="el" href="a00025.html#a665691f420dff4eebb8f4b4af62d7a49">on_start</a>, <a class="el" href="a00025.html#a257c5aafa157f3902bec16554a5a80b2">on_stop</a>, <a class="el" href="a00025.html#afb63488e3d1ec4aab05bb247cb756133">on_parse_opt</a> }</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Definition at line <a class="el" href="a00004_source.html#l00058">58</a> of file <a class="el" href="a00004_source.html">hpd_curl_ev.c</a>.</p>
-
-</div>
-</div>
-</div><!-- contents -->
+<div class="toc"><h3>Table of Contents</h3>
+<ul><li class="level1"><a href="#sec_intro">Introduction</a></li>
+<li class="level1"><a href="#sec_main">Main Program</a></li>
+<li class="level1"><a href="#sec_adapter">Demo Adapter</a><ul><li class="level2"><a href="#sec_adapter_header">Header file</a></li>
+<li class="level2"><a href="#sec_adapter_source">Source file</a><ul><li class="level3"><a href="#sec_adapter_source_functions">Function Implementations</a></li>
+<li class="level3"><a href="#sec_adapter_source_create_destroy">on_create() and on_destroy()</a></li>
+<li class="level3"><a href="#sec_adapter_source_parse_opt">on_parse_opt()</a></li>
+<li class="level3"><a href="#sec_adapter_source_start_stop">on_start() and on_stop()</a></li>
+<li class="level3"><a href="#sec_adapter_source_object_creation">Object creation</a></li>
+<li class="level3"><a href="#sec_adapter_source_actions">Action Callbacks</a></li>
+<li class="level3"><a href="#sec_adapter_source_send_set">Sending and Setting Values</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="textblock"><h1><a class="anchor" id="sec_intro"></a>
+Introduction</h1>
+<p>In this tutorial, we will cover the basic functions in hpd, which are needed in the main program, adapters, and applications.</p>
+<p>The full files can be found in the example/demo folder, and can be compiled with <code>make example_demo</code>.</p>
+<h1><a class="anchor" id="sec_main"></a>
+Main Program</h1>
+<p>The main program (<a class="el" href="a00065.html">demo_main.c</a>) is pretty similar to that of the template example. Note, that we included the <a class="el" href="a00034.html#a00128">hpd_rest</a> webservice module, which are included and installed alongside hpd itself.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="a00074.html">hpd/hpd_daemon_api.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="a00094.html">hpd/modules/hpd_rest.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;<a class="code" href="a00063.html">demo_adapter.h</a>&quot;</span></div>
+<div class="line"><span class="preprocessor">#include &quot;<a class="code" href="a00064.html">demo_application.h</a>&quot;</span></div>
+<div class="line"></div>
+<div class="line"><span class="keywordtype">int</span> <a class="code" href="a00047.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[])</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> rc;</div>
+<div class="line">    <a class="code" href="a00017.html#a00110">hpd_t</a> *<a class="code" href="a00017.html#a00110">hpd</a>;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Allocate hpd memory</span></div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00074.html#a3d879947af1cc338c9bb9cf68fcce672">hpd_alloc</a>(&amp;hpd))) <span class="keywordflow">goto</span> error_return;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Add modules</span></div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00074.html#a1360e4af1219978973e0afd4486c489e">hpd_module</a>(hpd, <span class="stringliteral">&quot;rest&quot;</span>, &amp;<a class="code" href="a00034.html#a00128">hpd_rest</a>))) <span class="keywordflow">goto</span> error_free;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00074.html#a1360e4af1219978973e0afd4486c489e">hpd_module</a>(hpd, <span class="stringliteral">&quot;demo_adapter&quot;</span>, &amp;<a class="code" href="a00013.html#a8cb5d45b345704bf7c749f48311db78d">hpd_demo_adapter_def</a>))) <span class="keywordflow">goto</span> error_free;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00074.html#a1360e4af1219978973e0afd4486c489e">hpd_module</a>(hpd, <span class="stringliteral">&quot;demo_application&quot;</span>, &amp;<a class="code" href="a00014.html#a38e48bd519f1c75ba6e4dd9d42d92b7f">hpd_demo_app_def</a>))) <span class="keywordflow">goto</span> error_free;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Start hpd</span></div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00074.html#a4a5e670df4a5790a7955aaef5483c08a">hpd_start</a>(hpd, argc, argv))) <span class="keywordflow">goto</span> error_free;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Clean up</span></div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00074.html#aa833627ad45d82173c0caf687cd30126">hpd_free</a>(hpd))) <span class="keywordflow">goto</span> error_return;</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">return</span> rc;</div>
+<div class="line"></div>
+<div class="line">    error_free:</div>
+<div class="line">        <a class="code" href="a00074.html#aa833627ad45d82173c0caf687cd30126">hpd_free</a>(hpd);</div>
+<div class="line">    error_return:</div>
+<div class="line">        <span class="keywordflow">return</span> rc;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> The hpd functionality used in this file:</p><ul>
+<li><a class="el" href="a00074.html">hpd_daemon_api.h</a>: Header file containing all daemon related functions.</li>
+<li><a class="el" href="a00094.html">hpd_rest.h</a>: Header file containing the <a class="el" href="a00034.html#a00128">hpd_rest</a> module.</li>
+<li>hpd_error_t: An error code and most functions in hpd returns, which should be checked for errors.</li>
+<li>hpd_t: The type of a hpd instance.</li>
+<li><a class="el" href="a00074.html#a3d879947af1cc338c9bb9cf68fcce672" title="[hpd_t functions] ">hpd_alloc()</a>: Allocates memory for hpd.</li>
+<li><a class="el" href="a00074.html#a1360e4af1219978973e0afd4486c489e">hpd_module()</a>: Adds a module to hpd. In this case we add three; <a class="el" href="a00034.html#a00128">hpd_rest</a>, a demo adapter and a demo app(lication).</li>
+<li><a class="el" href="a00074.html#a4a5e670df4a5790a7955aaef5483c08a">hpd_start()</a>: Starts and runs hpd.</li>
+<li><a class="el" href="a00074.html#aa833627ad45d82173c0caf687cd30126">hpd_free()</a>: Frees the memory allocated with <a class="el" href="a00074.html#a3d879947af1cc338c9bb9cf68fcce672" title="[hpd_t functions] ">hpd_alloc()</a>.</li>
+</ul>
+<h1><a class="anchor" id="sec_adapter"></a>
+Demo Adapter</h1>
+<p>Here, we will create a simple adapter, that creates N virtual lamps, where N is a number given as command-line argument. If N is not given we will create just one lamp as default.</p>
+<h2><a class="anchor" id="sec_adapter_header"></a>
+Header file</h2>
+<p>As usual, the header file (<a class="el" href="a00063.html">demo_adapter.h</a>) with only include a declaration of single <a class="el" href="a00030.html#a00123" title="[Application API Callbacks] ">hpd_module_def</a>. Which describes our module, and makes it easy to include in a main program when calling <a class="el" href="a00074.html#a1360e4af1219978973e0afd4486c489e">hpd_module()</a>.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#ifndef HOMEPORT_DEMO_ADAPTER_H</span></div>
+<div class="line"><span class="preprocessor">#define HOMEPORT_DEMO_ADAPTER_H</span></div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="a00030.html">hpd/hpd_types.h</a>&gt;</span></div>
+<div class="line"></div>
+<div class="line"><span class="keyword">extern</span> <span class="keyword">struct </span><a class="code" href="a00030.html#a00123">hpd_module_def</a> <a class="code" href="a00013.html#a8cb5d45b345704bf7c749f48311db78d">hpd_demo_adapter_def</a>;</div>
+<div class="line"></div>
+<div class="line"><span class="preprocessor">#endif //HOMEPORT_DEMO_ADAPTER_H</span></div>
+</div><!-- fragment --> <h2><a class="anchor" id="sec_adapter_source"></a>
+Source file</h2>
+<p>Our source file (<a class="el" href="a00013.html">demo_adapter.c</a>) will use two header files.</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="a00063.html">demo_adapter.h</a>&quot;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="a00071.html">hpd/hpd_adapter_api.h</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="a00053.html">hpd/common/hpd_common.h</a>&gt;</span></div>
+</div><!-- fragment --><ul>
+<li><a class="el" href="a00071.html">hpd_adapter_api.h</a>: All hpd functions required to make an adapter.</li>
+<li><a class="el" href="a00053.html">hpd_common.h</a>: A set of basic defines to ease simple tasks, such as memory allocation.</li>
+</ul>
+<p>We will need two struct of our own for this adapter:</p>
+<div class="fragment"><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="a00013.html#a00105">demo_adapter</a> <a class="code" href="a00013.html#a00105">demo_adapter_t</a>;</div>
+<div class="line"><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="a00013.html#a00106">demo_adapter_srv</a> <a class="code" href="a00013.html#a00106">demo_adapter_srv_t</a>;</div>
+<div class="line"></div>
+<div class="line"><span class="keyword">struct </span><a class="code" href="a00013.html#a00105">demo_adapter</a> {</div>
+<div class="line">    <span class="keywordtype">int</span> <a class="code" href="a00013.html#a6beed052da0a6e22d26b50a931f8c379">num_lamps</a>;</div>
+<div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code" href="a00013.html#a6512c26a020d7f7bc2177471868f45cd">module_id</a>;</div>
+<div class="line">    <a class="code" href="a00020.html#a00112">hpd_adapter_id_t</a> *<a class="code" href="a00013.html#a06e0ae699004de96414a14ee293aacb9">adapter_id</a>;</div>
+<div class="line">    <span class="keyword">const</span> <a class="code" href="a00029.html">hpd_module_t</a> *<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>;</div>
+<div class="line">};</div>
+<div class="line"></div>
+<div class="line"><span class="keyword">struct </span><a class="code" href="a00013.html#a00106">demo_adapter_srv</a> {</div>
+<div class="line">    <span class="keywordtype">int</span> <a class="code" href="a00013.html#ae528931e799e0e80feccea5777d38b63">state</a>;</div>
+<div class="line">    <a class="code" href="a00013.html#a00105">demo_adapter_t</a> *<a class="code" href="a00013.html#a603d0cdf45cec6d178153864cffda62e">demo_adapter</a>;</div>
+<div class="line">};</div>
+</div><!-- fragment --><ul>
+<li>demo_adapter_t: Will be used to store global data for our adapter, such as the number of lamps. We also store the unique id of the module (as given to <a class="el" href="a00074.html#a1360e4af1219978973e0afd4486c489e">hpd_module()</a> in the main program), a reference to the adapter and the context.</li>
+<li>demo_adapter_srv_t: Used to store data related to a single service in the adapter. This holds the current state of the lamp and a pointer the global data.</li>
+</ul>
+<p>As in the template we provide the five functions and an instance of the module definition struct, as declared in the header file:</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00013.html#a85637c6b8b67a585a362e70468afa8b2">demo_adapter_on_create</a>(<span class="keywordtype">void</span> **<a class="code" href="a00012.html#a00104">data</a>, <span class="keyword">const</span> <a class="code" href="a00029.html">hpd_module_t</a> *context);</div>
+<div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00013.html#ac972cc136bc16720df5087a037fe50d8">demo_adapter_on_destroy</a>(<span class="keywordtype">void</span> *<a class="code" href="a00012.html#a00104">data</a>);</div>
+<div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00013.html#a9f84d5de2ac16bde89480bd48efdff51">demo_adapter_on_start</a>(<span class="keywordtype">void</span> *<a class="code" href="a00012.html#a00104">data</a>, <a class="code" href="a00017.html#a00110">hpd_t</a> *hpd);</div>
+<div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00013.html#aa30316159e7cdc14f2f035f0949b6680">demo_adapter_on_stop</a>(<span class="keywordtype">void</span> *<a class="code" href="a00012.html#a00104">data</a>, <a class="code" href="a00017.html#a00110">hpd_t</a> *hpd);</div>
+<div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00013.html#a6b4ea0356993ac8bfa8ec2605af31670">demo_adapter_on_parse_opt</a>(<span class="keywordtype">void</span> *<a class="code" href="a00012.html#a00104">data</a>, <span class="keyword">const</span> <span class="keywordtype">char</span> *name, <span class="keyword">const</span> <span class="keywordtype">char</span> *arg);</div>
+<div class="line"></div>
+<div class="line"><span class="keyword">struct </span><a class="code" href="a00030.html#a00123">hpd_module_def</a> <a class="code" href="a00013.html#a8cb5d45b345704bf7c749f48311db78d">hpd_demo_adapter_def</a> = {</div>
+<div class="line">        <a class="code" href="a00013.html#a85637c6b8b67a585a362e70468afa8b2">demo_adapter_on_create</a>,</div>
+<div class="line">        <a class="code" href="a00013.html#ac972cc136bc16720df5087a037fe50d8">demo_adapter_on_destroy</a>,</div>
+<div class="line">        <a class="code" href="a00013.html#a9f84d5de2ac16bde89480bd48efdff51">demo_adapter_on_start</a>,</div>
+<div class="line">        <a class="code" href="a00013.html#aa30316159e7cdc14f2f035f0949b6680">demo_adapter_on_stop</a>,</div>
+<div class="line">        <a class="code" href="a00013.html#a6b4ea0356993ac8bfa8ec2605af31670">demo_adapter_on_parse_opt</a>,</div>
+<div class="line">};</div>
+</div><!-- fragment --> <h3><a class="anchor" id="sec_adapter_source_functions"></a>
+Function Implementations</h3>
+<p>The order of the functions here differs from the actual file (<a class="el" href="a00013.html">demo_adapter.c</a>), so refer to the file if you need to compile this example.</p>
+<h3><a class="anchor" id="sec_adapter_source_create_destroy"></a>
+on_create() and on_destroy()</h3>
+<p><a class="el" href="a00013.html#a85637c6b8b67a585a362e70468afa8b2" title="[types] ">demo_adapter_on_create()</a> first allocation the global memory and initialises it, then it add the support command-line arguments to hpd:</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00013.html#a85637c6b8b67a585a362e70468afa8b2">demo_adapter_on_create</a>(<span class="keywordtype">void</span> **<a class="code" href="a00012.html#a00104">data</a>, <span class="keyword">const</span> <a class="code" href="a00029.html">hpd_module_t</a> *context)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> rc;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Create struct with custom data</span></div>
+<div class="line">    <a class="code" href="a00013.html#a00105">demo_adapter_t</a> *<a class="code" href="a00013.html#a00105">demo_adapter</a>;</div>
+<div class="line">    <a class="code" href="a00053.html#a3845681e01afcaa2d65abc4c62dc34de">HPD_CALLOC</a>(demo_adapter, 1, <a class="code" href="a00013.html#a00105">demo_adapter_t</a>);</div>
+<div class="line">    demo_adapter-&gt;<a class="code" href="a00013.html#a6beed052da0a6e22d26b50a931f8c379">num_lamps</a> = 1;</div>
+<div class="line">    demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a> = context;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00075.html#a22c32e717ccc176ad124a3ebcc1c9e7b">hpd_module_get_id</a>(context, &amp;demo_adapter-&gt;<a class="code" href="a00013.html#a6512c26a020d7f7bc2177471868f45cd">module_id</a>)))</div>
+<div class="line">        <span class="keywordflow">goto</span> error_free;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Add supported options</span></div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00075.html#ae5288c3d07fdd00ff0b0a03f2d26961f">hpd_module_add_option</a>(context, <span class="stringliteral">&quot;num-lamps&quot;</span>, <span class="stringliteral">&quot;count&quot;</span>, 0, <span class="stringliteral">&quot;Number of lamps to create. Default 1.&quot;</span>)))</div>
+<div class="line">        <span class="keywordflow">goto</span> error_free;</div>
+<div class="line"></div>
+<div class="line">    *data = demo_adapter;</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"></div>
+<div class="line">    alloc_error:</div>
+<div class="line">    <a class="code" href="a00075.html#af8c302abc5b91cfa23b1b366445d2d81">HPD_LOG_RETURN_E_ALLOC</a>(context);</div>
+<div class="line"></div>
+<div class="line">    error_free:</div>
+<div class="line">    <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(demo_adapter);</div>
+<div class="line">    <span class="keywordflow">return</span> rc;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> New functionality introduced:</p><ul>
+<li>HPD_CALLOC: Allocate memory (like calloc), but forces a null-check by using <code>goto alloc_error</code> (from <a class="el" href="a00053.html">hpd_common.h</a>).</li>
+<li><a class="el" href="a00075.html#a22c32e717ccc176ad124a3ebcc1c9e7b">hpd_module_get_id()</a>: Get the id of your module, as provided to <a class="el" href="a00074.html#a1360e4af1219978973e0afd4486c489e">hpd_module()</a>.</li>
+<li><a class="el" href="a00075.html#ae5288c3d07fdd00ff0b0a03f2d26961f" title="[hpd_t functions] ">hpd_module_add_option()</a>: Add a command-line option to hpd. The this the same arguments as you will provide to struct argp_option when using argp.</li>
+<li><a class="el" href="a00075.html#af8c302abc5b91cfa23b1b366445d2d81">HPD_LOG_RETURN_E_ALLOC()</a>: Logs a standard debug message and returns an HPD_E_ALLOC error.</li>
+</ul>
+<p><a class="el" href="a00013.html#ac972cc136bc16720df5087a037fe50d8" title="[on_create] ">demo_adapter_on_destroy()</a> frees this memory:</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00013.html#ac972cc136bc16720df5087a037fe50d8">demo_adapter_on_destroy</a>(<span class="keywordtype">void</span> *data)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="a00013.html#a00105">demo_adapter_t</a> *demo_adapter = <a class="code" href="a00051.html#a7eeea53acac92b2cc17084963282fc11">data</a>;</div>
+<div class="line">    <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(demo_adapter);</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line">}</div>
+</div><!-- fragment --> <h3><a class="anchor" id="sec_adapter_source_parse_opt"></a>
+on_parse_opt()</h3>
+<p><a class="el" href="a00013.html#a6b4ea0356993ac8bfa8ec2605af31670" title="[on_stop] ">demo_adapter_on_parse_opt()</a> checks for the argument we defined with <a class="el" href="a00075.html#ae5288c3d07fdd00ff0b0a03f2d26961f" title="[hpd_t functions] ">hpd_module_add_option()</a> earlier and sets num_lamps accordingly. Recall that this function should return HPD_E_ARGUMENT, when the argument is not recognised.</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00013.html#a6b4ea0356993ac8bfa8ec2605af31670">demo_adapter_on_parse_opt</a>(<span class="keywordtype">void</span> *data, <span class="keyword">const</span> <span class="keywordtype">char</span> *name, <span class="keyword">const</span> <span class="keywordtype">char</span> *arg)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="a00013.html#a00105">demo_adapter_t</a> *demo_adapter = <a class="code" href="a00051.html#a7eeea53acac92b2cc17084963282fc11">data</a>;</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">if</span> (strcmp(name, <span class="stringliteral">&quot;num-lamps&quot;</span>) == 0) {</div>
+<div class="line">        demo_adapter-&gt;<a class="code" href="a00013.html#a6beed052da0a6e22d26b50a931f8c379">num_lamps</a> = atoi(arg);</div>
+<div class="line">        <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line">    }</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4de1dbcac975eac38ddbde99d9b5f1fe">HPD_E_ARGUMENT</a>;</div>
+<div class="line">}</div>
+</div><!-- fragment --> <h3><a class="anchor" id="sec_adapter_source_start_stop"></a>
+on_start() and on_stop()</h3>
+<p><a class="el" href="a00013.html#a9f84d5de2ac16bde89480bd48efdff51" title="[create_lamp] ">demo_adapter_on_start()</a> creates the adapter object and the required number of lamps (we will make <a class="el" href="a00013.html#a1a305bf3b6bebda2ca16c8adcdb95239" title="[on_destroy] ">demo_adapter_create_adapter()</a> and <a class="el" href="a00013.html#abfc239c18fce4bcc601e14074ddfabf8" title="[create_service] ">demo_adapter_create_lamp()</a> in a bit). On errors it stops everything again:</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00013.html#a9f84d5de2ac16bde89480bd48efdff51">demo_adapter_on_start</a>(<span class="keywordtype">void</span> *data, <a class="code" href="a00017.html#a00110">hpd_t</a> *hpd)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="a00013.html#a00105">demo_adapter_t</a> *demo_adapter = <a class="code" href="a00051.html#a7eeea53acac92b2cc17084963282fc11">data</a>;</div>
+<div class="line">    <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> rc, rc2;</div>
+<div class="line"></div>
+<div class="line">    <a class="code" href="a00075.html#ae79911535ebd35ce3afc5b9139270775">HPD_LOG_INFO</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;Starting with %i lamps...&quot;</span>, demo_adapter-&gt;<a class="code" href="a00013.html#a6beed052da0a6e22d26b50a931f8c379">num_lamps</a>);</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00013.html#a1a305bf3b6bebda2ca16c8adcdb95239">demo_adapter_create_adapter</a>(hpd, demo_adapter))) <span class="keywordflow">goto</span> error_return;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Create device structures</span></div>
+<div class="line">    <span class="keywordtype">char</span> *<span class="keywordtype">id</span> = NULL;</div>
+<div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; demo_adapter-&gt;<a class="code" href="a00013.html#a6beed052da0a6e22d26b50a931f8c379">num_lamps</a>; i++) {</div>
+<div class="line">        <a class="code" href="a00053.html#a76a140a09fea8be471874e07b4a24db0">HPD_SPRINTF_ALLOC</a>(<span class="keywordtype">id</span>, <span class="stringliteral">&quot;dev%i&quot;</span>, i);</div>
+<div class="line">        <span class="keywordflow">if</span> ((rc = <a class="code" href="a00013.html#abfc239c18fce4bcc601e14074ddfabf8">demo_adapter_create_lamp</a>(demo_adapter, <span class="keywordtype">id</span>))) <span class="keywordflow">goto</span> error_free_id;</div>
+<div class="line">        <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(<span class="keywordtype">id</span>);</div>
+<div class="line">    }</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"></div>
+<div class="line">    alloc_error:</div>
+<div class="line">    <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(<span class="keywordtype">id</span>);</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc2 = <a class="code" href="a00013.html#aa30316159e7cdc14f2f035f0949b6680">demo_adapter_on_stop</a>(demo_adapter, hpd)))</div>
+<div class="line">        <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;on_stop() failed [code: %i].&quot;</span>, rc2);</div>
+<div class="line">    <a class="code" href="a00075.html#af8c302abc5b91cfa23b1b366445d2d81">HPD_LOG_RETURN_E_ALLOC</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>);</div>
+<div class="line"></div>
+<div class="line">    snprintf_error:</div>
+<div class="line">    <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(<span class="keywordtype">id</span>);</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc2 = <a class="code" href="a00013.html#aa30316159e7cdc14f2f035f0949b6680">demo_adapter_on_stop</a>(demo_adapter, hpd)))</div>
+<div class="line">        <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;on_stop() failed [code: %i].&quot;</span>, rc2);</div>
+<div class="line">    <a class="code" href="a00075.html#a5b9d347586d29c45de09160890e70490">HPD_LOG_RETURN_E_SNPRINTF</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>);</div>
+<div class="line"></div>
+<div class="line">    error_free_id:</div>
+<div class="line">    <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(<span class="keywordtype">id</span>);</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc2 = <a class="code" href="a00013.html#aa30316159e7cdc14f2f035f0949b6680">demo_adapter_on_stop</a>(demo_adapter, hpd)))</div>
+<div class="line">        <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;on_stop() failed [code: %i].&quot;</span>, rc2);</div>
+<div class="line"></div>
+<div class="line">    error_return:</div>
+<div class="line">    <span class="keywordflow">return</span> rc;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> New functionality introduced:</p><ul>
+<li><a class="el" href="a00075.html#ae79911535ebd35ce3afc5b9139270775">HPD_LOG_INFO()</a>: Use to send log messages and has different versions: <a class="el" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR()</a>, <a class="el" href="a00075.html#a06043297c72698ce253e79a2d3db1fa1">HPD_LOG_WARN()</a>, <a class="el" href="a00075.html#ae79911535ebd35ce3afc5b9139270775">HPD_LOG_INFO()</a>, <a class="el" href="a00075.html#a6884829ecadbaa9daa48c921d41294d1">HPD_LOG_DEBUG()</a>, and <a class="el" href="a00075.html#aaae2b86654de88a574c9393965662ac2">HPD_LOG_VERBOSE()</a>.</li>
+<li><a class="el" href="a00053.html#a76a140a09fea8be471874e07b4a24db0">HPD_SPRINTF_ALLOC()</a>: Works like sprintf, but allocates the required memory and actually uses snprintf instead, it requires two labels for error handling; alloc_error and snprintf_error. (from <a class="el" href="a00053.html">hpd_common.h</a>)</li>
+<li><a class="el" href="a00075.html#a5b9d347586d29c45de09160890e70490">HPD_LOG_RETURN_E_SNPRINTF()</a>: Can, like <a class="el" href="a00075.html#af8c302abc5b91cfa23b1b366445d2d81">HPD_LOG_RETURN_E_ALLOC()</a>, be used to log and return simple error messages, in this case a HPD_E_UNKNOWN when snprintf fails.</li>
+</ul>
+<p><a class="el" href="a00013.html#aa30316159e7cdc14f2f035f0949b6680" title="[on_start] ">demo_adapter_on_stop()</a> stops anything that was started during runtime. As we only created one adapter, we only have to detach and free this - everything underneath it (devices, services, and parameters) will automatically be freed by hpd:</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00013.html#aa30316159e7cdc14f2f035f0949b6680">demo_adapter_on_stop</a>(<span class="keywordtype">void</span> *data, <a class="code" href="a00017.html#a00110">hpd_t</a> *hpd)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> rc, rc2;</div>
+<div class="line"></div>
+<div class="line">    <a class="code" href="a00013.html#a00105">demo_adapter_t</a> *demo_adapter = <a class="code" href="a00051.html#a7eeea53acac92b2cc17084963282fc11">data</a>;</div>
+<div class="line"></div>
+<div class="line">    <a class="code" href="a00075.html#ae79911535ebd35ce3afc5b9139270775">HPD_LOG_INFO</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;Stopping...&quot;</span>);</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Detach adapter from hpd</span></div>
+<div class="line">    <a class="code" href="a00019.html">hpd_adapter_t</a> *adapter;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a66c7a7a288fb2be658fcab815bd274e2">hpd_adapter_detach</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a06e0ae699004de96414a14ee293aacb9">adapter_id</a>, &amp;adapter))) <span class="keywordflow">goto</span> error_free_id;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Clean up nicely</span></div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a0a2b0d9eef603396a0171d5b0c67bbbf">hpd_adapter_free</a>(adapter))) <span class="keywordflow">goto</span> error_free_id;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00075.html#a6dfca5e2723ca3a11d12fe545e69923e">hpd_adapter_id_free</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a06e0ae699004de96414a14ee293aacb9">adapter_id</a>))) <span class="keywordflow">goto</span> error_return;</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"></div>
+<div class="line">    error_free_id:</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc2 = <a class="code" href="a00075.html#a6dfca5e2723ca3a11d12fe545e69923e">hpd_adapter_id_free</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a06e0ae699004de96414a14ee293aacb9">adapter_id</a>)))</div>
+<div class="line">        <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;Free function failed [code: %i].&quot;</span>, rc2);</div>
+<div class="line"></div>
+<div class="line">    error_return:</div>
+<div class="line">    <span class="keywordflow">return</span> rc;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> New functionality introduced:</p><ul>
+<li>hpd_adapter_t: The type of an detached adapter.</li>
+<li><a class="el" href="a00071.html#a66c7a7a288fb2be658fcab815bd274e2">hpd_adapter_detach()</a>: Detach an adapter with everything underneath, given by a id reference.</li>
+<li><a class="el" href="a00071.html#a0a2b0d9eef603396a0171d5b0c67bbbf">hpd_adapter_free()</a>: Frees the detached adapter and everything underneath it.</li>
+<li><a class="el" href="a00075.html#a6dfca5e2723ca3a11d12fe545e69923e">hpd_adapter_id_free()</a>: Frees the adapter id reference.</li>
+</ul>
+<h3><a class="anchor" id="sec_adapter_source_object_creation"></a>
+Object creation</h3>
+<p>In <a class="el" href="a00013.html#a9f84d5de2ac16bde89480bd48efdff51" title="[create_lamp] ">demo_adapter_on_start()</a> we called two functions; <a class="el" href="a00013.html#a1a305bf3b6bebda2ca16c8adcdb95239" title="[on_destroy] ">demo_adapter_create_adapter()</a> and <a class="el" href="a00013.html#abfc239c18fce4bcc601e14074ddfabf8" title="[create_service] ">demo_adapter_create_lamp()</a> to create our object models, which we will implement now.</p>
+<p>First <a class="el" href="a00013.html#a1a305bf3b6bebda2ca16c8adcdb95239" title="[on_destroy] ">demo_adapter_create_adapter()</a> allocates an adapter object, attaches it and creates an id reference to it. As unique id we will use the module id, because we do not have better options and we are only making one adapter per module.</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00013.html#a1a305bf3b6bebda2ca16c8adcdb95239">demo_adapter_create_adapter</a>(<a class="code" href="a00017.html#a00110">hpd_t</a> *hpd, <a class="code" href="a00013.html#a00105">demo_adapter_t</a> *demo_adapter)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> rc, rc2;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Create id structure to reference our adapter</span></div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00075.html#aaf24eefdbdf2debbf530eb19db96bd86">hpd_adapter_id_alloc</a>(&amp;demo_adapter-&gt;<a class="code" href="a00013.html#a06e0ae699004de96414a14ee293aacb9">adapter_id</a>, hpd, demo_adapter-&gt;<a class="code" href="a00013.html#a6512c26a020d7f7bc2177471868f45cd">module_id</a>))) <span class="keywordflow">goto</span> error_return;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Create adapter structure (using module_id as id)</span></div>
+<div class="line">    <a class="code" href="a00019.html">hpd_adapter_t</a> *adapter;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#aec51fa5c17a707a90a1634358ae1a9b4">hpd_adapter_alloc</a>(&amp;adapter, demo_adapter-&gt;<a class="code" href="a00013.html#a6512c26a020d7f7bc2177471868f45cd">module_id</a>))) <span class="keywordflow">goto</span> error_free_id;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a0d5ca643908e5c921d763ad9f5c9ba8e">hpd_adapter_set_attr</a>(adapter, <a class="code" href="a00030.html#aff4150f68e4fc6506adc361a2620b8fc">HPD_ATTR_TYPE</a>, <span class="stringliteral">&quot;demo_adapter&quot;</span>))) <span class="keywordflow">goto</span> error_free_adapter;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a247f5a01789cd6bd85a2f1238d36c29c">hpd_adapter_attach</a>(hpd, adapter))) <span class="keywordflow">goto</span> error_free_adapter;</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"></div>
+<div class="line">    error_free_adapter:</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc2 = <a class="code" href="a00071.html#a0a2b0d9eef603396a0171d5b0c67bbbf">hpd_adapter_free</a>(adapter)))</div>
+<div class="line">        <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;Free function failed [code: %i].&quot;</span>, rc2);</div>
+<div class="line"></div>
+<div class="line">    error_free_id:</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc2 = <a class="code" href="a00075.html#a6dfca5e2723ca3a11d12fe545e69923e">hpd_adapter_id_free</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a06e0ae699004de96414a14ee293aacb9">adapter_id</a>)))</div>
+<div class="line">        <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;Free function failed [code: %i].&quot;</span>, rc2);</div>
+<div class="line">    demo_adapter-&gt;<a class="code" href="a00013.html#a06e0ae699004de96414a14ee293aacb9">adapter_id</a> = NULL;</div>
+<div class="line"></div>
+<div class="line">    error_return:</div>
+<div class="line">    <span class="keywordflow">return</span> rc;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> New functionality introduced:</p><ul>
+<li><a class="el" href="a00075.html#aaf24eefdbdf2debbf530eb19db96bd86" title="[log functions] ">hpd_adapter_id_alloc()</a>: Allocate a new id reference. Not it is perfectly fine to do this, even when the adapter object does not exist. We will however be getting HPD_E_NOT_FOUND if we tried to used it for anything.</li>
+<li><a class="el" href="a00071.html#aec51fa5c17a707a90a1634358ae1a9b4" title="[hpd_adapter_t functions] ">hpd_adapter_alloc()</a>: Allocate a new adapter object. Note, this may return HPD_E_NOT_UNIQUE, if the given id is not globally unique. In this case the adapter will fail in such cases (by returning the error).</li>
+<li><a class="el" href="a00071.html#a0d5ca643908e5c921d763ad9f5c9ba8e">hpd_adapter_set_attr()</a>: Sets an attribute on the adapter, in this case we set the default type attribute (HPD_ATTR_TYPE). If you have to set more than one attribute, you may prefer <a class="el" href="a00071.html#a0dc61e22d6abc5a621e53cd3aab2f9ca">hpd_adapter_set_attrs()</a> instead that takes a variable number of arguments.</li>
+<li><a class="el" href="a00071.html#a247f5a01789cd6bd85a2f1238d36c29c">hpd_adapter_attach()</a>: Attach the adapter to hpd. Note that, after this the adapter instance of hpd_adapter_t, will be invalid and can no longer be used. Use <a class="el" href="a00071.html#a66c7a7a288fb2be658fcab815bd274e2">hpd_adapter_detach()</a> to obtain it again.</li>
+</ul>
+<p><a class="el" href="a00013.html#abfc239c18fce4bcc601e14074ddfabf8" title="[create_service] ">demo_adapter_create_lamp()</a> create the device object and calls <a class="el" href="a00013.html#aca3f96055b6405843c652ef5efd1c3e8" title="[create_parameter] ">demo_adapter_create_service()</a> to create the service and parameter. Note that we are creating the service before attaching the device - unlike adapters, devices needs to be attached with all their services and parameters already attached.</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00013.html#abfc239c18fce4bcc601e14074ddfabf8">demo_adapter_create_lamp</a>(<a class="code" href="a00013.html#a00105">demo_adapter_t</a> *demo_adapter, <span class="keyword">const</span> <span class="keywordtype">char</span> *<span class="keywordtype">id</span>)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> rc, rc2;</div>
+<div class="line"></div>
+<div class="line">    <a class="code" href="a00022.html">hpd_device_t</a> *device;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a10a4b84cc7128e1900008dc1de4653a2">hpd_device_alloc</a>(&amp;device, <span class="keywordtype">id</span>))) <span class="keywordflow">goto</span> error_return;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#aa52044afe11425f0febeba4f6094e48f">hpd_device_set_attr</a>(device, <a class="code" href="a00030.html#aff4150f68e4fc6506adc361a2620b8fc">HPD_ATTR_TYPE</a>, <span class="stringliteral">&quot;demo_lamp&quot;</span>))) <span class="keywordflow">goto</span> error_free;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00013.html#aca3f96055b6405843c652ef5efd1c3e8">demo_adapter_create_service</a>(demo_adapter, device))) <span class="keywordflow">goto</span> error_free;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a8ecd575d81e054bd4296e55f2f36b126">hpd_device_attach</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a06e0ae699004de96414a14ee293aacb9">adapter_id</a>, device))) <span class="keywordflow">goto</span> error_free;</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"></div>
+<div class="line">    error_free:</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc2 = <a class="code" href="a00071.html#a7b20f2cfe2e46cdbfe4112b95922446b">hpd_device_free</a>(device)))</div>
+<div class="line">        <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;Free function failed [code: %i].&quot;</span>, rc2);</div>
+<div class="line"></div>
+<div class="line">    error_return:</div>
+<div class="line">    <span class="keywordflow">return</span> rc;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> New functionality introduced:</p><ul>
+<li><a class="el" href="a00071.html#a10a4b84cc7128e1900008dc1de4653a2" title="[hpd_adapter_t functions] ">hpd_device_alloc()</a>, <a class="el" href="a00071.html#aa52044afe11425f0febeba4f6094e48f">hpd_device_set_attr()</a>, <a class="el" href="a00071.html#a8ecd575d81e054bd4296e55f2f36b126">hpd_device_attach()</a>, <a class="el" href="a00071.html#a7b20f2cfe2e46cdbfe4112b95922446b">hpd_device_free()</a>: Like the equivalent functions for adapters.</li>
+</ul>
+<p><a class="el" href="a00013.html#aca3f96055b6405843c652ef5efd1c3e8" title="[create_parameter] ">demo_adapter_create_service()</a> creates the service, the struct for our custom data for it, and calls <a class="el" href="a00013.html#aae15756770f631aecb995dca162fbc65" title="[create_adapter] ">demo_adapter_create_parameter()</a> to create the parameter. We will create two callbacks <a class="el" href="a00013.html#ad12964278a8b6998fccbae23e084a8a7" title="[set] ">demo_adapter_on_get()</a> and <a class="el" href="a00013.html#a00981c2b16f03b852495746fb9ecb2c9" title="[on_get] ">demo_adapter_on_put()</a> later.</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00013.html#aca3f96055b6405843c652ef5efd1c3e8">demo_adapter_create_service</a>(<a class="code" href="a00013.html#a00105">demo_adapter_t</a> *demo_adapter, <a class="code" href="a00022.html">hpd_device_t</a> *device)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> rc, rc2;</div>
+<div class="line"></div>
+<div class="line">    <a class="code" href="a00035.html">hpd_service_t</a> *service;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#ae265c33796304a96d8a0e670e61e7a3a">hpd_service_alloc</a>(&amp;service, <span class="stringliteral">&quot;srv0&quot;</span>))) <span class="keywordflow">goto</span> error_return;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a8a4f9edb085f44b1eb5d9b31447f06c9">hpd_service_set_actions</a>(service,</div>
+<div class="line">                                      <a class="code" href="a00030.html#ae5973cb13ba680422f6381e98b783dd1a4aa1b1492e9715dc6214b6ebf1fa21f0">HPD_M_GET</a>, <a class="code" href="a00013.html#ad12964278a8b6998fccbae23e084a8a7">demo_adapter_on_get</a>,</div>
+<div class="line">                                      <a class="code" href="a00030.html#ae5973cb13ba680422f6381e98b783dd1abb3582c2747d9760897062694fa369a5">HPD_M_PUT</a>, <a class="code" href="a00013.html#a00981c2b16f03b852495746fb9ecb2c9">demo_adapter_on_put</a>,</div>
+<div class="line">                                      <a class="code" href="a00030.html#ae5973cb13ba680422f6381e98b783dd1a2c38a7f6fd4aea028bccace7aa2e5df4">HPD_M_NONE</a>))) <span class="keywordflow">goto</span> error_free_service;</div>
+<div class="line"></div>
+<div class="line">    <a class="code" href="a00013.html#a00106">demo_adapter_srv_t</a> *srv_data;</div>
+<div class="line">    <a class="code" href="a00053.html#a3845681e01afcaa2d65abc4c62dc34de">HPD_CALLOC</a>(srv_data, 1, <a class="code" href="a00013.html#a00106">demo_adapter_srv_t</a>);</div>
+<div class="line">    srv_data-&gt;<a class="code" href="a00013.html#ae528931e799e0e80feccea5777d38b63">state</a> = 0;</div>
+<div class="line">    srv_data-&gt;<a class="code" href="a00013.html#a603d0cdf45cec6d178153864cffda62e">demo_adapter</a> = demo_adapter;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a3974326e212a829eef3dc2a4f554ccf0">hpd_service_set_data</a>(service, srv_data, <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>))) <span class="keywordflow">goto</span> error_free_data;</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00013.html#aae15756770f631aecb995dca162fbc65">demo_adapter_create_parameter</a>(demo_adapter, service))) <span class="keywordflow">goto</span> error_free_service;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#af441be40a9cec089a7bd655e5b7bc61c">hpd_service_attach</a>(device, service))) <span class="keywordflow">goto</span> error_free_service;</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"></div>
+<div class="line">    alloc_error:</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc2 = <a class="code" href="a00071.html#acebc47c8796cb46b14899df696fae147">hpd_service_free</a>(service)))</div>
+<div class="line">        <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;Free function failed [code: %i].&quot;</span>, rc2);</div>
+<div class="line">    <a class="code" href="a00075.html#af8c302abc5b91cfa23b1b366445d2d81">HPD_LOG_RETURN_E_ALLOC</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>);</div>
+<div class="line"></div>
+<div class="line">    error_free_data:</div>
+<div class="line">    <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(srv_data);</div>
+<div class="line"></div>
+<div class="line">    error_free_service:</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc2 = <a class="code" href="a00071.html#acebc47c8796cb46b14899df696fae147">hpd_service_free</a>(service)))</div>
+<div class="line">        <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;Free function failed [code: %i].&quot;</span>, rc2);</div>
+<div class="line"></div>
+<div class="line">    error_return:</div>
+<div class="line">    <span class="keywordflow">return</span> rc;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> New functionality introduced:</p><ul>
+<li><a class="el" href="a00071.html#ae265c33796304a96d8a0e670e61e7a3a" title="[hpd_device_t functions] ">hpd_service_alloc()</a>, <a class="el" href="a00071.html#af441be40a9cec089a7bd655e5b7bc61c">hpd_service_attach()</a>, and <a class="el" href="a00071.html#acebc47c8796cb46b14899df696fae147">hpd_service_free()</a>: Like the equivalent functions for devices and adapters.</li>
+<li><a class="el" href="a00071.html#a8a4f9edb085f44b1eb5d9b31447f06c9">hpd_service_set_actions()</a>: Set action on a service, we set both a HPD_M_GET and a HPD_M_PUT action. Here, we used the plural version for setting multiple at once, in which case HPD_M_NONE should always come last. If you only have to set one action, have a look at <a class="el" href="a00071.html#a66883e77bc53793b588c5768621c477e">hpd_service_set_action()</a>.</li>
+<li><a class="el" href="a00071.html#a3974326e212a829eef3dc2a4f554ccf0">hpd_service_set_data()</a>: Used to set custom data on a service, in this case an instance of demo_adapter_srv_t. The given on_free function will be used by hpd when this data needs to be freed later (can be NULL). In this case we used the standard C <a class="el" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free()</a> function.</li>
+</ul>
+<p><a class="el" href="a00013.html#aae15756770f631aecb995dca162fbc65" title="[create_adapter] ">demo_adapter_create_parameter()</a> creates a new parameter object for our service:</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00013.html#aae15756770f631aecb995dca162fbc65">demo_adapter_create_parameter</a>(<a class="code" href="a00013.html#a00105">demo_adapter_t</a> *demo_adapter, <a class="code" href="a00035.html">hpd_service_t</a> *service)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> rc, rc2;</div>
+<div class="line"></div>
+<div class="line">    <a class="code" href="a00032.html">hpd_parameter_t</a> *parameter;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a510d8b9b58d0cf4d661e7e433004ca10">hpd_parameter_alloc</a>(&amp;parameter, <span class="stringliteral">&quot;param0&quot;</span>))) <span class="keywordflow">goto</span> error_return;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#add11419bd4fd209882bbe83c8ce8442a">hpd_parameter_attach</a>(service, parameter))) <span class="keywordflow">goto</span> error_free;</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="a00030.html#af2d90ea316126f626dd4bcd587cdfb0da4daeb92d8a8f80fa07ea5909d5efd940">HPD_E_SUCCESS</a>;</div>
+<div class="line"></div>
+<div class="line">    error_free:</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc2 = <a class="code" href="a00071.html#ad8c6360b9faf931207a84a045e44b858">hpd_parameter_free</a>(parameter)))</div>
+<div class="line">        <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(demo_adapter-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;Free function failed [code: %i].&quot;</span>, rc2);</div>
+<div class="line"></div>
+<div class="line">    error_return:</div>
+<div class="line">    <span class="keywordflow">return</span> rc;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> New functionality introduced:</p><ul>
+<li><a class="el" href="a00071.html#a510d8b9b58d0cf4d661e7e433004ca10" title="[hpd_service_t functions] ">hpd_parameter_alloc()</a>, <a class="el" href="a00071.html#add11419bd4fd209882bbe83c8ce8442a">hpd_parameter_attach()</a>, and <a class="el" href="a00071.html#ad8c6360b9faf931207a84a045e44b858">hpd_parameter_free()</a>: Like the equivalent functions for services, devices and adapters.</li>
+</ul>
+<h3><a class="anchor" id="sec_adapter_source_actions"></a>
+Action Callbacks</h3>
+<p><a class="el" href="a00013.html#ad12964278a8b6998fccbae23e084a8a7" title="[set] ">demo_adapter_on_get()</a> will send the current value of the lamp:</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a> <a class="code" href="a00013.html#ad12964278a8b6998fccbae23e084a8a7">demo_adapter_on_get</a>(<span class="keywordtype">void</span> *data, <a class="code" href="a00033.html#a00126">hpd_request_t</a> *req)</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="a00013.html#a1d3cd6fde2598f29c88786537becfbb3">demo_adapter_send_value</a>(req, data);</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="a00013.html#a00981c2b16f03b852495746fb9ecb2c9" title="[on_get] ">demo_adapter_on_put()</a> will set the value of the lamp and then send the new current value:</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a> <a class="code" href="a00013.html#a00981c2b16f03b852495746fb9ecb2c9">demo_adapter_on_put</a>(<span class="keywordtype">void</span> *data, <a class="code" href="a00033.html#a00126">hpd_request_t</a> *req)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a> status;</div>
+<div class="line">    <span class="keywordflow">if</span> ((status = <a class="code" href="a00013.html#ace98565eb7d2f6a302873024f672b95f">demo_adapter_set_value</a>(req, data)) != <a class="code" href="a00030.html#ae4a225ffa1d7c54da791fd9109d8b026ae721ddf4e6ed5344ca7c8eb2d8c76ec1">HPD_S_NONE</a>) <span class="keywordflow">return</span> status;</div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="a00013.html#a1d3cd6fde2598f29c88786537becfbb3">demo_adapter_send_value</a>(req, data);</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> New functionality introduced:</p><ul>
+<li>hpd_status_t: Both functions returns hpd_status_t, which is a HTTP status code that will be sent to the requester. In cases where we handle sending the response later, we need to return HPD_S_NONE. Note that it is perfectly fine to keep the hpd_request_t pointer for use later, when we return HPD_S_NONE. However, we do commit to calling <a class="el" href="a00071.html#a0f52d1f4e06fe16eb27a1b394bcd6d86">hpd_respond()</a> some time later in those cases.</li>
+</ul>
+<h3><a class="anchor" id="sec_adapter_source_send_set"></a>
+Sending and Setting Values</h3>
+<p><a class="el" href="a00013.html#a1d3cd6fde2598f29c88786537becfbb3" title="[definition] ">demo_adapter_send_value()</a> sends a response to the requester with the current value:</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a> <a class="code" href="a00013.html#a1d3cd6fde2598f29c88786537becfbb3">demo_adapter_send_value</a>(<a class="code" href="a00033.html#a00126">hpd_request_t</a> *req, <a class="code" href="a00013.html#a00106">demo_adapter_srv_t</a> *srv_data)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> rc, rc2;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Allocate response</span></div>
+<div class="line">    <a class="code" href="a00033.html#a00127">hpd_response_t</a> *res;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#aff4eae061b1220e0bb55de72f8129493">hpd_response_alloc</a>(&amp;res, req, HPD_S_200))) <span class="keywordflow">goto</span> error_return;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Create and set value</span></div>
+<div class="line">    <a class="code" href="a00033.html#a00133">hpd_value_t</a> *val;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00075.html#a0aa34f0ba8202ed0e5d3c71719f658b0">hpd_value_allocf</a>(&amp;val, <span class="stringliteral">&quot;%i&quot;</span>, srv_data-&gt;<a class="code" href="a00013.html#ae528931e799e0e80feccea5777d38b63">state</a>))) <span class="keywordflow">goto</span> error_free_res;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a23aa9a2e797738188778c906be59221a">hpd_response_set_value</a>(res, val))) <span class="keywordflow">goto</span> error_free_val;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Send response</span></div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a0f52d1f4e06fe16eb27a1b394bcd6d86">hpd_respond</a>(res))) <span class="keywordflow">goto</span> error_free_res;</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="a00030.html#ae4a225ffa1d7c54da791fd9109d8b026ae721ddf4e6ed5344ca7c8eb2d8c76ec1">HPD_S_NONE</a>;</div>
+<div class="line"></div>
+<div class="line">    error_free_val:</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc2 = <a class="code" href="a00075.html#a214a6d699e1e5cbff10fa2d6fee721ff">hpd_value_free</a>(val)))</div>
+<div class="line">        <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(srv_data-&gt;<a class="code" href="a00013.html#a603d0cdf45cec6d178153864cffda62e">demo_adapter</a>-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;Free function failed [code: %i].&quot;</span>, rc2);</div>
+<div class="line"></div>
+<div class="line">    error_free_res:</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc2 = <a class="code" href="a00071.html#a2f50d49e360ca2689857e43bfcd533b3">hpd_response_free</a>(res)))</div>
+<div class="line">        <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(srv_data-&gt;<a class="code" href="a00013.html#a603d0cdf45cec6d178153864cffda62e">demo_adapter</a>-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;Free function failed [code: %i].&quot;</span>, rc2);</div>
+<div class="line"></div>
+<div class="line">    error_return:</div>
+<div class="line">    <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(srv_data-&gt;<a class="code" href="a00013.html#a603d0cdf45cec6d178153864cffda62e">demo_adapter</a>-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;%s() failed [code: %i].&quot;</span>, __FUNCTION__, rc);</div>
+<div class="line">    <span class="keywordflow">return</span> HPD_S_500;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> New functionality introduced:</p><ul>
+<li>hpd_response_t: The type of a response.</li>
+<li><a class="el" href="a00071.html#aff4eae061b1220e0bb55de72f8129493" title="[hpd_request_t functions] ">hpd_response_alloc()</a>: Allocate a new response instance.</li>
+<li>hpd_value_t: The type of a value.</li>
+<li><a class="el" href="a00075.html#a0aa34f0ba8202ed0e5d3c71719f658b0">hpd_value_allocf()</a>: One of several functions to allocate a new value instance. This one have similar behaviour as the printf family of functions.</li>
+<li><a class="el" href="a00071.html#a23aa9a2e797738188778c906be59221a">hpd_response_set_value()</a>: Set the value of a response. After this, the value is no longer valid to use.</li>
+<li><a class="el" href="a00071.html#a0f52d1f4e06fe16eb27a1b394bcd6d86">hpd_respond()</a>: Sends the response to the requester. After this, the response is no longer valid to use, and we have to return HPD_S_NONE, because to already responded to the request ourselves.</li>
+<li><a class="el" href="a00075.html#a214a6d699e1e5cbff10fa2d6fee721ff">hpd_value_free()</a>: Frees a value.</li>
+<li><a class="el" href="a00071.html#a2f50d49e360ca2689857e43bfcd533b3">hpd_response_free()</a>: Frees a response.</li>
+</ul>
+<p><a class="el" href="a00013.html#ace98565eb7d2f6a302873024f672b95f" title="[changed] ">demo_adapter_set_value()</a> set the value of a lamp, which was store in the state field of demo_adapter_srv_t. To do so we first have to retrieve the new value from the request and parse it from a string into an integer. If the value is changed be call <a class="el" href="a00013.html#adbf1665143a378afa8da1fa998518b3d" title="[send] ">demo_adapter_send_changed()</a> to send out an event.</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a60424f5506ab8db09a11ee78f2f980e6">hpd_status_t</a> <a class="code" href="a00013.html#ace98565eb7d2f6a302873024f672b95f">demo_adapter_set_value</a>(<a class="code" href="a00033.html#a00126">hpd_request_t</a> *req, <a class="code" href="a00013.html#a00106">demo_adapter_srv_t</a> *srv_data)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> rc;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Get value</span></div>
+<div class="line">    <span class="keyword">const</span> <a class="code" href="a00033.html#a00133">hpd_value_t</a> *val;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a985e1c73f321c64d6a74fb4d1cf8524f">hpd_request_get_value</a>(req, &amp;val))) <span class="keywordflow">goto</span> error_return;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Get body from value</span></div>
+<div class="line">    <span class="keyword">const</span> <span class="keywordtype">char</span> *body;</div>
+<div class="line">    <span class="keywordtype">size_t</span> len;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00075.html#af797956501814440a1d9f3110b2b6fba">hpd_value_get_body</a>(val, &amp;body, &amp;len))) <span class="keywordflow">goto</span> error_return;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Get service id</span></div>
+<div class="line">    <span class="keyword">const</span> <a class="code" href="a00020.html#a00130">hpd_service_id_t</a> *service_id;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#aadd680601ef9f0c2364a1aeaced59953">hpd_request_get_service</a>(req, &amp;service_id))) <span class="keywordflow">goto</span> error_return;</div>
+<div class="line"></div>
+<div class="line">    <span class="comment">// Get new state</span></div>
+<div class="line">    <span class="keywordtype">char</span> *nul_term = NULL;</div>
+<div class="line">    <a class="code" href="a00053.html#af16aa8e101575e88940a1cd9eff5d8f3">HPD_STR_N_CPY</a>(nul_term, body, len);</div>
+<div class="line">    <span class="keywordtype">int</span> <a class="code" href="a00025.html#adc6e5733fc3c22f0a7b2914188c49c90">state</a> = atoi(nul_term);</div>
+<div class="line">    <a class="code" href="a00012.html#adf46370d9c211c3be22966b4606ba9b0">free</a>(nul_term);</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">if</span> (state != srv_data-&gt;<a class="code" href="a00013.html#ae528931e799e0e80feccea5777d38b63">state</a>) {</div>
+<div class="line">        srv_data-&gt;<a class="code" href="a00013.html#ae528931e799e0e80feccea5777d38b63">state</a> = <a class="code" href="a00025.html#adc6e5733fc3c22f0a7b2914188c49c90">state</a>;</div>
+<div class="line">        <span class="keywordflow">if</span> ((rc = <a class="code" href="a00013.html#adbf1665143a378afa8da1fa998518b3d">demo_adapter_send_changed</a>(service_id, srv_data)))</div>
+<div class="line">            <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(srv_data-&gt;<a class="code" href="a00013.html#a603d0cdf45cec6d178153864cffda62e">demo_adapter</a>-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;Failed to send changed value [code: %i].&quot;</span>, rc);</div>
+<div class="line">    }</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">return</span> <a class="code" href="a00030.html#ae4a225ffa1d7c54da791fd9109d8b026ae721ddf4e6ed5344ca7c8eb2d8c76ec1">HPD_S_NONE</a>;</div>
+<div class="line"></div>
+<div class="line">    alloc_error:</div>
+<div class="line">    <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(srv_data-&gt;<a class="code" href="a00013.html#a603d0cdf45cec6d178153864cffda62e">demo_adapter</a>-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;%s() failed.&quot;</span>, __FUNCTION__);</div>
+<div class="line">    <span class="keywordflow">return</span> HPD_S_500;</div>
+<div class="line"></div>
+<div class="line">    error_return:</div>
+<div class="line">    <a class="code" href="a00075.html#ae0e846785d642ec279ebd1c5bc195b2d">HPD_LOG_ERROR</a>(srv_data-&gt;<a class="code" href="a00013.html#a603d0cdf45cec6d178153864cffda62e">demo_adapter</a>-&gt;<a class="code" href="a00013.html#a716e061aea250c6b2fa0b52d068b826e">context</a>, <span class="stringliteral">&quot;%s() failed [code: %i].&quot;</span>, __FUNCTION__, rc);</div>
+<div class="line">    <span class="keywordflow">return</span> HPD_S_500;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> New functionality introduced:</p><ul>
+<li><a class="el" href="a00071.html#a985e1c73f321c64d6a74fb4d1cf8524f">hpd_request_get_value()</a>: Get the value struct from a request.</li>
+<li><a class="el" href="a00075.html#af797956501814440a1d9f3110b2b6fba">hpd_value_get_body()</a>: Get the body of a value. Note that this is not '\0'-terminated.</li>
+<li><a class="el" href="a00071.html#aadd680601ef9f0c2364a1aeaced59953" title="[hpd_parameter_t functions] ">hpd_request_get_service()</a>: Get the service id reference of the service being requested.</li>
+<li><a class="el" href="a00053.html#af16aa8e101575e88940a1cd9eff5d8f3">HPD_STR_N_CPY()</a>: Like strncpy(), but allocates memory in the string first.</li>
+</ul>
+<p><a class="el" href="a00013.html#adbf1665143a378afa8da1fa998518b3d" title="[send] ">demo_adapter_send_changed()</a> sends out events that the value of changed to any possible listeners.</p>
+<div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00013.html#adbf1665143a378afa8da1fa998518b3d">demo_adapter_send_changed</a>(<span class="keyword">const</span> <a class="code" href="a00020.html#a00130">hpd_service_id_t</a> *service_id, <a class="code" href="a00013.html#a00106">demo_adapter_srv_t</a> *srv_data)</div>
+<div class="line">{</div>
+<div class="line">    <a class="code" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> rc;</div>
+<div class="line"></div>
+<div class="line">    <a class="code" href="a00033.html#a00133">hpd_value_t</a> *<a class="code" href="a00051.html#aee53bdc848584e095375d0d39aa400b8">value</a>;</div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00075.html#a0aa34f0ba8202ed0e5d3c71719f658b0">hpd_value_allocf</a>(&amp;value, <span class="stringliteral">&quot;%i&quot;</span>, srv_data-&gt;<a class="code" href="a00013.html#ae528931e799e0e80feccea5777d38b63">state</a>))) <span class="keywordflow">return</span> rc;</div>
+<div class="line"></div>
+<div class="line">    <span class="keywordflow">if</span> ((rc = <a class="code" href="a00071.html#a07a10b83cf5554e81e5d80d0dfbe7215">hpd_changed</a>(service_id, value))) <a class="code" href="a00075.html#a214a6d699e1e5cbff10fa2d6fee721ff">hpd_value_free</a>(value);</div>
+<div class="line">    <span class="keywordflow">return</span> rc;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> New functionality introduced:</p><ul>
+<li><a class="el" href="a00071.html#a07a10b83cf5554e81e5d80d0dfbe7215" title="[hpd_response_t functions] ">hpd_changed()</a>: Informs hpd that a service changed value. After this, the value is no longer valid to use. </li>
+</ul>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:23 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:25 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

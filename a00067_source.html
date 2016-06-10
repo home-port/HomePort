@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: hpd/src/event.h Source File</title>
+<title>HomePort: example/template/template_adapter.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,12 +81,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_ab00a9b86cff89a0b86b44294c0aada6.html">hpd</a></li><li class="navelem"><a class="el" href="dir_3128ee3f19d8356fe970e43f9e882e44.html">src</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_cfafba98a580ce4b62f8a6fa96d7cbb0.html">example</a></li><li class="navelem"><a class="el" href="dir_1ef88aeded6ac5f4d6081793163879de.html">template</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">event.h</div>  </div>
+<div class="title">template_adapter.h</div>  </div>
 </div><!--header-->
 <div class="contents">
 <a href="a00067.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">/*</span></div>
@@ -102,7 +102,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment"> * of conditions and the following disclaimer in the documentation and/or other materials</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="comment"> * provided with the distribution.</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="comment"> *</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * THIS SOFTWARE IS PROVidED BY Aalborg University &#39;&#39;AS IS&#39;&#39; AND ANY EXPRESS OR IMPLIED</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="comment"> * THIS SOFTWARE IS PROVIDED BY Aalborg University &#39;&#39;AS IS&#39;&#39; AND ANY EXPRESS OR IMPLIED</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="comment"> * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="comment"> * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL Aalborg University OR</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="comment"> * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span></div>
@@ -116,72 +116,21 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment"> * authors and should not be interpreted as representing official policies, either expressed</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment"> */</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#ifndef HOMEPORT_EVENT_H</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#define HOMEPORT_EVENT_H</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> {</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="a00021.html">hpd_types.h</a>&quot;</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00067.html#a2d636e9cbe8f3c89cbe9fea8d36cb272">event_alloc_listener</a>(<a class="code" href="a00019.html">hpd_listener_t</a> **listener, <a class="code" href="a00009.html#a00093">hpd_t</a> *<a class="code" href="a00009.html#a00093">hpd</a>);</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00067.html#a4cc65f197e3ad3f70ea2559bc95a68e9">event_free_listener</a>(<a class="code" href="a00019.html">hpd_listener_t</a> *listener);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00067.html#a89ff40606fb6eb1f5a0969a5b65ead1d">event_set_listener_data</a>(<a class="code" href="a00019.html">hpd_listener_t</a> *listener, <span class="keywordtype">void</span> *<a class="code" href="a00006.html#a00090">data</a>, <a class="code" href="a00021.html#aed058b74824064628a0bf3d07ef9ab02">hpd_free_f</a> <a class="code" href="a00025.html#a65f3fe01ba50f1473cad1a4418cfdf09">on_free</a>);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00067.html#a5a4f36876f3697336ef7769fb858cc14">event_set_value_callback</a>(<a class="code" href="a00019.html">hpd_listener_t</a> *listener, <a class="code" href="a00021.html#a4f0f482759e348a059a70b038805b31c">hpd_value_f</a> on_change);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00067.html#a35ba1f146b947469a9adedccd3d471a8">event_set_device_callback</a>(<a class="code" href="a00019.html">hpd_listener_t</a> *listener, <a class="code" href="a00021.html#a30f772da6ef5214e6b11e99daf1b6e12">hpd_device_f</a> on_attach, <a class="code" href="a00021.html#a30f772da6ef5214e6b11e99daf1b6e12">hpd_device_f</a> on_detach);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00067.html#a1d1e86089d5b3655f3769210b242509a">event_subscribe</a>(<a class="code" href="a00019.html">hpd_listener_t</a> *listener);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00067.html#a26d85d96270d9985f23b600ea3249bc8">event_unsubscribe</a>(<a class="code" href="a00019.html">hpd_listener_t</a> *listener);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00067.html#a967361ef865970d353a94f40141ca6c6">event_get_listener_data</a>(<a class="code" href="a00019.html">hpd_listener_t</a> *listener, <span class="keywordtype">void</span> **<a class="code" href="a00006.html#a00090">data</a>);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00067.html#ac3592bf060b0cb5e2831a42bf8e70983">event_foreach_attached</a>(<a class="code" href="a00019.html">hpd_listener_t</a> *listener);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00067.html#a4fe0122223191a771d05d2d1454cdee9">event_changed</a>(<a class="code" href="a00011.html#a00113">hpd_service_id_t</a> *<span class="keywordtype">id</span>, <a class="code" href="a00024.html#a00116">hpd_value_t</a> *val);</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00067.html#a7ef81e99623c1b5b75b3282aa9a25703">event_inform_adapter_attached</a>(<a class="code" href="a00010.html">hpd_adapter_t</a> *adapter);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00067.html#ab3279e57e3faeb9689b5b60283103ef2">event_inform_adapter_detached</a>(<a class="code" href="a00010.html">hpd_adapter_t</a> *adapter);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00067.html#a8e77eacc816b401e7f31d4cf625edc71">event_inform_device_attached</a>(<a class="code" href="a00013.html">hpd_device_t</a> *device);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<a class="code" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> <a class="code" href="a00067.html#a38f3fa1f45b7832adcbdd3f1af2bd9a4">event_inform_device_detached</a>(<a class="code" href="a00013.html">hpd_device_t</a> *device);</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#endif //HOMEPORT_EVENT_H</span></div>
-<div class="ttc" id="a00021_html_aed058b74824064628a0bf3d07ef9ab02"><div class="ttname"><a href="a00021.html#aed058b74824064628a0bf3d07ef9ab02">hpd_free_f</a></div><div class="ttdeci">hpd_error_t(* hpd_free_f)(void *data)</div><div class="ttdoc">[hpd_action_f] </div><div class="ttdef"><b>Definition:</b> <a href="a00021_source.html#l00188">hpd_types.h:188</a></div></div>
-<div class="ttc" id="a00010_html"><div class="ttname"><a href="a00010.html">hpd_adapter</a></div><div class="ttdef"><b>Definition:</b> <a href="a00003_source.html#l00064">model.h:64</a></div></div>
-<div class="ttc" id="a00011_html_a00113"><div class="ttname"><a href="a00011.html#a00113">hpd_service_id</a></div><div class="ttdef"><b>Definition:</b> <a href="a00011_source.html#l00048">discovery.h:48</a></div></div>
-<div class="ttc" id="a00025_html_a65f3fe01ba50f1473cad1a4418cfdf09"><div class="ttname"><a href="a00025.html#a65f3fe01ba50f1473cad1a4418cfdf09">on_free</a></div><div class="ttdeci">static hpd_error_t on_free(void *data)</div><div class="ttdef"><b>Definition:</b> <a href="a00025_source.html#l00435">hpd_rest.c:435</a></div></div>
-<div class="ttc" id="a00021_html_a4f0f482759e348a059a70b038805b31c"><div class="ttname"><a href="a00021.html#a4f0f482759e348a059a70b038805b31c">hpd_value_f</a></div><div class="ttdeci">hpd_error_t(* hpd_value_f)(void *data, const hpd_service_id_t *service, const hpd_value_t *val)</div><div class="ttdoc">Value callback for listeners. </div><div class="ttdef"><b>Definition:</b> <a href="a00021_source.html#l00195">hpd_types.h:195</a></div></div>
-<div class="ttc" id="a00067_html_a7ef81e99623c1b5b75b3282aa9a25703"><div class="ttname"><a href="a00067.html#a7ef81e99623c1b5b75b3282aa9a25703">event_inform_adapter_attached</a></div><div class="ttdeci">hpd_error_t event_inform_adapter_attached(hpd_adapter_t *adapter)</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00217">event.c:217</a></div></div>
-<div class="ttc" id="a00067_html_a8e77eacc816b401e7f31d4cf625edc71"><div class="ttname"><a href="a00067.html#a8e77eacc816b401e7f31d4cf625edc71">event_inform_device_attached</a></div><div class="ttdeci">hpd_error_t event_inform_device_attached(hpd_device_t *device)</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00237">event.c:237</a></div></div>
-<div class="ttc" id="a00021_html"><div class="ttname"><a href="a00021.html">hpd_types.h</a></div></div>
-<div class="ttc" id="a00067_html_a26d85d96270d9985f23b600ea3249bc8"><div class="ttname"><a href="a00067.html#a26d85d96270d9985f23b600ea3249bc8">event_unsubscribe</a></div><div class="ttdeci">hpd_error_t event_unsubscribe(hpd_listener_t *listener)</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00081">event.c:81</a></div></div>
-<div class="ttc" id="a00067_html_a38f3fa1f45b7832adcbdd3f1af2bd9a4"><div class="ttname"><a href="a00067.html#a38f3fa1f45b7832adcbdd3f1af2bd9a4">event_inform_device_detached</a></div><div class="ttdeci">hpd_error_t event_inform_device_detached(hpd_device_t *device)</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00264">event.c:264</a></div></div>
-<div class="ttc" id="a00021_html_a3f117b297a535788094c22da826c2c94"><div class="ttname"><a href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a></div><div class="ttdeci">enum hpd_error hpd_error_t</div><div class="ttdef"><b>Definition:</b> <a href="a00021_source.html#l00167">hpd_types.h:167</a></div></div>
-<div class="ttc" id="a00067_html_a1d1e86089d5b3655f3769210b242509a"><div class="ttname"><a href="a00067.html#a1d1e86089d5b3655f3769210b242509a">event_subscribe</a></div><div class="ttdeci">hpd_error_t event_subscribe(hpd_listener_t *listener)</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00075">event.c:75</a></div></div>
-<div class="ttc" id="a00067_html_a4fe0122223191a771d05d2d1454cdee9"><div class="ttname"><a href="a00067.html#a4fe0122223191a771d05d2d1454cdee9">event_changed</a></div><div class="ttdeci">hpd_error_t event_changed(hpd_service_id_t *id, hpd_value_t *val)</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00188">event.c:188</a></div></div>
-<div class="ttc" id="a00009_html_a00093"><div class="ttname"><a href="a00009.html#a00093">hpd</a></div><div class="ttdef"><b>Definition:</b> <a href="a00009_source.html#l00050">daemon.h:50</a></div></div>
-<div class="ttc" id="a00067_html_a967361ef865970d353a94f40141ca6c6"><div class="ttname"><a href="a00067.html#a967361ef865970d353a94f40141ca6c6">event_get_listener_data</a></div><div class="ttdeci">hpd_error_t event_get_listener_data(hpd_listener_t *listener, void **data)</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00091">event.c:91</a></div></div>
-<div class="ttc" id="a00067_html_a35ba1f146b947469a9adedccd3d471a8"><div class="ttname"><a href="a00067.html#a35ba1f146b947469a9adedccd3d471a8">event_set_device_callback</a></div><div class="ttdeci">hpd_error_t event_set_device_callback(hpd_listener_t *listener, hpd_device_f on_attach, hpd_device_f on_detach)</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00068">event.c:68</a></div></div>
-<div class="ttc" id="a00067_html_a89ff40606fb6eb1f5a0969a5b65ead1d"><div class="ttname"><a href="a00067.html#a89ff40606fb6eb1f5a0969a5b65ead1d">event_set_listener_data</a></div><div class="ttdeci">hpd_error_t event_set_listener_data(hpd_listener_t *listener, void *data, hpd_free_f on_free)</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00054">event.c:54</a></div></div>
-<div class="ttc" id="a00013_html"><div class="ttname"><a href="a00013.html">hpd_device</a></div><div class="ttdef"><b>Definition:</b> <a href="a00003_source.html#l00077">model.h:77</a></div></div>
-<div class="ttc" id="a00067_html_a5a4f36876f3697336ef7769fb858cc14"><div class="ttname"><a href="a00067.html#a5a4f36876f3697336ef7769fb858cc14">event_set_value_callback</a></div><div class="ttdeci">hpd_error_t event_set_value_callback(hpd_listener_t *listener, hpd_value_f on_change)</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00062">event.c:62</a></div></div>
-<div class="ttc" id="a00024_html_a00116"><div class="ttname"><a href="a00024.html#a00116">hpd_value</a></div><div class="ttdef"><b>Definition:</b> <a href="a00024_source.html#l00070">comm.h:70</a></div></div>
-<div class="ttc" id="a00067_html_ab3279e57e3faeb9689b5b60283103ef2"><div class="ttname"><a href="a00067.html#ab3279e57e3faeb9689b5b60283103ef2">event_inform_adapter_detached</a></div><div class="ttdeci">hpd_error_t event_inform_adapter_detached(hpd_adapter_t *adapter)</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00227">event.c:227</a></div></div>
-<div class="ttc" id="a00006_html_a00090"><div class="ttname"><a href="a00006.html#a00090">data</a></div><div class="ttdef"><b>Definition:</b> <a href="a00042_source.html#l00032">header_parser_test.c:32</a></div></div>
-<div class="ttc" id="a00067_html_ac3592bf060b0cb5e2831a42bf8e70983"><div class="ttname"><a href="a00067.html#ac3592bf060b0cb5e2831a42bf8e70983">event_foreach_attached</a></div><div class="ttdeci">hpd_error_t event_foreach_attached(hpd_listener_t *listener)</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00097">event.c:97</a></div></div>
-<div class="ttc" id="a00021_html_a30f772da6ef5214e6b11e99daf1b6e12"><div class="ttname"><a href="a00021.html#a30f772da6ef5214e6b11e99daf1b6e12">hpd_device_f</a></div><div class="ttdeci">hpd_error_t(* hpd_device_f)(void *data, const hpd_device_id_t *device)</div><div class="ttdoc">Device callback for listeners. </div><div class="ttdef"><b>Definition:</b> <a href="a00021_source.html#l00197">hpd_types.h:197</a></div></div>
-<div class="ttc" id="a00019_html"><div class="ttname"><a href="a00019.html">hpd_listener</a></div><div class="ttdef"><b>Definition:</b> <a href="a00024_source.html#l00041">comm.h:41</a></div></div>
-<div class="ttc" id="a00067_html_a2d636e9cbe8f3c89cbe9fea8d36cb272"><div class="ttname"><a href="a00067.html#a2d636e9cbe8f3c89cbe9fea8d36cb272">event_alloc_listener</a></div><div class="ttdeci">hpd_error_t event_alloc_listener(hpd_listener_t **listener, hpd_t *hpd)</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00037">event.c:37</a></div></div>
-<div class="ttc" id="a00067_html_a4cc65f197e3ad3f70ea2559bc95a68e9"><div class="ttname"><a href="a00067.html#a4cc65f197e3ad3f70ea2559bc95a68e9">event_free_listener</a></div><div class="ttdeci">hpd_error_t event_free_listener(hpd_listener_t *listener)</div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00047">event.c:47</a></div></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#ifndef HOMEPORT_TEMPLATE_ADAPTER_H</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#define HOMEPORT_TEMPLATE_ADAPTER_H</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="a00030.html">hpd/hpd_types.h</a>&gt;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword">extern</span> <span class="keyword">struct </span><a class="code" href="a00030.html#a00123">hpd_module_def</a> <a class="code" href="a00067.html#aab404af7ffc41473410cd3d1f66c80da">template_adapter_def</a>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#endif //HOMEPORT_TEMPLATE_ADAPTER_H</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<div class="ttc" id="a00030_html"><div class="ttname"><a href="a00030.html">hpd_types.h</a></div></div>
+<div class="ttc" id="a00067_html_aab404af7ffc41473410cd3d1f66c80da"><div class="ttname"><a href="a00067.html#aab404af7ffc41473410cd3d1f66c80da">template_adapter_def</a></div><div class="ttdeci">struct hpd_module_def template_adapter_def</div><div class="ttdoc">[file] </div><div class="ttdef"><b>Definition:</b> <a href="a00066_source.html#l00042">template_adapter.c:42</a></div></div>
+<div class="ttc" id="a00030_html_a00123"><div class="ttname"><a href="a00030.html#a00123">hpd_module_def</a></div><div class="ttdoc">[Application API Callbacks] </div><div class="ttdef"><b>Definition:</b> <a href="a00030_source.html#l00200">hpd_types.h:200</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:23 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:24 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

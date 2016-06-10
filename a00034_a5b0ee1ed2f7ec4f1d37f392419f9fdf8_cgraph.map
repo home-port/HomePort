@@ -1,0 +1,16 @@
+<map id="rest_on_free" name="rest_on_free">
+<area shape="rect" id="node2" href="$a00034.html#a362db74b5ebb509cd4c0032f5704148f" title="rest_reply_internal\l_server_error" alt="" coords="148,305,276,347"/>
+<area shape="rect" id="node10" href="$a00012.html#adf46370d9c211c3be22966b4606ba9b0" title="free" alt="" coords="1312,317,1356,343"/>
+<area shape="rect" id="node14" href="$a00075.html#a19ce779c8a8a82fcb624cd7631eaee20" title="hpd_service_id_free" alt="" coords="324,422,463,449"/>
+<area shape="rect" id="node3" href="$a00034.html#a18db249df9c6c163ca09c0d7fadc3c75" title="rest_reply" alt="" coords="354,313,433,339"/>
+<area shape="rect" id="node4" href="$a00027.html#a3b100e8d7e1214067cf1b90ad577745c" title="Create the reponse and constructs the status line. " alt="" coords="511,152,649,193"/>
+<area shape="rect" id="node13" href="$a00027.html#a36a5feca39485163b3ef446c9e3171a3" title="Destroy a hpd_httpd_response. " alt="" coords="723,305,861,347"/>
+<area shape="rect" id="node5" href="$a00025.html#a4a16719295f2a18fa4e8d08e6afb80f0" title="http_request_get_context" alt="" coords="707,189,877,215"/>
+<area shape="rect" id="node6" href="$a00026.html#ab55da21d4573c8d9c22fa3797f579628" title="Convert a status code to string. " alt="" coords="724,240,860,281"/>
+<area shape="rect" id="node7" href="$a00026.html#a36a5feca39485163b3ef446c9e3171a3" title="Destroy a hpd_httpd_response. " alt="" coords="723,5,861,47"/>
+<area shape="rect" id="node11" href="$a00025.html#a1568fdba259271965551fb5aa1f07006" title="Get the connection of a request. " alt="" coords="697,71,887,98"/>
+<area shape="rect" id="node12" href="$a00026.html#a3aabea0eb8be381d54ece47fa1fd6a75" title="Add header to a response. " alt="" coords="723,123,861,164"/>
+<area shape="rect" id="node8" href="$a00038.html#a494a1841a6c8963c10f5d3a6b662f014" title="Close a connection, after the remaining data has been sent. " alt="" coords="935,266,1083,293"/>
+<area shape="rect" id="node9" href="$a00059.html#a58068e1a4c60b401bc6fc99c25e9a3f6" title="Kill and clean up after a connection. " alt="" coords="1131,266,1264,293"/>
+<area shape="rect" id="node15" href="$a00020.html#a8922de7d42124afa8ab5fd339fe695ee" title="discovery_free_sid" alt="" coords="515,422,645,449"/>
+</map>

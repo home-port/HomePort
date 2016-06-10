@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.9.1"/>
-<title>HomePort: common/httpd/src/httpd.c File Reference</title>
+<title>HomePort: common/httpd/src/httpd_header_parser.c File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -87,15 +87,16 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">httpd.c File Reference</div>  </div>
+<div class="title">httpd_header_parser.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><div class="dynheader">
-Include dependency graph for httpd.c:</div>
+Include dependency graph for httpd_header_parser.c:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00144.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00157.svg" width="639" height="202"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </div>
@@ -103,105 +104,146 @@ Include dependency graph for httpd.c:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:a00102"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a00102">hpd_httpd</a></td></tr>
-<tr class="memdesc:a00102"><td class="mdescLeft">&#160;</td><td class="mdescRight">httpd instance struct  <a href="a00015.html#a00102">More...</a><br /></td></tr>
-<tr class="separator:a00102"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a00108"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a00108">hp</a></td></tr>
+<tr class="separator:a00108"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a08ec98e7e06353315dc1f0f8b30757c1"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a08ec98e7e06353315dc1f0f8b30757c1">hp_state</a> { <a class="el" href="a00015.html#a08ec98e7e06353315dc1f0f8b30757c1aa09fa5ed5be816eeb89a11be5a00c477">S_ERROR</a> = -1, 
+<a class="el" href="a00015.html#a08ec98e7e06353315dc1f0f8b30757c1a97834bbd5ea2fe642ee4bb3a22a3e74f">S_FIELD</a>, 
+<a class="el" href="a00015.html#a08ec98e7e06353315dc1f0f8b30757c1a3b8eac361dfcdbac66e304efb3929b1b">S_VALUE</a>, 
+<a class="el" href="a00015.html#a08ec98e7e06353315dc1f0f8b30757c1a9654c200ecbbfa4178025ec5ff7ab731">S_COMPLETED</a>
+ }</td></tr>
+<tr class="separator:a08ec98e7e06353315dc1f0f8b30757c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a8287f77cb41a94d39f282b607616df70"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a8287f77cb41a94d39f282b607616df70">hpd_httpd_create</a> (<a class="el" href="a00018.html#a164f4db82cb0cafe40d18764f7ae0c8e">hpd_httpd_t</a> **httpd, <a class="el" href="a00018.html#aef7869a58ff75fab7a7108e819160f7a">hpd_httpd_settings_t</a> *<a class="el" href="a00006.html#af199db15de773bb97002d69856cd55c0">settings</a>, <a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *context, <a class="el" href="a00021.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *<a class="el" href="a00031.html#a855923b555731173d3509ecb645de0e0">loop</a>)</td></tr>
-<tr class="memdesc:a8287f77cb41a94d39f282b607616df70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new httpd instance.  <a href="#a8287f77cb41a94d39f282b607616df70">More...</a><br /></td></tr>
-<tr class="separator:a8287f77cb41a94d39f282b607616df70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b2691e281b72e90f2aa231db8368e89"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a5b2691e281b72e90f2aa231db8368e89">hpd_httpd_destroy</a> (<a class="el" href="a00018.html#a164f4db82cb0cafe40d18764f7ae0c8e">hpd_httpd_t</a> *httpd)</td></tr>
-<tr class="memdesc:a5b2691e281b72e90f2aa231db8368e89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy a httpd instance.  <a href="#a5b2691e281b72e90f2aa231db8368e89">More...</a><br /></td></tr>
-<tr class="separator:a5b2691e281b72e90f2aa231db8368e89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab26dd9acbd2ec17e5863a50f01e70e65"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#ab26dd9acbd2ec17e5863a50f01e70e65">hpd_httpd_start</a> (<a class="el" href="a00018.html#a164f4db82cb0cafe40d18764f7ae0c8e">hpd_httpd_t</a> *httpd)</td></tr>
-<tr class="memdesc:ab26dd9acbd2ec17e5863a50f01e70e65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start a httpd instance.  <a href="#ab26dd9acbd2ec17e5863a50f01e70e65">More...</a><br /></td></tr>
-<tr class="separator:ab26dd9acbd2ec17e5863a50f01e70e65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4404f8d3cbdf72597c7cc5ce8ee96a6a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a4404f8d3cbdf72597c7cc5ce8ee96a6a">hpd_httpd_stop</a> (<a class="el" href="a00018.html#a164f4db82cb0cafe40d18764f7ae0c8e">hpd_httpd_t</a> *httpd)</td></tr>
-<tr class="memdesc:a4404f8d3cbdf72597c7cc5ce8ee96a6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop a httpd instance.  <a href="#a4404f8d3cbdf72597c7cc5ce8ee96a6a">More...</a><br /></td></tr>
-<tr class="separator:a4404f8d3cbdf72597c7cc5ce8ee96a6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbf369331509bd9760bf346f6292376a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00029.html#a246d5c8d082c32fa4f4625e8afb9aee7">hpd_tcpd_return_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#acbf369331509bd9760bf346f6292376a">on_connect</a> (<a class="el" href="a00029.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> *<a class="el" href="a00006.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>, <a class="el" href="a00029.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *conn, void *ws_ctx, void **conn_ctx)</td></tr>
-<tr class="memdesc:acbf369331509bd9760bf346f6292376a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for tcpd library.  <a href="#acbf369331509bd9760bf346f6292376a">More...</a><br /></td></tr>
-<tr class="separator:acbf369331509bd9760bf346f6292376a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42d99b2bf42ff8eedd6c276afad095e3"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00029.html#a246d5c8d082c32fa4f4625e8afb9aee7">hpd_tcpd_return_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a42d99b2bf42ff8eedd6c276afad095e3">on_disconnect</a> (<a class="el" href="a00029.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> *<a class="el" href="a00006.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>, <a class="el" href="a00029.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *conn, void *ws_ctx, void **conn_ctx)</td></tr>
-<tr class="memdesc:a42d99b2bf42ff8eedd6c276afad095e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for tcpd library.  <a href="#a42d99b2bf42ff8eedd6c276afad095e3">More...</a><br /></td></tr>
-<tr class="separator:a42d99b2bf42ff8eedd6c276afad095e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae90f250895769faf9479f2d999257a77"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="a00029.html#a246d5c8d082c32fa4f4625e8afb9aee7">hpd_tcpd_return_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#ae90f250895769faf9479f2d999257a77">on_receive</a> (<a class="el" href="a00029.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> *<a class="el" href="a00006.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>, <a class="el" href="a00029.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *conn, void *ws_ctx, void **conn_ctx, const char *buf, size_t len)</td></tr>
-<tr class="memdesc:ae90f250895769faf9479f2d999257a77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Callback for tcpd library.  <a href="#ae90f250895769faf9479f2d999257a77">More...</a><br /></td></tr>
-<tr class="separator:ae90f250895769faf9479f2d999257a77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d47fcb8466bd141a4c89e37a6bc561b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a9d47fcb8466bd141a4c89e37a6bc561b">hp_create</a> (struct <a class="el" href="a00015.html#a00108">hp</a> **<a class="el" href="a00012.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>, struct <a class="el" href="a00016.html#a00109">hp_settings</a> *<a class="el" href="a00012.html#af199db15de773bb97002d69856cd55c0">settings</a>, const <a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *context)</td></tr>
+<tr class="separator:a9d47fcb8466bd141a4c89e37a6bc561b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44d5834ea8c85b0b95edacc546a4267d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a44d5834ea8c85b0b95edacc546a4267d">hp_destroy</a> (struct <a class="el" href="a00015.html#a00108">hp</a> *<a class="el" href="a00012.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>)</td></tr>
+<tr class="separator:a44d5834ea8c85b0b95edacc546a4267d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e2a553c8b98e8601a22b508281754fd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a8e2a553c8b98e8601a22b508281754fd">hp_on_header_complete</a> (struct <a class="el" href="a00015.html#a00108">hp</a> *<a class="el" href="a00012.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>)</td></tr>
+<tr class="separator:a8e2a553c8b98e8601a22b508281754fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3734df5dbe38729c61890828b63ccae0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a3734df5dbe38729c61890828b63ccae0">hp_on_header_field</a> (struct <a class="el" href="a00015.html#a00108">hp</a> *<a class="el" href="a00012.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>, const char *field_chunk, size_t length)</td></tr>
+<tr class="separator:a3734df5dbe38729c61890828b63ccae0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac4815ab3b2a63bbff112cb25cb4492c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#aac4815ab3b2a63bbff112cb25cb4492c">hp_on_header_value</a> (struct <a class="el" href="a00015.html#a00108">hp</a> *<a class="el" href="a00012.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>, const char *value_chunk, size_t length)</td></tr>
+<tr class="separator:aac4815ab3b2a63bbff112cb25cb4492c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c26a00f2618ee4901b5c34f15c63042"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="a00015.html#a8c26a00f2618ee4901b5c34f15c63042">hp_reset_buffers</a> (struct <a class="el" href="a00015.html#a00108">hp</a> *<a class="el" href="a00012.html#a50e95e721b7d8a15c3a184649c98b284">instance</a>)</td></tr>
+<tr class="separator:a8c26a00f2618ee4901b5c34f15c63042"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/><h2 class="groupheader">Data Structure Documentation</h2>
-<a name="a00102" id="a00102"></a>
+<a name="a00108" id="a00108"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct hpd_httpd</td>
+          <td class="memname">struct hp</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<div class="textblock"><p>httpd instance struct </p>
-
-<p>Definition at line <a class="el" href="a00015_source.html#l00038">38</a> of file <a class="el" href="a00015_source.html">httpd.c</a>.</p>
+<div class="textblock">
+<p>Definition at line <a class="el" href="a00015_source.html#l00042">42</a> of file <a class="el" href="a00015_source.html">httpd_header_parser.c</a>.</p>
 </div><div class="dynheader">
-Collaboration diagram for hpd_httpd:</div>
+Collaboration diagram for hp:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00145.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00158.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="a79a125edec96abc96086d3ae07a25aea"></a><a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *</td>
+<a class="anchor" id="a4a358bc3a08cb4fbd34d7b5250c803cb"></a>const <a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *</td>
 <td class="fieldname">
 context</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="a69368f09a9b53658fa6417d4d09186d0"></a><a class="el" href="a00018.html#aef7869a58ff75fab7a7108e819160f7a">hpd_httpd_settings_t</a></td>
+<a class="anchor" id="a22838a81ac6e386fec114c2152a5c4ee"></a>char *</td>
+<td class="fieldname">
+field_buffer</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a class="anchor" id="a3452dd08ecc707e077d07ca776771f02"></a>size_t</td>
+<td class="fieldname">
+field_buffer_size</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a class="anchor" id="aefe313d5e2e437b92814f117a4da1c8d"></a>struct <a class="el" href="a00016.html#a00109">hp_settings</a></td>
 <td class="fieldname">
 settings</td>
 <td class="fielddoc">
-Settings. </td></tr>
+</td></tr>
 <tr><td class="fieldtype">
-<a class="anchor" id="a4b52e76f8168b5facc60a592aa79feff"></a><a class="el" href="a00029.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> *</td>
+<a class="anchor" id="ae992750b4b78e41636b36a11eeee6219"></a>enum <a class="el" href="a00015.html#a08ec98e7e06353315dc1f0f8b30757c1">hp_state</a></td>
 <td class="fieldname">
-webserver</td>
+state</td>
 <td class="fielddoc">
-Webserver instance. </td></tr>
+</td></tr>
+<tr><td class="fieldtype">
+<a class="anchor" id="ac4107f542bdfe26b72f4c8b72f782db9"></a>char *</td>
+<td class="fieldname">
+value_buffer</td>
+<td class="fielddoc">
+</td></tr>
+<tr><td class="fieldtype">
+<a class="anchor" id="a451a659d99bd33919464cf68fe11eaf8"></a>size_t</td>
+<td class="fieldname">
+value_buffer_size</td>
+<td class="fielddoc">
+</td></tr>
 </table>
 
 </div>
 </div>
-<h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a8287f77cb41a94d39f282b607616df70"></a>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a class="anchor" id="a08ec98e7e06353315dc1f0f8b30757c1"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_httpd_create </td>
+          <td class="memname">enum <a class="el" href="a00015.html#a08ec98e7e06353315dc1f0f8b30757c1">hp_state</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a class="anchor" id="a08ec98e7e06353315dc1f0f8b30757c1aa09fa5ed5be816eeb89a11be5a00c477"></a>S_ERROR&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a08ec98e7e06353315dc1f0f8b30757c1a97834bbd5ea2fe642ee4bb3a22a3e74f"></a>S_FIELD&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a08ec98e7e06353315dc1f0f8b30757c1a3b8eac361dfcdbac66e304efb3929b1b"></a>S_VALUE&#160;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><a class="anchor" id="a08ec98e7e06353315dc1f0f8b30757c1a9654c200ecbbfa4178025ec5ff7ab731"></a>S_COMPLETED&#160;</td><td class="fielddoc">
+</td></tr>
+</table>
+
+<p>Definition at line <a class="el" href="a00015_source.html#l00035">35</a> of file <a class="el" href="a00015_source.html">httpd_header_parser.c</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a class="anchor" id="a9d47fcb8466bd141a4c89e37a6bc561b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hp_create </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00018.html#a164f4db82cb0cafe40d18764f7ae0c8e">hpd_httpd_t</a> **&#160;</td>
-          <td class="paramname"><em>httpd</em>, </td>
+          <td class="paramtype">struct <a class="el" href="a00015.html#a00108">hp</a> **&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="a00018.html#aef7869a58ff75fab7a7108e819160f7a">hpd_httpd_settings_t</a> *&#160;</td>
+          <td class="paramtype">struct <a class="el" href="a00016.html#a00109">hp_settings</a> *&#160;</td>
           <td class="paramname"><em>settings</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *&#160;</td>
-          <td class="paramname"><em>context</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00021.html#a8b9d6b16dbb9ccaf08497a11cc0b1d29">hpd_ev_loop_t</a> *&#160;</td>
-          <td class="paramname"><em>loop</em>&#160;</td>
+          <td class="paramtype">const <a class="el" href="a00030.html#a78ef50baa49d382fb958e5519bcc876d">hpd_module_t</a> *&#160;</td>
+          <td class="paramname"><em>context</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -211,67 +253,38 @@ Webserver instance. </td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Create a new httpd instance. </p>
-<p>Allocates a new httpd instance, that should be freed with <a class="el" href="a00015.html#a5b2691e281b72e90f2aa231db8368e89" title="Destroy a httpd instance. ">hpd_httpd_destroy()</a></p>
-<p>The settings is copied to the instance and a webserver instance is created for it.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">settings</td><td>The settings for the httpd. </td></tr>
-    <tr><td class="paramname">loop</td><td>The event loop to start the server on.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The newly created instance. </dd></dl>
-
-<p>Definition at line <a class="el" href="a00015_source.html#l00135">135</a> of file <a class="el" href="a00015_source.html">httpd.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00015_a8287f77cb41a94d39f282b607616df70_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
+<p>Definition at line <a class="el" href="a00015_source.html#l00067">67</a> of file <a class="el" href="a00015_source.html">httpd_header_parser.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_a8287f77cb41a94d39f282b607616df70_icgraph.svg" width="251" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00015_a9d47fcb8466bd141a4c89e37a6bc561b_icgraph.svg" width="100%" height="366"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a5b2691e281b72e90f2aa231db8368e89"></a>
+<a class="anchor" id="a44d5834ea8c85b0b95edacc546a4267d"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_httpd_destroy </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hp_destroy </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00018.html#a164f4db82cb0cafe40d18764f7ae0c8e">hpd_httpd_t</a> *&#160;</td>
-          <td class="paramname"><em>httpd</em></td><td>)</td>
+          <td class="paramtype">struct <a class="el" href="a00015.html#a00108">hp</a> *&#160;</td>
+          <td class="paramname"><em>instance</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Destroy a httpd instance. </p>
-<p>Destroy a httpd instance created with <a class="el" href="a00015.html#a8287f77cb41a94d39f282b607616df70" title="Create a new httpd instance. ">hpd_httpd_create()</a>. If the server is started it should be stopped first by <a class="el" href="a00015.html#a4404f8d3cbdf72597c7cc5ce8ee96a6a" title="Stop a httpd instance. ">hpd_httpd_stop()</a>.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">instance</td><td>The httpd instance to destroy. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Definition at line <a class="el" href="a00015_source.html#l00177">177</a> of file <a class="el" href="a00015_source.html">httpd.c</a>.</p>
+<p>Definition at line <a class="el" href="a00015_source.html#l00183">183</a> of file <a class="el" href="a00015_source.html">httpd_header_parser.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_a5b2691e281b72e90f2aa231db8368e89_cgraph.svg" width="406" height="63"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_a44d5834ea8c85b0b95edacc546a4267d_cgraph.svg" width="356" height="63"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
@@ -279,301 +292,144 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_a5b2691e281b72e90f2aa231db8368e89_icgraph.svg" width="428" height="190"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00015_a44d5834ea8c85b0b95edacc546a4267d_icgraph.svg" width="100%" height="366"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="ab26dd9acbd2ec17e5863a50f01e70e65"></a>
+<a class="anchor" id="a8e2a553c8b98e8601a22b508281754fd"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_httpd_start </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hp_on_header_complete </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00018.html#a164f4db82cb0cafe40d18764f7ae0c8e">hpd_httpd_t</a> *&#160;</td>
-          <td class="paramname"><em>httpd</em></td><td>)</td>
+          <td class="paramtype">struct <a class="el" href="a00015.html#a00108">hp</a> *&#160;</td>
+          <td class="paramname"><em>instance</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Start a httpd instance. </p>
-<p>Starts a created httpd.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">instance</td><td>The instance to start.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The error code of <a class="el" href="a00029.html#ae77def0ed256affe27ea6ce37bf0ebf7" title="Start the tcpd. ">hpd_tcpd_start()</a> </dd></dl>
-
-<p>Definition at line <a class="el" href="a00015_source.html#l00195">195</a> of file <a class="el" href="a00015_source.html">httpd.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00015_ab26dd9acbd2ec17e5863a50f01e70e65_cgraph.svg" width="100%" height="480"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
+<p>Definition at line <a class="el" href="a00015_source.html#l00158">158</a> of file <a class="el" href="a00015_source.html">httpd_header_parser.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_ab26dd9acbd2ec17e5863a50f01e70e65_icgraph.svg" width="240" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_a8e2a553c8b98e8601a22b508281754fd_icgraph.svg" width="340" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a4404f8d3cbdf72597c7cc5ce8ee96a6a"></a>
+<a class="anchor" id="a3734df5dbe38729c61890828b63ccae0"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="a00021.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hpd_httpd_stop </td>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hp_on_header_field </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="a00018.html#a164f4db82cb0cafe40d18764f7ae0c8e">hpd_httpd_t</a> *&#160;</td>
-          <td class="paramname"><em>httpd</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Stop a httpd instance. </p>
-<p>Stops an already started httpd instance. All open connections will be killed without notifying clients, nor sending remaining data.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">instance</td><td>Instance to stop. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Definition at line <a class="el" href="a00015_source.html#l00210">210</a> of file <a class="el" href="a00015_source.html">httpd.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_a4404f8d3cbdf72597c7cc5ce8ee96a6a_cgraph.svg" width="550" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_a4404f8d3cbdf72597c7cc5ce8ee96a6a_icgraph.svg" width="360" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="acbf369331509bd9760bf346f6292376a"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="a00029.html#a246d5c8d082c32fa4f4625e8afb9aee7">hpd_tcpd_return_t</a> on_connect </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00029.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> *&#160;</td>
+          <td class="paramtype">struct <a class="el" href="a00015.html#a00108">hp</a> *&#160;</td>
           <td class="paramname"><em>instance</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00029.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *&#160;</td>
-          <td class="paramname"><em>conn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>ws_ctx</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void **&#160;</td>
-          <td class="paramname"><em>conn_ctx</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Callback for tcpd library. </p>
-<p>Handles new connections, by creating a request for them.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">instance</td><td>Webserver instance </td></tr>
-    <tr><td class="paramname">conn</td><td>Connection </td></tr>
-    <tr><td class="paramname">tcpd_ctx</td><td>The http webserver instance </td></tr>
-    <tr><td class="paramname">req</td><td>The http request</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>0 on success, 1 on error </dd></dl>
-
-<p>Definition at line <a class="el" href="a00015_source.html#l00056">56</a> of file <a class="el" href="a00015_source.html">httpd.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00015_acbf369331509bd9760bf346f6292376a_cgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_acbf369331509bd9760bf346f6292376a_icgraph.svg" width="388" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="a42d99b2bf42ff8eedd6c276afad095e3"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="a00029.html#a246d5c8d082c32fa4f4625e8afb9aee7">hpd_tcpd_return_t</a> on_disconnect </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00029.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> *&#160;</td>
-          <td class="paramname"><em>instance</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00029.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *&#160;</td>
-          <td class="paramname"><em>conn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>ws_ctx</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void **&#160;</td>
-          <td class="paramname"><em>conn_ctx</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Callback for tcpd library. </p>
-<p>Handles closure of connections, by creating a destroying the request.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">instance</td><td>Webserver instance </td></tr>
-    <tr><td class="paramname">conn</td><td>Connection </td></tr>
-    <tr><td class="paramname">tcpd_ctx</td><td>The http webserver instance </td></tr>
-    <tr><td class="paramname">req</td><td>The http request</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>0 on success, 1 on error </dd></dl>
-
-<p>Definition at line <a class="el" href="a00015_source.html#l00107">107</a> of file <a class="el" href="a00015_source.html">httpd.c</a>.</p>
-
-<p><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00015_a42d99b2bf42ff8eedd6c276afad095e3_cgraph.svg" width="100%" height="518"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-</div>
-</p>
-
-<p><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_a42d99b2bf42ff8eedd6c276afad095e3_icgraph.svg" width="406" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-</p>
-
-</div>
-</div>
-<a class="anchor" id="ae90f250895769faf9479f2d999257a77"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static <a class="el" href="a00029.html#a246d5c8d082c32fa4f4625e8afb9aee7">hpd_tcpd_return_t</a> on_receive </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="a00029.html#ab571ca8885398f31c50237024f747398">hpd_tcpd_t</a> *&#160;</td>
-          <td class="paramname"><em>instance</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="a00029.html#aa27be8d4aed65bfa5605a866a6bc52c2">hpd_tcpd_conn_t</a> *&#160;</td>
-          <td class="paramname"><em>conn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *&#160;</td>
-          <td class="paramname"><em>ws_ctx</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void **&#160;</td>
-          <td class="paramname"><em>conn_ctx</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const char *&#160;</td>
-          <td class="paramname"><em>buf</em>, </td>
+          <td class="paramname"><em>field_chunk</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>len</em>&#160;</td>
+          <td class="paramname"><em>length</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00015_source.html#l00090">90</a> of file <a class="el" href="a00015_source.html">httpd_header_parser.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_a3734df5dbe38729c61890828b63ccae0_cgraph.svg" width="404" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_a3734df5dbe38729c61890828b63ccae0_icgraph.svg" width="308" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="aac4815ab3b2a63bbff112cb25cb4492c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="a00030.html#a3f117b297a535788094c22da826c2c94">hpd_error_t</a> hp_on_header_value </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="a00015.html#a00108">hp</a> *&#160;</td>
+          <td class="paramname"><em>instance</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>value_chunk</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>length</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="a00015_source.html#l00131">131</a> of file <a class="el" href="a00015_source.html">httpd_header_parser.c</a>.</p>
+
+<p><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_aac4815ab3b2a63bbff112cb25cb4492c_icgraph.svg" width="322" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div>
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a8c26a00f2618ee4901b5c34f15c63042"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void hp_reset_buffers </td>
+          <td>(</td>
+          <td class="paramtype">struct <a class="el" href="a00015.html#a00108">hp</a> *&#160;</td>
+          <td class="paramname"><em>instance</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -583,25 +439,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Callback for tcpd library. </p>
-<p>Handles reception of data, by supplying it to the http_parser associated with the request.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">instance</td><td>Webserver instance </td></tr>
-    <tr><td class="paramname">conn</td><td>Connection </td></tr>
-    <tr><td class="paramname">tcpd_ctx</td><td>The http webserver instance </td></tr>
-    <tr><td class="paramname">req</td><td>The http request</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>0 on success, 1 on error </dd></dl>
-
-<p>Definition at line <a class="el" href="a00015_source.html#l00082">82</a> of file <a class="el" href="a00015_source.html">httpd.c</a>.</p>
+<p>Definition at line <a class="el" href="a00015_source.html#l00055">55</a> of file <a class="el" href="a00015_source.html">httpd_header_parser.c</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_ae90f250895769faf9479f2d999257a77_cgraph.svg" width="278" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_a8c26a00f2618ee4901b5c34f15c63042_cgraph.svg" width="222" height="38"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 </p>
@@ -609,7 +452,7 @@ Here is the call graph for this function:</div>
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="a00015_ae90f250895769faf9479f2d999257a77_icgraph.svg" width="384" height="88"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="a00015_a8c26a00f2618ee4901b5c34f15c63042_icgraph.svg" width="100%" height="385"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 </p>
@@ -619,7 +462,7 @@ Here is the caller graph for this function:</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jun 1 2016 12:43:23 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Jun 10 2016 13:43:25 for HomePort by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

@@ -1,2 +1,9 @@
-<map id="common/include/hpd_queue.h" name="common/include/hpd_queue.h">
+<map id="common/httpd/src/httpd_request.h" name="common/httpd/src/httpd_request.h">
+<area shape="rect" id="node2" href="$a00027.html" title="hpd/common/hpd_httpd.h" alt="" coords="222,95,391,121"/>
+<area shape="rect" id="node11" href="$a00038.html" title="hpd/common/hpd_tcpd.h" alt="" coords="395,177,560,203"/>
+<area shape="rect" id="node3" href="$a00056.html" title="hpd/common/hpd_map.h" alt="" coords="104,177,269,203"/>
+<area shape="rect" id="node4" href="$a00030.html" title="hpd/hpd_types.h" alt="" coords="393,266,511,293"/>
+<area shape="rect" id="node9" href="$a00048.html" title="hpd/common/hpd_httpd\l_types.h" alt="" coords="585,169,743,211"/>
+<area shape="rect" id="node5" href="$a00055.html" title="hpd/common/hpd_queue.h" alt="" coords="99,266,274,293"/>
+<area shape="rect" id="node10" href="$a00058.html" title="hpd/common/hpd_tcpd\l_types.h" alt="" coords="560,259,715,300"/>
 </map>

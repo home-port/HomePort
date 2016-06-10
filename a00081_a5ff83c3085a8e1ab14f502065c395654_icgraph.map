@@ -1,0 +1,11 @@
+<map id="event_on_attached" name="event_on_attached">
+<area shape="rect" id="node2" href="$a00082.html#a8e77eacc816b401e7f31d4cf625edc71" title="event_inform_device\l_attached" alt="" coords="185,27,328,69"/>
+<area shape="rect" id="node3" href="$a00020.html#affbbf9ded6a14798e8b3336886c72e0a" title="discovery_attach_device" alt="" coords="376,5,543,32"/>
+<area shape="rect" id="node7" href="$a00082.html#a7ef81e99623c1b5b75b3282aa9a25703" title="event_inform_adapter\l_attached" alt="" coords="386,57,533,98"/>
+<area shape="rect" id="node4" href="$a00079.html#a8ecd575d81e054bd4296e55f2f36b126" title="hpd_device_attach" alt="" coords="611,5,741,32"/>
+<area shape="rect" id="node5" href="$a00013.html#abfc239c18fce4bcc601e14074ddfabf8" title="[create_service] " alt="" coords="993,5,1176,32"/>
+<area shape="rect" id="node6" href="$a00013.html#a9f84d5de2ac16bde89480bd48efdff51" title="[create_lamp] " alt="" coords="1224,35,1383,61"/>
+<area shape="rect" id="node8" href="$a00020.html#afa5616fcf36352f0af085bb5f1ac3686" title="discovery_attach_adapter" alt="" coords="591,64,761,91"/>
+<area shape="rect" id="node9" href="$a00079.html#a247f5a01789cd6bd85a2f1238d36c29c" title="hpd_adapter_attach" alt="" coords="809,64,945,91"/>
+<area shape="rect" id="node10" href="$a00013.html#a1a305bf3b6bebda2ca16c8adcdb95239" title="[on_destroy] " alt="" coords="1011,57,1158,98"/>
+</map>
