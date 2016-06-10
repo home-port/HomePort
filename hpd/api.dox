@@ -29,53 +29,7 @@
  *
  * \tableofcontents
  *
- * \section sec_arch Overall architecture
- *
- * @startuml "A HomePort Executable"
- * node "Main Executable" {
- *     [Adapter] - [HomePort Library]
- *     [HomePort Library] - [Application]
- * }
- * @enduml
- *
- * In general, a HomePort installation consists of the HomePort library, one or more adapters and applications, and a
- * main program that combines everything into one executable.
- * - Adapter: A module that provides a connection to one or more devices.
- * - Application: A module that utilises this data, typically by providing an interface to a cloud.
- *
- * \subsection sec_headers Public header files
- *
- * The header files provided by HomePort (excluding the common utilities) are structured in the following way:
- *
- * @startuml
- *     hide empty fields
- *     hide empty method
- *     interface "hpd_adapter_api" as adapter
- *     interface "hpd_api" as hpd
- *     interface "hpd_application_api" as application
- *     interface "hpd_daemon_api" as daemon
- *     interface "hpd_shared_api" as shared
- *     interface "hpd_types" as types
- *     types <|-- shared : includes
- *     types <|-- daemon : includes
- *     shared <|-- adapter : includes
- *     shared <|-- application : includes
- *     daemon <|-- hpd : includes
- *     adapter <|-- hpd : includes
- *     application <|-- hpd : includes
- * @enduml
- *
- * Their purpose:
- * - hpd_types.h: Only type definitions, can be used in header files to obtain the types without the functions.
- * - hpd_shared_api.h: Functionality shared between adapters and applications, used in libraries that may be used for
- * both.
- * - hpd_adapter_api.h: Adapter functionality, should only be included by adapters.
- * - hpd_application_api.h: Application functionality, should only be included by applications.
- * - hpd_daemon_api.h: Daemon functionality, should only be included in file defining main().
- * - hpd_api.h: Everything in one file for the lazy, sometimes used inside HomePort when it is not possible to separate
- * between adapter and application functionality.
- *
- * \subsection sec_internal_arch Internal architecture
+ * \section sec_internal_arch Internal architecture
  *
  * - Data Model:
  *     - model.h
@@ -107,75 +61,7 @@
  *     - value.h
  *     - value_api.c
  *
- * \section sec_use_cases Use cases covered by the API
- *
- * Actors involved:
- * - Configurator: Collects a set of modules into an executable file with a main function.
- * - Adapter developer.
- * - Application developer.
- *
- * \subsection sec_configurator Configurator
- *
- * Functionality provided by: hpd_daemon_api.h
- *
- * Tasks:
- * - Start and stop HomePort [\ref sec_main].
- * - Add modules to HomePort [\ref sec_main].
- *
- * In addition, the configurator needs the module definitions (hpd_module_def_t) as provided by the adapters and
- * applications to add them to HomePort.
- *
- * \subsection sec_adapter_dev Adapter Developer
- *
- * Functionality provided by: hpd_adapter_api.h
- *
- * Tasks:
- * - Define a HomePort module for the configurator [\ref sec_modules].
- * - Manage the appropriate models in HomePort (adapters, devices, ...) [\ref sec_adapter_api].
- * - Answer to a request for a value [\ref sec_adapter_comm].
- *     - Read contents of PUT value [\ref sec_value].
- *     - Construct the value [\ref sec_value].
- * - Report that a service have changed value [\ref sec_adapter_comm].
- *     - Construct the value [\ref sec_value].
- *
- * In addition, the adapter developer may need to browse the models provided by the adapter, when communicating with
- * the underlying network (as they can store data within these models) [\ref sec_shared_api_cont].
- *
- * \subsection sec_application_dev Application Developer
- *
- * Functionality provided by: hpd_application_api.h
- *
- * Tasks:
- * - Define a HomePort module for the configurator [\ref sec_modules].
- * - Browsing available services in HomePort [\ref sec_shared_api_cont].
- * - Request a value [\ref sec_application_api].
- *      - Construct the value for PUT request [\ref sec_value].
- *      - Read the response [\ref sec_value].
- * - Listen to events [\ref sec_application_api].
- *
- * \subsection sec_sub_task Sub-tasks
- *
- * The following tasks may be a sub-component for those mentioned above:
- *
- * - Functions for logging (error) messages [\ref sec_logging].
- * - Functions for managing indirect references [\ref sec_indirect_refs].
- *
  * \section sec_data_mode HomePort data model
- *
- * The model layer in HomePort remains consistent with previous version, and from the outside looks like this:
- *
- * @startuml "HomePort Data Model"
- *     hide empty members
- *     class hpd_t
- *     class adapter_t
- *     class device_t
- *     class service_t
- *     class parameter_t
- *     hpd_t o-- adapter_t
- *     adapter_t o-- device_t
- *     device_t o-- service_t
- *     service_t o-- parameter_t
- * @enduml
  *
  * The internal class diagram for reference, most but not all types are available to the outside through references
  * (direct access to members are generally not possible):

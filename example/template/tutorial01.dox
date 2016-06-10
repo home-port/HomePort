@@ -115,9 +115,12 @@
  * \section sec_application Application Template
  *
  * The application template is almost identical with just one exception; the source file includes hpd_application_api.h
- * instead of hpd_adapter_api.h:
+ * instead of hpd_adapter_api.h. First the header file (template_application.h):
  *
  * \snippet template_application.h file
+ *
+ * Then the source file (template_application.c):
+ *
  * \snippet template_application.c file
  *
  */
