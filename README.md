@@ -1,5 +1,7 @@
 # HomePort Documentation
 
+Full API Documentation can be found at [https://home-port.github.io/HomePort/index.html](https://home-port.github.io/HomePort/index.html)
+
 ## Download and install HomePort
 
 This guide has been tested on Ubuntu Desktop 16.04, with the (as of
