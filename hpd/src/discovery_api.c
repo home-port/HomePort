@@ -995,6 +995,7 @@ hpd_error_t hpd_adapter_next_service(hpd_service_id_t **service_id)
     return rc;
 }
 
+// TODO ALL next functions should free their iterator on errors...
 hpd_error_t hpd_device_next_service(hpd_service_id_t **service_id)
 {
     if (!service_id || !(*service_id)) LOG_RETURN_E_NULL();
