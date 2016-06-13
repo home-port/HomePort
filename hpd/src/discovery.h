@@ -91,6 +91,17 @@ hpd_error_t discovery_get_parameter_adapter(const hpd_parameter_id_t *pid, hpd_a
 hpd_error_t discovery_get_parameter_device(const hpd_parameter_id_t *pid, hpd_device_id_t **did);
 hpd_error_t discovery_get_parameter_service(const hpd_parameter_id_t *pid, hpd_service_id_t **sid);
 
+hpd_error_t discovery_get_adapter_id(const hpd_adapter_id_t *adapter, const char **id);
+hpd_error_t discovery_get_device_id(const hpd_device_id_t *device, const char **id);
+hpd_error_t discovery_get_device_adapter_id(const hpd_device_id_t *device, const char **id);
+hpd_error_t discovery_get_service_id(const hpd_service_id_t *service, const char **id);
+hpd_error_t discovery_get_service_adapter_id(const hpd_service_id_t *service, const char **id);
+hpd_error_t discovery_get_service_device_id(const hpd_service_id_t *service, const char **id);
+hpd_error_t discovery_get_parameter_id(const hpd_parameter_id_t *parameter, const char **id);
+hpd_error_t discovery_get_parameter_adapter_id(const hpd_parameter_id_t *parameter, const char **id);
+hpd_error_t discovery_get_parameter_device_id(const hpd_parameter_id_t *parameter, const char **id);
+hpd_error_t discovery_get_parameter_service_id(const hpd_parameter_id_t *parameter, const char **id);
+
 hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const char *id);
 hpd_error_t discovery_alloc_device(hpd_device_t **device, const char *id);
 hpd_error_t discovery_alloc_service(hpd_service_t **service, const char *id);
@@ -112,18 +123,14 @@ hpd_error_t discovery_detach_service(hpd_service_t *service);
 hpd_error_t discovery_detach_parameter(hpd_parameter_t *parameter);
 
 hpd_error_t discovery_get_adapter_data(hpd_adapter_t *adapter, void **data);
-hpd_error_t discovery_get_adapter_id(hpd_adapter_t *adapter, const char **id);
 hpd_error_t discovery_get_adapter_attr(hpd_adapter_t *adapter, const char *key, const char **val);
 hpd_error_t discovery_get_adapter_attrs_v(hpd_adapter_t *adapter, va_list vp);
 hpd_error_t discovery_get_device_data(hpd_device_t *device, void **data);
-hpd_error_t discovery_get_device_id(hpd_device_t *device, const char **id);
 hpd_error_t discovery_get_device_attr(hpd_device_t *device, const char *key, const char **val);
 hpd_error_t discovery_get_device_attrs_v(hpd_device_t *device, va_list vp);
 hpd_error_t discovery_get_service_data(hpd_service_t *service, void **data);
-hpd_error_t discovery_get_service_id(hpd_service_t *service, const char **id);
 hpd_error_t discovery_get_service_attr(hpd_service_t *service, const char *key, const char **val);
 hpd_error_t discovery_get_service_attrs_v(hpd_service_t *service, va_list vp);
-hpd_error_t discovery_get_parameter_id(hpd_parameter_t *parameter, const char **id);
 hpd_error_t discovery_get_parameter_attr(hpd_parameter_t *parameter, const char *key, const char **val);
 hpd_error_t discovery_get_parameter_attrs_v(hpd_parameter_t *parameter, va_list vp);
 hpd_error_t discovery_get_action_method(const hpd_action_t *action, hpd_method_t *method);

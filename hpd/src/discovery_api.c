@@ -173,14 +173,10 @@ hpd_error_t hpd_adapter_get_data(const hpd_adapter_id_t *id, void **data)
     return discovery_get_adapter_data(adapter, data);
 }
 
-hpd_error_t hpd_adapter_get_id(const hpd_adapter_id_t *aid, const char **id)
+hpd_error_t hpd_adapter_get_adapter_id(const hpd_adapter_id_t *aid, const char **id)
 {
     if (!aid || !id) LOG_RETURN_E_NULL();
-    if (!aid->hpd->configuration) LOG_RETURN_HPD_STOPPED();
-    hpd_error_t rc;
-    hpd_adapter_t *adapter;
-    if ((rc = discovery_find_adapter(aid, &adapter))) return rc;
-    return discovery_get_adapter_id(adapter, id);
+    return discovery_get_adapter_id(aid, id);
 }
 
 hpd_error_t hpd_adapter_get_attr(const hpd_adapter_id_t *id, const char *key, const char **val)
@@ -303,14 +299,16 @@ hpd_error_t hpd_device_get_data(const hpd_device_id_t *id, void **data)
     return discovery_get_device_data(device, data);
 }
 
-hpd_error_t hpd_device_get_id(const hpd_device_id_t *did, const char **id)
+hpd_error_t hpd_device_get_adapter_id(const hpd_device_id_t *did, const char **id)
 {
     if (!did || !id) LOG_RETURN_E_NULL();
-    if (!did->adapter.hpd->configuration) LOG_RETURN_HPD_STOPPED();
-    hpd_error_t rc;
-    hpd_device_t *device;
-    if ((rc = discovery_find_device(did, &device))) return rc;
-    return discovery_get_device_id(device, id);
+    return discovery_get_device_adapter_id(did, id);
+}
+
+hpd_error_t hpd_device_get_device_id(const hpd_device_id_t *did, const char **id)
+{
+    if (!did || !id) LOG_RETURN_E_NULL();
+    return discovery_get_device_id(did, id);
 }
 
 hpd_error_t hpd_device_get_attr(const hpd_device_id_t *id, const char *key, const char **val)
@@ -445,14 +443,22 @@ hpd_error_t hpd_service_get_data(const hpd_service_id_t *id, void **data)
     return discovery_get_service_data(service, data);
 }
 
-hpd_error_t hpd_service_get_id(const hpd_service_id_t *sid, const char **id)
+hpd_error_t hpd_service_get_adapter_id(const hpd_service_id_t *sid, const char **id)
 {
     if (!sid || !id) LOG_RETURN_E_NULL();
-    if (!sid->device.adapter.hpd->configuration) LOG_RETURN_HPD_STOPPED();
-    hpd_error_t rc;
-    hpd_service_t *service;
-    if ((rc = discovery_find_service(sid, &service))) return rc;
-    return discovery_get_service_id(service, id);
+    return discovery_get_service_adapter_id(sid, id);
+}
+
+hpd_error_t hpd_service_get_device_id(const hpd_service_id_t *sid, const char **id)
+{
+    if (!sid || !id) LOG_RETURN_E_NULL();
+    return discovery_get_service_device_id(sid, id);
+}
+
+hpd_error_t hpd_service_get_service_id(const hpd_service_id_t *sid, const char **id)
+{
+    if (!sid || !id) LOG_RETURN_E_NULL();
+    return discovery_get_service_id(sid, id);
 }
 
 hpd_error_t hpd_service_get_attr(const hpd_service_id_t *id, const char *key, const char **val)
@@ -580,14 +586,28 @@ hpd_error_t hpd_parameter_set_attrs(hpd_parameter_t *parameter, ...)
     return rc;
 }
 
-hpd_error_t hpd_parameter_get_id(const hpd_parameter_id_t *pid, const char **id)
+hpd_error_t hpd_parameter_get_adapter_id(const hpd_parameter_id_t *pid, const char **id)
 {
     if (!pid || !id) LOG_RETURN_E_NULL();
-    if (!pid->service.device.adapter.hpd->configuration) LOG_RETURN_HPD_STOPPED();
-    hpd_error_t rc;
-    hpd_parameter_t *parameter;
-    if ((rc = discovery_find_parameter(pid, &parameter))) return rc;
-    return discovery_get_parameter_id(parameter, id);
+    return discovery_get_parameter_adapter_id(pid, id);
+}
+
+hpd_error_t hpd_parameter_get_device_id(const hpd_parameter_id_t *pid, const char **id)
+{
+    if (!pid || !id) LOG_RETURN_E_NULL();
+    return discovery_get_parameter_device_id(pid, id);
+}
+
+hpd_error_t hpd_parameter_get_service_id(const hpd_parameter_id_t *pid, const char **id)
+{
+    if (!pid || !id) LOG_RETURN_E_NULL();
+    return discovery_get_parameter_service_id(pid, id);
+}
+
+hpd_error_t hpd_parameter_get_parameter_id(const hpd_parameter_id_t *pid, const char **id)
+{
+    if (!pid || !id) LOG_RETURN_E_NULL();
+    return discovery_get_parameter_id(pid, id);
 }
 
 hpd_error_t hpd_parameter_get_attr(const hpd_parameter_id_t *id, const char *key, const char **val)

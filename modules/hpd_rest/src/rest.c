@@ -125,26 +125,10 @@ hpd_error_t hpd_rest_url_create(hpd_rest_t *rest, hpd_service_id_t *service, cha
 {
     hpd_error_t rc;
 
-    hpd_adapter_id_t *adapter = NULL;
-    hpd_device_id_t *device = NULL;
-    if ((rc = hpd_service_get_adapter(service, &adapter))) goto id_error;
-    if ((rc = hpd_service_get_device(service, &device))) goto id_error;
-
     const char *adp_id, *dev_id, *srv_id;
-    if ((rc = hpd_service_get_id(service, &srv_id))) goto id_error;
-    if ((rc = hpd_device_get_id(device, &dev_id))) goto id_error;
-    if ((rc = hpd_adapter_get_id(adapter, &adp_id))) goto id_error;
-
-    if ((rc = hpd_device_id_free(device))) {
-        device = NULL;
-        goto id_error;
-    }
-    device = NULL;
-    if ((rc = hpd_adapter_id_free(adapter))) {
-        adapter = NULL;
-        goto id_error;
-    }
-    adapter = NULL;
+    if ((rc = hpd_service_get_service_id(service, &srv_id))) goto id_error;
+    if ((rc = hpd_service_get_device_id(service, &dev_id))) goto id_error;
+    if ((rc = hpd_service_get_adapter_id(service, &adp_id))) goto id_error;
 
     char *aid = NULL, *did = NULL, *sid = NULL;
     if ((rc = rest_url_encode(rest, adp_id, &aid))) goto encode_error;
@@ -172,8 +156,6 @@ hpd_error_t hpd_rest_url_create(hpd_rest_t *rest, hpd_service_id_t *service, cha
     return HPD_E_SUCCESS;
 
     id_error:
-    hpd_adapter_id_free(adapter);
-    hpd_device_id_free(device);
     return rc;
 
     encode_error:

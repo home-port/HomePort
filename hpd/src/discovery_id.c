@@ -314,3 +314,63 @@ hpd_error_t discovery_get_parameter_service(const hpd_parameter_id_t *pid, hpd_s
     return discovery_alloc_sid(sid, pid->service.device.adapter.hpd, pid->service.device.adapter.aid, pid->service.device.did, pid->service.sid);
 }
 
+hpd_error_t discovery_get_adapter_id(const hpd_adapter_id_t *adapter, const char **id)
+{
+    (*id) = adapter->aid;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_device_adapter_id(const hpd_device_id_t *device, const char **id)
+{
+    (*id) = device->adapter.aid;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_device_id(const hpd_device_id_t *device, const char **id)
+{
+    (*id) = device->did;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_service_adapter_id(const hpd_service_id_t *service, const char **id)
+{
+    (*id) = service->device.adapter.aid;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_service_device_id(const hpd_service_id_t *service, const char **id)
+{
+    (*id) = service->device.did;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_service_id(const hpd_service_id_t *service, const char **id)
+{
+    (*id) = service->sid;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_parameter_adapter_id(const hpd_parameter_id_t *parameter, const char **id)
+{
+    (*id) = parameter->service.device.adapter.aid;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_parameter_device_id(const hpd_parameter_id_t *parameter, const char **id)
+{
+    (*id) = parameter->service.device.did;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_parameter_service_id(const hpd_parameter_id_t *parameter, const char **id)
+{
+    (*id) = parameter->service.sid;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t discovery_get_parameter_id(const hpd_parameter_id_t *parameter, const char **id)
+{
+    (*id) = parameter->pid;
+    return HPD_E_SUCCESS;
+}
+

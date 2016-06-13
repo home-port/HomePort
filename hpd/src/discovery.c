@@ -333,30 +333,6 @@ hpd_error_t discovery_get_service_data(hpd_service_t *service, void **data)
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t discovery_get_adapter_id(hpd_adapter_t *adapter, const char **id)
-{
-    (*id) = adapter->id;
-    return HPD_E_SUCCESS;
-}
-
-hpd_error_t discovery_get_device_id(hpd_device_t *device, const char **id)
-{
-    (*id) = device->id;
-    return HPD_E_SUCCESS;
-}
-
-hpd_error_t discovery_get_service_id(hpd_service_t *service, const char **id)
-{
-    (*id) = service->id;
-    return HPD_E_SUCCESS;
-}
-
-hpd_error_t discovery_get_parameter_id(hpd_parameter_t *parameter, const char **id)
-{
-    (*id) = parameter->id;
-    return HPD_E_SUCCESS;
-}
-
 hpd_error_t discovery_get_adapter_attr(hpd_adapter_t *adapter, const char *key, const char **val)
 {
     return hpd_map_get(adapter->attributes, key, val);

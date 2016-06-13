@@ -79,7 +79,7 @@ hpd_error_t hpd_parameter_id_free(hpd_parameter_id_t *id);
 /// [id_t functions]
 
 /// [hpd_adapter_t functions]
-hpd_error_t hpd_adapter_get_id(const hpd_adapter_id_t *aid, const char **id);
+hpd_error_t hpd_adapter_get_adapter_id(const hpd_adapter_id_t *aid, const char **id);
 hpd_error_t hpd_adapter_get_attr(const hpd_adapter_id_t *id, const char *key, const char **val);
 hpd_error_t hpd_adapter_get_attrs(const hpd_adapter_id_t *id, ...);
 hpd_error_t hpd_adapter_first_attr(const hpd_adapter_id_t *id, hpd_pair_t **pair);
@@ -87,7 +87,8 @@ hpd_error_t hpd_adapter_next_attr(hpd_pair_t **pair);
 /// [hpd_adapter_t functions]
 
 /// [hpd_device_t functions]
-hpd_error_t hpd_device_get_id(const hpd_device_id_t *did, const char **id);
+hpd_error_t hpd_device_get_adapter_id(const hpd_device_id_t *did, const char **id);
+hpd_error_t hpd_device_get_device_id(const hpd_device_id_t *did, const char **id);
 hpd_error_t hpd_device_get_attr(const hpd_device_id_t *id, const char *key, const char **val);
 hpd_error_t hpd_device_get_attrs(const hpd_device_id_t *id, ...);
 hpd_error_t hpd_device_first_attr(const hpd_device_id_t *id, hpd_pair_t **pair);
@@ -95,7 +96,9 @@ hpd_error_t hpd_device_next_attr(hpd_pair_t **pair);
 /// [hpd_device_t functions]
 
 /// [hpd_service_t functions]
-hpd_error_t hpd_service_get_id(const hpd_service_id_t *sid, const char **id);
+hpd_error_t hpd_service_get_adapter_id(const hpd_service_id_t *sid, const char **id);
+hpd_error_t hpd_service_get_device_id(const hpd_service_id_t *sid, const char **id);
+hpd_error_t hpd_service_get_service_id(const hpd_service_id_t *sid, const char **id);
 hpd_error_t hpd_service_get_attr(const hpd_service_id_t *id, const char *key, const char **val);
 hpd_error_t hpd_service_get_attrs(const hpd_service_id_t *id, ...);
 hpd_error_t hpd_service_has_action(const hpd_service_id_t *id, const hpd_method_t method, hpd_bool_t *boolean);
@@ -106,7 +109,10 @@ hpd_error_t hpd_service_next_attr(hpd_pair_t **pair);
 /// [hpd_service_t functions]
 
 /// [hpd_parameter_t functions]
-hpd_error_t hpd_parameter_get_id(const hpd_parameter_id_t *pid, const char **id);
+hpd_error_t hpd_parameter_get_adapter_id(const hpd_parameter_id_t *pid, const char **id);
+hpd_error_t hpd_parameter_get_device_id(const hpd_parameter_id_t *pid, const char **id);
+hpd_error_t hpd_parameter_get_service_id(const hpd_parameter_id_t *pid, const char **id);
+hpd_error_t hpd_parameter_get_parameter_id(const hpd_parameter_id_t *pid, const char **id);
 hpd_error_t hpd_parameter_get_attr(const hpd_parameter_id_t *id, const char *key, const char **val);
 hpd_error_t hpd_parameter_get_attrs(const hpd_parameter_id_t *id, ...);
 hpd_error_t hpd_parameter_first_attr(const hpd_parameter_id_t *id, hpd_pair_t **pair);

@@ -81,7 +81,7 @@ static hpd_error_t rest_xml_add_parameter(mxml_node_t *parent, hpd_parameter_id_
 
     // Add id
     const char *id;
-    if ((rc = hpd_parameter_get_id(parameter, &id))) return rc;
+    if ((rc = hpd_parameter_get_parameter_id(parameter, &id))) return rc;
     if ((rc = rest_xml_add(xml, HPD_REST_KEY_ID, id, context))) return rc;
 
     // Add attributes
@@ -103,7 +103,7 @@ static hpd_error_t rest_xml_add_service(mxml_node_t *parent, hpd_service_id_t *s
 
     // Add id
     const char *id;
-    if ((rc = hpd_service_get_id(service, &id))) return rc;
+    if ((rc = hpd_service_get_service_id(service, &id))) return rc;
     if ((rc = rest_xml_add(xml, HPD_REST_KEY_ID, id, context))) return rc;
 
     // Add url
@@ -159,7 +159,7 @@ static hpd_error_t rest_xml_add_device(mxml_node_t *parent, hpd_device_id_t *dev
 
     // Add id
     const char *id;
-    if ((rc = hpd_device_get_id(device, &id))) return rc;
+    if ((rc = hpd_device_get_device_id(device, &id))) return rc;
     if ((rc = rest_xml_add(xml, HPD_REST_KEY_ID, id, context))) return rc;
 
     // Add attributes
@@ -188,7 +188,7 @@ static hpd_error_t rest_xml_add_adapter(mxml_node_t *parent, hpd_adapter_id_t *a
 
     // Add id
     const char *id;
-    if ((rc = hpd_adapter_get_id(adapter, &id))) return rc;
+    if ((rc = hpd_adapter_get_adapter_id(adapter, &id))) return rc;
     if ((rc = rest_xml_add(json, HPD_REST_KEY_ID, id, context))) return rc;
 
     // Add attributes

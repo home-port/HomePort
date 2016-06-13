@@ -65,7 +65,7 @@ static hpd_error_t rest_json_add_parameter(json_t *parent, hpd_parameter_id_t *p
 
     // Add id
     const char *id;
-    if ((rc = hpd_parameter_get_id(parameter, &id))) goto error;
+    if ((rc = hpd_parameter_get_parameter_id(parameter, &id))) goto error;
     if ((rc = rest_json_add(json, HPD_REST_KEY_ID, id, context))) goto error;
 
     // Add attributes
@@ -124,7 +124,7 @@ static hpd_error_t rest_json_add_service(json_t *parent, hpd_service_id_t *servi
 
     // Add id
     const char *id;
-    if ((rc = hpd_service_get_id(service, &id))) goto error;
+    if ((rc = hpd_service_get_service_id(service, &id))) goto error;
     if ((rc = rest_json_add(json, HPD_REST_KEY_ID, id, context))) goto error;
 
     // Add url
@@ -213,7 +213,7 @@ static hpd_error_t rest_json_add_device(json_t *parent, hpd_device_id_t *device,
 
     // Add id
     const char *id;
-    if ((rc = hpd_device_get_id(device, &id))) goto error;
+    if ((rc = hpd_device_get_device_id(device, &id))) goto error;
     if ((rc = rest_json_add(json, HPD_REST_KEY_ID, id, context))) goto error;
 
     // Add attributes
@@ -276,7 +276,7 @@ static hpd_error_t rest_json_add_adapter(json_t *parent, hpd_adapter_id_t *adapt
 
     // Add id
     const char *id;
-    if ((rc = hpd_adapter_get_id(adapter, &id))) goto error;
+    if ((rc = hpd_adapter_get_adapter_id(adapter, &id))) goto error;
     if ((rc = rest_json_add(json, HPD_REST_KEY_ID, id, context))) goto error;
 
     // Add attributes
