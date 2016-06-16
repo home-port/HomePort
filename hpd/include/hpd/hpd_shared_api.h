@@ -45,6 +45,7 @@ hpd_error_t hpd_get_loop(hpd_t *hpd, hpd_ev_loop_t **loop);
 /// [hpd_t functions]
 
 /// [log functions]
+// TODO Should *logf() be allowed to return errors - not really checked anywhere and HPD_LOG_RETURN just ignore return values...
 hpd_error_t hpd_logf(const hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, ...);
 hpd_error_t hpd_vlogf(const hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp);
 #define HPD_LOG_ERROR(CONTEXT, FMT, ...) hpd_logf((CONTEXT), HPD_L_ERROR, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
@@ -56,8 +57,12 @@ hpd_error_t hpd_vlogf(const hpd_module_t *context, hpd_log_level_t level, const 
 #define HPD_LOG_RETURN(CONTEXT, E, FMT, ...) do { HPD_LOG_DEBUG((CONTEXT), (FMT), ##__VA_ARGS__); return (E); } while(0)
 #define HPD_LOG_RETURN_E_NULL(CONTEXT)  HPD_LOG_RETURN((CONTEXT), HPD_E_NULL,  "Unexpected null pointer.")
 #define HPD_LOG_RETURN_E_ALLOC(CONTEXT) HPD_LOG_RETURN((CONTEXT), HPD_E_ALLOC, "Unable to allocate memory.")
-// TODO New function, check if it can be used elsewhere
+// TODO New functions, check if they can be used elsewhere
 #define HPD_LOG_RETURN_E_SNPRINTF(CONTEXT) HPD_LOG_RETURN((CONTEXT), HPD_E_UNKNOWN, "snprintf failed.")
+#define HPD_LOG_RETURN_E_UNKNOWN_NOCODE(CONTEXT) HPD_LOG_RETURN((CONTEXT), HPD_E_UNKNOWN, "%s failed.", __FUNCTION__)
+#define HPD_LOG_RETURN_E_UNKNOWN_CODE(CONTEXT, RC) HPD_LOG_RETURN((CONTEXT), HPD_E_UNKNOWN, "%s failed [code: %i].", __FUNCTION__, (RC))
+#define HPD_LOG_ERROR_NOCODE(CONTEXT) HPD_LOG_ERROR((CONTEXT), "%s failed.", __FUNCTION__)
+#define HPD_LOG_ERROR_CODE(CONTEXT, RC) HPD_LOG_ERROR((CONTEXT), "%s failed [code: %i].", __FUNCTION__, (RC))
 /// [log functions]
 
 /// [id_t functions]
