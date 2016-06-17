@@ -49,7 +49,7 @@ hpd_error_t hpd_map_alloc(hpd_map_t **map)
         return HPD_E_ALLOC;
 }
 
-hpd_error_t hpd_map_first(hpd_map_t *map, hpd_pair_t **pair)
+hpd_error_t hpd_map_first(hpd_map_t *map, const hpd_pair_t **pair)
 {
     if (!map || !pair) return HPD_E_NULL;
 
@@ -57,7 +57,7 @@ hpd_error_t hpd_map_first(hpd_map_t *map, hpd_pair_t **pair)
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t hpd_map_next(hpd_pair_t **pair)
+hpd_error_t hpd_map_next(const hpd_pair_t **pair)
 {
     if (!pair || !(*pair)) return HPD_E_NULL;
 

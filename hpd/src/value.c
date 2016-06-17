@@ -81,7 +81,7 @@ hpd_error_t value_copy(hpd_value_t **dst, const hpd_value_t *src)
 {
     hpd_error_t rc;
     if ((rc = value_alloc(dst, src->body, (int) src->len))) return rc;
-    hpd_pair_t *pair;
+    const hpd_pair_t *pair;
     hpd_map_foreach(rc, pair, src->headers) {
         const char *k, *v;
         if ((rc = hpd_pair_get(pair, &k, &v))) {
@@ -150,12 +150,12 @@ hpd_error_t value_get_headers_v(const hpd_value_t *value, va_list vp)
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t value_first_header(const hpd_value_t *value, hpd_pair_t **pair)
+hpd_error_t value_first_header(const hpd_value_t *value, const hpd_pair_t **pair)
 {
     return hpd_map_first(value->headers, pair);
 }
 
-hpd_error_t value_next_header(hpd_pair_t **pair)
+hpd_error_t value_next_header(const hpd_pair_t **pair)
 {
     return hpd_map_next(pair);
 }
