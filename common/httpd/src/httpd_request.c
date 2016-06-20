@@ -32,6 +32,8 @@
 #include "hpd/hpd_shared_api.h"
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
+#include <hpd/common/hpd_common.h>
 
 /// The possible states of a request
 enum state {
@@ -213,10 +215,14 @@ static hpd_error_t url_parser_key_value(void *data, const char *key, size_t key_
  *  \param  value         The value, not null-terminated
  *  \param  value_length  The length of the value
  */
-static hpd_error_t header_parser_field_value_pair_complete(void* data, const char* field, size_t field_length, const char* value, size_t value_length)
+static hpd_error_t header_parser_field_value_pair_complete(void* data, const char* field_in, size_t field_length, const char* value, size_t value_length)
 {
     hpd_error_t rc;
     hpd_httpd_request_t *req = data;
+
+    char *field = NULL;
+    HPD_STR_N_CPY(field, field_in, field_length);
+    for (int i = 0; i < field_length; i++) field[i] = (char) tolower(field[i]);
 
     const char *existing;
     switch ((rc = hpd_map_get_n(req->headers, field, field_length, &existing))) {
@@ -224,21 +230,29 @@ static hpd_error_t header_parser_field_value_pair_complete(void* data, const cha
         case HPD_E_NOT_FOUND:
             break;
         default:
+            free(field);
             return rc;
     }
 
     // If cookie, then store it in cookie list
-    if (strncmp(field, "Cookie", 6) == 0) {
+    if (strncmp(field, "cookie", 6) == 0) {
         size_t key_s = 0, key_e, val_s, val_e;
 
         while (key_s < value_length) {
             for (key_e = key_s; key_e < value_length && value[key_e] != '='; key_e++);
-            if (key_e == value_length) HPD_LOG_RETURN(req->context, HPD_E_ARGUMENT, "Parse error.");
+            if (key_e == value_length) {
+                free(field);
+                HPD_LOG_RETURN(req->context, HPD_E_ARGUMENT, "Parse error.");
+            }
             val_s = key_e + 1;
             for (val_e = val_s; val_e < value_length && value[val_e] != ';'; val_e++);
             if (key_e-key_s > 0 && val_e-val_s > 0) {
-                if ((rc = hpd_map_set_n(req->cookies, &value[key_s], (size_t) key_e - key_s, &value[val_s], val_e - val_s))) return rc;
+                if ((rc = hpd_map_set_n(req->cookies, &value[key_s], (size_t) key_e - key_s, &value[val_s], val_e - val_s))) {
+                    free(field);
+                    return rc;
+                }
             } else {
+                free(field);
                 HPD_LOG_RETURN(req->context, HPD_E_ARGUMENT, "Parse error.");
             }
             key_s = val_e + 2;
@@ -250,7 +264,10 @@ static hpd_error_t header_parser_field_value_pair_complete(void* data, const cha
         // Combine values
         size_t new_len = strlen(existing) + 1 + value_length + 1;
         char *new = malloc(new_len * sizeof(char));
-        if (!new) HPD_LOG_RETURN_E_ALLOC(req->context);
+        if (!new) {
+            free(field);
+            HPD_LOG_RETURN_E_ALLOC(req->context);
+        }
         strcpy(new, existing);
         strcat(new, ",");
         strncat(new, value, value_length);
@@ -262,12 +279,22 @@ static hpd_error_t header_parser_field_value_pair_complete(void* data, const cha
         // Clean up
         free(new);
 
-        if (rc) return rc;
+        if (rc) {
+            free(field);
+            return rc;
+        }
     } else {
-        if ((rc = hpd_map_set_n(req->headers, field, field_length, value, value_length))) return rc;
+        if ((rc = hpd_map_set_n(req->headers, field, field_length, value, value_length))) {
+            free(field);
+            return rc;
+        }
     }
 
+    free(field);
     return HPD_E_SUCCESS;
+
+    alloc_error:
+        HPD_LOG_RETURN_E_ALLOC(req->context);
 }
 
 /**

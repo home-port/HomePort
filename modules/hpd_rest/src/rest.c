@@ -285,7 +285,7 @@ static hpd_error_t rest_reply_devices(hpd_rest_req_t *rest_req)
 
     // Get Accept header
     const char *accept;
-    switch ((rc = hpd_map_get(rest_req->headers, "Accept", &accept))) {
+    switch ((rc = hpd_map_get(rest_req->headers, "accept", &accept))) {
         case HPD_E_SUCCESS:
             break;
         case HPD_E_NOT_FOUND:
@@ -493,7 +493,7 @@ static void rest_on_response(void *data, const hpd_response_t *res)
     // Get data from httpd
     const char *accept;
     rest_content_type_t accept_type;
-    switch ((rc = hpd_map_get(rest_req->headers, "Accept", &accept))) {
+    switch ((rc = hpd_map_get(rest_req->headers, "accept", &accept))) {
         case HPD_E_SUCCESS:
             break;
         case HPD_E_NOT_FOUND:
@@ -829,7 +829,7 @@ static hpd_httpd_return_t rest_on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t
     if (rest_req->body) {
         // Get content type
         const char *content_type;
-        switch ((rc = hpd_map_get(rest_req->headers, "Content-Type", &content_type))) {
+        switch ((rc = hpd_map_get(rest_req->headers, "content-type", &content_type))) {
             case HPD_E_SUCCESS:
                 break;
             case HPD_E_NOT_FOUND:
