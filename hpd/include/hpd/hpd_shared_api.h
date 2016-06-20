@@ -45,6 +45,7 @@ hpd_error_t hpd_get_loop(hpd_t *hpd, hpd_ev_loop_t **loop);
 /// [hpd_t functions]
 
 /// [log functions]
+// TODO Should *logf() be allowed to return errors - not really checked anywhere and HPD_LOG_RETURN just ignore return values...
 hpd_error_t hpd_logf(const hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, ...);
 hpd_error_t hpd_vlogf(const hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp);
 #define HPD_LOG_ERROR(CONTEXT, FMT, ...) hpd_logf((CONTEXT), HPD_L_ERROR, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
@@ -56,8 +57,12 @@ hpd_error_t hpd_vlogf(const hpd_module_t *context, hpd_log_level_t level, const 
 #define HPD_LOG_RETURN(CONTEXT, E, FMT, ...) do { HPD_LOG_DEBUG((CONTEXT), (FMT), ##__VA_ARGS__); return (E); } while(0)
 #define HPD_LOG_RETURN_E_NULL(CONTEXT)  HPD_LOG_RETURN((CONTEXT), HPD_E_NULL,  "Unexpected null pointer.")
 #define HPD_LOG_RETURN_E_ALLOC(CONTEXT) HPD_LOG_RETURN((CONTEXT), HPD_E_ALLOC, "Unable to allocate memory.")
-// TODO New function, check if it can be used elsewhere
+// TODO New functions, check if they can be used elsewhere
 #define HPD_LOG_RETURN_E_SNPRINTF(CONTEXT) HPD_LOG_RETURN((CONTEXT), HPD_E_UNKNOWN, "snprintf failed.")
+#define HPD_LOG_RETURN_E_UNKNOWN_NOCODE(CONTEXT) HPD_LOG_RETURN((CONTEXT), HPD_E_UNKNOWN, "%s failed.", __FUNCTION__)
+#define HPD_LOG_RETURN_E_UNKNOWN_CODE(CONTEXT, RC) HPD_LOG_RETURN((CONTEXT), HPD_E_UNKNOWN, "%s failed [code: %i].", __FUNCTION__, (RC))
+#define HPD_LOG_ERROR_NOCODE(CONTEXT) HPD_LOG_ERROR((CONTEXT), "%s failed.", __FUNCTION__)
+#define HPD_LOG_ERROR_CODE(CONTEXT, RC) HPD_LOG_ERROR((CONTEXT), "%s failed [code: %i].", __FUNCTION__, (RC))
 /// [log functions]
 
 /// [id_t functions]
@@ -79,38 +84,44 @@ hpd_error_t hpd_parameter_id_free(hpd_parameter_id_t *id);
 /// [id_t functions]
 
 /// [hpd_adapter_t functions]
-hpd_error_t hpd_adapter_get_id(const hpd_adapter_id_t *aid, const char **id);
+hpd_error_t hpd_adapter_get_adapter_id(const hpd_adapter_id_t *aid, const char **id);
 hpd_error_t hpd_adapter_get_attr(const hpd_adapter_id_t *id, const char *key, const char **val);
 hpd_error_t hpd_adapter_get_attrs(const hpd_adapter_id_t *id, ...);
-hpd_error_t hpd_adapter_first_attr(const hpd_adapter_id_t *id, hpd_pair_t **pair);
-hpd_error_t hpd_adapter_next_attr(hpd_pair_t **pair);
+hpd_error_t hpd_adapter_first_attr(const hpd_adapter_id_t *id, const hpd_pair_t **pair);
+hpd_error_t hpd_adapter_next_attr(const hpd_pair_t **pair);
 /// [hpd_adapter_t functions]
 
 /// [hpd_device_t functions]
-hpd_error_t hpd_device_get_id(const hpd_device_id_t *did, const char **id);
+hpd_error_t hpd_device_get_adapter_id(const hpd_device_id_t *did, const char **id);
+hpd_error_t hpd_device_get_device_id(const hpd_device_id_t *did, const char **id);
 hpd_error_t hpd_device_get_attr(const hpd_device_id_t *id, const char *key, const char **val);
 hpd_error_t hpd_device_get_attrs(const hpd_device_id_t *id, ...);
-hpd_error_t hpd_device_first_attr(const hpd_device_id_t *id, hpd_pair_t **pair);
-hpd_error_t hpd_device_next_attr(hpd_pair_t **pair);
+hpd_error_t hpd_device_first_attr(const hpd_device_id_t *id, const hpd_pair_t **pair);
+hpd_error_t hpd_device_next_attr(const hpd_pair_t **pair);
 /// [hpd_device_t functions]
 
 /// [hpd_service_t functions]
-hpd_error_t hpd_service_get_id(const hpd_service_id_t *sid, const char **id);
+hpd_error_t hpd_service_get_adapter_id(const hpd_service_id_t *sid, const char **id);
+hpd_error_t hpd_service_get_device_id(const hpd_service_id_t *sid, const char **id);
+hpd_error_t hpd_service_get_service_id(const hpd_service_id_t *sid, const char **id);
 hpd_error_t hpd_service_get_attr(const hpd_service_id_t *id, const char *key, const char **val);
 hpd_error_t hpd_service_get_attrs(const hpd_service_id_t *id, ...);
 hpd_error_t hpd_service_has_action(const hpd_service_id_t *id, const hpd_method_t method, hpd_bool_t *boolean);
 hpd_error_t hpd_service_first_action(const hpd_service_id_t *id, hpd_action_t **action);
 hpd_error_t hpd_service_next_action(hpd_action_t **action);
-hpd_error_t hpd_service_first_attr(const hpd_service_id_t *id, hpd_pair_t **pair);
-hpd_error_t hpd_service_next_attr(hpd_pair_t **pair);
+hpd_error_t hpd_service_first_attr(const hpd_service_id_t *id, const hpd_pair_t **pair);
+hpd_error_t hpd_service_next_attr(const hpd_pair_t **pair);
 /// [hpd_service_t functions]
 
 /// [hpd_parameter_t functions]
-hpd_error_t hpd_parameter_get_id(const hpd_parameter_id_t *pid, const char **id);
+hpd_error_t hpd_parameter_get_adapter_id(const hpd_parameter_id_t *pid, const char **id);
+hpd_error_t hpd_parameter_get_device_id(const hpd_parameter_id_t *pid, const char **id);
+hpd_error_t hpd_parameter_get_service_id(const hpd_parameter_id_t *pid, const char **id);
+hpd_error_t hpd_parameter_get_parameter_id(const hpd_parameter_id_t *pid, const char **id);
 hpd_error_t hpd_parameter_get_attr(const hpd_parameter_id_t *id, const char *key, const char **val);
 hpd_error_t hpd_parameter_get_attrs(const hpd_parameter_id_t *id, ...);
-hpd_error_t hpd_parameter_first_attr(const hpd_parameter_id_t *id, hpd_pair_t **pair);
-hpd_error_t hpd_parameter_next_attr(hpd_pair_t **pair);
+hpd_error_t hpd_parameter_first_attr(const hpd_parameter_id_t *id, const hpd_pair_t **pair);
+hpd_error_t hpd_parameter_next_attr(const hpd_pair_t **pair);
 /// [hpd_parameter_t functions]
 
 /// [model foreach loops]
@@ -144,18 +155,17 @@ hpd_error_t hpd_action_get_method(const hpd_action_t *action, hpd_method_t *meth
 hpd_error_t hpd_pair_get(const hpd_pair_t *pair, const char **key, const char **value);
 /// [hpd_pair_t functions]
 
-// TODO Rename get functions to get_alloc ?
 /// [Browsing functions]
 hpd_error_t hpd_adapter_get_hpd(const hpd_adapter_id_t *aid, hpd_t **hpd);
 hpd_error_t hpd_device_get_hpd(const hpd_device_id_t *did, hpd_t **hpd);
-hpd_error_t hpd_device_get_adapter(const hpd_device_id_t *did, hpd_adapter_id_t **aid);
+hpd_error_t hpd_device_get_adapter(const hpd_device_id_t *did, const hpd_adapter_id_t **aid);
 hpd_error_t hpd_service_get_hpd(const hpd_service_id_t *sid, hpd_t **hpd);
-hpd_error_t hpd_service_get_adapter(const hpd_service_id_t *sid, hpd_adapter_id_t **aid);
-hpd_error_t hpd_service_get_device(const hpd_service_id_t *sid, hpd_device_id_t **did);
+hpd_error_t hpd_service_get_adapter(const hpd_service_id_t *sid, const hpd_adapter_id_t **aid);
+hpd_error_t hpd_service_get_device(const hpd_service_id_t *sid, const hpd_device_id_t **did);
 hpd_error_t hpd_parameter_get_hpd(const hpd_parameter_id_t *pid, hpd_t **hpd);
-hpd_error_t hpd_parameter_get_adapter(const hpd_parameter_id_t *pid, hpd_adapter_id_t **aid);
-hpd_error_t hpd_parameter_get_device(const hpd_parameter_id_t *pid, hpd_device_id_t **did);
-hpd_error_t hpd_parameter_get_service(const hpd_parameter_id_t *pid, hpd_service_id_t **sid);
+hpd_error_t hpd_parameter_get_adapter(const hpd_parameter_id_t *pid, const hpd_adapter_id_t **aid);
+hpd_error_t hpd_parameter_get_device(const hpd_parameter_id_t *pid, const hpd_device_id_t **did);
+hpd_error_t hpd_parameter_get_service(const hpd_parameter_id_t *pid, const hpd_service_id_t **sid);
 
 hpd_error_t hpd_first_adapter(hpd_t *hpd, hpd_adapter_id_t **adapter_id);
 hpd_error_t hpd_first_device(hpd_t *hpd, hpd_device_id_t **device_id);
@@ -217,8 +227,8 @@ hpd_error_t hpd_value_set_headers(hpd_value_t *value, ...);
 hpd_error_t hpd_value_get_body(const hpd_value_t *value, const char **body, size_t *len);
 hpd_error_t hpd_value_get_header(const hpd_value_t *value, const char *key, const char **val);
 hpd_error_t hpd_value_get_headers(const hpd_value_t *value, ...);
-hpd_error_t hpd_value_first_header(const hpd_value_t *value, hpd_pair_t **pair);
-hpd_error_t hpd_value_next_header(hpd_pair_t **pair);
+hpd_error_t hpd_value_first_header(const hpd_value_t *value, const hpd_pair_t **pair);
+hpd_error_t hpd_value_next_header(const hpd_pair_t **pair);
 /// [hpd_value_t functions]
 
 /// [hpd_value_t foreach loops]

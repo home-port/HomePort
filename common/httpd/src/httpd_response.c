@@ -63,7 +63,7 @@ struct hpd_httpd_response
  *  The result is constructed to match the textual status code in the
  *  first line in a http response, according to RFC 2616.
  *
- *  \param Status code as enum
+ *  \param  status  Status code as enum
  *
  *  \return The status code as text
  */
@@ -107,8 +107,9 @@ hpd_error_t hpd_httpd_response_destroy(hpd_httpd_response_t *res)
  *  called, it is possible to call these with a NULL body to send
  *  messages without it.
  *
- *  \param  req     The http request to repond to
- *  \param  status  The status code to respond with
+ *  \param  response  Will point to the response on success.
+ *  \param  req       The http request to repond to
+ *  \param  status    The status code to respond with
  *
  *  \return  The http respond created
  */
@@ -317,6 +318,7 @@ hpd_error_t hpd_httpd_response_sendf(hpd_httpd_response_t *res, const char *fmt,
  *
  *  \param  res  The http response to send.
  *  \param  fmt  The format string for the body
+ *  \param  arg  Variable parameter list
  */
 hpd_error_t hpd_httpd_response_vsendf(hpd_httpd_response_t *res, const char *fmt, va_list arg)
 {

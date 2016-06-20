@@ -87,11 +87,11 @@ struct up {
  *  The instance should be destroyed using up_destroy when it is no
  *  longer needed.
  *
+ *  \param  instance  Will point to the newly created instance on success.
  *  \param  settings  A pointer to a url_parser_settings struct
+ *  \param  context   The HPD module context
  *  \param  data      Pointer to user data, will be supplied to
  *                    callbacks
- *
- *  \return  a pointer to the newly created instance
  */
 hpd_error_t up_create(struct up **instance, struct up_settings *settings, const hpd_module_t *context, void *data)
 {
@@ -202,9 +202,9 @@ static int up_isLegalURLChar(char c)
  *  chunk may of course be a complete URL, all of which will be parsed
  *  immediately. 
  *
- *  @param  instance    A pointer to an URL Parser instance
- *  @param  chunk       A pointer to the chunk (non zero terminated)
- *  @param  chunk_size  The size of the chunk
+ *  @param  instance  A pointer to an URL Parser instance
+ *  @param  chunk     A pointer to the chunk (non zero terminated)
+ *  @param  len       The size of the chunk
  */
 hpd_error_t up_add_chunk(struct up *instance, const char *chunk, size_t len)
 {

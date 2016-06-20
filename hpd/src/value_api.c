@@ -108,13 +108,13 @@ hpd_error_t hpd_value_get_headers(const hpd_value_t *value, ...)
     return rc;
 }
 
-hpd_error_t hpd_value_first_header(const hpd_value_t *value, hpd_pair_t **pair)
+hpd_error_t hpd_value_first_header(const hpd_value_t *value, const hpd_pair_t **pair)
 {
     if (!value || !pair) LOG_RETURN_E_NULL();
     return value_first_header(value, pair);
 }
 
-hpd_error_t hpd_value_next_header(hpd_pair_t **pair)
+hpd_error_t hpd_value_next_header(const hpd_pair_t **pair)
 {
     if (!pair || !*pair) LOG_RETURN_E_NULL();
     return value_next_header(pair);

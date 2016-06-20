@@ -80,6 +80,7 @@ add_library(hpd SHARED
         ../include/hpd/hpd_daemon_api.h
         ../include/hpd/hpd_shared_api.h
         ../include/hpd/hpd_types.h
+        ../intro.dox
         ../api.dox
 )
 set_target_properties(hpd PROPERTIES LINKER_LANGUAGE C)

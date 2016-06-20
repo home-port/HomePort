@@ -29,14 +29,14 @@
  *
  * \tableofcontents
  *
- * \section sec_intro Introduction
+ * \section sec_t02_intro Introduction
  *
  * In this tutorial, we will cover the basic functions in hpd, which are needed in the main program, adapters, and
  * applications.
  *
  * The full files can be found in the example/demo folder, and can be compiled with `make example_demo`.
  *
- * \section sec_main Main Program
+ * \section sec_t02_main Main Program
  *
  * The main program (demo_main.c) is pretty similar to that of the template example. Note, that we included the
  * hpd_rest webservice module, which are included and installed alongside hpd itself.
@@ -53,19 +53,19 @@
  * - hpd_start(): Starts and runs hpd.
  * - hpd_free(): Frees the memory allocated with hpd_alloc().
  *
- * \section sec_adapter Demo Adapter
+ * \section sec_t02_adapter Demo Adapter
  *
  * Here, we will create a simple adapter, that creates N virtual lamps, where N is a number given as command-line
  * argument. If N is not given we will create just one lamp as default.
  *
- * \subsection sec_adapter_header Header file
+ * \subsection sec_t02_adapter_header Header file
  *
  * As usual, the header file (demo_adapter.h) with only include a declaration of single hpd_module_def. Which describes
  * our module, and makes it easy to include in a main program when calling hpd_module().
  *
  * \snippet demo_adapter.h file
  *
- * \subsection sec_adapter_source Source file
+ * \subsection sec_t02_adapter_source Source file
  *
  * Our source file (demo_adapter.c) will use two header files.
  *
@@ -89,12 +89,12 @@
  *
  * \snippet demo_adapter.c definition
  *
- * \subsubsection sec_adapter_source_functions Function Implementations
+ * \subsubsection sec_t02_adapter_source_functions Function Implementations
  *
  * The order of the functions here differs from the actual file (demo_adapter.c), so refer to the file if you need to
  * compile this example.
  *
- * \subsubsection sec_adapter_source_create_destroy on_create() and on_destroy()
+ * \subsubsection sec_t02_adapter_source_create_destroy on_create() and on_destroy()
  *
  * demo_adapter_on_create() first allocation the global memory and initialises it, then it add the support command-line
  * arguments to hpd:
@@ -112,14 +112,14 @@
  *
  * \snippet demo_adapter.c on_destroy
  *
- * \subsubsection sec_adapter_source_parse_opt on_parse_opt()
+ * \subsubsection sec_t02_adapter_source_parse_opt on_parse_opt()
  *
  * demo_adapter_on_parse_opt() checks for the argument we defined with hpd_module_add_option() earlier and sets
  * num_lamps accordingly. Recall that this function should return HPD_E_ARGUMENT, when the argument is not recognised.
  *
  * \snippet demo_adapter.c on_parse_opt
  *
- * \subsubsection sec_adapter_source_start_stop on_start() and on_stop()
+ * \subsubsection sec_t02_adapter_source_start_stop on_start() and on_stop()
  *
  * demo_adapter_on_start() creates the adapter object and the required number of lamps (we will make
  * demo_adapter_create_adapter() and demo_adapter_create_lamp() in a bit). On errors it stops everything again:
@@ -147,7 +147,7 @@
  * - hpd_adapter_free(): Frees the detached adapter and everything underneath it.
  * - hpd_adapter_id_free(): Frees the adapter id reference.
  *
- * \subsubsection sec_adapter_source_object_creation Object creation
+ * \subsubsection sec_t02_adapter_source_object_creation Object creation
  *
  * In demo_adapter_on_start() we called two functions; demo_adapter_create_adapter() and demo_adapter_create_lamp() to
  * create our object models, which we will implement now.
@@ -204,7 +204,7 @@
  * - hpd_parameter_alloc(), hpd_parameter_attach(), and hpd_parameter_free(): Like the equivalent functions
  *   for services, devices and adapters.
  *   
- * \subsubsection sec_adapter_source_actions Action Callbacks
+ * \subsubsection sec_t02_adapter_source_actions Action Callbacks
  * 
  * demo_adapter_on_get() will send the current value of the lamp:
  * 
@@ -220,7 +220,7 @@
  *   to keep the hpd_request_t pointer for use later, when we return HPD_S_NONE. However, we do commit to calling
  *   hpd_respond() some time later in those cases.
  *
- * \subsubsection sec_adapter_source_send_set Sending and Setting Values
+ * \subsubsection sec_t02_adapter_source_send_set Sending and Setting Values
  *
  * demo_adapter_send_value() sends a response to the requester with the current value:
  *

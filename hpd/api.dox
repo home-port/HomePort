@@ -29,7 +29,7 @@
  *
  * \tableofcontents
  *
- * \section sec_internal_arch Internal architecture
+ * \section sec_api_internal_arch Internal architecture
  *
  * - Data Model:
  *     - model.h
@@ -61,7 +61,7 @@
  *     - value.h
  *     - value_api.c
  *
- * \section sec_data_mode HomePort data model
+ * \section sec_api_data_mode HomePort data model
  *
  * The internal class diagram for reference, most but not all types are available to the outside through references
  * (direct access to members are generally not possible):
@@ -214,7 +214,7 @@
  *
  * @enduml
  *
- * \subsection sec_error_handling Enumerations for error handling
+ * \subsection sec_api_error_handling Enumerations for error handling
  *
  * All functions in the API returns hpd_err_t, which is:
  * \todo Should really reconsider whether to have errors on free functions - really difficult to handle (there's a reason you're not suppose to throw in destructors!)
@@ -226,7 +226,7 @@
  *
  * \snippet include/hpd/hpd_types.h hpd_status_t
  *
- * \subsection sec_attrs Attribute default keys
+ * \subsection sec_api_attrs Attribute default keys
  *
  * The entities in the data model are described using attributes. These are flexible key-value pairs, where the keys can
  * be chosen freely. However, we do define the following default keys for consistencies between modules:
@@ -234,14 +234,14 @@
  *
  * \snippet include/hpd/hpd_types.h Default keys
  *
- * \subsection sec_methods Method and Port enumeration
+ * \subsection sec_api_methods Method and Port enumeration
  *
  * Services have a set of actions, currently for get and put only, but these are define in a enumeration, thus can
  * easily be expanded later:
  *
  * \snippet include/hpd/hpd_types.h hpd_method_t
  *
- * \subsection sec_custom_data Custom user data and free functions
+ * \subsection sec_api_custom_data Custom user data and free functions
  *
  * HomePort's data model allow module developers to store custom pointers to user data of their own choice. HomePort
  * will not touch this data. To allow memory management of custom data pointers, HomePort generally take a on_free
@@ -251,7 +251,7 @@
  *
  * \snippet include/hpd/hpd_types.h hpd_free_f
  *
- * \section sec_main Daemon API
+ * \section sec_api_main Daemon API
  *
  * \snippet include/hpd/hpd_daemon_api.h hpd_t functions
  *
@@ -304,9 +304,9 @@
  * Any pointer to hpd_t is valid between calls to hpd_alloc() and hpd_free(), and thus can generally be stored by
  * modules in their entire lifetime.
  *
- * \section sec_shared_api Shared API (Adapters and Applications) - Part I
+ * \section sec_api_shared_api Shared API (Adapters and Applications) - Part I
  *
- * \subsection sec_modules Modules
+ * \subsection sec_api_modules Modules
  *
  * A module will provide an instance of the module_def structure along with implementations of the five included
  * functions. module_def is a structure where the members are publicly available.
@@ -405,13 +405,13 @@
  * valid in the same interval. The pointer to the event loop (as obtained with hpd_get_loop()) is valid between calls to
  * on_start and on_stop.
  *
- * \subsection sec_logging Logging
+ * \subsection sec_api_logging Logging
  *
  * \snippet include/hpd/hpd_types.h hpd_log_level_t
  *
  * \snippet include/hpd/hpd_shared_api.h log functions
  *
- * \subsection sec_indirect_refs Indirect references
+ * \subsection sec_api_indirect_refs Indirect references
  *
  * Through the following sections we shall utilise indirect references to objects in the data mode (adapters, devices,
  * services, parameters). These prevent module developers from keeping pointers to objects that eventually will be
@@ -421,11 +421,11 @@
  *
  * If a module developers explicitly call *_id_alloc(), they are also responsible for calling *_id_free().
  *
- * \section sec_adapter_api Adapter API
+ * \section sec_api_adapter_api Adapter API
  *
  * The functions in the Adapter API are only available for adapters.
  *
- * \subsection sec_hpd_adapter_t Adapter structure (hpd_adapter_t)
+ * \subsection sec_api_hpd_adapter_t Adapter structure (hpd_adapter_t)
  *
  * To maintain adapter structures in the data model:
  * \todo Maybe change name of the structure from “adapter” to “network” to highlight the differences between modules and adapters. A module can make multiple networks of devices.
@@ -541,26 +541,26 @@
  * hpd_adapter_attach() will make a copy of hpd_adapter_t, thus effectively invalidating the pointer.
  * hpd_adapter_detach() will return a pointer to this copy, which was stored in the internal data model.
  *
- * \subsection sec_hpd_device_t Device structure (hpd_device_t)
+ * \subsection sec_api_hpd_device_t Device structure (hpd_device_t)
  *
  * Devices are managed in a similar manner:
  * \snippet include/hpd/hpd_adapter_api.h hpd_device_t functions
  *
- * \subsection sec_hpd_service_t Service structure (hpd_service_t)
+ * \subsection sec_api_hpd_service_t Service structure (hpd_service_t)
  *
  * Services furthermore allow setting an action, which is a method and a function pointer. Currently only get and put
  * is support, but it could theoretically be expanded to others:
  * \snippet include/hpd/hpd_adapter_api.h hpd_service_t functions
  * \snippet include/hpd/hpd_types.h hpd_action_f
  *
- * \subsection sec_hpd_parameter_t Parameter structure (hpd_parameter_t)
+ * \subsection sec_api_hpd_parameter_t Parameter structure (hpd_parameter_t)
  *
  * Finally, functions to manage parameters:
  * \snippet include/hpd/hpd_adapter_api.h hpd_parameter_t functions
  *
- * \section sec_shared_api_cont Shared API (Adapters and Applications) - Part II
+ * \section sec_api_shared_api_cont Shared API (Adapters and Applications) - Part II
  *
- * \subsection sec_data_model_get Data model getters
+ * \subsection sec_api_data_model_get Data model getters
  *
  * To get members from the objects, created by an adapter, applications have the following functions:
  * \snippet include/hpd/hpd_shared_api.h hpd_adapter_t functions
@@ -573,7 +573,7 @@
  * Again, we have defines to ease foreach loops:
  * \snippet include/hpd/hpd_shared_api.h model foreach loops
  *
- * \subsection sec_data_model_nav Data model navigation
+ * \subsection sec_api_data_model_nav Data model navigation
  *
  * The HomePort data model can be navigated by both adapters and applications, thus only the later will find use for
  * browsing through models created by another module. To do so, the following functions are available:
@@ -586,9 +586,9 @@
  * foreach loops (based on the same principle from libev):
  * \snippet include/hpd/hpd_shared_api.h Browsing foreach loops
  *
- * \section sec_comm Communication
+ * \section sec_api_comm Communication
  *
- * \subsection sec_value Shared API - Value structure
+ * \subsection sec_api_value Shared API - Value structure
  *
  * The value structure is used in both get and put requests and thus is available for both adapters and applications:
  * \snippet include/hpd/hpd_shared_api.h hpd_value_t functions
@@ -603,7 +603,7 @@
  *
  * \snippet include/hpd/hpd_types.h HPD_NULL_TERMINATED
  *
- * \subsection sec_adapter_comm Adapter API - Communication
+ * \subsection sec_api_adapter_comm Adapter API - Communication
  *
  * Action functions will need functions related to requests/responses to manage these (functions to manage values are
  * shared with applications and will be shown later):
@@ -761,7 +761,7 @@
  *
  * @enduml
  *
- * \subsection sec_application_api Application API - Communication
+ * \subsection sec_api_application_api Application API - Communication
  *
  * The functions in the Application API are only available for applications.
  *
@@ -921,13 +921,13 @@
  *
  * @enduml
  *
- * \todo Finish listener sequence chart
- *
  * @startuml "Lifetime of listener structures"
  *
  * participant Application as app
  * participant "Event Dispatch" as ev
  * entity hpd_listener_t as lt
+ * entity hpd_device_id_t as dit
+ * entity hpd_value_t as vt
  *
  * [-> app
  * activate app
@@ -961,14 +961,22 @@
  *
  * app -> ev: hpd_foreach_attached()
  * activate ev
+ * ev -> dit: alloc()
+ * activate dit
  * ev -> app: on_attach()
  * activate app
  * ev <-- app
  * deactivate app
+ * ev -> dit: free()
+ * destroy dit
+ * ev -> dit: alloc()
+ * activate dit
  * ev -> app: on_attach()
  * activate app
  * ev <-- app
  * deactivate app
+ * ev -> dit: free()
+ * destroy dit
  * app <-- ev
  * deactivate ev
  *
@@ -979,12 +987,16 @@
  *
  * [-> ev
  * activate ev
+ * activate dit
  *
  * ev -> app: on_attach()
  * activate app
  * ev <-- app
  * deactivate app
  *
+ * ev -> dit: free()
+ * destroy dit
+ *
  * [<-- ev
  * deactivate ev
  *
@@ -992,12 +1004,16 @@
  *
  * [-> ev
  * activate ev
+ * activate dit
  *
  * ev -> app: on_detach()
  * activate app
  * ev <-- app
  * deactivate app
  *
+ * ev -> dit: free()
+ * destroy dit
+ *
  * [<-- ev
  * deactivate ev
  *
@@ -1005,11 +1021,15 @@
  *
  * [-> ev
  * activate ev
+ * activate vt
  *
  * ev -> app: on_change()
  * activate app
  * ev <-- app
  * deactivate app
+ *
+ * ev -> vt: free()
+ * destroy vt
  *
  * [<-- ev
  * deactivate ev

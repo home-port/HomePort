@@ -99,6 +99,11 @@ include_directories(hpd/include)
 include_directories(common/include)
 include_directories(common/map/include)
 
+add_library(hpd_doc SHARED
+        main.dox
+        )
+set_target_properties(hpd_doc PROPERTIES LINKER_LANGUAGE C)
+
 add_subdirectory(common)
 add_subdirectory(hpd)
 add_subdirectory(example)

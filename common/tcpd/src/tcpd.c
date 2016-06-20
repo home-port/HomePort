@@ -261,10 +261,10 @@ static void tcpd_on_ev_conn(hpd_ev_loop_t *loop, struct ev_io *watcher, int reve
  *  hpd_tcpd_start() and stopped with hpd_tcpd_stop(). The instance should be
  *  destroyed with hpd_tcpd_destroy when not longer needed.
  *
+ *  \param  tcpd      Will point to the newly created instance on success.
  *  \param  settings  The settings for the tcpd.
+ *  \param  context   HPD module context.
  *  \param  loop      The event loop to run tcpd on.
- *
- *  \return  The new tcpd instance.
  */
 hpd_error_t hpd_tcpd_create(hpd_tcpd_t **tcpd, hpd_tcpd_settings_t *settings, const hpd_module_t *context,
                             hpd_ev_loop_t *loop)
@@ -292,7 +292,7 @@ hpd_error_t hpd_tcpd_create(hpd_tcpd_t **tcpd, hpd_tcpd_settings_t *settings, co
  *  tcpd should be stopped before destroy to properly close all
  *  connections and sockets first.
  *
- *  \param  instance  The tcpd instance to destroy
+ *  \param  tcpd  The tcpd instance to destroy
  */
 hpd_error_t hpd_tcpd_destroy(hpd_tcpd_t *tcpd)
 {
@@ -310,8 +310,7 @@ hpd_error_t hpd_tcpd_destroy(hpd_tcpd_t *tcpd)
  *
  *  To stop the tcpd again, one may call hpd_tcpd_stop().
  *
- *  \param instance The tcpd instance to start. Created with
- *  hpd_tcpd_create();
+ *  \param tcpd  The tcpd instance to start. Created with hpd_tcpd_create()
  *
  *  \return  0 on success, 1 on error.
  */
@@ -423,7 +422,7 @@ hpd_error_t hpd_tcpd_start(hpd_tcpd_t *tcpd)
  *  This includes killing all connections without waiting for
  *  remaining data to be sent.
  *
- *  \param instance The tcpd instance to stop.
+ *  \param tcpd The tcpd instance to stop.
  */
 hpd_error_t hpd_tcpd_stop(hpd_tcpd_t *tcpd)
 {
@@ -453,8 +452,7 @@ hpd_error_t hpd_tcpd_stop(hpd_tcpd_t *tcpd)
  * Get the IP address of the client
  *
  *  \param  conn  The connection on which the client is connected.
- *
- *  \return  The IP address in a string.
+ *  \param  ip    Will point to the ip on success.
  */
 hpd_error_t hpd_tcpd_conn_get_ip(hpd_tcpd_conn_t *conn, const char **ip)
 {
@@ -526,7 +524,7 @@ hpd_error_t hpd_tcpd_conn_sendf(hpd_tcpd_conn_t *conn, const char *fmt, ...)
  *
  * \param  conn  Connection to send on
  * \param  fmt   Format string
- * \param  arg   List of arguments
+ * \param  vp    List of arguments
  *
  * \return  zero on success, -1 or the return value of vsprintf on
  *          failure

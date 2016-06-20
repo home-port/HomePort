@@ -41,8 +41,8 @@ typedef struct hpd_map hpd_map_t;
 typedef struct hpd_pair hpd_pair_t;
 
 hpd_error_t hpd_map_alloc(hpd_map_t **map);
-hpd_error_t hpd_map_first(hpd_map_t *map, hpd_pair_t **pair);
-hpd_error_t hpd_map_next(hpd_pair_t **pair);
+hpd_error_t hpd_map_first(hpd_map_t *map, const hpd_pair_t **pair);
+hpd_error_t hpd_map_next(const hpd_pair_t **pair);
 hpd_error_t hpd_map_remove(hpd_map_t *map, hpd_pair_t *pair);
 hpd_error_t hpd_map_free(hpd_map_t *map);
 hpd_error_t hpd_map_get(hpd_map_t *map, const char *k, const char **v);

@@ -28,7 +28,6 @@
 #include "hpd/hpd_api.h"
 #include "daemon.h"
 #include "log.h"
-// Not the same as other queue.h
 
 hpd_error_t hpd_alloc(hpd_t **hpd) {
     if (!hpd) LOG_RETURN_E_NULL();
