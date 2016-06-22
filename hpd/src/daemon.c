@@ -81,7 +81,7 @@ static int daemon_on_parse_opt(int key, char *arg, struct argp_state *state)
                 char **argv = NULL;
                 HPD_REALLOC(argv, argc, char *);
                 argv[0] = hpd->argv0;
-                for (char *a = strtok(buffer, " \n\t"); a; a = strtok(NULL, " ")) {
+                for (char *a = strtok(buffer, " \n\t"); a; a = strtok(NULL, " \n\t")) {
                     HPD_REALLOC(argv, argc + 1, char *);
                     argv[argc] = a;
                     argc++;
