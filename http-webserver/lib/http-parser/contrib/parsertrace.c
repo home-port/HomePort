@@ -152,5 +152,6 @@ int main(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
+  fclose(file);
   return EXIT_SUCCESS;
 }
