@@ -201,8 +201,7 @@ xmlGetState(char *state)
 char*
 xmlParseState(char *xml_value)
 {
-  mxml_node_t *xml;
-  mxml_node_t *node;
+  mxml_node_t *xml, *state_node;
 
   xml = mxmlLoadString(NULL, xml_value, MXML_TEXT_CALLBACK);
   if(xml == NULL)
@@ -211,16 +210,23 @@ xmlParseState(char *xml_value)
     return NULL;
   }
 
-  node = mxmlFindElement(xml, xml, "value", NULL, NULL, MXML_DESCEND);
-  if(node == NULL || node-> child == NULL || node->child->value.text.string == NULL)
+  state_node = mxmlFindElement(xml, xml, "value", NULL, NULL, MXML_DESCEND);
+  if(state_node == NULL || state_node-> child == NULL || state_node->child->value.text.string == NULL)
   {
     mxmlDelete(xml);
     printf("No \"value\" in the XML file\n");
     return NULL;
   }
 
-  char *state = malloc(sizeof(char)*(strlen(node->child->value.text.string)+1));
-  strcpy(state, node->child->value.text.string);
+  size_t len = 0;
+  for (mxml_node_t *node = state_node->child; node != NULL; node = node->next)
+    len += node->value.text.whitespace + strlen(node->value.text.string);
+
+  char *state = calloc(len+1, sizeof(char));
+
+  int i = 0;
+  for (mxml_node_t *node = state_node->child; node != NULL; node = node->next)
+    i += sprintf(&state[i], "%*s%s", node->value.text.whitespace, "", node->value.text.string);
 
   mxmlDelete(xml);
 
