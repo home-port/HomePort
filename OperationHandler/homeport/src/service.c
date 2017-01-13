@@ -52,13 +52,13 @@ homePortNew( struct ev_loop *loop )
 
     // MXML header file bug results in 2.8 and 2.9 having the same version defines
     if (MXML_MAJOR_VERSION == 2 && MXML_MINOR_VERSION == 8) {
-        fprintf("-------- IMPORTANT WARNING --------\n");
-        fprintf("You may have version 2.9 of mxml which is known to contain xml parsing errors with some HomePort modules, please check and upgrade (packages libmxml1 and libmxml-dev on Ubuntu)\n");
-        fprintf("-------- IMPORTANT WARNING --------\n");
+        fprintf(stderr, "-------- IMPORTANT WARNING --------\n");
+        fprintf(stderr, "You may have version 2.9 of mxml which is known to contain xml parsing errors with some HomePort modules, please check and upgrade (packages libmxml1 and libmxml-dev on Ubuntu)\n");
+        fprintf(stderr, "-------- IMPORTANT WARNING --------\n");
     } else if (MXML_MAJOR_VERSION == 2 && MXML_MINOR_VERSION == 9) {
-        fprintf("-------- IMPORTANT WARNING --------\n");
-        fprintf("You HAVE version 2.9 of mxml which is known to contain xml parsing errors with some HomePort modules, please upgrade (packages libmxml1 and libmxml-dev on Ubuntu)\n");
-        fprintf("-------- IMPORTANT WARNING --------\n");
+        fprintf(stderr, "-------- IMPORTANT WARNING --------\n");
+        fprintf(stderr, "You HAVE version 2.9 of mxml which is known to contain xml parsing errors with some HomePort modules, please upgrade (packages libmxml1 and libmxml-dev on Ubuntu)\n");
+        fprintf(stderr, "-------- IMPORTANT WARNING --------\n");
     }
 
     homeport->loop = loop;
