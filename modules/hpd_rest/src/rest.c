@@ -33,6 +33,7 @@
 #include <curl/curl.h>
 #include "rest_json.h"
 #include "rest_xml.h"
+#include <mxml.h>
 
 static hpd_error_t rest_on_create(void **data, const hpd_module_t *context);
 static hpd_error_t rest_on_destroy(void *data);
@@ -996,6 +997,14 @@ static hpd_error_t rest_on_start(void *data, hpd_t *hpd)
     const hpd_module_t *context = rest->context;
 
     HPD_LOG_INFO(context, "Starting REST server on port %d.", rest->ws_set.port);
+
+#if MXML_MAJOR_VERSION == 2 && MXML_MINOR_VERSION == 8
+#warning "You may have version 2.9 of mxml which is known to contain xml parsing errors with some HomePort modules, please check and upgrade (packages libmxml1 and libmxml-dev on Ubuntu)"
+    HPD_LOG_WARN(context, "You may have version 2.9 of mxml which is known to contain xml parsing errors with some HomePort modules, please check and upgrade (packages libmxml1 and libmxml-dev on Ubuntu).");
+#elif MXML_MAJOR_VERSION == 2 && MXML_MINOR_VERSION == 9
+    #warning "You HAVE version 2.9 of mxml which is known to contain xml parsing errors with some HomePort modules, please upgrade (packages libmxml1 and libmxml-dev on Ubuntu)"
+    HPD_LOG_WARN(context, "You HAVE version 2.9 of mxml which is known to contain xml parsing errors with some HomePort modules, please upgrade (packages libmxml1 and libmxml-dev on Ubuntu).");
+#endif
 
     rest->hpd = hpd;
 
