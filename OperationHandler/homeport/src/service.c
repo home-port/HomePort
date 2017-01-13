@@ -30,6 +30,7 @@
 #include <ev.h>
 #include "utlist.h"
 #include <mxml.h>
+#include <stdio.h>
 
 /**
  * Creates a HomePort structure
