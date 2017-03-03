@@ -29,7 +29,7 @@
 # as representing official policies, either expressed.
 
 cmake_minimum_required(VERSION 2.6)
-project(HOMEPORT C CXX)
+project(homeport C CXX)
 
 set(CMAKE_C_FLAGS "-std=gnu99 -DHPD_REST_ORIGIN")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -g -DDEBUG -Wall")
@@ -42,7 +42,16 @@ if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
   set(CMAKE_C_FLAGS_DEBUG "-fPIC ${CMAKE_C_FLAGS_DEBUG}")
 endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 
+# -fPIC for cross-compiling against arm
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL armhf)
+    set(CMAKE_C_FLAGS "-fPIC ${CMAKE_C_FLAGS}")
+    set(CMAKE_C_FLAGS_DEBUG "-fPIC ${CMAKE_C_FLAGS_DEBUG}")
+endif(CMAKE_SYSTEM_PROCESSOR STREQUAL armhf)
+
 # GoogleTest
+MESSAGE("PATH: " ${CMAKE_LIBRARY_ARCHITECTURE})
+find_path(GOOGLE_TEST_INCLUDE pthread.h)
+include_directories(${GOOGLE_TEST_INCLUDE})
 add_subdirectory(lib/googletest EXCLUDE_FROM_ALL)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
@@ -108,3 +117,37 @@ add_subdirectory(common)
 add_subdirectory(hpd)
 add_subdirectory(example)
 add_subdirectory(modules)
+
+SET(MAJOR_VERSION "0")
+SET(MINOR_VERSION "2")
+SET(PATCH_VERSION "0")
+
+IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
+    INCLUDE(InstallRequiredSystemLibraries)
+
+    SET(CPACK_SET_DESTDIR "on")
+    SET(CPACK_PACKAGING_INSTALL_PREFIX "/tmp")
+    SET(CPACK_GENERATOR "DEB")
+
+    SET(CPACK_PACKAGE_DESCRIPTION "AAU HomePort")
+    SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "HomePort middleware/glue for adapters and applications")
+    SET(CPACK_PACKAGE_VENDOR "CISS/AAU")
+    SET(CPACK_PACKAGE_CONTACT "kronborg@cs.aau.dk")
+    SET(CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
+    SET(CPACK_PACKAGE_VERSION_MAJOR "${MAJOR_VERSION}")
+    SET(CPACK_PACKAGE_VERSION_MINOR "${MINOR_VERSION}")
+    SET(CPACK_PACKAGE_VERSION_PATCH "${PATCH_VERSION}")
+    SET(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}_${CPACK_DEBIAN_ARCHITECTURE}_${MAJOR_VERSION}.${MINOR_VERSION}.${CPACK_PACKAGE_VERSION_PATCH}")
+    SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}_${CPACK_DEBIAN_ARCHITECTURE}_${MAJOR_VERSION}.${MINOR_VERSION}.${CPACK_PACKAGE_VERSION_PATCH}")
+
+    #dependencies for homePort
+    SET(CPACK_DEBIAN_PACKAGE_DEPENDS " libev4 , libjansson4 , libmxml1 , libcurl3-gnutls ")
+
+    SET(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
+    SET(CPACK_DEBIAN_PACKAGE_SECTION "libs")
+    SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
+
+    SET(CPACK_COMPONENTS_ALL Libraries ApplicationData)
+    INCLUDE(CPack)
+
+ENDIF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")

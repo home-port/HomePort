@@ -44,4 +44,8 @@ add_executable(example_demo
         demo_main.c
         tutorial02.dox
         )
-target_link_libraries(example_demo example_demo_adapter example_demo_application hpd-rest)
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL armhf)
+    target_link_libraries(example_demo example_demo_adapter example_demo_application hpd-rest pthread resolv)
+else(CMAKE_SYSTEM_PROCESSOR STREQUAL armhf)
+    target_link_libraries(example_demo example_demo_adapter example_demo_application hpd-rest)
+endif(CMAKE_SYSTEM_PROCESSOR STREQUAL armhf)
