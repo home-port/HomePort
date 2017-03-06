@@ -28,11 +28,10 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(include)
-
-add_subdirectory(include)
-add_subdirectory(map)
-add_subdirectory(httpd)
-add_subdirectory(tcpd)
-add_subdirectory(curl_ev)
-add_subdirectory(tty)
+add_library(hpd-tty SHARED
+        ../include/hpd/common/hpd_tty.h
+        tty.c
+        )
+target_link_libraries(hpd-tty ev)
+set_target_properties(hpd-tty PROPERTIES VERSION 0.0.0 SOVERSION 0)
+install(TARGETS hpd-tty DESTINATION lib)
