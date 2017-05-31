@@ -224,7 +224,7 @@ hpd_error_t hpd_adapter_get_adapter_id_str(const hpd_adapter_t *adapter, const c
 hpd_error_t hpd_adapter_id_get_adapter_id_str(const hpd_adapter_id_t *aid, const char **id)
 {
     if (!aid) return HPD_E_NULL;
-    if (!!id) LOG_RETURN_E_NULL(aid->context->hpd);
+    if (!id) LOG_RETURN_E_NULL(aid->context->hpd);
     return discovery_get_aid_aid(aid, id);
 }
 
