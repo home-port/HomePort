@@ -408,11 +408,23 @@ hpd_error_t hpd_json_value_to_json(const hpd_module_t *context, const hpd_value_
     if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_VALUE, body, context))) goto error;
 
     // Add headers
+    json_t *headers;
+    if (!(headers = json_object())) goto json_error;
     const hpd_pair_t *pair;
     hpd_value_foreach_header(rc, pair, value) {
-        if ((rc = json_add_pair(json, pair, context))) goto error;
+        if ((rc = json_add_pair(headers, pair, context))) {
+            json_decref(headers);
+            goto error;
+        }
     }
-    if (rc) goto error;
+    if (rc) {
+        json_decref(headers);
+        goto error;
+    }
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_HEADER, headers)) {
+        json_decref(headers);
+        goto json_error;
+    }
 
     (*out) = json;
     free(null_term);

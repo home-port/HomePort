@@ -44,6 +44,7 @@ static const char * const HPD_SERIALIZE_KEY_VALUE = "_value";
 static const char * const HPD_SERIALIZE_KEY_CONFIGURATION = "_configuration";
 static const char * const HPD_SERIALIZE_KEY_STATUS = "_status";
 static const char * const HPD_SERIALIZE_KEY_METHOD = "_method";
+static const char * const HPD_SERIALIZE_KEY_HEADER = "_header";
 
 static const char * const HPD_SERIALIZE_VAL_ASCII = "ASCII";
 static const char * const HPD_SERIALIZE_VAL_TRUE = "1";
