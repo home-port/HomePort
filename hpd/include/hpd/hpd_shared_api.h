@@ -84,67 +84,67 @@ hpd_error_t hpd_parameter_id_free(hpd_parameter_id_t *id);
 /// [id_t functions]
 
 /// [hpd_adapter_t functions]
-hpd_error_t hpd_adapter_get_adapter_id(const hpd_adapter_id_t *aid, const char **id);
-hpd_error_t hpd_adapter_get_attr(const hpd_adapter_id_t *id, const char *key, const char **val);
-hpd_error_t hpd_adapter_get_attrs(const hpd_adapter_id_t *id, ...);
-hpd_error_t hpd_adapter_first_attr(const hpd_adapter_id_t *id, const hpd_pair_t **pair);
-hpd_error_t hpd_adapter_next_attr(const hpd_pair_t **pair);
+hpd_error_t hpd_adapter_id_get_adapter_id_str(const hpd_adapter_id_t *aid, const char **id);
+hpd_error_t hpd_adapter_id_get_attr(const hpd_adapter_id_t *id, const char *key, const char **val);
+hpd_error_t hpd_adapter_id_get_attrs(const hpd_adapter_id_t *id, ...);
+hpd_error_t hpd_adapter_id_first_attr(const hpd_adapter_id_t *id, const hpd_pair_t **pair);
+hpd_error_t hpd_adapter_id_next_attr(const hpd_pair_t **pair);
 /// [hpd_adapter_t functions]
 
 /// [hpd_device_t functions]
-hpd_error_t hpd_device_get_adapter_id(const hpd_device_id_t *did, const char **id);
-hpd_error_t hpd_device_get_device_id(const hpd_device_id_t *did, const char **id);
-hpd_error_t hpd_device_get_attr(const hpd_device_id_t *id, const char *key, const char **val);
-hpd_error_t hpd_device_get_attrs(const hpd_device_id_t *id, ...);
-hpd_error_t hpd_device_first_attr(const hpd_device_id_t *id, const hpd_pair_t **pair);
-hpd_error_t hpd_device_next_attr(const hpd_pair_t **pair);
+hpd_error_t hpd_device_id_get_adapter_id_str(const hpd_device_id_t *did, const char **id);
+hpd_error_t hpd_device_id_get_device_id_str(const hpd_device_id_t *did, const char **id);
+hpd_error_t hpd_device_id_get_attr(const hpd_device_id_t *id, const char *key, const char **val);
+hpd_error_t hpd_device_id_get_attrs(const hpd_device_id_t *id, ...);
+hpd_error_t hpd_device_id_first_attr(const hpd_device_id_t *id, const hpd_pair_t **pair);
+hpd_error_t hpd_device_id_next_attr(const hpd_pair_t **pair);
 /// [hpd_device_t functions]
 
 /// [hpd_service_t functions]
-hpd_error_t hpd_service_get_adapter_id(const hpd_service_id_t *sid, const char **id);
-hpd_error_t hpd_service_get_device_id(const hpd_service_id_t *sid, const char **id);
-hpd_error_t hpd_service_get_service_id(const hpd_service_id_t *sid, const char **id);
-hpd_error_t hpd_service_get_attr(const hpd_service_id_t *id, const char *key, const char **val);
-hpd_error_t hpd_service_get_attrs(const hpd_service_id_t *id, ...);
-hpd_error_t hpd_service_has_action(const hpd_service_id_t *id, const hpd_method_t method, hpd_bool_t *boolean);
-hpd_error_t hpd_service_first_action(const hpd_service_id_t *id, hpd_action_t **action);
-hpd_error_t hpd_service_next_action(hpd_action_t **action);
-hpd_error_t hpd_service_first_attr(const hpd_service_id_t *id, const hpd_pair_t **pair);
-hpd_error_t hpd_service_next_attr(const hpd_pair_t **pair);
+hpd_error_t hpd_service_id_get_adapter_id_str(const hpd_service_id_t *sid, const char **id);
+hpd_error_t hpd_service_id_get_device_id_str(const hpd_service_id_t *sid, const char **id);
+hpd_error_t hpd_service_id_get_service_id_str(const hpd_service_id_t *sid, const char **id);
+hpd_error_t hpd_service_id_get_attr(const hpd_service_id_t *id, const char *key, const char **val);
+hpd_error_t hpd_service_id_get_attrs(const hpd_service_id_t *id, ...);
+hpd_error_t hpd_service_id_has_action(const hpd_service_id_t *id, const hpd_method_t method, hpd_bool_t *boolean);
+hpd_error_t hpd_service_id_first_action(const hpd_service_id_t *id, const hpd_action_t **action);
+hpd_error_t hpd_service_id_next_action(const hpd_action_t **action);
+hpd_error_t hpd_service_id_first_attr(const hpd_service_id_t *id, const hpd_pair_t **pair);
+hpd_error_t hpd_service_id_next_attr(const hpd_pair_t **pair);
 /// [hpd_service_t functions]
 
 /// [hpd_parameter_t functions]
-hpd_error_t hpd_parameter_get_adapter_id(const hpd_parameter_id_t *pid, const char **id);
-hpd_error_t hpd_parameter_get_device_id(const hpd_parameter_id_t *pid, const char **id);
-hpd_error_t hpd_parameter_get_service_id(const hpd_parameter_id_t *pid, const char **id);
-hpd_error_t hpd_parameter_get_parameter_id(const hpd_parameter_id_t *pid, const char **id);
-hpd_error_t hpd_parameter_get_attr(const hpd_parameter_id_t *id, const char *key, const char **val);
-hpd_error_t hpd_parameter_get_attrs(const hpd_parameter_id_t *id, ...);
-hpd_error_t hpd_parameter_first_attr(const hpd_parameter_id_t *id, const hpd_pair_t **pair);
-hpd_error_t hpd_parameter_next_attr(const hpd_pair_t **pair);
+hpd_error_t hpd_parameter_id_get_adapter_id_str(const hpd_parameter_id_t *pid, const char **id);
+hpd_error_t hpd_parameter_id_get_device_id_str(const hpd_parameter_id_t *pid, const char **id);
+hpd_error_t hpd_parameter_id_get_service_id_str(const hpd_parameter_id_t *pid, const char **id);
+hpd_error_t hpd_parameter_id_get_parameter_id_str(const hpd_parameter_id_t *pid, const char **id);
+hpd_error_t hpd_parameter_id_get_attr(const hpd_parameter_id_t *id, const char *key, const char **val);
+hpd_error_t hpd_parameter_id_get_attrs(const hpd_parameter_id_t *id, ...);
+hpd_error_t hpd_parameter_id_first_attr(const hpd_parameter_id_t *id, const hpd_pair_t **pair);
+hpd_error_t hpd_parameter_id_next_attr(const hpd_pair_t **pair);
 /// [hpd_parameter_t functions]
 
 /// [model foreach loops]
-#define hpd_service_foreach_action(RC, ACTION, ID) for ( \
-    (RC) = hpd_service_first_action((ID), &(ACTION)); \
+#define HPD_SERVICE_ID_FOREACH_ACTION(RC, ACTION, ID) for ( \
+    (RC) = hpd_service_id_first_action((ID), &(ACTION)); \
     !(RC) && (ACTION); \
-    (RC) = hpd_service_next_action(&(ACTION)))
-#define hpd_adapter_foreach_attr(RC, PAIR, ID) for ( \
-    (RC) = hpd_adapter_first_attr((ID), &(PAIR)); \
+    (RC) = hpd_service_id_next_action(&(ACTION)))
+#define HPD_ADAPTER_ID_FOREACH_ATTR(RC, PAIR, ID) for ( \
+    (RC) = hpd_adapter_id_first_attr((ID), &(PAIR)); \
     !(RC) && (PAIR); \
-    (RC) = hpd_adapter_next_attr(&(PAIR)))
-#define hpd_device_foreach_attr(RC, PAIR, ID) for ( \
-    (RC) = hpd_device_first_attr((ID), &(PAIR)); \
+    (RC) = hpd_adapter_id_next_attr(&(PAIR)))
+#define HPD_DEVICE_ID_FOREACH_ATTR(RC, PAIR, ID) for ( \
+    (RC) = hpd_device_id_first_attr((ID), &(PAIR)); \
     !(RC) && (PAIR); \
-    (RC) = hpd_device_next_attr(&(PAIR)))
-#define hpd_service_foreach_attr(RC, PAIR, ID) for ( \
-    (RC) = hpd_service_first_attr((ID), &(PAIR)); \
+    (RC) = hpd_device_id_next_attr(&(PAIR)))
+#define HPD_SERVICE_ID_FOREACH_ATTR(RC, PAIR, ID) for ( \
+    (RC) = hpd_service_id_first_attr((ID), &(PAIR)); \
     !(RC) && (PAIR); \
-    (RC) = hpd_service_next_attr(&(PAIR)))
-#define hpd_parameter_foreach_attr(RC, PAIR, ID) for ( \
-    (RC) = hpd_parameter_first_attr((ID), &(PAIR)); \
+    (RC) = hpd_service_id_next_attr(&(PAIR)))
+#define HPD_PARAMETER_ID_FOREACH_ATTR(RC, PAIR, ID) for ( \
+    (RC) = hpd_parameter_id_first_attr((ID), &(PAIR)); \
     !(RC) && (PAIR); \
-    (RC) = hpd_parameter_next_attr(&(PAIR)))
+    (RC) = hpd_parameter_id_next_attr(&(PAIR)))
 /// [model foreach loops]
 
 /// [hpd_action_t functions]
@@ -156,63 +156,63 @@ hpd_error_t hpd_pair_get(const hpd_pair_t *pair, const char **key, const char **
 /// [hpd_pair_t functions]
 
 /// [Browsing functions]
-hpd_error_t hpd_adapter_get_hpd(const hpd_adapter_id_t *aid, hpd_t **hpd);
-hpd_error_t hpd_device_get_hpd(const hpd_device_id_t *did, hpd_t **hpd);
-hpd_error_t hpd_device_get_adapter(const hpd_device_id_t *did, const hpd_adapter_id_t **aid);
-hpd_error_t hpd_service_get_hpd(const hpd_service_id_t *sid, hpd_t **hpd);
-hpd_error_t hpd_service_get_adapter(const hpd_service_id_t *sid, const hpd_adapter_id_t **aid);
-hpd_error_t hpd_service_get_device(const hpd_service_id_t *sid, const hpd_device_id_t **did);
-hpd_error_t hpd_parameter_get_hpd(const hpd_parameter_id_t *pid, hpd_t **hpd);
-hpd_error_t hpd_parameter_get_adapter(const hpd_parameter_id_t *pid, const hpd_adapter_id_t **aid);
-hpd_error_t hpd_parameter_get_device(const hpd_parameter_id_t *pid, const hpd_device_id_t **did);
-hpd_error_t hpd_parameter_get_service(const hpd_parameter_id_t *pid, const hpd_service_id_t **sid);
+hpd_error_t hpd_adapter_id_get_hpd(const hpd_adapter_id_t *aid, hpd_t **hpd);
+hpd_error_t hpd_device_id_get_hpd(const hpd_device_id_t *did, hpd_t **hpd);
+hpd_error_t hpd_device_id_get_adapter_id(const hpd_device_id_t *did, const hpd_adapter_id_t **aid);
+hpd_error_t hpd_service_id_get_hpd(const hpd_service_id_t *sid, hpd_t **hpd);
+hpd_error_t hpd_service_id_get_adapter_id(const hpd_service_id_t *sid, const hpd_adapter_id_t **aid);
+hpd_error_t hpd_service_id_get_device_id(const hpd_service_id_t *sid, const hpd_device_id_t **did);
+hpd_error_t hpd_parameter_id_get_hpd(const hpd_parameter_id_t *pid, hpd_t **hpd);
+hpd_error_t hpd_parameter_id_get_adapter_id(const hpd_parameter_id_t *pid, const hpd_adapter_id_t **aid);
+hpd_error_t hpd_parameter_id_get_device_id(const hpd_parameter_id_t *pid, const hpd_device_id_t **did);
+hpd_error_t hpd_parameter_id_get_service_id(const hpd_parameter_id_t *pid, const hpd_service_id_t **sid);
 
-hpd_error_t hpd_first_adapter(hpd_t *hpd, hpd_adapter_id_t **adapter_id);
-hpd_error_t hpd_first_device(hpd_t *hpd, hpd_device_id_t **device_id);
-hpd_error_t hpd_first_service(hpd_t *hpd, hpd_service_id_t **service_id);
-hpd_error_t hpd_adapter_first_device(const hpd_adapter_id_t *adapter_id, hpd_device_id_t **device_id);
-hpd_error_t hpd_adapter_first_service(const hpd_adapter_id_t *adapter_id, hpd_service_id_t **service_id);
-hpd_error_t hpd_device_first_service(const hpd_device_id_t *device_id, hpd_service_id_t **service_id);
-hpd_error_t hpd_service_first_parameter(const hpd_service_id_t *service_id, hpd_parameter_id_t **parameter_id);
+hpd_error_t hpd_first_adapter_id(hpd_t *hpd, hpd_adapter_id_t **adapter_id);
+hpd_error_t hpd_first_device_id(hpd_t *hpd, hpd_device_id_t **device_id);
+hpd_error_t hpd_first_service_id(hpd_t *hpd, hpd_service_id_t **service_id);
+hpd_error_t hpd_adapter_id_first_device_id(const hpd_adapter_id_t *adapter_id, hpd_device_id_t **device_id);
+hpd_error_t hpd_adapter_id_first_service_id(const hpd_adapter_id_t *adapter_id, hpd_service_id_t **service_id);
+hpd_error_t hpd_device_id_first_service_id(const hpd_device_id_t *device_id, hpd_service_id_t **service_id);
+hpd_error_t hpd_service_id_first_parameter_id(const hpd_service_id_t *service_id, hpd_parameter_id_t **parameter_id);
 
-hpd_error_t hpd_next_adapter(hpd_adapter_id_t **adapter_id);
-hpd_error_t hpd_next_device(hpd_device_id_t **device_id);
-hpd_error_t hpd_next_service(hpd_service_id_t **service_id);
-hpd_error_t hpd_adapter_next_device(hpd_device_id_t **device_id);
-hpd_error_t hpd_adapter_next_service(hpd_service_id_t **service_id);
-hpd_error_t hpd_device_next_service(hpd_service_id_t **service_id);
-hpd_error_t hpd_service_next_parameter(hpd_parameter_id_t **parameter_id);
+hpd_error_t hpd_next_adapter_id(hpd_adapter_id_t **adapter_id);
+hpd_error_t hpd_next_device_id(hpd_device_id_t **device_id);
+hpd_error_t hpd_next_service_id(hpd_service_id_t **service_id);
+hpd_error_t hpd_adapter_id_next_device_id(hpd_device_id_t **device_id);
+hpd_error_t hpd_adapter_id_next_service_id(hpd_service_id_t **service_id);
+hpd_error_t hpd_device_id_next_service_id(hpd_service_id_t **service_id);
+hpd_error_t hpd_service_id_next_parameter_id(hpd_parameter_id_t **parameter_id);
 /// [Browsing functions]
 
 /// [Browsing foreach loops]
-#define hpd_foreach_adapter(RC, ADAPTER, HPD) for ( \
-    (RC) = hpd_first_adapter((HPD), &(ADAPTER)); \
+#define HPD_FOREACH_ADAPTER_ID(RC, ADAPTER, HPD) for ( \
+    (RC) = hpd_first_adapter_id((HPD), &(ADAPTER)); \
     !(RC) && (ADAPTER); \
-    (RC) = hpd_next_adapter(&(ADAPTER)))
-#define hpd_foreach_device(RC, DEVICE, HPD) for ( \
-    (RC) = hpd_first_device((HPD), &(DEVICE)); \
+    (RC) = hpd_next_adapter_id(&(ADAPTER)))
+#define HPD_FOREACH_DEVICE_ID(RC, DEVICE, HPD) for ( \
+    (RC) = hpd_first_device_id((HPD), &(DEVICE)); \
     !(RC) && (DEVICE); \
-    (RC) = hpd_next_device(&(DEVICE)))
-#define hpd_foreach_service(RC, SERVICE, HPD) for ( \
-    (RC) = hpd_first_service((HPD), &(SERVICE)); \
+    (RC) = hpd_next_device_id(&(DEVICE)))
+#define HPD_FOREACH_SERVICE_ID(RC, SERVICE, HPD) for ( \
+    (RC) = hpd_first_service_id((HPD), &(SERVICE)); \
     !(RC) && (SERVICE); \
-    (RC) = hpd_next_service(&(SERVICE)))
-#define hpd_adapter_foreach_device(RC, DEVICE, ADAPTER) for ( \
-    (RC) = hpd_adapter_first_device((ADAPTER), &(DEVICE)); \
+    (RC) = hpd_next_service_id(&(SERVICE)))
+#define HPD_ADAPTER_ID_FOREACH_DEVICE_ID(RC, DEVICE, ADAPTER) for ( \
+    (RC) = hpd_adapter_id_first_device_id((ADAPTER), &(DEVICE)); \
     !(RC) && (DEVICE); \
-    (RC) = hpd_adapter_next_device(&(DEVICE)))
-#define hpd_adapter_foreach_service(RC, SERVICE, ADAPTER) for ( \
-    (RC) = hpd_adapter_first_service((ADAPTER), &(SERVICE)); \
+    (RC) = hpd_adapter_id_next_device_id(&(DEVICE)))
+#define HPD_ADAPTER_ID_FOREACH_SERVICE_ID(RC, SERVICE, ADAPTER) for ( \
+    (RC) = hpd_adapter_id_first_service_id((ADAPTER), &(SERVICE)); \
     !(RC) && (SERVICE); \
-    (RC) = hpd_adapter_next_service(&(SERVICE)))
-#define hpd_device_foreach_service(RC, SERVICE, DEVICE) for ( \
-    (RC) = hpd_device_first_service((DEVICE), &(SERVICE)); \
+    (RC) = hpd_adapter_id_next_service_id(&(SERVICE)))
+#define HPD_DEVICE_ID_FOREACH_SERVICE_ID(RC, SERVICE, DEVICE) for ( \
+    (RC) = hpd_device_id_first_service_id((DEVICE), &(SERVICE)); \
     !(RC) && (SERVICE); \
-    (RC) = hpd_device_next_service(&(SERVICE)))
-#define hpd_service_foreach_parameter(RC, PARAMETER, SERVICE) for ( \
-    (RC) = hpd_service_first_parameter((SERVICE), &(PARAMETER)); \
+    (RC) = hpd_device_id_next_service_id(&(SERVICE)))
+#define HPD_SERVICE_ID_FOREACH_PARAMETER_ID(RC, PARAMETER, SERVICE) for ( \
+    (RC) = hpd_service_id_first_parameter_id((SERVICE), &(PARAMETER)); \
     !(RC) && (PARAMETER); \
-    (RC) = hpd_service_next_parameter(&(PARAMETER)))
+    (RC) = hpd_service_id_next_parameter_id(&(PARAMETER)))
 /// [Browsing foreach loops]
 
 /// [hpd_value_t functions]

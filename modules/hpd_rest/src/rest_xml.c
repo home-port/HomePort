@@ -81,12 +81,12 @@ static hpd_error_t rest_xml_add_parameter(mxml_node_t *parent, hpd_parameter_id_
 
     // Add id
     const char *id;
-    if ((rc = hpd_parameter_get_parameter_id(parameter, &id))) return rc;
+    if ((rc = hpd_parameter_id_get_parameter_id_str(parameter, &id))) return rc;
     if ((rc = rest_xml_add(xml, HPD_REST_KEY_ID, id, context))) return rc;
 
     // Add attributes
     const hpd_pair_t *pair;
-    hpd_parameter_foreach_attr(rc, pair, parameter)
+    HPD_PARAMETER_ID_FOREACH_ATTR(rc, pair, parameter)
         if ((rc = rest_xml_add_attr(xml, pair, context))) return rc;
     if (rc) return rc;
 
@@ -103,7 +103,7 @@ static hpd_error_t rest_xml_add_service(mxml_node_t *parent, hpd_service_id_t *s
 
     // Add id
     const char *id;
-    if ((rc = hpd_service_get_service_id(service, &id))) return rc;
+    if ((rc = hpd_service_id_get_service_id_str(service, &id))) return rc;
     if ((rc = rest_xml_add(xml, HPD_REST_KEY_ID, id, context))) return rc;
 
     // Add url
@@ -116,8 +116,8 @@ static hpd_error_t rest_xml_add_service(mxml_node_t *parent, hpd_service_id_t *s
     free(url);
 
     // Add actions
-    hpd_action_t *action;
-    hpd_service_foreach_action(rc, action, service) {
+    const hpd_action_t *action;
+    HPD_SERVICE_ID_FOREACH_ACTION(rc, action, service) {
         hpd_method_t method;
         if ((rc = hpd_action_get_method(action, &method))) return rc;
         switch (method) {
@@ -135,13 +135,13 @@ static hpd_error_t rest_xml_add_service(mxml_node_t *parent, hpd_service_id_t *s
 
     // Add attributes
     const hpd_pair_t *pair;
-    hpd_service_foreach_attr(rc, pair, service)
+    HPD_SERVICE_ID_FOREACH_ATTR(rc, pair, service)
         if ((rc = rest_xml_add_attr(xml, pair, context))) return rc;
     if (rc) return rc;
 
     // Add parameters
     hpd_parameter_id_t *parameter;
-    hpd_service_foreach_parameter(rc, parameter, service) {
+    HPD_SERVICE_ID_FOREACH_PARAMETER_ID(rc, parameter, service) {
         if ((rc = rest_xml_add_parameter(xml, parameter, context))) return rc;
     }
     if (rc) return rc;
@@ -159,18 +159,18 @@ static hpd_error_t rest_xml_add_device(mxml_node_t *parent, hpd_device_id_t *dev
 
     // Add id
     const char *id;
-    if ((rc = hpd_device_get_device_id(device, &id))) return rc;
+    if ((rc = hpd_device_id_get_device_id_str(device, &id))) return rc;
     if ((rc = rest_xml_add(xml, HPD_REST_KEY_ID, id, context))) return rc;
 
     // Add attributes
     const hpd_pair_t *pair;
-    hpd_device_foreach_attr(rc, pair, device)
+    HPD_DEVICE_ID_FOREACH_ATTR(rc, pair, device)
         if ((rc = rest_xml_add_attr(xml, pair, context))) return rc;
     if (rc) return rc;
 
     // Add services
     hpd_service_id_t *service;
-    hpd_device_foreach_service(rc, service, device) {
+    HPD_DEVICE_ID_FOREACH_SERVICE_ID(rc, service, device) {
         if ((rc = rest_xml_add_service(xml, service, rest, context))) return rc;
     }
     if (rc) return rc;
@@ -188,19 +188,19 @@ static hpd_error_t rest_xml_add_adapter(mxml_node_t *parent, hpd_adapter_id_t *a
 
     // Add id
     const char *id;
-    if ((rc = hpd_adapter_get_adapter_id(adapter, &id))) return rc;
+    if ((rc = hpd_adapter_id_get_adapter_id_str(adapter, &id))) return rc;
     if ((rc = rest_xml_add(json, HPD_REST_KEY_ID, id, context))) return rc;
 
     // Add attributes
     const hpd_pair_t *pair;
-    hpd_adapter_foreach_attr(rc, pair, adapter) {
+    HPD_ADAPTER_ID_FOREACH_ATTR(rc, pair, adapter) {
         if ((rc = rest_xml_add_attr(json, pair, context))) return rc;
     }
     if (rc) return rc;
 
     // Add devices
     hpd_device_id_t *device;
-    hpd_adapter_foreach_device(rc, device, adapter) {
+    HPD_ADAPTER_ID_FOREACH_DEVICE_ID(rc, device, adapter) {
         if ((rc = rest_xml_add_device(json, device, rest, context))) return rc;
     }
     if (rc) return rc;
@@ -229,7 +229,7 @@ static hpd_error_t rest_xml_add_configuration(mxml_node_t *parent, hpd_t *hpd, h
 
     // Add adapters
     hpd_adapter_id_t *adapter;
-    hpd_foreach_adapter(rc, adapter, hpd) {
+    HPD_FOREACH_ADAPTER_ID(rc, adapter, hpd) {
         if ((rc = rest_xml_add_adapter(xml, adapter, rest, context))) return rc;
     }
     if (rc) return rc;

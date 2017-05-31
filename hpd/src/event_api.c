@@ -56,16 +56,16 @@ hpd_error_t hpd_listener_set_value_callback(hpd_listener_t *listener, hpd_value_
     if (!listener) LOG_RETURN_E_NULL();
     return event_set_value_callback(listener, on_change);
 }
-hpd_error_t hpd_listener_set_device_callback(hpd_listener_t *listener, hpd_device_f on_attach, hpd_device_f on_detach)
+hpd_error_t hpd_listener_set_device_callback(hpd_listener_t *listener, hpd_device_f on_attach, hpd_device_f on_detach, hpd_device_f on_change)
 {
     if (!listener) LOG_RETURN_E_NULL();
-    return event_set_device_callback(listener, on_attach, on_detach);
+    return event_set_device_callback(listener, on_attach, on_detach, on_change);
 }
 
 hpd_error_t hpd_subscribe(hpd_listener_t *listener)
 {
     if (!listener) LOG_RETURN_E_NULL();
-    if (!listener->on_change && !listener->on_attach && !listener->on_detach)
+    if (!listener->on_change && !listener->on_dev_attach && !listener->on_dev_detach)
         LOG_RETURN(HPD_E_ARGUMENT, "Listener do not contain any callbacks.");
     if (!listener->hpd->configuration) LOG_RETURN_HPD_STOPPED();
     return event_subscribe(listener);
@@ -86,7 +86,7 @@ hpd_error_t hpd_listener_get_data(const hpd_listener_t *listener, void **data)
 hpd_error_t hpd_foreach_attached(const hpd_listener_t *listener)
 {
     if (!listener) LOG_RETURN_E_NULL();
-    if (!listener->on_attach)
-        LOG_RETURN(HPD_E_ARGUMENT, "Listener do not contain an on_attach callback.");
+    if (!listener->on_dev_attach)
+        LOG_RETURN(HPD_E_ARGUMENT, "Listener do not contain an on_dev_attach callback.");
     return event_foreach_attached(listener);
 }

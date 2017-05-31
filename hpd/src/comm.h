@@ -44,8 +44,9 @@ struct hpd_listener {
     hpd_t *hpd;
     // Data members
     hpd_value_f on_change;
-    hpd_device_f on_attach;
-    hpd_device_f on_detach;
+    hpd_device_f on_dev_attach;
+    hpd_device_f on_dev_detach;
+    hpd_device_f on_dev_change;
     // User data
     void *data;
     hpd_free_f on_free;

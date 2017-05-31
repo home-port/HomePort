@@ -39,7 +39,8 @@ hpd_error_t event_free_listener(hpd_listener_t *listener);
 
 hpd_error_t event_set_listener_data(hpd_listener_t *listener, void *data, hpd_free_f on_free);
 hpd_error_t event_set_value_callback(hpd_listener_t *listener, hpd_value_f on_change);
-hpd_error_t event_set_device_callback(hpd_listener_t *listener, hpd_device_f on_attach, hpd_device_f on_detach);
+hpd_error_t event_set_device_callback(hpd_listener_t *listener, hpd_device_f on_attach, hpd_device_f on_detach,
+                                      hpd_device_f on_change);
 
 hpd_error_t event_subscribe(hpd_listener_t *listener);
 hpd_error_t event_unsubscribe(hpd_listener_t *listener);
@@ -54,6 +55,7 @@ hpd_error_t event_inform_adapter_attached(hpd_adapter_t *adapter);
 hpd_error_t event_inform_adapter_detached(hpd_adapter_t *adapter);
 hpd_error_t event_inform_device_attached(hpd_device_t *device);
 hpd_error_t event_inform_device_detached(hpd_device_t *device);
+hpd_error_t event_inform_device_changed(hpd_device_t *device);
 
 #ifdef __cplusplus
 }

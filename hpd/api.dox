@@ -83,8 +83,8 @@
  *     class hpd_listener_t {
  *         hpd_t *hpd
  *         hpd_value_f on_change
- *         hpd_device_f on_attach
- *         hpd_device_f on_detach
+ *         hpd_device_f on_dev_attach
+ *         hpd_device_f on_dev_detach
  *         void *data
  *         hpd_free_f on_free
  *     }
@@ -964,7 +964,7 @@
  * activate ev
  * ev -> dit: alloc()
  * activate dit
- * ev -> app: on_attach()
+ * ev -> app: on_dev_attach()
  * activate app
  * ev <-- app
  * deactivate app
@@ -972,7 +972,7 @@
  * destroy dit
  * ev -> dit: alloc()
  * activate dit
- * ev -> app: on_attach()
+ * ev -> app: on_dev_attach()
  * activate app
  * ev <-- app
  * deactivate app
@@ -990,7 +990,7 @@
  * activate ev
  * activate dit
  *
- * ev -> app: on_attach()
+ * ev -> app: on_dev_attach()
  * activate app
  * ev <-- app
  * deactivate app
@@ -1007,7 +1007,7 @@
  * activate ev
  * activate dit
  *
- * ev -> app: on_detach()
+ * ev -> app: on_dev_detach()
  * activate app
  * ev <-- app
  * deactivate app

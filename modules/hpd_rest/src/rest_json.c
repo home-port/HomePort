@@ -65,12 +65,12 @@ static hpd_error_t rest_json_add_parameter(json_t *parent, hpd_parameter_id_t *p
 
     // Add id
     const char *id;
-    if ((rc = hpd_parameter_get_parameter_id(parameter, &id))) goto error;
+    if ((rc = hpd_parameter_id_get_parameter_id_str(parameter, &id))) goto error;
     if ((rc = rest_json_add(json, HPD_REST_KEY_ID, id, context))) goto error;
 
     // Add attributes
     const hpd_pair_t *pair;
-    hpd_parameter_foreach_attr(rc, pair, parameter)
+    HPD_PARAMETER_ID_FOREACH_ATTR(rc, pair, parameter)
         if ((rc = rest_json_add_attr(json, pair, context))) goto error;
     if (rc) goto error;
 
@@ -97,7 +97,7 @@ static hpd_error_t rest_json_add_parameters(json_t *parent, hpd_service_id_t *se
 
     // Add parameters
     hpd_parameter_id_t *parameter;
-    hpd_service_foreach_parameter(rc, parameter, service) {
+    HPD_SERVICE_ID_FOREACH_PARAMETER_ID(rc, parameter, service) {
         if ((rc = rest_json_add_parameter(json, parameter, context))) goto error;
     }
     if (rc) goto error;
@@ -124,7 +124,7 @@ static hpd_error_t rest_json_add_service(json_t *parent, hpd_service_id_t *servi
 
     // Add id
     const char *id;
-    if ((rc = hpd_service_get_service_id(service, &id))) goto error;
+    if ((rc = hpd_service_id_get_service_id_str(service, &id))) goto error;
     if ((rc = rest_json_add(json, HPD_REST_KEY_ID, id, context))) goto error;
 
     // Add url
@@ -137,8 +137,8 @@ static hpd_error_t rest_json_add_service(json_t *parent, hpd_service_id_t *servi
     free(url);
 
     // Add actions
-    hpd_action_t *action;
-    hpd_service_foreach_action(rc, action, service) {
+    const hpd_action_t *action;
+    HPD_SERVICE_ID_FOREACH_ACTION(rc, action, service) {
         hpd_method_t method;
         if ((rc = hpd_action_get_method(action, &method))) goto error;
         switch (method) {
@@ -156,7 +156,7 @@ static hpd_error_t rest_json_add_service(json_t *parent, hpd_service_id_t *servi
 
     // Add attributes
     const hpd_pair_t *pair;
-    hpd_service_foreach_attr(rc, pair, service)
+    HPD_SERVICE_ID_FOREACH_ATTR(rc, pair, service)
         if ((rc = rest_json_add_attr(json, pair, context))) goto error;
     if (rc) goto error;
 
@@ -186,7 +186,7 @@ static hpd_error_t rest_json_add_services(json_t *parent, hpd_device_id_t *devic
 
     // Add services
     hpd_service_id_t *service;
-    hpd_device_foreach_service(rc, service, device) {
+    HPD_DEVICE_ID_FOREACH_SERVICE_ID(rc, service, device) {
         if ((rc = rest_json_add_service(json, service, rest, context))) goto error;
     }
     if (rc) goto error;
@@ -213,12 +213,12 @@ static hpd_error_t rest_json_add_device(json_t *parent, hpd_device_id_t *device,
 
     // Add id
     const char *id;
-    if ((rc = hpd_device_get_device_id(device, &id))) goto error;
+    if ((rc = hpd_device_id_get_device_id_str(device, &id))) goto error;
     if ((rc = rest_json_add(json, HPD_REST_KEY_ID, id, context))) goto error;
 
     // Add attributes
     const hpd_pair_t *pair;
-    hpd_device_foreach_attr(rc, pair, device)
+    HPD_DEVICE_ID_FOREACH_ATTR(rc, pair, device)
         if ((rc = rest_json_add_attr(json, pair, context))) goto error;
     if (rc) goto error;
 
@@ -248,7 +248,7 @@ static hpd_error_t rest_json_add_devices(json_t *parent, hpd_adapter_id_t *adapt
 
     // Add devices
     hpd_device_id_t *device;
-    hpd_adapter_foreach_device(rc, device, adapter) {
+    HPD_ADAPTER_ID_FOREACH_DEVICE_ID(rc, device, adapter) {
         if ((rc = rest_json_add_device(json, device, rest, context))) goto error;
     }
     if (rc) goto error;
@@ -276,12 +276,12 @@ static hpd_error_t rest_json_add_adapter(json_t *parent, hpd_adapter_id_t *adapt
 
     // Add id
     const char *id;
-    if ((rc = hpd_adapter_get_adapter_id(adapter, &id))) goto error;
+    if ((rc = hpd_adapter_id_get_adapter_id_str(adapter, &id))) goto error;
     if ((rc = rest_json_add(json, HPD_REST_KEY_ID, id, context))) goto error;
 
     // Add attributes
     const hpd_pair_t *pair;
-    hpd_adapter_foreach_attr(rc, pair, adapter) {
+    HPD_ADAPTER_ID_FOREACH_ATTR(rc, pair, adapter) {
         if ((rc = rest_json_add_attr(json, pair, context))) goto error;
     }
     if (rc) goto error;
@@ -312,7 +312,7 @@ static hpd_error_t rest_json_add_adapters(json_t *parent, hpd_t *hpd, hpd_rest_t
 
     // Add adapters
     hpd_adapter_id_t *adapter;
-    hpd_foreach_adapter(rc, adapter, hpd) {
+    HPD_FOREACH_ADAPTER_ID(rc, adapter, hpd) {
         if ((rc = rest_json_add_adapter(json, adapter, rest, context))) goto error;
     }
     if (rc) goto error;

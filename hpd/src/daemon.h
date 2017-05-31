@@ -61,8 +61,7 @@ struct hpd {
     hpd_ev_asyncs_t request_watchers;
     hpd_ev_asyncs_t respond_watchers;
     hpd_ev_asyncs_t changed_watchers;
-    hpd_ev_asyncs_t attached_watchers;
-    hpd_ev_asyncs_t detached_watchers;
+    hpd_ev_asyncs_t device_watchers;
     char *argv0;
 };
 

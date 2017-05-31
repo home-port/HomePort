@@ -55,10 +55,10 @@ static void demo_app_on_device(demo_app_t *demo_app, const hpd_device_id_t *devi
     hpd_error_t rc;
 
     const char *aid;
-    if ((rc = hpd_device_get_adapter_id(device, &aid))) goto error_return;
+    if ((rc = hpd_device_id_get_adapter_id_str(device, &aid))) goto error_return;
 
     const char *did;
-    if ((rc = hpd_device_get_device_id(device, &did))) goto error_return;
+    if ((rc = hpd_device_id_get_device_id_str(device, &did))) goto error_return;
 
     HPD_LOG_INFO(demo_app->context, msg, aid, did);
 
@@ -68,14 +68,19 @@ static void demo_app_on_device(demo_app_t *demo_app, const hpd_device_id_t *devi
     HPD_LOG_ERROR(demo_app->context, "%s() failed [code: %i].", __FUNCTION__, rc);
 }
 
-void demo_app_on_attach(void *data, const hpd_device_id_t *device)
+void demo_app_on_dev_attach(void *data, const hpd_device_id_t *device)
 {
     demo_app_on_device(data, device, "%s/%s attached");
 }
 
-void demo_app_on_detach(void *data, const hpd_device_id_t *device)
+void demo_app_on_dev_detach(void *data, const hpd_device_id_t *device)
 {
     demo_app_on_device(data, device, "%s/%s detached");
+}
+
+void demo_app_on_dev_change(void *data, const hpd_device_id_t *device)
+{
+    demo_app_on_device(data, device, "%s/%s changed");
 }
 
 void demo_app_on_change(void *data, const hpd_service_id_t *service, const hpd_value_t *val)
@@ -84,13 +89,13 @@ void demo_app_on_change(void *data, const hpd_service_id_t *service, const hpd_v
     demo_app_t *demo_app = data;
 
     const char *aid;
-    if ((rc = hpd_service_get_adapter_id(service, &aid))) goto error_return;
+    if ((rc = hpd_service_id_get_adapter_id_str(service, &aid))) goto error_return;
 
     const char *did;
-    if ((rc = hpd_service_get_device_id(service, &did))) goto error_return;
+    if ((rc = hpd_service_id_get_device_id_str(service, &did))) goto error_return;
 
     const char *sid;
-    if ((rc = hpd_service_get_service_id(service, &sid))) goto error_return;
+    if ((rc = hpd_service_id_get_service_id_str(service, &sid))) goto error_return;
 
     const char *v;
     size_t len;
@@ -133,7 +138,7 @@ static hpd_error_t demo_app_on_start(void *data, hpd_t *hpd)
         goto error_return;
     if ((rc = hpd_listener_set_data(demo_app->listener, demo_app, NULL)))
         goto error_free;
-    if ((rc = hpd_listener_set_device_callback(demo_app->listener, demo_app_on_attach, demo_app_on_detach)))
+    if ((rc = hpd_listener_set_device_callback(demo_app->listener, demo_app_on_dev_attach, demo_app_on_dev_detach, demo_app_on_dev_change)))
         goto error_free;
     if ((rc = hpd_listener_set_value_callback(demo_app->listener, demo_app_on_change)))
         goto error_free;

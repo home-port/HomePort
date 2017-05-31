@@ -51,6 +51,8 @@ hpd_error_t log_vlogf(const char *module, hpd_log_level_t level, const char *fil
 #define LOG_RETURN_E_ALLOC() LOG_RETURN(HPD_E_ALLOC, "Unable to allocate memory.")
 
 #define LOG_RETURN_HPD_STOPPED() LOG_RETURN(HPD_E_STATE, "Cannot perform %s() while hpd is stopped.", __func__)
+#define LOG_RETURN_ATTACHED() LOG_RETURN(HPD_E_ARGUMENT, "Cannot perform %s(), object already attached.", __func__)
+#define LOG_RETURN_DETACHED() LOG_RETURN(HPD_E_ARGUMENT, "Cannot perform %s(), object already detached.", __func__)
 
 #ifdef __cplusplus
 }

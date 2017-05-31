@@ -127,9 +127,9 @@ hpd_error_t hpd_rest_url_create(hpd_rest_t *rest, hpd_service_id_t *service, cha
     hpd_error_t rc;
 
     const char *adp_id, *dev_id, *srv_id;
-    if ((rc = hpd_service_get_service_id(service, &srv_id))) goto id_error;
-    if ((rc = hpd_service_get_device_id(service, &dev_id))) goto id_error;
-    if ((rc = hpd_service_get_adapter_id(service, &adp_id))) goto id_error;
+    if ((rc = hpd_service_id_get_service_id_str(service, &srv_id))) goto id_error;
+    if ((rc = hpd_service_id_get_device_id_str(service, &dev_id))) goto id_error;
+    if ((rc = hpd_service_id_get_adapter_id_str(service, &adp_id))) goto id_error;
 
     char *aid = NULL, *did = NULL, *sid = NULL;
     if ((rc = rest_url_encode(rest, adp_id, &aid))) goto encode_error;
@@ -350,8 +350,8 @@ static hpd_error_t rest_reply_options(hpd_rest_req_t *rest_req)
     if (strcmp(rest_req->url, "/devices") == 0) {
         strcat(methods, "GET");
     } else {
-        hpd_action_t *action;
-        hpd_service_foreach_action(rc, action, rest_req->service) {
+        const hpd_action_t *action;
+        HPD_SERVICE_ID_FOREACH_ACTION(rc, action, rest_req->service) {
             hpd_method_t method;
             if ((rc = hpd_action_get_method(action, &method))) {
                 if ((rc2 = rest_reply_internal_server_error(http_req, rest_req, context))) {
@@ -757,7 +757,7 @@ static hpd_httpd_return_t rest_on_req_hdr_cmpl(hpd_httpd_t *ins, hpd_httpd_reque
             }
 
             hpd_bool_t found;
-            switch (hpd_service_has_action(rest_req->service, rest_req->hpd_method, &found)) {
+            switch (hpd_service_id_has_action(rest_req->service, rest_req->hpd_method, &found)) {
                 case HPD_E_SUCCESS:
                     break;
                 case HPD_E_NOT_FOUND:
