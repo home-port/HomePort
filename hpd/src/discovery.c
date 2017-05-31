@@ -561,7 +561,13 @@ hpd_error_t discovery_set_service_actions_v(hpd_service_t *service, va_list vp)
 
 hpd_error_t discovery_first_action_in_service(const hpd_service_t *service, const hpd_action_t **action)
 {
-    (*action) = &service->actions[HPD_M_NONE+1];
+    for (hpd_method_t method = HPD_M_NONE+1; method < HPD_M_COUNT; method++) {
+        if (service->actions[method].action) {
+            (*action) = &service->actions[method];
+            return HPD_E_SUCCESS;
+        }
+    }
+    (*action) = NULL;
     return HPD_E_SUCCESS;
 }
 
