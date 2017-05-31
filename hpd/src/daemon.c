@@ -43,6 +43,30 @@ static void daemon_on_signal(hpd_ev_loop_t *loop, ev_signal *w, int revents)
     ev_break(loop, EVBREAK_ALL);
 }
 
+void set_log_level(char *arg, hpd_t *hpd, hpd_log_level_t level)
+{
+    if (arg) {
+        for (char *mod = strtok(arg, ","); mod; mod = strtok(NULL, ",")) {
+            if (strcmp(mod, HPD_LOG_MODULE) == 0) {
+                hpd->hpd_log_level = level;
+            } else {
+                hpd_module_t *module;
+                TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD) {
+                    if (strcmp(module->id, mod) == 0) {
+                        module->log_level = level;
+                    }
+                }
+            }
+        }
+    } else {
+        hpd->hpd_log_level = level;
+        hpd_module_t *module;
+        TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD) {
+            module->log_level = level;
+        }
+    }
+}
+
 static int daemon_on_parse_opt(int key, char *arg, struct argp_state *state)
 {
     hpd_error_t rc;
@@ -71,11 +95,11 @@ static int daemon_on_parse_opt(int key, char *arg, struct argp_state *state)
 
     switch (key) {
         case 'q': {
-            hpd->log_level = HPD_L_NONE;
+            set_log_level(arg, hpd, HPD_L_NONE);
             return 0;
         }
         case 'v': {
-            hpd->log_level = HPD_L_VERBOSE;
+            set_log_level(arg, hpd, HPD_L_VERBOSE);
             return 0;
         }
         case 'c': {
@@ -271,8 +295,8 @@ static hpd_error_t daemon_options_create(hpd_t *hpd)
 
     HPD_CALLOC(hpd->options, 1, hpd_argp_option_t);
     if ((rc = daemon_add_global_option(hpd, "conf", 'c', "file", 0, "Load arguments from configuration file"))) goto error;
-    if ((rc = daemon_add_global_option(hpd, "quiet", 'q', NULL, 0, "Quiet mode"))) goto error;
-    if ((rc = daemon_add_global_option(hpd, "verbose", 'v', NULL, 0, "Verbose mode"))) goto error;
+    if ((rc = daemon_add_global_option(hpd, "quiet", 'q', "modules", OPTION_ARG_OPTIONAL, "Quiet mode, optionally a comma-separated list of modules can be supplied"))) goto error;
+    if ((rc = daemon_add_global_option(hpd, "verbose", 'v', "modules", OPTION_ARG_OPTIONAL, "Verbose mode, optionally a comma-separated list of modules can be supplied"))) goto error;
 
     return HPD_E_SUCCESS;
 
@@ -394,7 +418,6 @@ hpd_error_t daemon_alloc(hpd_t **hpd)
     ev_signal_init(&(*hpd)->sigterm_watcher, daemon_on_signal, SIGTERM);
     (*hpd)->sigint_watcher.data = hpd;
     (*hpd)->sigterm_watcher.data = hpd;
-    (*hpd)->log_level = HPD_L_INFO;
 
     return HPD_E_SUCCESS;
 
@@ -428,6 +451,7 @@ hpd_error_t daemon_add_module(hpd_t *hpd, const char *id, const hpd_module_def_t
     HPD_CALLOC(module, 1, hpd_module_t);
     module->hpd = hpd;
     module->def = *module_def;
+    module->log_level = HPD_L_INFO;
     HPD_STR_CPY(module->id, id);
     TAILQ_INSERT_TAIL(&hpd->modules, module, HPD_TAILQ_FIELD);
     return HPD_E_SUCCESS;

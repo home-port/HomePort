@@ -38,6 +38,9 @@ hpd_error_t hpd_logf(const hpd_module_t *context, hpd_log_level_t level, const c
 {
     if (!context) return HPD_E_NULL;
     if (!fmt) LOG_RETURN_E_NULL(context->hpd);
+
+    if (level > context->log_level) return HPD_E_SUCCESS;
+
     hpd_error_t rc;
     va_list vp;
     va_start(vp, fmt);

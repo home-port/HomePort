@@ -62,10 +62,10 @@ struct hpd {
     hpd_ev_asyncs_t respond_watchers;
     hpd_ev_asyncs_t changed_watchers;
     char *argv0;
-    hpd_log_level_t log_level;
 #ifdef THREAD_SAFE
     pthread_mutex_t log_mutex;
 #endif
+    hpd_log_level_t hpd_log_level;
 };
 
 struct hpd_ev_async {
@@ -89,6 +89,7 @@ typedef struct hpd_module {
     hpd_module_def_t def;
     char *id;
     void *data;
+    hpd_log_level_t log_level;
 } hpd_module_t;
 
 hpd_error_t daemon_alloc(hpd_t **hpd);

@@ -45,49 +45,43 @@ hpd_error_t log_logf(hpd_t *hpd, const char *module, hpd_log_level_t level, cons
 
 hpd_error_t log_vlogf(hpd_t *hpd, const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp)
 {
-    char *type;
+    if (strcmp(module, HPD_LOG_MODULE) == 0 && level > hpd->hpd_log_level) return HPD_E_SUCCESS;
 
-    if (level <= hpd->log_level) {
-
-        switch (level) {
-            case HPD_L_ERROR:
-//                stream = stderr;
-                type = "ERROR";
-                break;
-            case HPD_L_WARN:
-//                stream = stderr;
-                type = "WARNING";
-                break;
-            case HPD_L_INFO:
-//                stream = stdout;
-                type = "INFO";
-                break;
-            case HPD_L_DEBUG:
-//                stream = stderr;
-                type = "DEBUG";
-                break;
-            case HPD_L_VERBOSE:
-//                stream = stdout;
-                type = "VERBOSE";
-                break;
-            default:
-                LOG_RETURN(hpd, HPD_E_ARGUMENT, "Unknown log level.");
-        }
-
-#ifdef THREAD_SAFE
-        // TODO Better thing to do?
-        if (pthread_mutex_lock(&hpd->log_mutex)) return HPD_E_UNKNOWN;
-#endif
-
-        fprintf(stderr, "[%s]%*s %8s: ", module, (int) (12 - strlen(module)), "", type);
-        int len = vfprintf(stderr, fmt, vp);
-        fprintf(stderr, "%*s  %s:%d\n", 104 - len, "", file, line);
-
-#ifdef THREAD_SAFE
-        // TODO Better thing to do?
-        if (pthread_mutex_unlock(&hpd->log_mutex)) return HPD_E_UNKNOWN;
-#endif
+    char *type = NULL;
+    switch (level) {
+        case HPD_L_NONE:
+            break;
+        case HPD_L_ERROR:
+            type = "ERROR";
+            break;
+        case HPD_L_WARN:
+            type = "WARNING";
+            break;
+        case HPD_L_INFO:
+            type = "INFO";
+            break;
+        case HPD_L_DEBUG:
+            type = "DEBUG";
+            break;
+        case HPD_L_VERBOSE:
+            type = "VERBOSE";
+            break;
     }
+    if (!type) LOG_RETURN(hpd, HPD_E_ARGUMENT, "Unknown log level.");
+
+#ifdef THREAD_SAFE
+    // TODO Better thing to do?
+    if (pthread_mutex_lock(&hpd->log_mutex)) return HPD_E_UNKNOWN;
+#endif
+
+    fprintf(stderr, "[%s]%*s %8s: ", module, (int) (12 - strlen(module)), "", type);
+    int len = vfprintf(stderr, fmt, vp);
+    fprintf(stderr, "%*s  %s:%d\n", 104 - len, "", file, line);
+
+#ifdef THREAD_SAFE
+    // TODO Better thing to do?
+    if (pthread_mutex_unlock(&hpd->log_mutex)) return HPD_E_UNKNOWN;
+#endif
 
     return HPD_E_SUCCESS;
 }
