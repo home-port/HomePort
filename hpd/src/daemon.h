@@ -64,6 +64,9 @@ struct hpd {
     hpd_ev_asyncs_t device_watchers;
     char *argv0;
     hpd_log_level_t log_level;
+#ifdef THREAD_SAFE
+    pthread_mutex_t log_mutex;
+#endif
 };
 
 struct hpd_ev_async {

@@ -27,10 +27,13 @@
 
 #include "log.h"
 #include "daemon.h"
+#ifdef THREAD_SAFE
+#include <pthread.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 
-hpd_error_t log_logf(const hpd_t *hpd, const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, ...)
+hpd_error_t log_logf(hpd_t *hpd, const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, ...)
 {
     hpd_error_t rc;
     va_list vp;
@@ -40,11 +43,12 @@ hpd_error_t log_logf(const hpd_t *hpd, const char *module, hpd_log_level_t level
     return rc;
 }
 
-hpd_error_t log_vlogf(const hpd_t *hpd, const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp)
+hpd_error_t log_vlogf(hpd_t *hpd, const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp)
 {
     char *type;
 
     if (level <= hpd->log_level) {
+
         switch (level) {
             case HPD_L_ERROR:
 //                stream = stderr;
@@ -70,9 +74,19 @@ hpd_error_t log_vlogf(const hpd_t *hpd, const char *module, hpd_log_level_t leve
                 LOG_RETURN(hpd, HPD_E_ARGUMENT, "Unknown log level.");
         }
 
+#ifdef THREAD_SAFE
+        // TODO Better thing to do?
+        if (pthread_mutex_lock(&hpd->log_mutex)) return HPD_E_UNKNOWN;
+#endif
+
         fprintf(stderr, "[%s]%*s %8s: ", module, (int) (12 - strlen(module)), "", type);
         int len = vfprintf(stderr, fmt, vp);
         fprintf(stderr, "%*s  %s:%d\n", 104 - len, "", file, line);
+
+#ifdef THREAD_SAFE
+        // TODO Better thing to do?
+        if (pthread_mutex_unlock(&hpd->log_mutex)) return HPD_E_UNKNOWN;
+#endif
     }
 
     return HPD_E_SUCCESS;

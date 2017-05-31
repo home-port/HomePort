@@ -37,6 +37,8 @@
 extern "C" {
 #endif
 
+extern const int HPD_THREAD_SAFE;
+
 /// [hpd_t functions]
 hpd_error_t hpd_module_add_option(const hpd_module_t *context, const char *name, const char *arg, int flags,
                                   const char *doc);

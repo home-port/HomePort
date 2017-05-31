@@ -28,6 +28,12 @@
 #include "log.h"
 #include "daemon.h"
 
+#ifdef THREAD_SAFE
+const int HPD_THREAD_SAFE = 1;
+#else
+const int HPD_THREAD_SAFE = 0;
+#endif
+
 hpd_error_t hpd_logf(const hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, ...)
 {
     if (!context) return HPD_E_NULL;

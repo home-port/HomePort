@@ -32,6 +32,9 @@
 #include "value.h"
 #include "log.h"
 #include "model.h"
+#ifdef THREAD_SAFE
+#include <pthread.h>
+#endif
 
 static hpd_error_t daemon_options_parse(hpd_t *hpd, int argc, char **argv);
 
@@ -173,7 +176,7 @@ static void daemon_loop_run(hpd_t *hpd)
     ev_signal_stop(hpd->loop, &hpd->sigint_watcher);
 }
 
-static hpd_error_t daemon_modules_create(const hpd_t *hpd)
+static hpd_error_t daemon_modules_create(hpd_t *hpd)
 {
     // Call on_create() on modules
     hpd_error_t rc;
@@ -384,6 +387,13 @@ static hpd_error_t daemon_watchers_stop(hpd_t *hpd)
 hpd_error_t daemon_alloc(hpd_t **hpd)
 {
     HPD_CALLOC(*hpd, 1, hpd_t);
+#ifdef THREAD_SAFE
+    // TODO Better thing to do?
+    if (pthread_mutex_init(&(*hpd)->log_mutex, NULL)) {
+        free(*hpd);
+        return HPD_E_UNKNOWN;
+    }
+#endif
     TAILQ_INIT(&(*hpd)->modules);
     TAILQ_INIT(&(*hpd)->request_watchers);
     TAILQ_INIT(&(*hpd)->respond_watchers);
@@ -413,6 +423,10 @@ hpd_error_t daemon_free(hpd_t *hpd)
         free(module->id);
         free(module);
     }
+#ifdef THREAD_SAFE
+    // TODO Better thing to do?
+    if (pthread_mutex_destroy(&hpd->log_mutex)) return HPD_E_UNKNOWN;
+#endif
     free(hpd);
     return HPD_E_SUCCESS;
 }

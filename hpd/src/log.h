@@ -37,8 +37,8 @@ extern "C" {
 
 #define HPD_LOG_MODULE "hpd"
 
-hpd_error_t log_logf(const hpd_t *hpd, const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, ...);
-hpd_error_t log_vlogf(const hpd_t *hpd, const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp);
+hpd_error_t log_logf(hpd_t *hpd, const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, ...);
+hpd_error_t log_vlogf(hpd_t *hpd, const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp);
 
 #define LOG_ERROR(HPD, FMT, ...) log_logf((HPD), HPD_LOG_MODULE, HPD_L_ERROR, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
 #define LOG_WARN(HPD, FMT, ...) log_logf((HPD), HPD_LOG_MODULE, HPD_L_WARN , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
