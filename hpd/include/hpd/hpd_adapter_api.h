@@ -69,6 +69,10 @@ hpd_error_t hpd_service_set_actions(hpd_service_t *service, ...);
 hpd_error_t hpd_service_get_data(const hpd_service_id_t *id, void **data);
 /// [hpd_service_t functions]
 
+/// [hpd_action_t adapter functions]
+hpd_error_t hpd_action_get_action(const hpd_action_t *action, hpd_action_f *cb);
+/// [hpd_action_t adapter functions]
+
 /// [hpd_parameter_t functions]
 hpd_error_t hpd_parameter_alloc(hpd_parameter_t **parameter, const char *id);
 hpd_error_t hpd_parameter_free(hpd_parameter_t *parameter);

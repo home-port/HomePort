@@ -552,6 +552,7 @@
  * is support, but it could theoretically be expanded to others:
  * \snippet include/hpd/hpd_adapter_api.h hpd_service_t functions
  * \snippet include/hpd/hpd_types.h hpd_action_f
+ * \snippet include/hpd/hpd_adapter_api.h hpd_action_t adapter functions
  *
  * \subsection sec_api_hpd_parameter_t Parameter structure (hpd_parameter_t)
  *

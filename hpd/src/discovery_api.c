@@ -661,6 +661,12 @@ hpd_error_t hpd_action_get_method(const hpd_action_t *action, hpd_method_t *meth
     return discovery_get_action_method(action, method);
 }
 
+hpd_error_t hpd_action_get_action(const hpd_action_t *action, hpd_action_f *cb)
+{
+    if (!action || !cb) LOG_RETURN_E_NULL();
+    return discovery_get_action_action(action, cb);
+}
+
 hpd_error_t hpd_adapter_get_hpd(const hpd_adapter_id_t *aid, hpd_t **hpd)
 {
     if (!aid || !hpd) LOG_RETURN_E_NULL();

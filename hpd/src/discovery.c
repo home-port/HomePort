@@ -411,6 +411,12 @@ hpd_error_t discovery_get_action_method(const hpd_action_t *action, hpd_method_t
     return HPD_E_SUCCESS;
 }
 
+hpd_error_t discovery_get_action_action(const hpd_action_t *action, hpd_action_f *cb)
+{
+    (*cb) = action->action;
+    return HPD_E_SUCCESS;
+}
+
 hpd_error_t discovery_set_adapter_data(hpd_adapter_t *adapter, void *data, hpd_free_f on_free)
 {
     if (adapter->on_free) adapter->on_free(adapter->data);
