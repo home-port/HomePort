@@ -33,10 +33,11 @@
 
 hpd_error_t hpd_json_adapter_id_to_json(const hpd_module_t *context, const hpd_adapter_id_t *adapter, json_t **out);
 hpd_error_t hpd_json_adapter_to_json(const hpd_module_t *context, const hpd_adapter_id_t *adapter, json_t **out);
+hpd_error_t hpd_json_adapter_to_json_shallow(const hpd_module_t *context, const hpd_adapter_id_t *adapter, json_t **out);
 hpd_error_t hpd_json_adapters_to_json(const hpd_module_t *context, json_t **out);
 hpd_error_t hpd_json_configuration_to_json(const hpd_module_t *context, json_t **out);
 hpd_error_t hpd_json_device_id_to_json(const hpd_module_t *context, const hpd_device_id_t *device, json_t **out);
-hpd_error_t hpd_json_device_to_json(const hpd_module_t *context, const hpd_device_id_t *device, json_t **out);
+hpd_error_t hpd_json_device_to_json_shallow(const hpd_module_t *context, const hpd_device_id_t *device, json_t **out);
 hpd_error_t hpd_json_devices_to_json(const hpd_module_t *context, const hpd_adapter_id_t *adapter, json_t **out);
 hpd_error_t hpd_json_parameter_id_to_json(const hpd_module_t *context, const hpd_parameter_id_t *parameter, json_t **out);
 hpd_error_t hpd_json_parameter_to_json(const hpd_module_t *context, const hpd_parameter_id_t *parameter, json_t **out);

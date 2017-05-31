@@ -253,7 +253,7 @@ hpd_error_t hpd_json_services_to_json(const hpd_module_t *context, const hpd_dev
     HPD_JSON_RETURN_JSON_ERROR(context);
 }
 
-hpd_error_t hpd_json_device_to_json(const hpd_module_t *context, const hpd_device_id_t *device, json_t **out)
+hpd_error_t hpd_json_device_to_json_shallow(const hpd_module_t *context, const hpd_device_id_t *device, json_t **out)
 {
     hpd_error_t rc;
 
@@ -284,6 +284,25 @@ hpd_error_t hpd_json_device_to_json(const hpd_module_t *context, const hpd_devic
         json_decref(attrs);
         goto json_error;
     }
+
+    (*out) = json;
+    return HPD_E_SUCCESS;
+
+    error:
+    json_decref(json);
+    return rc;
+
+    json_error:
+    json_decref(json);
+    HPD_JSON_RETURN_JSON_ERROR(context);
+}
+
+hpd_error_t hpd_json_device_to_json(const hpd_module_t *context, const hpd_device_id_t *device, json_t **out)
+{
+    hpd_error_t rc;
+
+    json_t *json;
+    if ((rc = hpd_json_device_to_json_shallow(context, device, &json))) return rc;
 
     // Add services
     json_t *child;
@@ -331,7 +350,7 @@ hpd_error_t hpd_json_devices_to_json(const hpd_module_t *context, const hpd_adap
     HPD_JSON_RETURN_JSON_ERROR(context);
 }
 
-hpd_error_t hpd_json_adapter_to_json(const hpd_module_t *context, const hpd_adapter_id_t *adapter, json_t **out)
+hpd_error_t hpd_json_adapter_to_json_shallow(const hpd_module_t *context, const hpd_adapter_id_t *adapter, json_t **out)
 {
     hpd_error_t rc;
 
@@ -362,6 +381,25 @@ hpd_error_t hpd_json_adapter_to_json(const hpd_module_t *context, const hpd_adap
         json_decref(attrs);
         goto json_error;
     }
+
+    (*out) = json;
+    return HPD_E_SUCCESS;
+
+    error:
+    json_decref(json);
+    return rc;
+
+    json_error:
+    json_decref(json);
+    HPD_JSON_RETURN_JSON_ERROR(context);
+}
+
+hpd_error_t hpd_json_adapter_to_json(const hpd_module_t *context, const hpd_adapter_id_t *adapter, json_t **out)
+{
+    hpd_error_t rc;
+
+    json_t *json;
+    if ((rc = hpd_json_adapter_to_json_shallow(context, adapter, &json))) return rc;
 
     // Add devices
     json_t *child;
