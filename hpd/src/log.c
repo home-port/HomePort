@@ -70,7 +70,7 @@ hpd_error_t log_vlogf(const hpd_t *hpd, const char *module, hpd_log_level_t leve
                 LOG_RETURN(hpd, HPD_E_ARGUMENT, "Unknown log level.");
         }
 
-        fprintf(stderr, "[%s]%*s %8s: ", module, (int) (16 - strlen(module)), "", type);
+        fprintf(stderr, "[%s]%*s %8s: ", module, (int) (12 - strlen(module)), "", type);
         int len = vfprintf(stderr, fmt, vp);
         fprintf(stderr, "%*s  %s:%d\n", 104 - len, "", file, line);
     }
