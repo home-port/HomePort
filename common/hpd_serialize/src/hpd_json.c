@@ -89,10 +89,23 @@ hpd_error_t hpd_json_parameter_to_json(const hpd_module_t *context, const hpd_pa
     if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_ID, id, context))) goto error;
 
     // Add attributes
+    json_t *attrs;
+    if (!(attrs = json_object())) goto json_error;
     const hpd_pair_t *pair;
-    HPD_PARAMETER_ID_FOREACH_ATTR(rc, pair, parameter)
-        if ((rc = json_add_pair(json, pair, context))) goto error;
-    if (rc) goto error;
+    HPD_PARAMETER_ID_FOREACH_ATTR(rc, pair, parameter) {
+        if ((rc = json_add_pair(attrs, pair, context))) {
+            json_decref(attrs);
+            goto error;
+        }
+    }
+    if (rc) {
+        json_decref(attrs);
+        goto error;
+    }
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_ATTRS, attrs)) {
+        json_decref(attrs);
+        goto json_error;
+    }
 
     (*out) = json;
     return HPD_E_SUCCESS;
@@ -100,6 +113,10 @@ hpd_error_t hpd_json_parameter_to_json(const hpd_module_t *context, const hpd_pa
     error:
     json_decref(json);
     return rc;
+
+    json_error:
+    if (json) json_decref(json);
+    HPD_JSON_RETURN_JSON_ERROR(context);
 }
 
 hpd_error_t hpd_json_parameters_to_json(const hpd_module_t *context, const hpd_service_id_t *service, json_t **out)
@@ -172,10 +189,23 @@ hpd_error_t hpd_json_service_to_json(const hpd_module_t *context, const hpd_serv
     if (rc) goto error;
 
     // Add attributes
+    json_t *attrs;
+    if (!(attrs = json_object())) goto json_error;
     const hpd_pair_t *pair;
-    HPD_SERVICE_ID_FOREACH_ATTR(rc, pair, service)
-        if ((rc = json_add_pair(json, pair, context))) goto error;
-    if (rc) goto error;
+    HPD_SERVICE_ID_FOREACH_ATTR(rc, pair, service) {
+        if ((rc = json_add_pair(attrs, pair, context))) {
+            json_decref(attrs);
+            goto error;
+        }
+    }
+    if (rc) {
+        json_decref(attrs);
+        goto error;
+    }
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_ATTRS, attrs)) {
+        json_decref(attrs);
+        goto json_error;
+    }
 
     // Add parameters
     json_t *child;
@@ -237,10 +267,23 @@ hpd_error_t hpd_json_device_to_json(const hpd_module_t *context, const hpd_devic
     if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_ID, id, context))) goto error;
 
     // Add attributes
+    json_t *attrs;
+    if (!(attrs = json_object())) goto json_error;
     const hpd_pair_t *pair;
-    HPD_DEVICE_ID_FOREACH_ATTR(rc, pair, device)
-        if ((rc = json_add_pair(json, pair, context))) goto error;
-    if (rc) goto error;
+    HPD_DEVICE_ID_FOREACH_ATTR(rc, pair, device) {
+        if ((rc = json_add_pair(attrs, pair, context))) {
+            json_decref(attrs);
+            goto error;
+        }
+    }
+    if (rc) {
+        json_decref(attrs);
+        goto error;
+    }
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_ATTRS, attrs)) {
+        json_decref(attrs);
+        goto json_error;
+    }
 
     // Add services
     json_t *child;
@@ -302,11 +345,23 @@ hpd_error_t hpd_json_adapter_to_json(const hpd_module_t *context, const hpd_adap
     if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_ID, id, context))) goto error;
 
     // Add attributes
+    json_t *attrs;
+    if (!(attrs = json_object())) goto json_error;
     const hpd_pair_t *pair;
     HPD_ADAPTER_ID_FOREACH_ATTR(rc, pair, adapter) {
-        if ((rc = json_add_pair(json, pair, context))) goto error;
+        if ((rc = json_add_pair(attrs, pair, context))) {
+            json_decref(attrs);
+            goto error;
+        }
     }
-    if (rc) goto error;
+    if (rc) {
+        json_decref(attrs);
+        goto error;
+    }
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_ATTRS, attrs)) {
+        json_decref(attrs);
+        goto json_error;
+    }
 
     // Add devices
     json_t *child;
