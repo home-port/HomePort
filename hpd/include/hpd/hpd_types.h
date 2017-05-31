@@ -203,7 +203,9 @@ typedef void (*hpd_response_f) (void *data, const hpd_response_t *res);
 /// Value callback for listeners
 typedef void (*hpd_value_f) (void *data, const hpd_service_id_t *service, const hpd_value_t *val);
 /// Device callback for listeners
+typedef void (*hpd_adapter_f) (void *data, const hpd_adapter_id_t *adapter);
 typedef void (*hpd_device_f) (void *data, const hpd_device_id_t *device);
+typedef void (*hpd_service_f) (void *data, const hpd_service_id_t *service);
 /// [Application API Callbacks]
 
 /// [hpd_module_def_t]

@@ -64,12 +64,27 @@ hpd_error_t event_set_value_callback(hpd_listener_t *listener, hpd_value_f on_ch
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t event_set_device_callback(hpd_listener_t *listener, hpd_device_f on_attach, hpd_device_f on_detach,
-                                      hpd_device_f on_change)
+hpd_error_t event_set_adapter_callback(hpd_listener_t *listener, hpd_adapter_f on_attach, hpd_adapter_f on_detach, hpd_adapter_f on_change)
+{
+    listener->on_adp_attach = on_attach;
+    listener->on_adp_detach = on_detach;
+    listener->on_adp_change = on_change;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t event_set_device_callback(hpd_listener_t *listener, hpd_device_f on_attach, hpd_device_f on_detach, hpd_device_f on_change)
 {
     listener->on_dev_attach = on_attach;
     listener->on_dev_detach = on_detach;
     listener->on_dev_change = on_change;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t event_set_service_callback(hpd_listener_t *listener, hpd_service_f on_attach, hpd_service_f on_detach, hpd_service_f on_change)
+{
+    listener->on_srv_attach = on_attach;
+    listener->on_srv_detach = on_detach;
+    listener->on_srv_change = on_change;
     return HPD_E_SUCCESS;
 }
 
@@ -139,70 +154,6 @@ static void event_on_changed(hpd_ev_loop_t *loop, ev_async *w, int revents)
     }
 }
 
-static void event_on_device_attached(hpd_ev_loop_t *loop, ev_async *w, int revents)
-{
-    hpd_error_t rc;
-    hpd_ev_async_t *async = w->data;
-    hpd_t *hpd = async->hpd;
-    hpd_device_id_t *id = async->device;
-
-    TAILQ_REMOVE(&hpd->device_watchers, async, HPD_TAILQ_FIELD);
-    ev_async_stop(loop, w);
-    free(async);
-
-    hpd_listener_t *listener;
-    // TODO With this loop delayed, hpd_foreach_attached() is likely to provide duplicated calls for the same devices
-    TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
-        if (listener->on_dev_attach) listener->on_dev_attach(listener->data, id);
-    }
-
-    if ((rc = discovery_free_did(id))) {
-        LOG_ERROR(hpd, "free function failed [code: %i].", rc);
-    }
-}
-
-static void event_on_device_detached(hpd_ev_loop_t *loop, ev_async *w, int revents)
-{
-    hpd_error_t rc;
-    hpd_ev_async_t *async = w->data;
-    hpd_t *hpd = async->hpd;
-    hpd_device_id_t *id = async->device;
-
-    TAILQ_REMOVE(&hpd->device_watchers, async, HPD_TAILQ_FIELD);
-    ev_async_stop(loop, w);
-    free(async);
-
-    hpd_listener_t *listener;
-    TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
-        if (listener->on_dev_detach) listener->on_dev_detach(listener->data, id);
-    }
-
-    if ((rc = discovery_free_did(id))) {
-        LOG_ERROR(hpd, "free function failed [code: %i].", rc);
-    }
-}
-
-static void event_on_device_changed(hpd_ev_loop_t *loop, ev_async *w, int revents)
-{
-    hpd_error_t rc;
-    hpd_ev_async_t *async = w->data;
-    hpd_t *hpd = async->hpd;
-    hpd_device_id_t *id = async->device;
-
-    TAILQ_REMOVE(&hpd->device_watchers, async, HPD_TAILQ_FIELD);
-    ev_async_stop(loop, w);
-    free(async);
-
-    hpd_listener_t *listener;
-    TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
-        if (listener->on_dev_change) listener->on_dev_change(listener->data, id);
-    }
-
-    if ((rc = discovery_free_did(id))) {
-        LOG_ERROR(hpd, "free function failed [code: %i].", rc);
-    }
-}
-
 hpd_error_t event_changed(const hpd_service_id_t *id, hpd_value_t *val)
 {
     hpd_error_t rc = HPD_E_ALLOC;
@@ -232,111 +183,173 @@ hpd_error_t event_changed(const hpd_service_id_t *id, hpd_value_t *val)
     }
 }
 
-hpd_error_t event_inform_adapter_attached(hpd_adapter_t *adapter)
+hpd_error_t event_inform_adp_attached(hpd_adapter_t *adapter)
 {
     hpd_error_t rc;
-    hpd_device_t *device;
-    TAILQ_FOREACH(device, adapter->devices, HPD_TAILQ_FIELD) {
-        // TODO Could alternatively remove the attached watchers and return an error
-        if ((rc = event_inform_device_attached(device)))
-            LOG_ERROR(adapter->context->hpd, "event_inform_device_attached() [code: %i].", rc);
+
+    const hpd_module_t *context = adapter->context;
+    hpd_t *hpd = context->hpd;
+
+    hpd_adapter_id_t *aid;
+    if ((rc = discovery_alloc_aid(&aid, context, adapter->id))) return rc;
+    
+    hpd_listener_t *listener;
+    TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
+        if (listener->on_adp_attach) listener->on_adp_attach(listener->data, aid);
     }
-    return HPD_E_SUCCESS;
+    
+    return discovery_free_aid(aid);
 }
 
-hpd_error_t event_inform_adapter_detached(hpd_adapter_t *adapter)
+hpd_error_t event_inform_adp_detached(hpd_adapter_t *adapter)
 {
     hpd_error_t rc;
-    hpd_device_t *device;
-    TAILQ_FOREACH(device, adapter->devices, HPD_TAILQ_FIELD) {
-        // TODO Could alternatively remove the attached watchers and return an error
-        if ((rc = event_inform_device_detached(device)))
-            LOG_ERROR(adapter->context->hpd, "event_inform_device_detached() [code: %i].", rc);
-    }
-    return HPD_E_SUCCESS;
-}
 
-hpd_error_t event_inform_device_attached(hpd_device_t *device)
-{
-    hpd_error_t rc = HPD_E_ALLOC;
-    hpd_ev_async_t *async;
-    HPD_CALLOC(async, 1, hpd_ev_async_t);
-    hpd_adapter_t *adapter = device->adapter;
     const hpd_module_t *context = adapter->context;
     hpd_t *hpd = context->hpd;
-    if ((rc = discovery_alloc_did(&async->device, context, adapter->id, device->id))) goto did_error;
-    async->hpd = hpd;
-    ev_async_init(&async->watcher, event_on_device_attached);
-    async->watcher.data = async;
-    ev_async_start(hpd->loop, &async->watcher);
-    ev_async_send(hpd->loop, &async->watcher);
-    TAILQ_INSERT_TAIL(&hpd->device_watchers, async, HPD_TAILQ_FIELD);
-    return HPD_E_SUCCESS;
 
-    did_error:
-    free(async);
-    alloc_error:
-    switch (rc) {
-        case HPD_E_ALLOC:
-            LOG_RETURN_E_ALLOC(hpd);
-        default:
-            return rc;
+    hpd_adapter_id_t *aid;
+    if ((rc = discovery_alloc_aid(&aid, context, adapter->id))) return rc;
+
+    hpd_listener_t *listener;
+    TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
+        if (listener->on_adp_detach) listener->on_adp_detach(listener->data, aid);
     }
+
+    return discovery_free_aid(aid);
 }
 
-hpd_error_t event_inform_device_detached(hpd_device_t *device)
+hpd_error_t event_inform_adp_changed(hpd_adapter_t *adapter)
 {
-    hpd_error_t rc = HPD_E_ALLOC;
-    hpd_ev_async_t *async;
-    HPD_CALLOC(async, 1, hpd_ev_async_t);
-    hpd_adapter_t *adapter = device->adapter;
+    hpd_error_t rc;
+
     const hpd_module_t *context = adapter->context;
     hpd_t *hpd = context->hpd;
-    if ((rc = discovery_alloc_did(&async->device, context, adapter->id, device->id))) goto did_error;
-    async->hpd = hpd;
-    ev_async_init(&async->watcher, event_on_device_detached);
-    async->watcher.data = async;
-    ev_async_start(hpd->loop, &async->watcher);
-    ev_async_send(hpd->loop, &async->watcher);
-    TAILQ_INSERT_TAIL(&hpd->device_watchers, async, HPD_TAILQ_FIELD);
-    return HPD_E_SUCCESS;
 
-    did_error:
-    free(async);
-    alloc_error:
-    switch (rc) {
-        case HPD_E_ALLOC:
-            LOG_RETURN_E_ALLOC(hpd);
-        default:
-            return rc;
+    hpd_adapter_id_t *aid;
+    if ((rc = discovery_alloc_aid(&aid, context, adapter->id))) return rc;
+
+    hpd_listener_t *listener;
+    TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
+        if (listener->on_adp_change) listener->on_adp_change(listener->data, aid);
     }
+
+    return discovery_free_aid(aid);
 }
 
-hpd_error_t event_inform_device_changed(hpd_device_t *device)
+hpd_error_t event_inform_dev_attached(hpd_device_t *device)
 {
-    hpd_error_t rc = HPD_E_ALLOC;
-    hpd_ev_async_t *async;
-    HPD_CALLOC(async, 1, hpd_ev_async_t);
-    hpd_adapter_t *adapter = device->adapter;
-    const hpd_module_t *context = adapter->context;
-    hpd_t *hpd = context->hpd;
-    if ((rc = discovery_alloc_did(&async->device, context, adapter->id, device->id))) goto did_error;
-    async->hpd = hpd;
-    ev_async_init(&async->watcher, event_on_device_changed);
-    async->watcher.data = async;
-    ev_async_start(hpd->loop, &async->watcher);
-    ev_async_send(hpd->loop, &async->watcher);
-    TAILQ_INSERT_TAIL(&hpd->device_watchers, async, HPD_TAILQ_FIELD);
-    return HPD_E_SUCCESS;
+    hpd_error_t rc;
 
-    did_error:
-    free(async);
-    alloc_error:
-    switch (rc) {
-        case HPD_E_ALLOC:
-            LOG_RETURN_E_ALLOC(hpd);
-        default:
-            return rc;
+    const hpd_module_t *context = device->context;
+    hpd_t *hpd = context->hpd;
+    hpd_adapter_t *adapter = device->adapter;
+
+    hpd_device_id_t *did;
+    if ((rc = discovery_alloc_did(&did, context, adapter->id, device->id))) return rc;
+
+    hpd_listener_t *listener;
+    TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
+        if (listener->on_dev_attach) listener->on_dev_attach(listener->data, did);
     }
+
+    return discovery_free_did(did);
 }
 
+hpd_error_t event_inform_dev_detached(hpd_device_t *device)
+{
+    hpd_error_t rc;
+
+    const hpd_module_t *context = device->context;
+    hpd_t *hpd = context->hpd;
+    hpd_adapter_t *adapter = device->adapter;
+
+    hpd_device_id_t *did;
+    if ((rc = discovery_alloc_did(&did, context, adapter->id, device->id))) return rc;
+
+    hpd_listener_t *listener;
+    TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
+        if (listener->on_dev_detach) listener->on_dev_detach(listener->data, did);
+    }
+
+    return discovery_free_did(did);
+}
+
+hpd_error_t event_inform_dev_changed(hpd_device_t *device)
+{
+    hpd_error_t rc;
+
+    const hpd_module_t *context = device->context;
+    hpd_t *hpd = context->hpd;
+    hpd_adapter_t *adapter = device->adapter;
+
+    hpd_device_id_t *did;
+    if ((rc = discovery_alloc_did(&did, context, adapter->id, device->id))) return rc;
+
+    hpd_listener_t *listener;
+    TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
+        if (listener->on_dev_change) listener->on_dev_change(listener->data, did);
+    }
+
+    return discovery_free_did(did);
+}
+
+hpd_error_t event_inform_srv_attached(hpd_service_t *service)
+{
+    hpd_error_t rc;
+
+    const hpd_module_t *context = service->context;
+    hpd_t *hpd = context->hpd;
+    hpd_device_t *device = service->device;
+    hpd_adapter_t *adapter = device->adapter;
+
+    hpd_service_id_t *sid;
+    if ((rc = discovery_alloc_sid(&sid, context, adapter->id, device->id, service->id))) return rc;
+
+    hpd_listener_t *listener;
+    TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
+        if (listener->on_srv_attach) listener->on_srv_attach(listener->data, sid);
+    }
+
+    return discovery_free_sid(sid);
+}
+
+hpd_error_t event_inform_srv_detached(hpd_service_t *service)
+{
+    hpd_error_t rc;
+
+    const hpd_module_t *context = service->context;
+    hpd_t *hpd = context->hpd;
+    hpd_device_t *device = service->device;
+    hpd_adapter_t *adapter = device->adapter;
+
+    hpd_service_id_t *sid;
+    if ((rc = discovery_alloc_sid(&sid, context, adapter->id, device->id, service->id))) return rc;
+
+    hpd_listener_t *listener;
+    TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
+        if (listener->on_srv_detach) listener->on_srv_detach(listener->data, sid);
+    }
+
+    return discovery_free_sid(sid);
+}
+
+hpd_error_t event_inform_srv_changed(hpd_service_t *service)
+{
+    hpd_error_t rc;
+
+    const hpd_module_t *context = service->context;
+    hpd_t *hpd = context->hpd;
+    hpd_device_t *device = service->device;
+    hpd_adapter_t *adapter = device->adapter;
+
+    hpd_service_id_t *sid;
+    if ((rc = discovery_alloc_sid(&sid, context, adapter->id, device->id, service->id))) return rc;
+
+    hpd_listener_t *listener;
+    TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
+        if (listener->on_srv_change) listener->on_srv_change(listener->data, sid);
+    }
+
+    return discovery_free_sid(sid);
+}

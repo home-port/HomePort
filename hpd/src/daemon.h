@@ -61,7 +61,6 @@ struct hpd {
     hpd_ev_asyncs_t request_watchers;
     hpd_ev_asyncs_t respond_watchers;
     hpd_ev_asyncs_t changed_watchers;
-    hpd_ev_asyncs_t device_watchers;
     char *argv0;
     hpd_log_level_t log_level;
 #ifdef THREAD_SAFE
@@ -78,13 +77,8 @@ struct hpd_ev_async {
         hpd_response_t *response;
         struct {
             hpd_t *hpd;
-            union {
-                struct {
-                    hpd_service_id_t *service;
-                    hpd_value_t *value;
-                };
-                hpd_device_id_t *device;
-            };
+            hpd_service_id_t *service;
+            hpd_value_t *value;
         };
     };
 };

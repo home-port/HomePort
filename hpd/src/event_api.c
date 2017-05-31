@@ -87,10 +87,23 @@ hpd_error_t hpd_listener_set_value_callback(hpd_listener_t *listener, hpd_value_
     if (!listener) return HPD_E_NULL;
     return event_set_value_callback(listener, on_change);
 }
+
+hpd_error_t hpd_listener_set_adapter_callback(hpd_listener_t *listener, hpd_adapter_f on_attach, hpd_adapter_f on_detach, hpd_adapter_f on_change)
+{
+    if (!listener) return HPD_E_NULL;
+    return event_set_adapter_callback(listener, on_attach, on_detach, on_change);
+}
+
 hpd_error_t hpd_listener_set_device_callback(hpd_listener_t *listener, hpd_device_f on_attach, hpd_device_f on_detach, hpd_device_f on_change)
 {
     if (!listener) return HPD_E_NULL;
     return event_set_device_callback(listener, on_attach, on_detach, on_change);
+}
+
+hpd_error_t hpd_listener_set_service_callback(hpd_listener_t *listener, hpd_service_f on_attach, hpd_service_f on_detach, hpd_service_f on_change)
+{
+    if (!listener) return HPD_E_NULL;
+    return event_set_service_callback(listener, on_attach, on_detach, on_change);
 }
 
 hpd_error_t hpd_subscribe(hpd_listener_t *listener)

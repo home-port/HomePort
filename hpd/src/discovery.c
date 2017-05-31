@@ -189,7 +189,7 @@ hpd_error_t discovery_attach_adapter(hpd_t *hpd, hpd_adapter_t *adapter)
     TAILQ_INSERT_TAIL(&hpd->configuration->adapters, adapter, HPD_TAILQ_FIELD);
     adapter->configuration = hpd->configuration;
 
-    if ((rc = event_inform_adapter_attached(adapter))) {
+    if ((rc = event_inform_adp_attached(adapter))) {
         TAILQ_REMOVE(&hpd->configuration->adapters, adapter, HPD_TAILQ_FIELD);
         return rc;
     }
@@ -205,7 +205,7 @@ hpd_error_t discovery_attach_device(hpd_adapter_t *adapter, hpd_device_t *device
     device->adapter = adapter;
 
     if (adapter->configuration) {
-        if ((rc = event_inform_device_attached(device))) {
+        if ((rc = event_inform_dev_attached(device))) {
             TAILQ_REMOVE(adapter->devices, device, HPD_TAILQ_FIELD);
             return rc;
         }
@@ -216,16 +216,34 @@ hpd_error_t discovery_attach_device(hpd_adapter_t *adapter, hpd_device_t *device
 
 hpd_error_t discovery_attach_service(hpd_device_t *device, hpd_service_t *service)
 {
+    hpd_error_t rc;
+
     TAILQ_INSERT_TAIL(device->services, service, HPD_TAILQ_FIELD);
     service->device = device;
+
+    if (device->adapter && device->adapter->configuration) {
+        if ((rc = event_inform_srv_attached(service))) {
+            TAILQ_REMOVE(device->services, service, HPD_TAILQ_FIELD);
+            return rc;
+        }
+    }
 
     return HPD_E_SUCCESS;
 }
 
 hpd_error_t discovery_attach_parameter(hpd_service_t *service, hpd_parameter_t *parameter)
 {
+    hpd_error_t rc;
+
     TAILQ_INSERT_TAIL(service->parameters, parameter, HPD_TAILQ_FIELD);
     parameter->service = service;
+
+    if (service->device && service->device->adapter && service->device->adapter->configuration) {
+        if ((rc = event_inform_srv_changed(service))) {
+            TAILQ_REMOVE(service->parameters, parameter, HPD_TAILQ_FIELD);
+            return rc;
+        }
+    }
 
     return HPD_E_SUCCESS;
 }
@@ -235,7 +253,7 @@ hpd_error_t discovery_detach_adapter(hpd_adapter_t *adapter)
     hpd_error_t rc;
 
     // Inform event listeners
-    if ((rc = event_inform_adapter_detached(adapter))) return rc;
+    if ((rc = event_inform_adp_detached(adapter))) return rc;
 
     // Detach it
     TAILQ_REMOVE(&adapter->configuration->adapters, adapter, HPD_TAILQ_FIELD);
@@ -250,7 +268,7 @@ hpd_error_t discovery_detach_device(hpd_device_t *device)
 
     // Inform event listeners
     if (device->adapter->configuration) {
-        if ((rc = event_inform_device_detached(device))) return rc;
+        if ((rc = event_inform_dev_detached(device))) return rc;
     }
 
     // Detach it
@@ -262,6 +280,13 @@ hpd_error_t discovery_detach_device(hpd_device_t *device)
 
 hpd_error_t discovery_detach_service(hpd_service_t *service)
 {
+    hpd_error_t rc;
+
+    // Inform event listeners
+    if (service->device && service->device->adapter && service->device->adapter->configuration) {
+        if ((rc = event_inform_srv_detached(service))) return rc;
+    }
+
     TAILQ_REMOVE(service->device->services, service, HPD_TAILQ_FIELD);
     service->device = NULL;
 
@@ -270,6 +295,13 @@ hpd_error_t discovery_detach_service(hpd_service_t *service)
 
 hpd_error_t discovery_detach_parameter(hpd_parameter_t *parameter)
 {
+    hpd_error_t rc;
+
+    // Inform event listeners
+    if (parameter->service && parameter->service->device && parameter->service->device->adapter && parameter->service->device->adapter->configuration) {
+        if ((rc = event_inform_srv_changed(parameter->service))) return rc;
+    }
+
     TAILQ_REMOVE(parameter->service->parameters, parameter, HPD_TAILQ_FIELD);
     parameter->service = NULL;
 
@@ -464,30 +496,69 @@ hpd_error_t discovery_set_service_data(hpd_service_t *service, void *data, hpd_f
 
 hpd_error_t discovery_set_adapter_attr(hpd_adapter_t *adapter, const char *key, const char *val)
 {
-    return hpd_map_set(adapter->attributes, key, val);
+    hpd_error_t rc;
+
+    if ((rc = hpd_map_set(adapter->attributes, key, val))) return rc;
+
+    if (adapter->configuration) {
+        if ((rc = event_inform_adp_changed(adapter))) return rc;
+    }
+
+    return HPD_E_SUCCESS;
 }
 
 hpd_error_t discovery_set_device_attr(hpd_device_t *device, const char *key, const char *val)
 {
-    return hpd_map_set(device->attributes, key, val);
+    hpd_error_t rc;
+
+    if ((rc = hpd_map_set(device->attributes, key, val))) return rc;
+
+    if (device->adapter && device->adapter->configuration) {
+        if ((rc = event_inform_dev_changed(device))) return rc;
+    }
+
+    return HPD_E_SUCCESS;
 }
 
 hpd_error_t discovery_set_service_attr(hpd_service_t *service, const char *key, const char *val)
 {
-    return hpd_map_set(service->attributes, key, val);
+    hpd_error_t rc;
+
+    if ((rc = hpd_map_set(service->attributes, key, val))) return rc;
+
+    if (service->device && service->device->adapter && service->device->adapter->configuration) {
+        if ((rc = event_inform_srv_changed(service))) return rc;
+    }
+
+    return HPD_E_SUCCESS;
 }
 
 hpd_error_t discovery_set_parameter_attr(hpd_parameter_t *parameter, const char *key, const char *val)
 {
-    return hpd_map_set(parameter->attributes, key, val);
+    hpd_error_t rc;
+
+    if ((rc = hpd_map_set(parameter->attributes, key, val))) return rc;
+
+    if (parameter->service && parameter->service->device && parameter->service->device->adapter && parameter->service->device->adapter->configuration) {
+        if ((rc = event_inform_srv_changed(parameter->service))) return rc;
+    }
+
+    return HPD_E_SUCCESS;
 }
 
 hpd_error_t discovery_set_service_action(hpd_service_t *service, const hpd_method_t method, hpd_action_f action)
 {
+    hpd_error_t rc;
+
     hpd_action_t *action_p = &service->actions[method];
     action_p->service = service;
     action_p->method = method;
     action_p->action = action;
+
+    if (service->device && service->device->adapter && service->device->adapter->configuration) {
+        if ((rc = event_inform_srv_changed(service))) return rc;
+    }
+
     return HPD_E_SUCCESS;
 }
 
@@ -499,8 +570,13 @@ hpd_error_t discovery_set_adapter_attrs_v(hpd_adapter_t *adapter, va_list vp)
     while ((key = va_arg(vp, const char *))) {
         if (key[0] == '_') LOG_RETURN(adapter->context->hpd, HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
         val = va_arg(vp, const char *);
-        if ((rc = discovery_set_adapter_attr(adapter, key, val))) return rc;
+        if ((rc = hpd_map_set(adapter->attributes, key, val))) return rc;
     }
+
+    if (adapter->configuration) {
+        if ((rc = event_inform_adp_changed(adapter))) return rc;
+    }
+
     return HPD_E_SUCCESS;
 }
 
@@ -512,8 +588,13 @@ hpd_error_t discovery_set_device_attrs_v(hpd_device_t *device, va_list vp)
     while ((key = va_arg(vp, const char *))) {
         if (key[0] == '_') LOG_RETURN(device->context->hpd, HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
         val = va_arg(vp, const char *);
-        if ((rc = discovery_set_device_attr(device, key, val))) return rc;
+        if ((rc = hpd_map_set(device->attributes, key, val))) return rc;
     }
+
+    if (device->adapter && device->adapter->configuration) {
+        if ((rc = event_inform_dev_changed(device))) return rc;
+    }
+
     return HPD_E_SUCCESS;
 }
 
@@ -525,8 +606,13 @@ hpd_error_t discovery_set_service_attrs_v(hpd_service_t *service, va_list vp)
     while ((key = va_arg(vp, const char *))) {
         if (key[0] == '_') LOG_RETURN(service->context->hpd, HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
         val = va_arg(vp, const char *);
-        if ((rc = discovery_set_service_attr(service, key, val))) return rc;
+        if ((rc = hpd_map_set(service->attributes, key, val))) return rc;
     }
+
+    if (service->device && service->device->adapter && service->device->adapter->configuration) {
+        if ((rc = event_inform_srv_changed(service))) return rc;
+    }
+
     return HPD_E_SUCCESS;
 }
 
@@ -538,8 +624,13 @@ hpd_error_t discovery_set_parameter_attrs_v(hpd_parameter_t *parameter, va_list 
     while ((key = va_arg(vp, const char *))) {
         if (key[0] == '_') LOG_RETURN(parameter->context->hpd, HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
         val = va_arg(vp, const char *);
-        if ((rc = discovery_set_parameter_attr(parameter, key, val))) return rc;
+        if ((rc = hpd_map_set(parameter->attributes, key, val))) return rc;
     }
+
+    if (parameter->service && parameter->service->device && parameter->service->device->adapter && parameter->service->device->adapter->configuration) {
+        if ((rc = event_inform_srv_changed(parameter->service))) return rc;
+    }
+
     return HPD_E_SUCCESS;
 }
 
@@ -554,8 +645,17 @@ hpd_error_t discovery_set_service_actions_v(hpd_service_t *service, va_list vp)
             LOG_RETURN(service->context->hpd, HPD_E_ARGUMENT, "Unknown method given to %s() - did you end the list with HPD_M_NONE?", __func__);
         action = va_arg(vp, hpd_action_f);
         if (!action) LOG_RETURN_E_NULL(service->context->hpd);
-        if ((rc = discovery_set_service_action(service, method, action))) return rc;
+
+        hpd_action_t *action_p = &service->actions[method];
+        action_p->service = service;
+        action_p->method = method;
+        action_p->action = action;
     }
+
+    if (service->device && service->device->adapter && service->device->adapter->configuration) {
+        if ((rc = event_inform_srv_changed(service))) return rc;
+    }
+
     return HPD_E_SUCCESS;
 }
 

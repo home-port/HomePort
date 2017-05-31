@@ -372,14 +372,6 @@ static hpd_error_t daemon_watchers_stop(hpd_t *hpd)
         else LOG_ERROR(hpd, "free function failed [code: %i]", tmp);
         free(async);
     }
-    TAILQ_FOREACH_SAFE(async, &hpd->device_watchers, HPD_TAILQ_FIELD, async_tmp) {
-        TAILQ_REMOVE(&hpd->device_watchers, async, HPD_TAILQ_FIELD);
-        ev_async_stop(hpd->loop, &async->watcher);
-        tmp = discovery_free_did(async->device);
-        if (!rc) rc = tmp;
-        else LOG_ERROR(hpd, "free function failed [code: %i]", tmp);
-        free(async);
-    }
 
     return rc;
 }
@@ -398,7 +390,6 @@ hpd_error_t daemon_alloc(hpd_t **hpd)
     TAILQ_INIT(&(*hpd)->request_watchers);
     TAILQ_INIT(&(*hpd)->respond_watchers);
     TAILQ_INIT(&(*hpd)->changed_watchers);
-    TAILQ_INIT(&(*hpd)->device_watchers);
     ev_signal_init(&(*hpd)->sigint_watcher, daemon_on_signal, SIGINT);
     ev_signal_init(&(*hpd)->sigterm_watcher, daemon_on_signal, SIGTERM);
     (*hpd)->sigint_watcher.data = hpd;

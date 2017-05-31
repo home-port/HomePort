@@ -44,9 +44,15 @@ struct hpd_listener {
     const hpd_module_t *context;
     // Data members
     hpd_value_f on_change;
+    hpd_adapter_f on_adp_attach;
+    hpd_adapter_f on_adp_detach;
+    hpd_adapter_f on_adp_change;
     hpd_device_f on_dev_attach;
     hpd_device_f on_dev_detach;
     hpd_device_f on_dev_change;
+    hpd_service_f on_srv_attach;
+    hpd_service_f on_srv_detach;
+    hpd_service_f on_srv_change;
     // User data
     void *data;
     hpd_free_f on_free;

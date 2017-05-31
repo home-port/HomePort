@@ -55,7 +55,9 @@ hpd_error_t hpd_response_get_request_value(const hpd_response_t *response, const
 hpd_error_t hpd_listener_alloc(hpd_listener_t **listener, const hpd_module_t *context);
 hpd_error_t hpd_listener_set_data(hpd_listener_t *listener, void *data, hpd_free_f on_free);
 hpd_error_t hpd_listener_set_value_callback(hpd_listener_t *listener, hpd_value_f on_change);
+hpd_error_t hpd_listener_set_adapter_callback(hpd_listener_t *listener, hpd_adapter_f on_attach, hpd_adapter_f on_detach, hpd_adapter_f on_change);
 hpd_error_t hpd_listener_set_device_callback(hpd_listener_t *listener, hpd_device_f on_attach, hpd_device_f on_detach, hpd_device_f on_change);
+hpd_error_t hpd_listener_set_service_callback(hpd_listener_t *listener, hpd_service_f on_attach, hpd_service_f on_detach, hpd_service_f on_change);
 hpd_error_t hpd_subscribe(hpd_listener_t *listener);
 hpd_error_t hpd_listener_free(hpd_listener_t *listener);
 hpd_error_t hpd_listener_get_data(const hpd_listener_t *listener, void **data);

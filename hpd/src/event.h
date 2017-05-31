@@ -39,8 +39,9 @@ hpd_error_t event_free_listener(hpd_listener_t *listener);
 
 hpd_error_t event_set_listener_data(hpd_listener_t *listener, void *data, hpd_free_f on_free);
 hpd_error_t event_set_value_callback(hpd_listener_t *listener, hpd_value_f on_change);
-hpd_error_t event_set_device_callback(hpd_listener_t *listener, hpd_device_f on_attach, hpd_device_f on_detach,
-                                      hpd_device_f on_change);
+hpd_error_t event_set_adapter_callback(hpd_listener_t *listener, hpd_adapter_f on_attach, hpd_adapter_f on_detach, hpd_adapter_f on_change);
+hpd_error_t event_set_device_callback(hpd_listener_t *listener, hpd_device_f on_attach, hpd_device_f on_detach, hpd_device_f on_change);
+hpd_error_t event_set_service_callback(hpd_listener_t *listener, hpd_service_f on_attach, hpd_service_f on_detach, hpd_service_f on_change);
 
 hpd_error_t event_subscribe(hpd_listener_t *listener);
 hpd_error_t event_unsubscribe(hpd_listener_t *listener);
@@ -51,11 +52,15 @@ hpd_error_t event_foreach_attached(const hpd_listener_t *listener);
 
 hpd_error_t event_changed(const hpd_service_id_t *id, hpd_value_t *val);
 
-hpd_error_t event_inform_adapter_attached(hpd_adapter_t *adapter);
-hpd_error_t event_inform_adapter_detached(hpd_adapter_t *adapter);
-hpd_error_t event_inform_device_attached(hpd_device_t *device);
-hpd_error_t event_inform_device_detached(hpd_device_t *device);
-hpd_error_t event_inform_device_changed(hpd_device_t *device);
+hpd_error_t event_inform_adp_attached(hpd_adapter_t *adapter);
+hpd_error_t event_inform_adp_detached(hpd_adapter_t *adapter);
+hpd_error_t event_inform_adp_changed(hpd_adapter_t *adapter);
+hpd_error_t event_inform_dev_attached(hpd_device_t *device);
+hpd_error_t event_inform_dev_detached(hpd_device_t *device);
+hpd_error_t event_inform_dev_changed(hpd_device_t *device);
+hpd_error_t event_inform_srv_attached(hpd_service_t *service);
+hpd_error_t event_inform_srv_detached(hpd_service_t *service);
+hpd_error_t event_inform_srv_changed(hpd_service_t *service);
 
 #ifdef __cplusplus
 }
