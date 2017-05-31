@@ -891,7 +891,7 @@ static hpd_httpd_return_t rest_on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t
         }
 
         // Allocate hpd value
-        if ((rc = hpd_value_alloc(context, &value, val, HPD_NULL_TERMINATED))) {
+        if ((rc = hpd_value_alloc(&value, context, val, HPD_NULL_TERMINATED))) {
             free(val);
             HPD_LOG_ERROR(context, "Unable to allocate value (code: %d).", rc);
             if ((rc2 = rest_reply_internal_server_error(req, rest_req, context))) {

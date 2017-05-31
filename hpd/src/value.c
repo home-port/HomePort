@@ -32,7 +32,7 @@
 #include "log.h"
 #include "daemon.h"
 
-hpd_error_t value_alloc(const hpd_module_t *context, hpd_value_t **value, const char *body, int len)
+hpd_error_t value_alloc(hpd_value_t **value, const hpd_module_t *context, const char *body, int len)
 {
     hpd_error_t rc;
     HPD_CALLOC((*value), 1, hpd_value_t);
@@ -54,7 +54,7 @@ hpd_error_t value_alloc(const hpd_module_t *context, hpd_value_t **value, const 
         LOG_RETURN_E_ALLOC(context->hpd);
 }
 
-hpd_error_t value_vallocf(const hpd_module_t *context, hpd_value_t **value, const char *fmt, va_list vp)
+hpd_error_t value_vallocf(hpd_value_t **value, const hpd_module_t *context, const char *fmt, va_list vp)
 {
     hpd_error_t rc;
     HPD_CALLOC((*value), 1, hpd_value_t);
@@ -83,7 +83,7 @@ hpd_error_t value_vallocf(const hpd_module_t *context, hpd_value_t **value, cons
 hpd_error_t value_copy(hpd_value_t **dst, const hpd_value_t *src)
 {
     hpd_error_t rc;
-    if ((rc = value_alloc(src->context, dst, src->body, (int) src->len))) return rc;
+    if ((rc = value_alloc(dst, src->context, src->body, (int) src->len))) return rc;
     const hpd_pair_t *pair;
     hpd_map_foreach(rc, pair, src->headers) {
         const char *k, *v;

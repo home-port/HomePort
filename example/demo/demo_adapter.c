@@ -75,7 +75,7 @@ static hpd_status_t demo_adapter_send_value(hpd_request_t *req, demo_adapter_srv
 
     // Create and set value
     hpd_value_t *val;
-    if ((rc = hpd_value_allocf(srv_data->demo_adapter->context, &val, "%i", srv_data->state))) goto error_free_res;
+    if ((rc = hpd_value_allocf(&val, srv_data->demo_adapter->context, "%i", srv_data->state))) goto error_free_res;
     if ((rc = hpd_response_set_value(res, val))) goto error_free_val;
 
     // Send response
@@ -103,7 +103,7 @@ static hpd_error_t demo_adapter_send_changed(const hpd_service_id_t *service_id,
     hpd_error_t rc;
 
     hpd_value_t *value;
-    if ((rc = hpd_value_allocf(srv_data->demo_adapter->context, &value, "%i", srv_data->state))) return rc;
+    if ((rc = hpd_value_allocf(&value, srv_data->demo_adapter->context, "%i", srv_data->state))) return rc;
 
     if ((rc = hpd_id_changed(service_id, value))) hpd_value_free(value);
     return rc;

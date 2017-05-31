@@ -212,10 +212,10 @@ hpd_error_t hpd_service_id_next_parameter_id(hpd_parameter_id_t **parameter_id);
 /// [Browsing foreach loops]
 
 /// [hpd_value_t functions]
-hpd_error_t hpd_value_alloc(const hpd_module_t *context, hpd_value_t **value, const char *body, int len);
+hpd_error_t hpd_value_alloc(hpd_value_t **value, const hpd_module_t *context, const char *body, int len);
 // TODO New function, check if it can be used elsewhere
-hpd_error_t hpd_value_allocf(const hpd_module_t *context, hpd_value_t **value, const char *fmt, ...);
-hpd_error_t hpd_value_vallocf(const hpd_module_t *context, hpd_value_t **value, const char *fmt, va_list vp);
+hpd_error_t hpd_value_allocf(hpd_value_t **value, const hpd_module_t *context, const char *fmt, ...);
+hpd_error_t hpd_value_vallocf(hpd_value_t **value, const hpd_module_t *context, const char *fmt, va_list vp);
 hpd_error_t hpd_value_copy(const hpd_module_t *context, hpd_value_t **dst, const hpd_value_t *src);
 hpd_error_t hpd_value_free(hpd_value_t *value);
 hpd_error_t hpd_value_set_header(hpd_value_t *value, const char *key, const char *val);
