@@ -179,8 +179,10 @@ static hpd_error_t daemon_modules_create(const hpd_t *hpd)
     hpd_error_t rc;
     hpd_module_t *module;
     TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD)
-        if (module->def.on_create && (rc = module->def.on_create(&module->data, module)) != HPD_E_SUCCESS)
+        if (module->def.on_create && (rc = module->def.on_create(&module->data, module)) != HPD_E_SUCCESS) {
+            LOG_DEBUG(hpd, "Module %s failed to create", module->id);
             goto module_create_error;
+        }
     return HPD_E_SUCCESS;
 
     module_create_error:
@@ -215,8 +217,10 @@ static hpd_error_t daemon_modules_start(hpd_t *hpd)
 
     // Call on_start() on modules
     TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD)
-        if (module->def.on_start && (rc = module->def.on_start(module->data)) != HPD_E_SUCCESS)
+        if (module->def.on_start && (rc = module->def.on_start(module->data)) != HPD_E_SUCCESS) {
             goto module_error;
+            LOG_DEBUG(hpd, "Module %s failed to start", module->id);
+        }
 
     return HPD_E_SUCCESS;
 
@@ -261,6 +265,7 @@ static hpd_error_t daemon_options_create(hpd_t *hpd)
     LOG_RETURN_E_ALLOC(hpd);
 
     error:
+    LOG_DEBUG(hpd, "Failed to add global option");
     free(hpd->options);
     hpd->options = NULL;
     return rc;
