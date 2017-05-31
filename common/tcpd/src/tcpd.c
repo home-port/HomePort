@@ -91,7 +91,7 @@ static void tcpd_on_ev_recv(hpd_ev_loop_t *loop, struct ev_io *watcher, int reve
         if (hpd_tcpd_conn_kill(conn)) HPD_LOG_ERROR(context, "Failed to kill connection.");
         return;
     } else if (received == 0) {
-        HPD_LOG_INFO(context, "Connection closed by %s\n", conn->ip);
+        HPD_LOG_INFO(context, "Connection closed by %s", conn->ip);
         if (hpd_tcpd_conn_kill(conn)) HPD_LOG_ERROR(context, "Failed to kill connection.");
         return;
     }
