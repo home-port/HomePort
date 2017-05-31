@@ -140,7 +140,7 @@ IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}_${CPACK_DEBIAN_ARCHITECTURE}_${MAJOR_VERSION}.${MINOR_VERSION}.${CPACK_PACKAGE_VERSION_PATCH}")
 
     #dependencies for homePort
-    SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libev4, libjansson4, libmxml1, libcurl3-gnutls")
+    SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libev4, libjansson4, libmxml1, libcurl3, libcurl3-gnutls")
 
     SET(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
     SET(CPACK_DEBIAN_PACKAGE_SECTION "libs")
