@@ -557,7 +557,7 @@ hpd_error_t hpd_service_id_attach(const hpd_device_id_t *id, hpd_service_t *serv
     hpd_device_t *device;
     if ((rc = discovery_find_device(id, &device))) return rc;
     if (!discovery_is_service_id_unique(device, service))
-        LOG_RETURN(hpd, HPD_E_NOT_UNIQUE, "Service ids must be unique within the device.");
+        LOG_RETURN(hpd, HPD_E_NOT_UNIQUE, "Service ids must be unique within the device [id: %s].", service->id);
     return discovery_attach_service(device, service);
 }
 
@@ -568,7 +568,7 @@ hpd_error_t hpd_service_attach(hpd_device_t *device, hpd_service_t *service)
     if (!device || !service) LOG_RETURN_E_NULL(hpd);
     if (service->device) LOG_RETURN_ATTACHED(hpd);
     if (!discovery_is_service_id_unique(device, service))
-        LOG_RETURN(hpd, HPD_E_NOT_UNIQUE, "Service ids must be unique within the device.");
+        LOG_RETURN(hpd, HPD_E_NOT_UNIQUE, "Service ids must be unique within the device [id: %s].", service->id);
     return discovery_attach_service(device, service);
 }
 
