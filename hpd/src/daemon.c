@@ -109,9 +109,9 @@ static int daemon_on_parse_opt(int key, char *arg, struct argp_state *state)
     }
 
     alloc_error:
-        // TODO What ?
-        // TODO Free up a lot of stuff...
-        return 0;
+    // TODO What ?
+    // TODO Free up a lot of stuff...
+    return 0;
 }
 
 static hpd_error_t daemon_add_global_option(hpd_t *hpd, const char *name, int key, const char *arg, int flags, const char *doc)
@@ -178,11 +178,12 @@ static hpd_error_t daemon_modules_create(const hpd_t *hpd)
     // Call on_create() on modules
     hpd_error_t rc;
     hpd_module_t *module;
-    TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD)
+    TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD) {
         if (module->def.on_create && (rc = module->def.on_create(&module->data, module)) != HPD_E_SUCCESS) {
             LOG_DEBUG(hpd, "Module %s failed to create", module->id);
             goto module_create_error;
         }
+    }
     return HPD_E_SUCCESS;
 
     module_create_error:
@@ -216,11 +217,16 @@ static hpd_error_t daemon_modules_start(hpd_t *hpd)
     hpd_module_t *module;
 
     // Call on_start() on modules
-    TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD)
-        if (module->def.on_start && (rc = module->def.on_start(module->data)) != HPD_E_SUCCESS) {
-            LOG_DEBUG(hpd, "Module %s failed to start", module->id);
-            goto module_error;
+    TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD) {
+        if (module->def.on_start) {
+            if ((rc = module->def.on_start(module->data)) != HPD_E_SUCCESS) {
+                LOG_DEBUG(hpd, "Module %s failed to start", module->id);
+                goto module_error;
+            } else {
+                LOG_INFO(hpd, "Module %s started.", module->id);
+            }
         }
+    }
 
     return HPD_E_SUCCESS;
 
@@ -237,9 +243,15 @@ static hpd_error_t daemon_modules_stop(hpd_t *hpd)
     hpd_module_t *module;
 
     // Call on_stop() on modules
-    TAILQ_FOREACH_REVERSE(module, &hpd->modules, hpd_modules, HPD_TAILQ_FIELD)
-        if (module->def.on_stop && (rc = module->def.on_stop(module->data)) != HPD_E_SUCCESS)
-            goto module_error;
+    TAILQ_FOREACH_REVERSE(module, &hpd->modules, hpd_modules, HPD_TAILQ_FIELD) {
+        if (module->def.on_stop) {
+            if ((rc = module->def.on_stop(module->data)) != HPD_E_SUCCESS) {
+                goto module_error;
+            } else {
+                LOG_INFO(hpd, "Module %s stopped.", module->id);
+            }
+        }
+    }
 
     return HPD_E_SUCCESS;
 
@@ -386,10 +398,10 @@ hpd_error_t daemon_alloc(hpd_t **hpd)
     return HPD_E_SUCCESS;
 
     alloc_error:
-        if (*hpd) {
-            if ((*hpd)->options) free((*hpd)->options);
-            free(*hpd);
-        }
+    if (*hpd) {
+        if ((*hpd)->options) free((*hpd)->options);
+        free(*hpd);
+    }
     return HPD_E_NULL;
 }
 
@@ -425,7 +437,7 @@ hpd_error_t daemon_add_option(const hpd_module_t *context, const char *name, con
 {
     hpd_error_t rc;
     hpd_t *hpd = context->hpd;
-    
+
     char *name_cat;
     HPD_CALLOC(name_cat, strlen(name)+strlen(context->id)+2, char);
     strcpy(name_cat, context->id);
@@ -464,6 +476,7 @@ hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[])
     hpd->argv0 = argv[0];
 
     // Allocate run-time and option memory
+    LOG_INFO(hpd, "Starting...");
     if ((rc = daemon_runtime_create(hpd)))
         goto runtime_create_error;
     if ((rc = daemon_options_create(hpd)))
@@ -477,7 +490,9 @@ hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[])
         goto loop_create_error;
     if ((rc = daemon_modules_start(hpd)))
         goto modules_start_error;
+    LOG_INFO(hpd, "Started.");
     daemon_loop_run(hpd);
+    LOG_INFO(hpd, "Stopping...");
     if ((rc = daemon_modules_stop(hpd)))
         goto modules_stop_error;
     if ((rc = daemon_watchers_stop(hpd)))
@@ -487,30 +502,31 @@ hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[])
         goto modules_destroy_error;
     if ((rc = daemon_runtime_destroy(hpd)))
         goto runtime_destroy_error;
+    LOG_INFO(hpd, "Stopped.");
 
     // Return
     return HPD_E_SUCCESS;
 
     // Return in a nice state if an error occur
     options_parse_error:
-        if ((rc2 = daemon_modules_destroy(hpd))) LOG_ERROR(hpd, "Failed to destroy modules [code: %i]", rc2);
+    if ((rc2 = daemon_modules_destroy(hpd))) LOG_ERROR(hpd, "Failed to destroy modules [code: %i]", rc2);
     modules_create_error:
     daemon_options_destroy(hpd);
     options_create_error:
-        if ((rc2 = daemon_runtime_destroy(hpd))) LOG_ERROR(hpd, "Failed to destroy runtime [code: %i]", rc2);
+    if ((rc2 = daemon_runtime_destroy(hpd))) LOG_ERROR(hpd, "Failed to destroy runtime [code: %i]", rc2);
     runtime_create_error:
-        return rc;
+    return rc;
     modules_start_error:
     modules_stop_error:
-        if ((rc2 = daemon_watchers_stop(hpd))) LOG_ERROR(hpd, "Failed to stop watchers [code: %i]", rc2);
+    if ((rc2 = daemon_watchers_stop(hpd))) LOG_ERROR(hpd, "Failed to stop watchers [code: %i]", rc2);
     watchers_stop_error:
     daemon_loop_destroy(hpd);
     loop_create_error:
-        if ((rc2 = daemon_modules_destroy(hpd))) LOG_ERROR(hpd, "Failed to destroy modules [code: %i]", rc2);
+    if ((rc2 = daemon_modules_destroy(hpd))) LOG_ERROR(hpd, "Failed to destroy modules [code: %i]", rc2);
     modules_destroy_error:
-        if ((rc2 = daemon_runtime_destroy(hpd))) LOG_ERROR(hpd, "Failed to destroy runtime [code: %i]", rc2);
+    if ((rc2 = daemon_runtime_destroy(hpd))) LOG_ERROR(hpd, "Failed to destroy runtime [code: %i]", rc2);
     runtime_destroy_error:
-        return rc;
+    return rc;
 }
 
 hpd_error_t daemon_stop(const hpd_t *hpd)
