@@ -85,7 +85,7 @@ static int daemon_on_parse_opt(int key, char *arg, struct argp_state *state)
                 // TODO Puts a limit on file size (recheck the casting bit)
                 size_t len = (size_t) ftell(fp);
                 fseek(fp, 0, SEEK_SET);
-                HPD_CALLOC(buffer, len, char);
+                HPD_CALLOC(buffer, len+1, char);
                 fread(buffer, 1, len, fp);
                 fclose(fp);
             }
