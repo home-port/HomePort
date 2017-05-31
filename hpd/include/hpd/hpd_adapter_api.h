@@ -82,8 +82,8 @@ hpd_error_t hpd_parameter_attach(hpd_service_t *service, hpd_parameter_t *parame
 hpd_error_t hpd_parameter_detach(const hpd_parameter_id_t *id, hpd_parameter_t **parameter);
 hpd_error_t hpd_parameter_set_attr(hpd_parameter_t *parameter, const char *key, const char *val);
 hpd_error_t hpd_parameter_set_attrs(hpd_parameter_t *parameter, ...);
-hpd_error_t hpd_parameter_id_set_attr(hpd_parameter_t *parameter, const char *key, const char *val);
-hpd_error_t hpd_parameter_id_set_attrs(hpd_parameter_t *parameter, ...);
+hpd_error_t hpd_parameter_id_set_attr(hpd_parameter_id_t *parameter, const char *key, const char *val);
+hpd_error_t hpd_parameter_id_set_attrs(hpd_parameter_id_t *parameter, ...);
 /// [hpd_parameter_t functions]
 
 /// [hpd_request_t functions]
