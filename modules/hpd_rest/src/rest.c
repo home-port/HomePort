@@ -469,11 +469,12 @@ static void rest_on_response(void *data, const hpd_response_t *res)
     // Get data from hpd
     // TODO Need to send value into xml/json to get headers too !!!
     const hpd_value_t *value;
-    const char *val;
-    size_t len;
+    const char *val = NULL;
+    size_t len = 0;
     hpd_status_t status;
     if ((rc = hpd_response_get_value(res, &value)) ||
-        (rc = hpd_value_get_body(value, &val, &len)) ||
+        (value != NULL && (rc = hpd_value_get_body(value, &val, &len))) ||
+        (val == NULL && len != 0) ||
         (rc = hpd_response_get_status(res, &status))) {
         if ((rc2 = rest_reply_internal_server_error(http_req, rest_req, context))) {
             HPD_LOG_ERROR(context, "Failed to send internal server error response (code: %d).", rc2);
@@ -488,7 +489,7 @@ static void rest_on_response(void *data, const hpd_response_t *res)
             HPD_LOG_ERROR(context, "Failed to send status response (code: %d).", rc2);
         }
         HPD_LOG_WARN(context, "No value in response.");
-        return ;
+        return;
     }
 
     // Get data from httpd

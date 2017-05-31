@@ -72,7 +72,7 @@ hpd_error_t log_vlogf(const char *module, hpd_log_level_t level, const char *fil
 
     fprintf(stream, "[%s]%*s %8s: ", module, (int) (16 - strlen(module)), "", type);
     int len = vfprintf(stream, fmt, vp);
-    fprintf(stream, "%*s  %s:%d\n", 128-len, "", file, line);
+    fprintf(stream, "%*s  %s:%d\n", 104-len, "", file, line);
 
     return HPD_E_SUCCESS;
 }

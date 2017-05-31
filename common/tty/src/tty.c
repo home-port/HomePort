@@ -158,14 +158,15 @@ hpd_error_t hpd_tty_open(hpd_tty_t **tty, const hpd_module_t *context, hpd_ev_lo
     (*tty)->read_len = 0;
     (*tty)->write_buffer = NULL;
     (*tty)->write_len = 0;
-    (*tty)->read_watcher.data = tty;
-    (*tty)->write_watcher.data = tty;
+    (*tty)->read_watcher.data = *tty;
+    (*tty)->write_watcher.data = *tty;
     (*tty)->on_data = on_data;
     (*tty)->on_close = on_close;
     (*tty)->data = data;
 
     if ((rc = tty_conn(*tty, baud)) != HPD_E_SUCCESS) {
         hpd_tty_close((*tty));
+        *tty = NULL;
         return rc;
     }
 
