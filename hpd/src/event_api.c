@@ -31,12 +31,37 @@
 #include "event.h"
 #include "log.h"
 #include "comm.h"
+#include "model.h"
 
-hpd_error_t hpd_changed(const hpd_service_id_t *id, hpd_value_t *val)
+hpd_error_t hpd_id_changed(const hpd_service_id_t *id, hpd_value_t *val)
 {
     if (!id || !val) LOG_RETURN_E_NULL();
     if (!id->device.adapter.hpd->loop) LOG_RETURN_HPD_STOPPED();
     return event_changed(id, val);
+}
+
+hpd_error_t hpd_changed(const hpd_service_t *service, hpd_value_t *val)
+{
+    hpd_error_t rc, rc2;
+
+    if (!service || !val) LOG_RETURN_E_NULL();
+    if (!service->device || !service->device->adapter || !service->device->adapter->configuration)
+        LOG_RETURN_DETACHED();
+    if (!service->device->adapter->configuration->hpd->loop) LOG_RETURN_HPD_STOPPED();
+
+    hpd_service_id_t *sid;
+    if ((rc = discovery_alloc_sid(&sid, service->device->adapter->configuration->hpd,
+                                  service->device->adapter->id, service->device->id, service->id)))
+        return rc;
+
+    rc = event_changed(sid, val);
+
+    if ((rc2 = discovery_free_sid(sid))) {
+        if (rc != HPD_E_SUCCESS) rc = rc2;
+        else LOG_ERROR("free function failed [code: %i].", rc2);
+    }
+
+    return rc;
 }
 
 hpd_error_t hpd_listener_alloc(hpd_listener_t **listener, hpd_t *hpd)

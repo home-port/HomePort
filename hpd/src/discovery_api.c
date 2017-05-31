@@ -1398,6 +1398,24 @@ hpd_error_t hpd_parameter_get_service(const hpd_parameter_t *parameter, const hp
     return discovery_get_parameter_service(parameter, service);
 }
 
+hpd_error_t hpd_adapter_get_device(const hpd_adapter_t *adapter, const char *id, hpd_device_t **device)
+{
+    if (!adapter || !id || !device) LOG_RETURN_E_NULL();
+    return  discovery_get_adapter_device(adapter, id, device);
+}
+
+hpd_error_t hpd_device_get_service(const hpd_device_t *device, const char *id, hpd_service_t **service)
+{
+    if (!device || !id || !service) LOG_RETURN_E_NULL();
+    return  discovery_get_device_service(device, id, service);
+}
+
+hpd_error_t hpd_service_get_parameter(const hpd_service_t *service, const char *id, hpd_parameter_t **parameter)
+{
+    if (!service || !id || !parameter) LOG_RETURN_E_NULL();
+    return  discovery_get_service_parameter(service, id, parameter);
+}
+
 hpd_error_t hpd_adapter_first_device(const hpd_adapter_t *adapter, hpd_device_t **device)
 {
     if (!adapter || !device) LOG_RETURN_E_NULL();

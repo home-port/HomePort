@@ -105,7 +105,7 @@ static hpd_error_t demo_adapter_send_changed(const hpd_service_id_t *service_id,
     hpd_value_t *value;
     if ((rc = hpd_value_allocf(&value, "%i", srv_data->state))) return rc;
 
-    if ((rc = hpd_changed(service_id, value))) hpd_value_free(value);
+    if ((rc = hpd_id_changed(service_id, value))) hpd_value_free(value);
     return rc;
 }
 /// [changed]

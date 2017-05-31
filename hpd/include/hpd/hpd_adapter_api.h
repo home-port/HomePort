@@ -141,11 +141,14 @@ hpd_error_t hpd_parameter_next_attr(const hpd_pair_t **pair);
     (RC) = hpd_parameter_next_attr(&(PAIR)))
 
 hpd_error_t hpd_adapter_get_hpd(const hpd_adapter_t *adapter, hpd_t **hpd);
+hpd_error_t hpd_adapter_get_device(const hpd_adapter_t *adapter, const char *id, hpd_device_t **device);
 hpd_error_t hpd_device_get_hpd(const hpd_device_t *device, hpd_t **hpd);
 hpd_error_t hpd_device_get_adapter(const hpd_device_t *device, const hpd_adapter_t **adapter);
+hpd_error_t hpd_device_get_service(const hpd_device_t *device, const char *id, hpd_service_t **service);
 hpd_error_t hpd_service_get_hpd(const hpd_service_t *service, hpd_t **hpd);
 hpd_error_t hpd_service_get_adapter(const hpd_service_t *service, const hpd_adapter_t **adapter);
 hpd_error_t hpd_service_get_device(const hpd_service_t *service, const hpd_device_t **device);
+hpd_error_t hpd_service_get_parameter(const hpd_service_t *service, const char *id, hpd_parameter_t **parameter);
 hpd_error_t hpd_parameter_get_hpd(const hpd_parameter_t *parameter, hpd_t **hpd);
 hpd_error_t hpd_parameter_get_adapter(const hpd_parameter_t *parameter, const hpd_adapter_t **adapter);
 hpd_error_t hpd_parameter_get_device(const hpd_parameter_t *parameter, const hpd_device_t **device);
@@ -192,7 +195,8 @@ hpd_error_t hpd_respond(hpd_response_t *response);
 /// [hpd_response_t functions]
 
 /// [hpd_changed]
-hpd_error_t hpd_changed(const hpd_service_id_t *id, hpd_value_t *val);
+hpd_error_t hpd_id_changed(const hpd_service_id_t *id, hpd_value_t *val);
+hpd_error_t hpd_changed(const hpd_service_t *service, hpd_value_t *val);
 /// [hpd_changed]
 
 #ifdef __cplusplus

@@ -860,3 +860,27 @@ hpd_error_t discovery_get_parameter_service(const hpd_parameter_t *parameter, co
     (*service) = parameter->service;
     return HPD_E_SUCCESS;
 }
+
+hpd_error_t discovery_get_adapter_device(const hpd_adapter_t *adapter, const char *id, hpd_device_t **device)
+{
+    TAILQ_FOREACH((*device), adapter->devices, HPD_TAILQ_FIELD)
+        if (strcmp((*device)->id, id) == 0) break;
+
+    return (!(*device) ? HPD_E_NOT_FOUND : HPD_E_SUCCESS);
+}
+
+hpd_error_t discovery_get_device_service(const hpd_device_t *device, const char *id, hpd_service_t **service)
+{
+    TAILQ_FOREACH((*service), device->services, HPD_TAILQ_FIELD)
+        if (strcmp((*service)->id, id) == 0) break;
+
+    return (!(*service) ? HPD_E_NOT_FOUND : HPD_E_SUCCESS);
+}
+
+hpd_error_t discovery_get_service_parameter(const hpd_service_t *service, const char *id, hpd_parameter_t **parameter)
+{
+    TAILQ_FOREACH((*parameter), service->parameters, HPD_TAILQ_FIELD)
+        if (strcmp((*parameter)->id, id) == 0) break;
+
+    return (!(*parameter) ? HPD_E_NOT_FOUND : HPD_E_SUCCESS);
+}
