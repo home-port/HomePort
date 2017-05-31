@@ -618,6 +618,38 @@ hpd_error_t hpd_parameter_set_attrs(hpd_parameter_t *parameter, ...)
     return rc;
 }
 
+hpd_error_t hpd_parameter_id_set_attr(hpd_parameter_id_t *id, const char *key, const char *val)
+{
+    hpd_error_t rc;
+
+    if (!id || !key) LOG_RETURN_E_NULL();
+    if (key[0] == '_') LOG_RETURN(HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
+
+    if (!id->service.device.adapter.hpd->configuration) LOG_RETURN_HPD_STOPPED();
+    hpd_parameter_t *parameter;
+    if ((rc = discovery_find_parameter(id, &parameter))) return rc;
+
+    return discovery_set_parameter_attr(parameter, key, val);
+}
+
+hpd_error_t hpd_parameter_id_set_attrs(hpd_parameter_id_t *id, ...)
+{
+    hpd_error_t rc;
+
+    if (!id) LOG_RETURN_E_NULL();
+
+    if (!id->service.device.adapter.hpd->configuration) LOG_RETURN_HPD_STOPPED();
+    hpd_parameter_t *parameter;
+    if ((rc = discovery_find_parameter(id, &parameter))) return rc;
+
+    va_list vp;
+    va_start(vp, parameter);
+    rc = discovery_set_parameter_attrs_v(parameter, vp);
+    va_end(vp);
+
+    return rc;
+}
+
 hpd_error_t hpd_parameter_get_adapter_id(const hpd_parameter_id_t *pid, const char **id)
 {
     if (!pid || !id) LOG_RETURN_E_NULL();
