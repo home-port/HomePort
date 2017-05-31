@@ -42,38 +42,37 @@ hpd_error_t log_logf(const hpd_t *hpd, const char *module, hpd_log_level_t level
 
 hpd_error_t log_vlogf(const hpd_t *hpd, const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp)
 {
-    FILE *stream;
     char *type;
 
     if (level <= hpd->log_level) {
         switch (level) {
             case HPD_L_ERROR:
-                stream = stderr;
+//                stream = stderr;
                 type = "ERROR";
                 break;
             case HPD_L_WARN:
-                stream = stderr;
+//                stream = stderr;
                 type = "WARNING";
                 break;
             case HPD_L_INFO:
-                stream = stdout;
+//                stream = stdout;
                 type = "INFO";
                 break;
             case HPD_L_DEBUG:
-                stream = stderr;
+//                stream = stderr;
                 type = "DEBUG";
                 break;
             case HPD_L_VERBOSE:
-                stream = stdout;
+//                stream = stdout;
                 type = "VERBOSE";
                 break;
             default:
                 LOG_RETURN(hpd, HPD_E_ARGUMENT, "Unknown log level.");
         }
 
-        fprintf(stream, "[%s]%*s %8s: ", module, (int) (16 - strlen(module)), "", type);
-        int len = vfprintf(stream, fmt, vp);
-        fprintf(stream, "%*s  %s:%d\n", 104 - len, "", file, line);
+        fprintf(stderr, "[%s]%*s %8s: ", module, (int) (16 - strlen(module)), "", type);
+        int len = vfprintf(stderr, fmt, vp);
+        fprintf(stderr, "%*s  %s:%d\n", 104 - len, "", file, line);
     }
 
     return HPD_E_SUCCESS;
