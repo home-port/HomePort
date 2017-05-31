@@ -28,12 +28,17 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(include)
+add_library(hpd-serialize-shared
+        ../include/hpd/common/hpd_serialize_shared.h
+        hpd_serialize_shared.c
+        )
+target_link_libraries(hpd-serialize-shared curl)
 
-add_subdirectory(include)
-add_subdirectory(map)
-add_subdirectory(httpd)
-add_subdirectory(tcpd)
-add_subdirectory(curl_ev)
-add_subdirectory(tty)
-add_subdirectory(hpd_serialize)
+add_library(hpd-json SHARED
+        ../include/hpd/common/hpd_json.h
+        hpd_json.c
+        )
+set_target_properties(hpd-json PROPERTIES VERSION 0.0.0 SOVERSION 0)
+target_link_libraries(hpd-json hpd-serialize-shared)
+install(TARGETS hpd-json DESTINATION lib)
+

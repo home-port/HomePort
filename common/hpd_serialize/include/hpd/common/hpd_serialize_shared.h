@@ -25,31 +25,29 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_REST_INTERN_H
-#define HOMEPORT_REST_INTERN_H
+#ifndef HOMEPORT_HPD_SERIALIZE_SHARED_H
+#define HOMEPORT_HPD_SERIALIZE_SHARED_H
 
-#include "hpd/hpd_types.h"
-
-typedef struct hpd_rest hpd_rest_t;
-
-hpd_error_t hpd_rest_url_create(hpd_rest_t *rest, hpd_service_id_t *service, char **url);
-hpd_error_t hpd_rest_get_timestamp(const hpd_module_t *context, char *str);
+#include <hpd/hpd_types.h>
 
 // ALL keys starts with _ to avoid conflicts with adapter provided ones..
-static const char * const HPD_REST_KEY_ID = "_id";
-static const char * const HPD_REST_KEY_URI = "_uri";
-static const char * const HPD_REST_KEY_GET = "_get";
-static const char * const HPD_REST_KEY_PUT = "_put";
-static const char * const HPD_REST_KEY_PARAMETER = "_parameter";
-static const char * const HPD_REST_KEY_SERVICE = "_service";
-static const char * const HPD_REST_KEY_DEVICE = "_device";
-static const char * const HPD_REST_KEY_URL_ENCODED_CHARSET = "_urlEncodedCharset";
-static const char * const HPD_REST_KEY_ADAPTER = "_adapter";
-static const char * const HPD_REST_KEY_VALUE = "_value";
-static const char * const HPD_REST_KEY_CONFIGURATION = "_configuration";
-static const char * const HPD_REST_KEY_TIMESTAMP = "_timestamp";
+static const char * const HPD_SERIALIZE_KEY_ID = "_id";
+static const char * const HPD_SERIALIZE_KEY_URI = "_uri";
+static const char * const HPD_SERIALIZE_KEY_GET = "_get";
+static const char * const HPD_SERIALIZE_KEY_PUT = "_put";
+static const char * const HPD_SERIALIZE_KEY_PARAMETER = "_parameter";
+static const char * const HPD_SERIALIZE_KEY_SERVICE = "_service";
+static const char * const HPD_SERIALIZE_KEY_DEVICE = "_device";
+static const char * const HPD_SERIALIZE_KEY_URL_ENCODED_CHARSET = "_urlEncodedCharset";
+static const char * const HPD_SERIALIZE_KEY_ADAPTER = "_adapter";
+static const char * const HPD_SERIALIZE_KEY_VALUE = "_value";
+static const char * const HPD_SERIALIZE_KEY_CONFIGURATION = "_configuration";
 
-static const char * const HPD_REST_VAL_TRUE = "1";
-static const char * const HPD_REST_VAL_ASCII = "ASCII";
+static const char * const HPD_SERIALIZE_VAL_ASCII = "ASCII";
+static const char * const HPD_SERIALIZE_VAL_TRUE = "1";
 
-#endif //HOMEPORT_HPD_REST_INTERN_H
+hpd_error_t hpd_serialize_url_encode(const hpd_module_t *context, const char *decoded, char **encoded);
+hpd_error_t hpd_serialize_url_decode(const hpd_module_t *context, const char *encoded, char **decoded);
+hpd_error_t hpd_serialize_url_create(const hpd_module_t *context, hpd_service_id_t *service, char **url);
+
+#endif //HOMEPORT_HPD_SERIALIZE_SHARED_H

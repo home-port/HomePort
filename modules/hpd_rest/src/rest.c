@@ -25,7 +25,6 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "rest_intern.h"
 #include "hpd/modules/hpd_rest.h"
 #include "hpd/hpd_application_api.h"
 #include "hpd/common/hpd_common.h"
@@ -34,6 +33,7 @@
 #include "rest_json.h"
 #include "rest_xml.h"
 #include <mxml.h>
+#include <hpd/common/hpd_serialize_shared.h>
 
 static hpd_error_t rest_on_create(void **data, const hpd_module_t *context);
 static hpd_error_t rest_on_destroy(void *data);
@@ -55,7 +55,6 @@ struct hpd_rest {
     hpd_httpd_t *ws;
     hpd_httpd_settings_t ws_set;
     const hpd_module_t *context;
-    CURL *curl;
 };
 
 typedef struct hpd_rest_req {
@@ -95,74 +94,6 @@ static rest_content_type_t rest_media_type_to_enum(const char *haystack)
     if (strcmp(haystack, "*/*") == 0)
         return CONTENT_WILDCARD;
     return CONTENT_UNKNOWN;
-}
-
-static hpd_error_t rest_url_encode(hpd_rest_t *rest, const char *decoded, char **encoded)
-{
-    (*encoded) = curl_easy_escape(rest->curl, decoded, 0);
-    if (!(*encoded)) HPD_LOG_RETURN(rest->context, HPD_E_UNKNOWN, "Curl failed encoding url.");
-    return HPD_E_SUCCESS;
-}
-
-static hpd_error_t rest_url_decode(hpd_rest_t *rest, const char *encoded, char **decoded)
-{
-    (*decoded) = curl_easy_unescape(rest->curl, encoded, 0, NULL);
-    if (!(*decoded)) HPD_LOG_RETURN(rest->context, HPD_E_UNKNOWN, "Curl failed decoding url.");
-    return HPD_E_SUCCESS;
-}
-
-// Conforms to ISO 8601
-hpd_error_t hpd_rest_get_timestamp(const hpd_module_t *context, char *str)
-{
-    time_t now = time(NULL);
-    struct tm *tm = gmtime(&now);
-    if (!tm) HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Time conversion failed.");
-    strftime(str, 20, "%FT%TZ", tm);
-    return HPD_E_SUCCESS;
-}
-
-hpd_error_t hpd_rest_url_create(hpd_rest_t *rest, hpd_service_id_t *service, char **url)
-{
-    hpd_error_t rc;
-
-    const char *adp_id, *dev_id, *srv_id;
-    if ((rc = hpd_service_id_get_service_id_str(service, &srv_id))) goto id_error;
-    if ((rc = hpd_service_id_get_device_id_str(service, &dev_id))) goto id_error;
-    if ((rc = hpd_service_id_get_adapter_id_str(service, &adp_id))) goto id_error;
-
-    char *aid = NULL, *did = NULL, *sid = NULL;
-    if ((rc = rest_url_encode(rest, adp_id, &aid))) goto encode_error;
-    if ((rc = rest_url_encode(rest, dev_id, &did))) goto encode_error;
-    if ((rc = rest_url_encode(rest, srv_id, &sid))) goto encode_error;
-
-    (*url) = malloc((strlen(aid)+strlen(did)+strlen(sid)+3+1)*sizeof(char));
-    if (!(*url)) {
-        rc = HPD_E_ALLOC;
-        goto encode_error;
-    }
-    (*url)[0] = '\0';
-
-    strcat((*url), "/");
-    strcat((*url), aid);
-    strcat((*url), "/");
-    strcat((*url), did);
-    strcat((*url), "/");
-    strcat((*url), sid);
-
-    free(aid);
-    free(did);
-    free(sid);
-
-    return HPD_E_SUCCESS;
-
-    id_error:
-    return rc;
-
-    encode_error:
-    free(aid);
-    free(did);
-    free(sid);
-    return rc;
 }
 
 static hpd_error_t rest_url_extract(hpd_rest_t *rest, const char *url, char **aid, char **did, char **sid)
@@ -551,7 +482,9 @@ static void rest_on_response(void *data, const hpd_response_t *res)
             if ((rc = hpd_httpd_response_add_header(http_res, "Content-Type", "application/xml"))) goto error_free_state;
             break;
         case CONTENT_JSON:
-            if ((rc = hpd_rest_json_get_value(body, context, &state))) goto error_free_res;
+            if (value) {
+                if ((rc = hpd_rest_json_get_value(value, context, &state))) goto error_free_res;
+            }
             if ((rc = hpd_httpd_response_add_header(http_res, "Content-Type", "application/json"))) goto error_free_state;
             break;
         case CONTENT_UNKNOWN:
@@ -561,7 +494,11 @@ static void rest_on_response(void *data, const hpd_response_t *res)
 #ifdef HPD_REST_ORIGIN
     if ((rc = hpd_httpd_response_add_header(http_res, "Access-Control-Allow-Origin", "*"))) goto error_free_state;
 #endif
-    if ((rc = hpd_httpd_response_sendf(http_res, "%s", state))) goto error_free_state;
+    if (state) {
+        if ((rc = hpd_httpd_response_sendf(http_res, "%s", state))) goto error_free_state;
+    } else {
+        if ((rc = hpd_httpd_response_sendf(http_res, ""))) goto error_free_state;
+    }
     rc = hpd_httpd_response_destroy(http_res);
 
     // Clean up
@@ -661,21 +598,21 @@ static hpd_httpd_return_t rest_on_req_url_cmpl(hpd_httpd_t *ins, hpd_httpd_reque
 
     // Decode IDs
     char *aid_decoded, *did_decoded, *sid_decoded;
-    if ((rc = rest_url_decode(rest, aid_encoded, &aid_decoded))) {
+    if ((rc = hpd_serialize_url_decode(rest->context, aid_encoded, &aid_decoded))) {
         HPD_LOG_ERROR(context, "Failed to decode id (code: %d).", rc);
         if ((rc2 = rest_reply_internal_server_error(req, rest_req, context))) {
             HPD_LOG_ERROR(context, "Failed to send internal server error response (code: %d).", rc2);
         }
         return HPD_HTTPD_R_STOP;
     }
-    if ((rc = rest_url_decode(rest, did_encoded, &did_decoded))) {
+    if ((rc = hpd_serialize_url_decode(rest->context, did_encoded, &did_decoded))) {
         HPD_LOG_ERROR(context, "Failed to decode id (code: %d).", rc);
         if ((rc2 = rest_reply_internal_server_error(req, rest_req, context))) {
             HPD_LOG_ERROR(context, "Failed to send internal server error response (code: %d).", rc2);
         }
         return HPD_HTTPD_R_STOP;
     }
-    if ((rc = rest_url_decode(rest, sid_encoded, &sid_decoded))) {
+    if ((rc = hpd_serialize_url_decode(rest->context, sid_encoded, &sid_decoded))) {
         HPD_LOG_ERROR(context, "Failed to decode id (code: %d).", rc);
         if ((rc2 = rest_reply_internal_server_error(req, rest_req, context))) {
             HPD_LOG_ERROR(context, "Failed to send internal server error response (code: %d).", rc2);
@@ -845,9 +782,9 @@ static hpd_httpd_return_t rest_on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t
         }
 
         // Construct actual value
-        char *val = NULL;
         switch (rest_media_type_to_enum(content_type)) {
-            case CONTENT_XML:
+            case CONTENT_XML: {
+                char *val = NULL;
                 switch ((rc = hpd_rest_xml_parse_value(rest_req->body, context, &val))) {
                     case HPD_E_SUCCESS:
                         break;
@@ -863,9 +800,21 @@ static hpd_httpd_return_t rest_on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t
                         }
                         return HPD_HTTPD_R_STOP;
                 }
+
+                // Allocate hpd value
+                if ((rc = hpd_value_alloc(&value, context, val, HPD_NULL_TERMINATED))) {
+                    free(val);
+                    HPD_LOG_ERROR(context, "Unable to allocate value (code: %d).", rc);
+                    if ((rc2 = rest_reply_internal_server_error(req, rest_req, context))) {
+                        HPD_LOG_ERROR(context, "Failed to send internal server error response (code: %d).", rc2);
+                    }
+                    return HPD_HTTPD_R_STOP;
+                }
+                free(val);
                 break;
+            }
             case CONTENT_JSON:
-                switch ((rc = hpd_rest_json_parse_value(rest_req->body, context, &val))) {
+                switch ((rc = hpd_rest_json_parse_value(rest_req->body, context, &value))) {
                     case HPD_E_SUCCESS:
                         break;
                     case HPD_E_ARGUMENT:
@@ -890,16 +839,7 @@ static hpd_httpd_return_t rest_on_req_cmpl(hpd_httpd_t *ins, hpd_httpd_request_t
                 return HPD_HTTPD_R_STOP;
         }
 
-        // Allocate hpd value
-        if ((rc = hpd_value_alloc(&value, context, val, HPD_NULL_TERMINATED))) {
-            free(val);
-            HPD_LOG_ERROR(context, "Unable to allocate value (code: %d).", rc);
-            if ((rc2 = rest_reply_internal_server_error(req, rest_req, context))) {
-                HPD_LOG_ERROR(context, "Failed to send internal server error response (code: %d).", rc2);
-            }
-            return HPD_HTTPD_R_STOP;
-        }
-        free(val);
+
     }
 
     // Send hpd request
@@ -967,12 +907,6 @@ static hpd_error_t rest_on_create(void **data, const hpd_module_t *context)
     rest->ws_set.httpd_ctx = rest;
     rest->context = context;
 
-    rest->curl = curl_easy_init();
-    if (!rest->curl) {
-        rest_on_destroy(rest);
-        HPD_LOG_RETURN(rest->context, HPD_E_UNKNOWN, "Could not initialise curl.");
-    }
-
     (*data) = rest;
     return HPD_E_SUCCESS;
 
@@ -984,7 +918,6 @@ static hpd_error_t rest_on_destroy(void *data)
 {
     hpd_rest_t *rest = data;
     if (rest) {
-        if (rest->curl) curl_easy_cleanup(rest->curl);
         free(rest);
     }
     return HPD_E_SUCCESS;

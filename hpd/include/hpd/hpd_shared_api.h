@@ -233,7 +233,7 @@ hpd_error_t hpd_value_next_header(const hpd_value_t *value, const hpd_pair_t **p
 #define hpd_value_foreach_header(RC, PAIR, VALUE) for ( \
     (RC) = hpd_value_first_header((VALUE), &(PAIR)); \
     !(RC) && (PAIR); \
-    (RC) = hpd_value_next_header(&(PAIR)))
+    (RC) = hpd_value_next_header((VALUE), &(PAIR)))
 /// [hpd_value_t foreach loops]
 
 #ifdef __cplusplus

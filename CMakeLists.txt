@@ -32,9 +32,9 @@ cmake_minimum_required(VERSION 3.1)
 project(homeport C CXX)
 
 set(CMAKE_C_FLAGS "-std=gnu99 -DHPD_REST_ORIGIN")
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -g -DDEBUG -Wall")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -g -DDEBUG -Wall -Wno-unknown-pragmas")
 set(CMAKE_CXX_FLAGS "-std=gnu++0x -DHPD_REST_ORIGIN")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -DDEBUG -Wall")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -DDEBUG -Wall -Wno-unknown-pragmas")
 
 # -fPIC is for compiling on 64bit
 if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
@@ -115,6 +115,7 @@ endif (CMAKE_USE_PTHREADS_INIT)
 include_directories(hpd/include)
 include_directories(common/include)
 include_directories(common/map/include)
+include_directories(common/hpd_serialize/include)
 
 add_library(hpd_doc SHARED
         main.dox

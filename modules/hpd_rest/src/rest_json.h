@@ -29,10 +29,11 @@
 #define HOMEPORT_REST_JSON_H
 
 #include "hpd/hpd_types.h"
-#include "rest_intern.h"
+
+typedef struct hpd_rest hpd_rest_t;
 
 hpd_error_t hpd_rest_json_get_configuration(const hpd_module_t *context, hpd_rest_t *rest, char **out);
-hpd_error_t hpd_rest_json_get_value(char *value, const hpd_module_t *context, char **out);
-hpd_error_t hpd_rest_json_parse_value(const char *in, const hpd_module_t *context, char **out);
+hpd_error_t hpd_rest_json_get_value(const hpd_value_t *value, const hpd_module_t *context, char **out);
+hpd_error_t hpd_rest_json_parse_value(const char *in, const hpd_module_t *context, hpd_value_t **out);
 
 #endif

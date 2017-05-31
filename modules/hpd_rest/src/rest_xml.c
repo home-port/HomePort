@@ -29,6 +29,7 @@
 #include <time.h>
 #include <mxml.h>
 #include <hpd/common/hpd_common.h>
+#include <hpd/common/hpd_serialize_shared.h>
 #include "hpd/hpd_application_api.h"
 
 static const char * const REST_XML_VERSION = "1.0";
@@ -77,12 +78,12 @@ static hpd_error_t rest_xml_add_parameter(mxml_node_t *parent, hpd_parameter_id_
 
     // Create node
     mxml_node_t *xml;
-    if (!(xml = mxmlNewElement(parent, HPD_REST_KEY_PARAMETER))) REST_XML_RETURN_XML_ERROR(context);
+    if (!(xml = mxmlNewElement(parent, HPD_SERIALIZE_KEY_PARAMETER))) REST_XML_RETURN_XML_ERROR(context);
 
     // Add id
     const char *id;
     if ((rc = hpd_parameter_id_get_parameter_id_str(parameter, &id))) return rc;
-    if ((rc = rest_xml_add(xml, HPD_REST_KEY_ID, id, context))) return rc;
+    if ((rc = rest_xml_add(xml, HPD_SERIALIZE_KEY_ID, id, context))) return rc;
 
     // Add attributes
     const hpd_pair_t *pair;
@@ -99,17 +100,17 @@ static hpd_error_t rest_xml_add_service(mxml_node_t *parent, hpd_service_id_t *s
 
     // Create node
     mxml_node_t *xml;
-    if (!(xml = mxmlNewElement(parent, HPD_REST_KEY_SERVICE))) REST_XML_RETURN_XML_ERROR(context);
+    if (!(xml = mxmlNewElement(parent, HPD_SERIALIZE_KEY_SERVICE))) REST_XML_RETURN_XML_ERROR(context);
 
     // Add id
     const char *id;
     if ((rc = hpd_service_id_get_service_id_str(service, &id))) return rc;
-    if ((rc = rest_xml_add(xml, HPD_REST_KEY_ID, id, context))) return rc;
+    if ((rc = rest_xml_add(xml, HPD_SERIALIZE_KEY_ID, id, context))) return rc;
 
     // Add url
     char *url;
-    if ((rc = hpd_rest_url_create(rest, service, &url))) return rc;
-    if ((rc = rest_xml_add(xml, HPD_REST_KEY_URI, url, context))) {
+    if ((rc = hpd_serialize_url_create(context, service, &url))) return rc;
+    if ((rc = rest_xml_add(xml, HPD_SERIALIZE_KEY_URI, url, context))) {
         free(url);
         return rc;
     }
@@ -123,10 +124,10 @@ static hpd_error_t rest_xml_add_service(mxml_node_t *parent, hpd_service_id_t *s
         switch (method) {
             case HPD_M_NONE:break;
             case HPD_M_GET:
-                if ((rc = rest_xml_add(xml, HPD_REST_KEY_GET, HPD_REST_VAL_TRUE, context))) return rc;
+                if ((rc = rest_xml_add(xml, HPD_SERIALIZE_KEY_GET, HPD_SERIALIZE_VAL_TRUE, context))) return rc;
                 break;
             case HPD_M_PUT:
-                if ((rc = rest_xml_add(xml, HPD_REST_KEY_PUT, HPD_REST_VAL_TRUE, context))) return rc;
+                if ((rc = rest_xml_add(xml, HPD_SERIALIZE_KEY_PUT, HPD_SERIALIZE_VAL_TRUE, context))) return rc;
                 break;
             case HPD_M_COUNT:break;
         }
@@ -155,12 +156,12 @@ static hpd_error_t rest_xml_add_device(mxml_node_t *parent, hpd_device_id_t *dev
 
     // Create object
     mxml_node_t *xml;
-    if (!(xml = mxmlNewElement(parent, HPD_REST_KEY_DEVICE))) REST_XML_RETURN_XML_ERROR(context);
+    if (!(xml = mxmlNewElement(parent, HPD_SERIALIZE_KEY_DEVICE))) REST_XML_RETURN_XML_ERROR(context);
 
     // Add id
     const char *id;
     if ((rc = hpd_device_id_get_device_id_str(device, &id))) return rc;
-    if ((rc = rest_xml_add(xml, HPD_REST_KEY_ID, id, context))) return rc;
+    if ((rc = rest_xml_add(xml, HPD_SERIALIZE_KEY_ID, id, context))) return rc;
 
     // Add attributes
     const hpd_pair_t *pair;
@@ -184,12 +185,12 @@ static hpd_error_t rest_xml_add_adapter(mxml_node_t *parent, hpd_adapter_id_t *a
 
     // Create object
     mxml_node_t *json;
-    if (!(json = mxmlNewElement(parent, HPD_REST_KEY_ADAPTER))) REST_XML_RETURN_XML_ERROR(context);
+    if (!(json = mxmlNewElement(parent, HPD_SERIALIZE_KEY_ADAPTER))) REST_XML_RETURN_XML_ERROR(context);
 
     // Add id
     const char *id;
     if ((rc = hpd_adapter_id_get_adapter_id_str(adapter, &id))) return rc;
-    if ((rc = rest_xml_add(json, HPD_REST_KEY_ID, id, context))) return rc;
+    if ((rc = rest_xml_add(json, HPD_SERIALIZE_KEY_ID, id, context))) return rc;
 
     // Add attributes
     const hpd_pair_t *pair;
@@ -214,17 +215,17 @@ static hpd_error_t rest_xml_add_configuration(mxml_node_t *parent, hpd_rest_t *r
 
     // Create object
     mxml_node_t *xml;
-    if (!(xml = mxmlNewElement(parent, HPD_REST_KEY_CONFIGURATION))) REST_XML_RETURN_XML_ERROR(context);
+    if (!(xml = mxmlNewElement(parent, HPD_SERIALIZE_KEY_CONFIGURATION))) REST_XML_RETURN_XML_ERROR(context);
 
     // Add encoded charset
 #ifdef CURL_ICONV_CODESET_OF_HOST
     curl_version_info_data *curl_ver = curl_version_info(CURLVERSION_NOW);
     if (curl_ver->features & CURL_VERSION_CONV && curl_ver->iconv_ver_num != 0)
-        if ((rc = rest_xml_add(xml, HPD_REST_KEY_URL_ENCODED_CHARSET, CURL_ICONV_CODESET_OF_HOST, context))) return rc;
+        if ((rc = rest_xml_add(xml, HPD_SERIALIZE_KEY_URL_ENCODED_CHARSET, CURL_ICONV_CODESET_OF_HOST, context))) return rc;
     else
-        if ((rc = rest_xml_add(xml, HPD_REST_KEY_URL_ENCODED_CHARSET, HPD_REST_VAL_ASCII, context))) return rc;
+        if ((rc = rest_xml_add(xml, HPD_SERIALIZE_KEY_URL_ENCODED_CHARSET, HPD_SERIALIZE_VAL_ASCII, context))) return rc;
 #else
-    if ((rc = rest_xml_add(xml, HPD_REST_KEY_URL_ENCODED_CHARSET, HPD_REST_VAL_ASCII, context))) return rc;
+    if ((rc = rest_xml_add(xml, HPD_SERIALIZE_KEY_URL_ENCODED_CHARSET, HPD_SERIALIZE_VAL_ASCII, context))) return rc;
 #endif
 
     // Add adapters
@@ -269,14 +270,8 @@ hpd_error_t hpd_rest_xml_get_configuration(const hpd_module_t *context, hpd_rest
 
 static hpd_error_t rest_xml_add_value(mxml_node_t *parent, char *value, const hpd_module_t *context)
 {
-    hpd_error_t rc;
-
     mxml_node_t *xml;
-    if (!(xml = mxmlNewElement(parent, HPD_REST_KEY_VALUE))) REST_XML_RETURN_XML_ERROR(context);
-
-    char timestamp[21];
-    if ((rc = hpd_rest_get_timestamp(context, timestamp))) return rc;
-    if ((rc = rest_xml_add(xml, HPD_REST_KEY_TIMESTAMP, timestamp, context))) return rc;
+    if (!(xml = mxmlNewElement(parent, HPD_SERIALIZE_KEY_VALUE))) REST_XML_RETURN_XML_ERROR(context);
 
     if (!mxmlNewText(xml, 0, value)) REST_XML_RETURN_XML_ERROR(context);
 
@@ -324,7 +319,7 @@ hpd_error_t hpd_rest_xml_parse_value(const char *in, const hpd_module_t *context
     }
 
     mxml_node_t *node;
-    node = mxmlFindElement(xml, xml, HPD_REST_KEY_VALUE, NULL, NULL, MXML_DESCEND);
+    node = mxmlFindElement(xml, xml, HPD_SERIALIZE_KEY_VALUE, NULL, NULL, MXML_DESCEND);
     if (!node) {
         mxmlDelete(xml);
         REST_XML_END();
