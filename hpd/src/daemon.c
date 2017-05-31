@@ -218,8 +218,8 @@ static hpd_error_t daemon_modules_start(hpd_t *hpd)
     // Call on_start() on modules
     TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD)
         if (module->def.on_start && (rc = module->def.on_start(module->data)) != HPD_E_SUCCESS) {
-            goto module_error;
             LOG_DEBUG(hpd, "Module %s failed to start", module->id);
+            goto module_error;
         }
 
     return HPD_E_SUCCESS;
@@ -464,19 +464,29 @@ hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[])
     hpd->argv0 = argv[0];
 
     // Allocate run-time and option memory
-    if ((rc = daemon_runtime_create(hpd))) goto runtime_create_error;
-    if ((rc = daemon_options_create(hpd))) goto options_create_error;
-    if ((rc = daemon_modules_create(hpd))) goto modules_create_error;
-    if ((rc = daemon_options_parse(hpd, argc, argv))) goto options_parse_error;
+    if ((rc = daemon_runtime_create(hpd)))
+        goto runtime_create_error;
+    if ((rc = daemon_options_create(hpd)))
+        goto options_create_error;
+    if ((rc = daemon_modules_create(hpd)))
+        goto modules_create_error;
+    if ((rc = daemon_options_parse(hpd, argc, argv)))
+        goto options_parse_error;
     daemon_options_destroy(hpd);
-    if ((rc = daemon_loop_create(hpd))) goto loop_create_error;
-    if ((rc = daemon_modules_start(hpd))) goto modules_start_error;
+    if ((rc = daemon_loop_create(hpd)))
+        goto loop_create_error;
+    if ((rc = daemon_modules_start(hpd)))
+        goto modules_start_error;
     daemon_loop_run(hpd);
-    if ((rc = daemon_modules_stop(hpd))) goto modules_stop_error;
-    if ((rc = daemon_watchers_stop(hpd))) goto watchers_stop_error;
+    if ((rc = daemon_modules_stop(hpd)))
+        goto modules_stop_error;
+    if ((rc = daemon_watchers_stop(hpd)))
+        goto watchers_stop_error;
     daemon_loop_destroy(hpd);
-    if ((rc = daemon_modules_destroy(hpd))) goto modules_destroy_error;
-    if ((rc = daemon_runtime_destroy(hpd))) goto runtime_destroy_error;
+    if ((rc = daemon_modules_destroy(hpd)))
+        goto modules_destroy_error;
+    if ((rc = daemon_runtime_destroy(hpd)))
+        goto runtime_destroy_error;
 
     // Return
     return HPD_E_SUCCESS;
