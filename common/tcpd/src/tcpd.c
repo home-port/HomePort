@@ -91,7 +91,7 @@ static void tcpd_on_ev_recv(hpd_ev_loop_t *loop, struct ev_io *watcher, int reve
         if (hpd_tcpd_conn_kill(conn)) HPD_LOG_ERROR(context, "Failed to kill connection.");
         return;
     } else if (received == 0) {
-        HPD_LOG_INFO(context, "Connection closed by %s", conn->ip);
+        HPD_LOG_VERBOSE(context, "Connection closed by %s", conn->ip);
         if (hpd_tcpd_conn_kill(conn)) HPD_LOG_ERROR(context, "Failed to kill connection.");
         return;
     }
@@ -173,7 +173,7 @@ static void tcpd_on_ev_timeout(hpd_ev_loop_t *loop, struct ev_timer *watcher, in
     hpd_tcpd_conn_t *conn = watcher->data;
     const hpd_module_t *context = conn->tcpd->context;
     
-    HPD_LOG_INFO(context, "Timeout on %s [%ld].", conn->ip, (long)conn);
+    HPD_LOG_DEBUG(context, "Timeout on %s [%ld].", conn->ip, (long)conn);
     if (hpd_tcpd_conn_kill(conn)) HPD_LOG_ERROR(context, "Failed to kill connection.");
 }
 
@@ -212,7 +212,7 @@ static void tcpd_on_ev_conn(hpd_ev_loop_t *loop, struct ev_io *watcher, int reve
 
     // Print a nice message
     inet_ntop(in_addr_storage.ss_family, tcpd_get_in_addr(in_addr), ip_string, sizeof ip_string);
-    HPD_LOG_INFO(context, "Got connection from %s.", ip_string);
+    HPD_LOG_VERBOSE(context, "Got connection from %s.", ip_string);
 
     // Create conn and parser
     conn = malloc(sizeof(hpd_tcpd_conn_t));
@@ -610,7 +610,7 @@ hpd_error_t hpd_tcpd_conn_kill(hpd_tcpd_conn_t *conn)
     hpd_tcpd_settings_t *settings = &conn->tcpd->settings;
 
     // Print messange
-    HPD_LOG_INFO(conn->tcpd->context, "Killing connection from %s.", conn->ip);
+    HPD_LOG_VERBOSE(conn->tcpd->context, "Killing connection from %s.", conn->ip);
 
     // Stop circular calls and only kill this connection once
     if (conn->recv_watcher.fd < 0) return HPD_E_SUCCESS;
