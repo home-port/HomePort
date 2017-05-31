@@ -128,6 +128,9 @@ hpd_error_t hpd_response_alloc(hpd_response_t **response, hpd_request_t *request
         case HPD_S_422:
         case HPD_S_423:
         case HPD_S_424:
+        case HPD_S_428:
+        case HPD_S_429:
+        case HPD_S_431:
         case HPD_S_500:
         case HPD_S_501:
         case HPD_S_502:
@@ -135,6 +138,7 @@ hpd_error_t hpd_response_alloc(hpd_response_t **response, hpd_request_t *request
         case HPD_S_504:
         case HPD_S_505:
         case HPD_S_507:
+        case HPD_S_511:
             return request_alloc_response(response, request, status);
     }
 

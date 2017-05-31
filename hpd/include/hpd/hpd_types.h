@@ -93,7 +93,7 @@ enum hpd_method {
 
 /// [hpd_status_t]
 /**
- * HTTP status codes according to RFC 2616, RFC 4918
+ * HTTP status codes according to RFC 2616, RFC 4918, RFC 6585
  *
  * Categories:
  *     Informational 1xx
@@ -142,13 +142,17 @@ enum hpd_method {
     XX(422, Unprocessable Entity) \
     XX(423, Locked) \
     XX(424, Failed Dependency) \
+    XX(428, Precondition Required) \
+    XX(429, Too Many Requests) \
+    XX(431, Request Header Fields Too Large) \
     XX(500, Internal Server Error) \
     XX(501, Not Implemented) \
     XX(502, Bad Gateway) \
     XX(503, Service Unavailable) \
     XX(504, Gateway Timeout) \
     XX(505, HTTP Version Not Supported) \
-    XX(507, Insufficient Storage)
+    XX(507, Insufficient Storage) \
+    XX(511, Network Authentication Required)
 
 enum hpd_status {
     HPD_S_NONE = 0,
