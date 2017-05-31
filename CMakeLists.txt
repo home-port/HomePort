@@ -118,8 +118,8 @@ add_subdirectory(hpd)
 add_subdirectory(example)
 add_subdirectory(modules)
 
-SET(MAJOR_VERSION "0")
-SET(MINOR_VERSION "2")
+SET(MAJOR_VERSION "1")
+SET(MINOR_VERSION "0")
 SET(PATCH_VERSION "0")
 
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
