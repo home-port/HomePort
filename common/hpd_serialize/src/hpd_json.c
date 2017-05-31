@@ -210,7 +210,7 @@ hpd_error_t hpd_json_service_to_json(const hpd_module_t *context, const hpd_serv
     // Add parameters
     json_t *child;
     if ((rc = hpd_json_parameters_to_json(context, service, &child))) goto error;
-    if (json_object_set_new(json, HPD_SERIALIZE_KEY_PARAMETER, child)) goto json_error;
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_PARAMETERS, child)) goto json_error;
 
     (*out) = json;
     return HPD_E_SUCCESS;
@@ -288,7 +288,7 @@ hpd_error_t hpd_json_device_to_json(const hpd_module_t *context, const hpd_devic
     // Add services
     json_t *child;
     if ((rc = hpd_json_services_to_json(context, device, &child))) goto error;
-    if (json_object_set_new(json, HPD_SERIALIZE_KEY_SERVICE, child)) goto json_error;
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_SERVICES, child)) goto json_error;
 
     (*out) = json;
     return HPD_E_SUCCESS;
@@ -366,7 +366,7 @@ hpd_error_t hpd_json_adapter_to_json(const hpd_module_t *context, const hpd_adap
     // Add devices
     json_t *child;
     if ((rc = hpd_json_devices_to_json(context, adapter, &child))) goto error;
-    if (json_object_set_new(json, HPD_SERIALIZE_KEY_DEVICE, child)) goto json_error;
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_DEVICES, child)) goto json_error;
 
     (*out) = json;
     return HPD_E_SUCCESS;
@@ -431,7 +431,7 @@ hpd_error_t hpd_json_configuration_to_json(const hpd_module_t *context, json_t *
     // Add child
     json_t *child;
     if ((rc = hpd_json_adapters_to_json(context, &child))) goto error;
-    if (json_object_set_new(json, HPD_SERIALIZE_KEY_ADAPTER, child)) goto json_error;
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_ADAPTERS, child)) goto json_error;
 
     (*out) = json;
     return HPD_E_SUCCESS;
@@ -476,7 +476,7 @@ hpd_error_t hpd_json_value_to_json(const hpd_module_t *context, const hpd_value_
         json_decref(headers);
         goto error;
     }
-    if (json_object_set_new(json, HPD_SERIALIZE_KEY_HEADER, headers)) {
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_HEADERS, headers)) {
         json_decref(headers);
         goto json_error;
     }
