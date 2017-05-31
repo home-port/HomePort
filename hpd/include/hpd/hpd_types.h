@@ -93,7 +93,7 @@ enum hpd_method {
 
 /// [hpd_status_t]
 /**
- * HTTP status codes according to http://www.w3.org/Protocols/rfc2616/rfc2616.html
+ * HTTP status codes according to RFC 2616, RFC 4918
  *
  * Categories:
  *     Informational 1xx
@@ -112,6 +112,7 @@ enum hpd_method {
     XX(204, No Content) \
     XX(205, Reset Content) \
     XX(206, Partial Content) \
+    XX(207, Multi-Status) \
     XX(300, Multiple Choices) \
     XX(301, Moved Permanently) \
     XX(302, Found) \
@@ -138,12 +139,16 @@ enum hpd_method {
     XX(415, Unsupported Media Type) \
     XX(416, Requested Range Not Satisfiable) \
     XX(417, Expectation Failed) \
+    XX(422, Unprocessable Entity) \
+    XX(423, Locked) \
+    XX(424, Failed Dependency) \
     XX(500, Internal Server Error) \
     XX(501, Not Implemented) \
     XX(502, Bad Gateway) \
     XX(503, Service Unavailable) \
     XX(504, Gateway Timeout) \
-    XX(505, HTTP Version Not Supported)
+    XX(505, HTTP Version Not Supported) \
+    XX(507, Insufficient Storage)
 
 enum hpd_status {
     HPD_S_NONE = 0,

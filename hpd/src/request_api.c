@@ -88,51 +88,57 @@ hpd_error_t hpd_response_alloc(hpd_response_t **response, hpd_request_t *request
 {
     if (!response || !request) LOG_RETURN_E_NULL();
     switch (status) {
-        case HPD_S_100:break;
-        case HPD_S_101:break;
-        case HPD_S_200:break;
-        case HPD_S_201:break;
-        case HPD_S_202:break;
-        case HPD_S_203:break;
-        case HPD_S_204:break;
-        case HPD_S_205:break;
-        case HPD_S_206:break;
-        case HPD_S_300:break;
-        case HPD_S_301:break;
-        case HPD_S_302:break;
-        case HPD_S_303:break;
-        case HPD_S_304:break;
-        case HPD_S_305:break;
-        case HPD_S_306:break;
-        case HPD_S_307:break;
-        case HPD_S_400:break;
-        case HPD_S_401:break;
-        case HPD_S_402:break;
-        case HPD_S_403:break;
-        case HPD_S_404:break;
-        case HPD_S_405:break;
-        case HPD_S_406:break;
-        case HPD_S_407:break;
-        case HPD_S_408:break;
-        case HPD_S_409:break;
-        case HPD_S_410:break;
-        case HPD_S_411:break;
-        case HPD_S_412:break;
-        case HPD_S_413:break;
-        case HPD_S_414:break;
-        case HPD_S_415:break;
-        case HPD_S_416:break;
-        case HPD_S_417:break;
-        case HPD_S_500:break;
-        case HPD_S_501:break;
-        case HPD_S_502:break;
-        case HPD_S_503:break;
-        case HPD_S_504:break;
-        case HPD_S_505:break;
-        default:
-            LOG_RETURN(HPD_E_ARGUMENT, "Unknown status code given to %s().", __func__);
+        case HPD_S_NONE:break;
+        case HPD_S_100:
+        case HPD_S_101:
+        case HPD_S_200:
+        case HPD_S_201:
+        case HPD_S_202:
+        case HPD_S_203:
+        case HPD_S_204:
+        case HPD_S_205:
+        case HPD_S_206:
+        case HPD_S_207:
+        case HPD_S_300:
+        case HPD_S_301:
+        case HPD_S_302:
+        case HPD_S_303:
+        case HPD_S_304:
+        case HPD_S_305:
+        case HPD_S_306:
+        case HPD_S_307:
+        case HPD_S_400:
+        case HPD_S_401:
+        case HPD_S_402:
+        case HPD_S_403:
+        case HPD_S_404:
+        case HPD_S_405:
+        case HPD_S_406:
+        case HPD_S_407:
+        case HPD_S_408:
+        case HPD_S_409:
+        case HPD_S_410:
+        case HPD_S_411:
+        case HPD_S_412:
+        case HPD_S_413:
+        case HPD_S_414:
+        case HPD_S_415:
+        case HPD_S_416:
+        case HPD_S_417:
+        case HPD_S_422:
+        case HPD_S_423:
+        case HPD_S_424:
+        case HPD_S_500:
+        case HPD_S_501:
+        case HPD_S_502:
+        case HPD_S_503:
+        case HPD_S_504:
+        case HPD_S_505:
+        case HPD_S_507:
+            return request_alloc_response(response, request, status);
     }
-    return request_alloc_response(response, request, status);
+
+    LOG_RETURN(HPD_E_ARGUMENT, "Unknown status code given to %s().", __func__);
 }
 
 hpd_error_t hpd_response_free(hpd_response_t *response)
