@@ -410,6 +410,7 @@ hpd_error_t daemon_alloc(hpd_t **hpd)
         return HPD_E_UNKNOWN;
     }
 #endif
+    (*hpd)->hpd_log_level = HPD_L_INFO;
     TAILQ_INIT(&(*hpd)->modules);
     TAILQ_INIT(&(*hpd)->request_watchers);
     TAILQ_INIT(&(*hpd)->respond_watchers);
