@@ -32,6 +32,7 @@
 #endif
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 hpd_error_t log_logf(hpd_t *hpd, const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, ...)
 {
@@ -69,14 +70,22 @@ hpd_error_t log_vlogf(hpd_t *hpd, const char *module, hpd_log_level_t level, con
     }
     if (!type) LOG_RETURN(hpd, HPD_E_ARGUMENT, "Unknown log level.");
 
+    time_t timer;
+    char time_buffer[26];
+    struct tm* tm_info;
+    time(&timer);
+    tm_info = localtime(&timer);
+    strftime(time_buffer, 26, "%Y/%m/%d %H:%M:%S", tm_info);
+
 #ifdef THREAD_SAFE
     // TODO Better thing to do?
     if (pthread_mutex_lock(&hpd->log_mutex)) return HPD_E_UNKNOWN;
 #endif
 
-    fprintf(stderr, "[%s]%*s %8s: ", module, (int) (12 - strlen(module)), "", type);
+    fprintf(stderr, "%s [%s]%*s %8s: ", time_buffer, module, (int) (8 - strlen(module)), "", type);
     int len = vfprintf(stderr, fmt, vp);
-    fprintf(stderr, "%*s  %s:%d\n", 104 - len, "", file, line);
+    const char *fn = strrchr(file, '/');
+    fprintf(stderr, "%*s  %s:%d\n", 160 - len, "", (fn ? fn : file), line);
 
 #ifdef THREAD_SAFE
     // TODO Better thing to do?
