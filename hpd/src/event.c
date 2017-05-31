@@ -116,14 +116,11 @@ hpd_error_t event_foreach_attached(const hpd_listener_t *listener)
     const hpd_module_t *context = listener->context;
     hpd_configuration_t *configuration = context->hpd->configuration;
     hpd_adapter_t *adapter;
-    hpd_device_t *device;
     TAILQ_FOREACH(adapter, &configuration->adapters, HPD_TAILQ_FIELD) {
-        TAILQ_FOREACH(device, adapter->devices, HPD_TAILQ_FIELD) {
-            hpd_device_id_t *did;
-            if ((rc = discovery_alloc_did(&did, context, adapter->id, device->id))) return rc;
-            listener->on_dev_attach(listener->data, did);
-            if ((rc = discovery_free_did(did))) return rc;
-        }
+        hpd_adapter_id_t *aid;
+        if ((rc = discovery_alloc_aid(&aid, context, adapter->id))) return rc;
+        listener->on_adp_attach(listener->data, aid);
+        if ((rc = discovery_free_aid(aid))) return rc;
     }
     return HPD_E_SUCCESS;
 }
