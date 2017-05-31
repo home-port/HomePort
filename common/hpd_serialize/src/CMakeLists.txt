@@ -39,6 +39,6 @@ add_library(hpd-json SHARED
         hpd_json.c
         )
 set_target_properties(hpd-json PROPERTIES VERSION 0.0.0 SOVERSION 0)
-target_link_libraries(hpd-json hpd-serialize-shared)
+target_link_libraries(hpd-json hpd-serialize-shared jansson)
 install(TARGETS hpd-json DESTINATION lib)
 

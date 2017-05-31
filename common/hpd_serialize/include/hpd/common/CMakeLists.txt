@@ -29,3 +29,4 @@
 # as representing official policies, either expressed.
 
 install(FILES hpd_json.h DESTINATION include/hpd/common)
+install(FILES hpd_serialize_shared.h DESTINATION include/hpd/common)

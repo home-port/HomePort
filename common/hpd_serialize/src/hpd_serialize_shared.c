@@ -63,7 +63,7 @@ hpd_error_t hpd_serialize_url_decode(const hpd_module_t *context, const char *en
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t hpd_serialize_url_create(const hpd_module_t *context, hpd_service_id_t *service, char **url)
+hpd_error_t hpd_serialize_url_create(const hpd_module_t *context, const hpd_service_id_t *service, char **url)
 {
     hpd_error_t rc;
 

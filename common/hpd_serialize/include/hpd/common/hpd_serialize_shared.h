@@ -42,12 +42,16 @@ static const char * const HPD_SERIALIZE_KEY_URL_ENCODED_CHARSET = "_urlEncodedCh
 static const char * const HPD_SERIALIZE_KEY_ADAPTER = "_adapter";
 static const char * const HPD_SERIALIZE_KEY_VALUE = "_value";
 static const char * const HPD_SERIALIZE_KEY_CONFIGURATION = "_configuration";
+static const char * const HPD_SERIALIZE_KEY_STATUS = "_status";
+static const char * const HPD_SERIALIZE_KEY_METHOD = "_method";
 
 static const char * const HPD_SERIALIZE_VAL_ASCII = "ASCII";
 static const char * const HPD_SERIALIZE_VAL_TRUE = "1";
 
+static const char * const HPD_SERIALIZE_VAL_METHOD[] = { "GET", "PUT", "UNKNOWN" };
+
 hpd_error_t hpd_serialize_url_encode(const hpd_module_t *context, const char *decoded, char **encoded);
 hpd_error_t hpd_serialize_url_decode(const hpd_module_t *context, const char *encoded, char **decoded);
-hpd_error_t hpd_serialize_url_create(const hpd_module_t *context, hpd_service_id_t *service, char **url);
+hpd_error_t hpd_serialize_url_create(const hpd_module_t *context, const hpd_service_id_t *service, char **url);
 
 #endif //HOMEPORT_HPD_SERIALIZE_SHARED_H

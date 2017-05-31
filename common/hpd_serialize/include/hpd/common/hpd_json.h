@@ -31,21 +31,24 @@
 #include <hpd/hpd_types.h>
 #include <hpd/common/hpd_jansson.h>
 
-hpd_error_t hpd_json_adapter_id_to_json(const hpd_module_t *context, hpd_adapter_id_t *adapter, json_t **out);
-hpd_error_t hpd_json_adapter_to_json(const hpd_module_t *context, hpd_adapter_id_t *adapter, json_t **out);
+hpd_error_t hpd_json_adapter_id_to_json(const hpd_module_t *context, const hpd_adapter_id_t *adapter, json_t **out);
+hpd_error_t hpd_json_adapter_to_json(const hpd_module_t *context, const hpd_adapter_id_t *adapter, json_t **out);
 hpd_error_t hpd_json_adapters_to_json(const hpd_module_t *context, json_t **out);
 hpd_error_t hpd_json_configuration_to_json(const hpd_module_t *context, json_t **out);
-hpd_error_t hpd_json_device_id_to_json(const hpd_module_t *context, hpd_device_id_t *device, json_t **out);
-hpd_error_t hpd_json_device_to_json(const hpd_module_t *context, hpd_device_id_t *device, json_t **out);
-hpd_error_t hpd_json_devices_to_json(const hpd_module_t *context, hpd_adapter_id_t *adapter, json_t **out);
-hpd_error_t hpd_json_parameter_id_to_json(const hpd_module_t *context, hpd_parameter_id_t *parameter, json_t **out);
-hpd_error_t hpd_json_parameter_to_json(const hpd_module_t *context, hpd_parameter_id_t *parameter, json_t **out);
-hpd_error_t hpd_json_parameters_to_json(const hpd_module_t *context, hpd_service_id_t *service, json_t **out);
-hpd_error_t hpd_json_service_id_to_json(const hpd_module_t *context, hpd_service_id_t *service, json_t **out);
-hpd_error_t hpd_json_service_to_json(const hpd_module_t *context, hpd_service_id_t *service, json_t **out);
-hpd_error_t hpd_json_services_to_json(const hpd_module_t *context, hpd_device_id_t *device, json_t **out);
+hpd_error_t hpd_json_device_id_to_json(const hpd_module_t *context, const hpd_device_id_t *device, json_t **out);
+hpd_error_t hpd_json_device_to_json(const hpd_module_t *context, const hpd_device_id_t *device, json_t **out);
+hpd_error_t hpd_json_devices_to_json(const hpd_module_t *context, const hpd_adapter_id_t *adapter, json_t **out);
+hpd_error_t hpd_json_parameter_id_to_json(const hpd_module_t *context, const hpd_parameter_id_t *parameter, json_t **out);
+hpd_error_t hpd_json_parameter_to_json(const hpd_module_t *context, const hpd_parameter_id_t *parameter, json_t **out);
+hpd_error_t hpd_json_parameters_to_json(const hpd_module_t *context, const hpd_service_id_t *service, json_t **out);
+hpd_error_t hpd_json_service_id_to_json(const hpd_module_t *context, const hpd_service_id_t *service, json_t **out);
+hpd_error_t hpd_json_service_to_json(const hpd_module_t *context, const hpd_service_id_t *service, json_t **out);
+hpd_error_t hpd_json_services_to_json(const hpd_module_t *context, const hpd_device_id_t *device, json_t **out);
 hpd_error_t hpd_json_value_to_json(const hpd_module_t *context, const hpd_value_t *value, json_t **out);
+hpd_error_t hpd_json_response_to_json(const hpd_module_t *context, const hpd_response_t *response, json_t **out);
+hpd_error_t hpd_json_request_to_json(const hpd_module_t *context, const hpd_request_t *request, json_t **out);
 
 hpd_error_t hpd_json_value_parse(const hpd_module_t *context, json_t *json, hpd_value_t **out);
+hpd_error_t hpd_json_request_parse(const hpd_module_t *context, json_t *json, hpd_response_f on_response, hpd_request_t **out);
 
 #endif //HOMEPORT_HPD_JSON_H

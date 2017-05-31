@@ -35,14 +35,27 @@
 
 #include <hpd/hpd_shared_api.h>
 #include <hpd/common/hpd_common.h>
+#include <hpd/hpd_api.h>
 
 #define HPD_JSON_RETURN_JSON_ERROR(CONTEXT) HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Json error")
 #define HPD_JSON_RETURN_PARSE_ERROR(CONTEXT) HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Parse error")
 
-static hpd_error_t json_add(json_t *parent, const char *key, const char *val, const hpd_module_t *context)
+static hpd_error_t json_add_str(json_t *parent, const char *key, const char *val, const hpd_module_t *context)
 {
     json_t *json;
     if (!(json = json_string(val)))
+        HPD_JSON_RETURN_JSON_ERROR(context);
+    if (json_object_set_new(parent, key, json)) {
+        json_decref(json);
+        HPD_JSON_RETURN_JSON_ERROR(context);
+    }
+    return HPD_E_SUCCESS;
+}
+
+static hpd_error_t json_add_int(json_t *parent, const char *key, int val, const hpd_module_t *context)
+{
+    json_t *json;
+    if (!(json = json_integer(val)))
         HPD_JSON_RETURN_JSON_ERROR(context);
     if (json_object_set_new(parent, key, json)) {
         json_decref(json);
@@ -59,10 +72,10 @@ static hpd_error_t json_add_pair(json_t *parent, const hpd_pair_t *pair, const h
     const char *key, *val;
     if ((rc = hpd_pair_get(pair, &key, &val))) return rc;
 
-    return json_add(parent, key, val, context);
+    return json_add_str(parent, key, val, context);
 }
 
-hpd_error_t hpd_json_parameter_to_json(const hpd_module_t *context, hpd_parameter_id_t *parameter, json_t **out)
+hpd_error_t hpd_json_parameter_to_json(const hpd_module_t *context, const hpd_parameter_id_t *parameter, json_t **out)
 {
     hpd_error_t rc;
 
@@ -73,7 +86,7 @@ hpd_error_t hpd_json_parameter_to_json(const hpd_module_t *context, hpd_paramete
     // Add id
     const char *id;
     if ((rc = hpd_parameter_id_get_parameter_id_str(parameter, &id))) goto error;
-    if ((rc = json_add(json, HPD_SERIALIZE_KEY_ID, id, context))) goto error;
+    if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_ID, id, context))) goto error;
 
     // Add attributes
     const hpd_pair_t *pair;
@@ -89,7 +102,7 @@ hpd_error_t hpd_json_parameter_to_json(const hpd_module_t *context, hpd_paramete
     return rc;
 }
 
-hpd_error_t hpd_json_parameters_to_json(const hpd_module_t *context, hpd_service_id_t *service, json_t **out)
+hpd_error_t hpd_json_parameters_to_json(const hpd_module_t *context, const hpd_service_id_t *service, json_t **out)
 {
     hpd_error_t rc;
 
@@ -118,7 +131,7 @@ hpd_error_t hpd_json_parameters_to_json(const hpd_module_t *context, hpd_service
     HPD_JSON_RETURN_JSON_ERROR(context);
 }
 
-hpd_error_t hpd_json_service_to_json(const hpd_module_t *context, hpd_service_id_t *service, json_t **out)
+hpd_error_t hpd_json_service_to_json(const hpd_module_t *context, const hpd_service_id_t *service, json_t **out)
 {
     hpd_error_t rc;
 
@@ -129,12 +142,12 @@ hpd_error_t hpd_json_service_to_json(const hpd_module_t *context, hpd_service_id
     // Add id
     const char *id;
     if ((rc = hpd_service_id_get_service_id_str(service, &id))) goto error;
-    if ((rc = json_add(json, HPD_SERIALIZE_KEY_ID, id, context))) goto error;
+    if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_ID, id, context))) goto error;
 
     // Add url
     char *url;
     if ((rc = hpd_serialize_url_create(context, service, &url))) goto error;
-    if ((rc = json_add(json, HPD_SERIALIZE_KEY_URI, url, context))) {
+    if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_URI, url, context))) {
         free(url);
         goto error;
     }
@@ -148,10 +161,10 @@ hpd_error_t hpd_json_service_to_json(const hpd_module_t *context, hpd_service_id
         switch (method) {
             case HPD_M_NONE:break;
             case HPD_M_GET:
-                if ((rc = json_add(json, HPD_SERIALIZE_KEY_GET, HPD_SERIALIZE_VAL_TRUE, context))) goto error;
+                if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_GET, HPD_SERIALIZE_VAL_TRUE, context))) goto error;
                 break;
             case HPD_M_PUT:
-                if ((rc = json_add(json, HPD_SERIALIZE_KEY_PUT, HPD_SERIALIZE_VAL_TRUE, context))) goto error;
+                if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_PUT, HPD_SERIALIZE_VAL_TRUE, context))) goto error;
                 break;
             case HPD_M_COUNT:break;
         }
@@ -181,7 +194,7 @@ hpd_error_t hpd_json_service_to_json(const hpd_module_t *context, hpd_service_id
     HPD_JSON_RETURN_JSON_ERROR(context);
 }
 
-hpd_error_t hpd_json_services_to_json(const hpd_module_t *context, hpd_device_id_t *device, json_t **out)
+hpd_error_t hpd_json_services_to_json(const hpd_module_t *context, const hpd_device_id_t *device, json_t **out)
 {
     hpd_error_t rc;
 
@@ -210,7 +223,7 @@ hpd_error_t hpd_json_services_to_json(const hpd_module_t *context, hpd_device_id
     HPD_JSON_RETURN_JSON_ERROR(context);
 }
 
-hpd_error_t hpd_json_device_to_json(const hpd_module_t *context, hpd_device_id_t *device, json_t **out)
+hpd_error_t hpd_json_device_to_json(const hpd_module_t *context, const hpd_device_id_t *device, json_t **out)
 {
     hpd_error_t rc;
 
@@ -221,7 +234,7 @@ hpd_error_t hpd_json_device_to_json(const hpd_module_t *context, hpd_device_id_t
     // Add id
     const char *id;
     if ((rc = hpd_device_id_get_device_id_str(device, &id))) goto error;
-    if ((rc = json_add(json, HPD_SERIALIZE_KEY_ID, id, context))) goto error;
+    if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_ID, id, context))) goto error;
 
     // Add attributes
     const hpd_pair_t *pair;
@@ -246,7 +259,7 @@ hpd_error_t hpd_json_device_to_json(const hpd_module_t *context, hpd_device_id_t
     HPD_JSON_RETURN_JSON_ERROR(context);
 }
 
-hpd_error_t hpd_json_devices_to_json(const hpd_module_t *context, hpd_adapter_id_t *adapter, json_t **out)
+hpd_error_t hpd_json_devices_to_json(const hpd_module_t *context, const hpd_adapter_id_t *adapter, json_t **out)
 {
     hpd_error_t rc;
 
@@ -275,7 +288,7 @@ hpd_error_t hpd_json_devices_to_json(const hpd_module_t *context, hpd_adapter_id
     HPD_JSON_RETURN_JSON_ERROR(context);
 }
 
-hpd_error_t hpd_json_adapter_to_json(const hpd_module_t *context, hpd_adapter_id_t *adapter, json_t **out)
+hpd_error_t hpd_json_adapter_to_json(const hpd_module_t *context, const hpd_adapter_id_t *adapter, json_t **out)
 {
     hpd_error_t rc;
 
@@ -286,7 +299,7 @@ hpd_error_t hpd_json_adapter_to_json(const hpd_module_t *context, hpd_adapter_id
     // Add id
     const char *id;
     if ((rc = hpd_adapter_id_get_adapter_id_str(adapter, &id))) goto error;
-    if ((rc = json_add(json, HPD_SERIALIZE_KEY_ID, id, context))) goto error;
+    if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_ID, id, context))) goto error;
 
     // Add attributes
     const hpd_pair_t *pair;
@@ -357,7 +370,7 @@ hpd_error_t hpd_json_configuration_to_json(const hpd_module_t *context, json_t *
     else
         if ((rc = json_add(json, HPD_SERIALIZE_KEY_URL_ENCODED_CHARSET, HPD_SERIALIZE_VAL_ASCII, context))) goto error;
 #else
-    if ((rc = json_add(json, HPD_SERIALIZE_KEY_URL_ENCODED_CHARSET, HPD_SERIALIZE_VAL_ASCII, context))) goto error;
+    if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_URL_ENCODED_CHARSET, HPD_SERIALIZE_VAL_ASCII, context))) goto error;
 #endif
 
     // Add child
@@ -392,7 +405,7 @@ hpd_error_t hpd_json_value_to_json(const hpd_module_t *context, const hpd_value_
     if (!(json = json_object())) goto json_error;
 
     // Add value
-    if ((rc = json_add(json, HPD_SERIALIZE_KEY_VALUE, body, context))) goto error;
+    if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_VALUE, body, context))) goto error;
 
     // Add headers
     const hpd_pair_t *pair;
@@ -425,12 +438,12 @@ hpd_error_t hpd_json_value_parse(const hpd_module_t *context, json_t *json, hpd_
 
     if (!json_is_object(json)) HPD_JSON_RETURN_PARSE_ERROR(context);
 
-    json_t *value;
-    if (!(value = json_object_get(json, HPD_SERIALIZE_KEY_VALUE))) HPD_JSON_RETURN_PARSE_ERROR(context);
-    if (!json_is_string(value)) HPD_JSON_RETURN_PARSE_ERROR(context);
+    json_t *body;
+    if (!(body = json_object_get(json, HPD_SERIALIZE_KEY_VALUE))) HPD_JSON_RETURN_PARSE_ERROR(context);
+    if (!json_is_string(body)) HPD_JSON_RETURN_PARSE_ERROR(context);
 
     hpd_value_t *hpd_val;
-    if ((rc = hpd_value_alloc(&hpd_val, context, json_string_value(value), -1))) return rc;
+    if ((rc = hpd_value_alloc(&hpd_val, context, json_string_value(body), -1))) return rc;
 
     {
         const char *k;
@@ -453,7 +466,7 @@ hpd_error_t hpd_json_value_parse(const hpd_module_t *context, json_t *json, hpd_
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t hpd_json_adapter_id_to_json(const hpd_module_t *context, hpd_adapter_id_t *adapter, json_t **out)
+hpd_error_t hpd_json_adapter_id_to_json(const hpd_module_t *context, const hpd_adapter_id_t *adapter, json_t **out)
 {
     hpd_error_t rc;
 
@@ -463,7 +476,7 @@ hpd_error_t hpd_json_adapter_id_to_json(const hpd_module_t *context, hpd_adapter
     json_t *json;
     if (!(json = json_object())) HPD_JSON_RETURN_JSON_ERROR(context);
 
-    if ((rc = json_add(json, HPD_SERIALIZE_KEY_ADAPTER, aid, context))) {
+    if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_ADAPTER, aid, context))) {
         json_decref(json);
         return rc;
     }
@@ -472,7 +485,7 @@ hpd_error_t hpd_json_adapter_id_to_json(const hpd_module_t *context, hpd_adapter
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t hpd_json_device_id_to_json(const hpd_module_t *context, hpd_device_id_t *device, json_t **out)
+hpd_error_t hpd_json_device_id_to_json(const hpd_module_t *context, const hpd_device_id_t *device, json_t **out)
 {
     hpd_error_t rc;
 
@@ -484,8 +497,8 @@ hpd_error_t hpd_json_device_id_to_json(const hpd_module_t *context, hpd_device_i
     json_t *json;
     if (!(json = json_object())) HPD_JSON_RETURN_JSON_ERROR(context);
 
-    if ((rc = json_add(json, HPD_SERIALIZE_KEY_ADAPTER, aid, context)) ||
-        (rc = json_add(json, HPD_SERIALIZE_KEY_DEVICE, did, context)) ) {
+    if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_ADAPTER, aid, context)) ||
+        (rc = json_add_str(json, HPD_SERIALIZE_KEY_DEVICE, did, context)) ) {
         json_decref(json);
         return rc;
     }
@@ -494,7 +507,7 @@ hpd_error_t hpd_json_device_id_to_json(const hpd_module_t *context, hpd_device_i
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t hpd_json_service_id_to_json(const hpd_module_t *context, hpd_service_id_t *service, json_t **out)
+hpd_error_t hpd_json_service_id_to_json(const hpd_module_t *context, const hpd_service_id_t *service, json_t **out)
 {
     hpd_error_t rc;
 
@@ -508,9 +521,9 @@ hpd_error_t hpd_json_service_id_to_json(const hpd_module_t *context, hpd_service
     json_t *json;
     if (!(json = json_object())) HPD_JSON_RETURN_JSON_ERROR(context);
 
-    if ((rc = json_add(json, HPD_SERIALIZE_KEY_ADAPTER, aid, context)) ||
-        (rc = json_add(json, HPD_SERIALIZE_KEY_DEVICE, did, context)) ||
-        (rc = json_add(json, HPD_SERIALIZE_KEY_SERVICE, sid, context)) ) {
+    if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_ADAPTER, aid, context)) ||
+        (rc = json_add_str(json, HPD_SERIALIZE_KEY_DEVICE, did, context)) ||
+        (rc = json_add_str(json, HPD_SERIALIZE_KEY_SERVICE, sid, context)) ) {
         json_decref(json);
         return rc;
     }
@@ -519,7 +532,33 @@ hpd_error_t hpd_json_service_id_to_json(const hpd_module_t *context, hpd_service
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t hpd_json_parameter_id_to_json(const hpd_module_t *context, hpd_parameter_id_t *parameter, json_t **out)
+hpd_error_t hpd_json_service_id_parse(const hpd_module_t *context, json_t *json, hpd_service_id_t **out)
+{
+    hpd_error_t rc;
+
+    if (!json_is_object(json)) HPD_JSON_RETURN_PARSE_ERROR(context);
+
+    json_t *adapter;
+    if (!(adapter = json_object_get(json, HPD_SERIALIZE_KEY_ADAPTER))) HPD_JSON_RETURN_PARSE_ERROR(context);
+    if (!json_is_string(adapter)) HPD_JSON_RETURN_PARSE_ERROR(context);
+
+    json_t *device;
+    if (!(device = json_object_get(json, HPD_SERIALIZE_KEY_DEVICE))) HPD_JSON_RETURN_PARSE_ERROR(context);
+    if (!json_is_string(device)) HPD_JSON_RETURN_PARSE_ERROR(context);
+
+    json_t *service;
+    if (!(service = json_object_get(json, HPD_SERIALIZE_KEY_SERVICE))) HPD_JSON_RETURN_PARSE_ERROR(context);
+    if (!json_is_string(service)) HPD_JSON_RETURN_PARSE_ERROR(context);
+
+    hpd_service_id_t *service_id;
+    if ((rc = hpd_service_id_alloc(&service_id, context, json_string_value(adapter), json_string_value(device), json_string_value(service))))
+        return rc;
+
+    (*out) = service_id;
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t hpd_json_parameter_id_to_json(const hpd_module_t *context, const hpd_parameter_id_t *parameter, json_t **out)
 {
     hpd_error_t rc;
 
@@ -535,10 +574,10 @@ hpd_error_t hpd_json_parameter_id_to_json(const hpd_module_t *context, hpd_param
     json_t *json;
     if (!(json = json_object())) HPD_JSON_RETURN_JSON_ERROR(context);
 
-    if ((rc = json_add(json, HPD_SERIALIZE_KEY_ADAPTER, aid, context)) ||
-        (rc = json_add(json, HPD_SERIALIZE_KEY_DEVICE, did, context)) ||
-        (rc = json_add(json, HPD_SERIALIZE_KEY_SERVICE, sid, context)) ||
-        (rc = json_add(json, HPD_SERIALIZE_KEY_PARAMETER, pid, context)) ) {
+    if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_ADAPTER, aid, context)) ||
+        (rc = json_add_str(json, HPD_SERIALIZE_KEY_DEVICE, did, context)) ||
+        (rc = json_add_str(json, HPD_SERIALIZE_KEY_SERVICE, sid, context)) ||
+        (rc = json_add_str(json, HPD_SERIALIZE_KEY_PARAMETER, pid, context)) ) {
         json_decref(json);
         return rc;
     }
@@ -547,10 +586,126 @@ hpd_error_t hpd_json_parameter_id_to_json(const hpd_module_t *context, hpd_param
     return HPD_E_SUCCESS;
 }
 
+hpd_error_t hpd_json_response_to_json(const hpd_module_t *context, const hpd_response_t *response, json_t **out)
+{
+    hpd_error_t rc;
+    json_t *child;
 
+    json_t *json;
+    if (!(json = json_object())) HPD_JSON_RETURN_JSON_ERROR(context);
 
+    const hpd_service_id_t *service;
+    if ((rc = hpd_response_get_request_service(response, &service))) return rc;
+    if ((rc = hpd_json_service_id_to_json(context, service, &child))) goto hpd_error;
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_SERVICE, child)) goto json_error;
 
+    hpd_status_t status;
+    if ((rc = hpd_response_get_status(response, &status))) goto hpd_error;
+    if ((rc = json_add_int(json, HPD_SERIALIZE_KEY_STATUS, status, context))) goto hpd_error;
 
+    const hpd_value_t *value;
+    if ((rc = hpd_response_get_value(response, &value))) return rc;
+    if ((rc = hpd_json_value_to_json(context, value, &child))) return rc;
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_VALUE, child)) goto json_error;
+
+    (*out) = json;
+    return HPD_E_SUCCESS;
+
+    hpd_error:
+    if (json) json_decref(json);
+    return rc;
+
+    json_error:
+    if (json) json_decref(json);
+    HPD_JSON_RETURN_JSON_ERROR(context);
+}
+
+hpd_error_t hpd_json_request_to_json(const hpd_module_t *context, const hpd_request_t *request, json_t **out)
+{
+    hpd_error_t rc;
+    json_t *child;
+
+    json_t *json;
+    if (!(json = json_object())) HPD_JSON_RETURN_JSON_ERROR(context);
+
+    const hpd_service_id_t *service;
+    if ((rc = hpd_request_get_service(request, &service))) return rc;
+    if ((rc = hpd_json_service_id_to_json(context, service, &child))) goto rc_error;
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_SERVICE, child)) goto json_error;
+
+    hpd_method_t method;
+    if ((rc = hpd_request_get_method(request, &method))) return rc;
+    if (method < 0 || method >= HPD_M_COUNT) method = HPD_M_COUNT;
+    if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_METHOD, HPD_SERIALIZE_VAL_METHOD[method], context))) goto rc_error;
+
+    const hpd_value_t *value;
+    if ((rc = hpd_request_get_value(request, &value))) return rc;
+    if ((rc = hpd_json_value_to_json(context, value, &child))) return rc;
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_VALUE, child)) goto json_error;
+
+    (*out) = json;
+    return HPD_E_SUCCESS;
+
+    rc_error:
+    if (json) json_decref(json);
+    return rc;
+
+    json_error:
+    if (json) json_decref(json);
+    HPD_JSON_RETURN_JSON_ERROR(context);
+}
+
+hpd_error_t hpd_json_request_parse(const hpd_module_t *context, json_t *json, hpd_response_f on_response, hpd_request_t **out)
+{
+    hpd_error_t rc, rc2;
+
+    if (!json_is_object(json)) HPD_JSON_RETURN_PARSE_ERROR(context);
+
+    json_t *json_service;
+    if (!(json_service = json_object_get(json, HPD_SERIALIZE_KEY_SERVICE))) HPD_JSON_RETURN_PARSE_ERROR(context);
+    if (!json_is_object(json_service)) HPD_JSON_RETURN_PARSE_ERROR(context);
+
+    json_t *json_method;
+    if (!(json_method = json_object_get(json, HPD_SERIALIZE_KEY_METHOD))) HPD_JSON_RETURN_PARSE_ERROR(context);
+    if (!json_is_string(json_method)) HPD_JSON_RETURN_PARSE_ERROR(context);
+
+    json_t *json_value;
+    if ((json_value = json_object_get(json, HPD_SERIALIZE_KEY_VALUE))) {
+        if (!json_is_object(json_value)) HPD_JSON_RETURN_PARSE_ERROR(context);
+    }
+
+    hpd_service_id_t *service_id;
+    if ((rc = hpd_json_service_id_parse(context, json_service, &service_id))) return rc;
+    
+    hpd_method_t method;
+    for (method = HPD_M_NONE; method < HPD_M_COUNT; method++)
+        if (strcmp(HPD_SERIALIZE_VAL_METHOD[method], json_string_value(json_method)) == 0)
+            break;
+
+    hpd_value_t *value = NULL;
+    if (json_value && (rc = hpd_json_value_parse(context, json_value, &value))) {
+        if ((rc2 = hpd_service_id_free(service_id))) HPD_LOG_ERROR_CODE(context, rc2);
+        return rc;
+    }
+
+    hpd_request_t *request;
+    if ((rc = hpd_request_alloc(&request, service_id, method, on_response))) {
+        if ((rc2 = hpd_service_id_free(service_id))) HPD_LOG_ERROR_CODE(context, rc2);
+        if ((rc2 = hpd_value_free(value))) HPD_LOG_ERROR_CODE(context, rc2);
+        return rc;
+    }
+
+    if ((rc = hpd_service_id_free(service_id))) HPD_LOG_RETURN_E_UNKNOWN_CODE(context, rc);
+
+    if (json_value && (rc = hpd_request_set_value(request, value))) {
+        if ((rc2 = hpd_value_free(value))) HPD_LOG_ERROR_CODE(context, rc2);
+        if ((rc2 = hpd_request_free(request))) HPD_LOG_ERROR_CODE(context, rc2);
+        return rc;
+    }
+
+    (*out) = request;
+    return HPD_E_SUCCESS;
+}
 
 
 
