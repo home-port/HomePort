@@ -64,10 +64,10 @@ hpd_error_t hpd_changed(const hpd_service_t *service, hpd_value_t *val)
     return rc;
 }
 
-hpd_error_t hpd_listener_alloc(hpd_listener_t **listener, hpd_t *hpd)
+hpd_error_t hpd_listener_alloc(hpd_listener_t **listener, const hpd_module_t *context)
 {
-    if (!listener || !hpd) LOG_RETURN_E_NULL();
-    return event_alloc_listener(listener, hpd);
+    if (!listener || !context) LOG_RETURN_E_NULL();
+    return event_alloc_listener(listener, context->hpd);
 }
 
 hpd_error_t hpd_listener_set_data(hpd_listener_t *listener, void *data, hpd_free_f on_free)

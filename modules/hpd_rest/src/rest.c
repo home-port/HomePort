@@ -37,8 +37,8 @@
 
 static hpd_error_t rest_on_create(void **data, const hpd_module_t *context);
 static hpd_error_t rest_on_destroy(void *data);
-static hpd_error_t rest_on_start(void *data, hpd_t *hpd);
-static hpd_error_t rest_on_stop(void *data, hpd_t *hpd);
+static hpd_error_t rest_on_start(void *data);
+static hpd_error_t rest_on_stop(void *data);
 static hpd_error_t rest_on_parse_opt(void *data, const char *name, const char *arg);
 
 hpd_module_def_t hpd_rest = { rest_on_create, rest_on_destroy, rest_on_start, rest_on_stop, rest_on_parse_opt };
@@ -54,7 +54,6 @@ typedef enum rest_content_type {
 struct hpd_rest {
     hpd_httpd_t *ws;
     hpd_httpd_settings_t ws_set;
-    hpd_t *hpd;
     const hpd_module_t *context;
     CURL *curl;
 };
@@ -305,10 +304,10 @@ static hpd_error_t rest_reply_devices(hpd_rest_req_t *rest_req)
         case CONTENT_NONE:
         case CONTENT_XML:
         case CONTENT_WILDCARD:
-            if ((rc = hpd_rest_xml_get_configuration(rest->hpd, rest, context, &body))) return rc;
+            if ((rc = hpd_rest_xml_get_configuration(context, rest, &body))) return rc;
             break;
         case CONTENT_JSON:
-            if ((rc = hpd_rest_json_get_configuration(rest->hpd, rest, context, &body))) return rc;
+            if ((rc = hpd_rest_json_get_configuration(rest->context, rest, &body))) return rc;
             break;
         case CONTENT_UNKNOWN:
             if ((rc = rest_reply_unsupported_media_type(http_req, rest_req, context))) {
@@ -688,7 +687,7 @@ static hpd_httpd_return_t rest_on_req_url_cmpl(hpd_httpd_t *ins, hpd_httpd_reque
     free(sid_encoded);
 
     // Create service ID
-    if ((rc = hpd_service_id_alloc(&rest_req->service, rest->hpd, aid_decoded, did_decoded, sid_decoded))) {
+    if ((rc = hpd_service_id_alloc(&rest_req->service, rest->context, aid_decoded, did_decoded, sid_decoded))) {
         HPD_LOG_ERROR(context, "Failed to allocate id (code: %d).", rc);
         if ((rc2 = rest_reply_internal_server_error(req, rest_req, context))) {
             HPD_LOG_ERROR(context, "Failed to send internal server error response (code: %d).", rc2);
@@ -991,7 +990,7 @@ static hpd_error_t rest_on_destroy(void *data)
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t rest_on_start(void *data, hpd_t *hpd)
+static hpd_error_t rest_on_start(void *data)
 {
     hpd_error_t rc, rc2;
     hpd_rest_t *rest = data;
@@ -1007,10 +1006,8 @@ static hpd_error_t rest_on_start(void *data, hpd_t *hpd)
     HPD_LOG_WARN(context, "You HAVE version 2.9 of mxml which is known to contain xml parsing errors with some HomePort modules, please upgrade (packages libmxml1 and libmxml-dev on Ubuntu).");
 #endif
 
-    rest->hpd = hpd;
-
     hpd_ev_loop_t *loop;
-    if ((rc = hpd_get_loop(hpd, &loop))) return rc;
+    if ((rc = hpd_get_loop(context, &loop))) return rc;
 
     if ((rc = hpd_httpd_create(&rest->ws, &rest->ws_set, context, loop))) return rc;
     if ((rc = hpd_httpd_start(rest->ws))) {
@@ -1023,7 +1020,7 @@ static hpd_error_t rest_on_start(void *data, hpd_t *hpd)
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t rest_on_stop(void *data, hpd_t *hpd)
+static hpd_error_t rest_on_stop(void *data)
 {
     hpd_error_t rc, rc2;
     hpd_rest_t *rest = data;
@@ -1038,7 +1035,6 @@ static hpd_error_t rest_on_stop(void *data, hpd_t *hpd)
     }
     
     rest->ws = NULL;
-    rest->hpd = NULL;
 
     return rc;
 }

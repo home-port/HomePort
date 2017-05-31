@@ -31,8 +31,8 @@
 
 static hpd_error_t template_app_on_create(void **data, const hpd_module_t *context);
 static hpd_error_t template_app_on_destroy(void *data);
-static hpd_error_t template_app_on_start(void *data, hpd_t *hpd);
-static hpd_error_t template_app_on_stop(void *data, hpd_t *hpd);
+static hpd_error_t template_app_on_start(void *data);
+static hpd_error_t template_app_on_stop(void *data);
 static hpd_error_t template_app_on_parse_opt(void *data, const char *name, const char *arg);
 
 struct hpd_module_def template_app_def = {
@@ -53,12 +53,12 @@ static hpd_error_t template_app_on_destroy(void *data)
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t template_app_on_start(void *data, hpd_t *hpd)
+static hpd_error_t template_app_on_start(void *data)
 {
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t template_app_on_stop(void *data, hpd_t *hpd)
+static hpd_error_t template_app_on_stop(void *data)
 {
     return HPD_E_SUCCESS;
 }

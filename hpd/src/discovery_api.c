@@ -25,16 +25,17 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
+#include <zlib.h>
 #include "daemon.h"
 #include "hpd/hpd_shared_api.h"
 #include "discovery.h"
 #include "log.h"
 #include "model.h"
 
-hpd_error_t hpd_adapter_id_alloc(hpd_adapter_id_t **id, hpd_t *hpd, const char *aid)
+hpd_error_t hpd_adapter_id_alloc(hpd_adapter_id_t **id, const hpd_module_t *context, const char *aid)
 {
-    if (!id || !hpd || !aid) LOG_RETURN_E_NULL();
-    return discovery_alloc_aid(id, hpd, aid);
+    if (!id || !context || !aid) LOG_RETURN_E_NULL();
+    return discovery_alloc_aid(id, context->hpd, aid);
 }
 
 hpd_error_t hpd_adapter_id_copy(hpd_adapter_id_t **dst, const hpd_adapter_id_t *src)
@@ -49,10 +50,10 @@ hpd_error_t hpd_adapter_id_free(hpd_adapter_id_t *id)
     return discovery_free_aid(id);
 }
 
-hpd_error_t hpd_device_id_alloc(hpd_device_id_t **id, hpd_t *hpd, const char *aid, const char *did)
+hpd_error_t hpd_device_id_alloc(hpd_device_id_t **id, const hpd_module_t *context, const char *aid, const char *did)
 {
-    if (!id || !hpd || !aid || !did) LOG_RETURN_E_NULL();
-    return discovery_alloc_did(id, hpd, aid, did);
+    if (!id || !context || !aid || !did) LOG_RETURN_E_NULL();
+    return discovery_alloc_did(id, context->hpd, aid, did);
 }
 
 hpd_error_t hpd_device_id_copy(hpd_device_id_t **dst, const hpd_device_id_t *src)
@@ -67,10 +68,10 @@ hpd_error_t hpd_device_id_free(hpd_device_id_t *id)
     return discovery_free_did(id);
 }
 
-hpd_error_t hpd_service_id_alloc(hpd_service_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid)
+hpd_error_t hpd_service_id_alloc(hpd_service_id_t **id, const hpd_module_t *context, const char *aid, const char *did, const char *sid)
 {
-    if (!id || !hpd || !aid || !did || !sid) LOG_RETURN_E_NULL();
-    return discovery_alloc_sid(id, hpd, aid, did, sid);
+    if (!id || !context || !aid || !did || !sid) LOG_RETURN_E_NULL();
+    return discovery_alloc_sid(id, context->hpd, aid, did, sid);
 }
 
 hpd_error_t hpd_service_id_copy(hpd_service_id_t **dst, const hpd_service_id_t *src)
@@ -86,11 +87,11 @@ hpd_error_t hpd_service_id_free(hpd_service_id_t *id)
     return discovery_free_sid(id);
 }
 
-hpd_error_t hpd_parameter_id_alloc(hpd_parameter_id_t **id, hpd_t *hpd, const char *aid, const char *did,
+hpd_error_t hpd_parameter_id_alloc(hpd_parameter_id_t **id, const hpd_module_t *context, const char *aid, const char *did,
                                    const char *sid, const char *pid)
 {
-    if (!id || !hpd || !aid || !did || !sid || !pid) LOG_RETURN_E_NULL();
-    return discovery_alloc_pid(id, hpd, aid, did, sid, pid);
+    if (!id || !context || !aid || !did || !sid || !pid) LOG_RETURN_E_NULL();
+    return discovery_alloc_pid(id, context->hpd, aid, did, sid, pid);
 }
 
 hpd_error_t hpd_parameter_id_copy(hpd_parameter_id_t **dst, const hpd_parameter_id_t *src)
@@ -948,28 +949,10 @@ hpd_error_t hpd_action_get_action(const hpd_action_t *action, hpd_action_f *cb)
     return discovery_get_action_action(action, cb);
 }
 
-hpd_error_t hpd_adapter_id_get_hpd(const hpd_adapter_id_t *aid, hpd_t **hpd)
-{
-    if (!aid || !hpd) LOG_RETURN_E_NULL();
-    return discovery_get_aid_hpd(aid, hpd);
-}
-
-hpd_error_t hpd_device_id_get_hpd(const hpd_device_id_t *did, hpd_t **hpd)
-{
-    if (!did || !hpd) LOG_RETURN_E_NULL();
-    return discovery_get_did_hpd(did, hpd);
-}
-
 hpd_error_t hpd_device_id_get_adapter_id(const hpd_device_id_t *did, const hpd_adapter_id_t **aid)
 {
     if (!did || !aid) LOG_RETURN_E_NULL();
     return discovery_get_did_adapter(did, aid);
-}
-
-hpd_error_t hpd_service_id_get_hpd(const hpd_service_id_t *sid, hpd_t **hpd)
-{
-    if (!sid || !hpd) LOG_RETURN_E_NULL();
-    return discovery_get_sid_hpd(sid, hpd);
 }
 
 hpd_error_t hpd_service_id_get_adapter_id(const hpd_service_id_t *sid, const hpd_adapter_id_t **aid)
@@ -982,12 +965,6 @@ hpd_error_t hpd_service_id_get_device_id(const hpd_service_id_t *sid, const hpd_
 {
     if (!sid || !did) LOG_RETURN_E_NULL();
     return discovery_get_sid_device(sid, did);
-}
-
-hpd_error_t hpd_parameter_id_get_hpd(const hpd_parameter_id_t *pid, hpd_t **hpd)
-{
-    if (!pid || !hpd) LOG_RETURN_E_NULL();
-    return discovery_get_pid_hpd(pid, hpd);
 }
 
 hpd_error_t hpd_parameter_id_get_adapter_id(const hpd_parameter_id_t *pid, const hpd_adapter_id_t **aid)
@@ -1008,31 +985,31 @@ hpd_error_t hpd_parameter_id_get_service_id(const hpd_parameter_id_t *pid, const
     return discovery_get_pid_service(pid, sid);
 }
 
-hpd_error_t hpd_first_adapter_id(hpd_t *hpd, hpd_adapter_id_t **adapter_id)
+hpd_error_t hpd_first_adapter_id(const hpd_module_t *context, hpd_adapter_id_t **adapter_id)
 {
-    if (!hpd || !adapter_id) LOG_RETURN_E_NULL();
-    if (!hpd->configuration) LOG_RETURN_HPD_STOPPED();
+    if (!context || !adapter_id) LOG_RETURN_E_NULL();
+    if (!context->hpd->configuration) LOG_RETURN_HPD_STOPPED();
 
     hpd_error_t rc;
     hpd_adapter_t *adapter;
-    if ((rc = discovery_first_hpd_adapter(hpd, &adapter))) return rc;
+    if ((rc = discovery_first_hpd_adapter(context->hpd, &adapter))) return rc;
 
     if (!adapter) {
         (*adapter_id) = NULL;
         return HPD_E_SUCCESS;
     }
 
-    return discovery_alloc_aid(adapter_id, hpd, adapter->id);
+    return discovery_alloc_aid(adapter_id, context->hpd, adapter->id);
 }
 
-hpd_error_t hpd_first_device_id(hpd_t *hpd, hpd_device_id_t **device_id)
+hpd_error_t hpd_first_device_id(const hpd_module_t *context, hpd_device_id_t **device_id)
 {
-    if (!hpd || !device_id) LOG_RETURN_E_NULL();
-    if (!hpd->configuration) LOG_RETURN_HPD_STOPPED();
+    if (!context || !device_id) LOG_RETURN_E_NULL();
+    if (!context->hpd->configuration) LOG_RETURN_HPD_STOPPED();
 
     hpd_error_t rc;
     hpd_device_t *device;
-    if ((rc = discovery_first_hpd_device(hpd, &device))) return rc;
+    if ((rc = discovery_first_hpd_device(context->hpd, &device))) return rc;
 
     if (!device) {
         (*device_id) = NULL;
@@ -1040,17 +1017,17 @@ hpd_error_t hpd_first_device_id(hpd_t *hpd, hpd_device_id_t **device_id)
     }
 
     hpd_adapter_t *adapter = device->adapter;
-    return discovery_alloc_did(device_id, hpd, adapter->id, device->id);
+    return discovery_alloc_did(device_id, context->hpd, adapter->id, device->id);
 }
 
-hpd_error_t hpd_first_service_id(hpd_t *hpd, hpd_service_id_t **service_id)
+hpd_error_t hpd_first_service_id(const hpd_module_t *context, hpd_service_id_t **service_id)
 {
-    if (!hpd || !service_id) LOG_RETURN_E_NULL();
-    if (!hpd->configuration) LOG_RETURN_HPD_STOPPED();
+    if (!context || !service_id) LOG_RETURN_E_NULL();
+    if (!context->hpd->configuration) LOG_RETURN_HPD_STOPPED();
 
     hpd_error_t rc;
     hpd_service_t *service;
-    if ((rc = discovery_first_hpd_service(hpd, &service))) return rc;
+    if ((rc = discovery_first_hpd_service(context->hpd, &service))) return rc;
 
     if (!service) {
         (*service_id) = NULL;
@@ -1059,7 +1036,7 @@ hpd_error_t hpd_first_service_id(hpd_t *hpd, hpd_service_id_t **service_id)
 
     hpd_device_t *device = service->device;
     hpd_adapter_t *adapter = device->adapter;
-    return discovery_alloc_sid(service_id, hpd, adapter->id, device->id, service->id);
+    return discovery_alloc_sid(service_id, context->hpd, adapter->id, device->id, service->id);
 }
 
 hpd_error_t hpd_adapter_id_first_device_id(const hpd_adapter_id_t *adapter_id, hpd_device_id_t **device_id)
@@ -1338,28 +1315,10 @@ hpd_error_t hpd_service_id_next_parameter_id(hpd_parameter_id_t **parameter_id)
     return rc;
 }
 
-hpd_error_t hpd_adapter_get_hpd(const hpd_adapter_t *adapter, hpd_t **hpd)
-{
-    if (!adapter || !hpd) LOG_RETURN_E_NULL();
-    return discovery_get_adapter_hpd(adapter, hpd);
-}
-
-hpd_error_t hpd_device_get_hpd(const hpd_device_t *device, hpd_t **hpd)
-{
-    if (!device || !hpd) LOG_RETURN_E_NULL();
-    return discovery_get_device_hpd(device, hpd);
-}
-
 hpd_error_t hpd_device_get_adapter(const hpd_device_t *device, const hpd_adapter_t **adapter)
 {
     if (!device || !adapter) LOG_RETURN_E_NULL();
     return discovery_get_device_adapter(device, adapter);
-}
-
-hpd_error_t hpd_service_get_hpd(const hpd_service_t *service, hpd_t **hpd)
-{
-    if (!service || !hpd) LOG_RETURN_E_NULL();
-    return discovery_get_service_hpd(service, hpd);
 }
 
 hpd_error_t hpd_service_get_adapter(const hpd_service_t *service, const hpd_adapter_t **adapter)
@@ -1372,12 +1331,6 @@ hpd_error_t hpd_service_get_device(const hpd_service_t *service, const hpd_devic
 {
     if (!service || !device) LOG_RETURN_E_NULL();
     return discovery_get_service_device(service, device);
-}
-
-hpd_error_t hpd_parameter_get_hpd(const hpd_parameter_t *parameter, hpd_t **hpd)
-{
-    if (!parameter || !hpd) LOG_RETURN_E_NULL();
-    return discovery_get_parameter_hpd(parameter, hpd);
 }
 
 hpd_error_t hpd_parameter_get_adapter(const hpd_parameter_t *parameter, const hpd_adapter_t **adapter)

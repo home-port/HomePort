@@ -51,8 +51,8 @@ struct demo_adapter_srv {
 /// [definition]
 static hpd_error_t demo_adapter_on_create(void **data, const hpd_module_t *context);
 static hpd_error_t demo_adapter_on_destroy(void *data);
-static hpd_error_t demo_adapter_on_start(void *data, hpd_t *hpd);
-static hpd_error_t demo_adapter_on_stop(void *data, hpd_t *hpd);
+static hpd_error_t demo_adapter_on_start(void *data);
+static hpd_error_t demo_adapter_on_stop(void *data);
 static hpd_error_t demo_adapter_on_parse_opt(void *data, const char *name, const char *arg);
 
 struct hpd_module_def hpd_demo_adapter_def = {
@@ -207,7 +207,7 @@ static hpd_error_t demo_adapter_on_destroy(void *data)
 /// [on_destroy]
 
 /// [create_adapter]
-static hpd_error_t demo_adapter_create_adapter(hpd_t *hpd, demo_adapter_t *demo_adapter)
+static hpd_error_t demo_adapter_create_adapter(demo_adapter_t *demo_adapter)
 {
     hpd_error_t rc, rc2;
 
@@ -215,7 +215,7 @@ static hpd_error_t demo_adapter_create_adapter(hpd_t *hpd, demo_adapter_t *demo_
     hpd_adapter_t *adapter;
     if ((rc = hpd_adapter_alloc(&adapter, demo_adapter->module_id))) goto error_return;
     if ((rc = hpd_adapter_set_attr(adapter, HPD_ATTR_TYPE, "demo_adapter"))) goto error_free_adapter;
-    if ((rc = hpd_adapter_attach(hpd, adapter))) goto error_free_adapter;
+    if ((rc = hpd_adapter_attach(adapter))) goto error_free_adapter;
 
     return HPD_E_SUCCESS;
 
@@ -311,14 +311,14 @@ static hpd_error_t demo_adapter_create_lamp(demo_adapter_t *demo_adapter, const 
 /// [create_lamp]
 
 /// [on_start]
-static hpd_error_t demo_adapter_on_start(void *data, hpd_t *hpd)
+static hpd_error_t demo_adapter_on_start(void *data)
 {
     demo_adapter_t *demo_adapter = data;
     hpd_error_t rc, rc2;
 
     HPD_LOG_INFO(demo_adapter->context, "Starting with %i lamps...", demo_adapter->num_lamps);
 
-    if ((rc = demo_adapter_create_adapter(hpd, demo_adapter))) goto error_return;
+    if ((rc = demo_adapter_create_adapter(demo_adapter))) goto error_return;
 
     // Create device structures
     char *id = NULL;
@@ -332,19 +332,19 @@ static hpd_error_t demo_adapter_on_start(void *data, hpd_t *hpd)
 
     alloc_error:
     free(id);
-    if ((rc2 = demo_adapter_on_stop(demo_adapter, hpd)))
+    if ((rc2 = demo_adapter_on_stop(demo_adapter)))
         HPD_LOG_ERROR(demo_adapter->context, "on_stop() failed [code: %i].", rc2);
     HPD_LOG_RETURN_E_ALLOC(demo_adapter->context);
 
     snprintf_error:
     free(id);
-    if ((rc2 = demo_adapter_on_stop(demo_adapter, hpd)))
+    if ((rc2 = demo_adapter_on_stop(demo_adapter)))
         HPD_LOG_ERROR(demo_adapter->context, "on_stop() failed [code: %i].", rc2);
     HPD_LOG_RETURN_E_SNPRINTF(demo_adapter->context);
 
     error_free_id:
     free(id);
-    if ((rc2 = demo_adapter_on_stop(demo_adapter, hpd)))
+    if ((rc2 = demo_adapter_on_stop(demo_adapter)))
         HPD_LOG_ERROR(demo_adapter->context, "on_stop() failed [code: %i].", rc2);
 
     error_return:
@@ -353,7 +353,7 @@ static hpd_error_t demo_adapter_on_start(void *data, hpd_t *hpd)
 /// [on_start]
 
 /// [on_stop]
-static hpd_error_t demo_adapter_on_stop(void *data, hpd_t *hpd)
+static hpd_error_t demo_adapter_on_stop(void *data)
 {
     hpd_error_t rc;
 

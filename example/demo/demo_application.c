@@ -38,8 +38,8 @@ struct demo_app {
 
 static hpd_error_t demo_app_on_create(void **data, const hpd_module_t *context);
 static hpd_error_t demo_app_on_destroy(void *data);
-static hpd_error_t demo_app_on_start(void *data, hpd_t *hpd);
-static hpd_error_t demo_app_on_stop(void *data, hpd_t *hpd);
+static hpd_error_t demo_app_on_start(void *data);
+static hpd_error_t demo_app_on_stop(void *data);
 static hpd_error_t demo_app_on_parse_opt(void *data, const char *name, const char *arg);
 
 struct hpd_module_def hpd_demo_app_def = {
@@ -128,13 +128,13 @@ static hpd_error_t demo_app_on_destroy(void *data)
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t demo_app_on_start(void *data, hpd_t *hpd)
+static hpd_error_t demo_app_on_start(void *data)
 {
     hpd_error_t rc, rc2;
 
     demo_app_t *demo_app = data;
 
-    if ((rc = hpd_listener_alloc(&demo_app->listener, hpd)))
+    if ((rc = hpd_listener_alloc(&demo_app->listener, demo_app->context)))
         goto error_return;
     if ((rc = hpd_listener_set_data(demo_app->listener, demo_app, NULL)))
         goto error_free;
@@ -159,7 +159,7 @@ static hpd_error_t demo_app_on_start(void *data, hpd_t *hpd)
     return rc;
 }
 
-static hpd_error_t demo_app_on_stop(void *data, hpd_t *hpd)
+static hpd_error_t demo_app_on_stop(void *data)
 {
     demo_app_t *demo_app = data;
 

@@ -40,10 +40,10 @@ hpd_error_t hpd_free(hpd_t *hpd)
     return daemon_free(hpd);
 }
 
-hpd_error_t hpd_get_loop(hpd_t *hpd, hpd_ev_loop_t **loop)
+hpd_error_t hpd_get_loop(const hpd_module_t *context, hpd_ev_loop_t **loop)
 {
-    if (!hpd || !loop) LOG_RETURN_E_NULL();
-    return daemon_get_loop(hpd, loop);
+    if (!context || !loop) LOG_RETURN_E_NULL();
+    return daemon_get_loop(context->hpd, loop);
 }
 
 hpd_error_t hpd_module(hpd_t *hpd, const char *id, const hpd_module_def_t *module_def)

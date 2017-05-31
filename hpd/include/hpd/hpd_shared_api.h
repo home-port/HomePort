@@ -41,7 +41,7 @@ extern "C" {
 hpd_error_t hpd_module_add_option(const hpd_module_t *context, const char *name, const char *arg, int flags,
                                   const char *doc);
 hpd_error_t hpd_module_get_id(const hpd_module_t *context, const char **id);
-hpd_error_t hpd_get_loop(hpd_t *hpd, hpd_ev_loop_t **loop);
+hpd_error_t hpd_get_loop(const hpd_module_t *context, hpd_ev_loop_t **loop);
 /// [hpd_t functions]
 
 /// [log functions]
@@ -66,19 +66,19 @@ hpd_error_t hpd_vlogf(const hpd_module_t *context, hpd_log_level_t level, const 
 /// [log functions]
 
 /// [id_t functions]
-hpd_error_t hpd_adapter_id_alloc(hpd_adapter_id_t **id, hpd_t *hpd, const char *aid);
+hpd_error_t hpd_adapter_id_alloc(hpd_adapter_id_t **id, const hpd_module_t *context, const char *aid);
 hpd_error_t hpd_adapter_id_copy(hpd_adapter_id_t **dst, const hpd_adapter_id_t *src);
 hpd_error_t hpd_adapter_id_free(hpd_adapter_id_t *id);
 
-hpd_error_t hpd_device_id_alloc(hpd_device_id_t **id, hpd_t *hpd, const char *aid, const char *did);
+hpd_error_t hpd_device_id_alloc(hpd_device_id_t **id, const hpd_module_t *context, const char *aid, const char *did);
 hpd_error_t hpd_device_id_copy(hpd_device_id_t **dst, const hpd_device_id_t *src);
 hpd_error_t hpd_device_id_free(hpd_device_id_t *id);
 
-hpd_error_t hpd_service_id_alloc(hpd_service_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid);
+hpd_error_t hpd_service_id_alloc(hpd_service_id_t **id, const hpd_module_t *context, const char *aid, const char *did, const char *sid);
 hpd_error_t hpd_service_id_copy(hpd_service_id_t **dst, const hpd_service_id_t *src);
 hpd_error_t hpd_service_id_free(hpd_service_id_t *id);
 
-hpd_error_t hpd_parameter_id_alloc(hpd_parameter_id_t **id, hpd_t *hpd, const char *aid, const char *did, const char *sid, const char *pid);
+hpd_error_t hpd_parameter_id_alloc(hpd_parameter_id_t **id, const hpd_module_t *context, const char *aid, const char *did, const char *sid, const char *pid);
 hpd_error_t hpd_parameter_id_copy(hpd_parameter_id_t **dst, const hpd_parameter_id_t *src);
 hpd_error_t hpd_parameter_id_free(hpd_parameter_id_t *id);
 /// [id_t functions]
@@ -156,20 +156,16 @@ hpd_error_t hpd_pair_get(const hpd_pair_t *pair, const char **key, const char **
 /// [hpd_pair_t functions]
 
 /// [Browsing functions]
-hpd_error_t hpd_adapter_id_get_hpd(const hpd_adapter_id_t *aid, hpd_t **hpd);
-hpd_error_t hpd_device_id_get_hpd(const hpd_device_id_t *did, hpd_t **hpd);
 hpd_error_t hpd_device_id_get_adapter_id(const hpd_device_id_t *did, const hpd_adapter_id_t **aid);
-hpd_error_t hpd_service_id_get_hpd(const hpd_service_id_t *sid, hpd_t **hpd);
 hpd_error_t hpd_service_id_get_adapter_id(const hpd_service_id_t *sid, const hpd_adapter_id_t **aid);
 hpd_error_t hpd_service_id_get_device_id(const hpd_service_id_t *sid, const hpd_device_id_t **did);
-hpd_error_t hpd_parameter_id_get_hpd(const hpd_parameter_id_t *pid, hpd_t **hpd);
 hpd_error_t hpd_parameter_id_get_adapter_id(const hpd_parameter_id_t *pid, const hpd_adapter_id_t **aid);
 hpd_error_t hpd_parameter_id_get_device_id(const hpd_parameter_id_t *pid, const hpd_device_id_t **did);
 hpd_error_t hpd_parameter_id_get_service_id(const hpd_parameter_id_t *pid, const hpd_service_id_t **sid);
 
-hpd_error_t hpd_first_adapter_id(hpd_t *hpd, hpd_adapter_id_t **adapter_id);
-hpd_error_t hpd_first_device_id(hpd_t *hpd, hpd_device_id_t **device_id);
-hpd_error_t hpd_first_service_id(hpd_t *hpd, hpd_service_id_t **service_id);
+hpd_error_t hpd_first_adapter_id(const hpd_module_t *context, hpd_adapter_id_t **adapter_id);
+hpd_error_t hpd_first_device_id(const hpd_module_t *context, hpd_device_id_t **device_id);
+hpd_error_t hpd_first_service_id(const hpd_module_t *context, hpd_service_id_t **service_id);
 hpd_error_t hpd_adapter_id_first_device_id(const hpd_adapter_id_t *adapter_id, hpd_device_id_t **device_id);
 hpd_error_t hpd_adapter_id_first_service_id(const hpd_adapter_id_t *adapter_id, hpd_service_id_t **service_id);
 hpd_error_t hpd_device_id_first_service_id(const hpd_device_id_t *device_id, hpd_service_id_t **service_id);

@@ -37,7 +37,7 @@ extern "C" {
 /// [hpd_adapter_t functions]
 hpd_error_t hpd_adapter_alloc(hpd_adapter_t **adapter, const char *id);
 hpd_error_t hpd_adapter_free(hpd_adapter_t *adapter);
-hpd_error_t hpd_adapter_attach(hpd_t *hpd, hpd_adapter_t *adapter);
+hpd_error_t hpd_adapter_attach(hpd_adapter_t *adapter);
 hpd_error_t hpd_adapter_detach(hpd_adapter_t *adapter);
 hpd_error_t hpd_adapter_id_detach(const hpd_adapter_id_t *id, hpd_adapter_t **adapter);
 hpd_error_t hpd_adapter_set_attr(hpd_adapter_t *adapter, const char *key, const char *val);
@@ -140,16 +140,12 @@ hpd_error_t hpd_parameter_next_attr(const hpd_pair_t **pair);
     !(RC) && (PAIR); \
     (RC) = hpd_parameter_next_attr(&(PAIR)))
 
-hpd_error_t hpd_adapter_get_hpd(const hpd_adapter_t *adapter, hpd_t **hpd);
 hpd_error_t hpd_adapter_get_device(const hpd_adapter_t *adapter, const char *id, hpd_device_t **device);
-hpd_error_t hpd_device_get_hpd(const hpd_device_t *device, hpd_t **hpd);
 hpd_error_t hpd_device_get_adapter(const hpd_device_t *device, const hpd_adapter_t **adapter);
 hpd_error_t hpd_device_get_service(const hpd_device_t *device, const char *id, hpd_service_t **service);
-hpd_error_t hpd_service_get_hpd(const hpd_service_t *service, hpd_t **hpd);
 hpd_error_t hpd_service_get_adapter(const hpd_service_t *service, const hpd_adapter_t **adapter);
 hpd_error_t hpd_service_get_device(const hpd_service_t *service, const hpd_device_t **device);
 hpd_error_t hpd_service_get_parameter(const hpd_service_t *service, const char *id, hpd_parameter_t **parameter);
-hpd_error_t hpd_parameter_get_hpd(const hpd_parameter_t *parameter, hpd_t **hpd);
 hpd_error_t hpd_parameter_get_adapter(const hpd_parameter_t *parameter, const hpd_adapter_t **adapter);
 hpd_error_t hpd_parameter_get_device(const hpd_parameter_t *parameter, const hpd_device_t **device);
 hpd_error_t hpd_parameter_get_service(const hpd_parameter_t *parameter, const hpd_service_t **service);

@@ -183,8 +183,8 @@ typedef enum hpd_log_level hpd_log_level_t;
 /// [hpd_module_def_t functions]
 typedef hpd_error_t (*hpd_create_f)    (void **data, const hpd_module_t *context);
 typedef hpd_error_t (*hpd_destroy_f)   (void *data);
-typedef hpd_error_t (*hpd_start_f)     (void *data, hpd_t *hpd);
-typedef hpd_error_t (*hpd_stop_f)      (void *data, hpd_t *hpd);
+typedef hpd_error_t (*hpd_start_f)     (void *data);
+typedef hpd_error_t (*hpd_stop_f)      (void *data);
 typedef hpd_error_t (*hpd_parse_opt_f) (void *data, const char *name, const char *arg);
 /// [hpd_module_def_t functions]
 

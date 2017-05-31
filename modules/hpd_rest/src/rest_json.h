@@ -31,7 +31,7 @@
 #include "hpd/hpd_types.h"
 #include "rest_intern.h"
 
-hpd_error_t hpd_rest_json_get_configuration(hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context, char **out);
+hpd_error_t hpd_rest_json_get_configuration(const hpd_module_t *context, hpd_rest_t *rest, char **out);
 hpd_error_t hpd_rest_json_get_value(char *value, const hpd_module_t *context, char **out);
 hpd_error_t hpd_rest_json_parse_value(const char *in, const hpd_module_t *context, char **out);
 

@@ -207,14 +207,14 @@ static hpd_error_t daemon_modules_start(hpd_t *hpd)
 
     // Call on_start() on modules
     TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD)
-        if (module->def.on_start && (rc = module->def.on_start(module->data, hpd)) != HPD_E_SUCCESS)
+        if (module->def.on_start && (rc = module->def.on_start(module->data)) != HPD_E_SUCCESS)
             goto module_error;
 
     return HPD_E_SUCCESS;
 
     module_error:
     for (module = TAILQ_PREV(module, hpd_modules, HPD_TAILQ_FIELD); module; module = TAILQ_PREV(module, hpd_modules, HPD_TAILQ_FIELD))
-        if (module->def.on_stop && (rc2 = module->def.on_stop(module->data, hpd)))
+        if (module->def.on_stop && (rc2 = module->def.on_stop(module->data)))
             LOG_ERROR("Failed to stop module [code: %i].", rc2);
     return rc;
 }
@@ -226,14 +226,14 @@ static hpd_error_t daemon_modules_stop(hpd_t *hpd)
 
     // Call on_stop() on modules
     TAILQ_FOREACH_REVERSE(module, &hpd->modules, hpd_modules, HPD_TAILQ_FIELD)
-        if (module->def.on_stop && (rc = module->def.on_stop(module->data, hpd)) != HPD_E_SUCCESS)
+        if (module->def.on_stop && (rc = module->def.on_stop(module->data)) != HPD_E_SUCCESS)
             goto module_error;
 
     return HPD_E_SUCCESS;
 
     module_error:
     for (module = TAILQ_PREV(module, hpd_modules, HPD_TAILQ_FIELD); module; module = TAILQ_PREV(module, hpd_modules, HPD_TAILQ_FIELD))
-        if (module->def.on_stop && (rc2 = module->def.on_stop(module->data, hpd)))
+        if (module->def.on_stop && (rc2 = module->def.on_stop(module->data)))
             LOG_ERROR("Failed to stop module [code: %i].", rc2);
     return rc;
 }

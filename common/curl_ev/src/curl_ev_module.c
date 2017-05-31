@@ -49,8 +49,8 @@ struct curl_ev {
 
 static hpd_error_t curl_ev_on_create(void **data, const hpd_module_t *context);
 static hpd_error_t curl_ev_on_destroy(void *data);
-static hpd_error_t curl_ev_on_start(void *data, hpd_t *hpd);
-static hpd_error_t curl_ev_on_stop(void *data, hpd_t *hpd);
+static hpd_error_t curl_ev_on_start(void *data);
+static hpd_error_t curl_ev_on_stop(void *data);
 static hpd_error_t curl_ev_on_parse_opt(void *data, const char *name, const char *arg);
 
 static CURLMcode curl_ev_socket_action(int sockfd);
@@ -345,10 +345,9 @@ static hpd_error_t curl_ev_on_destroy(void *data)
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t curl_ev_on_start(void *data, hpd_t *hpd)
+static hpd_error_t curl_ev_on_start(void *data)
 {
     if (!curl_ev) return HPD_E_NULL;
-    if (!hpd) HPD_LOG_RETURN_E_NULL(curl_ev->context);
 
     hpd_error_t rc;
     const hpd_module_t *context = curl_ev->context;
@@ -359,7 +358,7 @@ static hpd_error_t curl_ev_on_start(void *data, hpd_t *hpd)
     // TODO Check supported features in curl_version_info
 
     hpd_ev_loop_t *loop;
-    if ((rc = hpd_get_loop(hpd, &loop))) goto hpd_error;
+    if ((rc = hpd_get_loop(context, &loop))) goto hpd_error;
     curl_ev->loop = loop;
 
     CURLMcode cmc;
@@ -386,7 +385,7 @@ static hpd_error_t curl_ev_on_start(void *data, hpd_t *hpd)
     return rc;
 }
 
-static hpd_error_t curl_ev_on_stop(void *data, hpd_t *hpd)
+static hpd_error_t curl_ev_on_stop(void *data)
 {
     if (!curl_ev) return HPD_E_NULL;
 

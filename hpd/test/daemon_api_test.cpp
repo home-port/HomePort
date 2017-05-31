@@ -45,15 +45,17 @@ typedef struct {
     int option_errors[21];
     int opt1_called;
     int opt2_called;
+    const hpd_module_t *context;
 } module_data_t;
 
 static module_data_t *last_module_data = NULL;
 
-static hpd_error_t on_create(void **data, const hpd_module_t *)
+static hpd_error_t on_create(void **data, const hpd_module_t *context)
 {
     module_data_t *module_data = (module_data_t *) calloc(1, sizeof(module_data_t));
     if (!module_data) return HPD_E_ALLOC;
     module_data->create_called = ++module_data->next;
+    module_data->context = context;
     *data = module_data;
     last_module_data = module_data;
     return HPD_E_SUCCESS;
@@ -107,19 +109,19 @@ static hpd_error_t on_destroy(void *data)
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t on_start(void *data, hpd_t *hpd)
+static hpd_error_t on_start(void *data)
 {
     module_data_t *module_data = (module_data_t *) data;
     module_data->start_called = ++module_data->next;
-    module_data->start_loop = hpd->loop;
+    module_data->start_loop = module_data->context->hpd->loop;
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t on_stop(void *data, hpd_t *hpd)
+static hpd_error_t on_stop(void *data)
 {
     module_data_t *module_data = (module_data_t *) data;
     module_data->stop_called = ++module_data->next;
-    module_data->stop_loop = hpd->loop;
+    module_data->stop_loop = module_data->context->hpd->loop;
     return HPD_E_SUCCESS;
 }
 
@@ -154,9 +156,11 @@ TEST(CASE, hpd_allocation) {
 TEST(CASE, hpd_get_loop) {
     hpd_t *hpd;
     hpd_ev_loop_t *loop;
+    hpd_module_t context;
 
     ASSERT_EQ(hpd_alloc(&hpd), HPD_E_SUCCESS);
-    ASSERT_EQ(hpd_get_loop(hpd, &loop), HPD_E_SUCCESS);
+    context.hpd = hpd;
+    ASSERT_EQ(hpd_get_loop(&context, &loop), HPD_E_SUCCESS);
     ASSERT_EQ(loop, hpd->loop);
     ASSERT_EQ(hpd_free(hpd), HPD_E_SUCCESS);
 }

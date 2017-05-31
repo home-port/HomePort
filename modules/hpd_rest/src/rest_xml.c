@@ -208,7 +208,7 @@ static hpd_error_t rest_xml_add_adapter(mxml_node_t *parent, hpd_adapter_id_t *a
     return HPD_E_SUCCESS;
 }
 
-static hpd_error_t rest_xml_add_configuration(mxml_node_t *parent, hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context)
+static hpd_error_t rest_xml_add_configuration(mxml_node_t *parent, hpd_rest_t *rest, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -229,7 +229,7 @@ static hpd_error_t rest_xml_add_configuration(mxml_node_t *parent, hpd_t *hpd, h
 
     // Add adapters
     hpd_adapter_id_t *adapter;
-    HPD_FOREACH_ADAPTER_ID(rc, adapter, hpd) {
+    HPD_FOREACH_ADAPTER_ID(rc, adapter, context) {
         if ((rc = rest_xml_add_adapter(xml, adapter, rest, context))) return rc;
     }
     if (rc) return rc;
@@ -237,7 +237,7 @@ static hpd_error_t rest_xml_add_configuration(mxml_node_t *parent, hpd_t *hpd, h
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t hpd_rest_xml_get_configuration(hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context, char **out)
+hpd_error_t hpd_rest_xml_get_configuration(const hpd_module_t *context, hpd_rest_t *rest, char **out)
 {
     REST_XML_BEGIN(context);
 
@@ -249,7 +249,7 @@ hpd_error_t hpd_rest_xml_get_configuration(hpd_t *hpd, hpd_rest_t *rest, const h
         REST_XML_RETURN_XML_ERROR(context);
     }
 
-    if ((rc = rest_xml_add_configuration(xml, hpd, rest, context))) goto error;
+    if ((rc = rest_xml_add_configuration(xml, rest, context))) goto error;
 
     if (!((*out) = mxmlSaveAllocString(xml, MXML_NO_CALLBACK))) {
         mxmlDelete(xml);

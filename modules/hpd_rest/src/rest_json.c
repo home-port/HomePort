@@ -302,7 +302,7 @@ static hpd_error_t rest_json_add_adapter(json_t *parent, hpd_adapter_id_t *adapt
     return rc;
 }
 
-static hpd_error_t rest_json_add_adapters(json_t *parent, hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context)
+static hpd_error_t rest_json_add_adapters(json_t *parent, hpd_rest_t *rest, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -312,7 +312,7 @@ static hpd_error_t rest_json_add_adapters(json_t *parent, hpd_t *hpd, hpd_rest_t
 
     // Add adapters
     hpd_adapter_id_t *adapter;
-    HPD_FOREACH_ADAPTER_ID(rc, adapter, hpd) {
+    HPD_FOREACH_ADAPTER_ID(rc, adapter, context) {
         if ((rc = rest_json_add_adapter(json, adapter, rest, context))) goto error;
     }
     if (rc) goto error;
@@ -330,7 +330,7 @@ static hpd_error_t rest_json_add_adapters(json_t *parent, hpd_t *hpd, hpd_rest_t
     return rc;
 }
 
-static hpd_error_t rest_json_add_configuration(json_t *parent, hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context)
+static hpd_error_t rest_json_add_configuration(json_t *parent, hpd_rest_t *rest, const hpd_module_t *context)
 {
     hpd_error_t rc;
 
@@ -350,7 +350,7 @@ static hpd_error_t rest_json_add_configuration(json_t *parent, hpd_t *hpd, hpd_r
 #endif
 
     // Add adapters
-    if ((rc = rest_json_add_adapters(json, hpd, rest, context))) goto error;
+    if ((rc = rest_json_add_adapters(json, rest, context))) goto error;
 
     // Add to parent
     if (json_object_set_new(parent, HPD_REST_KEY_CONFIGURATION, json)) {
@@ -365,14 +365,14 @@ static hpd_error_t rest_json_add_configuration(json_t *parent, hpd_t *hpd, hpd_r
     return rc;
 }
 
-hpd_error_t hpd_rest_json_get_configuration(hpd_t *hpd, hpd_rest_t *rest, const hpd_module_t *context, char **out)
+hpd_error_t hpd_rest_json_get_configuration(const hpd_module_t *context, hpd_rest_t *rest, char **out)
 {
     hpd_error_t rc;
 
     json_t *json;
     if (!(json = json_object())) REST_JSON_RETURN_JSON_ERROR(context);
 
-    if ((rc = rest_json_add_configuration(json, hpd, rest, context))) goto error;
+    if ((rc = rest_json_add_configuration(json, rest, context))) goto error;
 
     if (!((*out) = json_dumps(json, 0))) {
         json_decref(json);

@@ -33,8 +33,8 @@
 /// [declarations]
 static hpd_error_t template_adapter_on_create(void **data, const hpd_module_t *context);
 static hpd_error_t template_adapter_on_destroy(void *data);
-static hpd_error_t template_adapter_on_start(void *data, hpd_t *hpd);
-static hpd_error_t template_adapter_on_stop(void *data, hpd_t *hpd);
+static hpd_error_t template_adapter_on_start(void *data);
+static hpd_error_t template_adapter_on_stop(void *data);
 static hpd_error_t template_adapter_on_parse_opt(void *data, const char *name, const char *arg);
 /// [declarations]
 
@@ -63,14 +63,14 @@ static hpd_error_t template_adapter_on_destroy(void *data)
 /// [on_destroy]
 
 /// [on_start]
-static hpd_error_t template_adapter_on_start(void *data, hpd_t *hpd)
+static hpd_error_t template_adapter_on_start(void *data)
 {
     return HPD_E_SUCCESS;
 }
 /// [on_start]
 
 /// [on_stop]
-static hpd_error_t template_adapter_on_stop(void *data, hpd_t *hpd)
+static hpd_error_t template_adapter_on_stop(void *data)
 {
     return HPD_E_SUCCESS;
 }
