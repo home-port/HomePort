@@ -62,6 +62,7 @@ struct hpd_configuration {
 };
 
 struct hpd_adapter {
+    const hpd_module_t *context;
     // Navigational members
     hpd_configuration_t *configuration;
     TAILQ_ENTRY(hpd_adapter) HPD_TAILQ_FIELD;
@@ -75,6 +76,7 @@ struct hpd_adapter {
 };
 
 struct hpd_device {
+    const hpd_module_t *context;
     // Navigational members
     hpd_adapter_t *adapter;
     TAILQ_ENTRY(hpd_device) HPD_TAILQ_FIELD;
@@ -88,6 +90,7 @@ struct hpd_device {
 };
 
 struct hpd_service {
+    const hpd_module_t *context;
     // Navigational members
     hpd_device_t *device;
     TAILQ_ENTRY(hpd_service) HPD_TAILQ_FIELD;
@@ -102,6 +105,7 @@ struct hpd_service {
 };
 
 struct hpd_parameter {
+    const hpd_module_t *context;
     hpd_service_t *service;
     TAILQ_ENTRY(hpd_parameter) HPD_TAILQ_FIELD;
     char *id;

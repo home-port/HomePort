@@ -35,7 +35,7 @@ extern "C" {
 #endif
 
 /// [hpd_adapter_t functions]
-hpd_error_t hpd_adapter_alloc(hpd_adapter_t **adapter, const char *id);
+hpd_error_t hpd_adapter_alloc(hpd_adapter_t **adapter, const hpd_module_t *context, const char *id);
 hpd_error_t hpd_adapter_free(hpd_adapter_t *adapter);
 hpd_error_t hpd_adapter_attach(hpd_adapter_t *adapter);
 hpd_error_t hpd_adapter_detach(hpd_adapter_t *adapter);
@@ -48,11 +48,11 @@ hpd_error_t hpd_adapter_get_adapter_id_str(const hpd_adapter_t *adapter, const c
 hpd_error_t hpd_adapter_get_attr(const hpd_adapter_t *adapter, const char *key, const char **val);
 hpd_error_t hpd_adapter_get_attrs(const hpd_adapter_t *adapter, ...);
 hpd_error_t hpd_adapter_first_attr(const hpd_adapter_t *adapter, const hpd_pair_t **pair);
-hpd_error_t hpd_adapter_next_attr(const hpd_pair_t **pair);
+hpd_error_t hpd_adapter_next_attr(const hpd_adapter_t *adapter, const hpd_pair_t **pair);
 /// [hpd_adapter_t functions]
 
 /// [hpd_device_t functions]
-hpd_error_t hpd_device_alloc(hpd_device_t **device, const char *id);
+hpd_error_t hpd_device_alloc(hpd_device_t **device, const hpd_module_t *context, const char *id);
 hpd_error_t hpd_device_free(hpd_device_t *device);
 hpd_error_t hpd_device_attach(hpd_adapter_t *adapter, hpd_device_t *device);
 hpd_error_t hpd_device_id_attach(const hpd_adapter_id_t *id, hpd_device_t *device);
@@ -67,11 +67,11 @@ hpd_error_t hpd_device_get_device_id_str(const hpd_device_t *device, const char 
 hpd_error_t hpd_device_get_attr(const hpd_device_t *device, const char *key, const char **val);
 hpd_error_t hpd_device_get_attrs(const hpd_device_t *device, ...);
 hpd_error_t hpd_device_first_attr(const hpd_device_t *device, const hpd_pair_t **pair);
-hpd_error_t hpd_device_next_attr(const hpd_pair_t **pair);
+hpd_error_t hpd_device_next_attr(const hpd_device_t *device, const hpd_pair_t **pair);
 /// [hpd_device_t functions]
 
 /// [hpd_service_t functions]
-hpd_error_t hpd_service_alloc(hpd_service_t **service, const char *id);
+hpd_error_t hpd_service_alloc(hpd_service_t **service, const hpd_module_t *context, const char *id);
 hpd_error_t hpd_service_free(hpd_service_t *service);
 hpd_error_t hpd_service_attach(hpd_device_t *device, hpd_service_t *service);
 hpd_error_t hpd_service_id_attach(const hpd_device_id_t *id, hpd_service_t *service);
@@ -90,9 +90,9 @@ hpd_error_t hpd_service_get_attr(const hpd_service_t *service, const char *key, 
 hpd_error_t hpd_service_get_attrs(const hpd_service_t *service, ...);
 hpd_error_t hpd_service_has_action(const hpd_service_t *service, const hpd_method_t method, hpd_bool_t *boolean);
 hpd_error_t hpd_service_first_action(const hpd_service_t *service, const hpd_action_t **action);
-hpd_error_t hpd_service_next_action(const hpd_action_t **action);
+hpd_error_t hpd_service_next_action(const hpd_service_t *service, const hpd_action_t **action);
 hpd_error_t hpd_service_first_attr(const hpd_service_t *service, const hpd_pair_t **pair);
-hpd_error_t hpd_service_next_attr(const hpd_pair_t **pair);
+hpd_error_t hpd_service_next_attr(const hpd_service_t *service, const hpd_pair_t **pair);
 /// [hpd_service_t functions]
 
 /// [hpd_action_t adapter functions]
@@ -100,7 +100,7 @@ hpd_error_t hpd_action_get_action(const hpd_action_t *action, hpd_action_f *cb);
 /// [hpd_action_t adapter functions]
 
 /// [hpd_parameter_t functions]
-hpd_error_t hpd_parameter_alloc(hpd_parameter_t **parameter, const char *id);
+hpd_error_t hpd_parameter_alloc(hpd_parameter_t **parameter, const hpd_module_t *context, const char *id);
 hpd_error_t hpd_parameter_free(hpd_parameter_t *parameter);
 hpd_error_t hpd_parameter_attach(hpd_service_t *service, hpd_parameter_t *parameter);
 hpd_error_t hpd_parameter_id_attach(const hpd_service_id_t *id, hpd_parameter_t *parameter);
@@ -115,30 +115,30 @@ hpd_error_t hpd_parameter_get_parameter_id_str(const hpd_parameter_t *parameter,
 hpd_error_t hpd_parameter_get_attr(const hpd_parameter_t *parameter, const char *key, const char **val);
 hpd_error_t hpd_parameter_get_attrs(const hpd_parameter_t *parameter, ...);
 hpd_error_t hpd_parameter_first_attr(const hpd_parameter_t *parameter, const hpd_pair_t **pair);
-hpd_error_t hpd_parameter_next_attr(const hpd_pair_t **pair);
+hpd_error_t hpd_parameter_next_attr(const hpd_parameter_t *parameter, const hpd_pair_t **pair);
 /// [hpd_parameter_t functions]
 
 // TODO Document the following lot of functions/defines
 #define HPD_SERVICE_FOREACH_ACTION(RC, ACTION, ID) for ( \
     (RC) = hpd_service_first_action((ID), &(ACTION)); \
     !(RC) && (ACTION); \
-    (RC) = hpd_service_next_action(&(ACTION)))
+    (RC) = hpd_service_next_action((ID), &(ACTION)))
 #define HPD_ADAPTER_FOREACH_ATTR(RC, PAIR, ID) for ( \
     (RC) = hpd_adapter_first_attr((ID), &(PAIR)); \
     !(RC) && (PAIR); \
-    (RC) = hpd_adapter_next_attr(&(PAIR)))
+    (RC) = hpd_adapter_next_attr((ID), &(PAIR)))
 #define HPD_DEVICE_FOREACH_ATTR(RC, PAIR, ID) for ( \
     (RC) = hpd_device_first_attr((ID), &(PAIR)); \
     !(RC) && (PAIR); \
-    (RC) = hpd_device_next_attr(&(PAIR)))
+    (RC) = hpd_device_next_attr((ID), &(PAIR)))
 #define HPD_SERVICE_FOREACH_ATTR(RC, PAIR, ID) for ( \
     (RC) = hpd_service_first_attr((ID), &(PAIR)); \
     !(RC) && (PAIR); \
-    (RC) = hpd_service_next_attr(&(PAIR)))
+    (RC) = hpd_service_next_attr((ID), &(PAIR)))
 #define HPD_PARAMETER_FOREACH_ATTR(RC, PAIR, ID) for ( \
     (RC) = hpd_parameter_first_attr((ID), &(PAIR)); \
     !(RC) && (PAIR); \
-    (RC) = hpd_parameter_next_attr(&(PAIR)))
+    (RC) = hpd_parameter_next_attr((ID), &(PAIR)))
 
 hpd_error_t hpd_adapter_get_device(const hpd_adapter_t *adapter, const char *id, hpd_device_t **device);
 hpd_error_t hpd_device_get_adapter(const hpd_device_t *device, const hpd_adapter_t **adapter);

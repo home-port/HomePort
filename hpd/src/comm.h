@@ -41,7 +41,7 @@ TAILQ_HEAD(hpd_listeners, hpd_listener);
 struct hpd_listener {
     // Navigational members
     TAILQ_ENTRY(hpd_listener) HPD_TAILQ_FIELD;
-    hpd_t *hpd;
+    const hpd_module_t *context;
     // Data members
     hpd_value_f on_change;
     hpd_device_f on_dev_attach;
@@ -69,6 +69,7 @@ struct hpd_response {
 };
 
 struct hpd_value {
+    const hpd_module_t *context;
     hpd_map_t  *headers;
     char       *body;
     size_t      len;

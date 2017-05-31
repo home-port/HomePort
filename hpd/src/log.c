@@ -26,53 +26,55 @@
  */
 
 #include "log.h"
+#include "daemon.h"
 #include <stdio.h>
 #include <string.h>
 
-hpd_error_t log_logf(const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, ...)
+hpd_error_t log_logf(const hpd_t *hpd, const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, ...)
 {
     hpd_error_t rc;
     va_list vp;
     va_start(vp, fmt);
-    rc = log_vlogf(module, level, file, line, fmt, vp);
+    rc = log_vlogf(hpd, module, level, file, line, fmt, vp);
     va_end(vp);
     return rc;
 }
 
-hpd_error_t log_vlogf(const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp)
+hpd_error_t log_vlogf(const hpd_t *hpd, const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp)
 {
     FILE *stream;
     char *type;
 
-    // TODO Something more fancy than just printing...
-    switch (level) {
-        case HPD_L_ERROR:
-            stream = stderr;
-            type = "ERROR";
-            break;
-        case HPD_L_WARN:
-            stream = stderr;
-            type = "WARNING";
-            break;
-        case HPD_L_INFO:
-            stream = stdout;
-            type = "INFO";
-            break;
-        case HPD_L_DEBUG:
-            stream = stderr;
-            type = "DEBUG";
-            break;
-        case HPD_L_VERBOSE:
-            stream = stdout;
-            type = "VERBOSE";
-            break;
-        default:
-            LOG_RETURN(HPD_E_ARGUMENT, "Unknown log level.");
-    }
+    if (level <= hpd->log_level) {
+        switch (level) {
+            case HPD_L_ERROR:
+                stream = stderr;
+                type = "ERROR";
+                break;
+            case HPD_L_WARN:
+                stream = stderr;
+                type = "WARNING";
+                break;
+            case HPD_L_INFO:
+                stream = stdout;
+                type = "INFO";
+                break;
+            case HPD_L_DEBUG:
+                stream = stderr;
+                type = "DEBUG";
+                break;
+            case HPD_L_VERBOSE:
+                stream = stdout;
+                type = "VERBOSE";
+                break;
+            default:
+                LOG_RETURN(hpd, HPD_E_ARGUMENT, "Unknown log level.");
+        }
 
-    fprintf(stream, "[%s]%*s %8s: ", module, (int) (16 - strlen(module)), "", type);
-    int len = vfprintf(stream, fmt, vp);
-    fprintf(stream, "%*s  %s:%d\n", 104-len, "", file, line);
+        fprintf(stream, "[%s]%*s %8s: ", module, (int) (16 - strlen(module)), "", type);
+        int len = vfprintf(stream, fmt, vp);
+        fprintf(stream, "%*s  %s:%d\n", 104 - len, "", file, line);
+    }
 
     return HPD_E_SUCCESS;
 }

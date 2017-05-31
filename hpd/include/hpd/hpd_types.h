@@ -164,6 +164,7 @@ enum hpd_status {
 
 /// [hpd_log_level_t]
 enum hpd_log_level {
+    HPD_L_NONE,
     HPD_L_ERROR,
     HPD_L_WARN,
     HPD_L_INFO,

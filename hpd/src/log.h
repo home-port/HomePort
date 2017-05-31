@@ -37,22 +37,22 @@ extern "C" {
 
 #define HPD_LOG_MODULE "hpd"
 
-hpd_error_t log_logf(const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, ...);
-hpd_error_t log_vlogf(const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp);
+hpd_error_t log_logf(const hpd_t *hpd, const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, ...);
+hpd_error_t log_vlogf(const hpd_t *hpd, const char *module, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp);
 
-#define LOG_ERROR(FMT, ...) log_logf(HPD_LOG_MODULE, HPD_L_ERROR, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
-#define LOG_WARN(FMT, ...) log_logf(HPD_LOG_MODULE, HPD_L_WARN , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
-#define LOG_INFO(FMT, ...) log_logf(HPD_LOG_MODULE, HPD_L_INFO , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
-#define LOG_DEBUG(FMT, ...) log_logf(HPD_LOG_MODULE, HPD_L_DEBUG, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
+#define LOG_ERROR(HPD, FMT, ...) log_logf((HPD), HPD_LOG_MODULE, HPD_L_ERROR, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
+#define LOG_WARN(HPD, FMT, ...) log_logf((HPD), HPD_LOG_MODULE, HPD_L_WARN , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
+#define LOG_INFO(HPD, FMT, ...) log_logf((HPD), HPD_LOG_MODULE, HPD_L_INFO , __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
+#define LOG_DEBUG(HPD, FMT, ...) log_logf((HPD), HPD_LOG_MODULE, HPD_L_DEBUG, __FILE__, __LINE__, (FMT), ##__VA_ARGS__)
 
-#define LOG_RETURN(E, FMT, ...) do { LOG_DEBUG((FMT), ##__VA_ARGS__); return (E); } while(0)
+#define LOG_RETURN(HPD, E, FMT, ...) do { LOG_DEBUG((HPD), (FMT), ##__VA_ARGS__); return (E); } while(0)
 
-#define LOG_RETURN_E_NULL()  LOG_RETURN(HPD_E_NULL,  "Unexpected null pointer.")
-#define LOG_RETURN_E_ALLOC() LOG_RETURN(HPD_E_ALLOC, "Unable to allocate memory.")
+#define LOG_RETURN_E_NULL(HPD)  LOG_RETURN((HPD), HPD_E_NULL,  "Unexpected null pointer.")
+#define LOG_RETURN_E_ALLOC(HPD) LOG_RETURN((HPD), HPD_E_ALLOC, "Unable to allocate memory.")
 
-#define LOG_RETURN_HPD_STOPPED() LOG_RETURN(HPD_E_STATE, "Cannot perform %s() while hpd is stopped.", __func__)
-#define LOG_RETURN_ATTACHED() LOG_RETURN(HPD_E_ARGUMENT, "Cannot perform %s(), object already attached.", __func__)
-#define LOG_RETURN_DETACHED() LOG_RETURN(HPD_E_ARGUMENT, "Cannot perform %s(), object already detached.", __func__)
+#define LOG_RETURN_HPD_STOPPED(HPD) LOG_RETURN((HPD), HPD_E_STATE, "Cannot perform %s() while hpd is stopped.", __func__)
+#define LOG_RETURN_ATTACHED(HPD) LOG_RETURN((HPD), HPD_E_ARGUMENT, "Cannot perform %s(), object already attached.", __func__)
+#define LOG_RETURN_DETACHED(HPD) LOG_RETURN((HPD), HPD_E_ARGUMENT, "Cannot perform %s(), object already detached.", __func__)
 
 #ifdef __cplusplus
 }

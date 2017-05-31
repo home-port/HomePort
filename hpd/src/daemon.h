@@ -63,6 +63,7 @@ struct hpd {
     hpd_ev_asyncs_t changed_watchers;
     hpd_ev_asyncs_t device_watchers;
     char *argv0;
+    hpd_log_level_t log_level;
 };
 
 struct hpd_ev_async {

@@ -35,8 +35,10 @@
 
 hpd_error_t hpd_id_changed(const hpd_service_id_t *id, hpd_value_t *val)
 {
-    if (!id || !val) LOG_RETURN_E_NULL();
-    if (!id->device.adapter.hpd->loop) LOG_RETURN_HPD_STOPPED();
+    if (!id) return HPD_E_NULL;
+    hpd_t *hpd = id->device.adapter.context->hpd;
+    if (!val) LOG_RETURN_E_NULL(hpd);
+    if (!hpd->loop) LOG_RETURN_HPD_STOPPED(hpd);
     return event_changed(id, val);
 }
 
@@ -44,13 +46,16 @@ hpd_error_t hpd_changed(const hpd_service_t *service, hpd_value_t *val)
 {
     hpd_error_t rc, rc2;
 
-    if (!service || !val) LOG_RETURN_E_NULL();
+    if (!service) return HPD_E_NULL;
+    const hpd_module_t *context = service->context;
+    hpd_t *hpd = context->hpd;
+    if (!val) LOG_RETURN_E_NULL(hpd);
     if (!service->device || !service->device->adapter || !service->device->adapter->configuration)
-        LOG_RETURN_DETACHED();
-    if (!service->device->adapter->configuration->hpd->loop) LOG_RETURN_HPD_STOPPED();
+        LOG_RETURN_DETACHED(hpd);
+    if (!service->device->adapter->configuration->hpd->loop) LOG_RETURN_HPD_STOPPED(hpd);
 
     hpd_service_id_t *sid;
-    if ((rc = discovery_alloc_sid(&sid, service->device->adapter->configuration->hpd,
+    if ((rc = discovery_alloc_sid(&sid, context,
                                   service->device->adapter->id, service->device->id, service->id)))
         return rc;
 
@@ -58,7 +63,7 @@ hpd_error_t hpd_changed(const hpd_service_t *service, hpd_value_t *val)
 
     if ((rc2 = discovery_free_sid(sid))) {
         if (rc != HPD_E_SUCCESS) rc = rc2;
-        else LOG_ERROR("free function failed [code: %i].", rc2);
+        else LOG_ERROR(hpd, "free function failed [code: %i].", rc2);
     }
 
     return rc;
@@ -66,52 +71,55 @@ hpd_error_t hpd_changed(const hpd_service_t *service, hpd_value_t *val)
 
 hpd_error_t hpd_listener_alloc(hpd_listener_t **listener, const hpd_module_t *context)
 {
-    if (!listener || !context) LOG_RETURN_E_NULL();
-    return event_alloc_listener(listener, context->hpd);
+    if (!context) return HPD_E_NULL;
+    if (!listener) LOG_RETURN_E_NULL(context->hpd);
+    return event_alloc_listener(listener, context);
 }
 
 hpd_error_t hpd_listener_set_data(hpd_listener_t *listener, void *data, hpd_free_f on_free)
 {
-    if (!listener) LOG_RETURN_E_NULL();
+    if (!listener) return HPD_E_NULL;
     return event_set_listener_data(listener, data, on_free);
 }
 
 hpd_error_t hpd_listener_set_value_callback(hpd_listener_t *listener, hpd_value_f on_change)
 {
-    if (!listener) LOG_RETURN_E_NULL();
+    if (!listener) return HPD_E_NULL;
     return event_set_value_callback(listener, on_change);
 }
 hpd_error_t hpd_listener_set_device_callback(hpd_listener_t *listener, hpd_device_f on_attach, hpd_device_f on_detach, hpd_device_f on_change)
 {
-    if (!listener) LOG_RETURN_E_NULL();
+    if (!listener) return HPD_E_NULL;
     return event_set_device_callback(listener, on_attach, on_detach, on_change);
 }
 
 hpd_error_t hpd_subscribe(hpd_listener_t *listener)
 {
-    if (!listener) LOG_RETURN_E_NULL();
+    if (!listener) return HPD_E_NULL;
+    hpd_t *hpd = listener->context->hpd;
     if (!listener->on_change && !listener->on_dev_attach && !listener->on_dev_detach)
-        LOG_RETURN(HPD_E_ARGUMENT, "Listener do not contain any callbacks.");
-    if (!listener->hpd->configuration) LOG_RETURN_HPD_STOPPED();
+        LOG_RETURN(hpd, HPD_E_ARGUMENT, "Listener do not contain any callbacks.");
+    if (!hpd->configuration) LOG_RETURN_HPD_STOPPED(hpd);
     return event_subscribe(listener);
 }
 
 hpd_error_t hpd_listener_free(hpd_listener_t *listener)
 {
-    if (!listener) LOG_RETURN_E_NULL();
+    if (!listener) return HPD_E_NULL;
     return event_unsubscribe(listener);
 }
 
 hpd_error_t hpd_listener_get_data(const hpd_listener_t *listener, void **data)
 {
-    if (!listener || !data) LOG_RETURN_E_NULL();
+    if (!listener) return HPD_E_NULL;
+    if (!data) LOG_RETURN_E_NULL(listener->context->hpd);
     return event_get_listener_data(listener, data);
 }
 
 hpd_error_t hpd_foreach_attached(const hpd_listener_t *listener)
 {
-    if (!listener) LOG_RETURN_E_NULL();
+    if (!listener) return HPD_E_NULL;
     if (!listener->on_dev_attach)
-        LOG_RETURN(HPD_E_ARGUMENT, "Listener do not contain an on_dev_attach callback.");
+        LOG_RETURN(listener->context->hpd, HPD_E_ARGUMENT, "Listener do not contain an on_dev_attach callback.");
     return event_foreach_attached(listener);
 }

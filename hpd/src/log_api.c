@@ -30,17 +30,19 @@
 
 hpd_error_t hpd_logf(const hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, ...)
 {
-    if (!context || !fmt) LOG_RETURN_E_NULL();
+    if (!context) return HPD_E_NULL;
+    if (!fmt) LOG_RETURN_E_NULL(context->hpd);
     hpd_error_t rc;
     va_list vp;
     va_start(vp, fmt);
-    rc = log_vlogf(context->id, level, file, line, fmt, vp);
+    rc = log_vlogf(context->hpd, context->id, level, file, line, fmt, vp);
     va_end(vp);
     return rc;
 }
 
 hpd_error_t hpd_vlogf(const hpd_module_t *context, hpd_log_level_t level, const char *file, int line, const char *fmt, va_list vp)
 {
-    if (!context || !fmt) LOG_RETURN_E_NULL();
-    return log_vlogf(context->id, level, file, line, fmt, vp);
+    if (!context) return HPD_E_NULL;
+    if (!fmt) LOG_RETURN_E_NULL(context->hpd);
+    return log_vlogf(context->hpd, context->id, level, file, line, fmt, vp);
 }

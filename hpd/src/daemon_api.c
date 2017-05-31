@@ -30,66 +30,75 @@
 #include "log.h"
 
 hpd_error_t hpd_alloc(hpd_t **hpd) {
-    if (!hpd) LOG_RETURN_E_NULL();
+    if (!hpd) return HPD_E_NULL;
     return daemon_alloc(hpd);
 }
 
 hpd_error_t hpd_free(hpd_t *hpd)
 {
-    if (!hpd) LOG_RETURN_E_NULL();
+    if (!hpd) return HPD_E_NULL;
     return daemon_free(hpd);
 }
 
 hpd_error_t hpd_get_loop(const hpd_module_t *context, hpd_ev_loop_t **loop)
 {
-    if (!context || !loop) LOG_RETURN_E_NULL();
+    if (!context) return HPD_E_NULL;
+    if (!loop) LOG_RETURN_E_NULL(context->hpd);
     return daemon_get_loop(context->hpd, loop);
 }
 
 hpd_error_t hpd_module(hpd_t *hpd, const char *id, const hpd_module_def_t *module_def)
 {
     hpd_module_t *module;
-    if (!hpd || !id || !module_def) LOG_RETURN_E_NULL();
-    if (hpd->configuration) LOG_RETURN(HPD_E_STATE, "Cannot add module while hpd is running.");
-    if (strchr(id, '-')) LOG_RETURN(HPD_E_ARGUMENT, "Module ids may not contain '-'.");
-    // TODO Create hpd and log as modules ?
-    if (strcmp(id, "hpd") == 0) LOG_RETURN(HPD_E_ARGUMENT, "Module ids cannot be 'hpd'.");
-    if (strcmp(id, "log") == 0) LOG_RETURN(HPD_E_ARGUMENT, "Module ids cannot be 'log'.");
+
+    if (!hpd) return HPD_E_NULL;
+    if (!id || !module_def) LOG_RETURN_E_NULL(hpd);
+    if (hpd->configuration) LOG_RETURN(hpd, HPD_E_STATE, "Cannot add module while hpd is running.");
+    if (strchr(id, '-')) LOG_RETURN(hpd, HPD_E_ARGUMENT, "Module ids may not contain '-'.");
+    if (strcmp(id, "hpd") == 0) LOG_RETURN(hpd, HPD_E_ARGUMENT, "Module ids cannot be 'hpd'.");
+    if (strcmp(id, "log") == 0) LOG_RETURN(hpd, HPD_E_ARGUMENT, "Module ids cannot be 'log'.");
     TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD)
         if (strcmp(module->id, id) == 0)
-            LOG_RETURN(HPD_E_NOT_UNIQUE, "Module ids must be unique.");
+            LOG_RETURN(hpd, HPD_E_NOT_UNIQUE, "Module ids must be unique.");
+
     return daemon_add_module(hpd, id, module_def);
 }
 
 hpd_error_t hpd_module_add_option(const hpd_module_t *context, const char *name, const char *arg, int flags,
                                   const char *doc)
 {
-    if (!context || !name) LOG_RETURN_E_NULL();
+    if (!context) return HPD_E_NULL;
+    if (!name) LOG_RETURN_E_NULL(context->hpd);
     hpd_t *hpd = context->hpd;
-    if (!hpd->options) LOG_RETURN(HPD_E_STATE, "Can only add options during on_create().");
+    if (!hpd->options) LOG_RETURN(hpd, HPD_E_STATE, "Can only add options during on_create().");
     size_t name_index = strlen(context->id)+1;
     for (int i = 0; i < hpd->module_options_count; i++) {
         if (name_index < strlen(hpd->options[i].name) && strcmp(&hpd->options[i].name[name_index], name) == 0)
-            LOG_RETURN(HPD_E_NOT_UNIQUE, "Option names must be unique within the module.");
+            LOG_RETURN(hpd, HPD_E_NOT_UNIQUE, "Option names must be unique within the module.");
     }
+
     return daemon_add_option(context, name, arg, flags, doc);
 }
 
 hpd_error_t hpd_module_get_id(const hpd_module_t *context, const char **id)
 {
-    if (!context || !id) LOG_RETURN_E_NULL();
+    if (!context) return HPD_E_NULL;
+    if (!id) LOG_RETURN_E_NULL(context->hpd);
+
     return daemon_get_id(context, id);
 }
 
 hpd_error_t hpd_start(hpd_t *hpd, int argc, char *argv[])
 {
-    if (!hpd) LOG_RETURN_E_NULL();
+    if (!hpd) return HPD_E_NULL;
+
     return daemon_start(hpd, argc, argv);
 }
 
 hpd_error_t hpd_stop(hpd_t *hpd)
 {
-    if (!hpd) LOG_RETURN_E_NULL();
-    if (!hpd->loop) LOG_RETURN_HPD_STOPPED();
+    if (!hpd) return HPD_E_NULL;
+    if (!hpd->loop) LOG_RETURN_HPD_STOPPED(hpd);
+
     return daemon_stop(hpd);
 }

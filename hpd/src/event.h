@@ -34,7 +34,7 @@ extern "C" {
 
 #include "hpd/hpd_types.h"
 
-hpd_error_t event_alloc_listener(hpd_listener_t **listener, hpd_t *hpd);
+hpd_error_t event_alloc_listener(hpd_listener_t **listener, const hpd_module_t *context);
 hpd_error_t event_free_listener(hpd_listener_t *listener);
 
 hpd_error_t event_set_listener_data(hpd_listener_t *listener, void *data, hpd_free_f on_free);

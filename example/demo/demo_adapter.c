@@ -75,7 +75,7 @@ static hpd_status_t demo_adapter_send_value(hpd_request_t *req, demo_adapter_srv
 
     // Create and set value
     hpd_value_t *val;
-    if ((rc = hpd_value_allocf(&val, "%i", srv_data->state))) goto error_free_res;
+    if ((rc = hpd_value_allocf(srv_data->demo_adapter->context, &val, "%i", srv_data->state))) goto error_free_res;
     if ((rc = hpd_response_set_value(res, val))) goto error_free_val;
 
     // Send response
@@ -103,7 +103,7 @@ static hpd_error_t demo_adapter_send_changed(const hpd_service_id_t *service_id,
     hpd_error_t rc;
 
     hpd_value_t *value;
-    if ((rc = hpd_value_allocf(&value, "%i", srv_data->state))) return rc;
+    if ((rc = hpd_value_allocf(srv_data->demo_adapter->context, &value, "%i", srv_data->state))) return rc;
 
     if ((rc = hpd_id_changed(service_id, value))) hpd_value_free(value);
     return rc;
@@ -213,7 +213,7 @@ static hpd_error_t demo_adapter_create_adapter(demo_adapter_t *demo_adapter)
 
     // Create adapter structure (using module_id as id)
     hpd_adapter_t *adapter;
-    if ((rc = hpd_adapter_alloc(&adapter, demo_adapter->module_id))) goto error_return;
+    if ((rc = hpd_adapter_alloc(&adapter, demo_adapter->context, demo_adapter->module_id))) goto error_return;
     if ((rc = hpd_adapter_set_attr(adapter, HPD_ATTR_TYPE, "demo_adapter"))) goto error_free_adapter;
     if ((rc = hpd_adapter_attach(adapter))) goto error_free_adapter;
 
@@ -234,7 +234,7 @@ static hpd_error_t demo_adapter_create_parameter(demo_adapter_t *demo_adapter, h
     hpd_error_t rc, rc2;
 
     hpd_parameter_t *parameter;
-    if ((rc = hpd_parameter_alloc(&parameter, "param0"))) goto error_return;
+    if ((rc = hpd_parameter_alloc(&parameter, demo_adapter->context, "param0"))) goto error_return;
     if ((rc = hpd_parameter_attach(service, parameter))) goto error_free;
 
     return HPD_E_SUCCESS;
@@ -254,7 +254,7 @@ static hpd_error_t demo_adapter_create_service(demo_adapter_t *demo_adapter, hpd
     hpd_error_t rc, rc2;
 
     hpd_service_t *service;
-    if ((rc = hpd_service_alloc(&service, "srv0"))) goto error_return;
+    if ((rc = hpd_service_alloc(&service, demo_adapter->context, "srv0"))) goto error_return;
     if ((rc = hpd_service_set_actions(service,
                                       HPD_M_GET, demo_adapter_on_get,
                                       HPD_M_PUT, demo_adapter_on_put,
@@ -294,7 +294,7 @@ static hpd_error_t demo_adapter_create_lamp(demo_adapter_t *demo_adapter, const 
     hpd_error_t rc, rc2;
 
     hpd_device_t *device;
-    if ((rc = hpd_device_alloc(&device, id))) goto error_return;
+    if ((rc = hpd_device_alloc(&device, demo_adapter->context, id))) goto error_return;
     if ((rc = hpd_device_set_attr(device, HPD_ATTR_TYPE, "demo_lamp"))) goto error_free;
     if ((rc = demo_adapter_create_service(demo_adapter, device))) goto error_free;
     if ((rc = hpd_device_attach(demo_adapter->adapter, device))) goto error_free;

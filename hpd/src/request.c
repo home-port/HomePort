@@ -49,7 +49,7 @@ hpd_error_t request_alloc_request(hpd_request_t **request, const hpd_service_id_
         request_free_request(*request);
     switch (rc) {
         case HPD_E_ALLOC:
-            LOG_RETURN_E_ALLOC();
+            LOG_RETURN_E_ALLOC(id->device.adapter.context->hpd);
         default:
             return rc;
     }
@@ -78,7 +78,7 @@ hpd_error_t request_set_request_value(hpd_request_t *request, hpd_value_t *value
     return HPD_E_SUCCESS;
 
     alloc_error:
-        LOG_RETURN_E_ALLOC();
+        LOG_RETURN_E_ALLOC(request->service->device.adapter.context->hpd);
 }
 
 hpd_error_t request_set_request_data(hpd_request_t *request, void *data, hpd_free_f on_free)
@@ -116,7 +116,7 @@ hpd_error_t request_alloc_response(hpd_response_t **response, hpd_request_t *req
 
     alloc_error:
     request_free_response(*response);
-        LOG_RETURN_E_ALLOC();
+        LOG_RETURN_E_ALLOC(request->service->device.adapter.context->hpd);
 }
 
 hpd_error_t request_free_response(hpd_response_t *response)
@@ -141,7 +141,7 @@ hpd_error_t request_set_response_value(hpd_response_t *response, hpd_value_t *va
     return HPD_E_SUCCESS;
 
     alloc_error:
-    LOG_RETURN_E_ALLOC();
+    LOG_RETURN_E_ALLOC(response->request->service->device.adapter.context->hpd);
 }
 
 hpd_error_t request_get_response_status(const hpd_response_t *response, hpd_status_t *status)
@@ -187,7 +187,7 @@ static void request_on_request(hpd_ev_loop_t *loop, ev_async *w, int revents)
     hpd_request_t *request = async->request;
     hpd_service_id_t *service_id = request->service;
 
-    hpd_t *hpd = service_id->device.adapter.hpd;
+    hpd_t *hpd = service_id->device.adapter.context->hpd;
     char *sid = service_id->sid;
     char *did = service_id->device.did;
     char *aid = service_id->device.adapter.aid;
@@ -201,7 +201,7 @@ static void request_on_request(hpd_ev_loop_t *loop, ev_async *w, int revents)
     
     switch (discovery_find_service(service_id, &service)) {
         case HPD_E_NOT_FOUND: {
-            LOG_DEBUG("Did not find service %s/%s/%s.", aid, did, sid);
+            LOG_DEBUG(hpd, "Did not find service %s/%s/%s.", aid, did, sid);
             if ((rc = request_alloc_response(&response, request, HPD_S_404))) goto error_free_request;
             if ((rc = request_respond(response))) goto error_free_response;
             return;
@@ -228,7 +228,7 @@ static void request_on_request(hpd_ev_loop_t *loop, ev_async *w, int revents)
         request_free_response(response);
     error_free_request:
         request_free_request(request);
-        LOG_ERROR("on_request() failed [code: %i].", rc);
+        LOG_ERROR(hpd, "on_request() failed [code: %i].", rc);
         return;
 }
 
@@ -239,7 +239,7 @@ static void request_on_respond(hpd_ev_loop_t *loop, ev_async *w, int revents)
     hpd_response_t *response = async->response;
     hpd_request_t *request = response->request;
     hpd_service_id_t *service_id = request->service;
-    hpd_t *hpd = service_id->device.adapter.hpd;
+    hpd_t *hpd = service_id->device.adapter.context->hpd;
 
     TAILQ_REMOVE(&hpd->respond_watchers, async, HPD_TAILQ_FIELD);
     ev_async_stop(loop, w);
@@ -248,18 +248,18 @@ static void request_on_respond(hpd_ev_loop_t *loop, ev_async *w, int revents)
     if (request->on_response) request->on_response(request->data, response);
 
     if ((rc = request_free_response(response))) {
-        LOG_ERROR("Free function failed [code: %i].", rc);
+        LOG_ERROR(hpd, "Free function failed [code: %i].", rc);
     }
 }
 
 hpd_error_t request_request(hpd_request_t *request)
 {
     hpd_ev_async_t *async;
+    hpd_t *hpd = request->service->device.adapter.context->hpd;
     HPD_CALLOC(async, 1, hpd_ev_async_t);
     HPD_CPY_ALLOC(async->request, request, hpd_request_t);
     ev_async_init(&async->watcher, request_on_request);
     async->watcher.data = async;
-    hpd_t *hpd = request->service->device.adapter.hpd;
     ev_async_start(hpd->loop, &async->watcher);
     ev_async_send(hpd->loop, &async->watcher);
     TAILQ_INSERT_TAIL(&hpd->request_watchers, async, HPD_TAILQ_FIELD);
@@ -268,17 +268,17 @@ hpd_error_t request_request(hpd_request_t *request)
 
     alloc_error:
     free(async);
-    LOG_RETURN_E_ALLOC();
+    LOG_RETURN_E_ALLOC(hpd);
 }
 
 hpd_error_t request_respond(hpd_response_t *response)
 {
     hpd_ev_async_t *async;
+    hpd_t *hpd = response->request->service->device.adapter.context->hpd;
     HPD_CALLOC(async, 1, hpd_ev_async_t);
     HPD_CPY_ALLOC(async->response, response, hpd_response_t);
     ev_async_init(&async->watcher, request_on_respond);
     async->watcher.data = async;
-    hpd_t *hpd = response->request->service->device.adapter.hpd;
     ev_async_start(hpd->loop, &async->watcher);
     ev_async_send(hpd->loop, &async->watcher);
     TAILQ_INSERT_TAIL(&hpd->respond_watchers, async, HPD_TAILQ_FIELD);
@@ -287,5 +287,5 @@ hpd_error_t request_respond(hpd_response_t *response)
 
     alloc_error:
     free(async);
-    LOG_RETURN_E_ALLOC();
+    LOG_RETURN_E_ALLOC(hpd);
 }

@@ -31,11 +31,12 @@
 #include "daemon.h"
 #include "log.h"
 
-hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const char *id)
+hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const hpd_module_t *context, const char *id)
 {
     hpd_error_t rc;
 
     HPD_CALLOC((*adapter), 1, hpd_adapter_t);
+    (*adapter)->context = context;
     HPD_CALLOC((*adapter)->devices, 1, hpd_devices_t);
     TAILQ_INIT((*adapter)->devices);
     if ((rc = hpd_map_alloc(&(*adapter)->attributes))) {
@@ -49,14 +50,15 @@ hpd_error_t discovery_alloc_adapter(hpd_adapter_t **adapter, const char *id)
     alloc_error:
     if (*adapter) discovery_free_adapter(*adapter);
     (*adapter) = NULL;
-    LOG_RETURN_E_ALLOC();
+    LOG_RETURN_E_ALLOC(context->hpd);
 }
 
-hpd_error_t discovery_alloc_device(hpd_device_t **device, const char *id)
+hpd_error_t discovery_alloc_device(hpd_device_t **device, const hpd_module_t *context, const char *id)
 {
     hpd_error_t rc;
 
     HPD_CALLOC((*device), 1, hpd_device_t);
+    (*device)->context = context;
     HPD_CALLOC((*device)->services, 1, hpd_services_t);
     TAILQ_INIT((*device)->services);
     if ((rc = hpd_map_alloc(&(*device)->attributes))) {
@@ -70,14 +72,15 @@ hpd_error_t discovery_alloc_device(hpd_device_t **device, const char *id)
     alloc_error:
     if (*device) discovery_free_device(*device);
     (*device) = NULL;
-    LOG_RETURN_E_ALLOC();
+    LOG_RETURN_E_ALLOC(context->hpd);
 }
 
-hpd_error_t discovery_alloc_service(hpd_service_t **service, const char *id)
+hpd_error_t discovery_alloc_service(hpd_service_t **service, const hpd_module_t *context, const char *id)
 {
     hpd_error_t rc;
 
     HPD_CALLOC((*service), 1, hpd_service_t);
+    (*service)->context = context;
     HPD_CALLOC((*service)->parameters, 1, hpd_parameters_t);
     TAILQ_INIT((*service)->parameters);
     if ((rc = hpd_map_alloc(&(*service)->attributes))) {
@@ -95,14 +98,15 @@ hpd_error_t discovery_alloc_service(hpd_service_t **service, const char *id)
     alloc_error:
         if (*service) discovery_free_service(*service);
         (*service) = NULL;
-        LOG_RETURN_E_ALLOC();
+        LOG_RETURN_E_ALLOC(context->hpd);
 }
 
-hpd_error_t discovery_alloc_parameter(hpd_parameter_t **parameter, const char *id)
+hpd_error_t discovery_alloc_parameter(hpd_parameter_t **parameter, const hpd_module_t *context, const char *id)
 {
     hpd_error_t rc;
 
     HPD_CALLOC((*parameter), 1, hpd_parameter_t);
+    (*parameter)->context = context;
     if ((rc = hpd_map_alloc(&(*parameter)->attributes))) {
         discovery_free_parameter(*parameter);
         (*parameter) = NULL;
@@ -114,7 +118,7 @@ hpd_error_t discovery_alloc_parameter(hpd_parameter_t **parameter, const char *i
     alloc_error:
     if (*parameter) discovery_free_parameter(*parameter);
     (*parameter) = NULL;
-    LOG_RETURN_E_ALLOC();
+    LOG_RETURN_E_ALLOC(context->hpd);
 }
 
 hpd_error_t discovery_free_adapter(hpd_adapter_t *adapter)
@@ -131,7 +135,7 @@ hpd_error_t discovery_free_adapter(hpd_adapter_t *adapter)
     return rc;
 
     map_error:
-    LOG_RETURN(rc, "Free function returned an error [code: %i]", rc);
+    LOG_RETURN(adapter->context->hpd, rc, "Free function returned an error [code: %i]", rc);
 }
 
 hpd_error_t discovery_free_device(hpd_device_t *device)
@@ -148,7 +152,7 @@ hpd_error_t discovery_free_device(hpd_device_t *device)
     return rc;
 
     map_error:
-    LOG_RETURN(rc, "Free function returned an error [code: %i]", rc);
+    LOG_RETURN(device->context->hpd, rc, "Free function returned an error [code: %i]", rc);
 }
 
 hpd_error_t discovery_free_service(hpd_service_t *service)
@@ -165,7 +169,7 @@ hpd_error_t discovery_free_service(hpd_service_t *service)
     return rc;
 
     map_error:
-    LOG_RETURN(rc, "Free function returned an error [code: %i]", rc);
+    LOG_RETURN(service->context->hpd, rc, "Free function returned an error [code: %i]", rc);
 }
 
 
@@ -377,7 +381,7 @@ hpd_error_t discovery_get_adapter_attrs_v(const hpd_adapter_t *adapter, va_list 
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char **);
-        if (!val) LOG_RETURN_E_NULL();
+        if (!val) LOG_RETURN_E_NULL(adapter->context->hpd);
         if ((rc = discovery_get_adapter_attr(adapter, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -390,7 +394,7 @@ hpd_error_t discovery_get_device_attrs_v(const hpd_device_t *device, va_list vp)
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char **);
-        if (!val) LOG_RETURN_E_NULL();
+        if (!val) LOG_RETURN_E_NULL(device->context->hpd);
         if ((rc = discovery_get_device_attr(device, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -403,7 +407,7 @@ hpd_error_t discovery_get_service_attrs_v(const hpd_service_t *service, va_list 
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char **);
-        if (!val) LOG_RETURN_E_NULL();
+        if (!val) LOG_RETURN_E_NULL(service->context->hpd);
         if ((rc = discovery_get_service_attr(service, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -416,7 +420,7 @@ hpd_error_t discovery_get_parameter_attrs_v(const hpd_parameter_t *parameter, va
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char **);
-        if (!val) LOG_RETURN_E_NULL();
+        if (!val) LOG_RETURN_E_NULL(parameter->context->hpd);
         if ((rc = discovery_get_parameter_attr(parameter, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -493,7 +497,7 @@ hpd_error_t discovery_set_adapter_attrs_v(hpd_adapter_t *adapter, va_list vp)
     const char *key, *val;
 
     while ((key = va_arg(vp, const char *))) {
-        if (key[0] == '_') LOG_RETURN(HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
+        if (key[0] == '_') LOG_RETURN(adapter->context->hpd, HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
         val = va_arg(vp, const char *);
         if ((rc = discovery_set_adapter_attr(adapter, key, val))) return rc;
     }
@@ -506,7 +510,7 @@ hpd_error_t discovery_set_device_attrs_v(hpd_device_t *device, va_list vp)
     const char *key, *val;
 
     while ((key = va_arg(vp, const char *))) {
-        if (key[0] == '_') LOG_RETURN(HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
+        if (key[0] == '_') LOG_RETURN(device->context->hpd, HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
         val = va_arg(vp, const char *);
         if ((rc = discovery_set_device_attr(device, key, val))) return rc;
     }
@@ -519,7 +523,7 @@ hpd_error_t discovery_set_service_attrs_v(hpd_service_t *service, va_list vp)
     const char *key, *val;
 
     while ((key = va_arg(vp, const char *))) {
-        if (key[0] == '_') LOG_RETURN(HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
+        if (key[0] == '_') LOG_RETURN(service->context->hpd, HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
         val = va_arg(vp, const char *);
         if ((rc = discovery_set_service_attr(service, key, val))) return rc;
     }
@@ -532,7 +536,7 @@ hpd_error_t discovery_set_parameter_attrs_v(hpd_parameter_t *parameter, va_list 
     const char *key, *val;
 
     while ((key = va_arg(vp, const char *))) {
-        if (key[0] == '_') LOG_RETURN(HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
+        if (key[0] == '_') LOG_RETURN(parameter->context->hpd, HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
         val = va_arg(vp, const char *);
         if ((rc = discovery_set_parameter_attr(parameter, key, val))) return rc;
     }
@@ -547,9 +551,9 @@ hpd_error_t discovery_set_service_actions_v(hpd_service_t *service, va_list vp)
 
     while ((method = va_arg(vp, hpd_method_t)) != HPD_M_NONE) {
         if (method <= HPD_M_NONE || method >= HPD_M_COUNT)
-            LOG_RETURN(HPD_E_ARGUMENT, "Unknown method given to %s() - did you end the list with HPD_M_NONE?", __func__);
+            LOG_RETURN(service->context->hpd, HPD_E_ARGUMENT, "Unknown method given to %s() - did you end the list with HPD_M_NONE?", __func__);
         action = va_arg(vp, hpd_action_f);
-        if (!action) LOG_RETURN_E_NULL();
+        if (!action) LOG_RETURN_E_NULL(service->context->hpd);
         if ((rc = discovery_set_service_action(service, method, action))) return rc;
     }
     return HPD_E_SUCCESS;

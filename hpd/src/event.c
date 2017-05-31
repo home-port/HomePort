@@ -33,14 +33,14 @@
 #include "comm.h"
 #include "model.h"
 
-hpd_error_t event_alloc_listener(hpd_listener_t **listener, hpd_t *hpd)
+hpd_error_t event_alloc_listener(hpd_listener_t **listener, const hpd_module_t *context)
 {
     HPD_CALLOC(*listener, 1, hpd_listener_t);
-    (*listener)->hpd = hpd;
+    (*listener)->context = context;
     return HPD_E_SUCCESS;
 
     alloc_error:
-    LOG_RETURN_E_ALLOC();
+    LOG_RETURN_E_ALLOC(context->hpd);
 }
 
 hpd_error_t event_free_listener(hpd_listener_t *listener)
@@ -75,7 +75,7 @@ hpd_error_t event_set_device_callback(hpd_listener_t *listener, hpd_device_f on_
 
 hpd_error_t event_subscribe(hpd_listener_t *listener)
 {
-    TAILQ_INSERT_TAIL(&listener->hpd->configuration->listeners, listener, HPD_TAILQ_FIELD);
+    TAILQ_INSERT_TAIL(&listener->context->hpd->configuration->listeners, listener, HPD_TAILQ_FIELD);
     return HPD_E_SUCCESS;
 }
 
@@ -83,7 +83,7 @@ hpd_error_t event_unsubscribe(hpd_listener_t *listener)
 {
     if (listener) {
         if (listener->on_free) listener->on_free(listener->data);
-        TAILQ_REMOVE(&listener->hpd->configuration->listeners, listener, HPD_TAILQ_FIELD);
+        TAILQ_REMOVE(&listener->context->hpd->configuration->listeners, listener, HPD_TAILQ_FIELD);
         free(listener);
     }
     return HPD_E_SUCCESS;
@@ -98,13 +98,14 @@ hpd_error_t event_get_listener_data(const hpd_listener_t *listener, void **data)
 hpd_error_t event_foreach_attached(const hpd_listener_t *listener)
 {
     hpd_error_t rc;
-    hpd_configuration_t *configuration = listener->hpd->configuration;
+    const hpd_module_t *context = listener->context;
+    hpd_configuration_t *configuration = context->hpd->configuration;
     hpd_adapter_t *adapter;
     hpd_device_t *device;
     TAILQ_FOREACH(adapter, &configuration->adapters, HPD_TAILQ_FIELD) {
         TAILQ_FOREACH(device, adapter->devices, HPD_TAILQ_FIELD) {
             hpd_device_id_t *did;
-            if ((rc = discovery_alloc_did(&did, configuration->hpd, adapter->id, device->id))) return rc;
+            if ((rc = discovery_alloc_did(&did, context, adapter->id, device->id))) return rc;
             listener->on_dev_attach(listener->data, did);
             if ((rc = discovery_free_did(did))) return rc;
         }
@@ -130,11 +131,11 @@ static void event_on_changed(hpd_ev_loop_t *loop, ev_async *w, int revents)
     }
 
     if ((rc = discovery_free_sid(id))) {
-        LOG_ERROR("free function failed [code: %i].", rc);
+        LOG_ERROR(hpd, "free function failed [code: %i].", rc);
     }
 
     if ((rc = value_free(value))) {
-        LOG_ERROR("free function failed [code: %i].", rc);
+        LOG_ERROR(hpd, "free function failed [code: %i].", rc);
     }
 }
 
@@ -156,7 +157,7 @@ static void event_on_device_attached(hpd_ev_loop_t *loop, ev_async *w, int reven
     }
 
     if ((rc = discovery_free_did(id))) {
-        LOG_ERROR("free function failed [code: %i].", rc);
+        LOG_ERROR(hpd, "free function failed [code: %i].", rc);
     }
 }
 
@@ -177,7 +178,7 @@ static void event_on_device_detached(hpd_ev_loop_t *loop, ev_async *w, int reven
     }
 
     if ((rc = discovery_free_did(id))) {
-        LOG_ERROR("free function failed [code: %i].", rc);
+        LOG_ERROR(hpd, "free function failed [code: %i].", rc);
     }
 }
 
@@ -198,7 +199,7 @@ static void event_on_device_changed(hpd_ev_loop_t *loop, ev_async *w, int revent
     }
 
     if ((rc = discovery_free_did(id))) {
-        LOG_ERROR("free function failed [code: %i].", rc);
+        LOG_ERROR(hpd, "free function failed [code: %i].", rc);
     }
 }
 
@@ -206,10 +207,10 @@ hpd_error_t event_changed(const hpd_service_id_t *id, hpd_value_t *val)
 {
     hpd_error_t rc = HPD_E_ALLOC;
     hpd_ev_async_t *async;
+    hpd_t *hpd = id->device.adapter.context->hpd;
     HPD_CALLOC(async, 1, hpd_ev_async_t);
     HPD_CPY_ALLOC(async->value, val, hpd_value_t);
     if ((rc = discovery_copy_sid(&async->service, id))) goto copy_sid_error;
-    hpd_t *hpd = id->device.adapter.hpd;
     async->hpd = hpd;
     ev_async_init(&async->watcher, event_on_changed);
     async->watcher.data = async;
@@ -225,7 +226,7 @@ hpd_error_t event_changed(const hpd_service_id_t *id, hpd_value_t *val)
     free(async);
     switch (rc) {
         case HPD_E_ALLOC:
-            LOG_RETURN_E_ALLOC();
+            LOG_RETURN_E_ALLOC(hpd);
         default:
             return rc;
     }
@@ -238,7 +239,7 @@ hpd_error_t event_inform_adapter_attached(hpd_adapter_t *adapter)
     TAILQ_FOREACH(device, adapter->devices, HPD_TAILQ_FIELD) {
         // TODO Could alternatively remove the attached watchers and return an error
         if ((rc = event_inform_device_attached(device)))
-            LOG_ERROR("event_inform_device_attached() [code: %i].", rc);
+            LOG_ERROR(adapter->context->hpd, "event_inform_device_attached() [code: %i].", rc);
     }
     return HPD_E_SUCCESS;
 }
@@ -250,7 +251,7 @@ hpd_error_t event_inform_adapter_detached(hpd_adapter_t *adapter)
     TAILQ_FOREACH(device, adapter->devices, HPD_TAILQ_FIELD) {
         // TODO Could alternatively remove the attached watchers and return an error
         if ((rc = event_inform_device_detached(device)))
-            LOG_ERROR("event_inform_device_detached() [code: %i].", rc);
+            LOG_ERROR(adapter->context->hpd, "event_inform_device_detached() [code: %i].", rc);
     }
     return HPD_E_SUCCESS;
 }
@@ -261,8 +262,9 @@ hpd_error_t event_inform_device_attached(hpd_device_t *device)
     hpd_ev_async_t *async;
     HPD_CALLOC(async, 1, hpd_ev_async_t);
     hpd_adapter_t *adapter = device->adapter;
-    hpd_t *hpd = adapter->configuration->hpd;
-    if ((rc = discovery_alloc_did(&async->device, hpd, adapter->id, device->id))) goto did_error;
+    const hpd_module_t *context = adapter->context;
+    hpd_t *hpd = context->hpd;
+    if ((rc = discovery_alloc_did(&async->device, context, adapter->id, device->id))) goto did_error;
     async->hpd = hpd;
     ev_async_init(&async->watcher, event_on_device_attached);
     async->watcher.data = async;
@@ -276,7 +278,7 @@ hpd_error_t event_inform_device_attached(hpd_device_t *device)
     alloc_error:
     switch (rc) {
         case HPD_E_ALLOC:
-            LOG_RETURN_E_ALLOC();
+            LOG_RETURN_E_ALLOC(hpd);
         default:
             return rc;
     }
@@ -288,8 +290,9 @@ hpd_error_t event_inform_device_detached(hpd_device_t *device)
     hpd_ev_async_t *async;
     HPD_CALLOC(async, 1, hpd_ev_async_t);
     hpd_adapter_t *adapter = device->adapter;
-    hpd_t *hpd = adapter->configuration->hpd;
-    if ((rc = discovery_alloc_did(&async->device, hpd, adapter->id, device->id))) goto did_error;
+    const hpd_module_t *context = adapter->context;
+    hpd_t *hpd = context->hpd;
+    if ((rc = discovery_alloc_did(&async->device, context, adapter->id, device->id))) goto did_error;
     async->hpd = hpd;
     ev_async_init(&async->watcher, event_on_device_detached);
     async->watcher.data = async;
@@ -303,7 +306,7 @@ hpd_error_t event_inform_device_detached(hpd_device_t *device)
     alloc_error:
     switch (rc) {
         case HPD_E_ALLOC:
-            LOG_RETURN_E_ALLOC();
+            LOG_RETURN_E_ALLOC(hpd);
         default:
             return rc;
     }
@@ -315,8 +318,9 @@ hpd_error_t event_inform_device_changed(hpd_device_t *device)
     hpd_ev_async_t *async;
     HPD_CALLOC(async, 1, hpd_ev_async_t);
     hpd_adapter_t *adapter = device->adapter;
-    hpd_t *hpd = adapter->configuration->hpd;
-    if ((rc = discovery_alloc_did(&async->device, hpd, adapter->id, device->id))) goto did_error;
+    const hpd_module_t *context = adapter->context;
+    hpd_t *hpd = context->hpd;
+    if ((rc = discovery_alloc_did(&async->device, context, adapter->id, device->id))) goto did_error;
     async->hpd = hpd;
     ev_async_init(&async->watcher, event_on_device_changed);
     async->watcher.data = async;
@@ -330,7 +334,7 @@ hpd_error_t event_inform_device_changed(hpd_device_t *device)
     alloc_error:
     switch (rc) {
         case HPD_E_ALLOC:
-            LOG_RETURN_E_ALLOC();
+            LOG_RETURN_E_ALLOC(hpd);
         default:
             return rc;
     }

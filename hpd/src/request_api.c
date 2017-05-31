@@ -35,58 +35,69 @@
 hpd_error_t hpd_request_alloc(hpd_request_t **request, const hpd_service_id_t *id, hpd_method_t method,
                               hpd_response_f on_response)
 {
-    if (!request || !id) LOG_RETURN_E_NULL();
+    if (!id) return HPD_E_NULL;
+    hpd_t *hpd = id->device.adapter.context->hpd;
+    if (!request) LOG_RETURN_E_NULL(hpd);
     if (method <= HPD_M_NONE || method >= HPD_M_COUNT)
-        LOG_RETURN(HPD_E_ARGUMENT, "Unknown method given to %s().", __func__);
+        LOG_RETURN(hpd, HPD_E_ARGUMENT, "Unknown method given to %s().", __func__);
     return request_alloc_request(request, id, method, on_response);
 }
 
 hpd_error_t hpd_request_free(hpd_request_t *request)
 {
-    if (!request) LOG_RETURN_E_NULL();
+    if (!request) return HPD_E_NULL;
     return request_free_request(request);
 }
 
 hpd_error_t hpd_request_set_value(hpd_request_t *request, hpd_value_t *value)
 {
-    if (!request) LOG_RETURN_E_NULL();
+    if (!request) return HPD_E_NULL;
     return request_set_request_value(request, value);
 }
 
 hpd_error_t hpd_request_set_data(hpd_request_t *request, void *data, hpd_free_f on_free)
 {
-    if (!request) LOG_RETURN_E_NULL();
+    if (!request) return HPD_E_NULL;
     return request_set_request_data(request, data, on_free);
 }
 
 hpd_error_t hpd_request(hpd_request_t *request)
 {
-    if (!request) LOG_RETURN_E_NULL();
-    if (!request->service->device.adapter.hpd->loop) LOG_RETURN_HPD_STOPPED();
+    if (!request) return HPD_E_NULL;
+    hpd_t *hpd = request->service->device.adapter.context->hpd;
+    if (!hpd->loop) LOG_RETURN_HPD_STOPPED(hpd);
     return request_request(request);
 }
 
 hpd_error_t hpd_request_get_service(const hpd_request_t *req, const hpd_service_id_t **id)
 {
-    if (!req || !id) LOG_RETURN_E_NULL();
+    if (!req) return HPD_E_NULL;
+    hpd_t *hpd = req->service->device.adapter.context->hpd;
+    if (!id) LOG_RETURN_E_NULL(hpd);
     return request_get_request_service(req, id);
 }
 
 hpd_error_t hpd_request_get_method(const hpd_request_t *req, hpd_method_t *method)
 {
-    if (!req || !method) LOG_RETURN_E_NULL();
+    if (!req) return HPD_E_NULL;
+    hpd_t *hpd = req->service->device.adapter.context->hpd;
+    if (!method) LOG_RETURN_E_NULL(hpd);
     return request_get_request_method(req, method);
 }
 
 hpd_error_t hpd_request_get_value(const hpd_request_t *req, const hpd_value_t **value)
 {
-    if (!req || !value) LOG_RETURN_E_NULL();
+    if (!req) return HPD_E_NULL;
+    hpd_t *hpd = req->service->device.adapter.context->hpd;
+    if (!value) LOG_RETURN_E_NULL(hpd);
     return request_get_request_value(req, value);
 }
 
 hpd_error_t hpd_response_alloc(hpd_response_t **response, hpd_request_t *request, hpd_status_t status)
 {
-    if (!response || !request) LOG_RETURN_E_NULL();
+    if (!request) return HPD_E_NULL;
+    hpd_t *hpd = request->service->device.adapter.context->hpd;
+    if (!response) LOG_RETURN_E_NULL(hpd);
     switch (status) {
         case HPD_S_NONE:break;
         case HPD_S_100:
@@ -142,61 +153,74 @@ hpd_error_t hpd_response_alloc(hpd_response_t **response, hpd_request_t *request
             return request_alloc_response(response, request, status);
     }
 
-    LOG_RETURN(HPD_E_ARGUMENT, "Unknown status code given to %s().", __func__);
+    LOG_RETURN(hpd, HPD_E_ARGUMENT, "Unknown status code given to %s().", __func__);
 }
 
 hpd_error_t hpd_response_free(hpd_response_t *response)
 {
-    if (!response) LOG_RETURN_E_NULL();
+    if (!response) return HPD_E_NULL;
     return request_free_response(response);
 }
 
 hpd_error_t hpd_response_set_value(hpd_response_t *response, hpd_value_t *value)
 {
-    if (!response) LOG_RETURN_E_NULL();
+    if (!response) return HPD_E_NULL;
     return request_set_response_value(response, value);
 }
 
 hpd_error_t hpd_respond(hpd_response_t *response)
 {
-    if (!response) LOG_RETURN_E_NULL();
-    if (!response->request->service->device.adapter.hpd->loop) LOG_RETURN_HPD_STOPPED();
+    if (!response) return HPD_E_NULL;
+    hpd_t *hpd = response->request->service->device.adapter.context->hpd;
+    if (!hpd->loop) LOG_RETURN_HPD_STOPPED(hpd);
     return request_respond(response);
 }
 
 hpd_error_t hpd_response_get_status(const hpd_response_t *response, hpd_status_t *status)
 {
-    if (!response || !status) LOG_RETURN_E_NULL();
+    if (!response) return HPD_E_NULL;
+    hpd_t *hpd = response->request->service->device.adapter.context->hpd;
+    if (!status) LOG_RETURN_E_NULL(hpd);
     return request_get_response_status(response, status);
 }
 
 hpd_error_t hpd_response_get_value(const hpd_response_t *response, const hpd_value_t **value)
 {
-    if (!response || !value) LOG_RETURN_E_NULL();
+    if (!response) return HPD_E_NULL;
+    hpd_t *hpd = response->request->service->device.adapter.context->hpd;
+    if (!value) LOG_RETURN_E_NULL(hpd);
     return request_get_response_value(response, value);
 }
 
 hpd_error_t hpd_response_get_request_data(const hpd_response_t *response, void **data)
 {
-    if (!response || !data) LOG_RETURN_E_NULL();
+    if (!response) return HPD_E_NULL;
+    hpd_t *hpd = response->request->service->device.adapter.context->hpd;
+    if (!data) LOG_RETURN_E_NULL(hpd);
     return request_get_response_request_data(response, data);
 }
 
 hpd_error_t hpd_response_get_request_service(const hpd_response_t *response, const hpd_service_id_t **service)
 {
-    if (!response || !service) LOG_RETURN_E_NULL();
+    if (!response) return HPD_E_NULL;
+    hpd_t *hpd = response->request->service->device.adapter.context->hpd;
+    if (!service) LOG_RETURN_E_NULL(hpd);
     return request_get_response_request_service(response, service);
 }
 
 hpd_error_t hpd_response_get_request_method(const hpd_response_t *response, hpd_method_t *method)
 {
-    if (!response || !method) LOG_RETURN_E_NULL();
+    if (!response) return HPD_E_NULL;
+    hpd_t *hpd = response->request->service->device.adapter.context->hpd;
+    if (!method) LOG_RETURN_E_NULL(hpd);
     return request_get_response_request_method(response, method);
 }
 
 hpd_error_t hpd_response_get_request_value(const hpd_response_t *response, const hpd_value_t **value)
 {
-    if (!response || !value) LOG_RETURN_E_NULL();
+    if (!response) return HPD_E_NULL;
+    hpd_t *hpd = response->request->service->device.adapter.context->hpd;
+    if (!value) LOG_RETURN_E_NULL(hpd);
     return request_get_response_request_value(response, value);
 }
 

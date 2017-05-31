@@ -30,11 +30,13 @@
 #include "hpd/common/hpd_map.h"
 #include "comm.h"
 #include "log.h"
+#include "daemon.h"
 
-hpd_error_t value_alloc(hpd_value_t **value, const char *body, int len)
+hpd_error_t value_alloc(const hpd_module_t *context, hpd_value_t **value, const char *body, int len)
 {
     hpd_error_t rc;
     HPD_CALLOC((*value), 1, hpd_value_t);
+    (*value)->context = context;
     if ((rc = hpd_map_alloc(&(*value)->headers))) {
         free(*value);
         return rc;
@@ -49,13 +51,14 @@ hpd_error_t value_alloc(hpd_value_t **value, const char *body, int len)
     alloc_error:
         value_free(*value);
         (*value) = NULL;
-        LOG_RETURN_E_ALLOC();
+        LOG_RETURN_E_ALLOC(context->hpd);
 }
 
-hpd_error_t value_vallocf(hpd_value_t **value, const char *fmt, va_list vp)
+hpd_error_t value_vallocf(const hpd_module_t *context, hpd_value_t **value, const char *fmt, va_list vp)
 {
     hpd_error_t rc;
     HPD_CALLOC((*value), 1, hpd_value_t);
+    (*value)->context = context;
     if ((rc = hpd_map_alloc(&(*value)->headers))) {
         free(*value);
         return rc;
@@ -69,18 +72,18 @@ hpd_error_t value_vallocf(hpd_value_t **value, const char *fmt, va_list vp)
     alloc_error:
     value_free(*value);
     (*value) = NULL;
-    LOG_RETURN_E_ALLOC();
+    LOG_RETURN_E_ALLOC(context->hpd);
 
     vsnprintf_error:
     value_free(*value);
     free((*value)->body);
-    LOG_RETURN(HPD_E_UNKNOWN, "vsnprintf error.");
+    LOG_RETURN(context->hpd, HPD_E_UNKNOWN, "vsnprintf error.");
 }
 
 hpd_error_t value_copy(hpd_value_t **dst, const hpd_value_t *src)
 {
     hpd_error_t rc;
-    if ((rc = value_alloc(dst, src->body, (int) src->len))) return rc;
+    if ((rc = value_alloc(src->context, dst, src->body, (int) src->len))) return rc;
     const hpd_pair_t *pair;
     hpd_map_foreach(rc, pair, src->headers) {
         const char *k, *v;
@@ -119,7 +122,7 @@ hpd_error_t value_set_headers_v(hpd_value_t *value, va_list vp)
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char *);
-        if (!val) LOG_RETURN_E_NULL();
+        if (!val) LOG_RETURN_E_NULL(value->context->hpd);
         if ((rc = value_set_header(value, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
@@ -144,7 +147,7 @@ hpd_error_t value_get_headers_v(const hpd_value_t *value, va_list vp)
 
     while ((key = va_arg(vp, const char *))) {
         val = va_arg(vp, const char **);
-        if (!val) LOG_RETURN_E_NULL();
+        if (!val) LOG_RETURN_E_NULL(value->context->hpd);
         if ((rc = value_get_header(value, key, val))) return rc;
     }
     return HPD_E_SUCCESS;
