@@ -157,9 +157,12 @@ hpd_error_t hpd_json_service_to_json(const hpd_module_t *context, const hpd_serv
     if (!(json = json_object())) HPD_JSON_RETURN_JSON_ERROR(context);
 
     // Add id
-    const char *id;
-    if ((rc = hpd_service_id_get_service_id_str(service, &id))) goto error;
-    if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_ID, id, context))) goto error;
+    json_t *json_id;
+    if ((rc = hpd_json_service_id_to_json(context, service, &json_id))) goto error;
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_ID, json_id)) {
+        json_decref(json_id);
+        goto json_error;
+    }
 
     // Add url
     char *url;
@@ -262,9 +265,12 @@ hpd_error_t hpd_json_device_to_json_shallow(const hpd_module_t *context, const h
     if (!(json = json_object())) HPD_JSON_RETURN_JSON_ERROR(context);
 
     // Add id
-    const char *id;
-    if ((rc = hpd_device_id_get_device_id_str(device, &id))) goto error;
-    if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_ID, id, context))) goto error;
+    json_t *json_id;
+    if ((rc = hpd_json_device_id_to_json(context, device, &json_id))) goto error;
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_ID, json_id)) {
+        json_decref(json_id);
+        goto json_error;
+    }
 
     // Add attributes
     json_t *attrs;
@@ -359,9 +365,12 @@ hpd_error_t hpd_json_adapter_to_json_shallow(const hpd_module_t *context, const 
     if (!(json = json_object())) HPD_JSON_RETURN_JSON_ERROR(context);
 
     // Add id
-    const char *id;
-    if ((rc = hpd_adapter_id_get_adapter_id_str(adapter, &id))) goto error;
-    if ((rc = json_add_str(json, HPD_SERIALIZE_KEY_ID, id, context))) goto error;
+    json_t *json_id;
+    if ((rc = hpd_json_adapter_id_to_json(context, adapter, &json_id))) goto error;
+    if (json_object_set_new(json, HPD_SERIALIZE_KEY_ID, json_id)) {
+        json_decref(json_id);
+        goto json_error;
+    }
 
     // Add attributes
     json_t *attrs;
