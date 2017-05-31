@@ -64,6 +64,8 @@ hpd_error_t hpd_service_detach(const hpd_service_id_t *id, hpd_service_t **servi
 hpd_error_t hpd_service_set_data(hpd_service_t *service, void *data, hpd_free_f on_free);
 hpd_error_t hpd_service_set_attr(hpd_service_t *service, const char *key, const char *val);
 hpd_error_t hpd_service_set_attrs(hpd_service_t *service, ...);
+hpd_error_t hpd_service_id_set_attr(hpd_service_id_t *service, const char *key, const char *val);
+hpd_error_t hpd_service_id_set_attrs(hpd_service_id_t *service, ...);
 hpd_error_t hpd_service_set_action(hpd_service_t *service, const hpd_method_t method, hpd_action_f action);
 hpd_error_t hpd_service_set_actions(hpd_service_t *service, ...);
 hpd_error_t hpd_service_get_data(const hpd_service_id_t *id, void **data);

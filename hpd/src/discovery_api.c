@@ -413,6 +413,38 @@ hpd_error_t hpd_service_set_attrs(hpd_service_t *service, ...)
     return rc;
 }
 
+hpd_error_t hpd_service_id_set_attr(hpd_service_id_t *id, const char *key, const char *val)
+{
+    hpd_error_t rc;
+
+    if (!id || !key) LOG_RETURN_E_NULL();
+    if (key[0] == '_') LOG_RETURN(HPD_E_ARGUMENT, "Keys starting with '_' is reserved for generated attributes");
+
+    if (!id->device.adapter.hpd->configuration) LOG_RETURN_HPD_STOPPED();
+    hpd_service_t *service;
+    if ((rc = discovery_find_service(id, &service))) return rc;
+
+    return discovery_set_service_attr(service, key, val);
+}
+
+hpd_error_t hpd_service_id_set_attrs(hpd_service_id_t *id, ...)
+{
+    hpd_error_t rc;
+
+    if (!id) LOG_RETURN_E_NULL();
+
+    if (!id->device.adapter.hpd->configuration) LOG_RETURN_HPD_STOPPED();
+    hpd_service_t *service;
+    if ((rc = discovery_find_service(id, &service))) return rc;
+
+    va_list vp;
+    va_start(vp, service);
+    rc = discovery_set_service_attrs_v(service, vp);
+    va_end(vp);
+
+    return rc;
+}
+
 hpd_error_t hpd_service_set_action(hpd_service_t *service, const hpd_method_t method, hpd_action_f action)
 {
     if (!service || !action) LOG_RETURN_E_NULL();
