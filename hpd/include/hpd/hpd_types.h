@@ -322,6 +322,8 @@ static const char * const HPD_ATTR_SCALE    = "scale";
 static const char * const HPD_ATTR_VALUES   = "values";
 
 static const char * const HPD_ATTR_PROTOCOL   = "protocol";
+
+static const char * const HPD_ATTR_TIMESTAMP   = "timestamp";
 /// [Default keys]
 
 #ifdef __cplusplus
