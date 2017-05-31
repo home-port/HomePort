@@ -438,7 +438,7 @@ hpd_error_t hpd_service_id_set_attrs(hpd_service_id_t *id, ...)
     if ((rc = discovery_find_service(id, &service))) return rc;
 
     va_list vp;
-    va_start(vp, service);
+    va_start(vp, id);
     rc = discovery_set_service_attrs_v(service, vp);
     va_end(vp);
 
@@ -643,7 +643,7 @@ hpd_error_t hpd_parameter_id_set_attrs(hpd_parameter_id_t *id, ...)
     if ((rc = discovery_find_parameter(id, &parameter))) return rc;
 
     va_list vp;
-    va_start(vp, parameter);
+    va_start(vp, id);
     rc = discovery_set_parameter_attrs_v(parameter, vp);
     va_end(vp);
 
