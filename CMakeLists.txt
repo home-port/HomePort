@@ -49,7 +49,6 @@ if(CMAKE_SYSTEM_PROCESSOR STREQUAL armhf)
 endif(CMAKE_SYSTEM_PROCESSOR STREQUAL armhf)
 
 # GoogleTest
-MESSAGE("PATH: " ${CMAKE_LIBRARY_ARCHITECTURE})
 find_path(GOOGLE_TEST_INCLUDE pthread.h)
 include_directories(${GOOGLE_TEST_INCLUDE})
 add_subdirectory(lib/googletest EXCLUDE_FROM_ALL)
