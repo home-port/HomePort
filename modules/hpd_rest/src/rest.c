@@ -468,7 +468,7 @@ static void rest_on_response(void *data, const hpd_response_t *res)
 
     // Get data from hpd
     // TODO Need to send value into xml/json to get headers too !!!
-    const hpd_value_t *value;
+    const hpd_value_t *value = NULL;
     const char *val = NULL;
     size_t len = 0;
     hpd_status_t status;
