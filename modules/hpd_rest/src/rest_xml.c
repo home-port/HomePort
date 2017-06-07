@@ -336,9 +336,11 @@ hpd_error_t hpd_rest_xml_parse_value(const char *in, const hpd_module_t *context
     for (node = node->child; node && node->type == MXML_TEXT; node = node->next) {
         int whitespaces = node->value.text.whitespace;
         char *string = node->value.text.string;
-        HPD_REALLOC(*out, len + whitespaces + strlen(string), char);
+        size_t str_len = strlen(string);
+        HPD_REALLOC(*out, len + whitespaces + str_len, char);
         for (int i = 0; i < whitespaces; i++) strcat(*out, " ");
         strcat(*out, string);
+        len += whitespaces + str_len;
     }
 
     mxmlDelete(xml);
