@@ -419,9 +419,9 @@ hpd_error_t hpd_rest_json_parse_value(const char *in, const hpd_module_t *contex
 {
     // Load json
     json_t *json = NULL;
-    json_error_t *error = NULL;
-    if (!(json = json_loads(in, 0, error))) {
-        HPD_LOG_RETURN(context, HPD_E_ARGUMENT, "Json parsing error: %s", error->text);
+    json_error_t error;
+    if (!(json = json_loads(in, 0, &error))) {
+        HPD_LOG_RETURN(context, HPD_E_ARGUMENT, "Json parsing error: %s", error.text);
     }
 
     // Get value
