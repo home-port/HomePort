@@ -742,9 +742,10 @@ static hpd_httpd_return_t rest_on_req_body(hpd_httpd_t *ins, hpd_httpd_request_t
     hpd_rest_req_t *rest_req = *req_data;
     const hpd_module_t *context = rest_req->rest->context;
 
-    HPD_REALLOC(rest_req->body, rest_req->len + len, char);
+    HPD_REALLOC(rest_req->body, rest_req->len + len + 1, char);
     strncpy(&rest_req->body[rest_req->len], chunk, len);
     rest_req->len += len;
+    rest_req->body[rest_req->len] = '\0';
     return HPD_HTTPD_R_CONTINUE;
 
     alloc_error:
