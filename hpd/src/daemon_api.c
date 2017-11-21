@@ -88,6 +88,14 @@ hpd_error_t hpd_module_get_id(const hpd_module_t *context, const char **id)
     return daemon_get_id(context, id);
 }
 
+hpd_error_t hpd_module_get_def(const hpd_module_t *context, const hpd_module_def_t **mdef)
+{
+    if (!context) return HPD_E_NULL;
+    if (!mdef) LOG_RETURN_E_NULL(context->hpd);
+
+    return daemon_get_mdef(context, mdef);
+}
+
 hpd_error_t hpd_start(hpd_t *hpd, int argc, char *argv[])
 {
     if (!hpd) return HPD_E_NULL;

@@ -43,6 +43,7 @@ extern const int HPD_THREAD_SAFE;
 hpd_error_t hpd_module_add_option(const hpd_module_t *context, const char *name, const char *arg, int flags,
                                   const char *doc);
 hpd_error_t hpd_module_get_id(const hpd_module_t *context, const char **id);
+hpd_error_t hpd_module_get_def(const hpd_module_t *context, const hpd_module_def_t **mdef);
 hpd_error_t hpd_get_loop(const hpd_module_t *context, hpd_ev_loop_t **loop);
 /// [hpd_t functions]
 

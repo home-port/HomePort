@@ -100,6 +100,7 @@ hpd_error_t daemon_add_option(const hpd_module_t *context, const char *name, con
 hpd_error_t daemon_start(hpd_t *hpd, int argc, char *argv[]);
 hpd_error_t daemon_stop(const hpd_t *hpd);
 hpd_error_t daemon_get_id(const hpd_module_t *context, const char **id);
+hpd_error_t daemon_get_mdef(const hpd_module_t *context, const hpd_module_def_t **mdef);
 hpd_error_t daemon_get_loop(const hpd_t *hpd, hpd_ev_loop_t **loop);
 
 #ifdef __cplusplus

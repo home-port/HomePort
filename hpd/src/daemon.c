@@ -571,6 +571,12 @@ hpd_error_t daemon_get_id(const hpd_module_t *context, const char **id)
     return HPD_E_SUCCESS;
 }
 
+hpd_error_t daemon_get_mdef(const hpd_module_t *context, const hpd_module_def_t **mdef)
+{
+    (*mdef) = &context->def;
+    return HPD_E_SUCCESS;
+}
+
 hpd_error_t daemon_get_loop(const hpd_t *hpd, hpd_ev_loop_t **loop)
 {
     (*loop) = hpd->loop;
