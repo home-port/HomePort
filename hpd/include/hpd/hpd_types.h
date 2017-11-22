@@ -215,6 +215,7 @@ struct hpd_module_def {
     hpd_start_f on_start;
     hpd_stop_f on_stop;
     hpd_parse_opt_f on_parse_opt; //< Should return HPD_E_ARGUMENT if name is not known
+    void *data; //< Adapter specific data
 };
 /// [hpd_module_def_t]
 
