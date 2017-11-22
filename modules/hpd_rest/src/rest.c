@@ -931,6 +931,7 @@ static hpd_error_t rest_on_start(void *data)
     const hpd_module_t *context = rest->context;
 
     HPD_LOG_INFO(context, "Starting REST server on port %d.", rest->ws_set.port);
+    HPD_LOG_INFO(context, "Device list available at http://localhost:%d/devices", rest->ws_set.port);
 
 #if MXML_MAJOR_VERSION == 2 && MXML_MINOR_VERSION == 8
 #warning "You may have version 2.9 of mxml which is known to contain xml parsing errors with some HomePort modules, please check and upgrade (packages libmxml1 and libmxml-dev on Ubuntu)"
