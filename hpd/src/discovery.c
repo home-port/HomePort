@@ -806,6 +806,7 @@ hpd_error_t discovery_next_hpd_device(hpd_device_t **device)
             *device = TAILQ_FIRST(adapter->devices);
             if (*device) return HPD_E_SUCCESS;
         }
+        (*device) = NULL;
     }
     return HPD_E_SUCCESS;
 }
@@ -817,13 +818,13 @@ hpd_error_t discovery_next_hpd_service(hpd_service_t **service)
     s = TAILQ_NEXT(*service, HPD_TAILQ_FIELD);
 
     if (s) {
-        *service = s;
+        (*service) = s;
     } else {
         hpd_device_t *device = (*service)->device;
         while ((device = TAILQ_NEXT(device, HPD_TAILQ_FIELD))) {
             s = TAILQ_FIRST(device->services);
             if (s) {
-                *service = s;
+                (*service) = s;
                 return HPD_E_SUCCESS;
             }
         }
@@ -831,10 +832,11 @@ hpd_error_t discovery_next_hpd_service(hpd_service_t **service)
         while ((adapter = TAILQ_NEXT(adapter, HPD_TAILQ_FIELD))) {
             if ((rc = discovery_first_adapter_service(adapter, &s))) return rc;
             if (s) {
-                *service = s;
+                (*service) = s;
                 return HPD_E_SUCCESS;
             }
         }
+        (*service) = NULL;
     }
     return HPD_E_SUCCESS;
 }
@@ -857,6 +859,7 @@ hpd_error_t discovery_next_adapter_service(hpd_service_t **service)
             *service = TAILQ_FIRST(device->services);
             if (*service) return HPD_E_SUCCESS;
         }
+        (*service) = NULL;
     }
     return HPD_E_SUCCESS;
 }

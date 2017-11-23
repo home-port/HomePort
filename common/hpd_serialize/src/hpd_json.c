@@ -719,8 +719,10 @@ hpd_error_t hpd_json_response_to_json(const hpd_module_t *context, const hpd_res
 
     const hpd_value_t *value;
     if ((rc = hpd_response_get_value(response, &value))) return rc;
-    if ((rc = hpd_json_value_to_json(context, value, &child))) return rc;
-    if (json_object_set_new(json, HPD_SERIALIZE_KEY_VALUE, child)) goto json_error;
+    if (value) {
+        if ((rc = hpd_json_value_to_json(context, value, &child))) return rc;
+        if (json_object_set_new(json, HPD_SERIALIZE_KEY_VALUE, child)) goto json_error;
+    }
 
     (*out) = json;
     return HPD_E_SUCCESS;
