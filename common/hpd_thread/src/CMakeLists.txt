@@ -28,13 +28,10 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(include)
+add_library(hpd-thread SHARED
+        ../include/hpd/common/hpd_thread.h
+        hpd_thread.c
+        )
+set_target_properties(hpd-thread PROPERTIES VERSION 0.0.0 SOVERSION 0)
+install(TARGETS hpd-thread DESTINATION lib)
 
-add_subdirectory(include)
-add_subdirectory(map)
-add_subdirectory(httpd)
-add_subdirectory(tcpd)
-add_subdirectory(curl_ev)
-add_subdirectory(tty)
-add_subdirectory(hpd_serialize)
-#add_subdirectory(hpd_thread)
