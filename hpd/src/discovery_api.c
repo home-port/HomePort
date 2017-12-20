@@ -25,7 +25,6 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include <zlib.h>
 #include "daemon.h"
 #include "hpd/hpd_shared_api.h"
 #include "discovery.h"
