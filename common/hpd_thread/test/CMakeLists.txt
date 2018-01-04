@@ -28,8 +28,10 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(include)
+include_directories(../src/)
 
-add_subdirectory(include)
-add_subdirectory(src)
-add_subdirectory(test)
+add_executable(test_thread
+        thread_test.cpp
+)
+target_link_libraries(test_thread hpd hpd-thread gtest gtest_main)
+

@@ -29,3 +29,4 @@
 # as representing official policies, either expressed.
 
 install(FILES hpd_thread.h DESTINATION include/hpd/common)
+install(FILES hpd_thread_module.h DESTINATION include/hpd/common)

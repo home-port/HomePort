@@ -30,6 +30,7 @@
 
 add_library(hpd-thread SHARED
         ../include/hpd/common/hpd_thread.h
+        ../include/hpd/common/hpd_thread_module.h
         hpd_thread.c
         )
 set_target_properties(hpd-thread PROPERTIES VERSION 0.0.0 SOVERSION 0)

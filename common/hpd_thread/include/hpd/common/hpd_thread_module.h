@@ -25,8 +25,8 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_HPD_THREAD_H
-#define HOMEPORT_HPD_THREAD_H
+#ifndef HOMEPORT_HPD_THREAD_MODULE_H
+#define HOMEPORT_HPD_THREAD_MODULE_H
 
 #include <hpd/hpd_types.h>
 
@@ -34,11 +34,10 @@
 extern "C" {
 #endif
 
-hpd_error_t hpd_thread_lock(const hpd_module_t *context);
-hpd_error_t hpd_thread_unlock(const hpd_module_t *context);
+extern hpd_module_def_t hpd_thread;
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //HOMEPORT_HPD_THREAD_H
+#endif //HOMEPORT_HPD_THREAD_MODULE_H

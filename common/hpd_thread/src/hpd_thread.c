@@ -30,61 +30,153 @@
 #include <hpd/hpd_shared_api.h>
 #include <pthread.h>
 #include <hpd/common/hpd_common.h>
+#include <semaphore.h>
 
-#define HPD_LOG_RETURN_PTHREAD(CONTEXT, RC) HPD_LOG_RETURN((CONTEXT), HPD_E_UNKNOWN, "pthread failed [code: %i].", (RC))
+#define HPD_LOG_RETURN_PTHREAD_CODE(CONTEXT, RC) HPD_LOG_RETURN((CONTEXT), HPD_E_UNKNOWN, "pthread failed [code: %i].", (RC))
+#define HPD_LOG_RETURN_PTHREAD(CONTEXT, RC) do { HPD_LOG_DEBUG((CONTEXT), "pthread failed [code: %i].", (RC)); return; } while(0)
 
-typedef struct hpd_thread_lock hpd_thread_lock_t;
+typedef struct thread thread_t;
 
-struct hpd_thread_lock {};
+struct thread {
+    const hpd_module_t *context;
+    ev_async async;
+    hpd_ev_loop_t *loop;
+    pthread_mutex_t mutex;
+    sem_t sem_do_work;
+    sem_t sem_cont_loop;
+};
 
-static void on_ev_async(EV_P_ ev_async *w, int revents)
+static hpd_error_t thread_on_create(void **data, const hpd_module_t *context);
+static hpd_error_t thread_on_destroy(void *data);
+static hpd_error_t thread_on_start(void *data);
+static hpd_error_t thread_on_stop(void *data);
+static hpd_error_t thread_on_parse_opt(void *data, const char *name, const char *arg);
+
+hpd_module_def_t hpd_thread = {
+        thread_on_create,
+        thread_on_destroy,
+        thread_on_start,
+        thread_on_stop,
+        thread_on_parse_opt
+};
+
+static thread_t *thread = NULL;
+
+static void thread_on_ev_async(EV_P_ ev_async *w, int revents)
 {
-    
+    int stat;
+
+    if ((stat = sem_post(&thread->sem_do_work)))
+        HPD_LOG_RETURN_PTHREAD(thread->context, stat);
+
+    HPD_LOG_VERBOSE(thread->context, "Event loop paused");
+
+    if ((stat = sem_wait(&thread->sem_cont_loop)))
+        HPD_LOG_RETURN_PTHREAD(thread->context, stat);
+
+    HPD_LOG_VERBOSE(thread->context, "Resuming event loop");
 }
 
-hpd_error_t hpd_thread_lock_create(const hpd_module_t *context, hpd_thread_lock_t **lock)
+static hpd_error_t thread_on_create(void **data, const hpd_module_t *context)
 {
-    HPD_CALLOC(*lock, 1, hpd_thread_lock_t);
+    int stat;
+
+    if (!context) return HPD_E_NULL;
+    if (thread)
+        HPD_LOG_RETURN(context, HPD_E_STATE, "Only one instance of hpd_thread module allowed");
+
+    HPD_CALLOC(thread, 1, thread_t);
+    thread->context = context;
+    ev_async_init(&thread->async, thread_on_ev_async);
+    if ((stat = pthread_mutex_init(&thread->mutex, NULL)))
+        HPD_LOG_RETURN_PTHREAD_CODE(thread->context, stat);
+    if ((stat = sem_init(&thread->sem_do_work, 0, 0)))
+        HPD_LOG_RETURN_PTHREAD_CODE(thread->context, stat);
+    if ((stat = sem_init(&thread->sem_cont_loop, 0, 0)))
+        HPD_LOG_RETURN_PTHREAD_CODE(thread->context, stat);
+
     return HPD_E_SUCCESS;
 
     alloc_error:
     HPD_LOG_RETURN_E_ALLOC(context);
 }
 
-hpd_error_t hpd_thread_destroy(hpd_thread_lock_t *lock)
+static hpd_error_t thread_on_destroy(void *data)
 {
-    free(lock);
+    int stat;
+
+    if (!thread) return HPD_E_NULL;
+
+    if ((stat = pthread_mutex_destroy(&thread->mutex)))
+        HPD_LOG_RETURN_PTHREAD_CODE(thread->context, stat);
+    if ((stat = sem_destroy(&thread->sem_do_work)))
+        HPD_LOG_RETURN_PTHREAD_CODE(thread->context, stat);
+    if ((stat = sem_destroy(&thread->sem_cont_loop)))
+        HPD_LOG_RETURN_PTHREAD_CODE(thread->context, stat);
+
+    free(thread);
+    thread = NULL;
+
     return HPD_E_SUCCESS;
 }
 
-hpd_error_t hpd_thread_lock(hpd_thread_lock_t *lock)
+static hpd_error_t thread_on_start(void *data)
 {
-    int stat;
+    if (!thread) return HPD_E_NULL;
+
     hpd_error_t rc;
+    if ((rc = hpd_get_loop(thread->context, &thread->loop))) return rc;
+    ev_async_start(thread->loop, &thread->async);
 
-    hpd_ev_loop_t *loop;
-    if ((rc = hpd_get_loop(context, &loop))) return rc;
-
-    pthread_mutex_t mutex;
-    if ((stat = pthread_mutex_init(&mutex, NULL)))
-        HPD_LOG_RETURN_PTHREAD(context, stat);
-
-    if ((stat = pthread_mutex_lock(&mutex)))
-        HPD_LOG_RETURN_PTHREAD(context, stat);
-
-    ev_async async;
-    ev_async_init(&async, on_ev_async);
-    ev_async_send(loop, &async);
-
-    // TODO THIS !
-    return HPD_E_UNKNOWN;
+    return HPD_E_SUCCESS;
 }
 
-hpd_error_t hpd_thread_unlock(hpd_thread_lock_t *lock)
+static hpd_error_t thread_on_stop(void *data)
 {
-    if ((stat = pthread_mutex_destroy(&mutex)))
-        HPD_LOG_RETURN_PTHREAD(context, stat);
+    if (!thread) return HPD_E_NULL;
+    return HPD_E_SUCCESS;
+}
 
-    // TODO THIS !
-    return HPD_E_UNKNOWN;
+static hpd_error_t thread_on_parse_opt(void *data, const char *name, const char *arg)
+{
+    if (!thread) return HPD_E_NULL;
+    return HPD_E_ARGUMENT;
+}
+
+hpd_error_t hpd_thread_lock(const hpd_module_t *context)
+{
+    if (!thread) {
+        HPD_LOG_ERROR(context, "hpd_thread not initialised");
+        HPD_LOG_RETURN(context, HPD_E_STATE, "Did you remember to add the hpd_thread module to hpd?");
+    }
+
+    int stat;
+
+    if ((stat = pthread_mutex_lock(&thread->mutex)))
+        HPD_LOG_RETURN_PTHREAD_CODE(context, stat);
+
+    ev_async_send(thread->loop, &thread->async);
+
+    if ((stat = sem_wait(&thread->sem_do_work)))
+        HPD_LOG_RETURN_PTHREAD_CODE(context, stat);
+
+    return HPD_E_SUCCESS;
+}
+
+hpd_error_t hpd_thread_unlock(const hpd_module_t *context)
+{
+    if (!thread) {
+        HPD_LOG_ERROR(context, "hpd_thread not initialised");
+        HPD_LOG_RETURN(context, HPD_E_STATE, "Did you remember to add the hpd_thread module to hpd?");
+    }
+
+    int stat;
+
+    if ((stat = sem_post(&thread->sem_cont_loop)))
+        HPD_LOG_RETURN_PTHREAD_CODE(context, stat);
+
+    if ((stat = pthread_mutex_unlock(&thread->mutex)))
+        HPD_LOG_RETURN_PTHREAD_CODE(context, stat);
+
+    return HPD_E_SUCCESS;
 }
