@@ -306,7 +306,7 @@ static hpd_error_t curl_ev_on_create(void **data, const hpd_module_t *context)
 {
     if (!context) return HPD_E_NULL;
     if (curl_ev)
-        HPD_LOG_RETURN(context, HPD_E_STATE, "Only one ínstance of curl_ev module allowed");
+        HPD_LOG_RETURN(context, HPD_E_STATE, "Only one instance of curl_ev module allowed");
 
     HPD_CALLOC(curl_ev, 1, curl_ev_t);
     curl_ev->context = context;
