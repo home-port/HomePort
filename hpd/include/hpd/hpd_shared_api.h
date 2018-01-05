@@ -66,6 +66,7 @@ hpd_error_t hpd_vlogf(const hpd_module_t *context, hpd_log_level_t level, const 
 #define HPD_LOG_RETURN_E_UNKNOWN_CODE(CONTEXT, RC) HPD_LOG_RETURN((CONTEXT), HPD_E_UNKNOWN, "%s failed [code: %i].", __FUNCTION__, (RC))
 #define HPD_LOG_ERROR_NOCODE(CONTEXT) HPD_LOG_ERROR((CONTEXT), "%s failed.", __FUNCTION__)
 #define HPD_LOG_ERROR_CODE(CONTEXT, RC) HPD_LOG_ERROR((CONTEXT), "%s failed [code: %i].", __FUNCTION__, (RC))
+#define HPD_THREAD_SAFE_CHECK(CONTEXT) if (!HPD_THREAD_SAFE) HPD_LOG_RETURN((CONTEXT), HPD_E_UNKNOWN, "HPD must be compiled with THREAD_SAFE")
 /// [log functions]
 
 /// [id_t functions]

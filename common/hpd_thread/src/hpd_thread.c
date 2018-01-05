@@ -82,6 +82,8 @@ static hpd_error_t thread_on_create(void **data, const hpd_module_t *context)
     int stat;
 
     if (!context) return HPD_E_NULL;
+    HPD_THREAD_SAFE_CHECK(context);
+
     if (thread)
         HPD_LOG_RETURN(context, HPD_E_STATE, "Only one instance of hpd_thread module allowed");
 
