@@ -28,14 +28,10 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(include)
+add_library(hpd-mem SHARED
+        ../include/hpd/modules/hpd_mem.h
+        hpd_mem.c
+        )
+set_target_properties(hpd-mem PROPERTIES VERSION 0.0.0 SOVERSION 0)
+install(TARGETS hpd-mem DESTINATION lib)
 
-add_subdirectory(include)
-add_subdirectory(map)
-add_subdirectory(httpd)
-add_subdirectory(tcpd)
-add_subdirectory(curl_ev)
-add_subdirectory(tty)
-add_subdirectory(hpd_serialize)
-add_subdirectory(hpd_thread)
-add_subdirectory(hpd_mem)
