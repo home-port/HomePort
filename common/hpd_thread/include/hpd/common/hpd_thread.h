@@ -37,6 +37,10 @@ extern "C" {
 hpd_error_t hpd_thread_lock(const hpd_module_t *context);
 hpd_error_t hpd_thread_unlock(const hpd_module_t *context);
 
+hpd_error_t hpd_thread_request_sync_safe(const hpd_module_t *context, const hpd_service_id_t *srv,
+                                         hpd_method_t method, hpd_value_t *req_value, hpd_status_t *status,
+                                         hpd_value_t **res_value);
+
 #ifdef __cplusplus
 }
 #endif

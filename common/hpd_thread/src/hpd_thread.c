@@ -31,11 +31,19 @@
 #include <pthread.h>
 #include <hpd/common/hpd_common.h>
 #include <semaphore.h>
+#include <hpd/hpd_api.h>
 
 #define HPD_LOG_RETURN_PTHREAD_CODE(CONTEXT, RC) HPD_LOG_RETURN((CONTEXT), HPD_E_UNKNOWN, "pthread failed [code: %i].", (RC))
 #define HPD_LOG_RETURN_PTHREAD(CONTEXT, RC) do { HPD_LOG_DEBUG((CONTEXT), "pthread failed [code: %i].", (RC)); return; } while(0)
+#define MODULE_CHECK(CONTEXT) do { \
+    if (!thread) { \
+        HPD_LOG_ERROR((CONTEXT), "hpd_thread not initialised"); \
+        HPD_LOG_RETURN((CONTEXT), HPD_E_STATE, "Did you remember to add the hpd_thread module to hpd?"); \
+    } \
+} while(0)
 
 typedef struct thread thread_t;
+typedef struct req_data req_data_t;
 
 struct thread {
     const hpd_module_t *context;
@@ -44,6 +52,12 @@ struct thread {
     pthread_mutex_t mutex;
     sem_t sem_do_work;
     sem_t sem_cont_loop;
+};
+
+struct req_data {
+    hpd_value_t *val;
+    hpd_status_t status;
+    sem_t sem;
 };
 
 static hpd_error_t thread_on_create(void **data, const hpd_module_t *context);
@@ -147,10 +161,8 @@ static hpd_error_t thread_on_parse_opt(void *data, const char *name, const char 
 
 hpd_error_t hpd_thread_lock(const hpd_module_t *context)
 {
-    if (!thread) {
-        HPD_LOG_ERROR(context, "hpd_thread not initialised");
-        HPD_LOG_RETURN(context, HPD_E_STATE, "Did you remember to add the hpd_thread module to hpd?");
-    }
+    if (!context) return HPD_E_NULL;
+    MODULE_CHECK(context);
 
     int stat;
 
@@ -167,10 +179,8 @@ hpd_error_t hpd_thread_lock(const hpd_module_t *context)
 
 hpd_error_t hpd_thread_unlock(const hpd_module_t *context)
 {
-    if (!thread) {
-        HPD_LOG_ERROR(context, "hpd_thread not initialised");
-        HPD_LOG_RETURN(context, HPD_E_STATE, "Did you remember to add the hpd_thread module to hpd?");
-    }
+    if (!context) return HPD_E_NULL;
+    MODULE_CHECK(context);
 
     int stat;
 
@@ -181,4 +191,97 @@ hpd_error_t hpd_thread_unlock(const hpd_module_t *context)
         HPD_LOG_RETURN_PTHREAD_CODE(context, stat);
 
     return HPD_E_SUCCESS;
+}
+
+static void on_hpd_response(void *in, const hpd_response_t *res)
+{
+    int stat;
+    hpd_error_t rc;
+
+    req_data_t *data = in;
+
+    const hpd_service_id_t *srv;
+    if ((rc = hpd_response_get_request_service(res, &srv))) {
+        HPD_LOG_ERROR(thread->context, "hpd failed (code: %i)", rc);
+        goto done;
+    }
+
+    const char *sid;
+    if ((rc = hpd_service_id_get_service_id_str(srv, &sid))) {
+        HPD_LOG_ERROR(thread->context, "hpd failed (code: %i)", rc);
+        goto done;
+    }
+
+    if ((rc = hpd_response_get_status(res, &data->status))) {
+        HPD_LOG_ERROR(thread->context, "hpd failed (code: %i)", rc);
+        goto done;
+    }
+
+    const hpd_value_t *val;
+    if ((rc = hpd_response_get_value(res, &val))) {
+        HPD_LOG_ERROR(thread->context, "hpd failed (code: %i)", rc);
+        goto done;
+    }
+
+    if (val && (rc = hpd_value_copy(thread->context, &data->val, val))) {
+        HPD_LOG_ERROR(thread->context, "hpd failed (code: %i)", rc);
+        goto done;
+    }
+
+    done:
+    if ((stat = sem_post(&data->sem)))
+        HPD_LOG_ERROR(thread->context, "pthread failed [code: %i].", stat);
+}
+
+hpd_error_t hpd_thread_request_sync_safe(const hpd_module_t *context, const hpd_service_id_t *srv,
+                                         hpd_method_t method, hpd_value_t *req_value, hpd_status_t *status,
+                                         hpd_value_t **res_value)
+{
+    if (!context) return HPD_E_NULL;
+    MODULE_CHECK(context);
+
+    int stat, stat2;
+    hpd_error_t rc, rc2;
+    req_data_t data;
+    data.val = NULL;
+
+    if ((stat = sem_init(&data.sem, 0, 0))) goto error_pthread_return;
+
+    if ((rc = hpd_thread_lock(context))) goto error_hpd_free_data;
+    hpd_request_t *req;
+    if ((rc = hpd_request_alloc(&req, srv, method, on_hpd_response))) goto error_hpd_unlock;
+    if (req_value && (rc = hpd_request_set_value(req, req_value))) goto error_hpd_free_request;
+    if ((rc = hpd_request_set_data(req, &data, NULL))) goto error_hpd_free_request;
+    if ((rc = hpd_request(req))) goto error_hpd_free_request;
+    if ((rc = hpd_thread_unlock(context))) goto error_hpd_free_data;
+
+    if ((stat = sem_wait(&data.sem))) goto error_pthread_free;
+    if ((stat = sem_destroy(&data.sem))) goto error_pthread_free_data;
+
+    (*status) = data.status;
+    (*res_value) = data.val;
+
+    return HPD_E_SUCCESS;
+
+    error_hpd_free_request:
+    if ((rc2 = hpd_request_free(req)))
+        HPD_LOG_ERROR(context, "hpd free (code: %i)", rc2);
+    error_hpd_unlock:
+    if ((rc2 = hpd_thread_unlock(context)))
+        HPD_LOG_ERROR(context, "unlock failed (code: %i)", rc2);
+    error_hpd_free_data:
+    if ((stat2 = sem_destroy(&data.sem)))
+        HPD_LOG_ERROR(context, "pthread failed [code: %i].", stat2);
+    if (data.val && (rc2 = hpd_value_free(data.val)))
+        HPD_LOG_ERROR(context, "hpd free failed (code: %i)", rc2);
+    return rc;
+
+    error_pthread_free:
+    if ((stat2 = sem_destroy(&data.sem)))
+        HPD_LOG_ERROR(context, "pthread failed [code: %i].", stat2);
+    error_pthread_free_data:
+    if (data.val && (rc2 = hpd_value_free(data.val)))
+        HPD_LOG_ERROR(context, "hpd free failed (code: %i)", rc2);
+    error_pthread_return:
+    HPD_LOG_RETURN_PTHREAD_CODE(thread->context, stat);
 }
