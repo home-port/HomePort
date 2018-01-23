@@ -117,6 +117,7 @@ include_directories(common/include)
 include_directories(common/map/include)
 include_directories(common/hpd_serialize/include)
 include_directories(common/hpd_thread/include)
+include_directories(modules/hpd_rest/include)
 
 add_library(hpd_doc SHARED
         main.dox
