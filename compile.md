@@ -25,7 +25,7 @@ To build the LaTeX/PDF version of the documentation:
 First we clone the repository. Shown URL is for the official GitHub project, you need to change this to use one of the
 unofficial/personal forks of the project.
 
-To get a single branch:
+To get a single branch e.g. HomePortFunctionAPI:
 
 `git clone https://github.com/home-port/HomePort.git HomePort.git -b HomePortFunctionAPI`
 
