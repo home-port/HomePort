@@ -32,6 +32,7 @@
 
 hpd_error_t hpd_mem_alloc(hpd_module_def_t *mdef);
 hpd_error_t hpd_mem_add(hpd_module_def_t *mdef, const char *dev, const char *srv);
+hpd_error_t hpd_mem_add_set(hpd_module_def_t *mdef, const char *dev, const char *srv, const char *val);
 hpd_error_t hpd_mem_free(hpd_module_def_t *mdef);
 
 #endif //HPD_MEM_H

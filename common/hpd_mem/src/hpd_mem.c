@@ -55,6 +55,7 @@ struct mem_srv {
     mem_t *mem;
     char *dev;
     char *srv;
+    char *set;
     hpd_value_t *value;
     hpd_service_t *service;
 };
@@ -95,6 +96,31 @@ hpd_error_t hpd_mem_add(hpd_module_def_t *mdef, const char *dev, const char *srv
     if (msrv) {
         free(msrv->dev);
         free(msrv->srv);
+    }
+    free(msrv);
+    return HPD_E_ALLOC;
+}
+
+hpd_error_t hpd_mem_add_set(hpd_module_def_t *mdef, const char *dev, const char *srv, const char *val)
+{
+    mem_t *mem = mdef->data;
+
+    mem_srv_t *msrv;
+    HPD_CALLOC(msrv, 1, mem_srv_t);
+    HPD_STR_CPY(msrv->dev, dev);
+    HPD_STR_CPY(msrv->srv, srv);
+    HPD_STR_CPY(msrv->set, val);
+    msrv->mem = mem;
+
+    TAILQ_INSERT_TAIL(&mem->msrvs, msrv, HPD_TAILQ_FIELD);
+
+    return HPD_E_SUCCESS;
+
+    alloc_error:
+    if (msrv) {
+        free(msrv->dev);
+        free(msrv->srv);
+        free(msrv->set);
     }
     free(msrv);
     return HPD_E_ALLOC;
@@ -189,6 +215,9 @@ static hpd_error_t mem_on_start(void *data)
                                 HPD_M_GET, mem_on_get,
                                 HPD_M_PUT, mem_on_put
         );
+
+        if (msrv->set)
+            hpd_value_alloc(&msrv->value, mem->context, msrv->set, HPD_NULL_TERMINATED);
 
         hpd_service_attach(dev, msrv->service);
     }
