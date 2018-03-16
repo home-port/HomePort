@@ -213,7 +213,8 @@ static hpd_error_t mem_on_start(void *data)
         hpd_service_set_data(msrv->service, msrv, NULL);
         hpd_service_set_actions(msrv->service,
                                 HPD_M_GET, mem_on_get,
-                                HPD_M_PUT, mem_on_put
+                                HPD_M_PUT, mem_on_put,
+                                HPD_M_NONE
         );
 
         if (msrv->set)
