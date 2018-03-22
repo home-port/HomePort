@@ -71,10 +71,14 @@ hpd_error_t hpd_module_add_option(const hpd_module_t *context, const char *name,
     if (!name) LOG_RETURN_E_NULL(context->hpd);
     hpd_t *hpd = context->hpd;
     if (!hpd->options) LOG_RETURN(hpd, HPD_E_STATE, "Can only add options during on_create().");
-    size_t name_index = strlen(context->id)+1;
+    size_t id_len = strlen(context->id);
+    size_t name_index = id_len + 1;
     for (int i = 0; i < hpd->module_options_count; i++) {
-        if (name_index < strlen(hpd->options[i].name) && strcmp(&hpd->options[i].name[name_index], name) == 0)
-            LOG_RETURN(hpd, HPD_E_NOT_UNIQUE, "Option names must be unique within the module.");
+        size_t name_len = strlen(hpd->options[i].name);
+        if (name_len > id_len && strncmp(hpd->options[i].name, context->id, id_len) == 0) {
+            if (name_index < name_len && strcmp(&hpd->options[i].name[name_index], name) == 0)
+                LOG_RETURN(hpd, HPD_E_NOT_UNIQUE, "Option names must be unique within the module.");
+        }
     }
 
     return daemon_add_option(context, name, arg, flags, doc);
