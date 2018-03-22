@@ -81,14 +81,14 @@ static int daemon_on_parse_opt(int key, char *arg, struct argp_state *state)
                 case HPD_E_SUCCESS:
                     return 0;
                 case HPD_E_ARGUMENT:
-                    LOG_DEBUG(hpd, "Module '%s' did not recognise the option '%s'.", module->id, name);
+                    LOG_WARN(hpd, "Module '%s' did not recognise the option '%s'.", module->id, name);
                     return ARGP_ERR_UNKNOWN;
                 default:
                     // TODO Wrong return type
                     return rc;
             }
         } else {
-            LOG_DEBUG(hpd, "Module '%s' does not have options.", module->id);
+            LOG_WARN(hpd, "Module '%s' does not have options.", module->id);
             return ARGP_ERR_UNKNOWN;
         }
     }
@@ -207,7 +207,7 @@ static hpd_error_t daemon_modules_create(hpd_t *hpd)
     hpd_module_t *module;
     TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD) {
         if (module->def.on_create && (rc = module->def.on_create(&module->data, module)) != HPD_E_SUCCESS) {
-            LOG_DEBUG(hpd, "Module %s failed to create", module->id);
+            LOG_WARN(hpd, "Module %s failed to create", module->id);
             goto module_create_error;
         }
     }
@@ -247,7 +247,7 @@ static hpd_error_t daemon_modules_start(hpd_t *hpd)
     TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD) {
         if (module->def.on_start) {
             if ((rc = module->def.on_start(module->data)) != HPD_E_SUCCESS) {
-                LOG_DEBUG(hpd, "Module %s failed to start", module->id);
+                LOG_WARN(hpd, "Module %s failed to start", module->id);
                 goto module_error;
             } else {
                 LOG_INFO(hpd, "Module %s started.", module->id);
@@ -304,7 +304,7 @@ static hpd_error_t daemon_options_create(hpd_t *hpd)
     LOG_RETURN_E_ALLOC(hpd);
 
     error:
-    LOG_DEBUG(hpd, "Failed to add global option");
+    LOG_WARN(hpd, "Failed to add global option");
     free(hpd->options);
     hpd->options = NULL;
     return rc;
@@ -332,7 +332,7 @@ static hpd_error_t daemon_options_parse(hpd_t *hpd, int argc, char **argv)
     // Parse options
     struct argp argp = {hpd->options, daemon_on_parse_opt };
     if (argp_parse(&argp, argc, argv, 0, 0, hpd)) {
-        LOG_DEBUG(hpd, "Error while parsing arguments.");
+        LOG_WARN(hpd, "Error while parsing arguments.");
         return HPD_E_ARGUMENT;
     }
     return HPD_E_SUCCESS;
