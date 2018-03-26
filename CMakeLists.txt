@@ -31,6 +31,10 @@
 cmake_minimum_required(VERSION 2.6)
 project(homeport C)
 
+SET(MAJOR_VERSION "0")
+SET(MINOR_VERSION "4")
+SET(PATCH_VERSION "0")
+
 set(CMAKE_C_FLAGS "-DLR_ORIGIN")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -g -DDEBUG -Wall")
 
@@ -44,6 +48,14 @@ set(CTEST_MEMORYCHECK_COMMAND "/usr/bin/valgrind")
 include(CTest)
 
 enable_testing()
+
+# Version numbers
+set(HPD_VERSION_DEFAULT ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION})
+set(HPD_SOVERSION_DEFAULT ${MAJOR_VERSION}.${MINOR_VERSION})
+
+# Standard paths
+set(HPD_INCLUDE_PATH "include/hpd-${MAJOR_VERSION}.${MINOR_VERSION}")
+set(HPD_LIB_PATH "lib")
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Misc/include/)
@@ -65,10 +77,6 @@ add_subdirectory(DataManager)
 add_subdirectory(OperationHandler)
 add_subdirectory(REST)
 add_subdirectory(Examples)
-
-SET(MAJOR_VERSION "0")
-SET(MINOR_VERSION "1")
-SET(PATCH_VERSION "1")
  
 IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
 INCLUDE(InstallRequiredSystemLibraries)

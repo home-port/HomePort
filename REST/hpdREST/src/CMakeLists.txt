@@ -36,5 +36,5 @@ add_library(hpd_rest SHARED
       xml.c
       )
 target_link_libraries(hpd_rest libREST jansson mxml curl)
-install (TARGETS hpd_rest DESTINATION lib)
-set_target_properties(hpd_rest PROPERTIES VERSION 0.0.0 SOVERSION 0)
+install (TARGETS hpd_rest LIBRARY DESTINATION ${HPD_LIB_PATH} NAMELINK_SKIP)
+set_target_properties(hpd_rest PROPERTIES VERSION ${HPD_VERSION_DEFAULT} SOVERSION ${HPD_SOVERSION_DEFAULT})

@@ -28,4 +28,4 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-install (FILES homeport.h DESTINATION include/hpdaemon)
+install (FILES homeport.h DESTINATION ${HPD_INCLUDE_PATH})

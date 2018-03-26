@@ -35,6 +35,6 @@ add_library(hpd SHARED
       config.c
       )
 target_link_libraries(hpd DataManager idgen)
-install (TARGETS hpd DESTINATION lib)
-set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
+install (TARGETS hpd LIBRARY DESTINATION ${HPD_LIB_PATH} NAMELINK_SKIP)
+set_target_properties(hpd PROPERTIES VERSION ${HPD_VERSION_DEFAULT} SOVERSION ${HPD_SOVERSION_DEFAULT})
 

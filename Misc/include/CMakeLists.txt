@@ -28,4 +28,4 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-install (FILES hpd_error.h DESTINATION include/hpdaemon)
+install (FILES hpd_error.h DESTINATION ${HPD_INCLUDE_PATH})
