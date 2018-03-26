@@ -29,16 +29,16 @@
 # as representing official policies, either expressed.
 
 add_library(hpd-serialize-shared
-        ../include/hpd/common/hpd_serialize_shared.h
+        ../include/hpd-0.6/common/hpd_serialize_shared.h
         hpd_serialize_shared.c
         )
 target_link_libraries(hpd-serialize-shared curl)
 
 add_library(hpd-json SHARED
-        ../include/hpd/common/hpd_json.h
+        ../include/hpd-0.6/common/hpd_json.h
         hpd_json.c
         )
-set_target_properties(hpd-json PROPERTIES VERSION 0.0.0 SOVERSION 0)
+set_target_properties(hpd-json PROPERTIES VERSION ${HPD_VERSION_DEFAULT} SOVERSION ${HPD_SOVERSION_DEFAULT})
 target_link_libraries(hpd-json hpd-serialize-shared jansson)
-install(TARGETS hpd-json DESTINATION lib)
+install(TARGETS hpd-json LIBRARY DESTINATION ${HPD_LIB_PATH} NAMELINK_SKIP)
 

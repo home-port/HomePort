@@ -29,9 +29,9 @@
 # as representing official policies, either expressed.
 
 add_library(hpd-tty SHARED
-        ../include/hpd/common/hpd_tty.h
+        ../include/hpd-0.6/common/hpd_tty.h
         tty.c
         )
 target_link_libraries(hpd-tty ev)
-set_target_properties(hpd-tty PROPERTIES VERSION 0.0.0 SOVERSION 0)
-install(TARGETS hpd-tty DESTINATION lib)
+set_target_properties(hpd-tty PROPERTIES VERSION ${HPD_VERSION_DEFAULT} SOVERSION ${HPD_SOVERSION_DEFAULT})
+install(TARGETS hpd-tty LIBRARY DESTINATION ${HPD_LIB_PATH} NAMELINK_SKIP)

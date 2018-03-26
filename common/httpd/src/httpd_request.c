@@ -29,11 +29,11 @@
 #include "http_parser.h"
 #include "httpd_url_parser.h"
 #include "httpd_header_parser.h"
-#include "hpd/hpd_shared_api.h"
+#include "hpd-0.6/hpd_shared_api.h"
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <hpd/common/hpd_common.h>
+#include <hpd-0.6/common/hpd_common.h>
 
 /// The possible states of a request
 enum state {

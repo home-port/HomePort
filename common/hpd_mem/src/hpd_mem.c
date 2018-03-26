@@ -27,10 +27,10 @@
 
 // TODO Error check, entire file
 
-#include <hpd/modules/hpd_mem.h>
-#include <hpd/hpd_adapter_api.h>
+#include <hpd-0.6/modules/hpd_mem.h>
+#include <hpd-0.6/hpd_adapter_api.h>
 #include <bsd/sys/queue.h>
-#include <hpd/common/hpd_common.h>
+#include <hpd-0.6/common/hpd_common.h>
 
 static hpd_error_t mem_on_create(void **data, const hpd_module_t *context);
 static hpd_error_t mem_on_destroy(void *data);

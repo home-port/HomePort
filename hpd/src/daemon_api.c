@@ -25,7 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "hpd/hpd_api.h"
+#include "hpd-0.6/hpd_api.h"
 #include "daemon.h"
 #include "log.h"
 

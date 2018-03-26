@@ -28,7 +28,7 @@
 #ifndef HOMEPORT_REQUEST_H
 #define HOMEPORT_REQUEST_H
 
-#include "hpd/hpd_types.h"
+#include "hpd-0.6/hpd_types.h"
 
 #ifdef __cplusplus
 extern "C" {

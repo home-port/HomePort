@@ -31,6 +31,10 @@
 cmake_minimum_required(VERSION 3.1)
 project(homeport C CXX)
 
+SET(MAJOR_VERSION "0")
+SET(MINOR_VERSION "6")
+SET(PATCH_VERSION "0")
+
 set(CMAKE_C_FLAGS "-std=gnu99 -DHPD_REST_ORIGIN")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -g -DDEBUG -Wall -Wno-unknown-pragmas")
 set(CMAKE_CXX_FLAGS "-std=gnu++0x -DHPD_REST_ORIGIN")
@@ -57,6 +61,16 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 # Http-Parser
 add_library(http-parser lib/http-parser/http_parser.c)
 include_directories(lib/http-parser)
+
+# Version numbers
+set(HPD_VERSION_DEFAULT ${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION})
+set(HPD_SOVERSION_DEFAULT ${MAJOR_VERSION}.${MINOR_VERSION})
+
+# Standard paths
+set(HPD_INCLUDE_PATH "include/hpd-${MAJOR_VERSION}.${MINOR_VERSION}")
+set(HPD_LIB_PATH "lib")
+set(HPD_COMMON_INCLUDE_PATH "${HPD_INCLUDE_PATH}/common")
+set(HPD_MODULE_INCLUDE_PATH "${HPD_INCLUDE_PATH}/modules")
 
 # Generate API documentation with Doxygen
 find_package(Doxygen)
@@ -128,10 +142,6 @@ add_subdirectory(common)
 add_subdirectory(hpd)
 add_subdirectory(example)
 add_subdirectory(modules)
-
-SET(MAJOR_VERSION "1")
-SET(MINOR_VERSION "0")
-SET(PATCH_VERSION "0")
 
 if(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     include(InstallRequiredSystemLibraries)

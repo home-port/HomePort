@@ -26,7 +26,7 @@
  */
 
 #include "daemon.h"
-#include "hpd/hpd_shared_api.h"
+#include "hpd-0.6/hpd_shared_api.h"
 #include "discovery.h"
 #include "log.h"
 #include "model.h"

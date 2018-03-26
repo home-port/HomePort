@@ -27,7 +27,7 @@
 
 /// [file]
 #include "template_application.h"
-#include <hpd/hpd_application_api.h>
+#include <hpd-0.6/hpd_application_api.h>
 
 static hpd_error_t template_app_on_create(void **data, const hpd_module_t *context);
 static hpd_error_t template_app_on_destroy(void *data);

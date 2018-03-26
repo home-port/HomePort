@@ -30,11 +30,11 @@
 
 # Main library
 add_library(hpd-rest SHARED
-        ../include/hpd/modules/hpd_rest.h
+        ../include/hpd-0.6/modules/hpd_rest.h
         rest.c
         rest_json.c
         rest_xml.c
         )
 target_link_libraries(hpd-rest hpd-httpd jansson mxml hpd-json)
-install(TARGETS hpd-rest DESTINATION lib)
-set_target_properties(hpd-rest PROPERTIES VERSION 0.0.0 SOVERSION 0)
+install(TARGETS hpd-rest LIBRARY DESTINATION ${HPD_LIB_PATH} NAMELINK_SKIP)
+set_target_properties(hpd-rest PROPERTIES VERSION ${HPD_VERSION_DEFAULT} SOVERSION ${HPD_SOVERSION_DEFAULT})

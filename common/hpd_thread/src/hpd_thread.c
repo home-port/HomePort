@@ -25,13 +25,13 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include <hpd/common/hpd_thread.h>
+#include <hpd-0.6/common/hpd_thread.h>
 #include <ev.h>
-#include <hpd/hpd_shared_api.h>
+#include <hpd-0.6/hpd_shared_api.h>
 #include <pthread.h>
-#include <hpd/common/hpd_common.h>
+#include <hpd-0.6/common/hpd_common.h>
 #include <semaphore.h>
-#include <hpd/hpd_api.h>
+#include <hpd-0.6/hpd_api.h>
 
 #define HPD_LOG_RETURN_PTHREAD_CODE(CONTEXT, RC) HPD_LOG_RETURN((CONTEXT), HPD_E_UNKNOWN, "pthread failed [code: %i].", (RC))
 #define HPD_LOG_RETURN_PTHREAD(CONTEXT, RC) do { HPD_LOG_DEBUG((CONTEXT), "pthread failed [code: %i].", (RC)); return; } while(0)

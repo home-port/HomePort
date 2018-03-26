@@ -25,17 +25,17 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include <hpd/common/hpd_json.h>
-#include <hpd/common/hpd_serialize_shared.h>
+#include <hpd-0.6/common/hpd_json.h>
+#include <hpd-0.6/common/hpd_serialize_shared.h>
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "UnusedImportStatement"
 #include <curl/curl.h>
 #pragma clang diagnostic pop
 
-#include <hpd/hpd_shared_api.h>
-#include <hpd/common/hpd_common.h>
-#include <hpd/hpd_api.h>
+#include <hpd-0.6/hpd_shared_api.h>
+#include <hpd-0.6/common/hpd_common.h>
+#include <hpd-0.6/hpd_api.h>
 
 #define HPD_JSON_RETURN_JSON_ERROR(CONTEXT) HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Json error")
 #define HPD_JSON_RETURN_PARSE_ERROR(CONTEXT) HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Parse error")

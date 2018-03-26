@@ -28,9 +28,9 @@
 #ifndef HOMEPORT_TCPD_INTERN_H
 #define HOMEPORT_TCPD_INTERN_H
 
-#include "hpd/common/hpd_tcpd.h"
-#include "hpd/hpd_types.h"
-#include "hpd/common/hpd_queue.h"
+#include "hpd-0.6/common/hpd_tcpd.h"
+#include "hpd-0.6/hpd_types.h"
+#include "hpd-0.6/common/hpd_queue.h"
 #include <ev.h>
 #include <netinet/in.h>
 

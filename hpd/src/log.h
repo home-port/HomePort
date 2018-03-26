@@ -28,7 +28,7 @@
 #ifndef HOMEPORT_LOG_H
 #define HOMEPORT_LOG_H
 
-#include "hpd/hpd_types.h"
+#include "hpd-0.6/hpd_types.h"
 #include <stdarg.h>
 
 #ifdef __cplusplus

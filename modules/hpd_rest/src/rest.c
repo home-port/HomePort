@@ -25,15 +25,15 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "hpd/modules/hpd_rest.h"
-#include "hpd/hpd_application_api.h"
-#include "hpd/common/hpd_common.h"
-#include "hpd/common/hpd_httpd.h"
+#include "hpd-0.6/modules/hpd_rest.h"
+#include "hpd-0.6/hpd_application_api.h"
+#include "hpd-0.6/common/hpd_common.h"
+#include "hpd-0.6/common/hpd_httpd.h"
 #include <curl/curl.h>
 #include "rest_json.h"
 #include "rest_xml.h"
 #include <mxml.h>
-#include <hpd/common/hpd_serialize_shared.h>
+#include <hpd-0.6/common/hpd_serialize_shared.h>
 
 static hpd_error_t rest_on_create(void **data, const hpd_module_t *context);
 static hpd_error_t rest_on_destroy(void *data);

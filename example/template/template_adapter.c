@@ -27,7 +27,7 @@
 
 /// [includes]
 #include "template_adapter.h"
-#include <hpd/hpd_adapter_api.h>
+#include <hpd-0.6/hpd_adapter_api.h>
 /// [includes]
 
 /// [declarations]

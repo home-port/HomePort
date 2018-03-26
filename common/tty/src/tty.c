@@ -25,7 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "hpd/common/hpd_tty.h"
+#include "hpd-0.6/common/hpd_tty.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,8 +33,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
-#include <hpd/common/hpd_common.h>
-#include <hpd/hpd_shared_api.h>
+#include <hpd-0.6/common/hpd_common.h>
+#include <hpd-0.6/hpd_shared_api.h>
 
 struct hpd_tty {
     hpd_ev_loop_t *loop;

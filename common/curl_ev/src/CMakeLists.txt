@@ -31,15 +31,15 @@
 find_package(CURL)
 if (CURL_FOUND)
     add_library(hpd-curl-ev SHARED
-            ../include/hpd/common/hpd_curl_ev_module.h
-            ../include/hpd/common/hpd_curl_ev.h
+            ../include/hpd-0.6/common/hpd_curl_ev_module.h
+            ../include/hpd-0.6/common/hpd_curl_ev.h
             curl_ev_intern.h
             curl_ev_module.c
             curl_ev.c
             )
     target_link_libraries(hpd-curl-ev ${CURL_LIBRARIES} ev)
-    set_target_properties(hpd-curl-ev PROPERTIES VERSION 0.0.0 SOVERSION 0)
-    install(TARGETS hpd-curl-ev DESTINATION lib)
+    set_target_properties(hpd-curl-ev PROPERTIES VERSION ${HPD_VERSION_DEFAULT} SOVERSION ${HPD_SOVERSION_DEFAULT})
+    install(TARGETS hpd-curl-ev LIBRARY DESTINATION ${HPD_LIB_PATH} NAMELINK_SKIP)
 else (CURL_FOUND)
     message(WARNING "Please install curl to build hpd-curl-ev library")
 endif(CURL_FOUND)

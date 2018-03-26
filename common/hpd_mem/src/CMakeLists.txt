@@ -29,9 +29,9 @@
 # as representing official policies, either expressed.
 
 add_library(hpd-mem SHARED
-        ../include/hpd/modules/hpd_mem.h
+        ../include/hpd-0.6/modules/hpd_mem.h
         hpd_mem.c
         )
-set_target_properties(hpd-mem PROPERTIES VERSION 0.0.0 SOVERSION 0)
-install(TARGETS hpd-mem DESTINATION lib)
+set_target_properties(hpd-mem PROPERTIES VERSION ${HPD_VERSION_DEFAULT} SOVERSION ${HPD_SOVERSION_DEFAULT})
+install(TARGETS hpd-mem LIBRARY DESTINATION ${HPD_LIB_PATH} NAMELINK_SKIP)
 

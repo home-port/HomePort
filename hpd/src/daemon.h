@@ -28,9 +28,9 @@
 #ifndef HOMEPORT_DAEMON_H
 #define HOMEPORT_DAEMON_H
 
-#include "hpd/hpd_types.h"
-#include "hpd/common/hpd_common.h"
-#include "hpd/common/hpd_queue.h"
+#include "hpd-0.6/hpd_types.h"
+#include "hpd-0.6/common/hpd_common.h"
+#include "hpd-0.6/common/hpd_queue.h"
 #include <ev.h>
 #include <argp.h>
 

@@ -26,11 +26,11 @@
  */
 
 #include "rest_json.h"
-#include "hpd/common/hpd_jansson.h"
-#include "hpd/hpd_application_api.h"
+#include "hpd-0.6/common/hpd_jansson.h"
+#include "hpd-0.6/hpd_application_api.h"
 #include <string.h>
-#include <hpd/common/hpd_serialize_shared.h>
-#include <hpd/common/hpd_json.h>
+#include <hpd-0.6/common/hpd_serialize_shared.h>
+#include <hpd-0.6/common/hpd_json.h>
 
 #define REST_JSON_RETURN_JSON_ERROR(CONTEXT) HPD_LOG_RETURN(context, HPD_E_UNKNOWN, "Json error")
 

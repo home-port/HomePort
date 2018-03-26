@@ -26,7 +26,7 @@
  */
 
 #include "tcpd_intern.h"
-#include "hpd/hpd_shared_api.h"
+#include "hpd-0.6/hpd_shared_api.h"
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -26,8 +26,8 @@
  */
 
 /// [file]
-#include <hpd/hpd_daemon_api.h>
-#include <hpd/modules/hpd_rest.h>
+#include <hpd-0.6/hpd_daemon_api.h>
+#include <hpd-0.6/modules/hpd_rest.h>
 #include "demo_adapter.h"
 #include "demo_application.h"
 

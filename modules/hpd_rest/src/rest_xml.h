@@ -28,7 +28,7 @@
 #ifndef HOMEPORT_REST_XML_H
 #define HOMEPORT_REST_XML_H
 
-#include "hpd/hpd_types.h"
+#include "hpd-0.6/hpd_types.h"
 
 typedef struct hpd_rest hpd_rest_t;
 

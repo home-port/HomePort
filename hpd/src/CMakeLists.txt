@@ -74,20 +74,20 @@ add_library(hpd SHARED
         $<TARGET_OBJECTS:log>
         model.h
         comm.h
-        ../include/hpd/hpd_adapter_api.h
-        ../include/hpd/hpd_api.h
-        ../include/hpd/hpd_application_api.h
-        ../include/hpd/hpd_daemon_api.h
-        ../include/hpd/hpd_shared_api.h
-        ../include/hpd/hpd_types.h
+        ../include/hpd-0.6/hpd_adapter_api.h
+        ../include/hpd-0.6/hpd_api.h
+        ../include/hpd-0.6/hpd_application_api.h
+        ../include/hpd-0.6/hpd_daemon_api.h
+        ../include/hpd-0.6/hpd_shared_api.h
+        ../include/hpd-0.6/hpd_types.h
         ../intro.dox
         ../api.dox
 )
 set_target_properties(hpd PROPERTIES LINKER_LANGUAGE C)
-set_target_properties(hpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
+set_target_properties(hpd PROPERTIES VERSION ${HPD_VERSION_DEFAULT} SOVERSION ${HPD_SOVERSION_DEFAULT})
 if (CMAKE_USE_PTHREADS_INIT)
     target_link_libraries(hpd ev hpd-map Threads::Threads)
 else (CMAKE_USE_PTHREADS_INIT)
     target_link_libraries(hpd ev hpd-map)
 endif (CMAKE_USE_PTHREADS_INIT)
-install(TARGETS hpd DESTINATION lib)
+install(TARGETS hpd LIBRARY DESTINATION ${HPD_LIB_PATH} NAMELINK_SKIP)

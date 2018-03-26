@@ -29,8 +29,8 @@
 # as representing official policies, either expressed.
 
 add_library(hpd-map SHARED
-        ../include/hpd/common/hpd_map.h
+        ../include/hpd-0.6/common/hpd_map.h
         map.c
         )
-set_target_properties(hpd-map PROPERTIES VERSION 0.0.0 SOVERSION 0)
-install(TARGETS hpd-map DESTINATION lib)
+set_target_properties(hpd-map PROPERTIES VERSION ${HPD_VERSION_DEFAULT} SOVERSION ${HPD_SOVERSION_DEFAULT})
+install(TARGETS hpd-map LIBRARY DESTINATION ${HPD_LIB_PATH} NAMELINK_SKIP)

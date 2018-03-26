@@ -29,14 +29,14 @@
 # as representing official policies, either expressed.
 
 add_library(hpd-httpd SHARED
-        ../include/hpd/common/hpd_httpd.h
-        ../include/hpd/common/hpd_httpd_types.h
+        ../include/hpd-0.6/common/hpd_httpd.h
+        ../include/hpd-0.6/common/hpd_httpd_types.h
         httpd.c
         httpd_request.c
         httpd_url_parser.c
         httpd_header_parser.c
         httpd_response.c
         )
-set_target_properties(hpd-httpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
+set_target_properties(hpd-httpd PROPERTIES VERSION ${HPD_VERSION_DEFAULT} SOVERSION ${HPD_SOVERSION_DEFAULT})
 target_link_libraries(hpd-httpd hpd-tcpd http-parser)
-install(TARGETS hpd-httpd DESTINATION lib)
+install(TARGETS hpd-httpd LIBRARY DESTINATION ${HPD_LIB_PATH} NAMELINK_SKIP)

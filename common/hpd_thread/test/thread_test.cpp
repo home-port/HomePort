@@ -26,9 +26,9 @@
  */
 
 #include <gtest/gtest.h>
-#include "hpd/hpd_api.h"
-#include "hpd/common/hpd_thread.h"
-#include "hpd/common/hpd_thread_module.h"
+#include "hpd-0.6/hpd_api.h"
+#include "hpd-0.6/common/hpd_thread.h"
+#include "hpd-0.6/common/hpd_thread_module.h"
 #include <ev.h>
 
 #define HPD_LOG_RETURN_PTHREAD(CONTEXT, RC) HPD_LOG_RETURN((CONTEXT), HPD_E_UNKNOWN, "pthread failed [code: %i].", (RC))

@@ -28,9 +28,9 @@
 #include "rest_xml.h"
 #include <time.h>
 #include <mxml.h>
-#include <hpd/common/hpd_common.h>
-#include <hpd/common/hpd_serialize_shared.h>
-#include "hpd/hpd_application_api.h"
+#include <hpd-0.6/common/hpd_common.h>
+#include <hpd-0.6/common/hpd_serialize_shared.h>
+#include "hpd-0.6/hpd_application_api.h"
 
 static const char * const REST_XML_VERSION = "1.0";
 

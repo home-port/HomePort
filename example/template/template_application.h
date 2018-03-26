@@ -29,7 +29,7 @@
 #ifndef HOMEPORT_TEMPLATE_APPLICATION_H
 #define HOMEPORT_TEMPLATE_APPLICATION_H
 
-#include <hpd/hpd_types.h>
+#include <hpd-0.6/hpd_types.h>
 
 extern struct hpd_module_def template_app_def;
 

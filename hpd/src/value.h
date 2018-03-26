@@ -28,7 +28,7 @@
 #ifndef HOMEPORT_VALUE_H
 #define HOMEPORT_VALUE_H
 
-#include "hpd/hpd_types.h"
+#include "hpd-0.6/hpd_types.h"
 #include <stddef.h>
 #include <stdarg.h>
 

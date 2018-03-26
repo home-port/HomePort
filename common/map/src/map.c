@@ -25,9 +25,9 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "hpd/hpd_types.h"
-#include "hpd/common/hpd_map.h"
-#include "hpd/common/hpd_common.h"
+#include "hpd-0.6/hpd_types.h"
+#include "hpd-0.6/common/hpd_map.h"
+#include "hpd-0.6/common/hpd_common.h"
 
 TAILQ_HEAD(hpd_map, hpd_pair);
 

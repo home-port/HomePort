@@ -28,7 +28,7 @@
 #ifndef HOMEPORT_HTTPD_URL_PARSER_H
 #define HOMEPORT_HTTPD_URL_PARSER_H
 
-#include "hpd/hpd_types.h"
+#include "hpd-0.6/hpd_types.h"
 
 typedef hpd_error_t (*up_string_cb)(void *data, const char* parsedSegment, size_t segment_length);
 typedef hpd_error_t (*up_pair_cb)(void *data, const char* key, size_t key_length, const char* value, size_t value_length);

@@ -29,12 +29,12 @@
 # as representing official policies, either expressed.
 
 add_library(hpd-tcpd SHARED
-        ../include/hpd/common/hpd_tcpd.h
-        ../include/hpd/common/hpd_tcpd_types.h
+        ../include/hpd-0.6/common/hpd_tcpd.h
+        ../include/hpd-0.6/common/hpd_tcpd_types.h
         tcpd_intern.h
         tcpd.c
         )
-set_target_properties(hpd-tcpd PROPERTIES VERSION 0.0.0 SOVERSION 0)
+set_target_properties(hpd-tcpd PROPERTIES VERSION ${HPD_VERSION_DEFAULT} SOVERSION ${HPD_SOVERSION_DEFAULT})
 target_link_libraries(hpd-tcpd ev)
-install(TARGETS hpd-tcpd DESTINATION lib)
+install(TARGETS hpd-tcpd LIBRARY DESTINATION ${HPD_LIB_PATH} NAMELINK_SKIP)
 

@@ -25,9 +25,9 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include <hpd/common/hpd_serialize_shared.h>
+#include <hpd-0.6/common/hpd_serialize_shared.h>
 #include <curl/curl.h>
-#include <hpd/hpd_shared_api.h>
+#include <hpd-0.6/hpd_shared_api.h>
 #include <stdlib.h>
 #include <string.h>
 

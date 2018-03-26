@@ -26,8 +26,8 @@
  */
 
 #include "demo_application.h"
-#include <hpd/hpd_application_api.h>
-#include <hpd/common/hpd_common.h>
+#include <hpd-0.6/hpd_application_api.h>
+#include <hpd-0.6/common/hpd_common.h>
 
 typedef struct demo_app demo_app_t;
 

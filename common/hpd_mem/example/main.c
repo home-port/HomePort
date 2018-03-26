@@ -25,9 +25,9 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include <hpd/hpd_daemon_api.h>
-#include <hpd/modules/hpd_mem.h>
-#include <hpd/modules/hpd_rest.h>
+#include <hpd-0.6/hpd_daemon_api.h>
+#include <hpd-0.6/modules/hpd_mem.h>
+#include <hpd-0.6/modules/hpd_rest.h>
 
 int main(int argc, char *argv[])
 {

@@ -26,8 +26,8 @@
  */
 
 #include "curl_ev_intern.h"
-#include "hpd/common/hpd_common.h"
-#include "hpd/hpd_shared_api.h"
+#include "hpd-0.6/common/hpd_common.h"
+#include "hpd-0.6/hpd_shared_api.h"
 
 static size_t curl_ev_on_header(char *buffer, size_t size, size_t nmemb, void *userdata)
 {

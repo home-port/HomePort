@@ -26,7 +26,7 @@
  */
 
 /// [includes]
-#include <hpd/hpd_daemon_api.h>
+#include <hpd-0.6/hpd_daemon_api.h>
 #include "template_adapter.h"
 #include "template_application.h"
 /// [includes]

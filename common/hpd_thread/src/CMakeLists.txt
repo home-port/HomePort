@@ -29,10 +29,10 @@
 # as representing official policies, either expressed.
 
 add_library(hpd-thread SHARED
-        ../include/hpd/common/hpd_thread.h
-        ../include/hpd/common/hpd_thread_module.h
+        ../include/hpd-0.6/common/hpd_thread.h
+        ../include/hpd-0.6/common/hpd_thread_module.h
         hpd_thread.c
         )
-set_target_properties(hpd-thread PROPERTIES VERSION 0.0.0 SOVERSION 0)
-install(TARGETS hpd-thread DESTINATION lib)
+set_target_properties(hpd-thread PROPERTIES VERSION ${HPD_VERSION_DEFAULT} SOVERSION ${HPD_SOVERSION_DEFAULT})
+install(TARGETS hpd-thread LIBRARY DESTINATION ${HPD_LIB_PATH} NAMELINK_SKIP)
 
