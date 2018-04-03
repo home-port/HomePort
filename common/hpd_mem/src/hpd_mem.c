@@ -161,15 +161,30 @@ static hpd_status_t mem_on_get(void *data, hpd_request_t *req)
 static hpd_status_t mem_on_put(void *data, hpd_request_t *req)
 {
     mem_srv_t *msrv = data;
+
     const hpd_value_t *value;
     hpd_request_get_value(req, &value);
-    hpd_value_copy(msrv->mem->context, &msrv->value, value);
 
-    hpd_value_t *val;
-    hpd_value_copy(msrv->mem->context, &val, value);
-    hpd_changed(msrv->service, val);
+    { // Save value for later
+        hpd_value_copy(msrv->mem->context, &msrv->value, value);
+    }
+
+    { // Report as changed
+        hpd_value_t *val;
+        hpd_value_copy(msrv->mem->context, &val, value);
+        hpd_changed(msrv->service, val);
+    }
+
+    { // Respond with value
+        hpd_value_t *val;
+        hpd_value_copy(msrv->mem->context, &val, value);
+        hpd_response_t *res;
+        hpd_response_alloc(&res, req, HPD_S_200);
+        hpd_response_set_value(res, val);
+        hpd_respond(res);
+    }
     
-    return HPD_S_200;
+    return HPD_S_NONE;
 }
 
 static hpd_error_t mem_on_create(void **data, const hpd_module_t *context)
