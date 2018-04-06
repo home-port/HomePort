@@ -131,7 +131,7 @@ include_directories(common/include)
 include_directories(common/map/include)
 include_directories(common/hpd_serialize/include)
 include_directories(common/hpd_thread/include)
-include_directories(modules/hpd_rest/include)
+include_directories(common/hpd_rest/include)
 
 add_library(hpd_doc SHARED
         main.dox
@@ -141,7 +141,6 @@ set_target_properties(hpd_doc PROPERTIES LINKER_LANGUAGE C)
 add_subdirectory(common)
 add_subdirectory(hpd)
 add_subdirectory(example)
-add_subdirectory(modules)
 
 if(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
     include(InstallRequiredSystemLibraries)

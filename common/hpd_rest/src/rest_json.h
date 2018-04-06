@@ -25,11 +25,15 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_HPD_REST_H
-#define HOMEPORT_HPD_REST_H
+#ifndef HOMEPORT_REST_JSON_H
+#define HOMEPORT_REST_JSON_H
 
-#include <hpd-0.6/hpd_types.h>
+#include "../../../hpd/include/hpd-0.6/hpd_types.h"
 
-extern hpd_module_def_t hpd_rest;
+typedef struct hpd_rest hpd_rest_t;
 
-#endif //HOMEPORT_HPD_REST_H
+hpd_error_t hpd_rest_json_get_configuration(const hpd_module_t *context, hpd_rest_t *rest, char **out);
+hpd_error_t hpd_rest_json_get_value(const hpd_value_t *value, const hpd_module_t *context, char **out);
+hpd_error_t hpd_rest_json_parse_value(const char *in, const hpd_module_t *context, hpd_value_t **out);
+
+#endif

@@ -28,7 +28,7 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(${PROJECT_SOURCE_DIR}/modules/hpd_rest/include)
+include_directories(../common/hpd_rest/include)
 
 add_subdirectory(demo)
 add_subdirectory(template)
