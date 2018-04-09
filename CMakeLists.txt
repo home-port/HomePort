@@ -132,6 +132,8 @@ include_directories(common/map/include)
 include_directories(common/hpd_serialize/include)
 include_directories(common/hpd_thread/include)
 include_directories(common/hpd_rest/include)
+include_directories(common/httpd/include)
+include_directories(common/tcpd/include)
 
 add_library(hpd_doc SHARED
         main.dox
