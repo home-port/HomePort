@@ -23,7 +23,7 @@ Switch branch:
 
 Install the dependencies:
 
-`sudo apt-get install gcc make libev-dev cmake`
+`sudo apt-get install gcc make libev-dev cmake libmxml-dev`
 
 Quick compile:
 `./build.sh`
