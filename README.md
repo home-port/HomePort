@@ -67,6 +67,14 @@ Build examples
 Example executables can be found in the various example directories
 within the build folder.
 
+# Install
+
+Install the HomePort library globally:
+
+`cd build`
+
+`sudo make install`
+
 # Update
 
 Update the repository to the current version:
