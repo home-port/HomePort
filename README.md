@@ -36,7 +36,7 @@ Alternative, compile manually, it is advised to compile in a seperate directory:
 
 `make`
 
-# Run tests
+# Run tests (Optional)
 
 Install requirements:
 
@@ -52,7 +52,7 @@ Run the tests:
 
 `make check`
 
-# Build examples
+# Build examples (Optional)
 
 Run cmake as normal:
 
