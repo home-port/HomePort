@@ -23,7 +23,7 @@ Switch branch:
 
 Install the dependencies:
 
-`sudo apt-get install gcc make libev-dev cmake libmxml-dev`
+`sudo apt-get install gcc make libev-dev cmake libmxml-dev libjansson-dev`
 
 Quick compile:
 `./build.sh`
