@@ -31,7 +31,9 @@ Quick compile:
 Alternative, compile manually, it is advised to compile in a seperate directory:
 
 `mkdir build && cd build`
+
 `cmake ../`
+
 `make`
 
 # Run tests
