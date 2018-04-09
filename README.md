@@ -17,7 +17,7 @@ Switch branch:
 
 `cd HomePort`
 
-`git checkout HomePortRefactored`
+`git checkout v0.4-refactored`
 
 # Compile
 
@@ -25,18 +25,13 @@ Install the dependencies:
 
 `sudo apt-get install gcc make libev-dev cmake`
 
-Compile:
+Quick compile:
+`./build.sh`
 
-It is advised to compile in a seperate directory:
+Alternative, compile manually, it is advised to compile in a seperate directory:
 
 `mkdir build && cd build`
-
-First build your makefiles with cmake:
-
 `cmake ../`
-
-Then compile:
-
 `make`
 
 # Run tests
