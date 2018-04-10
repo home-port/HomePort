@@ -95,6 +95,8 @@ hpd_error_t hpd_curl_ev_cleanup(hpd_curl_ev_handle_t *handle)
     if (handle->headers) curl_slist_free_all(handle->headers);
     if (handle->handle) curl_easy_cleanup(handle->handle);
     if (handle->on_free) handle->on_free(handle->data);
+    free(handle->url);
+    free(handle->method);
     free(handle);
     
     return HPD_E_SUCCESS;
@@ -124,10 +126,14 @@ hpd_error_t hpd_curl_ev_set_done_callback(hpd_curl_ev_handle_t *handle, hpd_curl
 hpd_error_t hpd_curl_ev_set_custom_request(hpd_curl_ev_handle_t *handle, const char *request)
 {
     if (!handle) return HPD_E_NULL;
+    HPD_STR_CPY(handle->method, request);
     CURLcode cc;
     if ((cc = curl_easy_setopt(handle->handle, CURLOPT_CUSTOMREQUEST, request)))
         HPD_LOG_RETURN(handle->context, HPD_E_UNKNOWN, "Curl failed [code: %i]", cc);
     return HPD_E_SUCCESS;
+
+    alloc_error:
+    HPD_LOG_RETURN_E_ALLOC(handle->context);
 }
 
 hpd_error_t hpd_curl_ev_set_data(hpd_curl_ev_handle_t *handle, void *data, hpd_curl_ev_free_f on_free)
@@ -145,20 +151,28 @@ hpd_error_t hpd_curl_ev_set_data(hpd_curl_ev_handle_t *handle, void *data, hpd_c
 hpd_error_t hpd_curl_ev_set_postfields(hpd_curl_ev_handle_t *handle, const void *data, size_t len)
 {
     if (!handle) return HPD_E_NULL;
+    HPD_STR_CPY(handle->method, "POST");
     CURLcode cc;
     if (    (cc = curl_easy_setopt(handle->handle, CURLOPT_POSTFIELDSIZE, len)) ||
             (cc = curl_easy_setopt(handle->handle, CURLOPT_COPYPOSTFIELDS, data)))
         HPD_LOG_RETURN(handle->context, HPD_E_UNKNOWN, "Curl failed [code: %i]", cc);
     return HPD_E_SUCCESS;
+
+    alloc_error:
+    HPD_LOG_RETURN_E_ALLOC(handle->context);
 }
 
 hpd_error_t hpd_curl_ev_set_url(hpd_curl_ev_handle_t *handle, const char *url)
 {
     if (!handle) return HPD_E_NULL;
+    HPD_STR_CPY(handle->url, url);
     CURLcode cc;
     if ((cc = curl_easy_setopt(handle->handle, CURLOPT_URL, url)))
         HPD_LOG_RETURN(handle->context, HPD_E_UNKNOWN, "Curl failed [code: %i]", cc);
     return HPD_E_SUCCESS;
+
+    alloc_error:
+    HPD_LOG_RETURN_E_ALLOC(handle->context);
 }
 
 hpd_error_t hpd_curl_ev_set_verbose(hpd_curl_ev_handle_t *handle, long int bool)

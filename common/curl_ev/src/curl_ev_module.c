@@ -193,6 +193,7 @@ static hpd_error_t curl_ev_add_next()
 
     hpd_curl_ev_handle_t *handle = TAILQ_FIRST(&curl_ev->handles);
     if (handle) {
+        HPD_LOG_VERBOSE(context, "%s %s", handle->method ? handle->method : "GET", handle->url);
         // TODO On failures we can move along in the queue and send an error to the failed one
         if ((cmc = curl_multi_add_handle(curl_ev->mult_handle, handle->handle))) goto add_error;
         if ((cmc = curl_ev_socket_action(CURL_SOCKET_TIMEOUT))) goto action_error;

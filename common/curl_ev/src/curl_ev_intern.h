@@ -45,6 +45,8 @@ struct hpd_curl_ev_handle {
     hpd_curl_ev_f on_header;
     hpd_curl_ev_f on_body;
     hpd_curl_ev_done_f on_done;
+    char *url;
+    char *method;
 };
 
 #endif //HOMEPORT_CURL_EV_INTERN_H
