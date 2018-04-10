@@ -28,7 +28,7 @@
 #ifndef HOMEPORT_HPD_REST_H
 #define HOMEPORT_HPD_REST_H
 
-#include "../../../../../hpd/include/hpd-0.6/hpd_types.h"
+#include <hpd-0.6/hpd_types.h>
 
 extern hpd_module_def_t hpd_rest;
 
