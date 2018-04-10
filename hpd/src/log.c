@@ -82,10 +82,10 @@ hpd_error_t log_vlogf(hpd_t *hpd, const char *module, hpd_log_level_t level, con
     if (pthread_mutex_lock(&hpd->log_mutex)) return HPD_E_UNKNOWN;
 #endif
 
-    fprintf(stderr, "%s [%s]%*s %8s: ", time_buffer, module, (int) (8 - strlen(module)), "", type);
+    fprintf(stderr, "%s [%s]%*s %8s: ", time_buffer, module, (int) (12 - strlen(module)), "", type);
     int len = vfprintf(stderr, fmt, vp);
-    const char *fn = strrchr(file, '/');
-    fprintf(stderr, "%*s  %s:%d\n", 160 - len, "", (fn ? fn : file), line);
+    const char *fn = &strrchr(file, '/')[1];
+    fprintf(stderr, "%*s  %s:%d\n", 128 - len, "", fn ? fn : file, line);
 
 #ifdef THREAD_SAFE
     // TODO Better thing to do?
