@@ -342,6 +342,7 @@ lri_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, co
     struct lm *headersIn =  lr_request_get_headers( req );
     char *accept;
     char *res;
+    struct lm *headers = lm_create();
 
     accept = lm_find( headersIn, "Accept" );
 
@@ -349,17 +350,21 @@ lri_getConfiguration(void *srv_data, void **req_data, struct lr_request *req, co
     if( accept != NULL && strcmp(accept, "application/json") == 0 )
     {
         res = jsonGetConfiguration(homeport);
+        lm_insert(headers, "Content-Type", "application/json");
     }
     else
     {
         res = xmlGetConfiguration(homeport);
+        lm_insert(headers, "Content-Type", "application/xml");
     }
 //  else
 //  {
 //    lr_sendf(req, WS_HTTP_406, NULL, NULL);
 //    return 0;
 //  }
-    lr_sendf(req, WS_HTTP_200, NULL, "%s", res);
+    lr_sendf(req, WS_HTTP_200, headers, "%s", res);
+
+    lm_destroy(headers);
 
     free(res);
     return 0;
