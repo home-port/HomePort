@@ -28,16 +28,10 @@
 # documentation are those of the authors and should not be interpreted
 # as representing official policies, either expressed.
 
-include_directories(include)
+add_library(hpd-log SHARED
+        ../include/hpd-0.6/modules/hpd_log.h
+        hpd_log.c
+        )
+set_target_properties(hpd-log PROPERTIES VERSION ${HPD_VERSION_DEFAULT} SOVERSION ${HPD_SOVERSION_DEFAULT})
+install(TARGETS hpd-log LIBRARY DESTINATION ${HPD_LIB_PATH} NAMELINK_SKIP)
 
-add_subdirectory(include)
-add_subdirectory(map)
-add_subdirectory(httpd)
-add_subdirectory(tcpd)
-add_subdirectory(curl_ev)
-add_subdirectory(tty)
-add_subdirectory(hpd_serialize)
-add_subdirectory(hpd_thread)
-add_subdirectory(hpd_mem)
-add_subdirectory(hpd_rest)
-add_subdirectory(hpd_log)

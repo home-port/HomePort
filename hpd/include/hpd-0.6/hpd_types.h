@@ -206,6 +206,7 @@ typedef void (*hpd_value_f) (void *data, const hpd_service_id_t *service, const 
 typedef void (*hpd_adapter_f) (void *data, const hpd_adapter_id_t *adapter);
 typedef void (*hpd_device_f) (void *data, const hpd_device_id_t *device);
 typedef void (*hpd_service_f) (void *data, const hpd_service_id_t *service);
+typedef void (*hpd_log_f) (void *data, const char *msg);
 /// [Application API Callbacks]
 
 /// [hpd_module_def_t]

@@ -56,7 +56,6 @@ hpd_error_t hpd_module(hpd_t *hpd, const char *id, const hpd_module_def_t *modul
     if (hpd->configuration) LOG_RETURN(hpd, HPD_E_STATE, "Cannot add module while hpd is running.");
     if (strchr(id, '-')) LOG_RETURN(hpd, HPD_E_ARGUMENT, "Module ids may not contain '-'.");
     if (strcmp(id, "hpd") == 0) LOG_RETURN(hpd, HPD_E_ARGUMENT, "Module ids cannot be 'hpd'.");
-    if (strcmp(id, "log") == 0) LOG_RETURN(hpd, HPD_E_ARGUMENT, "Module ids cannot be 'log'.");
     TAILQ_FOREACH(module, &hpd->modules, HPD_TAILQ_FIELD)
         if (strcmp(module->id, id) == 0)
             LOG_RETURN(hpd, HPD_E_NOT_UNIQUE, "Module ids must be unique.");

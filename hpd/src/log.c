@@ -27,6 +27,8 @@
 
 #include "log.h"
 #include "daemon.h"
+#include "event.h"
+
 #ifdef THREAD_SAFE
 #include <pthread.h>
 #endif
@@ -77,20 +79,41 @@ hpd_error_t log_vlogf(hpd_t *hpd, const char *module, hpd_log_level_t level, con
     tm_info = localtime(&timer);
     strftime(time_buffer, 26, "%Y/%m/%d %H:%M:%S", tm_info);
 
+    const char *fn = &strrchr(file, '/')[1];
+
+    va_list  vp_copy;
+    va_copy(vp_copy, vp);
+    int mlen = vsnprintf(NULL, 0, fmt, vp_copy);
+    if (mlen < 0) return HPD_E_UNKNOWN;
+    int slen =
+            snprintf(NULL, 0, "%s [%s]%*s %8s: ", time_buffer, module, (int) (12 - strlen(module)), "", type) +
+            mlen +
+            snprintf(NULL, 0, "%*s  %s:%d\n", 128 - mlen, "", fn ? fn : file, line);
+    if (slen < 0) return HPD_E_UNKNOWN;
+    size_t uslen = (unsigned int) slen+1;
+    
+    char *msg = calloc(uslen, sizeof(char));
+    if (!msg) return HPD_E_ALLOC;
+
+    int i = snprintf(msg, uslen, "%s [%s]%*s %8s: ", time_buffer, module, (int) (12 - strlen(module)), "", type);
+    i += vsnprintf(&msg[i], uslen - i, fmt, vp);
+    snprintf(&msg[i], uslen - i, "%*s  %s:%d\n", 128 - mlen, "", fn ? fn : file, line);
+    
+
 #ifdef THREAD_SAFE
     // TODO Better thing to do?
     if (pthread_mutex_lock(&hpd->log_mutex)) return HPD_E_UNKNOWN;
 #endif
 
-    fprintf(stderr, "%s [%s]%*s %8s: ", time_buffer, module, (int) (12 - strlen(module)), "", type);
-    int len = vfprintf(stderr, fmt, vp);
-    const char *fn = &strrchr(file, '/')[1];
-    fprintf(stderr, "%*s  %s:%d\n", 128 - len, "", fn ? fn : file, line);
+    fprintf(stderr, "%s", msg);
+    // TODO Using log methods inside on_log callbacks causes everything to freeze (above mutex lock)
+    event_log(hpd, msg);
 
 #ifdef THREAD_SAFE
     // TODO Better thing to do?
     if (pthread_mutex_unlock(&hpd->log_mutex)) return HPD_E_UNKNOWN;
 #endif
 
+    free(msg);
     return HPD_E_SUCCESS;
 }

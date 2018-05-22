@@ -58,6 +58,7 @@ hpd_error_t hpd_listener_set_value_callback(hpd_listener_t *listener, hpd_value_
 hpd_error_t hpd_listener_set_adapter_callback(hpd_listener_t *listener, hpd_adapter_f on_attach, hpd_adapter_f on_detach, hpd_adapter_f on_change);
 hpd_error_t hpd_listener_set_device_callback(hpd_listener_t *listener, hpd_device_f on_attach, hpd_device_f on_detach, hpd_device_f on_change);
 hpd_error_t hpd_listener_set_service_callback(hpd_listener_t *listener, hpd_service_f on_attach, hpd_service_f on_detach, hpd_service_f on_change);
+hpd_error_t hpd_listener_set_log_callback(hpd_listener_t *listener, hpd_log_f on_log);
 hpd_error_t hpd_subscribe(hpd_listener_t *listener);
 hpd_error_t hpd_listener_free(hpd_listener_t *listener);
 hpd_error_t hpd_listener_get_data(const hpd_listener_t *listener, void **data);

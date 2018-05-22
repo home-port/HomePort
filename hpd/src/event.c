@@ -88,6 +88,12 @@ hpd_error_t event_set_service_callback(hpd_listener_t *listener, hpd_service_f o
     return HPD_E_SUCCESS;
 }
 
+hpd_error_t event_set_log_callback(hpd_listener_t *listener, hpd_log_f on_log)
+{
+    listener->on_log = on_log;
+    return HPD_E_SUCCESS;
+}
+
 hpd_error_t event_subscribe(hpd_listener_t *listener)
 {
     TAILQ_INSERT_TAIL(&listener->context->hpd->configuration->listeners, listener, HPD_TAILQ_FIELD);
@@ -349,4 +355,15 @@ hpd_error_t event_inform_srv_changed(hpd_service_t *service)
     }
 
     return discovery_free_sid(sid);
+}
+
+hpd_error_t event_log(hpd_t *hpd, const char *msg)
+{
+    hpd_listener_t *listener;
+    if (hpd->configuration) {
+        TAILQ_FOREACH(listener, &hpd->configuration->listeners, HPD_TAILQ_FIELD) {
+            if (listener->on_log) listener->on_log(listener->data, msg);
+        }
+    }
+    return HPD_E_SUCCESS;
 }

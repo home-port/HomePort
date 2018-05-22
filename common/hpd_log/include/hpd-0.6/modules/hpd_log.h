@@ -25,65 +25,11 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#ifndef HOMEPORT_COMM_H
-#define HOMEPORT_COMM_H
+#ifndef HPD_LOG_H
+#define HPD_LOG_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <hpd-0.6/hpd_types.h>
 
-#include "hpd-0.6/common/hpd_map.h"
+extern hpd_module_def_t hpd_log;
 
-typedef struct hpd_listeners hpd_listeners_t;
-
-TAILQ_HEAD(hpd_listeners, hpd_listener);
-
-struct hpd_listener {
-    // Navigational members
-    TAILQ_ENTRY(hpd_listener) HPD_TAILQ_FIELD;
-    const hpd_module_t *context;
-    // Data members
-    hpd_value_f on_change;
-    hpd_adapter_f on_adp_attach;
-    hpd_adapter_f on_adp_detach;
-    hpd_adapter_f on_adp_change;
-    hpd_device_f on_dev_attach;
-    hpd_device_f on_dev_detach;
-    hpd_device_f on_dev_change;
-    hpd_service_f on_srv_attach;
-    hpd_service_f on_srv_detach;
-    hpd_service_f on_srv_change;
-    hpd_log_f on_log;
-    // User data
-    void *data;
-    hpd_free_f on_free;
-};
-
-struct hpd_request {
-    hpd_service_id_t  *service;
-    hpd_method_t    method;
-    hpd_value_t    *value;
-    // Callback and data for returning the response to sender
-    hpd_response_f  on_response; // Nullable
-    hpd_free_f      on_free;
-    void       *data;
-};
-
-struct hpd_response {
-    hpd_request_t  *request;
-    hpd_status_t    status;
-    hpd_value_t    *value;
-};
-
-struct hpd_value {
-    const hpd_module_t *context;
-    hpd_map_t  *headers;
-    char       *body;
-    size_t      len;
-};
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif //HOMEPORT_COMM_H
+#endif //HPD_LOG_H

@@ -106,11 +106,17 @@ hpd_error_t hpd_listener_set_service_callback(hpd_listener_t *listener, hpd_serv
     return event_set_service_callback(listener, on_attach, on_detach, on_change);
 }
 
+hpd_error_t hpd_listener_set_log_callback(hpd_listener_t *listener, hpd_log_f on_log)
+{
+    if (!listener) return HPD_E_NULL;
+    return event_set_log_callback(listener, on_log);
+}
+
 hpd_error_t hpd_subscribe(hpd_listener_t *listener)
 {
     if (!listener) return HPD_E_NULL;
     hpd_t *hpd = listener->context->hpd;
-    if (!listener->on_change && !listener->on_dev_attach && !listener->on_dev_detach)
+    if (!listener->on_change && !listener->on_dev_attach && !listener->on_dev_detach && !listener->on_log)
         LOG_RETURN(hpd, HPD_E_ARGUMENT, "Listener do not contain any callbacks.");
     if (!hpd->configuration) LOG_RETURN_HPD_STOPPED(hpd);
     return event_subscribe(listener);
