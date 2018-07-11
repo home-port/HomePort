@@ -83,6 +83,36 @@ void demo_app_on_dev_change(void *data, const hpd_device_id_t *device)
     demo_app_on_device(data, device, "%s/%s changed");
 }
 
+void demo_app_on_adp_attach(void *data, const hpd_adapter_id_t *adapter)
+{
+    demo_app_t *demo_app = data;
+    hpd_error_t rc;
+    hpd_device_id_t *dev;
+    HPD_ADAPTER_ID_FOREACH_DEVICE_ID(rc, dev, adapter)
+        demo_app_on_dev_attach(data, dev);
+    if (rc) HPD_LOG_ERROR_CODE(demo_app->context, rc);
+}
+
+void demo_app_on_adp_detach(void *data, const hpd_adapter_id_t *adapter)
+{
+    demo_app_t *demo_app = data;
+    hpd_error_t rc;
+    hpd_device_id_t *dev;
+    HPD_ADAPTER_ID_FOREACH_DEVICE_ID(rc, dev, adapter)
+        demo_app_on_dev_detach(data, dev);
+    if (rc) HPD_LOG_ERROR_CODE(demo_app->context, rc);
+}
+
+void demo_app_on_adp_change(void *data, const hpd_adapter_id_t *adapter)
+{
+    demo_app_t *demo_app = data;
+    hpd_error_t rc;
+    hpd_device_id_t *dev;
+    HPD_ADAPTER_ID_FOREACH_DEVICE_ID(rc, dev, adapter)
+        demo_app_on_dev_change(data, dev);
+    if (rc) HPD_LOG_ERROR_CODE(demo_app->context, rc);
+}
+
 void demo_app_on_change(void *data, const hpd_service_id_t *service, const hpd_value_t *val)
 {
     hpd_error_t rc;
@@ -137,6 +167,8 @@ static hpd_error_t demo_app_on_start(void *data)
     if ((rc = hpd_listener_alloc(&demo_app->listener, demo_app->context)))
         goto error_return;
     if ((rc = hpd_listener_set_data(demo_app->listener, demo_app, NULL)))
+        goto error_free;
+    if ((rc = hpd_listener_set_adapter_callback(demo_app->listener, demo_app_on_adp_attach, demo_app_on_adp_detach, demo_app_on_adp_change)))
         goto error_free;
     if ((rc = hpd_listener_set_device_callback(demo_app->listener, demo_app_on_dev_attach, demo_app_on_dev_detach, demo_app_on_dev_change)))
         goto error_free;

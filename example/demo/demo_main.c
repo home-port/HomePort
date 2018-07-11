@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
     // Add modules
     if ((rc = hpd_module(hpd, "rest", &hpd_rest))) goto error_free;
     if ((rc = hpd_module(hpd, "demo_adapter", &hpd_demo_adapter_def))) goto error_free;
-    if ((rc = hpd_module(hpd, "demo_application", &hpd_demo_app_def))) goto error_free;
+    if ((rc = hpd_module(hpd, "demo_app", &hpd_demo_app_def))) goto error_free;
 
     // Start hpd
     if ((rc = hpd_start(hpd, argc, argv))) goto error_free;

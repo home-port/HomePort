@@ -212,15 +212,14 @@ static hpd_error_t demo_adapter_create_adapter(demo_adapter_t *demo_adapter)
     hpd_error_t rc, rc2;
 
     // Create adapter structure (using module_id as id)
-    hpd_adapter_t *adapter;
-    if ((rc = hpd_adapter_alloc(&adapter, demo_adapter->context, demo_adapter->module_id))) goto error_return;
-    if ((rc = hpd_adapter_set_attr(adapter, HPD_ATTR_TYPE, "demo_adapter"))) goto error_free_adapter;
-    if ((rc = hpd_adapter_attach(adapter))) goto error_free_adapter;
+    if ((rc = hpd_adapter_alloc(&demo_adapter->adapter, demo_adapter->context, demo_adapter->module_id))) goto error_return;
+    if ((rc = hpd_adapter_set_attr(demo_adapter->adapter, HPD_ATTR_TYPE, "demo_adapter"))) goto error_free_adapter;
+    if ((rc = hpd_adapter_attach(demo_adapter->adapter))) goto error_free_adapter;
 
     return HPD_E_SUCCESS;
 
     error_free_adapter:
-    if ((rc2 = hpd_adapter_free(adapter)))
+    if ((rc2 = hpd_adapter_free(demo_adapter->adapter)))
         HPD_LOG_ERROR(demo_adapter->context, "Free function failed [code: %i].", rc2);
 
     error_return:
