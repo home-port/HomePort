@@ -1,0 +1,20 @@
+GET http://localhost:8080/devices
+Accept: application/json
+Cache-Control: no-cache
+
+###
+
+GET http://localhost:8080/demo_adapter/dev0/srv0
+Accept: application/json
+Cache-Control: no-cache
+
+###
+
+PUT http://localhost:8080/demo_adapter/dev0/srv0
+Accept: application/json
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"_value": "1"}
+
+###
