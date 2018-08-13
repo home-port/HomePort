@@ -231,14 +231,18 @@ static hpd_error_t rest_reply_devices(hpd_rest_req_t *rest_req)
 
     // Create body
     char *body;
+    const char *content_type = NULL;
     switch (rest_media_type_to_enum(accept)) {
         case CONTENT_NONE:
         case CONTENT_XML:
         case CONTENT_WILDCARD:
             if ((rc = hpd_rest_xml_get_configuration(context, rest, &body))) return rc;
+            content_type = "application/xml";
             break;
         case CONTENT_JSON:
+
             if ((rc = hpd_rest_json_get_configuration(rest->context, rest, &body))) return rc;
+            content_type = "application/json";
             break;
         case CONTENT_UNKNOWN:
             if ((rc = rest_reply_unsupported_media_type(http_req, rest_req, context))) {
@@ -249,6 +253,7 @@ static hpd_error_t rest_reply_devices(hpd_rest_req_t *rest_req)
 
     // Send response
     if ((rc = hpd_httpd_response_create(&rest_req->http_res, http_req, HPD_S_200))) goto create_error;
+    if (content_type && (rc = hpd_httpd_response_add_header(rest_req->http_res, "Content-Type", content_type))) goto response_error;
     if ((rc = hpd_httpd_response_sendf(rest_req->http_res, "%s", body))) goto response_error;
     if ((rc = hpd_httpd_response_destroy(rest_req->http_res))) goto create_error;
 
