@@ -210,6 +210,9 @@ static void request_on_request(hpd_ev_loop_t *loop, ev_async *w, int revents)
 
     hpd_action_f action = service->actions[request->method].action;
     if (!action) {
+        LOG_DEBUG(hpd, "Action (%s) not supported by service %s/%s/%s.",
+                request->method == HPD_M_GET ? "GET" : request->method == HPD_M_PUT ? "PUT" : "UNKNOWN",
+                aid, did, sid);
         if ((rc = request_alloc_response(&response, request, HPD_S_405))) goto error_free_request;
         if ((rc = request_respond(response))) goto error_free_response;
         return;
