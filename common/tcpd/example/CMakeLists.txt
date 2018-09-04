@@ -32,4 +32,4 @@
 add_executable(echo-server EXCLUDE_FROM_ALL
       echo.c
       )
-target_link_libraries(echo-server tcpd)
+target_link_libraries(echo-server hpd-tcpd hpd)

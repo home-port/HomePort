@@ -25,7 +25,7 @@
  * authors and should not be interpreted as representing official policies, either expressed
  */
 
-#include "hpd_tcpd.h"
+#include "hpd-0.6/common/hpd_tcpd.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ev.h>
@@ -34,20 +34,20 @@
 static hpd_tcpd_t *ws = NULL;
 
 // Receive messages
-static int on_receive(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ctx, void **data,
-                      const char *buf, size_t len)
+static hpd_tcpd_return_t on_receive(hpd_tcpd_t *instance, hpd_tcpd_conn_t *conn, void *ctx, void **data,
+        const char *buf, size_t len)
 {
    hpd_tcpd_conn_sendf(conn, "%.*s", (int) len, buf);
-   return 0;
+   return HPD_TCPD_R_CONTINUE;
 }
 
 // Handle correct exiting
 static void exit_handler(int sig)
 {
    // Stop tcpd
-   if (hpd_ws != NULL) {
-      hpd_tcpd_stop(hpd_ws);
-      hpd_tcpd_destroy(hpd_ws);
+   if (ws != NULL) {
+      hpd_tcpd_stop(ws);
+      hpd_tcpd_destroy(ws);
    }
 
    // Exit
@@ -76,8 +76,8 @@ int main(int argc, char *argv[])
    signal(SIGTERM, exit_handler);
 
    // Create tcpd
-   hpd_ws = hpd_tcpd_create(NULL, &settings, NULL, NULL);
-   hpd_tcpd_start(hpd_ws);
+   hpd_tcpd_create(&ws, &settings, NULL, loop);
+   hpd_tcpd_start(ws);
 
    // Start the event loop and tcpd
    ev_run(loop, 0);
