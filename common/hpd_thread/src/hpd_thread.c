@@ -58,6 +58,7 @@ struct req_data {
     hpd_value_t *val;
     hpd_status_t status;
     sem_t sem;
+    hpd_bool_t get_val;
 };
 
 static hpd_error_t thread_on_create(void **data, const hpd_module_t *context);
@@ -217,15 +218,17 @@ static void on_hpd_response(void *in, const hpd_response_t *res)
         goto done;
     }
 
-    const hpd_value_t *val;
-    if ((rc = hpd_response_get_value(res, &val))) {
-        HPD_LOG_ERROR(thread->context, "hpd failed (code: %i)", rc);
-        goto done;
-    }
+    if (data->get_val) {
+        const hpd_value_t *val;
+        if ((rc = hpd_response_get_value(res, &val))) {
+            HPD_LOG_ERROR(thread->context, "hpd failed (code: %i)", rc);
+            goto done;
+        }
 
-    if (val && (rc = hpd_value_copy(thread->context, &data->val, val))) {
-        HPD_LOG_ERROR(thread->context, "hpd failed (code: %i)", rc);
-        goto done;
+        if (val && (rc = hpd_value_copy(thread->context, &data->val, val))) {
+            HPD_LOG_ERROR(thread->context, "hpd failed (code: %i)", rc);
+            goto done;
+        }
     }
 
     done:
@@ -244,6 +247,7 @@ hpd_error_t hpd_thread_request_sync_safe(const hpd_module_t *context, const hpd_
     hpd_error_t rc, rc2;
     req_data_t data;
     data.val = NULL;
+    data.get_val = (res_value != NULL);
 
     if ((stat = sem_init(&data.sem, 0, 0))) goto error_pthread_return;
 
@@ -258,8 +262,8 @@ hpd_error_t hpd_thread_request_sync_safe(const hpd_module_t *context, const hpd_
     if ((stat = sem_wait(&data.sem))) goto error_pthread_free;
     if ((stat = sem_destroy(&data.sem))) goto error_pthread_free_data;
 
-    (*status) = data.status;
-    (*res_value) = data.val;
+    if (status) (*status) = data.status;
+    if (res_value) (*res_value) = data.val;
 
     return HPD_E_SUCCESS;
 
