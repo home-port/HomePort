@@ -68,6 +68,7 @@ hpd_error_t log_vlogf(hpd_t *hpd, const char *module, hpd_log_level_t level, con
 {
     if (strcmp(module, HPD_LOG_MODULE) == 0 && level > hpd->hpd_log_level) return HPD_E_SUCCESS;
 
+    // Set type string and color based on type
     char *type = NULL;
     char *color = "";
     if (hpd->log_colored) color = COLOR_RESET;
@@ -95,9 +96,9 @@ hpd_error_t log_vlogf(hpd_t *hpd, const char *module, hpd_log_level_t level, con
             if (hpd->log_colored) color = COLOR_BBLACK;
             break;
     }
-
     if (!type) LOG_RETURN(hpd, HPD_E_ARGUMENT, "Unknown log level.");
 
+    // Build time string
     time_t timer;
     char time_buffer[26];
     struct tm* tm_info;
@@ -105,39 +106,57 @@ hpd_error_t log_vlogf(hpd_t *hpd, const char *module, hpd_log_level_t level, con
     tm_info = localtime(&timer);
     strftime(time_buffer, 26, "%Y/%m/%d %H:%M:%S", tm_info);
 
+    // Build filename
     const char *fn = &strrchr(file, '/')[1];
+    file = fn ? fn : file;
 
+    // Length of actual message
     va_list  vp_copy;
     va_copy(vp_copy, vp);
     int mlen = vsnprintf(NULL, 0, fmt, vp_copy);
+    va_end(vp_copy);
     if (mlen < 0) return HPD_E_UNKNOWN;
-    int slen =
-            snprintf(NULL, 0, "%s [%s]%*s %8s: ", time_buffer, module, (int) (12 - strlen(module)), "", type) +
-            mlen +
-            snprintf(NULL, 0, "%*s  %s:%d\n", 128 - mlen, "", fn ? fn : file, line);
-    if (slen < 0) return HPD_E_UNKNOWN;
-    size_t uslen = (unsigned int) slen+1;
+    size_t umlen = (unsigned int) mlen+1;
 
-    char *msg = calloc(uslen, sizeof(char));
+    // Allocate actual message
+    char *msg = calloc(umlen, sizeof(char));
     if (!msg) return HPD_E_ALLOC;
+    mlen = vsnprintf(msg, umlen, fmt, vp);
+    if (mlen < 0) return HPD_E_UNKNOWN;
+    
+    // Split into lines on newline character
+    for (char *mline = strtok(msg, "\n"); mline; mline = strtok(NULL, "\n")) {
 
-    int i = snprintf(msg, uslen, "%s [%s]%*s %8s: ", time_buffer, module, (int) (12 - strlen(module)), "", type);
-    i += vsnprintf(&msg[i], uslen - i, fmt, vp);
-    snprintf(&msg[i], uslen - i, "%*s  %s:%d\n", 128 - mlen, "", fn ? fn : file, line);
+        // Length of full string
+        int slen = snprintf(NULL, 0, "%s [%s]%*s %8s: %s%*s  %s:%d\n",
+                            time_buffer, module, (int) (12 - strlen(module)), "", type, mline, (int) (128 - strlen(mline)), "", file, line);
+        if (slen < 0) return HPD_E_UNKNOWN;
+        size_t uslen = (unsigned int) slen+1;
+
+        // Allocate full message
+        char *fmsg = calloc(uslen, sizeof(char));
+        if (!fmsg) return HPD_E_ALLOC;
+        slen = snprintf(fmsg, uslen, "%s [%s]%*s %8s: %s%*s  %s:%d\n",
+                        time_buffer, module, (int) (12 - strlen(module)), "", type, mline, (int) (128 - strlen(mline)), "", file, line);
+        if (slen < 0) return HPD_E_UNKNOWN;
 
 #ifdef THREAD_SAFE
-    // TODO Better thing to do?
-    if (pthread_mutex_lock(&hpd->log_mutex)) return HPD_E_UNKNOWN;
+        // TODO Better thing to do?
+        if (pthread_mutex_lock(&hpd->log_mutex)) return HPD_E_UNKNOWN;
 #endif
 
-    fprintf(stderr, "%s%s%s", color, msg, COLOR_RESET);
-    // TODO Using log methods inside on_log callbacks causes everything to freeze (above mutex lock)
-    event_log(hpd, msg);
+        fprintf(stderr, "%s%s%s", color, fmsg, hpd->log_colored ? COLOR_RESET : "");
+        // TODO Using log methods inside on_log callbacks causes everything to freeze (above mutex lock)
+        event_log(hpd, fmsg);
 
 #ifdef THREAD_SAFE
-    // TODO Better thing to do?
-    if (pthread_mutex_unlock(&hpd->log_mutex)) return HPD_E_UNKNOWN;
+        // TODO Better thing to do?
+        if (pthread_mutex_unlock(&hpd->log_mutex)) return HPD_E_UNKNOWN;
 #endif
+
+        free(fmsg);
+
+    }
 
     free(msg);
     return HPD_E_SUCCESS;
