@@ -66,6 +66,7 @@ struct hpd {
     pthread_mutex_t log_mutex;
 #endif
     hpd_log_level_t hpd_log_level;
+    hpd_bool_t log_colored;
 };
 
 struct hpd_ev_async {

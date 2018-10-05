@@ -131,6 +131,10 @@ static int daemon_on_parse_opt(int key, char *arg, struct argp_state *state)
             }
             return 0;
         }
+        case 'C': {
+            hpd->log_colored = HPD_TRUE;
+            return 0;
+        }
         default:
             return ARGP_ERR_UNKNOWN;
     }
@@ -297,6 +301,7 @@ static hpd_error_t daemon_options_create(hpd_t *hpd)
     if ((rc = daemon_add_global_option(hpd, "conf", 'c', "file", 0, "Load arguments from configuration file"))) goto error;
     if ((rc = daemon_add_global_option(hpd, "quiet", 'q', "modules", OPTION_ARG_OPTIONAL, "Quiet mode, optionally a comma-separated list of modules can be supplied"))) goto error;
     if ((rc = daemon_add_global_option(hpd, "verbose", 'v', "modules", OPTION_ARG_OPTIONAL, "Verbose mode, optionally a comma-separated list of modules can be supplied"))) goto error;
+    if ((rc = daemon_add_global_option(hpd, "color", 'C', NULL, 0, "Colored output mode"))) goto error;
 
     return HPD_E_SUCCESS;
 
