@@ -45,6 +45,8 @@ struct curl_ev {
     TAILQ_HEAD(curl_ev_handles, hpd_curl_ev_handle) handles;
     hpd_ev_loop_t *loop;
     const hpd_module_t *context;
+    size_t sent;
+    size_t sent_size;
 };
 
 static hpd_error_t curl_ev_on_create(void **data, const hpd_module_t *context);
@@ -193,7 +195,12 @@ static hpd_error_t curl_ev_add_next()
 
     hpd_curl_ev_handle_t *handle = TAILQ_FIRST(&curl_ev->handles);
     if (handle) {
-        HPD_LOG_VERBOSE(context, "%s %s", handle->method ? handle->method : "GET", handle->url);
+        HPD_LOG_VERBOSE(context, "(%zu) %s %s (Sending %zu bytes / %zu bytes)",
+                ++curl_ev->sent,
+                handle->method ? handle->method : "GET",
+                handle->url,
+                handle->size,
+                curl_ev->sent_size += handle->size);
         // TODO On failures we can move along in the queue and send an error to the failed one
         if ((cmc = curl_multi_add_handle(curl_ev->mult_handle, handle->handle))) goto add_error;
         if ((cmc = curl_ev_socket_action(CURL_SOCKET_TIMEOUT))) goto action_error;

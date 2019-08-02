@@ -156,6 +156,7 @@ hpd_error_t hpd_curl_ev_set_postfields(hpd_curl_ev_handle_t *handle, const void 
     if (    (cc = curl_easy_setopt(handle->handle, CURLOPT_POSTFIELDSIZE, len)) ||
             (cc = curl_easy_setopt(handle->handle, CURLOPT_COPYPOSTFIELDS, data)))
         HPD_LOG_RETURN(handle->context, HPD_E_UNKNOWN, "Curl failed [code: %i]", cc);
+    handle->size = len;
     return HPD_E_SUCCESS;
 
     alloc_error:
